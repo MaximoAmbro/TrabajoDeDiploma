@@ -1,0 +1,38 @@
+﻿/*
+Hacer un foreach cada elemento de la lista para que se almacenen todos los elementos en el repos.
+Los que cargamos por default hay que cargarlos directamente en el repositorio.
+Hacer un metodo en el repositorio que devuelva los valores del repositorio y modifique la lista
+Creo que si llamamos a las dos listas desde aca podriamos hacer la impresion
+Lo que me da cosa es si no se si podriamos hacer que se imprima los eventos de cada cliente
+
+*/
+
+
+
+public class Repositorio
+{
+	Cliente cliente = new Cliente();
+	Almacenamiento <Clientes> archivo = new Almacenamiento<T>(1//hay que pasar por parametro la cantidad de lista);
+	archivo.Agregar(""//Acá habria que almacenar las listas);
+	string NombreCliente =(cliente)lista.ObtenerLista(); // habria que ver como hacer para hacer la busqueda
+	//habria que llevar este funcionamiento a cada cliente y a cada evento que el cliente compra para el txt
+}
+
+clasee Almacenamiento<T>
+{
+	public class Almacenamiento(int z)
+	{
+		lista = new T [z]
+	}
+	public void Agregar( T obj)
+	{
+		lista[i] = obj;
+		i++;
+	})
+	public T ObtenerLista(int i)
+	{
+		return lista[i];
+	}
+	private T [] lista;
+	private int i = 0;
+ }
