@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Datos
 {
-    interface RepositorioEntradas
+    public sealed class RepositorioEntradas
     {
+        private static RepositorioEntradas _instance;
+
+        public static RepositorioEntradas Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new RepositorioEntradas();
+                }
+                return _instance;
+            }
+        }
+
+        private RepositorioEntradas() { }
     }
 }

@@ -1,0 +1,22 @@
+# ── Compilación ──────────────────────────────────────────────
+[Bb]in/
+[Oo]bj/
+*.dll
+*.pdb
+*.exe
+*.cache
+
+# ── Visual Studio ────────────────────────────────────────────
+.vs/
+*.user
+*.suo
+*.userprefs
+
+# ── NuGet ────────────────────────────────────────────────────
+packages/
+*.nupkg
+project.lock.json
+
+# ── Salidas del sistema ──────────────────────────────────────
+A1.Tickets EVENTAURA/
+A1.Reportes EVENTAURA/
