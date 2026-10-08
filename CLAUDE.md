@@ -14,7 +14,7 @@ La documentación completa está en `Documentacion/EventAura_v2.pdf` (112 págin
 
 | Componente | Versión |
 |---|---|
-| .NET Framework | 4.8 / WinForms |
+| .NET Framework | 4.8 (Visual) · netstandard2.0 (Entidades, Datos, Repo) |
 | Base de datos | SQL Server |
 | Acceso a datos | Microsoft.Data.SqlClient 6.0.2 |
 | Generación de PDF | iText 9.2.0 |

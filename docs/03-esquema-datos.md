@@ -1,7 +1,10 @@
 # Esquema de datos
 
-Tablas ya existentes: `Usuario`, `Propietario`, `Locales`, `Eventos`, `Sectores`, `Entradas`.
-El resto se crea. Los `ALTER` sobre tablas existentes están marcados.
+Tablas ya existentes: `Usuario`, `Cliente`, `Propietario`, `Locales`, `Eventos`, `Sectores`,
+`Entradas`. El resto se crea. Los `ALTER` sobre tablas existentes están marcados.
+
+> `Cliente` y `Propietario` son tablas de especialización: solo tienen `ID`, clave foránea
+> hacia `Usuario`. El perfil efectivo se resuelve por `Usuario.TipoUsuario` (RN-05).
 
 ## Por qué `Compras` es una entidad propia
 
@@ -25,8 +28,18 @@ ALTER TABLE Eventos  ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Publicado';
 ALTER TABLE Sectores ADD CantidadReservada INT NOT NULL DEFAULT 0;  -- RN-08 + RN-15
 
 ALTER TABLE Entradas ADD ID_Compra INT NULL;
+ALTER TABLE Entradas ADD ID_Sector INT NULL;           -- RN-08: sin esto no hay cupo por sector
 ALTER TABLE Entradas ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Confirmada';
-ALTER TABLE Entradas ADD CodigoQR VARCHAR(64) NULL;    -- RN-18, único
+ALTER TABLE Entradas ADD CodigoQR VARCHAR(64) NULL;    -- RN-18
+
+ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Sectores
+      FOREIGN KEY (ID_Sector) REFERENCES Sectores(ID);
+
+CREATE UNIQUE INDEX UX_Entradas_CodigoQR                -- RN-18: único e irrepetible
+    ON Entradas (CodigoQR) WHERE CodigoQR IS NOT NULL;
+
+-- RN-01: la unicidad del correo es una restriccion estructural, no solo de codigo.
+ALTER TABLE Usuario ADD CONSTRAINT UQ_Usuario_Mail UNIQUE (Mail);
 
 -- ═══════════════ Operación de compra ═══════════════
 CREATE TABLE Compras (
@@ -120,7 +133,39 @@ CREATE TABLE Parametros (
 );
 ```
 
-## Consulta clave — conteo de la ventana móvil (RN-19)
+## Por qué `Entradas` necesita `ID_Sector`
+
+RN-08 exige que las entradas vendidas de un sector nunca superen su capacidad. La tabla
+`Entradas` vincula la entrada con el **evento**, no con el **sector**, de modo que sin esta
+columna la cantidad vendida por sector no se puede calcular y la regla queda sin forma de
+verificarse.
+
+Se descartó la alternativa de llevar un contador `CantidadVendida` en `Sectores`: un
+contador desnormalizado se desincroniza ante cualquier reembolso o error de transacción.
+La suma sobre `Entradas` siempre refleja el estado real.
+
+`Sectores.CantidadReservada` sí es un contador, pero su naturaleza es distinta: representa
+un estado transitorio de diez minutos (RN-15) que no tiene filas propias en `Entradas`.
+
+## Consultas clave
+
+### Cupo disponible de un sector (RN-08 + RN-15)
+
+```sql
+SELECT  s.Capacidad
+      - ISNULL((SELECT SUM(e.CantidadVendida)
+                FROM   Entradas e
+                WHERE  e.ID_Sector = s.ID
+                  AND  e.Estado    = 'Confirmada'), 0)
+      - s.CantidadReservada                              AS Disponible
+FROM    Sectores s
+WHERE   s.ID = @IdSector;
+```
+
+El control computa vendidas **más** reservadas vigentes, según el conflicto RN-08 vs RN-15
+resuelto en `docs/02-reglas-negocio.md`.
+
+### Conteo de la ventana móvil (RN-19)
 
 ```sql
 SELECT COUNT(*)
@@ -130,6 +175,16 @@ WHERE  ID_Usuario  =  @IdUsuario
   AND  FechaCompra >  DATEADD(MONTH, -12, @FechaReferencia)
   AND  FechaCompra <= @FechaReferencia;
 ```
+
+## Restricciones estructurales que la base debe garantizar
+
+| Regla | Restricción | Por qué en la base y no solo en el código |
+|---|---|---|
+| RN-01 | `UQ_Usuario_Mail` | Dos registros simultáneos podrían colarse con una validación solo en memoria |
+| RN-08 | `FK_Entradas_Sectores` | Sin el vínculo, la regla no se puede evaluar |
+| RN-18 | `UX_Entradas_CodigoQR` | Un QR repetido habilitaría dos ingresos con una sola entrada |
+| RN-25 | `UX_Suscripcion_Activa` | Índice filtrado: una sola suscripción activa por usuario |
+| RN-36 | `UX_ListaEspera` | Una sola inscripción por evento y usuario |
 
 ## Datos semilla mínimos
 
