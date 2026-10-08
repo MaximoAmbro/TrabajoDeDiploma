@@ -91,8 +91,21 @@ ALTER TABLE Eventos  ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Publicado';
 ALTER TABLE Sectores ADD CantidadReservada INT NOT NULL DEFAULT 0;  -- RN-08 + RN-15
 
 ALTER TABLE Entradas ADD ID_Compra INT NULL;
+ALTER TABLE Entradas ADD ID_Sector INT NULL;           -- RN-08: sin esto no hay cupo por sector
 ALTER TABLE Entradas ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Confirmada';
-ALTER TABLE Entradas ADD CodigoQR VARCHAR(64) NULL;    -- RN-18, único
+ALTER TABLE Entradas ADD CodigoQR VARCHAR(64) NULL;    -- RN-18
+GO
+
+-- Constraints sobre las columnas nuevas: van en otro lote porque SQL Server no resuelve
+-- en el mismo lote una columna agregada por ALTER TABLE.
+ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Sectores
+      FOREIGN KEY (ID_Sector) REFERENCES Sectores(ID);
+
+CREATE UNIQUE INDEX UX_Entradas_CodigoQR                -- RN-18: único e irrepetible
+    ON Entradas (CodigoQR) WHERE CodigoQR IS NOT NULL;
+
+-- RN-01: la unicidad del correo es una restriccion estructural, no solo de codigo.
+ALTER TABLE Usuario ADD CONSTRAINT UQ_Usuario_Mail UNIQUE (Mail);
 GO
 
 -- ═══════════════ Operación de compra ═══════════════
