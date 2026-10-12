@@ -99,6 +99,22 @@ ALTER TABLE Entradas ADD CodigoQR VARCHAR(64) NULL;    -- RN-18
 ALTER TABLE Entradas ALTER COLUMN Precio DECIMAL(12,2) NOT NULL;
 GO
 
+-- ═══════════════ Obligatoriedad de las claves foráneas ═══════════════
+-- Ningún estado nulo de estas columnas es válido en el dominio. La base de desarrollo no
+-- tiene filas con NULL en ninguna de las seis, así que no hace falta sanear antes.
+ALTER TABLE Locales  ALTER COLUMN PropietarioID INT NOT NULL;
+ALTER TABLE Eventos  ALTER COLUMN LocalID       INT NOT NULL;
+ALTER TABLE Sectores ALTER COLUMN EventoID      INT NOT NULL;
+ALTER TABLE Entradas ALTER COLUMN ID_Evento     INT NOT NULL;
+ALTER TABLE Entradas ALTER COLUMN ID_Usuario    INT NOT NULL;
+ALTER TABLE Entradas ALTER COLUMN FechaVenta    DATETIME NOT NULL;
+GO
+
+-- Faltaba: la entrada debe apuntar a un usuario existente.
+ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Usuario
+      FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID);
+GO
+
 -- Constraints sobre las columnas nuevas: van en otro lote porque SQL Server no resuelve
 -- en el mismo lote una columna agregada por ALTER TABLE.
 ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Sectores

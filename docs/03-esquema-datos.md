@@ -213,6 +213,32 @@ WHERE  ID_Usuario  =  @IdUsuario
 | RN-25 | `UX_Suscripcion_Activa` | Índice filtrado: una sola suscripción activa por usuario |
 | RN-36 | `UX_ListaEspera` | Una sola inscripción por evento y usuario |
 
+## Obligatoriedad de las claves foráneas
+
+El esquema heredado declara anulables seis columnas cuyos estados nulos no son válidos en
+el dominio: un sector sin evento, un evento sin lugar, un local sin dueño o una entrada sin
+comprador no representan nada. Se corrigen en la base y no en las entidades: declararlas
+anulables en el código obligaría a verificar `null` en las cuatro capas de forma permanente
+y además dejaría entrar datos inconsistentes.
+
+```sql
+-- Ejecutar antes de las FK, y solo sobre datos ya saneados.
+UPDATE Locales  SET PropietarioID = 0 WHERE PropietarioID IS NULL;   -- revisar antes
+ALTER TABLE Locales  ALTER COLUMN PropietarioID INT NOT NULL;
+ALTER TABLE Eventos  ALTER COLUMN LocalID       INT NOT NULL;
+ALTER TABLE Sectores ALTER COLUMN EventoID      INT NOT NULL;
+ALTER TABLE Entradas ALTER COLUMN ID_Evento     INT NOT NULL;
+ALTER TABLE Entradas ALTER COLUMN ID_Usuario    INT NOT NULL;
+ALTER TABLE Entradas ALTER COLUMN FechaVenta    DATETIME NOT NULL;
+
+-- Faltaba: la entrada debe apuntar a un usuario existente.
+ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Usuario
+      FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID);
+```
+
+Con esto, las propiedades `int` y `DateTime` de las entidades se corresponden con columnas
+que nunca devuelven `DBNull`, y la capa `Datos` puede mapear sin verificaciones defensivas.
+
 ## Correspondencia obligatoria entre columna y propiedad
 
 Toda clave primaria y toda clave foránea del esquema —incluidas las de las tablas
