@@ -20,3 +20,6 @@ project.lock.json
 # ── Salidas del sistema ──────────────────────────────────────
 A1.Tickets EVENTAURA/
 A1.Reportes EVENTAURA/
+
+# ── Backups de base de datos ─────────────────────────────────
+BaseDatos/backup/
