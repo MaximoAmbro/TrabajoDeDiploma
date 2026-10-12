@@ -12,7 +12,10 @@ namespace Entidades
         public TimeSpan Hora { get; set; }
         public DateTime Fecha { get; set; }
         public int Id { get; set; }
+        public int IdLocal { get; set; }          // Eventos.LocalID
         public List<Sector> Sectores { get; set; }
+        public string Categoria { get; set; }     // Concierto|Deportivo|Teatro|Cultural
+        public string Estado { get; set; }        // DEFAULT 'Publicado'
 
     }
 }

@@ -6,6 +6,33 @@ Tablas ya existentes: `Usuario`, `Cliente`, `Propietario`, `Locales`, `Eventos`,
 > `Cliente` y `Propietario` son tablas de especialización: solo tienen `ID`, clave foránea
 > hacia `Usuario`. El perfil efectivo se resuelve por `Usuario.TipoUsuario` (RN-05).
 
+## Estructura de las tablas preexistentes
+
+Estas tablas ya existían antes de esta etapa. Se documentan porque sus claves primarias y
+foráneas también deben tener propiedad en la capa `Entidades`: sin ellas la capa `Datos` no
+puede mapear un `SELECT` ni resolver una relación.
+
+```sql
+Usuario      (ID PK, Nombre, Apellido, Mail, Contraseña, TipoUsuario)
+Cliente      (ID PK/FK → Usuario.ID)
+Propietario  (ID PK/FK → Usuario.ID)
+Locales      (ID PK, Nombre, Direccion, Capacidad, PropietarioID FK → Usuario.ID)
+Eventos      (ID PK, Nombre, Fecha, LocalID FK → Locales.ID)
+Sectores     (ID PK, EventoID FK → Eventos.ID, Nombre, Precio, Capacidad)
+Entradas     (ID PK, ID_Evento FK → Eventos.ID, ID_Usuario, Precio, CantidadVendida, FechaVenta)
+```
+
+`TipoUsuario` toma los valores `Cliente` o `Propietario`, y es el que resuelve RN-05.
+`Cliente` y `Propietario` son tablas de especialización: solo guardan el `ID`.
+
+`Eventos` no tiene columna de hora: `Fecha` es `DATETIME` y la incluye. La entidad `Evento`
+conserva una propiedad `Hora` heredada que no corresponde a ninguna columna.
+
+```sql
+-- Los importes van en decimal (ver CLAUDE.md). Entradas.Precio era INT.
+ALTER TABLE Entradas ALTER COLUMN Precio DECIMAL(12,2) NOT NULL;
+```
+
 ## Por qué `Compras` es una entidad propia
 
 `Entradas` guarda una fila por sector adquirido. RN-19 cuenta **operaciones**, no entradas:
@@ -185,6 +212,16 @@ WHERE  ID_Usuario  =  @IdUsuario
 | RN-18 | `UX_Entradas_CodigoQR` | Un QR repetido habilitaría dos ingresos con una sola entrada |
 | RN-25 | `UX_Suscripcion_Activa` | Índice filtrado: una sola suscripción activa por usuario |
 | RN-36 | `UX_ListaEspera` | Una sola inscripción por evento y usuario |
+
+## Correspondencia obligatoria entre columna y propiedad
+
+Toda clave primaria y toda clave foránea del esquema —incluidas las de las tablas
+preexistentes— debe tener su propiedad en la entidad correspondiente. Sin `Usuario.Id` no
+hay forma de identificar al usuario autenticado; sin `Sector.Id` e `IdEvento`, la regla
+RN-08 no se puede evaluar desde el código aunque la base la soporte.
+
+Convención de nombres: la columna `ID_Usuario` se mapea como `IdUsuario`, `LocalID` como
+`IdLocal`, y la clave primaria siempre como `Id`.
 
 ## Datos semilla mínimos
 
