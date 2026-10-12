@@ -8,14 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Repositorio;
+using Negocio;
 
 namespace Visual
 {
     public partial class frmCambiarContraseña : Form
     {
+        // TODO Seccion N: quitar ConexionSql. Solo se devuelve a frmInicio al volver.
         public SqlConnection ConexionSql;
-        public GestorUsuarios gestorusuarios;
         public frmCambiarContraseña()
         {
             InitializeComponent();
@@ -47,7 +47,15 @@ namespace Visual
         {
             if (ControlarTxt() == true)
             {
-                gestorusuarios.CambiarContraseña(txtMail.Text, TxtPassword.Text);
+                try
+                {
+                    GestorUsuarios.Instance.CambiarContrasena(txtMail.Text, TxtPassword.Text);
+                }
+                catch (ReglaNegocioException ex)
+                {
+                    MessageBox.Show(ex.Message, "No se pudo cambiar la contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
                 MessageBox.Show("Contraseña cambiada");
             } // se carga a la bdd
             else

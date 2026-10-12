@@ -1,4 +1,4 @@
-﻿using Repositorio;
+﻿using Negocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,11 +12,11 @@ using System.Windows.Forms;
 
 namespace Visual
 {
-    public partial class frmAgregarEvento : Form
+    public partial class frmCrearUsuario : Form
     {
+        // TODO Seccion N: quitar ConexionSql. Solo se devuelve a frmInicio al cerrar.
         public SqlConnection ConexionSql;
-        public GestorUsuarios gestorusuarios;
-        public frmAgregarEvento()
+        public frmCrearUsuario()
         {
             InitializeComponent();
         }
@@ -49,8 +49,16 @@ namespace Visual
         {
             if (RevisarTextbox()== true)
             {
-                gestorusuarios.AgregarUsuario (txtNombre.Text, txtApellido.Text, txtmail.Text, TxtPassword.Text, cbTipoUsuario.Text, out string mensaje);
-                MessageBox.Show(mensaje); Cerrar();
+                try
+                {
+                    GestorUsuarios.Instance.Registrar(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text, cbTipoUsuario.Text);
+                }
+                catch (ReglaNegocioException ex)
+                {
+                    MessageBox.Show(ex.Message, "No se pudo crear la cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                MessageBox.Show("Usuario creado con exito."); Cerrar();
             }
             else { return; }
         }

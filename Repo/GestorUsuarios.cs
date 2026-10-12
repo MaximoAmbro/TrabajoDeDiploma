@@ -1,150 +1,182 @@
-﻿using Entidades;
-using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Protocols;
 using System;
-using System.Collections.Generic;
-using System.Text;
-namespace Repositorio
+using System.Linq;
+using Datos;
+using Entidades;
+
+namespace Negocio
 {
-    public partial class GestorUsuarios
+    public sealed class GestorUsuarios
     {
-        private readonly SqlConnection _conexion;
+        private static GestorUsuarios _instance;
 
-        // Constructor recibe la conexión abierta o cerrada
-        public GestorUsuarios(SqlConnection conexion)
+        public static GestorUsuarios Instance
         {
-            _conexion = conexion;
-        }
-    } // llamamos a la cadena de conexion
-    public partial class GestorUsuarios
-    {
-        public int ObtenerIDUsuario(string mail, string contraseña, out int IdUsuario)
-        {
-            string consulta = "SELECT ID FROM Usuario WHERE Mail = @Mail AND Contraseña = @Contraseña";
-
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
+            get
             {
-                comando.Parameters.AddWithValue("@Mail", mail);
-                comando.Parameters.AddWithValue("@Contraseña", contraseña);
-
-                _conexion.Open();
-                object resultado = comando.ExecuteScalar();
-                _conexion.Close();
-
-                if (resultado != null)
+                if (_instance == null)
                 {
-                    IdUsuario = Convert.ToInt32(resultado);
-                    return Convert.ToInt32(resultado);
+                    _instance = new GestorUsuarios();
                 }
+                return _instance;
             }
-            IdUsuario = 0;
-            return 0;
         }
-        public string ObtenerTipoUsuario(string mail, string contraseña, out string tipoUsuario)
+
+        private const string TipoCliente = "Cliente";
+        private const string TipoPropietario = "Propietario";
+
+        private GestorUsuarios() { }
+
+        // Devuelve el usuario autenticado, o null si mail o contraseña son incorrectos.
+        // Lanza ReglaNegocioException si la cuenta está bloqueada (RN-04).
+        public Usuario Autenticar(string mail, string pwd)
         {
-            string consulta = "SELECT TipoUsuario FROM Usuario WHERE Mail = @Mail AND Contraseña = @Contraseña";
-
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
+            if (string.IsNullOrWhiteSpace(mail) || string.IsNullOrEmpty(pwd))
             {
-                comando.Parameters.AddWithValue("@Mail", mail);
-                comando.Parameters.AddWithValue("@Contraseña", contraseña);
-
-                _conexion.Open();
-                object resultado = comando.ExecuteScalar();
-                _conexion.Close();
-                tipoUsuario = resultado.ToString();
-                return resultado.ToString();
+                return null;
             }
+
+            Usuario usuario = RepositorioUsuarios.Instance.ObtenerPorMail(mail.Trim());
+            if (usuario == null)
+            {
+                return null;
+            }
+
+            DateTime ahora = DateTime.Now;
+            if (usuario.BloqueadoHasta.HasValue && usuario.BloqueadoHasta.Value > ahora)
+            {
+                throw CuentaBloqueada(usuario.BloqueadoHasta.Value);
+            }
+
+            if (!ContrasenaValida(usuario, pwd))
+            {
+                RegistrarIntentoFallido(usuario, ahora);
+                return null;
+            }
+
+            if (usuario.IntentosFallidos != 0 || usuario.BloqueadoHasta.HasValue)
+            {
+                RepositorioUsuarios.Instance.ActualizarIntentos(usuario.Id, 0, null);
+                usuario.IntentosFallidos = 0;
+                usuario.BloqueadoHasta = null;
+            }
+
+            usuario.Contraseña = null;   // el hash no sale de esta capa
+            GestorSesion.Instance.Iniciar(usuario);
+            return usuario;
         }
-        public string ObtenerNombreUsuario(string mail, string contraseña, out string nombreUsuario)
+
+        public void Registrar(string mail, string pwd, string nombre, string apellido, string tipoUsuario)
         {
-            string consulta = "SELECT Nombre FROM Usuario WHERE Mail = @Mail AND Contraseña = @Contraseña";
-
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
+            if (string.IsNullOrWhiteSpace(mail))
             {
-                comando.Parameters.AddWithValue("@Mail", mail);
-                comando.Parameters.AddWithValue("@Contraseña", contraseña);
+                throw new ReglaNegocioException("RN-01", "Ingrese un mail.");
+            }
+            if (tipoUsuario != TipoCliente && tipoUsuario != TipoPropietario)
+            {
+                throw new ReglaNegocioException("RN-05",
+                    $"El tipo de usuario debe ser {TipoCliente} o {TipoPropietario}.");
+            }
+            ValidarContrasena(pwd);
 
-                _conexion.Open();
-                object resultado = comando.ExecuteScalar();
-                _conexion.Close();
-                nombreUsuario = resultado.ToString();
-                return resultado?.ToString();
+            mail = mail.Trim();
+            if (RepositorioUsuarios.Instance.ExisteMail(mail))
+            {
+                throw MailDuplicado();
+            }
+
+            var usuario = new Usuario
+            {
+                Nombre = nombre,
+                Apellido = apellido,
+                Mail = mail,
+                Contraseña = Seguridad.Hash(pwd),
+                TipoUsuario = tipoUsuario
+            };
+
+            try
+            {
+                // RN-03: nace en Bronce y sin suscripción (no se inserta nada en Suscripciones).
+                RepositorioUsuarios.Instance.Insertar(usuario, NivelFidelidad.Bronce);
+            }
+            catch (RegistroDuplicadoException)
+            {
+                // Otro alta con el mismo mail entró entre ExisteMail e Insertar.
+                throw MailDuplicado();
             }
         }
-        public bool ValidarCredenciales(string mail, string contraseña)
+
+        // TODO Seccion N: exigir autenticación o un token por mail antes de cambiar la contraseña.
+        public void CambiarContrasena(string mail, string nueva)
         {
-            bool esValido = false;
-            string consulta = "SELECT COUNT(*) FROM Usuario WHERE Mail = @Mail AND Contraseña = @Contraseña";
+            ValidarContrasena(nueva);
 
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
+            if (string.IsNullOrWhiteSpace(mail) ||
+                !RepositorioUsuarios.Instance.ActualizarContrasena(mail.Trim(), Seguridad.Hash(nueva)))
             {
-                comando.Parameters.AddWithValue("@Mail", mail);
-                comando.Parameters.AddWithValue("@Contraseña", contraseña);
-
-                _conexion.Open();
-                int cantidad = Convert.ToInt32(comando.ExecuteScalar());
-                if (cantidad > 0)
-                { esValido = true; }
-                else
-                { esValido = false; }
-                _conexion.Close();
+                throw new ReglaNegocioException("RN-01", "No existe una cuenta con ese mail.");
             }
-            return esValido;
         }
-        public void AgregarUsuario (string nombre, string apellido, string mail, string contraseña, string tipo, out string Mensaje)
+
+        // RN-02: longitud mínima PWD_LONGITUD_MIN, al menos una letra y un dígito.
+        public void ValidarContrasena(string pwd)
         {
-             if (ValidarUsuario(contraseña, mail, out Mensaje) == true) 
+            int longitudMinima = GestorParametros.Instance.ObtenerEntero("PWD_LONGITUD_MIN");
+
+            if (pwd == null || pwd.Length < longitudMinima || !pwd.Any(char.IsLetter) || !pwd.Any(char.IsDigit))
             {
-                string consulta = "INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario) VALUES (@Nombre, @Apellido, @Mail, @Contraseña, @TipoUsuario)";
-                using (SqlCommand comando = new SqlCommand(consulta, _conexion))
-                {
-                    comando.Parameters.AddWithValue("@Nombre", nombre);
-                    comando.Parameters.AddWithValue("@Apellido", apellido);
-                    comando.Parameters.AddWithValue("@Mail", mail);
-                    comando.Parameters.AddWithValue("@Contraseña", contraseña);
-                    comando.Parameters.AddWithValue("@TipoUsuario", tipo);
-                    _conexion.Open();
-                    comando.ExecuteNonQuery();
-                    _conexion.Close();
-                }
+                throw new ReglaNegocioException("RN-02",
+                    $"La contraseña debe tener al menos {longitudMinima} caracteres, " +
+                    "con al menos una letra y un dígito.");
             }
-            else { return; }
         }
-        public bool ValidarUsuario(string contraseña, string mail, out string Mensaje)
+
+        // ------------------------------------- privados -------------------------------------
+
+        private bool ContrasenaValida(Usuario usuario, string pwd)
+        {
+            if (Seguridad.Verificar(pwd, usuario.Contraseña))
             {
-                if (contraseña == mail)
-                {
-                    Mensaje = "La contraseña no puede ser igual al mail.";;
-                    return false;
-            }
-                string consulta = "SELECT COUNT(*) FROM Usuario WHERE Mail = @Mail";
-                using (SqlCommand comando = new SqlCommand(consulta, _conexion))
-                {
-                    comando.Parameters.AddWithValue("@Mail", mail);
-                    _conexion.Open();
-                    int cantidad = Convert.ToInt32(comando.ExecuteScalar());
-                    _conexion.Close();
-                    if (cantidad > 0)
-                    {
-                        Mensaje = "El mail ya existe.";
-                        return false;
-                    }
-                }
-                Mensaje = "Usuario creado con exito.";
                 return true;
             }
-        public void CambiarContraseña (string MailUsuario, string nuevaContrasena)
-        {
-            string consulta = "UPDATE Usuario SET Contraseña = @NuevaContrasena WHERE Mail = @MailUsuario";
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
+
+            // Migración: contraseña heredada en texto plano. Se acepta una vez y se reemplaza por su hash.
+            // Solo si lo guardado no es un hash; si no, alguien que conozca el hash podría usarlo como contraseña.
+            if (!Seguridad.EsHash(usuario.Contraseña) && usuario.Contraseña == pwd)
             {
-                comando.Parameters.AddWithValue("@NuevaContrasena", nuevaContrasena);
-                comando.Parameters.AddWithValue("@MailUsuario", MailUsuario);
-                _conexion.Open();
-                comando.ExecuteNonQuery();
-                _conexion.Close();
+                RepositorioUsuarios.Instance.ActualizarContrasena(usuario.Mail, Seguridad.Hash(pwd));
+                return true;
+            }
+
+            return false;
+        }
+
+        // RN-04: tras LOGIN_INTENTOS_MAX fallos consecutivos, bloqueo de LOGIN_BLOQUEO_MIN minutos.
+        private void RegistrarIntentoFallido(Usuario usuario, DateTime ahora)
+        {
+            int intentosMax = GestorParametros.Instance.ObtenerEntero("LOGIN_INTENTOS_MAX");
+            int bloqueoMinutos = GestorParametros.Instance.ObtenerEntero("LOGIN_BLOQUEO_MIN");
+
+            // Si había un bloqueo y ya venció, la cuenta empieza a contar de nuevo.
+            int intentos = usuario.BloqueadoHasta.HasValue ? 1 : usuario.IntentosFallidos + 1;
+            DateTime? bloqueadoHasta = intentos >= intentosMax ? ahora.AddMinutes(bloqueoMinutos) : (DateTime?)null;
+
+            RepositorioUsuarios.Instance.ActualizarIntentos(usuario.Id, intentos, bloqueadoHasta);
+
+            if (bloqueadoHasta.HasValue)
+            {
+                throw CuentaBloqueada(bloqueadoHasta.Value);
             }
         }
-    }// Aca son los metodos para devolver cosas
+
+        private static ReglaNegocioException CuentaBloqueada(DateTime hasta)
+        {
+            return new ReglaNegocioException("RN-04",
+                $"La cuenta está bloqueada por demasiados intentos fallidos. Vuelva a intentar después de las {hasta:HH:mm}.");
+        }
+
+        private static ReglaNegocioException MailDuplicado()
+        {
+            return new ReglaNegocioException("RN-01", "Ya existe una cuenta registrada con ese mail.");
+        }
+    }
 }

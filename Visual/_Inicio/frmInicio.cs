@@ -1,6 +1,7 @@
-﻿using Repositorio; 
+﻿using Entidades;
+using Negocio;
 using System;
-using System.Configuration;  
+using System.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -8,14 +9,13 @@ namespace Visual
 {
     public partial class frmInicio : Form
     {
+        // TODO Seccion N: quitar ConexionSql. Solo se pasa a los menús, que todavía la usan.
         public SqlConnection ConexionSql;
-        private Repositorio.GestorUsuarios gestorUsuarios;
         public frmInicio()
         {
             string miConexion =
             ConfigurationManager.ConnectionStrings["Visual.Properties.Settings.BddEventAura"].ConnectionString;
             ConexionSql = new SqlConnection(miConexion);
-            gestorUsuarios = new GestorUsuarios(ConexionSql);
 
             InitializeComponent();
         }
@@ -44,16 +44,14 @@ namespace Visual
         private void lblolividarcontra_Click(object sender, EventArgs e)
         {
             frmCambiarContraseña frm = new frmCambiarContraseña();
-            frm.gestorusuarios = gestorUsuarios;
             frm.ConexionSql = ConexionSql;
             frm.Show();
             this.Hide();
         } // Llama frmCambiarContraseña
         private void lblcrearcuenta_Click(object sender, EventArgs e)
         {
-            frmAgregarEvento frm = new frmAgregarEvento();  // este es agregar usuario pero se cambio el nombre y no le encuentro la vuelta
+            frmCrearUsuario frm = new frmCrearUsuario();
             frm.ConexionSql = ConexionSql;
-            frm.gestorusuarios = gestorUsuarios;
             frm.Show();
             this.Hide();
         } // Llama a frmCrearCuenta
@@ -84,25 +82,33 @@ namespace Visual
         // --------------------------------------FUNCIONES DE CONTROL----------------------------------------------
         public void ValidarLista(string mail, string contraseña)
         {
-          if( gestorUsuarios.ValidarCredenciales(mail, contraseña) == true)
+            Usuario usuario;
+            try
             {
-                gestorUsuarios.ObtenerIDUsuario(mail, contraseña, out int IdUsuario);
-                gestorUsuarios.ObtenerNombreUsuario(mail, contraseña, out string nombreUsuario);
-                gestorUsuarios.ObtenerTipoUsuario(mail, contraseña, out string tipoUsuario);
-                if (tipoUsuario == "Cliente")
+                usuario = GestorUsuarios.Instance.Autenticar(mail, contraseña);
+            }
+            catch (ReglaNegocioException ex)
+            {
+                MessageBox.Show(ex.Message, "Cuenta bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (usuario != null)
+            {
+                if (usuario.TipoUsuario == "Cliente")
                 {
                     frmMenuCliente frm = new frmMenuCliente();
-                    frm.IDUsuario = IdUsuario;
-                    frm.NombreUsuario = nombreUsuario;
+                    frm.IDUsuario = usuario.Id;
+                    frm.NombreUsuario = usuario.Nombre;
                     frm.ConexionSql = ConexionSql;
                     frm.Show();
                     this.Hide();
                 } // Se abre el menu de cliente
-                if (tipoUsuario == "Propietario")
+                if (usuario.TipoUsuario == "Propietario")
                 {
                     frmMenuPropietario frm = new frmMenuPropietario();
-                    frm.IDUsuario= IdUsuario;
-                    frm.NombreUsuario = nombreUsuario;
+                    frm.IDUsuario = usuario.Id;
+                    frm.NombreUsuario = usuario.Nombre;
                     frm.ConexionSql = ConexionSql;
                     frm.Show();
                     this.Hide();
