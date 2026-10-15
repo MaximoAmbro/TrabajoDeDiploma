@@ -24,6 +24,7 @@ namespace Visual
         }
         private void frmHistorialCliente_Load(object sender, EventArgs e)
         {
+            // TODO Seccion 8: mover este SQL a Datos/
             string consulta = "SELECT E.Nombre AS NombreEvento, L.Direccion AS Ubicacion, E.Fecha " +
                   "FROM Entradas EN " +
                   "JOIN Eventos E ON EN.ID_Evento = E.ID " +

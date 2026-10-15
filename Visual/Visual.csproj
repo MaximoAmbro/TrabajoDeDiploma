@@ -221,11 +221,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BddEventAura.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BddEventAura.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Cliente\FrmCompraCliente.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -363,17 +358,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="BddEventAura.xsc">
-      <DependentUpon>BddEventAura.xsd</DependentUpon>
-    </None>
-    <None Include="BddEventAura.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>BddEventAura.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="BddEventAura.xss">
-      <DependentUpon>BddEventAura.xsd</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -80,6 +80,24 @@ Entrar como `plata@eventaura.com`. Resuelve 4.5: la pantalla de compra ya no con
 | 5.15 | Comprar 2 Campo + 1 Platea | Genera 3 PDF en `Documentos\A1.Tickets EVENTAURA` (uno por entrada, con el sector correcto) y graba dos filas en `Entradas` con `ID_Sector`. Disponibles baja al volver a entrar |
 | 5.16 | Propietario: agregar un 4.º sector a un evento | Se guarda: ya no hay límite de 3 |
 
+## Sección 5, filtros — commit «Seccion 5: filtros de busqueda en pantalla y limpieza del DataSet muerto»
+
+Pantalla «Eventos» del cliente (RF-03). La grilla bajó 33 px y perdió 33 de alto para dejar
+lugar a la fila de filtros; los botones Comprar y Volver no se movieron.
+
+| # | Qué probar | Resultado esperado |
+|---|---|---|
+| 5.17 | Aspecto de la fila de filtros | Caja de texto con la guía gris «Evento o dirección del local», combo, fecha con casilla, Buscar y Limpiar alineados sobre la grilla, sin tapar el título «Eventos» |
+| 5.18 | Al abrir la pantalla | El cursor está en la caja de búsqueda; el combo dice «Todas»; la fecha está destildada |
+| 5.19 | Escribir «Rock» y apretar **Enter** | Queda solo el Festival de Rock; no suena el «ding» de Windows |
+| 5.20 | Combo «Deportivo» → Buscar | Queda el Clásico Rosarino |
+| 5.21 | Combo «Teatro» → Buscar | Mensaje «No hay eventos que coincidan…» en la grilla; la Noche de Teatro no aparece porque ya pasó (RN-09) |
+| 5.22 | Con el mensaje en pantalla, «Comprar» | Pide seleccionar un evento; no abre la compra |
+| 5.23 | Escribir «Pellegrini» → Buscar | Aparecen los dos eventos del Estadio Rosario Arena (busca en la dirección del local) |
+| 5.24 | Tildar la fecha, elegir un día posterior al Clásico → Buscar | Queda solo el Festival |
+| 5.25 | «Limpiar» | Vuelven los dos eventos; caja vacía, combo en «Todas», fecha destildada |
+| 5.26 | Tabular desde la caja de búsqueda | Caja → combo → fecha → Buscar → Limpiar |
+
 ---
 
 ## Riesgo asumido

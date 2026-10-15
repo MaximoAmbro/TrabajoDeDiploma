@@ -27,7 +27,8 @@ INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
 ('DESCUENTO_ORO',           '0.075', 'Descuento sobre entradas para nivel Oro',                   'RN-20'),
 ('DESCUENTO_MAX_ADMISIBLE', '0.086', 'Tope de descuento admisible',                               'RN-20'),
 ('CARGO_SERVICIO',          '0.150', 'Cargo por servicio sobre el subtotal de entradas',          NULL),
-('SEGURO_HORAS_COBERTURA',  '48',    'Horas antes del evento hasta las que el seguro reembolsa',  'RN-29');
+('SEGURO_HORAS_COBERTURA',  '48',    'Horas antes del evento hasta las que el seguro reembolsa',  'RN-29'),
+('SEGURO_PRECIO',           '5000',  'Precio del seguro de entrada, en pesos',                    'RN-28');
 
 -- ═══════════════ Usuarios: un Administrador y tres Clientes ═══════════════
 -- El perfil Administrador se guarda como 'Propietario', que es el valor que usa el login actual.
