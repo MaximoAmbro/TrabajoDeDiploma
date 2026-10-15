@@ -59,8 +59,18 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
 | `Visual/` | Visual.csproj | `Visual` | Formularios WinForms |
 | `Pruebas/` | Pruebas.csproj | `Pruebas` | MSTest |
 
-> La carpeta del proyecto de negocio se llama `Repo/` pero su namespace es `Negocio`.
-> Es una inconsistencia heredada. **No la cambies**, rompe todos los `using`.
+> **Dos inconsistencias heredadas del proyecto original:**
+>
+> 1. La carpeta del proyecto de negocio se llama `Repo/` pero el proyecto es
+>    `Repositorio.csproj`. No la renombres.
+> 2. Dentro de ese proyecto conviven **dos namespaces**:
+>    `Negocio` en `GestorClientes.cs` y `GestorEventos.cs`;
+>    `Repositorio` en `GestorUsuarios.cs` y `GestorPropietario.cs`.
+>    Los formularios importan uno u otro según el gestor que usen.
+>
+> El destino es unificar todo en `Negocio`. Cada sección migra los archivos que toca
+> y actualiza el `using` de los formularios afectados. **Antes de escribir un
+> `namespace`, verificá cuál usa el archivo que estás modificando.**
 
 **Carpetas eliminadas** (eran código muerto fuera de la solución): `Entidades/`,
 `Negocio/`, `Visual_/`. Si volvés a verlas, están de más.

@@ -160,48 +160,23 @@ Compila. Cada tabla del DDL tiene su entidad y cada columna su propiedad.
 
 # Sección 3 — Capa de datos, sesión y seguridad
 
-```
-ANTES DE EMPEZAR
-Leé CLAUDE.md y cada archivo de docs/ citado en CONTEXTO. No deduzcas qué dice una
-regla ni un requerimiento: abrí el archivo y leelo. Si una regla no está en los
-archivos, preguntá; no la inventes.
+> Reescrita tras auditar el código real. El estado actual del repositorio está
+> verificado, no deducido. Ver el bloque ESTADO ACTUAL del prompt.
 
-OBJETIVO
-Mover todo el acceso a datos a la capa Datos e implementar login y logout con sus reglas.
+El prompt completo se entregó en la conversación. Puntos que lo diferencian del
+resto de las secciones:
 
-ARCHIVOS
-- Datos/: RepositorioBase.cs, RepositorioUsuarios.cs, RepositorioParametros.cs.
-- Repo/: GestorUsuarios.cs (reescribir), GestorSesion.cs, GestorParametros.cs, Seguridad.cs.
-- Visual/_Inicio/: frmInicio.cs y frmCrearUsuario.cs, quitándoles el SQL.
-
-CONTEXTO
-Aplicá RN-01 a RN-05 de docs/02-reglas-negocio.md.
-Los valores numéricos se leen de la tabla Parametros vía GestorParametros, no se
-escriben en el código.
-
-Seguridad.cs expone Hash(string) y Verificar(string, string) usando PBKDF2 con salt por
-usuario. Las contraseñas existentes en la base están en texto plano: agregá un método de
-migración que las hashee en el primer inicio de sesión exitoso.
-
-GestorSesion es singleton y guarda el usuario autenticado y su perfil.
-
-CONTRATO
-    bool   GestorUsuarios.Registrar(string mail, string pwd, string nombre, string apellido)
-    Usuario GestorUsuarios.Autenticar(string mail, string pwd)   // null si falla
-    string GestorParametros.Obtener(string clave)
-    int    GestorParametros.ObtenerEntero(string clave)
-    decimal GestorParametros.ObtenerDecimal(string clave)
-
-RESTRICCIONES
-- Ningún SqlCommand fuera de Datos/.
-- Negocio no referencia System.Windows.Forms ni muestra MessageBox.
-
-VERIFICACIÓN
-Compila. Se puede registrar un usuario, iniciar sesión y, tras 5 intentos fallidos, la
-cuenta queda bloqueada 15 minutos.
-```
-
----
+- **Paso previo**: `Visual.csproj` no referencia a `Datos`. Sin esa referencia el
+  código compila y falla al ejecutar.
+- **Namespace**: `GestorUsuarios` está en `Repositorio`, no en `Negocio`. Migra y
+  arrastra el `using` de tres formularios.
+- **Arreglo de navegación**: el botón «crear cuenta» abre `frmAgregarEvento` en vez
+  de `frmCrearUsuario`, que está completo y nunca se instancia. RF-01 hoy no es
+  alcanzable desde la interfaz.
+- **RN-02 nunca se implementó**: `ValidarUsuario` valida una regla inventada.
+- **RN-05 incompleta**: `AgregarUsuario` no inserta en `Cliente` ni `Propietario`.
+- **`ConexionSql` sobrevive**: los formularios de Cliente y Propietario dependen de
+  él hasta su propia sección.
 
 # Sección 4 — Gestión de eventos (RF-12)
 
