@@ -54,6 +54,21 @@ namespace Datos
             }
         }
 
+        // Nivel persistido en Usuario.Nivel (RN-22: se lee, no se recalcula). Bronce si no existe.
+        public NivelFidelidad ObtenerNivel(int idUsuario)
+        {
+            const string consulta = "SELECT Nivel FROM Usuario WHERE ID = @ID";
+
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@ID", idUsuario);
+                object valor = comando.ExecuteScalar();
+                NivelFidelidad nivel;
+                return valor != null && Enum.TryParse(valor.ToString(), out nivel) ? nivel : NivelFidelidad.Bronce;
+            }
+        }
+
         public bool ExisteMail(string mail)
         {
             const string consulta = "SELECT COUNT(*) FROM Usuario WHERE Mail = @Mail";

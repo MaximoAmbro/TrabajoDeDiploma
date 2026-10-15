@@ -120,6 +120,26 @@ namespace Datos
             return sectores;
         }
 
+        // RN-08 + RN-15: capacidad menos vendidas confirmadas menos reservadas vigentes
+        // (docs/03-esquema-datos.md, "Cupo disponible de un sector"). 0 si el sector no existe.
+        public int ObtenerDisponibles(int idSector)
+        {
+            const string consulta =
+                "SELECT s.Capacidad " +
+                "     - ISNULL((SELECT SUM(e.CantidadVendida) FROM Entradas e " +
+                "               WHERE e.ID_Sector = s.ID AND e.Estado = 'Confirmada'), 0) " +
+                "     - s.CantidadReservada AS Disponible " +
+                "FROM Sectores s WHERE s.ID = @IdSector";
+
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@IdSector", idSector);
+                object valor = comando.ExecuteScalar();
+                return valor == null || valor == DBNull.Value ? 0 : Convert.ToInt32(valor);
+            }
+        }
+
         public int ContarEntradas(int idSector)
         {
             const string consulta = "SELECT COUNT(*) FROM Entradas WHERE ID_Sector = @ID";

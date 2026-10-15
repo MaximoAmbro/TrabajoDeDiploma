@@ -57,6 +57,29 @@ C-5 cambia el flujo de alta: **reemplaza a 4.1 y 4.3**, que describían el flujo
 | C.12 | Mis locales | Sin columna ID; encabezados «Nombre del local», «Dirección», «Capacidad»; no se edita ni aparece fila vacía; un clic selecciona la fila entera; filas alternadas en gris; columnas ocupan todo el ancho; capacidad alineada a la derecha |
 | C.13 | Mis locales → elegir un local con un solo clic → «Eventos del local» | Abre el local elegido (antes había que seleccionar la fila desde el encabezado) |
 
+## Sección 5 — commit «Seccion 5: busqueda, seleccion y armado de paquete»
+
+Entrar como `plata@eventaura.com`. Resuelve 4.5: la pantalla de compra ya no consulta `PrecioID`.
+
+| # | Qué probar | Resultado esperado |
+|---|---|---|
+| 5.1 | Listado de eventos del cliente | Aparecen el Festival de Rock y el Clásico; **no** la Noche de Teatro (fecha pasada) ni eventos en Borrador o Suspendidos. Columnas: Nombre, Fecha, Categoría, Ubicación, Complejo |
+| 5.2 | Elegir el Festival y «Comprar» | Abre la compra de **ese** evento (el título muestra su nombre), aunque haya otro con igual nombre y fecha |
+| 5.3 | Pantalla de compra: aspecto general | Grilla con Sector, Precio, Disponibles, Cantidad; checks de servicios y seguro; resumen a la derecha; nada superpuesto ni cortado. **El formulario se ensanchó** de 394 a 760 px |
+| 5.4 | Encabezado de nivel | «Tu nivel: Plata · 5,0 % de descuento sobre las entradas» |
+| 5.5 | Columna Disponibles (H-03) | VIP 100, Platea 800, Campo 2000 en la semilla |
+| 5.6 | Escribir 2 en Campo y salir de la celda | El resumen muestra «2 x Campo» y $ 50.000,00 |
+| 5.7 | Marcar Hospedaje | Suma $ 45.000,00; total parcial $ 95.000,00 |
+| 5.8 | Escribir 5 en Platea con 2 en Campo | Mensaje de RN-12 y la celda vuelve a 0 |
+| 5.9 | Escribir «abc» o un número negativo en Cantidad | Mensaje y la celda vuelve al valor anterior |
+| 5.10 | Pedir más que lo disponible en un sector chico (crear uno de capacidad 2 y pedir 3) | Mensaje de RN-08 «quedan 2 entradas» |
+| 5.11 | Clásico Rosarino (agotado) | Los cuatro checks dicen «(no disponible)» y están deshabilitados (RN-14) |
+| 5.12 | Solo servicios, sin entradas, y «Comprar» | Mensaje de RN-13, no compra |
+| 5.13 | «Volver al listado» con algo cargado (H-06) | Pide confirmación; «No» se queda, «Sí» vuelve al listado |
+| 5.14 | «Volver al listado» con el paquete vacío | Vuelve sin preguntar |
+| 5.15 | Comprar 2 Campo + 1 Platea | Genera 3 PDF en `Documentos\A1.Tickets EVENTAURA` (uno por entrada, con el sector correcto) y graba dos filas en `Entradas` con `ID_Sector`. Disponibles baja al volver a entrar |
+| 5.16 | Propietario: agregar un 4.º sector a un evento | Se guarda: ya no hay límite de 3 |
+
 ---
 
 ## Riesgo asumido

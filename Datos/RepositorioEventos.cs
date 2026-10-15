@@ -84,6 +84,30 @@ namespace Datos
                 comando => AgregarParametro(comando, "@Estado", estado));
         }
 
+        // RF-03: eventos en el estado indicado, con fecha posterior a "ahora" y que cumplan los
+        // filtros no nulos. El texto se busca en el nombre del evento y en el nombre y la
+        // dirección del local.
+        public List<Evento> Buscar(string estado, DateTime ahora, string texto, string categoria, DateTime? desde)
+        {
+            const string consulta =
+                "SELECT e.ID, e.Nombre, e.Fecha, e.LocalID, e.Categoria, e.Estado " +
+                "FROM Eventos e JOIN Locales l ON l.ID = e.LocalID " +
+                "WHERE e.Estado = @Estado AND e.Fecha > @Valor " +
+                "  AND (@Texto IS NULL OR e.Nombre LIKE '%' + @Texto + '%' " +
+                "       OR l.Nombre LIKE '%' + @Texto + '%' OR l.Direccion LIKE '%' + @Texto + '%') " +
+                "  AND (@Categoria IS NULL OR e.Categoria = @Categoria) " +
+                "  AND (@Desde IS NULL OR e.Fecha >= @Desde) " +
+                "ORDER BY e.Fecha";
+
+            return Consultar(consulta, ahora, comando =>
+            {
+                AgregarParametro(comando, "@Estado", estado);
+                AgregarParametro(comando, "@Texto", texto);
+                AgregarParametro(comando, "@Categoria", categoria);
+                AgregarParametro(comando, "@Desde", desde);
+            });
+        }
+
         public int ContarEntradas(int idEvento)
         {
             const string consulta = "SELECT COUNT(*) FROM Entradas WHERE ID_Evento = @ID";

@@ -24,6 +24,12 @@ namespace Negocio
 
         private GestorLocales() { }
 
+        // Devuelve null si no existe.
+        public Local PorId(int idLocal)
+        {
+            return RepositorioLocales.Instance.ObtenerPorId(idLocal);
+        }
+
         public List<Local> PorPropietario(int idPropietario)
         {
             return RepositorioLocales.Instance.ObtenerPorPropietario(idPropietario);

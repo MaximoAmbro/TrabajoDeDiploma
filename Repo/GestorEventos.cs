@@ -18,10 +18,6 @@ namespace Negocio
         public const string EstadoPublicado = "Publicado";
         public const string EstadoSuspendido = "Suspendido";
 
-        // Límite heredado, no es una RN documentada: FrmCompraCliente solo muestra tres
-        // sectores (A, B y C) por evento.
-        private const int MaximoSectores = 3;
-
         // Valores admitidos en Eventos.Categoria (docs/03-esquema-datos.md). RF-03 filtra por ellos.
         public static readonly IReadOnlyList<string> Categorias =
             new[] { "Concierto", "Deportivo", "Teatro", "Cultural" };
@@ -82,11 +78,6 @@ namespace Negocio
                     "No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.");
             }
             ValidarEvento(e);
-            if (e.Sectores.Count > MaximoSectores)
-            {
-                throw new InvalidOperationException(
-                    $"Un evento admite como máximo {MaximoSectores} sectores.");
-            }
             foreach (Sector sector in e.Sectores)
             {
                 ValidarSector(sector);
@@ -134,6 +125,21 @@ namespace Negocio
             return RepositorioEventos.Instance.ObtenerPorEstadoPosterioresA(EstadoPublicado, DateTime.Now);
         }
 
+        // RF-03 + RN-09: solo eventos Publicado con fecha futura. Los filtros nulos o vacíos
+        // no filtran. El texto se busca en el nombre del evento y en el nombre y la dirección del local.
+        public List<Evento> Buscar(string texto, string categoria, DateTime? desde)
+        {
+            texto = string.IsNullOrWhiteSpace(texto) ? null : texto.Trim();
+            categoria = string.IsNullOrWhiteSpace(categoria) ? null : categoria;
+            return RepositorioEventos.Instance.Buscar(EstadoPublicado, DateTime.Now, texto, categoria, desde);
+        }
+
+        // Devuelve null si no existe.
+        public Evento ObtenerPorId(int idEvento)
+        {
+            return RepositorioEventos.Instance.ObtenerPorId(idEvento);
+        }
+
         public List<Evento> PorLocal(int idLocal)
         {
             return RepositorioEventos.Instance.ObtenerPorLocal(idLocal);
@@ -157,11 +163,6 @@ namespace Negocio
                 throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
             }
             List<Sector> actuales = Sectores(idEvento);
-            if (actuales.Count >= MaximoSectores)
-            {
-                throw new InvalidOperationException(
-                    $"Ya se registraron {MaximoSectores} sectores para este evento. No se pueden agregar más.");
-            }
             VerificarCapacidadLocal(evento.IdLocal, actuales.Sum(x => x.Capacidad), s.Capacidad);
 
             s.IdEvento = idEvento;
