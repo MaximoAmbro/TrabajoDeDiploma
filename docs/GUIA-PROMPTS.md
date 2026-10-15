@@ -180,42 +180,114 @@ resto de las secciones:
 
 # Sección 4 — Gestión de eventos (RF-12)
 
+> Reescrita tras auditar el código real. El bloque ESTADO ACTUAL está verificado.
+
 ```
 ANTES DE EMPEZAR
-Leé CLAUDE.md y cada archivo de docs/ citado en CONTEXTO. No deduzcas qué dice una
-regla ni un requerimiento: abrí el archivo y leelo. Si una regla no está en los
-archivos, preguntá; no la inventes.
+Leé CLAUDE.md, docs/01-requerimientos.md y docs/02-reglas-negocio.md. No deduzcas
+el contenido de una regla: abrí el archivo.
 
 OBJETIVO
-Implementar el alta, modificación y baja de eventos con sus sectores.
+Mover a la capa Datos el SQL de eventos, sectores y locales, e implementar RF-12
+con sus reglas.
+
+ESTADO ACTUAL (verificado, no lo deduzcas)
+- Repo/GestorEventos.cs ya está en namespace Negocio: no hay migración.
+- Cinco de sus seis métodos reciben un SqlConnection por parámetro:
+  EliminarEvento, AgregarEvento, EliminarSector, AgregarSector y ReasignarPrecio.
+  Esa es la violación de capas a corregir.
+- GenerarTicket(string, string, string, string) NO tiene SQL: arma el mensaje del
+  ticket y el QR, y lo consume Visual/Cliente/FrmCompraCliente.cs. Dejalo exactamente
+  como está: pertenece a la Sección 7. No lo muevas ni le cambies la firma.
+- AgregarSector recibe el precio como int, pero Sectores.Precio es DECIMAL(12,2) y
+  Sector.Precio es decimal.
+- AgregarEvento no asigna Categoria ni Estado, que son columnas nuevas del esquema.
+- Cinco formularios de Propietario/ tienen SQL propio: frmAdministrarEvento,
+  frmAgregarSector, frmEventosLocal, frmMisLocales y frmRegistrarLocal.
+- frmMisLocales y frmRegistrarLocal gestionan LOCALES, no eventos. No responden a
+  ningún requerimiento funcional: es un hueco del relevamiento. Se incluyen igual
+  para que no quede SQL suelto en Visual.
 
 ARCHIVOS
-- Datos/RepositorioEventos.cs (reescribir), Datos/RepositorioSectores.cs.
-- Repo/GestorEventos.cs (reescribir sacándole el SQL).
-- Visual/Propietario/: frmAgregarEvento, frmAgregarSector, frmAdministrarEvento.
-
-CONTEXTO
-RF-12 de docs/01-requerimientos.md. Aplicá RN-06, RN-07, RN-09 y RN-11 de
-docs/02-reglas-negocio.md.
+Crear:
+  Datos/RepositorioEventos.cs    — reescribir el singleton vacío que ya existe
+  Datos/RepositorioSectores.cs
+  Datos/RepositorioLocales.cs
+  Repo/GestorLocales.cs
+Reescribir:
+  Repo/GestorEventos.cs
+Adaptar:
+  Visual/Propietario/frmAgregarEvento.cs
+  Visual/Propietario/frmAgregarSector.cs
+  Visual/Propietario/frmAdministrarEvento.cs
+  Visual/Propietario/frmEventosLocal.cs
+  Visual/Propietario/frmMisLocales.cs
+  Visual/Propietario/frmRegistrarLocal.cs
 
 CONTRATO
-    int  GestorEventos.Publicar(Evento e)                  // valida RN-06
-    bool GestorEventos.Suspender(int idEvento)             // RN-11
-    int  GestorEventos.CapacidadTotal(int idEvento)        // RN-07
-    List<Evento> GestorEventos.Vigentes()                  // RN-09
+    int          GestorEventos.Publicar(Evento e)              // valida RN-06
+    void         GestorEventos.Eliminar(int idEvento)          // RN-11, ver abajo
+    void         GestorEventos.Suspender(int idEvento)         // Estado = Suspendido
+    int          GestorEventos.CapacidadTotal(int idEvento)    // RN-07
+    List<Evento> GestorEventos.Vigentes()                      // RN-09
+    List<Evento> GestorEventos.PorLocal(int idLocal)
+    void         GestorEventos.AgregarSector(int idEvento, Sector s)
+    void         GestorEventos.EliminarSector(int idSector)
+    List<Local>  GestorLocales.PorPropietario(int idPropietario)
+    int          GestorLocales.Registrar(Local l)
+
+SOBRE Eliminar Y Suspender (RN-11)
+Son dos operaciones distintas, no una con bandera:
+  - Eliminar(idEvento) borra el evento. Si tiene entradas vendidas, lanza una
+    excepción de dominio y NO borra nada.
+  - Suspender(idEvento) cambia Estado a 'Suspendido'. Siempre funciona.
+El formulario atrapa la excepción de Eliminar y le ofrece al usuario suspenderlo.
+Ninguno de los dos devuelve bool: el éxito es que no haya excepción.
+
+REGLAS A IMPLEMENTAR
+  RN-06  No se publica un evento sin al menos un sector con capacidad mayor que cero.
+  RN-07  CapacidadTotal es la suma de las capacidades de los sectores.
+  RN-09  Vigentes() devuelve solo eventos con fecha posterior a la actual.
+  RN-11  Ver el bloque anterior.
+
+CORRECCIONES DE TIPO
+- El precio del sector pasa a decimal en toda la cadena.
+- AgregarEvento asigna Categoria y Estado. Estado arranca en 'Publicado'.
+
+SOBRE ConexionSql
+Los seis formularios listados dejan de usarlo para su propia lógica y llaman a los
+gestores Singleton. Mantené el campo y las asignaciones al navegar: los formularios
+de Cliente/ todavía dependen de él. Dejá // TODO Seccion 5-7: quitar ConexionSql
+donde quede.
 
 RESTRICCIONES
-- Los formularios existentes ya tienen su diseño: conservá los controles y solo cambiá
-  el código detrás.
-- El intento de publicar sin sectores lanza una excepción de dominio que el formulario
-  atrapa y muestra.
+- Ningún SqlCommand ni SqlConnection fuera de Datos/.
+- Ningún método de Negocio recibe SqlConnection por parámetro.
+- No toques GenerarTicket.
+- No toques Repo/GestorUsuarios.cs, Repo/GestorPropietario.cs ni los formularios
+  de Cliente/ y _Inicio/.
+- No toques archivos .Designer.cs ni .resx.
 
-VERIFICACIÓN
-Compila. No se puede publicar un evento sin sector con capacidad > 0, ni eliminar uno con
-entradas vendidas.
+VERIFICACIÓN QUE HACÉS VOS
+1. La solución compila sin errores ni advertencias nuevas.
+2. grep -rn "SqlCommand\|SqlConnection" Repo/ no devuelve nada.
+3. grep -rnE "SELECT |INSERT INTO|UPDATE |DELETE FROM" Visual/Propietario/ no
+   devuelve nada.
+4. Sobre una base temporal, con SQL directo:
+   a. Publicar un evento sin sectores lanza la excepción de RN-06.
+   b. Un sector guardado con precio 12500.50 conserva los decimales.
+   c. Eliminar un evento con entradas vendidas lanza excepción y no borra la fila.
+   d. CapacidadTotal de un evento con sectores de 2000, 800 y 100 devuelve 2900.
+5. Commiteá con el mensaje:
+       Seccion 4: capa de datos de eventos, sectores y locales
+   Sin Co-Authored-By. No hagas push.
+
+VERIFICACIÓN MANUAL QUE QUEDA PARA EL USUARIO
+Ejecutar Visual.exe, entrar como admin@eventaura.com / Admin1234 y confirmar que:
+  - El alta de eventos y sectores funciona desde la interfaz.
+  - La compra de entradas del lado Cliente sigue generando el ticket PDF con QR.
+Avisale al usuario que esto le queda a él y no lo des por verificado.
 ```
-
----
 
 # Sección 5 — Búsqueda, selección y armado de paquete
 

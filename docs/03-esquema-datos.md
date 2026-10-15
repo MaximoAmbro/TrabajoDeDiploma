@@ -160,6 +160,28 @@ CREATE TABLE Parametros (
 );
 ```
 
+## Estados de un evento
+
+`Eventos.Estado` admite tres valores y gobierna la visibilidad del evento:
+
+| Estado | Cuándo | Visible para el cliente | RN-06 aplica |
+|---|---|---|---|
+| `Borrador` | Al crearse, antes de tener sectores | No | No |
+| `Publicado` | Al confirmarse el primer sector con capacidad > 0 | Sí | **Sí** |
+| `Suspendido` | Al suspenderlo por RN-11 | No | No |
+
+El estado `Borrador` permite guardar el evento apenas se crea, sin violar RN-06: la
+regla exige que un evento **publicado** tenga siempre al menos un sector, y un borrador
+todavía no lo está. Así el propietario no pierde lo cargado si interrumpe el alta.
+
+`GestorEventos.Vigentes()` devuelve únicamente eventos en estado `Publicado` con fecha
+posterior a la actual (RN-09).
+
+```sql
+ALTER TABLE Eventos ADD CONSTRAINT CK_Eventos_Estado
+      CHECK (Estado IN ('Borrador','Publicado','Suspendido'));
+```
+
 ## Por qué `Entradas` necesita `ID_Sector`
 
 RN-08 exige que las entradas vendidas de un sector nunca superen su capacidad. La tabla
@@ -230,6 +252,11 @@ ALTER TABLE Sectores ALTER COLUMN EventoID      INT NOT NULL;
 ALTER TABLE Entradas ALTER COLUMN ID_Evento     INT NOT NULL;
 ALTER TABLE Entradas ALTER COLUMN ID_Usuario    INT NOT NULL;
 ALTER TABLE Entradas ALTER COLUMN FechaVenta    DATETIME NOT NULL;
+
+-- RN-38 compara contra Locales.Capacidad: si es NULL se lee como 0 y el local no admite
+-- ningun sector. Un local sin capacidad declarada no es un estado valido del dominio.
+ALTER TABLE Locales  ALTER COLUMN Capacidad     INT NOT NULL;
+ALTER TABLE Locales  ADD CONSTRAINT CK_Locales_Capacidad CHECK (Capacidad > 0);
 
 -- Faltaba: la entrada debe apuntar a un usuario existente.
 ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Usuario

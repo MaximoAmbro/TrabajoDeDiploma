@@ -16,12 +16,13 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 
 | ID | Regla | T |
 |---|---|---|
-| RN-06 | Un evento no se publica si no tiene al menos un sector con capacidad mayor que cero. | A |
+| RN-06 | Un evento publicado tiene **siempre** al menos un sector con capacidad mayor que cero. Es un invariante, no una verificación de un solo momento: impide publicar sin sectores y también impide eliminar el último sector de un evento ya publicado. | E |
 | RN-07 | La capacidad total de un evento es la suma de las capacidades de sus sectores. | D |
 | RN-08 | Las entradas vendidas de un sector nunca superan su capacidad. | E |
 | RN-09 | Un evento con fecha pasada no admite ventas ni inscripciones en lista de espera. | A |
 | RN-10 | Un evento está agotado cuando todos sus sectores alcanzaron su capacidad; ahí se habilita la lista de espera. | D |
 | RN-11 | Un evento con entradas vendidas no se elimina: se suspende o se reprograma. | A |
+| RN-38 | La suma de las capacidades de los sectores de un evento no puede superar la capacidad del local donde se realiza. Se verifica al agregar o modificar un sector. | E |
 
 ## Compra y armado de paquetes
 

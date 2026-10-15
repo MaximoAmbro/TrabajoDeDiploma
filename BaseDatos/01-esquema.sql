@@ -108,6 +108,11 @@ ALTER TABLE Sectores ALTER COLUMN EventoID      INT NOT NULL;
 ALTER TABLE Entradas ALTER COLUMN ID_Evento     INT NOT NULL;
 ALTER TABLE Entradas ALTER COLUMN ID_Usuario    INT NOT NULL;
 ALTER TABLE Entradas ALTER COLUMN FechaVenta    DATETIME NOT NULL;
+
+-- RN-38 compara contra Locales.Capacidad: si es NULL se lee como 0 y el local no admite
+-- ningun sector. Un local sin capacidad declarada no es un estado valido del dominio.
+ALTER TABLE Locales  ALTER COLUMN Capacidad     INT NOT NULL;
+ALTER TABLE Locales  ADD CONSTRAINT CK_Locales_Capacidad CHECK (Capacidad > 0);
 GO
 
 -- Faltaba: la entrada debe apuntar a un usuario existente.

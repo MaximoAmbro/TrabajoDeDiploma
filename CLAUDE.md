@@ -87,6 +87,12 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
 - Fechas: `DateTime`. La ventana de fidelización usa `AddMonths(-12)`.
 - Los valores numéricos de las reglas **no se escriben en el código**: se leen de la tabla
   `Parametros` (ver `docs/02-reglas-negocio.md`, sección de parámetros configurables).
+- **Archivos `.Designer.cs`**: no se reposiciona, redimensiona ni recolorea lo existente.
+  Sí se permite, avisándolo en el reporte:
+  - **agregar** un control cuando un requerimiento lo necesita y no hay otra forma de cumplirlo;
+  - corregir el **orden de tabulación** (`TabIndex`);
+  - corregir el **texto visible** de etiquetas y botones.
+  El formato de un `DataGridView` va por código en el `Load`, no en el Designer.
 
 ---
 
@@ -123,3 +129,9 @@ Una tarea está completa cuando:
 2. No hay SQL fuera de `Datos/`.
 3. Las reglas de negocio citadas en la tarea están implementadas y son verificables.
 4. Los casos de prueba asociados pasan.
+5. **Las pruebas de interfaz que no pudiste ejecutar quedaron anotadas** en
+   `docs/PRUEBAS-PENDIENTES.md`, con qué probar, qué resultado se espera y el commit
+   que las introduce. Agregá tu sección al final del archivo antes de commitear.
+
+> Las pruebas manuales de interfaz están diferidas hasta terminar las 10 secciones.
+> No las des por verificadas ni las omitas: anotalas.
