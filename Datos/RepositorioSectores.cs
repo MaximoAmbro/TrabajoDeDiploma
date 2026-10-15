@@ -36,6 +36,35 @@ namespace Datos
             }
         }
 
+        // Inserta el sector y cambia el estado de su evento en una misma transacción
+        // (un Borrador pasa a Publicado con su primer sector con capacidad).
+        public int InsertarYCambiarEstado(Sector sector, string nuevoEstadoEvento)
+        {
+            const string actualizarEstado = "UPDATE Eventos SET Estado = @Estado WHERE ID = @ID";
+
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlTransaction transaccion = conexion.BeginTransaction())
+            {
+                try
+                {
+                    int id = Insertar(sector, conexion, transaccion);
+                    using (SqlCommand comando = CrearComando(conexion, actualizarEstado, transaccion))
+                    {
+                        AgregarParametro(comando, "@Estado", nuevoEstadoEvento);
+                        AgregarParametro(comando, "@ID", sector.IdEvento);
+                        comando.ExecuteNonQuery();
+                    }
+                    transaccion.Commit();
+                    return id;
+                }
+                catch
+                {
+                    transaccion.Rollback();
+                    throw;
+                }
+            }
+        }
+
         // Lo usa RepositorioEventos para dar de alta el evento y sus sectores en una sola transacción.
         internal int Insertar(Sector sector, SqlConnection conexion, SqlTransaction transaccion)
         {

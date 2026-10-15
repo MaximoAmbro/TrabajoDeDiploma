@@ -30,7 +30,24 @@ namespace Visual
                 .Select(l => new { ID = l.Id, l.Nombre, l.Direccion, l.Capacidad })
                 .ToList();
 
+            FormatearGrilla();
+        }
+
+        private void FormatearGrilla()
+        {
+            dgvLocales.ReadOnly = true;
+            dgvLocales.AllowUserToAddRows = false;
+            dgvLocales.AllowUserToDeleteRows = false;
+            dgvLocales.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvLocales.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245);
+            dgvLocales.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
             dgvLocales.Columns["ID"].Visible = false;
+            dgvLocales.Columns["Nombre"].HeaderText = "Nombre del local";
+            dgvLocales.Columns["Direccion"].HeaderText = "Dirección";
+            dgvLocales.Columns["Capacidad"].HeaderText = "Capacidad";
+            dgvLocales.Columns["Capacidad"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvLocales.Columns["Capacidad"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
         }
 
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------

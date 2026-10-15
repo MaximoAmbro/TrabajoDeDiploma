@@ -26,8 +26,8 @@ namespace Visual.Propietario
             cmbCategoria.Items.AddRange(GestorEventos.Categorias.ToArray<object>());
         }
 
-        // RN-06: el evento todavía no se guarda. Se publica en frmAgregarSector junto con su
-        // primer sector con capacidad mayor que cero.
+        // El evento se guarda en Borrador y se vuelve al listado. Se publica solo al agregarle,
+        // desde Administrar evento, su primer sector con capacidad mayor que cero.
         private void btnRegistrar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
@@ -46,24 +46,28 @@ namespace Visual.Propietario
                 Nombre = txtNombre.Text.Trim(),
                 Fecha = dtEvento.Value,
                 IdLocal = IDlocal,
-                Categoria = cmbCategoria.SelectedItem.ToString(),
-                Sectores = new List<Sector>()
+                Categoria = cmbCategoria.SelectedItem.ToString()
             };
 
-            MessageBox.Show("Agregue al menos un sector con capacidad mayor que cero para publicar el evento.");
-            frmAgregarSector frm = new frmAgregarSector();
-            frm.ConexionSql = ConexionSql;
-            frm.IDlocal = IDlocal;
-            frm.NombreUsuario = NombreUsuario;
-            frm.EventoPendiente = evento;
-            frm.NombreEvento = evento.Nombre;
-            frm.NombreLocal = NombreLocal;
-            frm.IDUsuario = IDUsuario;
-
-            frm.Show(); this.Hide();
+            try
+            {
+                GestorEventos.Instance.Crear(evento);
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            MessageBox.Show("Evento guardado como borrador. Para publicarlo, agréguele un sector desde «Administrar Evento».");
+            VolverAlListado();
         }
 
         private void lblVolver_Click(object sender, EventArgs e)
+        {
+            VolverAlListado();
+        }
+
+        private void VolverAlListado()
         {
             frmEventosLocal frm = new frmEventosLocal();
             frm.ConexionSql = ConexionSql;

@@ -13,6 +13,8 @@ namespace Negocio
 {
     public partial class GestorEventos //Singleton
     {
+        // Estados de un evento (docs/03-esquema-datos.md, CK_Eventos_Estado).
+        public const string EstadoBorrador = "Borrador";
         public const string EstadoPublicado = "Publicado";
         public const string EstadoSuspendido = "Suspendido";
 
@@ -56,6 +58,16 @@ namespace Negocio
     }
     public partial class GestorEventos //Metodos
     {
+        // Guarda el evento sin sectores, en Borrador: RN-06 todavía no aplica. Pasa a Publicado
+        // con su primer sector con capacidad (AgregarSector). Devuelve el Id generado.
+        public int Crear(Evento e)
+        {
+            ValidarEvento(e);
+            e.Sectores = new List<Sector>();
+            e.Estado = EstadoBorrador;
+            return RepositorioEventos.Instance.Insertar(e);
+        }
+
         // RN-06: el evento se publica junto con sus sectores, y al menos uno debe tener capacidad.
         // Devuelve el Id generado.
         public int Publicar(Evento e)
@@ -69,11 +81,7 @@ namespace Negocio
                 throw new ReglaNegocioException("RN-06",
                     "No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.");
             }
-            if (!Categorias.Contains(e.Categoria))
-            {
-                throw new ArgumentException(
-                    "El evento debe tener categoría: " + string.Join(", ", Categorias) + ".");
-            }
+            ValidarEvento(e);
             if (e.Sectores.Count > MaximoSectores)
             {
                 throw new InvalidOperationException(
@@ -83,6 +91,7 @@ namespace Negocio
             {
                 ValidarSector(sector);
             }
+            VerificarCapacidadLocal(e.IdLocal, 0, e.Sectores.Sum(s => s.Capacidad));
 
             e.Estado = EstadoPublicado;
             return RepositorioEventos.Instance.Insertar(e);
@@ -118,10 +127,11 @@ namespace Negocio
             return Sectores(idEvento).Sum(s => s.Capacidad);
         }
 
-        // RN-09: solo eventos con fecha posterior a la actual.
+        // RN-09: solo eventos Publicado con fecha posterior a la actual. Borrador y Suspendido
+        // no son visibles para el cliente.
         public List<Evento> Vigentes()
         {
-            return RepositorioEventos.Instance.ObtenerPosterioresA(DateTime.Now);
+            return RepositorioEventos.Instance.ObtenerPorEstadoPosterioresA(EstadoPublicado, DateTime.Now);
         }
 
         public List<Evento> PorLocal(int idLocal)
@@ -141,18 +151,29 @@ namespace Negocio
                 throw new ArgumentNullException(nameof(s));
             }
             ValidarSector(s);
-            if (RepositorioEventos.Instance.ObtenerPorId(idEvento) == null)
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            if (evento == null)
             {
                 throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
             }
-            if (Sectores(idEvento).Count >= MaximoSectores)
+            List<Sector> actuales = Sectores(idEvento);
+            if (actuales.Count >= MaximoSectores)
             {
                 throw new InvalidOperationException(
                     $"Ya se registraron {MaximoSectores} sectores para este evento. No se pueden agregar más.");
             }
+            VerificarCapacidadLocal(evento.IdLocal, actuales.Sum(x => x.Capacidad), s.Capacidad);
 
             s.IdEvento = idEvento;
-            s.Id = RepositorioSectores.Instance.Insertar(s);
+            if (evento.Estado == EstadoBorrador && s.Capacidad > 0)
+            {
+                // Primer sector con capacidad: el borrador ya cumple RN-06 y se publica.
+                s.Id = RepositorioSectores.Instance.InsertarYCambiarEstado(s, EstadoPublicado);
+            }
+            else
+            {
+                s.Id = RepositorioSectores.Instance.Insertar(s);
+            }
         }
 
         public void EliminarSector(int idSector)
@@ -182,6 +203,41 @@ namespace Negocio
             if (!RepositorioSectores.Instance.Eliminar(idSector))
             {
                 throw new InvalidOperationException("No se encontró ningún sector con ese ID.");
+            }
+        }
+
+        // RN-38: la suma de capacidades de los sectores no supera la capacidad del local.
+        // Si en el futuro se modifica la capacidad de un sector, pasar como ocupada la suma sin ese sector.
+        private static void VerificarCapacidadLocal(int idLocal, int capacidadOcupada, int capacidadNueva)
+        {
+            Local local = RepositorioLocales.Instance.ObtenerPorId(idLocal);
+            if (local == null)
+            {
+                throw new InvalidOperationException("No se encontró el local del evento.");
+            }
+            if (capacidadOcupada + capacidadNueva > local.Capacidad)
+            {
+                int disponible = Math.Max(0, local.Capacidad - capacidadOcupada);
+                throw new ReglaNegocioException("RN-38",
+                    $"La capacidad de los sectores superaría la del local ({local.Capacidad}). " +
+                    $"Capacidad disponible para este evento: {disponible}.");
+            }
+        }
+
+        private static void ValidarEvento(Evento e)
+        {
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+            if (string.IsNullOrWhiteSpace(e.Nombre))
+            {
+                throw new ArgumentException("El evento debe tener nombre.");
+            }
+            if (!Categorias.Contains(e.Categoria))
+            {
+                throw new ArgumentException(
+                    "El evento debe tener categoría: " + string.Join(", ", Categorias) + ".");
             }
         }
 

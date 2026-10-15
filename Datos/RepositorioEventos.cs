@@ -78,9 +78,10 @@ namespace Datos
             return Consultar(Columnas + "WHERE LocalID = @Valor ORDER BY Fecha", idLocal);
         }
 
-        public List<Evento> ObtenerPosterioresA(DateTime fecha)
+        public List<Evento> ObtenerPorEstadoPosterioresA(string estado, DateTime fecha)
         {
-            return Consultar(Columnas + "WHERE Fecha > @Valor ORDER BY Fecha", fecha);
+            return Consultar(Columnas + "WHERE Estado = @Estado AND Fecha > @Valor ORDER BY Fecha", fecha,
+                comando => AgregarParametro(comando, "@Estado", estado));
         }
 
         public int ContarEntradas(int idEvento)
@@ -143,7 +144,7 @@ namespace Datos
             }
         }
 
-        private List<Evento> Consultar(string consulta, object valor)
+        private List<Evento> Consultar(string consulta, object valor, Action<SqlCommand> otrosParametros = null)
         {
             var eventos = new List<Evento>();
 
@@ -151,6 +152,7 @@ namespace Datos
             using (SqlCommand comando = CrearComando(conexion, consulta))
             {
                 AgregarParametro(comando, "@Valor", valor);
+                otrosParametros?.Invoke(comando);
                 using (SqlDataReader lector = comando.ExecuteReader())
                 {
                     while (lector.Read())

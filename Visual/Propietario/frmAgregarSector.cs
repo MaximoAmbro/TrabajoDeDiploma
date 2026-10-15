@@ -19,9 +19,6 @@ namespace Visual.Vendedor
         public string NombreUsuario; public int IDlocal; public int IDEvento; public string NombreLocal; public int IDUsuario;
         public string NombreEvento;
         public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
-        // Evento recién cargado en frmAgregarEvento que todavía no se publicó (RN-06).
-        // Mientras no sea null, el primer sector se guarda con GestorEventos.Publicar.
-        public Evento EventoPendiente;
         public frmAgregarSector()
         {
             InitializeComponent();
@@ -38,18 +35,9 @@ namespace Visual.Vendedor
                 }
                 try
                 {
-                    if (EventoPendiente != null)
-                    {
-                        EventoPendiente.Sectores = new List<Sector> { sector };
-                        IDEvento = GestorEventos.Instance.Publicar(EventoPendiente);
-                        EventoPendiente = null;
-                        MessageBox.Show("Evento publicado con su primer sector.");
-                    }
-                    else
-                    {
-                        GestorEventos.Instance.AgregarSector(IDEvento, sector);
-                        MessageBox.Show("Sector agregado correctamente.");
-                    }
+                    // Si el evento está en Borrador y el sector tiene capacidad, queda publicado.
+                    GestorEventos.Instance.AgregarSector(IDEvento, sector);
+                    MessageBox.Show("Sector agregado correctamente.");
                     txtCapacidad.Clear(); txtNombre.Clear(); txtPrecio.Clear();
                 }
                 catch (ReglaNegocioException ex)
@@ -65,19 +53,6 @@ namespace Visual.Vendedor
 
         private void lblVolver_Click(object sender, EventArgs e)
         {
-            if (EventoPendiente != null)
-            {
-                // El evento nunca se publicó: no hay nada que administrar.
-                frmEventosLocal eventos = new frmEventosLocal();
-                eventos.ConexionSql = ConexionSql;
-                eventos.IDlocal = IDlocal;
-                eventos.NombreUsuario = NombreUsuario;
-                eventos.NombreLocal = NombreLocal;
-                eventos.IDUsuario = IDUsuario;
-                eventos.Show(); this.Hide();
-                return;
-            }
-
             frmAdministrarEvento form = new frmAdministrarEvento();
             form.ConexionSql = ConexionSql;
             form.IDlocal = IDlocal;

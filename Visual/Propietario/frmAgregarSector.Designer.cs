@@ -75,7 +75,7 @@
             this.btnregistrarse.Name = "btnregistrarse";
             this.btnregistrarse.Size = new System.Drawing.Size(214, 43);
             this.btnregistrarse.TabIndex = 48;
-            this.btnregistrarse.Text = "Registrarse";
+            this.btnregistrarse.Text = "Agregar sector";
             this.btnregistrarse.UseVisualStyleBackColor = false;
             this.btnregistrarse.Click += new System.EventHandler(this.btnregistrarse_Click);
             // 

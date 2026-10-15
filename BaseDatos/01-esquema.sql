@@ -125,6 +125,10 @@ CREATE UNIQUE INDEX UX_Entradas_CodigoQR                -- RN-18: único e irrep
 
 -- RN-01: la unicidad del correo es una restriccion estructural, no solo de codigo.
 ALTER TABLE Usuario ADD CONSTRAINT UQ_Usuario_Mail UNIQUE (Mail);
+
+-- Estados de un evento (docs/03-esquema-datos.md).
+ALTER TABLE Eventos ADD CONSTRAINT CK_Eventos_Estado
+      CHECK (Estado IN ('Borrador','Publicado','Suspendido'));
 GO
 
 -- ═══════════════ Operación de compra ═══════════════

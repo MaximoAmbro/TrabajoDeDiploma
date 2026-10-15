@@ -26,8 +26,9 @@ namespace Negocio
 
         private GestorUsuarios() { }
 
-        // Devuelve el usuario autenticado, o null si mail o contraseña son incorrectos.
-        // Lanza ReglaNegocioException si la cuenta está bloqueada (RN-04).
+        // Devuelve el usuario autenticado, o null si faltan datos o el mail no existe.
+        // Lanza ReglaNegocioException (RN-04) si la contraseña es incorrecta, con los intentos
+        // que quedan, o si la cuenta está bloqueada, con los minutos que faltan.
         public Usuario Autenticar(string mail, string pwd)
         {
             if (string.IsNullOrWhiteSpace(mail) || string.IsNullOrEmpty(pwd))
@@ -44,13 +45,12 @@ namespace Negocio
             DateTime ahora = DateTime.Now;
             if (usuario.BloqueadoHasta.HasValue && usuario.BloqueadoHasta.Value > ahora)
             {
-                throw CuentaBloqueada(usuario.BloqueadoHasta.Value);
+                throw CuentaBloqueada(usuario.BloqueadoHasta.Value, ahora);
             }
 
             if (!ContrasenaValida(usuario, pwd))
             {
-                RegistrarIntentoFallido(usuario, ahora);
-                return null;
+                throw RegistrarIntentoFallido(usuario, ahora);
             }
 
             if (usuario.IntentosFallidos != 0 || usuario.BloqueadoHasta.HasValue)
@@ -151,7 +151,8 @@ namespace Negocio
         }
 
         // RN-04: tras LOGIN_INTENTOS_MAX fallos consecutivos, bloqueo de LOGIN_BLOQUEO_MIN minutos.
-        private void RegistrarIntentoFallido(Usuario usuario, DateTime ahora)
+        // Devuelve la excepción a lanzar: intentos restantes, o bloqueo si se llegó al tope.
+        private ReglaNegocioException RegistrarIntentoFallido(Usuario usuario, DateTime ahora)
         {
             int intentosMax = GestorParametros.Instance.ObtenerEntero("LOGIN_INTENTOS_MAX");
             int bloqueoMinutos = GestorParametros.Instance.ObtenerEntero("LOGIN_BLOQUEO_MIN");
@@ -164,14 +165,21 @@ namespace Negocio
 
             if (bloqueadoHasta.HasValue)
             {
-                throw CuentaBloqueada(bloqueadoHasta.Value);
+                return CuentaBloqueada(bloqueadoHasta.Value, ahora);
             }
+
+            int restantes = intentosMax - intentos;
+            return new ReglaNegocioException("RN-04",
+                $"Mail o contraseña incorrectos. Le quedan {restantes} " +
+                (restantes == 1 ? "intento" : "intentos") + " antes de que la cuenta se bloquee.");
         }
 
-        private static ReglaNegocioException CuentaBloqueada(DateTime hasta)
+        private static ReglaNegocioException CuentaBloqueada(DateTime hasta, DateTime ahora)
         {
+            int minutos = Math.Max(1, (int)Math.Ceiling((hasta - ahora).TotalMinutes));
             return new ReglaNegocioException("RN-04",
-                $"La cuenta está bloqueada por demasiados intentos fallidos. Vuelva a intentar después de las {hasta:HH:mm}.");
+                $"La cuenta está bloqueada por demasiados intentos fallidos. Vuelva a intentar en {minutos} " +
+                (minutos == 1 ? "minuto." : "minutos."));
         }
 
         private static ReglaNegocioException MailDuplicado()

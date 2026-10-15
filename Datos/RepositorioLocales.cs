@@ -41,17 +41,29 @@ namespace Datos
             }
         }
 
+        // Devuelve null si no existe.
+        public Local ObtenerPorId(int idLocal)
+        {
+            List<Local> locales = Consultar(Columnas + "WHERE ID = @Valor", idLocal);
+            return locales.Count == 0 ? null : locales[0];
+        }
+
         public List<Local> ObtenerPorPropietario(int idPropietario)
         {
-            const string consulta =
-                "SELECT ID, Nombre, Direccion, Capacidad, PropietarioID " +
-                "FROM Locales WHERE PropietarioID = @PropietarioID ORDER BY Nombre";
+            return Consultar(Columnas + "WHERE PropietarioID = @Valor ORDER BY Nombre", idPropietario);
+        }
+
+        private const string Columnas =
+            "SELECT ID, Nombre, Direccion, Capacidad, PropietarioID FROM Locales ";
+
+        private List<Local> Consultar(string consulta, int valor)
+        {
             var locales = new List<Local>();
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlCommand comando = CrearComando(conexion, consulta))
             {
-                AgregarParametro(comando, "@PropietarioID", idPropietario);
+                AgregarParametro(comando, "@Valor", valor);
                 using (SqlDataReader lector = comando.ExecuteReader())
                 {
                     while (lector.Read())

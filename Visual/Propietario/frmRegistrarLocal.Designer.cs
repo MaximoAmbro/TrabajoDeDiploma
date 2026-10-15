@@ -61,7 +61,7 @@
             this.txtDireccion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(284, 32);
-            this.txtDireccion.TabIndex = 50;
+            this.txtDireccion.TabIndex = 1;
             // 
             // btnregistrarse
             // 
@@ -75,7 +75,7 @@
             this.btnregistrarse.Margin = new System.Windows.Forms.Padding(6, 2, 6, 2);
             this.btnregistrarse.Name = "btnregistrarse";
             this.btnregistrarse.Size = new System.Drawing.Size(224, 52);
-            this.btnregistrarse.TabIndex = 47;
+            this.btnregistrarse.TabIndex = 4;
             this.btnregistrarse.Text = "Registrarse";
             this.btnregistrarse.UseVisualStyleBackColor = false;
             this.btnregistrarse.Click += new System.EventHandler(this.btnregistrarse_Click);
@@ -103,7 +103,7 @@
             this.txtAltura.Margin = new System.Windows.Forms.Padding(6, 2, 6, 2);
             this.txtAltura.Name = "txtAltura";
             this.txtAltura.Size = new System.Drawing.Size(284, 32);
-            this.txtAltura.TabIndex = 45;
+            this.txtAltura.TabIndex = 2;
             // 
             // lblmail
             // 
@@ -137,7 +137,7 @@
             this.txtCapacidad.Margin = new System.Windows.Forms.Padding(6, 2, 6, 2);
             this.txtCapacidad.Name = "txtCapacidad";
             this.txtCapacidad.Size = new System.Drawing.Size(284, 32);
-            this.txtCapacidad.TabIndex = 39;
+            this.txtCapacidad.TabIndex = 3;
             // 
             // label3
             // 
@@ -160,7 +160,7 @@
             this.txtNombre.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(284, 32);
-            this.txtNombre.TabIndex = 48;
+            this.txtNombre.TabIndex = 0;
             // 
             // label1
             // 

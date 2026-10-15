@@ -26,6 +26,7 @@ namespace Visual
             txtMailLogin.Text = "";
             txtContraseñaLogin.Text = "";
             txtContraseñaLogin.PasswordChar = '*';
+            txtMailLogin.Select();   // no depende del orden de TabIndex
         }
 
         private void checkbxShowPass_CheckedChanged(object sender, EventArgs e)
@@ -89,7 +90,8 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, "Cuenta bloqueada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // RN-04: intentos restantes o minutos de bloqueo.
+                MessageBox.Show(ex.Message, "Inicio de sesión", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
