@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Entidades;
+using Negocio;
 
 namespace Visual
 {
@@ -15,7 +17,7 @@ namespace Visual
     {
         public int IDUsuario;
         public string NombreUsuario;
-        public SqlConnection ConexionSql;
+        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public frmRegistrarLocal()
         {
             InitializeComponent();
@@ -27,16 +29,29 @@ namespace Visual
         }
         private void btnregistrarse_Click(object sender, EventArgs e)
         {
-            string consulta = "INSERT INTO Locales (Nombre, Direccion, Capacidad, PropietarioID) " +
-                "VALUES (@Nombre, @Direccion, @Capacidad, @PropietarioID)";
-            SqlCommand sqlComando = new SqlCommand(consulta, ConexionSql);
-            ConexionSql.Open();
-            sqlComando.Parameters.AddWithValue("@Nombre", txtNombre.Text);
-            sqlComando.Parameters.AddWithValue("@Direccion", txtDireccion.Text + " " + txtAltura.Text);
-            sqlComando.Parameters.AddWithValue("@Capacidad", txtCapacidad.Text);
-            sqlComando.Parameters.AddWithValue("@PropietarioID", IDUsuario);
-            sqlComando.ExecuteNonQuery();
-            ConexionSql.Close();
+            int capacidad;
+            if (!int.TryParse(txtCapacidad.Text.Trim(), out capacidad))
+            {
+                MessageBox.Show("La capacidad debe ser un número entero.");
+                return;
+            }
+
+            Local local = new Local
+            {
+                Nombre = txtNombre.Text,
+                Direccion = txtDireccion.Text + " " + txtAltura.Text,
+                Capacidad = capacidad,
+                IdPropietario = IDUsuario
+            };
+            try
+            {
+                GestorLocales.Instance.Registrar(local);
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             MessageBox.Show("Local registrado correctamente");
             Cerrar();
         }

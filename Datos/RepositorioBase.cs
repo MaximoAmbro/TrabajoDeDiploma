@@ -41,6 +41,19 @@ namespace Datos
             return valor == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(valor);
         }
 
+        // Columnas heredadas anulables (Sectores.Capacidad, Locales.Capacidad...): NULL se lee como 0.
+        protected static int LeerEntero(SqlDataReader lector, string columna)
+        {
+            object valor = lector[columna];
+            return valor == DBNull.Value ? 0 : Convert.ToInt32(valor);
+        }
+
+        protected static decimal LeerDecimal(SqlDataReader lector, string columna)
+        {
+            object valor = lector[columna];
+            return valor == DBNull.Value ? 0m : Convert.ToDecimal(valor);
+        }
+
         protected static bool EsViolacionUnicidad(SqlException ex)
         {
             return ex.Number == ErrorClaveUnica || ex.Number == ErrorIndiceUnico;

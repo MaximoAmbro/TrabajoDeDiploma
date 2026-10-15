@@ -1,4 +1,5 @@
-﻿using Negocio;
+﻿using Entidades;
+using Negocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,23 +17,39 @@ namespace Visual.Propietario
     public partial class frmAgregarEvento : Form
     {
         public int IDUsuario; public int IDlocal; public string NombreUsuario; public string NombreLocal;
-        public SqlConnection ConexionSql; public GestorEventos gestorEventos = new GestorEventos();
+        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public frmAgregarEvento()
         {
             InitializeComponent();
         }
 
+        // RN-06: el evento todavía no se guarda. Se publica en frmAgregarSector junto con su
+        // primer sector con capacidad mayor que cero.
         private void btnRegistrar_Click(object sender, EventArgs e)
         {
-            gestorEventos.AgregarEvento(txtNombre.Text, dtEvento.Value, IDlocal, ConexionSql, out int IDEvento);
-            MessageBox.Show("Evento agregado con exito");
-            frmAdministrarEvento frm = new frmAdministrarEvento();
+            if (string.IsNullOrWhiteSpace(txtNombre.Text))
+            {
+                MessageBox.Show("Ingrese el nombre del evento.");
+                return;
+            }
+
+            Evento evento = new Evento
+            {
+                Nombre = txtNombre.Text.Trim(),
+                Fecha = dtEvento.Value,
+                IdLocal = IDlocal,
+                Categoria = null, // el formulario no tiene control de categoría
+                Sectores = new List<Sector>()
+            };
+
+            MessageBox.Show("Agregue al menos un sector con capacidad mayor que cero para publicar el evento.");
+            frmAgregarSector frm = new frmAgregarSector();
             frm.ConexionSql = ConexionSql;
             frm.IDlocal = IDlocal;
-            frm.NombreUsuario= NombreUsuario;
-            frm.IDEvento = IDEvento; 
+            frm.NombreUsuario = NombreUsuario;
+            frm.EventoPendiente = evento;
+            frm.NombreEvento = evento.Nombre;
             frm.NombreLocal = NombreLocal;
-            frm.NombreEvento = txtNombre.Text;
             frm.IDUsuario = IDUsuario;
 
             frm.Show(); this.Hide();

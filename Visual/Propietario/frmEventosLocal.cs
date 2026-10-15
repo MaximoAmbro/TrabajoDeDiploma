@@ -15,8 +15,8 @@ namespace Visual.Vendedor
 {
     public partial class frmEventosLocal : Form
     {
-        public int IDUsuario; public int IDlocal; 
-        public SqlConnection ConexionSql; GestorEventos gestorEventos = new GestorEventos();
+        public int IDUsuario; public int IDlocal;
+        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public string NombreLocal { get; set; } public string NombreUsuario { get; set; }
         public frmEventosLocal()
         {
@@ -28,13 +28,34 @@ namespace Visual.Vendedor
             CargaEventos();
         }
 
+        // RN-11: si el evento tiene entradas vendidas, Eliminar lo rechaza y se ofrece suspenderlo.
         private void btnEliminarEvento_Click(object sender, EventArgs e)
         {
-            if (dgvEventos.SelectedCells.Count > 0)
+            if (dgvEventos.CurrentRow == null)
             {
-                gestorEventos.EliminarEvento(Convert.ToInt32(dgvEventos.CurrentRow.Cells["ID"].Value), ConexionSql);
-                CargaEventos();
+                MessageBox.Show("Debe seleccionar un evento");
+                return;
             }
+
+            int idEvento = Convert.ToInt32(dgvEventos.CurrentRow.Cells["ID"].Value);
+            try
+            {
+                GestorEventos.Instance.Eliminar(idEvento);
+            }
+            catch (ReglaNegocioException ex)
+            {
+                DialogResult respuesta = MessageBox.Show(ex.Message + "\n\n¿Desea suspenderlo?",
+                    ex.Regla, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (respuesta == DialogResult.Yes)
+                {
+                    GestorEventos.Instance.Suspender(idEvento);
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            CargaEventos();
         }
 
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
@@ -58,6 +79,11 @@ namespace Visual.Vendedor
         } // este es modificar pero me da paja cambiar el nombre
         private void btnAdministrarEvento_Click(object sender, EventArgs e)
         {
+            if (dgvEventos.CurrentRow == null)
+            {
+                MessageBox.Show("Debe seleccionar un evento");
+                return;
+            }
             frmAdministrarEvento frm = new frmAdministrarEvento();
             int EventoSeleccionado = Convert.ToInt32(dgvEventos.CurrentRow.Cells["ID"].Value);
             frm.IDlocal = IDlocal;
@@ -66,6 +92,7 @@ namespace Visual.Vendedor
             frm.NombreUsuario = NombreUsuario;
             frm.NombreLocal = NombreLocal;
             frm.IDEvento = EventoSeleccionado;
+            frm.NombreEvento = Convert.ToString(dgvEventos.CurrentRow.Cells["Nombre"].Value);
             frm.Show(); this.Close();
 
         }
@@ -75,21 +102,10 @@ namespace Visual.Vendedor
         public void CargaEventos()
         {
             lblNombre.Text = NombreLocal;
-            string consulta = "SELECT Nombre, Fecha, ID FROM Eventos " +
-                              "WHERE LocalID = @LocalID";
-            using (SqlCommand cmd = new SqlCommand(consulta, ConexionSql))
-            {
-                cmd.Parameters.AddWithValue("@LocalID", IDlocal);
-
-                SqlDataAdapter adaptador = new SqlDataAdapter(cmd);
-                DataTable tabla = new DataTable();
-                adaptador.Fill(tabla);
-
-                dgvEventos.DataSource = tabla;
-                dgvEventos.Columns["ID"].Visible = false;
-                ConexionSql.Close();
-
-            }
+            dgvEventos.DataSource = GestorEventos.Instance.PorLocal(IDlocal)
+                .Select(ev => new { ID = ev.Id, ev.Nombre, ev.Fecha, ev.Estado })
+                .ToList();
+            dgvEventos.Columns["ID"].Visible = false;
         }
     }
 }

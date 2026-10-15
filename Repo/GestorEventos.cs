@@ -1,5 +1,5 @@
-﻿using Entidades;
-using Microsoft.Data.SqlClient;
+﻿using Datos;
+using Entidades;
 using QRCoder;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,33 @@ using static Entidades.Evento;
 using static QRCoder.PayloadGenerator;
 namespace Negocio
 {
+    public partial class GestorEventos //Singleton
+    {
+        public const string EstadoPublicado = "Publicado";
+        public const string EstadoSuspendido = "Suspendido";
+
+        // Límite heredado, no es una RN documentada: FrmCompraCliente solo muestra tres
+        // sectores (A, B y C) por evento.
+        private const int MaximoSectores = 3;
+
+        private static GestorEventos _instance;
+
+        public static GestorEventos Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new GestorEventos();
+                }
+                return _instance;
+            }
+        }
+
+        // TODO Seccion 7: FrmCompraCliente crea su propia instancia por el estado que deja
+        // GenerarTicket (MensajeTicket, QRCodeImage). Al migrarlo, hacer privado el constructor.
+        public GestorEventos() { }
+    }
     public partial class GestorEventos //Lista
     {
         public string SectorA { get; set; }
@@ -25,21 +52,125 @@ namespace Negocio
     }
     public partial class GestorEventos //Metodos
     {
-        public void EliminarEvento(int idEvento, SqlConnection _conexion)
+        // RN-06: el evento se publica junto con sus sectores, y al menos uno debe tener capacidad.
+        // Devuelve el Id generado.
+        public int Publicar(Evento e)
         {
-            string consulta = "DELETE FROM Eventos WHERE ID = @ID";
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion)) 
+            if (e == null)
             {
-                comando.Parameters.AddWithValue("@ID", idEvento);
-                _conexion.Open();
-                int filasAfectadas = comando.ExecuteNonQuery();
-                _conexion.Close();
-                if (filasAfectadas == 0)
-                {
-                    throw new Exception("No se encontró ningún evento con ese ID.");
-                }
+                throw new ArgumentNullException(nameof(e));
+            }
+            if (e.Sectores == null || !e.Sectores.Any(s => s != null && s.Capacidad > 0))
+            {
+                throw new ReglaNegocioException("RN-06",
+                    "No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.");
+            }
+            if (e.Sectores.Count > MaximoSectores)
+            {
+                throw new InvalidOperationException(
+                    $"Un evento admite como máximo {MaximoSectores} sectores.");
+            }
+            foreach (Sector sector in e.Sectores)
+            {
+                ValidarSector(sector);
+            }
+
+            e.Estado = EstadoPublicado;
+            return RepositorioEventos.Instance.Insertar(e);
+        }
+
+        // RN-11: un evento con entradas vendidas no se borra. Lanza la excepción sin tocar nada;
+        // el formulario ofrece Suspender en su lugar.
+        public void Eliminar(int idEvento)
+        {
+            if (RepositorioEventos.Instance.ContarEntradas(idEvento) > 0)
+            {
+                throw new ReglaNegocioException("RN-11",
+                    "El evento tiene entradas vendidas: no se puede eliminar, solo suspender.");
+            }
+            if (!RepositorioEventos.Instance.Eliminar(idEvento))
+            {
+                throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
             }
         }
+
+        // RN-11: alternativa a Eliminar. Vale tenga o no entradas vendidas.
+        public void Suspender(int idEvento)
+        {
+            if (!RepositorioEventos.Instance.ActualizarEstado(idEvento, EstadoSuspendido))
+            {
+                throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
+            }
+        }
+
+        // RN-07
+        public int CapacidadTotal(int idEvento)
+        {
+            return Sectores(idEvento).Sum(s => s.Capacidad);
+        }
+
+        // RN-09: solo eventos con fecha posterior a la actual.
+        public List<Evento> Vigentes()
+        {
+            return RepositorioEventos.Instance.ObtenerPosterioresA(DateTime.Now);
+        }
+
+        public List<Evento> PorLocal(int idLocal)
+        {
+            return RepositorioEventos.Instance.ObtenerPorLocal(idLocal);
+        }
+
+        public List<Sector> Sectores(int idEvento)
+        {
+            return RepositorioSectores.Instance.ObtenerPorEvento(idEvento);
+        }
+
+        public void AgregarSector(int idEvento, Sector s)
+        {
+            if (s == null)
+            {
+                throw new ArgumentNullException(nameof(s));
+            }
+            ValidarSector(s);
+            if (RepositorioEventos.Instance.ObtenerPorId(idEvento) == null)
+            {
+                throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
+            }
+            if (Sectores(idEvento).Count >= MaximoSectores)
+            {
+                throw new InvalidOperationException(
+                    $"Ya se registraron {MaximoSectores} sectores para este evento. No se pueden agregar más.");
+            }
+
+            s.IdEvento = idEvento;
+            s.Id = RepositorioSectores.Instance.Insertar(s);
+        }
+
+        public void EliminarSector(int idSector)
+        {
+            if (RepositorioSectores.Instance.ContarEntradas(idSector) > 0)
+            {
+                throw new InvalidOperationException(
+                    "El sector tiene entradas vendidas: no se puede eliminar.");
+            }
+            if (!RepositorioSectores.Instance.Eliminar(idSector))
+            {
+                throw new InvalidOperationException("No se encontró ningún sector con ese ID.");
+            }
+        }
+
+        private static void ValidarSector(Sector s)
+        {
+            if (s == null || string.IsNullOrWhiteSpace(s.Nombre))
+            {
+                throw new ArgumentException("El sector debe tener nombre.");
+            }
+            if (s.Capacidad < 0 || s.Precio < 0)
+            {
+                throw new ArgumentException("La capacidad y el precio del sector no pueden ser negativos.");
+            }
+        }
+
         public void GenerarTicket(string NombreEvento, string NombreSector, string PrecioSector, string FechaEvento)
         {
             MensajeTicket = null;
@@ -66,103 +197,6 @@ namespace Negocio
                         }
                     }
 
-        }
-        public void AgregarEvento(string nombre, DateTime fecha, int IDLocal, SqlConnection _conexion, out int idEvento)
-        {
-                    string consulta = @"
-                INSERT INTO Eventos (Nombre, Fecha, LocalID)
-                VALUES (@Nombre, @Fecha, @LocalID);
-                SELECT CAST(SCOPE_IDENTITY() AS int);
-            ";
-
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
-            {
-                comando.Parameters.AddWithValue("@Nombre", nombre);
-                comando.Parameters.AddWithValue("@Fecha", fecha);
-                comando.Parameters.AddWithValue("@LocalID", IDLocal);
-
-                _conexion.Open();
-
-                idEvento = (int)comando.ExecuteScalar();
-
-                _conexion.Close();
-            }
-        }
-        public void EliminarSector(string Nombre, int idEvento, SqlConnection _conexion)
-        {
-            string consulta = "DELETE FROM Sectores WHERE Nombre = @Nombre AND EventoID = @EventoID";
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
-            {
-                comando.Parameters.AddWithValue("@EventoID", idEvento);
-                comando.Parameters.AddWithValue("@Nombre", Nombre);
-                _conexion.Open();
-                int filasAfectadas = comando.ExecuteNonQuery();
-                _conexion.Close();
-                if (filasAfectadas == 0)
-                {
-                    throw new Exception("No se encontró ningún evento con ese ID.");
-                }
-            }
-        }
-
-        public void AgregarSector(string nombre, int capacidad, int precio, int idEvento, SqlConnection _conexion)
-        {
-            string consulta = "INSERT INTO Sectores (Nombre, Capacidad, Precio, EventoID) VALUES (@Nombre, @Capacidad, @Precio, @EventoID)";
-            using (SqlCommand comando = new SqlCommand(consulta, _conexion))
-            {
-                comando.Parameters.AddWithValue("@Nombre", nombre);
-                comando.Parameters.AddWithValue("@Capacidad", capacidad);
-                comando.Parameters.AddWithValue("@Precio", precio);
-                comando.Parameters.AddWithValue("@EventoID", idEvento);
-                _conexion.Open();
-                comando.ExecuteNonQuery();
-                _conexion.Close();
-            }
-            ReasignarPrecio(idEvento, _conexion);
-        }
-        public void ReasignarPrecio(int idEvento, SqlConnection conexion)
-        {
-            List<(int SectorID, decimal Precio)> sectores = new List<(int SectorID, decimal Precio)>();
-            string select = "SELECT ID, Precio FROM Sectores WHERE EventoID = @ID_Evento";
-            using (SqlCommand comando = new SqlCommand(select, conexion))
-            {
-                comando.Parameters.AddWithValue("@ID_Evento", idEvento);
-                conexion.Open();
-                using (SqlDataReader reader = comando.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        int sectorID = reader.GetInt32(0);
-                        decimal precio = reader.GetDecimal(1);
-                        sectores.Add((sectorID, precio));
-                    }
-                }
-                conexion.Close();
-                var sectoresOrdenados = sectores.OrderByDescending(s => s.Precio).ToList();
-                string update = "UPDATE Sectores SET PrecioID = @PrecioID WHERE ID = @SectorID";
-                conexion.Open();
-                for (int i = 0; i < sectoresOrdenados.Count; i++)
-                {
-                    using (SqlCommand cmd = new SqlCommand(update, conexion))
-                    {
-                        int? precioID;
-
-                        if (i < 3)
-                        {
-                            precioID = i + 1;
-                        }
-                        else
-                        {
-                            precioID = null;
-                        }
-                        cmd.Parameters.AddWithValue("@SectorID", sectoresOrdenados[i].SectorID);
-                        cmd.Parameters.AddWithValue("@PrecioID", (object)precioID ?? DBNull.Value);
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                conexion.Close();
-            }
         }
        
 

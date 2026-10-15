@@ -1,4 +1,5 @@
-﻿using Negocio;
+﻿using Entidades;
+using Negocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,10 +17,9 @@ namespace Visual.Vendedor
     public partial class frmAdministrarEvento : Form
     {
         public int IDUsuario; public int IDlocal; public int IDEvento;
-        public SqlConnection ConexionSql; 
+        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public string NombreUsuario;
         public string NombreLocal;
-        public GestorEventos gestorEventos = new GestorEventos();
         public string NombreEvento { get; set; }
 
         public frmAdministrarEvento()
@@ -43,23 +43,21 @@ namespace Visual.Vendedor
         }
         public void CargarDGV()
         {
-            string consulta = "SELECT Nombre, Capacidad FROM Sectores WHERE EventoID = @EventoID";
-            using (SqlCommand cmd = new SqlCommand(consulta, ConexionSql))
+            List<Sector> sectores = GestorEventos.Instance.Sectores(IDEvento);
+            if (sectores.Count == 0)
             {
-                cmd.Parameters.AddWithValue("@EventoID", IDEvento);
-                SqlDataAdapter adaptador = new SqlDataAdapter(cmd);
                 DataTable tabla = new DataTable();
-                adaptador.Fill(tabla);
+                tabla.Columns.Add("Mensaje", typeof(string));
+                tabla.Rows.Add("Sin sectores");
                 dgvSectores.DataSource = tabla;
-                ConexionSql.Close();
-                if (tabla.Rows.Count == 0)
-                {
-                    tabla.Columns.Add("Mensaje", typeof(string));
-                    tabla.Rows.Add("Sin sectores");
-                    dgvSectores.DataSource = tabla;
-                    dgvSectores.Columns["Mensaje"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                }
+                dgvSectores.Columns["Mensaje"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                return;
             }
+
+            dgvSectores.DataSource = sectores
+                .Select(s => new { ID = s.Id, s.Nombre, s.Capacidad, s.Precio })
+                .ToList();
+            dgvSectores.Columns["ID"].Visible = false;
         }
 
         private void btnAgregarSector_Click(object sender, EventArgs e)
@@ -70,18 +68,24 @@ namespace Visual.Vendedor
             frm.IDUsuario = IDUsuario;
             frm.ConexionSql = ConexionSql;
             frm.IDEvento = IDEvento;
+            frm.NombreEvento = NombreEvento;
             frm.NombreLocal=NombreLocal;
             frm.Show(); this.Close();
         }
         private void btnEliminarSector_Click(object sender, EventArgs e)
         {
-            if (dgvSectores.SelectedCells.Count > 0)
+            if (dgvSectores.CurrentRow != null && dgvSectores.Columns.Contains("ID"))
             {
-                    string nombreSector = dgvSectores.SelectedCells[0].Value.ToString();
-                
-                    gestorEventos.EliminarSector(nombreSector, IDEvento, ConexionSql);
-                    gestorEventos.ReasignarPrecio(IDEvento, ConexionSql);
-                    CargarDGV();
+                int idSector = Convert.ToInt32(dgvSectores.CurrentRow.Cells["ID"].Value);
+                try
+                {
+                    GestorEventos.Instance.EliminarSector(idSector);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                CargarDGV();
             }
             else
             {

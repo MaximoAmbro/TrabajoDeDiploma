@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Negocio;
 using Visual.Vendedor;
 
 namespace Visual
@@ -17,7 +18,7 @@ namespace Visual
     {
         public int IDUsuario;
         public string NombreUsuario;
-        public SqlConnection ConexionSql;
+        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public frmMisLocales()
         {
             InitializeComponent();
@@ -25,20 +26,11 @@ namespace Visual
 
         private void frmMisLocales_Load(object sender, EventArgs e)
         {
-            string consulta = "SELECT ID, Nombre, Direccion, Capacidad FROM Locales WHERE PropietarioID = @IDUsuario";
-            using (SqlCommand cmd = new SqlCommand(consulta, ConexionSql))
-            {
-                ConexionSql.Open();
-                cmd.Parameters.AddWithValue("@IDUsuario", IDUsuario);
-                SqlDataAdapter adaptador = new SqlDataAdapter(cmd);
-                DataTable tabla = new DataTable();
-                adaptador.Fill(tabla);
+            dgvLocales.DataSource = GestorLocales.Instance.PorPropietario(IDUsuario)
+                .Select(l => new { ID = l.Id, l.Nombre, l.Direccion, l.Capacidad })
+                .ToList();
 
-                dgvLocales.DataSource = tabla;
-
-                dgvLocales.Columns["ID"].Visible = false;
-                ConexionSql.Close();
-            }
+            dgvLocales.Columns["ID"].Visible = false;
         }
 
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
