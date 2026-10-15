@@ -81,6 +81,10 @@ namespace Visual.Vendedor
                 {
                     GestorEventos.Instance.EliminarSector(idSector);
                 }
+                catch (ReglaNegocioException ex)
+                {
+                    MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
                 catch (InvalidOperationException ex)
                 {
                     MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);

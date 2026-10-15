@@ -35,6 +35,8 @@
             this.dtEvento = new System.Windows.Forms.DateTimePicker();
             this.label3 = new System.Windows.Forms.Label();
             this.txtNombre = new System.Windows.Forms.TextBox();
+            this.lblCategoria = new System.Windows.Forms.Label();
+            this.cmbCategoria = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -117,7 +119,29 @@
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(272, 32);
             this.txtNombre.TabIndex = 49;
-            // 
+            //
+            // lblCategoria
+            //
+            this.lblCategoria.AutoSize = true;
+            this.lblCategoria.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCategoria.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
+            this.lblCategoria.Location = new System.Drawing.Point(83, 410);
+            this.lblCategoria.Name = "lblCategoria";
+            this.lblCategoria.Size = new System.Drawing.Size(86, 21);
+            this.lblCategoria.TabIndex = 50;
+            this.lblCategoria.Text = "Categoría";
+            //
+            // cmbCategoria
+            //
+            this.cmbCategoria.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cmbCategoria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbCategoria.FormattingEnabled = true;
+            this.cmbCategoria.Location = new System.Drawing.Point(87, 435);
+            this.cmbCategoria.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cmbCategoria.Name = "cmbCategoria";
+            this.cmbCategoria.Size = new System.Drawing.Size(272, 28);
+            this.cmbCategoria.TabIndex = 51;
+            //
             // frmAgregarEventoo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -131,6 +155,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnRegistrar);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblCategoria);
+            this.Controls.Add(this.cmbCategoria);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmAgregarEventoo";
             this.Text = "frmAgregarEventoo";
@@ -147,5 +173,7 @@
         private System.Windows.Forms.DateTimePicker dtEvento;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtNombre;
+        private System.Windows.Forms.Label lblCategoria;
+        private System.Windows.Forms.ComboBox cmbCategoria;
     }
 }

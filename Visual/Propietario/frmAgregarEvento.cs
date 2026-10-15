@@ -21,6 +21,9 @@ namespace Visual.Propietario
         public frmAgregarEvento()
         {
             InitializeComponent();
+            // Items y no DataSource: con DataSource, WinForms preselecciona el primer valor al
+            // mostrarse y la categoría dejaría de ser una elección explícita.
+            cmbCategoria.Items.AddRange(GestorEventos.Categorias.ToArray<object>());
         }
 
         // RN-06: el evento todavía no se guarda. Se publica en frmAgregarSector junto con su
@@ -32,13 +35,18 @@ namespace Visual.Propietario
                 MessageBox.Show("Ingrese el nombre del evento.");
                 return;
             }
+            if (cmbCategoria.SelectedItem == null)
+            {
+                MessageBox.Show("Seleccione la categoría del evento.");
+                return;
+            }
 
             Evento evento = new Evento
             {
                 Nombre = txtNombre.Text.Trim(),
                 Fecha = dtEvento.Value,
                 IdLocal = IDlocal,
-                Categoria = null, // el formulario no tiene control de categoría
+                Categoria = cmbCategoria.SelectedItem.ToString(),
                 Sectores = new List<Sector>()
             };
 

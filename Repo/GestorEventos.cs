@@ -20,6 +20,10 @@ namespace Negocio
         // sectores (A, B y C) por evento.
         private const int MaximoSectores = 3;
 
+        // Valores admitidos en Eventos.Categoria (docs/03-esquema-datos.md). RF-03 filtra por ellos.
+        public static readonly IReadOnlyList<string> Categorias =
+            new[] { "Concierto", "Deportivo", "Teatro", "Cultural" };
+
         private static GestorEventos _instance;
 
         public static GestorEventos Instance
@@ -64,6 +68,11 @@ namespace Negocio
             {
                 throw new ReglaNegocioException("RN-06",
                     "No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.");
+            }
+            if (!Categorias.Contains(e.Categoria))
+            {
+                throw new ArgumentException(
+                    "El evento debe tener categoría: " + string.Join(", ", Categorias) + ".");
             }
             if (e.Sectores.Count > MaximoSectores)
             {
@@ -148,11 +157,28 @@ namespace Negocio
 
         public void EliminarSector(int idSector)
         {
+            Sector sector = RepositorioSectores.Instance.ObtenerPorId(idSector);
+            if (sector == null)
+            {
+                throw new InvalidOperationException("No se encontró ningún sector con ese ID.");
+            }
             if (RepositorioSectores.Instance.ContarEntradas(idSector) > 0)
             {
                 throw new InvalidOperationException(
                     "El sector tiene entradas vendidas: no se puede eliminar.");
             }
+
+            // RN-06 es un invariante: un evento publicado no puede quedarse sin sector con capacidad.
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(sector.IdEvento);
+            bool quedaOtroConCapacidad = Sectores(sector.IdEvento)
+                .Any(s => s.Id != idSector && s.Capacidad > 0);
+            if (evento != null && evento.Estado == EstadoPublicado
+                && sector.Capacidad > 0 && !quedaOtroConCapacidad)
+            {
+                throw new ReglaNegocioException("RN-06",
+                    "No se puede eliminar el sector: es el último con capacidad mayor que cero de un evento publicado.");
+            }
+
             if (!RepositorioSectores.Instance.Eliminar(idSector))
             {
                 throw new InvalidOperationException("No se encontró ningún sector con ese ID.");

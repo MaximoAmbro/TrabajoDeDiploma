@@ -49,17 +49,29 @@ namespace Datos
             }
         }
 
+        // Devuelve null si no existe.
+        public Sector ObtenerPorId(int idSector)
+        {
+            List<Sector> sectores = Consultar(Columnas + "WHERE ID = @Valor", idSector);
+            return sectores.Count == 0 ? null : sectores[0];
+        }
+
         public List<Sector> ObtenerPorEvento(int idEvento)
         {
-            const string consulta =
-                "SELECT ID, EventoID, Nombre, Precio, Capacidad, CantidadReservada " +
-                "FROM Sectores WHERE EventoID = @EventoID ORDER BY Precio DESC";
+            return Consultar(Columnas + "WHERE EventoID = @Valor ORDER BY Precio DESC", idEvento);
+        }
+
+        private const string Columnas =
+            "SELECT ID, EventoID, Nombre, Precio, Capacidad, CantidadReservada FROM Sectores ";
+
+        private List<Sector> Consultar(string consulta, int valor)
+        {
             var sectores = new List<Sector>();
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlCommand comando = CrearComando(conexion, consulta))
             {
-                AgregarParametro(comando, "@EventoID", idEvento);
+                AgregarParametro(comando, "@Valor", valor);
                 using (SqlDataReader lector = comando.ExecuteReader())
                 {
                     while (lector.Read())
