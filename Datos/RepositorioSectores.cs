@@ -140,6 +140,81 @@ namespace Datos
             }
         }
 
+        // RN-08 + RN-15: suma la cantidad a CantidadReservada solo si el cupo alcanza. La condición
+        // va en el mismo UPDATE, así dos reservas simultáneas no pueden pasarse del cupo.
+        // Devuelve false si no alcanza. Lo usa RepositorioCompras dentro de su transacción.
+        internal bool Reservar(int idSector, int cantidad, SqlConnection conexion, SqlTransaction transaccion)
+        {
+            const string consulta =
+                "UPDATE s SET s.CantidadReservada = s.CantidadReservada + @Cantidad " +
+                "FROM Sectores s " +
+                "WHERE s.ID = @IdSector " +
+                "  AND s.Capacidad " +
+                "    - ISNULL((SELECT SUM(e.CantidadVendida) FROM Entradas e " +
+                "              WHERE e.ID_Sector = s.ID AND e.Estado = 'Confirmada'), 0) " +
+                "    - s.CantidadReservada >= @Cantidad";
+
+            using (SqlCommand comando = CrearComando(conexion, consulta, transaccion))
+            {
+                AgregarParametro(comando, "@Cantidad", cantidad);
+                AgregarParametro(comando, "@IdSector", idSector);
+                return comando.ExecuteNonQuery() == 1;
+            }
+        }
+
+        // Reserva de una vez todas las entradas Pendiente de la compra, sector por sector.
+        // Devuelve el ID del primer sector sin cupo, o null si todo entró.
+        internal int? ReservarCompra(int idCompra, SqlConnection conexion, SqlTransaction transaccion)
+        {
+            foreach (KeyValuePair<int, int> par in PendientesPorSector(idCompra, conexion, transaccion))
+            {
+                if (!Reservar(par.Key, par.Value, conexion, transaccion))
+                {
+                    return par.Key;
+                }
+            }
+            return null;
+        }
+
+        // RN-15 + RN-32: devuelve a CantidadReservada lo que reservaron las entradas Pendiente de la
+        // compra. Hay que llamarlo ANTES de cambiarles el estado a esas entradas.
+        internal void LiberarCompra(int idCompra, SqlConnection conexion, SqlTransaction transaccion)
+        {
+            const string consulta =
+                "UPDATE s SET s.CantidadReservada = s.CantidadReservada - r.Cantidad " +
+                "FROM Sectores s " +
+                "JOIN (SELECT ID_Sector, SUM(CantidadVendida) AS Cantidad FROM Entradas " +
+                "      WHERE ID_Compra = @IdCompra AND Estado = 'Pendiente' GROUP BY ID_Sector) r " +
+                "  ON r.ID_Sector = s.ID";
+
+            using (SqlCommand comando = CrearComando(conexion, consulta, transaccion))
+            {
+                AgregarParametro(comando, "@IdCompra", idCompra);
+                comando.ExecuteNonQuery();
+            }
+        }
+
+        private Dictionary<int, int> PendientesPorSector(int idCompra, SqlConnection conexion, SqlTransaction transaccion)
+        {
+            const string consulta =
+                "SELECT ID_Sector, SUM(CantidadVendida) AS Cantidad FROM Entradas " +
+                "WHERE ID_Compra = @IdCompra AND Estado = 'Pendiente' GROUP BY ID_Sector";
+            var cantidades = new Dictionary<int, int>();
+
+            using (SqlCommand comando = CrearComando(conexion, consulta, transaccion))
+            {
+                AgregarParametro(comando, "@IdCompra", idCompra);
+                using (SqlDataReader lector = comando.ExecuteReader())
+                {
+                    while (lector.Read())
+                    {
+                        cantidades[Convert.ToInt32(lector["ID_Sector"])] = Convert.ToInt32(lector["Cantidad"]);
+                    }
+                }
+            }
+            return cantidades;
+        }
+
         public int ContarEntradas(int idSector)
         {
             const string consulta = "SELECT COUNT(*) FROM Entradas WHERE ID_Sector = @ID";
@@ -163,6 +238,18 @@ namespace Datos
                 AgregarParametro(comando, "@ID", idSector);
                 return comando.ExecuteNonQuery() > 0;
             }
+        }
+    }
+
+    // El cupo del sector no alcanzó para la reserva (RN-08). Negocio la traduce a la regla.
+    public class CupoInsuficienteException : Exception
+    {
+        public int IdSector { get; }
+
+        public CupoInsuficienteException(int idSector)
+            : base("No hay cupo suficiente en el sector.")
+        {
+            IdSector = idSector;
         }
     }
 }

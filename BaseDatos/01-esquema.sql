@@ -141,17 +141,19 @@ CREATE TABLE Compras (
     ID                INT IDENTITY(1,1) PRIMARY KEY,
     ID_Usuario        INT           NOT NULL,
     FechaCompra       DATETIME      NOT NULL,
-    Estado            VARCHAR(12)   NOT NULL,   -- Pendiente|Confirmada|Reembolsada
+    Estado            VARCHAR(12)   NOT NULL,   -- Pendiente|Confirmada|Reembolsada|Vencida
     NivelAplicado     VARCHAR(8)    NOT NULL,   -- congelado, RN-22
     DescuentoAplicado DECIMAL(4,3)  NOT NULL,   -- congelado, RN-16
     BaseEntradas      DECIMAL(12,2) NOT NULL,
     MontoDescuento    DECIMAL(12,2) NOT NULL,
     MontoServicios    DECIMAL(12,2) NOT NULL,
     CargoServicio     DECIMAL(12,2) NOT NULL,
+    MontoSeguro       DECIMAL(12,2) NOT NULL DEFAULT 0,   -- RN-28
     TotalPagado       DECIMAL(12,2) NOT NULL,
-    ReservaVence      DATETIME      NULL,       -- RN-15
+    ReservaVence      DATETIME      NULL,       -- RN-15; NULL = sin cupo reservado
     CONSTRAINT FK_Compras_Usuario FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID),
-    CONSTRAINT CK_Compras_Estado CHECK (Estado IN ('Pendiente','Confirmada','Reembolsada'))
+    CONSTRAINT CK_Compras_Estado
+        CHECK (Estado IN ('Pendiente','Confirmada','Reembolsada','Vencida'))
 );
 
 ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Compras
@@ -159,6 +161,22 @@ ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Compras
 
 CREATE INDEX IX_Compras_Usuario_Fecha
     ON Compras (ID_Usuario, FechaCompra) INCLUDE (Estado);   -- RN-19
+
+-- RN-30 + RN-31: un intento de pago por fila; un cliente puede reintentar la misma compra.
+-- De la tarjeta solo se guardan los últimos 4 dígitos y el token, nunca el número completo.
+CREATE TABLE Pagos (
+    ID          INT IDENTITY(1,1) PRIMARY KEY,
+    ID_Compra   INT          NOT NULL,
+    FechaPago   DATETIME     NOT NULL,
+    Estado      VARCHAR(10)  NOT NULL,   -- Aprobado|Rechazado
+    Ultimos4    CHAR(4)      NOT NULL,
+    Token       VARCHAR(64)  NOT NULL,
+    Motivo      VARCHAR(80)  NULL,       -- solo en los rechazados
+    CONSTRAINT FK_Pagos_Compras FOREIGN KEY (ID_Compra) REFERENCES Compras(ID),
+    CONSTRAINT CK_Pagos_Estado CHECK (Estado IN ('Aprobado','Rechazado')),
+    CONSTRAINT CK_Pagos_Ultimos4 CHECK (Ultimos4 LIKE '[0-9][0-9][0-9][0-9]')
+);
+CREATE INDEX IX_Pagos_Compra ON Pagos (ID_Compra);
 GO
 
 -- ═══════════════ Servicios complementarios ═══════════════

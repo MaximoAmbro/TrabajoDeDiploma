@@ -227,6 +227,12 @@
     <Compile Include="Cliente\FrmCompraCliente.Designer.cs">
       <DependentUpon>FrmCompraCliente.cs</DependentUpon>
     </Compile>
+    <Compile Include="Cliente\frmConfirmacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cliente\frmConfirmacion.Designer.cs">
+      <DependentUpon>frmConfirmacion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Cliente\frmEventosCliente.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -238,6 +244,12 @@
     </Compile>
     <Compile Include="Cliente\frmHistorialCliente.Designer.cs">
       <DependentUpon>frmHistorialCliente.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cliente\frmPago.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cliente\frmPago.Designer.cs">
+      <DependentUpon>frmPago.cs</DependentUpon>
     </Compile>
     <Compile Include="Cliente\frmMenuCliente.cs">
       <SubType>Form</SubType>

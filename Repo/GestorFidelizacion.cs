@@ -81,6 +81,10 @@ namespace Negocio
             decimal subtotalEntradas = baseEntradas - monto;
             decimal servicios = GestorPaquetes.Instance.SubtotalServicios(p);
             decimal cargo = Redondear(subtotalEntradas * GestorParametros.Instance.ObtenerDecimal("CARGO_SERVICIO"));
+            // RN-28: SEGURO_PRECIO por entrada, sin descuento por nivel ni cargo por servicio.
+            decimal seguro = p.ConSeguro
+                ? GestorPaquetes.Instance.CantidadEntradas(p) * GestorParametros.Instance.ObtenerDecimal("SEGURO_PRECIO")
+                : 0m;
 
             return new ResumenDescuento
             {
@@ -91,7 +95,8 @@ namespace Negocio
                 SubtotalEntradas = subtotalEntradas,
                 Servicios = servicios,
                 CargoServicio = cargo,
-                Total = subtotalEntradas + servicios + cargo
+                Seguro = seguro,
+                Total = subtotalEntradas + servicios + cargo + seguro
             };
         }
 
@@ -113,6 +118,28 @@ namespace Negocio
             c.Nivel = nivel;
             c.FechaUltimaEvaluacion = fecha.Date;
             c.ComprasUltimos12Meses = compras;
+        }
+
+        // RN-22: al confirmarse una compra el nivel se recalcula y, si sube, rige desde la
+        // operación siguiente. Un descenso no se aplica acá: espera a la reevaluación mensual
+        // (RN-23; conflicto RN-23 vs RN-19 en docs/02-reglas-negocio.md).
+        public void AscenderSiCorresponde(Cliente c, DateTime fecha)
+        {
+            if (c == null)
+            {
+                throw new ArgumentNullException(nameof(c));
+            }
+            int compras = ComprasEnVentana(c.Id, fecha);
+            NivelFidelidad nivel = NivelPorCantidad(compras);
+            c.ComprasUltimos12Meses = compras;
+            if (nivel <= c.Nivel)
+            {
+                return;
+            }
+            DateTime evaluacion = c.FechaUltimaEvaluacion ?? fecha;
+            RepositorioFidelizacion.Instance.ActualizarNivel(c.Id, nivel, evaluacion);
+            c.Nivel = nivel;
+            c.FechaUltimaEvaluacion = evaluacion.Date;
         }
 
         // ------------------------------------- privados -------------------------------------

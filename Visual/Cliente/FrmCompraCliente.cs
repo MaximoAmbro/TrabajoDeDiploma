@@ -39,7 +39,6 @@ namespace Visual
         public int IDEvento;
         public SqlConnection ConexionSql; // TODO Seccion 7: quitar ConexionSql (se devuelve a frmEventosCliente)
         public string NombreUsuario;
-        GestorEventos GestorEventos = new GestorEventos();
 
         // RF-05: lo que el cliente va armando. Vive en memoria hasta confirmar la compra.
         private Paquete paquete;
@@ -54,6 +53,8 @@ namespace Visual
         }
         private void FrmCompraCliente_Load(object sender, EventArgs e)
         {
+            // RN-15: liberación perezosa de reservas vencidas, antes de calcular los disponibles.
+            GestorCompras.Instance.LiberarVencidas();
             try
             {
                 paquete = GestorPaquetes.Instance.Nuevo(IDEvento);
@@ -77,19 +78,62 @@ namespace Visual
             lblResumen.UseMnemonic = false;   // «Meet & Greet»: el & no es tecla de acceso
             ActualizarResumen();
         }
+        // RF-06: reserva el cupo y pasa a la pantalla de pago.
         private void btnComprar_Click(object sender, EventArgs e)
         {
+            // H-04: el seguro solo se contrata durante la compra (RN-28).
+            if (!paquete.ConSeguro && GestorPaquetes.Instance.CantidadEntradas(paquete) > 0)
+            {
+                DialogResult sinSeguro = MessageBox.Show(
+                    "No agregaste el seguro de entrada. Solo se puede contratar ahora: después de " +
+                    "pagar no se puede incorporar.\n\n¿Continuar sin seguro?",
+                    "Seguro de entrada", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button2);
+                if (sinSeguro != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
+            Compra compra;
             try
             {
-                GestorPaquetes.Instance.Validar(paquete);
-                GenerarTicket(); CargarEntradas();
+                compra = GestorCompras.Instance.Iniciar(paquete, cliente);
             }
             catch (ReglaNegocioException ex)
             {
                 MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                RecargarDisponibles();
                 return;
             }
-            MessageBox.Show("Compra realizada con exito," + "revise documentos para recibir su entrada");
+
+            DialogResult resultado;
+            using (var pago = new frmPago { Compra = compra })
+            {
+                resultado = pago.ShowDialog(this);
+            }
+
+            if (resultado == DialogResult.Abort)
+            {
+                // H-02: venció el plazo; el cupo ya se liberó.
+                VolverAlListado();
+                return;
+            }
+            if (resultado != DialogResult.OK)
+            {
+                RecargarDisponibles();
+                return;
+            }
+
+            List<string> rutas = GenerarTicket(compra);
+            using (var confirmacion = new frmConfirmacion { Compra = compra, Rutas = rutas, Carpeta = CarpetaTickets() })
+            {
+                confirmacion.ShowDialog(this);
+            }
+
+            // RN-22: si la compra subió el nivel, rige desde esta operación siguiente.
+            cliente = GestorFidelizacion.Instance.ObtenerCliente(IDUsuario);
+            CargarNivel();
             paquete = GestorPaquetes.Instance.Nuevo(IDEvento);
             CargarSectores();
             foreach (CheckBox chk in ChecksDeServicio())
@@ -102,10 +146,16 @@ namespace Visual
 
         // --------------------------------------        FUNCIONES          --------------------------------------
 
-        // TODO Seccion 7: flujo provisorio, sin reserva, pago ni QR guardado.
-        private void CargarEntradas()
+        // Vuelve a leer el cupo sin perder lo que el cliente pidió.
+        private void RecargarDisponibles()
         {
-            GestorPaquetes.Instance.RegistrarEntradas(paquete, IDUsuario);
+            cargandoGrilla = true;
+            foreach (DataGridViewRow fila in dgvSectores.Rows)
+            {
+                fila.Cells["Disponibles"].Value =
+                    GestorPaquetes.Instance.DisponiblesDe(Convert.ToInt32(fila.Cells["IdSector"].Value));
+            }
+            cargandoGrilla = false;
         }
 
         private void CargarNivel()
@@ -328,7 +378,9 @@ namespace Visual
             texto.AppendLine(Importe("Subtotal servicios", resumen.Servicios));
             texto.AppendLine();
             texto.AppendLine(Importe("Cargo por servicio", resumen.CargoServicio));
-            texto.AppendLine("Seguro: " + (paquete.ConSeguro ? "sí, se cotiza al pagar" : "no"));
+            texto.AppendLine(paquete.ConSeguro
+                ? Importe($"Seguro ({GestorPaquetes.Instance.CantidadEntradas(paquete)} entradas)", resumen.Seguro)
+                : "Seguro: no");
             texto.AppendLine();
             texto.AppendLine(Importe("TOTAL", resumen.Total));
             // H-01: el hallazgo de usabilidad más repetido.
@@ -361,29 +413,45 @@ namespace Visual
                 || (paquete.Entradas.Count == 0 && paquete.Servicios.Count == 0 && !paquete.ConSeguro);
         }
 
-        public void GenerarTicket()
+        private static string CarpetaTickets()
         {
-            string carpetaTickets = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\A1.Tickets EVENTAURA";
+            return System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "A1.Tickets EVENTAURA");
+        }
+
+        // RF-07 + RN-18: un PDF por entrada confirmada, con el QR de su propio código.
+        public List<string> GenerarTicket(Compra compra)
+        {
+            string carpetaTickets = CarpetaTickets();
             if (!Directory.Exists(carpetaTickets))
             {
                 Directory.CreateDirectory(carpetaTickets);
             }
 
-            string fechaevento = evento.Fecha.ToString("dd/MM/yyyy");
-            string marca = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string fechaevento = evento.Fecha.ToString("dd/MM/yyyy HH:mm");
+            string pedido = frmConfirmacion.NumeroPedido(compra);
+            var rutas = new List<string>();
             int CantidadTickets = 0;
-            foreach (Entrada entrada in paquete.Entradas)
+            foreach (Entrada entrada in GestorCompras.Instance.EntradasDe(compra))
             {
-                Sector sector = sectores[entrada.IdSector.Value];
-                string PrecioSector = entrada.Precio.ToString("C2", Pesos);
-                for (int i = 0; i < entrada.CantidadVendida; i++)
+                if (entrada.Estado != EstadoEntrada.Confirmada)
                 {
-                    CantidadTickets++;
-                    string Ruta = System.IO.Path.Combine(carpetaTickets, $"Ticket_{evento.Nombre}_{sector.Nombre}_{marca}_{CantidadTickets}.PDF");
-                    GestorEventos.GenerarTicket(evento.Nombre, sector.Nombre, PrecioSector, fechaevento);
-                    GenerarPDF(Ruta, GestorEventos.MensajeTicket, GestorEventos.QRCodeImage);
+                    continue;
                 }
+                CantidadTickets++;
+                Sector sector = sectores[entrada.IdSector.Value];
+                string mensaje =
+                    "ENTRADA " + evento.Nombre + "\n" +
+                    "SECTOR: " + sector.Nombre + "\n" +
+                    "PRECIO: " + entrada.Precio.ToString("C2", Pesos) + "\n" +
+                    "FECHA: " + fechaevento + "\n" +
+                    "PEDIDO: " + pedido + "\n" +
+                    "CÓDIGO: " + entrada.CodigoQR + "\n";
+                string Ruta = System.IO.Path.Combine(carpetaTickets,
+                    $"Ticket_{pedido}_{sector.Nombre}_{CantidadTickets}.PDF");
+                GenerarPDF(Ruta, mensaje, GeneradorQR.Instance.Imagen(entrada.CodigoQR));
+                rutas.Add(Ruta);
             }
+            return rutas;
         }
         public void GenerarPDF(string ruta, string mensaje, byte[] QR)
         {

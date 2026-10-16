@@ -10,6 +10,7 @@ namespace Entidades
         public decimal SubtotalEntradas { get; set; }
         public decimal Servicios { get; set; }
         public decimal CargoServicio { get; set; }
+        public decimal Seguro { get; set; }        // RN-28: SEGURO_PRECIO por entrada
         public decimal Total { get; set; }
     }
 }

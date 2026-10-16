@@ -1,6 +1,5 @@
 ﻿using Datos;
 using Entidades;
-using QRCoder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using static Entidades.Evento;
-using static QRCoder.PayloadGenerator;
 namespace Negocio
 {
     public partial class GestorEventos //Singleton
@@ -36,9 +34,7 @@ namespace Negocio
             }
         }
 
-        // TODO Seccion 7: FrmCompraCliente crea su propia instancia por el estado que deja
-        // GenerarTicket (MensajeTicket, QRCodeImage). Al migrarlo, hacer privado el constructor.
-        public GestorEventos() { }
+        private GestorEventos() { }
     }
     public partial class GestorEventos //Lista
     {
@@ -49,8 +45,6 @@ namespace Negocio
         public string PrecioB { get; set; }
         public string PrecioC { get; set; }
         public int TotalEntradas { get; set; }
-        public string MensajeTicket { get; set; }
-        public byte[] QRCodeImage { get; set; }
     }
     public partial class GestorEventos //Metodos
     {
@@ -253,35 +247,6 @@ namespace Negocio
                 throw new ArgumentException("La capacidad y el precio del sector no pueden ser negativos.");
             }
         }
-
-        public void GenerarTicket(string NombreEvento, string NombreSector, string PrecioSector, string FechaEvento)
-        {
-            MensajeTicket = null;
-            QRCodeImage = null;
-            string hora = DateTime.Now.ToString();
-            Guid idTicket = Guid.NewGuid();
-
-                    int codigoEvento = Guid.NewGuid().GetHashCode();
-                    string CodigoEvento = codigoEvento.ToString().Substring(0, 8);
-                    MensajeTicket =
-                        "ENTRADA " + NombreEvento + "\n" +
-                        "SECTOR: " + NombreSector + "\n" +
-                        "PRECIO: " + PrecioSector + "$\n" +
-                        "FECHA: " + FechaEvento + "\n";
-
-            string contenidoQR = "CÓDIGO: " + CodigoEvento;
-
-                    using (var qrGenerator = new QRCodeGenerator())
-                    {
-                        var qrCodeData = qrGenerator.CreateQrCode(contenidoQR, QRCodeGenerator.ECCLevel.Q);
-                        using (var qrCode = new PngByteQRCode(qrCodeData))
-                        {
-                            QRCodeImage = qrCode.GetGraphic(20);
-                        }
-                    }
-
-        }
-       
 
     }
 

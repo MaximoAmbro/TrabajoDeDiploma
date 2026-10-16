@@ -118,6 +118,66 @@ queda por mirar en la interfaz real. Entrar como `plata@eventaura.com` salvo que
 | 6.9 | RN-23 en la base de desarrollo: poner `FechaUltimaEvaluacion` del mes pasado a `plata@` y `Nivel = 'Bronce'`, abrir la compra | El encabezado ya dice Plata y la base quedó con `Nivel = 'Plata'` y la fecha de hoy |
 | 6.10 | Igual que 6.9 pero con la fecha de este mes | El encabezado sigue diciendo Bronce: entre reevaluaciones el nivel no cambia |
 
+## Sección 7 — commit «Seccion 7: reserva, pago, confirmacion y ticket»
+
+Antes de probar, aplicar a la base de desarrollo los tres cambios de esquema (están en
+`BaseDatos/01-esquema.sql`, pero el script no se puede volver a correr entero):
+
+```sql
+ALTER TABLE Compras ADD MontoSeguro DECIMAL(12,2) NOT NULL DEFAULT 0;
+GO
+ALTER TABLE Compras DROP CONSTRAINT CK_Compras_Estado;
+ALTER TABLE Compras ADD CONSTRAINT CK_Compras_Estado
+      CHECK (Estado IN ('Pendiente','Confirmada','Reembolsada','Vencida'));
+GO
+CREATE TABLE Pagos (
+    ID          INT IDENTITY(1,1) PRIMARY KEY,
+    ID_Compra   INT          NOT NULL,
+    FechaPago   DATETIME     NOT NULL,
+    Estado      VARCHAR(10)  NOT NULL,
+    Ultimos4    CHAR(4)      NOT NULL,
+    Token       VARCHAR(64)  NOT NULL,
+    Motivo      VARCHAR(80)  NULL,
+    CONSTRAINT FK_Pagos_Compras FOREIGN KEY (ID_Compra) REFERENCES Compras(ID),
+    CONSTRAINT CK_Pagos_Estado CHECK (Estado IN ('Aprobado','Rechazado')),
+    CONSTRAINT CK_Pagos_Ultimos4 CHECK (Ultimos4 LIKE '[0-9][0-9][0-9][0-9]')
+);
+CREATE INDEX IX_Pagos_Compra ON Pagos (ID_Compra);
+GO
+```
+
+Los gestores se verificaron sobre una base temporal (2a a 2h y CP-07, CP-08). El recorrido
+de pantalla también se hizo desde una prueba automática, con capturas; lo que sigue es lo
+que falta mirar a mano. Entrar como `plata@eventaura.com`. Tarjetas de prueba:
+`4111 1111 1111 1111` se aprueba; cualquiera terminada en `0000` se rechaza.
+**Reemplaza a 5.15**: ahora se graba una fila de `Entradas` por entrada, no por sector.
+
+| # | Qué probar | Resultado esperado |
+|---|---|---|
+| 7.1 | 2 Campo + Hospedaje, sin seguro → «Comprar» (H-04) | Pregunta «¿Continuar sin seguro?» con «No» por defecto. «No» se queda en la pantalla sin reservar nada |
+| 7.2 | Marcar el seguro | El resumen muestra «Seguro (2 entradas) $ 10.000,00» y el TOTAL sube a $ 109.625,00. «Comprar» ya no pregunta |
+| 7.3 | Pantalla de pago (H-02) | «Reserva: 09:59» arriba a la derecha, bajando de a un segundo; se pone rojo en el último minuto. Total a pagar igual al del resumen |
+| 7.4 | Tabular en el pago | Titular → Número → Vencimiento → Código → Pagar → Cancelar. Enter equivale a «Pagar». El código se ve con puntos |
+| 7.5 | Datos mal cargados: número de 10 dígitos, vencimiento `13/30` o vencido, código de 2 dígitos | Mensaje en rojo debajo de los campos. No se registra ningún intento en `Pagos` |
+| 7.6 | Tarjeta `4111 1111 1111 0000` | «Pago rechazado: Rechazada por el emisor…» en rojo; se borra el número. En `Compras` la fila sigue Pendiente con `ReservaVence` NULL; en `Pagos`, una fila Rechazado |
+| 7.7 | Reintentar con `4111 1111 1111 1111` | Se aprueba. `Pagos` queda con dos filas para la compra: Rechazado y Aprobado |
+| 7.8 | Confirmación (RF-07) | «¡Compra confirmada!», «Pedido EA-000NNN», desglose igual al resumen, «Tarjeta •••• 1111», token, la carpeta y un PDF por entrada |
+| 7.9 | «Abrir carpeta» | Abre `Documentos\A1.Tickets EVENTAURA` en el Explorador |
+| 7.10 | Abrir los PDF | Uno por entrada, con pedido, sector, precio, fecha y hora del evento y su código. Escanear los QR con el celular: cada uno muestra su código `EA-…` y son todos distintos |
+| 7.11 | «Aceptar» en la confirmación | Vuelve a la compra vacía; Disponibles de Campo bajó 2 |
+| 7.12 | Iniciar un pago y «Cancelar pago» → «Sí» (o cerrar con la X) | Vuelve a la compra con lo armado intacto y Disponibles vuelve al valor anterior |
+| 7.13 | Dejar vencer la reserva (más rápido: `UPDATE Parametros SET Valor = '1' WHERE Clave = 'RESERVA_MINUTOS'` y reiniciar la aplicación) | Al llegar a 00:00 avisa, vuelve al listado y la compra queda `Vencida`, con sus entradas `Vencida`. **Volver a poner `10` después** |
+| 7.14 | CP-08 en pantalla: `plata@` tiene 3 compras; hacer 4 seguidas | En la 4.ª el resumen todavía dice «Desc. Plata 5,0 %». Al aceptar la confirmación, el encabezado ya dice «Tu nivel: Oro · 7,5 %» |
+| 7.15 | Dos sesiones a la vez sobre un sector chico (capacidad 2): en una, iniciar el pago de 2; en la otra, abrir la compra del mismo evento | La segunda muestra Disponibles 0 y rechaza pedir 1 (RN-08). Si la primera cancela, al reabrir la compra vuelven a aparecer |
+
+Limitaciones conocidas, a resolver en la Sección 8 (no son fallas de esta sección):
+
+- `frmHistorialCliente` lista todas las filas de `Entradas`, sin mirar el estado: muestra
+  también las reservas Pendiente y Vencida, y una fila por entrada.
+- `ContarEntradas` (RN-11) cuenta todas las filas, incluidas las Vencidas: un evento con
+  reservas que caducaron no se puede eliminar, solo suspender.
+- La semilla todavía graba las entradas del Clásico Rosarino de a 2 por fila.
+
 ---
 
 ## Riesgo asumido

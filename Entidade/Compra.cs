@@ -14,7 +14,8 @@ namespace Entidades
         public decimal MontoDescuento { get; set; }
         public decimal MontoServicios { get; set; }
         public decimal CargoServicio { get; set; }
+        public decimal MontoSeguro { get; set; }               // RN-28, sin descuento ni cargo
         public decimal TotalPagado { get; set; }
-        public DateTime? ReservaVence { get; set; }            // RN-15
+        public DateTime? ReservaVence { get; set; }            // RN-15; null = sin cupo reservado
     }
 }

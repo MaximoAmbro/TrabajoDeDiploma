@@ -86,8 +86,12 @@ monto      = redondear(base × porcentaje, 2)
 subtotalE  = base − monto
 servicios  = Σ precio de servicios complementarios          // sin descuento
 cargo      = redondear(subtotalE × 0,15 ; 2)
-total      = subtotalE + servicios + cargo
+seguro     = cantidad de entradas × SEGURO_PRECIO, si se contrata   // RN-28
+total      = subtotalE + servicios + cargo + seguro
 ```
+
+El seguro se cobra **por entrada** (una póliza por entrada en `Seguros`): con 3 entradas son
+3 × $5.000 = $15.000. No recibe el descuento por nivel ni el cargo por servicio.
 
 El nivel **se lee de la entidad**, no se recalcula en el momento del cálculo.
 Eso es lo que materializa RN-16 y RN-22.

@@ -7,7 +7,8 @@ using Entidades;
 namespace Negocio
 {
     // RF-04 y RF-05: armado del paquete (entradas de varios sectores + servicios) antes de
-    // confirmar la compra. El paquete vive en memoria; no tiene tabla.
+    // confirmar la compra. El paquete vive en memoria; no tiene tabla. La compra la registra
+    // GestorCompras.
     public sealed class GestorPaquetes
     {
         private static GestorPaquetes _instance;
@@ -166,33 +167,6 @@ namespace Negocio
         public decimal SubtotalServicios(Paquete p)
         {
             return p.Servicios.Sum(s => s.Precio);
-        }
-
-        // Nivel persistido del cliente (RN-22) y su porcentaje (RN-20).
-        public NivelFidelidad NivelDe(int idUsuario)
-        {
-            return RepositorioUsuarios.Instance.ObtenerNivel(idUsuario);
-        }
-
-        // La tabla de porcentajes vive en GestorFidelizacion: una sola implementación.
-        public decimal PorcentajeDescuento(NivelFidelidad nivel)
-        {
-            return GestorFidelizacion.Instance.PorcentajePara(nivel);
-        }
-
-        // TODO Seccion 7: flujo provisorio. Registra las entradas como confirmadas sin reserva
-        // (RN-15), sin pago (RN-17) y sin QR (RN-18), igual que el flujo anterior a la Sección 5.
-        public void RegistrarEntradas(Paquete p, int idUsuario)
-        {
-            Validar(p);
-            DateTime ahora = DateTime.Now;
-            foreach (Entrada entrada in p.Entradas)
-            {
-                entrada.IdUsuario = idUsuario;
-                entrada.FechaVenta = ahora;
-                entrada.Estado = EstadoEntrada.Confirmada;
-            }
-            RepositorioEntradas.Instance.Insertar(p.Entradas);
         }
 
         // ------------------------------------- privados -------------------------------------
