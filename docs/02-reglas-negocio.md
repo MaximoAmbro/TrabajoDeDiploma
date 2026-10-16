@@ -28,7 +28,7 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 
 | ID | Regla | T |
 |---|---|---|
-| RN-12 | Máximo 6 entradas por operación y por evento. | A |
+| RN-12 | Máximo 6 entradas por operación y por evento, sumando todos los sectores elegidos. | A |
 | RN-13 | Un paquete debe contener al menos una entrada; los servicios no se venden sueltos. | E |
 | RN-14 | Un servicio complementario solo se incorpora si el evento lo tiene habilitado. | A |
 | RN-15 | Al iniciar el pago las entradas quedan reservadas 10 minutos; vencido el plazo el cupo se libera. | A |
@@ -111,6 +111,7 @@ No escribir estos valores en el código. Van en la tabla `Parametros`.
 | `DESCUENTO_MAX_ADMISIBLE` | RN-20 | 0.086 |
 | `CARGO_SERVICIO` | — | 0.150 |
 | `SEGURO_HORAS_COBERTURA` | RN-29 | 48 |
+| `SEGURO_PRECIO` | RN-28 | 5000 |
 
 ## Conflictos resueltos
 

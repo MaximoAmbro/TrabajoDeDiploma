@@ -278,7 +278,7 @@ Convención de nombres: la columna `ID_Usuario` se mapea como `IdUsuario`, `Loca
 
 ## Datos semilla mínimos
 
-- Los 13 registros de `Parametros` de `docs/02-reglas-negocio.md`.
+- Los 14 registros de `Parametros` de `docs/02-reglas-negocio.md`.
 - Un usuario Administrador y tres Clientes, uno por nivel.
 - Un local con tres eventos: uno vigente con cupo, uno agotado, uno con fecha pasada.
 - Tres sectores por evento con precios distintos.

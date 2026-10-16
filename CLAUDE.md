@@ -87,12 +87,15 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
 - Fechas: `DateTime`. La ventana de fidelización usa `AddMonths(-12)`.
 - Los valores numéricos de las reglas **no se escriben en el código**: se leen de la tabla
   `Parametros` (ver `docs/02-reglas-negocio.md`, sección de parámetros configurables).
-- **Archivos `.Designer.cs`**: no se reposiciona, redimensiona ni recolorea lo existente.
-  Sí se permite, avisándolo en el reporte:
-  - **agregar** un control cuando un requerimiento lo necesita y no hay otra forma de cumplirlo;
+- **Archivos `.Designer.cs`**: el criterio es **no rediseñar por gusto**. No se reposiciona,
+  redimensiona ni recolorea nada que ya funcione. Sí se permite, siempre declarándolo en el
+  reporte:
+  - **agregar** un control que un requerimiento necesita;
+  - **reemplazar** un grupo de controles por otro cuando la tarea lo pide de forma explícita;
   - corregir el **orden de tabulación** (`TabIndex`);
   - corregir el **texto visible** de etiquetas y botones.
-  El formato de un `DataGridView` va por código en el `Load`, no en el Designer.
+  Ante la duda, preguntá antes de tocar. El formato de un `DataGridView` va por código en el
+  `Load`, no en el Designer.
 
 ---
 
