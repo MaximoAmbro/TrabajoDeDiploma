@@ -108,9 +108,12 @@ namespace Datos
             });
         }
 
+        // RN-11: solo cuentan las ventas. Las reservas Pendiente y las Vencida no son ventas: una
+        // reserva abandonada no debe impedir eliminar el evento.
         public int ContarEntradas(int idEvento)
         {
-            const string consulta = "SELECT COUNT(*) FROM Entradas WHERE ID_Evento = @ID";
+            const string consulta =
+                "SELECT COUNT(*) FROM Entradas WHERE ID_Evento = @ID AND Estado = 'Confirmada'";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlCommand comando = CrearComando(conexion, consulta))
@@ -120,12 +123,15 @@ namespace Datos
             }
         }
 
-        // Borra el evento junto con lo que cuelga de él. No borra entradas: Negocio verifica
-        // antes que no haya (RN-11) y, si se colara alguna, FK_Entradas_Sectores aborta la transacción.
-        // Devuelve false si no existe el evento.
+        // Borra el evento junto con lo que cuelga de él. Las entradas no confirmadas (reservas
+        // Pendiente o Vencida) se borran: antes, sus compras abiertas pasan a Vencida, así un pago en
+        // curso no puede confirmarse sin entradas. Compras y Pagos quedan como rastro (RN-31).
+        // Las Confirmadas no se borran: Negocio verifica antes que no haya (RN-11) y, si se colara
+        // alguna, FK_Entradas_Sectores aborta la transacción. Devuelve false si no existe el evento.
         public bool Eliminar(int idEvento)
         {
             const string consulta =
+                "DELETE FROM Entradas WHERE ID_Evento = @ID AND Estado IN ('Pendiente', 'Vencida'); " +
                 "DELETE FROM ServiciosEvento WHERE ID_Evento = @ID; " +
                 "DELETE FROM ListaEspera WHERE ID_Evento = @ID; " +
                 "DELETE FROM Sectores WHERE EventoID = @ID; " +
@@ -137,6 +143,9 @@ namespace Datos
             {
                 try
                 {
+                    RepositorioCompras.Instance.VencerAbiertas(
+                        "SELECT DISTINCT ID_Compra FROM Entradas WHERE ID_Evento = @ID AND Estado = 'Pendiente'",
+                        idEvento, conexion, transaccion);
                     int filas;
                     using (SqlCommand comando = CrearComando(conexion, consulta, transaccion))
                     {

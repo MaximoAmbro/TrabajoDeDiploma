@@ -214,6 +214,11 @@ borrar la fila perdería el rastro del intento que pide RN-31.
   un reintento no lo extiende.
 - **Liberación perezosa.** No hay proceso en segundo plano: `GestorCompras.LiberarVencidas`
   se corre al abrir la pantalla de compra y al agotarse el temporizador de pago.
+- **Baja de un evento o un sector.** RN-11 cuenta solo las entradas `Confirmada`: una reserva
+  no es una venta. Al eliminar, las compras todavía `Pendiente` con entradas ahí pasan a
+  `Vencida` (devolviendo el cupo que retengan en otros sectores) y se borran las entradas
+  `Pendiente` y `Vencida`, que si no frenarían el borrado por clave foránea. `Compras` y
+  `Pagos` quedan como rastro (RN-31).
 
 ## Estados de un evento
 

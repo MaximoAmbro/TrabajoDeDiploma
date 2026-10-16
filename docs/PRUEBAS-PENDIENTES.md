@@ -169,13 +169,13 @@ que falta mirar a mano. Entrar como `plata@eventaura.com`. Tarjetas de prueba:
 | 7.13 | Dejar vencer la reserva (más rápido: `UPDATE Parametros SET Valor = '1' WHERE Clave = 'RESERVA_MINUTOS'` y reiniciar la aplicación) | Al llegar a 00:00 avisa, vuelve al listado y la compra queda `Vencida`, con sus entradas `Vencida`. **Volver a poner `10` después** |
 | 7.14 | CP-08 en pantalla: `plata@` tiene 3 compras; hacer 4 seguidas | En la 4.ª el resumen todavía dice «Desc. Plata 5,0 %». Al aceptar la confirmación, el encabezado ya dice «Tu nivel: Oro · 7,5 %» |
 | 7.15 | Dos sesiones a la vez sobre un sector chico (capacidad 2): en una, iniciar el pago de 2; en la otra, abrir la compra del mismo evento | La segunda muestra Disponibles 0 y rechaza pedir 1 (RN-08). Si la primera cancela, al reabrir la compra vuelven a aparecer |
+| 7.16 | Iniciar un pago de un evento nuevo, cancelarlo, y después eliminar el evento como propietario | Lo elimina: una reserva abandonada no es una venta |
+| 7.17 | Eliminar el último sector con capacidad de un evento publicado que tiene una reserva vencida | Sigue dando el mensaje de RN-06, que es el motivo correcto |
 
 Limitaciones conocidas, a resolver en la Sección 8 (no son fallas de esta sección):
 
 - `frmHistorialCliente` lista todas las filas de `Entradas`, sin mirar el estado: muestra
   también las reservas Pendiente y Vencida, y una fila por entrada.
-- `ContarEntradas` (RN-11) cuenta todas las filas, incluidas las Vencidas: un evento con
-  reservas que caducaron no se puede eliminar, solo suspender.
 - La semilla todavía graba las entradas del Clásico Rosarino de a 2 por fila.
 
 ---

@@ -215,9 +215,12 @@ namespace Datos
             return cantidades;
         }
 
+        // RN-11: solo cuentan las ventas. Las reservas Pendiente y las Vencida no son ventas: una
+        // reserva abandonada no debe impedir eliminar el sector.
         public int ContarEntradas(int idSector)
         {
-            const string consulta = "SELECT COUNT(*) FROM Entradas WHERE ID_Sector = @ID";
+            const string consulta =
+                "SELECT COUNT(*) FROM Entradas WHERE ID_Sector = @ID AND Estado = 'Confirmada'";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlCommand comando = CrearComando(conexion, consulta))
@@ -228,15 +231,38 @@ namespace Datos
         }
 
         // Devuelve false si no existe el sector.
+        // Igual que RepositorioEventos.Eliminar: las compras abiertas con entradas en el sector se
+        // vencen enteras (devolviendo el cupo que retengan en los otros sectores del evento) y se
+        // borran las entradas no confirmadas del sector. Las Confirmadas no: las frena la FK.
         public bool Eliminar(int idSector)
         {
-            const string consulta = "DELETE FROM Sectores WHERE ID = @ID";
+            const string consulta =
+                "DELETE FROM Entradas WHERE ID_Sector = @ID AND Estado IN ('Pendiente', 'Vencida'); " +
+                "DELETE FROM Sectores WHERE ID = @ID; " +
+                "SELECT @@ROWCOUNT;";
 
             using (SqlConnection conexion = AbrirConexion())
-            using (SqlCommand comando = CrearComando(conexion, consulta))
+            using (SqlTransaction transaccion = conexion.BeginTransaction())
             {
-                AgregarParametro(comando, "@ID", idSector);
-                return comando.ExecuteNonQuery() > 0;
+                try
+                {
+                    RepositorioCompras.Instance.VencerAbiertas(
+                        "SELECT DISTINCT ID_Compra FROM Entradas WHERE ID_Sector = @ID AND Estado = 'Pendiente'",
+                        idSector, conexion, transaccion);
+                    int filas;
+                    using (SqlCommand comando = CrearComando(conexion, consulta, transaccion))
+                    {
+                        AgregarParametro(comando, "@ID", idSector);
+                        filas = Convert.ToInt32(comando.ExecuteScalar());
+                    }
+                    transaccion.Commit();
+                    return filas > 0;
+                }
+                catch
+                {
+                    transaccion.Rollback();
+                    throw;
+                }
             }
         }
     }

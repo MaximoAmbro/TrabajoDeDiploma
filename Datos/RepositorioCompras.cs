@@ -270,6 +270,56 @@ namespace Datos
             }
         }
 
+        // Cierra como Vencida cada compra Pendiente que devuelve la consulta (una columna ID_Compra,
+        // con @ID como parámetro): devuelve el cupo que retenga y vence sus entradas Pendiente.
+        // Lo usan las bajas de eventos y sectores, dentro de su transacción.
+        internal void VencerAbiertas(string consultaIds, int id, SqlConnection conexion, SqlTransaction transaccion)
+        {
+            const string vencer =
+                "UPDATE Compras SET Estado = 'Vencida' " +
+                "OUTPUT CASE WHEN DELETED.ReservaVence IS NULL THEN 0 ELSE 1 END " +
+                "WHERE ID = @IdCompra AND Estado = 'Pendiente'";
+            const string vencerEntradas =
+                "UPDATE Entradas SET Estado = 'Vencida' WHERE ID_Compra = @IdCompra AND Estado = 'Pendiente'";
+
+            var compras = new List<int>();
+            using (SqlCommand comando = CrearComando(conexion, consultaIds, transaccion))
+            {
+                AgregarParametro(comando, "@ID", id);
+                using (SqlDataReader lector = comando.ExecuteReader())
+                {
+                    while (lector.Read())
+                    {
+                        compras.Add(Convert.ToInt32(lector[0]));
+                    }
+                }
+            }
+
+            foreach (int idCompra in compras)
+            {
+                object teniaReserva;
+                using (SqlCommand comando = CrearComando(conexion, vencer, transaccion))
+                {
+                    AgregarParametro(comando, "@IdCompra", idCompra);
+                    teniaReserva = comando.ExecuteScalar();
+                }
+                if (teniaReserva == null)
+                {
+                    continue;   // ya no estaba Pendiente
+                }
+                // Antes de vencer las entradas: LiberarCompra suma las Pendiente.
+                if (Convert.ToInt32(teniaReserva) == 1)
+                {
+                    RepositorioSectores.Instance.LiberarCompra(idCompra, conexion, transaccion);
+                }
+                using (SqlCommand comando = CrearComando(conexion, vencerEntradas, transaccion))
+                {
+                    AgregarParametro(comando, "@IdCompra", idCompra);
+                    comando.ExecuteNonQuery();
+                }
+            }
+        }
+
         // RN-15: pasa a Vencida las compras Pendiente cuyo plazo terminó y devuelve el cupo de las
         // que todavía lo retenían. El plazo es ReservaVence; si ya es NULL (cupo devuelto por un
         // rechazo), FechaCompra + minutosReserva. El UPDATE con OUTPUT toma cada compra una sola
