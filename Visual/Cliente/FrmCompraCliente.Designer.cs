@@ -33,6 +33,7 @@ namespace Visual
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblNivel = new System.Windows.Forms.Label();
+            this.lnkNiveles = new System.Windows.Forms.LinkLabel();
             this.dgvSectores = new System.Windows.Forms.DataGridView();
             this.chkHospedaje = new System.Windows.Forms.CheckBox();
             this.chkTraslado = new System.Windows.Forms.CheckBox();
@@ -104,6 +105,19 @@ namespace Visual
             this.lblNivel.Size = new System.Drawing.Size(40, 19);
             this.lblNivel.TabIndex = 49;
             this.lblNivel.Text = "Nivel";
+            //
+            // lnkNiveles
+            //
+            this.lnkNiveles.AutoSize = true;
+            this.lnkNiveles.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
+            this.lnkNiveles.Location = new System.Drawing.Point(230, 122);
+            this.lnkNiveles.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lnkNiveles.Name = "lnkNiveles";
+            this.lnkNiveles.Size = new System.Drawing.Size(147, 19);
+            this.lnkNiveles.TabIndex = 50;
+            this.lnkNiveles.TabStop = true;
+            this.lnkNiveles.Text = "¿Cómo funcionan los niveles?";
+            this.lnkNiveles.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkNiveles_LinkClicked);
             //
             // dgvSectores
             //
@@ -196,6 +210,7 @@ namespace Visual
             this.Controls.Add(this.chkTraslado);
             this.Controls.Add(this.chkHospedaje);
             this.Controls.Add(this.dgvSectores);
+            this.Controls.Add(this.lnkNiveles);
             this.Controls.Add(this.lblNivel);
             this.Controls.Add(this.btnComprar);
             this.Controls.Add(this.label4);
@@ -223,6 +238,7 @@ namespace Visual
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblNivel;
+        private System.Windows.Forms.LinkLabel lnkNiveles;
         private System.Windows.Forms.DataGridView dgvSectores;
         private System.Windows.Forms.CheckBox chkHospedaje;
         private System.Windows.Forms.CheckBox chkTraslado;

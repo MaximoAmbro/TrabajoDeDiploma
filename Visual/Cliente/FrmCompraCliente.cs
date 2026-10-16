@@ -44,6 +44,7 @@ namespace Visual
         // RF-05: lo que el cliente va armando. Vive en memoria hasta confirmar la compra.
         private Paquete paquete;
         private Evento evento;
+        private Cliente cliente;   // RN-22: su nivel persistido es el que se aplica
         private Dictionary<int, Sector> sectores = new Dictionary<int, Sector>();
         private bool cargandoGrilla;
 
@@ -66,10 +67,14 @@ namespace Visual
             evento = GestorEventos.Instance.ObtenerPorId(IDEvento);
             label1.Text = evento.Nombre;
 
+            // RN-23: reevaluación mensual antes de iniciar la operación, nunca en medio de ella.
+            cliente = GestorFidelizacion.Instance.ObtenerCliente(IDUsuario);
+            GestorFidelizacion.Instance.ReevaluarNivel(cliente, DateTime.Now);
             CargarNivel();
             CargarSectores();
             CargarServicios();
             chkSeguro.CheckedChanged += chkSeguro_CheckedChanged;
+            lblResumen.UseMnemonic = false;   // «Meet & Greet»: el & no es tecla de acceso
             ActualizarResumen();
         }
         private void btnComprar_Click(object sender, EventArgs e)
@@ -105,9 +110,33 @@ namespace Visual
 
         private void CargarNivel()
         {
-            NivelFidelidad nivel = GestorPaquetes.Instance.NivelDe(IDUsuario);
-            decimal porcentaje = GestorPaquetes.Instance.PorcentajeDescuento(nivel);
-            lblNivel.Text = $"Tu nivel: {nivel} · {porcentaje:P1} de descuento sobre las entradas";
+            decimal porcentaje = GestorFidelizacion.Instance.PorcentajePara(cliente.Nivel);
+            lblNivel.Text = $"Tu nivel: {cliente.Nivel} · {porcentaje.ToString("P1", Pesos)} de descuento";
+            lnkNiveles.Left = lblNivel.Right + 2;
+        }
+
+        // H-05: explica los niveles con los valores vigentes de la tabla Parametros.
+        private void lnkNiveles_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            int meses = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_VENTANA_MESES");
+            int plata = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_PLATA");
+            int oro = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_ORO");
+            string Porcentaje(NivelFidelidad nivel) =>
+                GestorFidelizacion.Instance.PorcentajePara(nivel).ToString("P1", Pesos);
+
+            var texto = new StringBuilder();
+            texto.AppendLine($"Tu nivel depende de las compras confirmadas en los últimos {meses} meses:");
+            texto.AppendLine();
+            texto.AppendLine($"  •  Bronce: de 0 a {plata - 1} compras  →  {Porcentaje(NivelFidelidad.Bronce)} de descuento");
+            texto.AppendLine($"  •  Plata: de {plata} a {oro - 1} compras  →  {Porcentaje(NivelFidelidad.Plata)} de descuento");
+            texto.AppendLine($"  •  Oro: {oro} compras o más  →  {Porcentaje(NivelFidelidad.Oro)} de descuento");
+            texto.AppendLine();
+            texto.AppendLine("El descuento se aplica sobre el valor de las entradas, no sobre los servicios ni el cargo por servicio.");
+            texto.AppendLine();
+            texto.AppendLine("El nivel se reevalúa una vez por mes. Una compra cuenta para tu nivel " +
+                             "a partir de la operación siguiente, no en la misma.");
+            MessageBox.Show(texto.ToString(), "¿Cómo funcionan los niveles?",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         // H-03: la grilla muestra el cupo restante de cada sector. Solo Cantidad es editable.
@@ -265,13 +294,15 @@ namespace Visual
             ActualizarResumen();
         }
 
-        // RF-05: desglose del paquete. Todavía sin descuento por nivel ni cargo por servicio (Sección 6).
+        // RF-05 + RF-08: desglose del paquete con el orden de cálculo de docs/02-reglas-negocio.md.
         private void ActualizarResumen()
         {
+            ResumenDescuento resumen = GestorFidelizacion.Instance.CalcularDescuento(cliente, paquete);
+
             var texto = new StringBuilder();
             texto.AppendLine("RESUMEN DEL PAQUETE");
             texto.AppendLine();
-            texto.AppendLine("Entradas");
+            texto.AppendLine($"Entradas ({GestorPaquetes.Instance.CantidadEntradas(paquete)})");
             if (paquete.Entradas.Count == 0)
             {
                 texto.AppendLine("  (ninguna)");
@@ -279,40 +310,48 @@ namespace Visual
             foreach (Entrada entrada in paquete.Entradas)
             {
                 Sector sector = sectores[entrada.IdSector.Value];
-                texto.AppendLine($"  {entrada.CantidadVendida} x {sector.Nombre}");
-                texto.AppendLine(Importe("", entrada.Precio * entrada.CantidadVendida));
+                texto.AppendLine(Importe($"  {entrada.CantidadVendida} x {sector.Nombre}", entrada.Precio * entrada.CantidadVendida));
             }
-            texto.AppendLine(Importe("Subtotal entradas", GestorPaquetes.Instance.SubtotalEntradas(paquete)));
+            texto.AppendLine(Importe("Base entradas", resumen.BaseEntradas));
+            texto.AppendLine(Importe($"Desc. {resumen.NivelAplicado} {resumen.Porcentaje.ToString("P1", Pesos)}", -resumen.MontoDescuento));
+            texto.AppendLine(Importe("Subtotal entradas", resumen.SubtotalEntradas));
             texto.AppendLine();
-            texto.AppendLine("Servicios");
+            texto.AppendLine("Servicios (sin descuento)");
             if (paquete.Servicios.Count == 0)
             {
                 texto.AppendLine("  (ninguno)");
             }
             foreach (Servicio servicio in paquete.Servicios)
             {
-                texto.AppendLine($"  {servicio.Nombre}");
-                texto.AppendLine(Importe("", servicio.Precio));
+                texto.AppendLine(Importe("  " + servicio.Nombre, servicio.Precio));
             }
-            texto.AppendLine(Importe("Subtotal servicios", GestorPaquetes.Instance.SubtotalServicios(paquete)));
+            texto.AppendLine(Importe("Subtotal servicios", resumen.Servicios));
             texto.AppendLine();
-            texto.AppendLine("Seguro de entrada: " + (paquete.ConSeguro ? "sí, se cotiza al pagar" : "no"));
+            texto.AppendLine(Importe("Cargo por servicio", resumen.CargoServicio));
+            texto.AppendLine("Seguro: " + (paquete.ConSeguro ? "sí, se cotiza al pagar" : "no"));
             texto.AppendLine();
-            decimal total = GestorPaquetes.Instance.SubtotalEntradas(paquete) + GestorPaquetes.Instance.SubtotalServicios(paquete);
-            texto.AppendLine(Importe("TOTAL PARCIAL", total));
-            texto.AppendLine();
-            texto.AppendLine("Sin descuento por nivel ni cargo");
-            texto.AppendLine("por servicio: se suman al pagar.");
-            texto.AppendLine($"Entradas: {GestorPaquetes.Instance.CantidadEntradas(paquete)}");
+            texto.AppendLine(Importe("TOTAL", resumen.Total));
+            // H-01: el hallazgo de usabilidad más repetido.
+            texto.AppendLine("El descuento se aplica sobre el valor");
+            texto.AppendLine("de las entradas.");
             lblResumen.Text = texto.ToString();
         }
 
         // RN-33: importes en pesos argentinos.
         private static readonly System.Globalization.CultureInfo Pesos = new System.Globalization.CultureInfo("es-AR");
 
+        // Una línea de 38 columnas: concepto a la izquierda (recortado si no entra), importe a la derecha.
+        private const int AnchoLinea = 38;
+
         private static string Importe(string concepto, decimal monto)
         {
-            return concepto.PadRight(20) + monto.ToString("C2", Pesos).PadLeft(18);
+            string importe = monto.ToString("C2", Pesos);
+            int ancho = AnchoLinea - importe.Length - 1;
+            if (concepto.Length > ancho)
+            {
+                concepto = concepto.Substring(0, ancho - 1) + "…";
+            }
+            return concepto.PadRight(ancho) + " " + importe;
         }
 
         // H-06: confirma antes de descartar lo cargado.

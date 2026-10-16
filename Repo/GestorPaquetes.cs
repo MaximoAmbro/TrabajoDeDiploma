@@ -157,7 +157,7 @@ namespace Negocio
             return p.Entradas.Sum(x => x.CantidadVendida);
         }
 
-        // Base de cálculo de RN-21: solo entradas. Sin descuento ni cargo (Sección 6).
+        // Base de cálculo de RN-21: solo entradas. El descuento lo aplica GestorFidelizacion.
         public decimal SubtotalEntradas(Paquete p)
         {
             return p.Entradas.Sum(x => x.Precio * x.CantidadVendida);
@@ -168,24 +168,16 @@ namespace Negocio
             return p.Servicios.Sum(s => s.Precio);
         }
 
-        // Nivel persistido del cliente (RN-22) y su porcentaje (RN-20). Se muestra en esta
-        // sección; el descuento se aplica en la Sección 6.
+        // Nivel persistido del cliente (RN-22) y su porcentaje (RN-20).
         public NivelFidelidad NivelDe(int idUsuario)
         {
             return RepositorioUsuarios.Instance.ObtenerNivel(idUsuario);
         }
 
+        // La tabla de porcentajes vive en GestorFidelizacion: una sola implementación.
         public decimal PorcentajeDescuento(NivelFidelidad nivel)
         {
-            switch (nivel)
-            {
-                case NivelFidelidad.Oro:
-                    return GestorParametros.Instance.ObtenerDecimal("DESCUENTO_ORO");
-                case NivelFidelidad.Plata:
-                    return GestorParametros.Instance.ObtenerDecimal("DESCUENTO_PLATA");
-                default:
-                    return 0m;   // RN-20: Bronce no tiene descuento
-            }
+            return GestorFidelizacion.Instance.PorcentajePara(nivel);
         }
 
         // TODO Seccion 7: flujo provisorio. Registra las entradas como confirmadas sin reserva

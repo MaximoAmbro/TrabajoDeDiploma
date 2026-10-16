@@ -98,6 +98,26 @@ lugar a la fila de filtros; los botones Comprar y Volver no se movieron.
 | 5.25 | «Limpiar» | Vuelven los dos eventos; caja vacía, combo en «Todas», fecha destildada |
 | 5.26 | Tabular desde la caja de búsqueda | Caja → combo → fecha → Buscar → Limpiar |
 
+## Sección 6 — commit «Seccion 6: fidelizacion y descuento por nivel»
+
+Los cálculos (RN-19 a RN-24, RN-37, CP-03, CP-05, CP-06, CP-09, CP-10 y la referencia de
+$ 99.625) se verificaron con los gestores sobre una base temporal. Lo que sigue es lo que
+queda por mirar en la interfaz real. Entrar como `plata@eventaura.com` salvo que se indique.
+**Reemplaza a 5.4 y 5.7**: el encabezado de nivel cambió de texto y ya no hay «total parcial».
+
+| # | Qué probar | Resultado esperado |
+|---|---|---|
+| 6.1 | Encabezado de nivel | «Tu nivel: Plata · 5,0 % de descuento» y a continuación, en la misma línea y sin pisarse, el enlace «¿Cómo funcionan los niveles?» |
+| 6.2 | Clic en «¿Cómo funcionan los niveles?» (H-05) | Ventana con: ventana de 12 meses; Bronce 0 a 2 compras 0,0 %; Plata 3 a 6 compras 5,0 %; Oro 7 o más 7,5 %; aclaración de que el descuento es solo sobre entradas |
+| 6.3 | 2 Campo + Hospedaje (referencia) | Resumen: Base entradas $ 50.000,00 · Desc. Plata 5,0 % -$ 2.500,00 · Subtotal entradas $ 47.500,00 · Subtotal servicios $ 45.000,00 · Cargo por servicio $ 7.125,00 · **TOTAL $ 99.625,00** |
+| 6.4 | Leyenda H-01 | Debajo del TOTAL: «El descuento se aplica sobre el valor de las entradas.» |
+| 6.5 | Repetir 6.3 con `bronce@eventaura.com` | Desc. Bronce 0,0 % $ 0,00; cargo $ 7.500,00; TOTAL $ 102.500,00 |
+| 6.6 | Repetir con `oro@eventaura.com`: 1 Platea + Hospedaje (CP-05 con la semilla) | Desc. Oro 7,5 % -$ 3.000,00; Hospedaje $ 45.000,00 sin descuento; TOTAL $ 87.550,00 |
+| 6.7 | Paquete máximo: 2 VIP + 2 Platea + 2 Campo, los 4 servicios y seguro | Todo el resumen entra en el panel, sin líneas cortadas; «Meet & Greet» se ve con el «&» |
+| 6.8 | Evento de nombre largo (el título está en `AutoSize`) | Verificar si el título invade el panel del resumen y tapa «RESUMEN DEL PAQUETE». **Viene de la Sección 5**: en la captura de prueba se superponía, pero `DrawToBitmap` no respeta el orden de capas, así que hay que mirarlo en pantalla |
+| 6.9 | RN-23 en la base de desarrollo: poner `FechaUltimaEvaluacion` del mes pasado a `plata@` y `Nivel = 'Bronce'`, abrir la compra | El encabezado ya dice Plata y la base quedó con `Nivel = 'Plata'` y la fecha de hoy |
+| 6.10 | Igual que 6.9 pero con la fecha de este mes | El encabezado sigue diciendo Bronce: entre reevaluaciones el nivel no cambia |
+
 ---
 
 ## Riesgo asumido
