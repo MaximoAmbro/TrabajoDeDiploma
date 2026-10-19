@@ -36,7 +36,42 @@ namespace Visual.Vendedor
         private void frmAgregarEventoLocal_Load(object sender, EventArgs e)
         {
             lblEvento.Text = NombreEvento;
+            CargarPreventa();
             CargarDGV();
+        }
+
+        // RN-39: destildado = sin preventa.
+        private void CargarPreventa()
+        {
+            Evento evento = GestorEventos.Instance.ObtenerPorId(IDEvento);
+            if (evento != null && evento.FinPreventa.HasValue)
+            {
+                dtpFinPreventa.Value = evento.FinPreventa.Value;
+                dtpFinPreventa.Checked = true;
+            }
+            else
+            {
+                dtpFinPreventa.Checked = false;
+            }
+        }
+
+        private void btnGuardarPreventa_Click(object sender, EventArgs e)
+        {
+            DateTime? fin = dtpFinPreventa.Checked ? dtpFinPreventa.Value : (DateTime?)null;
+            try
+            {
+                GestorEventos.Instance.CambiarPreventa(IDEvento, fin);
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CargarPreventa();
+                return;
+            }
+            MessageBox.Show(fin.HasValue
+                ? $"Preventa para suscriptores hasta el {fin.Value:dd/MM/yyyy HH:mm}."
+                : "El evento quedó sin preventa: pueden comprar todos los clientes.",
+                "Preventa", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         public void CargarDGV()
         {

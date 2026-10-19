@@ -112,6 +112,19 @@ namespace Negocio
             return RepositorioEventos.Instance.EstaAgotado(idEvento);
         }
 
+        // RN-39: fija o saca (null) la preventa de un evento ya creado.
+        public void CambiarPreventa(int idEvento, DateTime? finPreventa)
+        {
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            if (evento == null)
+            {
+                throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
+            }
+            evento.FinPreventa = finPreventa;
+            ValidarPreventa(evento);
+            RepositorioEventos.Instance.ActualizarPreventa(idEvento, finPreventa);
+        }
+
         // RN-07
         public int CapacidadTotal(int idEvento)
         {
@@ -239,6 +252,17 @@ namespace Negocio
             {
                 throw new ArgumentException(
                     "El evento debe tener categoría: " + string.Join(", ", Categorias) + ".");
+            }
+            ValidarPreventa(e);
+        }
+
+        // RN-39: una preventa que termina después del evento dejaría la venta entera solo para
+        // suscriptores.
+        private static void ValidarPreventa(Evento e)
+        {
+            if (e.FinPreventa.HasValue && e.FinPreventa.Value >= e.Fecha)
+            {
+                throw new ArgumentException("La preventa tiene que terminar antes de la fecha del evento.");
             }
         }
 

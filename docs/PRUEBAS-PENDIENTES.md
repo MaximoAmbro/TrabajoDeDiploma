@@ -190,6 +190,7 @@ no se pueden volver a correr enteros):
 ALTER TABLE Eventos     ADD FinPreventa      DATETIME      NULL;
 ALTER TABLE ListaEspera ADD ConSuscripcion   BIT           NOT NULL DEFAULT 0;
 ALTER TABLE Compras     ADD MontoReembolsado DECIMAL(12,2) NOT NULL DEFAULT 0;
+ALTER TABLE Compras     ADD ConSeguro        BIT           NOT NULL DEFAULT 0;   -- corrección C-9
 GO
 INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
 ('SUSCRIPCION_MENSUAL_PRECIO',   '12000', 'Precio del plan mensual de suscripción, en pesos',          'RF-13'),
@@ -244,6 +245,34 @@ sobre la grilla de sectores.
 | 8.24 | RN-35 congelada: anotar a `bronce@` sin suscripción y a `oro@` con suscripción; después cancelar la de `oro@` | `oro@` sigue primero aunque ya no sea suscriptor |
 | 8.25 | Sin eventos agotados (otro propietario) | Combo deshabilitado y el aviso «No hay eventos agotados ni listas de espera en sus locales.» |
 | 8.26 | Login y navegación completa (inicio → menús → cada pantalla → volver) | Todo funciona igual que antes sin `ConexionSql`: ningún formulario recibe ni abre una conexión |
+
+### Corrección C-9 — commit «Correccion C-9: ConSeguro en Compras y carga de preventa»
+
+El `ALTER TABLE Compras ADD ConSeguro` ya está agregado arriba, con los de la Sección 8.
+Se verificó con los gestores sobre una base temporal: una compra de suscriptor con seguro,
+confirmada desde la `Compra` releída con `ObtenerPorId`, graba una póliza por entrada con
+`Precio` 0 (con el binario del commit anterior no grababa ninguna); la referencia sigue en
+$ 99.625 y todas las filas de `Compras` cierran. La preventa se probó con los mismos métodos
+que llaman los formularios (`Crear` y `CambiarPreventa`).
+
+**Controles nuevos** (declarado): en `frmAgregarEvento`, «Preventa para suscriptores hasta»
+con su selector, debajo de Categoría; «Registrar» y «Volver» bajaron 70 y el formulario
+pasó de 714 a 784 de alto. En `frmAdministrarEvento`, el selector y el botón «Guardar
+preventa» en el hueco libre arriba de «Agregar sector»; no se movió nada.
+
+| # | Qué probar | Resultado esperado |
+|---|---|---|
+| C9.1 | Agregar evento | Debajo de Categoría, «Preventa para suscriptores hasta» con un selector **destildado**, formato `dd/MM/yyyy HH:mm`. Nada se pisa; «Registrar» y «Volver» visibles |
+| C9.2 | Crear un evento con fecha dentro de 10 días, tildar la preventa y poner mañana a las 20:00; agregarle un sector con capacidad | Se guarda y se publica. En `Eventos.FinPreventa` queda esa fecha y hora |
+| C9.3 | Preventa posterior a la fecha del evento | «La preventa tiene que terminar antes de la fecha del evento.» No guarda nada |
+| C9.4 | Como `plata@` sin suscripción, comprar ese evento | Aparece en el listado; al «Comprar», mensaje de RN-39 con «hasta el (mañana) a las 20:00» y vuelve al listado |
+| C9.5 | Como cliente con suscripción activa | Abre la compra y compra normal |
+| C9.6 | Administrar ese evento | El selector aparece **tildado** con la fecha y hora guardadas |
+| C9.7 | Destildar y «Guardar preventa» | «El evento quedó sin preventa…». En la base, `FinPreventa` NULL |
+| C9.8 | Repetir C9.4 y C9.5 | Compran los dos |
+| C9.9 | Administrar un evento sin preventa | El selector aparece destildado |
+| C9.10 | Pagar con suscripción y seguro (como 8.7–8.8) | En `Compras` la fila tiene `ConSeguro = 1` y `MontoSeguro = 0`; en `Seguros`, una póliza por entrada con `Precio` 0 |
+| C9.11 | Pagar sin seguro | `ConSeguro = 0` y ninguna póliza |
 
 ---
 

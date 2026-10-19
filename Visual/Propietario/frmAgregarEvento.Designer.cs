@@ -37,6 +37,8 @@
             this.txtNombre = new System.Windows.Forms.TextBox();
             this.lblCategoria = new System.Windows.Forms.Label();
             this.cmbCategoria = new System.Windows.Forms.ComboBox();
+            this.lblPreventa = new System.Windows.Forms.Label();
+            this.dtpFinPreventa = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // label1
@@ -56,7 +58,7 @@
             this.btnRegistrar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRegistrar.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRegistrar.ForeColor = System.Drawing.Color.White;
-            this.btnRegistrar.Location = new System.Drawing.Point(87, 495);
+            this.btnRegistrar.Location = new System.Drawing.Point(87, 565);
             this.btnRegistrar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnRegistrar.Name = "btnRegistrar";
             this.btnRegistrar.Size = new System.Drawing.Size(261, 48);
@@ -82,7 +84,7 @@
             this.lblVolver.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblVolver.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVolver.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
-            this.lblVolver.Location = new System.Drawing.Point(177, 594);
+            this.lblVolver.Location = new System.Drawing.Point(177, 664);
             this.lblVolver.Name = "lblVolver";
             this.lblVolver.Size = new System.Drawing.Size(72, 28);
             this.lblVolver.TabIndex = 5;
@@ -142,12 +144,36 @@
             this.cmbCategoria.Size = new System.Drawing.Size(272, 28);
             this.cmbCategoria.TabIndex = 51;
             //
+            // lblPreventa
+            //
+            this.lblPreventa.AutoSize = true;
+            this.lblPreventa.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPreventa.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
+            this.lblPreventa.Location = new System.Drawing.Point(83, 480);
+            this.lblPreventa.Name = "lblPreventa";
+            this.lblPreventa.Size = new System.Drawing.Size(250, 21);
+            this.lblPreventa.TabIndex = 53;
+            this.lblPreventa.Text = "Preventa para suscriptores hasta";
+            //
+            // dtpFinPreventa
+            //
+            this.dtpFinPreventa.Checked = false;
+            this.dtpFinPreventa.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.dtpFinPreventa.CustomFormat = "dd/MM/yyyy HH:mm";
+            this.dtpFinPreventa.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpFinPreventa.Location = new System.Drawing.Point(87, 505);
+            this.dtpFinPreventa.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.dtpFinPreventa.Name = "dtpFinPreventa";
+            this.dtpFinPreventa.ShowCheckBox = true;
+            this.dtpFinPreventa.Size = new System.Drawing.Size(272, 26);
+            this.dtpFinPreventa.TabIndex = 52;
+            //
             // frmAgregarEventoo
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(473, 714);
+            this.ClientSize = new System.Drawing.Size(473, 784);
             this.Controls.Add(this.txtNombre);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.dtEvento);
@@ -157,6 +183,8 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblCategoria);
             this.Controls.Add(this.cmbCategoria);
+            this.Controls.Add(this.lblPreventa);
+            this.Controls.Add(this.dtpFinPreventa);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmAgregarEventoo";
             this.Text = "frmAgregarEventoo";
@@ -175,5 +203,7 @@
         private System.Windows.Forms.TextBox txtNombre;
         private System.Windows.Forms.Label lblCategoria;
         private System.Windows.Forms.ComboBox cmbCategoria;
+        private System.Windows.Forms.Label lblPreventa;
+        private System.Windows.Forms.DateTimePicker dtpFinPreventa;
     }
 }

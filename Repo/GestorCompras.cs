@@ -63,7 +63,7 @@ namespace Negocio
                 MontoSeguro = resumen.Seguro,
                 TotalPagado = resumen.Total,
                 ReservaVence = ahora.AddMinutes(MinutosReserva()),
-                ConSeguro = p.ConSeguro   // RN-37: con suscripción, MontoSeguro puede ser 0
+                ConSeguro = p.ConSeguro   // RN-28; con suscripción, MontoSeguro puede ser 0 (RN-37)
             };
 
             // Una fila por entrada: cada una tendrá su QR y, si corresponde, su póliza.
@@ -164,7 +164,7 @@ namespace Negocio
             {
                 entrada.CodigoQR = GeneradorQR.Instance.NuevoCodigo();
             }
-            List<Seguro> seguros = PolizasDe(actual, c.ConSeguro, entradas);
+            List<Seguro> seguros = PolizasDe(actual, entradas);
 
             if (!RepositorioCompras.Instance.Confirmar(actual.Id, entradas, ahora, seguros))
             {
@@ -358,10 +358,11 @@ namespace Negocio
         // RN-28 + RN-29: una póliza por entrada, al precio congelado al iniciar la compra. Cubre
         // hasta SEGURO_HORAS_COBERTURA antes del evento. Con suscripción el precio puede ser 0
         // (RN-37): la póliza se graba igual, porque el cliente tiene cobertura aunque no la pagó.
-        private static List<Seguro> PolizasDe(Compra compra, bool conSeguro, List<Entrada> entradas)
+        // Por eso se mira Compras.ConSeguro y no MontoSeguro > 0.
+        private static List<Seguro> PolizasDe(Compra compra, List<Entrada> entradas)
         {
             var seguros = new List<Seguro>();
-            if (!(conSeguro || compra.MontoSeguro > 0m) || entradas.Count == 0)
+            if (!compra.ConSeguro || entradas.Count == 0)
             {
                 return seguros;
             }

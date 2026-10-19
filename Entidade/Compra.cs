@@ -19,9 +19,8 @@ namespace Entidades
         public decimal MontoReembolsado { get; set; }          // RN-29; neto = TotalPagado − MontoReembolsado
         public DateTime? ReservaVence { get; set; }            // RN-15; null = sin cupo reservado
 
-        // Sin columna. RN-28: el cliente eligió el seguro. Con suscripción activa la prima puede
-        // ser 0 (RN-37), así que MontoSeguro > 0 no alcanza para saber si se contrató.
-        // Solo vive mientras dura el pago: Iniciar la fija y Confirmar la lee.
+        // RN-28: el cliente eligió el seguro. Con suscripción activa la prima puede ser 0 (RN-37),
+        // así que MontoSeguro > 0 no alcanza para saber si se contrató.
         public bool ConSeguro { get; set; }
 
         // Sin columna: los completa la consulta del historial (CU-03).

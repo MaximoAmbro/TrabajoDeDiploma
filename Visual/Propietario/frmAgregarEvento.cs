@@ -44,7 +44,9 @@ namespace Visual.Propietario
                 Nombre = txtNombre.Text.Trim(),
                 Fecha = dtEvento.Value,
                 IdLocal = IDlocal,
-                Categoria = cmbCategoria.SelectedItem.ToString()
+                Categoria = cmbCategoria.SelectedItem.ToString(),
+                // RN-39: destildado = sin preventa.
+                FinPreventa = dtpFinPreventa.Checked ? dtpFinPreventa.Value : (DateTime?)null
             };
 
             try

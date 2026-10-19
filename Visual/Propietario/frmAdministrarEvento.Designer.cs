@@ -35,6 +35,9 @@
             this.btnAgregarSector = new System.Windows.Forms.Button();
             this.btnEliminarSector = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.lblPreventa = new System.Windows.Forms.Label();
+            this.dtpFinPreventa = new System.Windows.Forms.DateTimePicker();
+            this.btnGuardarPreventa = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSectores)).BeginInit();
             this.SuspendLayout();
             // 
@@ -136,6 +139,46 @@
             this.label2.Size = new System.Drawing.Size(169, 50);
             this.label2.TabIndex = 60;
             this.label2.Text = "Sectores";
+            //
+            // lblPreventa
+            //
+            this.lblPreventa.AutoSize = true;
+            this.lblPreventa.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPreventa.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
+            this.lblPreventa.Location = new System.Drawing.Point(14, 72);
+            this.lblPreventa.Name = "lblPreventa";
+            this.lblPreventa.Size = new System.Drawing.Size(220, 19);
+            this.lblPreventa.TabIndex = 61;
+            this.lblPreventa.Text = "Preventa para suscriptores hasta";
+            //
+            // dtpFinPreventa
+            //
+            this.dtpFinPreventa.Checked = false;
+            this.dtpFinPreventa.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.dtpFinPreventa.CustomFormat = "dd/MM/yyyy HH:mm";
+            this.dtpFinPreventa.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpFinPreventa.Location = new System.Drawing.Point(14, 96);
+            this.dtpFinPreventa.Name = "dtpFinPreventa";
+            this.dtpFinPreventa.ShowCheckBox = true;
+            this.dtpFinPreventa.Size = new System.Drawing.Size(262, 26);
+            this.dtpFinPreventa.TabIndex = 56;
+            //
+            // btnGuardarPreventa
+            //
+            this.btnGuardarPreventa.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
+            this.btnGuardarPreventa.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnGuardarPreventa.FlatAppearance.BorderSize = 0;
+            this.btnGuardarPreventa.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGuardarPreventa.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGuardarPreventa.ForeColor = System.Drawing.Color.White;
+            this.btnGuardarPreventa.Location = new System.Drawing.Point(57, 128);
+            this.btnGuardarPreventa.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.btnGuardarPreventa.Name = "btnGuardarPreventa";
+            this.btnGuardarPreventa.Size = new System.Drawing.Size(162, 40);
+            this.btnGuardarPreventa.TabIndex = 57;
+            this.btnGuardarPreventa.Text = "Guardar preventa";
+            this.btnGuardarPreventa.UseVisualStyleBackColor = false;
+            this.btnGuardarPreventa.Click += new System.EventHandler(this.btnGuardarPreventa_Click);
             // 
             // frmModificarSectoresEventos
             // 
@@ -143,6 +186,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(773, 412);
+            this.Controls.Add(this.btnGuardarPreventa);
+            this.Controls.Add(this.dtpFinPreventa);
+            this.Controls.Add(this.lblPreventa);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnEliminarSector);
             this.Controls.Add(this.btnAgregarSector);
@@ -170,5 +216,8 @@
         private System.Windows.Forms.Button btnAgregarSector;
         private System.Windows.Forms.Button btnEliminarSector;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblPreventa;
+        private System.Windows.Forms.DateTimePicker dtpFinPreventa;
+        private System.Windows.Forms.Button btnGuardarPreventa;
     }
 }

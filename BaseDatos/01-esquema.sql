@@ -150,6 +150,7 @@ CREATE TABLE Compras (
     MontoServicios    DECIMAL(12,2) NOT NULL,
     CargoServicio     DECIMAL(12,2) NOT NULL,
     MontoSeguro       DECIMAL(12,2) NOT NULL DEFAULT 0,   -- RN-28
+    ConSeguro         BIT           NOT NULL DEFAULT 0,   -- RN-28: con RN-37 la prima puede ser 0
     TotalPagado       DECIMAL(12,2) NOT NULL,     -- lo que pagó el cliente; no cambia
     MontoReembolsado  DECIMAL(12,2) NOT NULL DEFAULT 0,   -- RN-29; neto = TotalPagado - MontoReembolsado
     ReservaVence      DATETIME      NULL,       -- RN-15; NULL = sin cupo reservado

@@ -40,11 +40,11 @@ namespace Datos
             const string insertarCompra =
                 "INSERT INTO Compras (ID_Usuario, FechaCompra, Estado, NivelAplicado, DescuentoAplicado, " +
                 "                     BaseEntradas, MontoDescuento, MontoServicios, CargoServicio, " +
-                "                     MontoSeguro, TotalPagado, ReservaVence) " +
+                "                     MontoSeguro, ConSeguro, TotalPagado, ReservaVence) " +
                 "OUTPUT INSERTED.ID " +
                 "VALUES (@IdUsuario, @FechaCompra, @Estado, @NivelAplicado, @DescuentoAplicado, " +
                 "        @BaseEntradas, @MontoDescuento, @MontoServicios, @CargoServicio, " +
-                "        @MontoSeguro, @TotalPagado, @ReservaVence)";
+                "        @MontoSeguro, @ConSeguro, @TotalPagado, @ReservaVence)";
             const string insertarServicio =
                 "INSERT INTO CompraServicios (ID_Compra, ID_Servicio, Cantidad, PrecioUnit) " +
                 "VALUES (@IdCompra, @IdServicio, @Cantidad, @PrecioUnit)";
@@ -67,6 +67,7 @@ namespace Datos
                         AgregarParametro(comando, "@MontoServicios", compra.MontoServicios);
                         AgregarParametro(comando, "@CargoServicio", compra.CargoServicio);
                         AgregarParametro(comando, "@MontoSeguro", compra.MontoSeguro);
+                        AgregarParametro(comando, "@ConSeguro", compra.ConSeguro);
                         AgregarParametro(comando, "@TotalPagado", compra.TotalPagado);
                         AgregarParametro(comando, "@ReservaVence", compra.ReservaVence);
                         idCompra = Convert.ToInt32(comando.ExecuteScalar());
@@ -256,7 +257,7 @@ namespace Datos
 
         private const string ColumnasCompra =
             "c.ID, c.ID_Usuario, c.FechaCompra, c.Estado, c.NivelAplicado, c.DescuentoAplicado, " +
-            "c.BaseEntradas, c.MontoDescuento, c.MontoServicios, c.CargoServicio, c.MontoSeguro, " +
+            "c.BaseEntradas, c.MontoDescuento, c.MontoServicios, c.CargoServicio, c.MontoSeguro, c.ConSeguro, " +
             "c.TotalPagado, c.MontoReembolsado, c.ReservaVence";
 
         private static Compra LeerCompra(SqlDataReader lector)
@@ -278,6 +279,7 @@ namespace Datos
                 MontoServicios = LeerDecimal(lector, "MontoServicios"),
                 CargoServicio = LeerDecimal(lector, "CargoServicio"),
                 MontoSeguro = LeerDecimal(lector, "MontoSeguro"),
+                ConSeguro = Convert.ToBoolean(lector["ConSeguro"]),
                 TotalPagado = LeerDecimal(lector, "TotalPagado"),
                 MontoReembolsado = LeerDecimal(lector, "MontoReembolsado"),
                 ReservaVence = LeerFechaNula(lector, "ReservaVence")

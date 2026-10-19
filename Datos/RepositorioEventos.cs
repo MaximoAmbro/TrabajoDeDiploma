@@ -31,9 +31,9 @@ namespace Datos
         public int Insertar(Evento evento)
         {
             const string consulta =
-                "INSERT INTO Eventos (Nombre, Fecha, LocalID, Categoria, Estado) " +
+                "INSERT INTO Eventos (Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa) " +
                 "OUTPUT INSERTED.ID " +
-                "VALUES (@Nombre, @Fecha, @LocalID, @Categoria, @Estado)";
+                "VALUES (@Nombre, @Fecha, @LocalID, @Categoria, @Estado, @FinPreventa)";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlTransaction transaccion = conexion.BeginTransaction())
@@ -47,6 +47,7 @@ namespace Datos
                         AgregarParametro(comando, "@LocalID", evento.IdLocal);
                         AgregarParametro(comando, "@Categoria", evento.Categoria);
                         AgregarParametro(comando, "@Estado", evento.Estado);
+                        AgregarParametro(comando, "@FinPreventa", evento.FinPreventa);
                         evento.Id = Convert.ToInt32(comando.ExecuteScalar());
                     }
 
@@ -185,6 +186,20 @@ namespace Datos
                     transaccion.Rollback();
                     throw;
                 }
+            }
+        }
+
+        // RN-39: null saca la preventa. Devuelve false si no existe el evento.
+        public bool ActualizarPreventa(int idEvento, DateTime? finPreventa)
+        {
+            const string consulta = "UPDATE Eventos SET FinPreventa = @FinPreventa WHERE ID = @ID";
+
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@FinPreventa", finPreventa);
+                AgregarParametro(comando, "@ID", idEvento);
+                return comando.ExecuteNonQuery() > 0;
             }
         }
 

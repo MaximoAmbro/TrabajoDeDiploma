@@ -82,6 +82,7 @@ CREATE TABLE Compras (
     MontoServicios    DECIMAL(12,2) NOT NULL,
     CargoServicio     DECIMAL(12,2) NOT NULL,
     MontoSeguro       DECIMAL(12,2) NOT NULL DEFAULT 0,   -- RN-28
+    ConSeguro         BIT           NOT NULL DEFAULT 0,   -- RN-28: con RN-37 la prima puede ser 0
     TotalPagado       DECIMAL(12,2) NOT NULL,     -- lo que pagó el cliente; no cambia
     MontoReembolsado  DECIMAL(12,2) NOT NULL DEFAULT 0,   -- RN-29; neto = TotalPagado − MontoReembolsado
     ReservaVence      DATETIME      NULL,       -- RN-15; NULL = sin cupo reservado
@@ -229,7 +230,17 @@ borrar la fila perdería el rastro del intento que pide RN-31.
 ALTER TABLE Eventos     ADD FinPreventa      DATETIME      NULL;
 ALTER TABLE ListaEspera ADD ConSuscripcion   BIT           NOT NULL DEFAULT 0;
 ALTER TABLE Compras     ADD MontoReembolsado DECIMAL(12,2) NOT NULL DEFAULT 0;
+ALTER TABLE Compras     ADD ConSeguro        BIT           NOT NULL DEFAULT 0;   -- corrección C-9
 ```
+
+**`Compras.ConSeguro`** (corrección C-9). Hasta la Sección 7, `MontoSeguro > 0` alcanzaba
+para saber si el cliente contrató el seguro (RN-28). Con el seguro sin cargo de RN-37, un
+suscriptor que lo contrata tiene `MontoSeguro = 0`, igual que uno que no lo contrató: el
+importe ya no distingue los dos casos. Al confirmar el pago hay que grabar una póliza por
+entrada aunque la prima sea 0, así que la elección se guarda en la fila. Mientras era solo
+una propiedad en memoria, quien releía la compra con `ObtenerPorId` y la confirmaba dejaba
+al suscriptor sin póliza, sin ningún error. Las compras anteriores quedan en 0: todas las
+que tenían seguro lo pagaron y ya tienen sus pólizas grabadas.
 
 **`Eventos.FinPreventa`.** RN-39 necesita saber hasta cuándo un evento se vende solo a
 suscriptores. Es un atributo del evento, no de la suscripción. NULL = sin preventa, que es
