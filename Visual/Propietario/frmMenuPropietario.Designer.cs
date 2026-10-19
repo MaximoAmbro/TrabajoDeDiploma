@@ -34,6 +34,7 @@
             this.btnRegistrarLocal = new System.Windows.Forms.Button();
             this.btnMisLocales = new System.Windows.Forms.Button();
             this.btnListasEspera = new System.Windows.Forms.Button();
+            this.btnReportes = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblNombre
@@ -55,7 +56,7 @@
             this.lblvolver.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblvolver.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblvolver.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
-            this.lblvolver.Location = new System.Drawing.Point(156, 908);
+            this.lblvolver.Location = new System.Drawing.Point(156, 662);
             this.lblvolver.Name = "lblvolver";
             this.lblvolver.Size = new System.Drawing.Size(153, 28);
             this.lblvolver.TabIndex = 37;
@@ -81,7 +82,7 @@
             this.btnRegistrarLocal.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRegistrarLocal.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRegistrarLocal.ForeColor = System.Drawing.Color.White;
-            this.btnRegistrarLocal.Location = new System.Drawing.Point(65, 447);
+            this.btnRegistrarLocal.Location = new System.Drawing.Point(65, 342);
             this.btnRegistrarLocal.Margin = new System.Windows.Forms.Padding(2);
             this.btnRegistrarLocal.Name = "btnRegistrarLocal";
             this.btnRegistrarLocal.Size = new System.Drawing.Size(348, 84);
@@ -96,7 +97,7 @@
             this.btnMisLocales.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnMisLocales.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMisLocales.ForeColor = System.Drawing.Color.White;
-            this.btnMisLocales.Location = new System.Drawing.Point(65, 294);
+            this.btnMisLocales.Location = new System.Drawing.Point(65, 242);
             this.btnMisLocales.Margin = new System.Windows.Forms.Padding(2);
             this.btnMisLocales.Name = "btnMisLocales";
             this.btnMisLocales.Size = new System.Drawing.Size(348, 85);
@@ -111,7 +112,7 @@
             this.btnListasEspera.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnListasEspera.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnListasEspera.ForeColor = System.Drawing.Color.White;
-            this.btnListasEspera.Location = new System.Drawing.Point(65, 600);
+            this.btnListasEspera.Location = new System.Drawing.Point(65, 442);
             this.btnListasEspera.Margin = new System.Windows.Forms.Padding(2);
             this.btnListasEspera.Name = "btnListasEspera";
             this.btnListasEspera.Size = new System.Drawing.Size(348, 84);
@@ -119,16 +120,32 @@
             this.btnListasEspera.Text = "Listas de espera";
             this.btnListasEspera.UseVisualStyleBackColor = false;
             this.btnListasEspera.Click += new System.EventHandler(this.btnListasEspera_Click);
+            //
+            // btnReportes
+            //
+            this.btnReportes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
+            this.btnReportes.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnReportes.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReportes.ForeColor = System.Drawing.Color.White;
+            this.btnReportes.Location = new System.Drawing.Point(65, 542);
+            this.btnReportes.Margin = new System.Windows.Forms.Padding(2);
+            this.btnReportes.Name = "btnReportes";
+            this.btnReportes.Size = new System.Drawing.Size(348, 84);
+            this.btnReportes.TabIndex = 40;
+            this.btnReportes.Text = "Reportes";
+            this.btnReportes.UseVisualStyleBackColor = false;
+            this.btnReportes.Click += new System.EventHandler(this.btnReportes_Click);
             // 
             // frmMenuVendedor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(473, 1020);
+            this.ClientSize = new System.Drawing.Size(473, 714);
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnReportes);
             this.Controls.Add(this.btnListasEspera);
             this.Controls.Add(this.btnRegistrarLocal);
             this.Controls.Add(this.btnMisLocales);
@@ -150,5 +167,6 @@
         private System.Windows.Forms.Button btnRegistrarLocal;
         private System.Windows.Forms.Button btnMisLocales;
         private System.Windows.Forms.Button btnListasEspera;
+        private System.Windows.Forms.Button btnReportes;
     }
 }

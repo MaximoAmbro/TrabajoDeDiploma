@@ -118,8 +118,8 @@ No escribir estos valores en el código. Van en la tabla `Parametros`.
 | `CARGO_SERVICIO` | — | 0.150 |
 | `SEGURO_HORAS_COBERTURA` | RN-29 | 48 |
 | `SEGURO_PRECIO` | RN-28 | 5000 |
-| `SUSCRIPCION_MENSUAL_PRECIO` | RF-13 | 12000 |
-| `SUSCRIPCION_ANUAL_PRECIO` | RF-13 | 75000 |
+| `SUSCRIPCION_MENSUAL_PRECIO` | RF-13 | 9000 (anexo A02: 1.476.000 ÷ 164) |
+| `SUSCRIPCION_ANUAL_PRECIO` | RF-13 | 90000 (anexo A02: 4.590.000 ÷ 51) |
 | `SUSCRIPCION_SEGURO_DESCUENTO` | RN-37 | 1.000 (100 %: sin cargo) |
 
 ## Conflictos resueltos
@@ -142,9 +142,12 @@ Con `SUSCRIPCION_SEGURO_DESCUENTO` = 1.000 el suscriptor no paga la prima de
 - **Selección adversa.** El beneficio atrae justamente a quien piensa comprar mucho y con
   seguro, o a quien prevé que puede tener que devolver: el cliente puede suscribirse para
   una compra concreta y cancelar después (RN-26 no lo impide).
-- **El plan mensual no se cubre.** Con $12.000 por mes, una sola compra de **3 entradas o
-  más** con seguro ya bonifica $15.000 o más: el plan se paga solo en la primera operación.
-  El anual ($75.000) equivale a 15 entradas aseguradas en el año.
+- **El plan mensual no se cubre, y con los precios del anexo A02 menos todavía.** Desde la
+  Sección 9 el mensual cuesta $9.000 (antes $12.000): una sola compra de **2 entradas o
+  más** con seguro ya bonifica $10.000 o más, y el plan se paga solo en la primera
+  operación (antes hacían falta 3). El anual mejora: a $90.000 (antes $75.000) equivale a
+  18 entradas aseguradas en el año (antes 15). La exposición se concentra en el mensual,
+  justamente el plan que se puede contratar para una sola compra y no renovar.
 - La devolución (RN-29) no reintegra el cargo por servicio ni la prima, y el costo de los
   servicios se recupera del proveedor; con el seguro sin cargo, la prima que no se
   reintegra es 0, así que en una devolución de un suscriptor el único ingreso que queda es

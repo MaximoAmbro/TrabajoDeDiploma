@@ -29,8 +29,8 @@ INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
 ('CARGO_SERVICIO',          '0.150', 'Cargo por servicio sobre el subtotal de entradas',          NULL),
 ('SEGURO_HORAS_COBERTURA',  '48',    'Horas antes del evento hasta las que el seguro reembolsa',  'RN-29'),
 ('SEGURO_PRECIO',           '5000',  'Precio del seguro de entrada, en pesos',                    'RN-28'),
-('SUSCRIPCION_MENSUAL_PRECIO',   '12000', 'Precio del plan mensual de suscripción, en pesos',     'RF-13'),
-('SUSCRIPCION_ANUAL_PRECIO',     '75000', 'Precio del plan anual de suscripción, en pesos',       'RF-13'),
+('SUSCRIPCION_MENSUAL_PRECIO',   '9000',  'Precio del plan mensual de suscripción, en pesos',     'RF-13'),
+('SUSCRIPCION_ANUAL_PRECIO',     '90000', 'Precio del plan anual de suscripción, en pesos',       'RF-13'),
 ('SUSCRIPCION_SEGURO_DESCUENTO', '1.000', 'Bonificación del seguro para suscriptores (1 = sin cargo)', 'RN-37');
 
 -- ═══════════════ Usuarios: un Administrador y tres Clientes ═══════════════

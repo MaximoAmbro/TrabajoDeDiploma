@@ -192,9 +192,13 @@ ALTER TABLE ListaEspera ADD ConSuscripcion   BIT           NOT NULL DEFAULT 0;
 ALTER TABLE Compras     ADD MontoReembolsado DECIMAL(12,2) NOT NULL DEFAULT 0;
 ALTER TABLE Compras     ADD ConSeguro        BIT           NOT NULL DEFAULT 0;   -- corrección C-9
 GO
+-- Las filas anteriores a la columna quedaron en 0 por el DEFAULT. Si pagaron prima,
+-- contrataron el seguro: RPT-04 (adopción de seguros) las cuenta.
+UPDATE Compras SET ConSeguro = 1 WHERE MontoSeguro > 0;
+GO
 INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
-('SUSCRIPCION_MENSUAL_PRECIO',   '12000', 'Precio del plan mensual de suscripción, en pesos',          'RF-13'),
-('SUSCRIPCION_ANUAL_PRECIO',     '75000', 'Precio del plan anual de suscripción, en pesos',            'RF-13'),
+('SUSCRIPCION_MENSUAL_PRECIO',   '9000',  'Precio del plan mensual de suscripción, en pesos',          'RF-13'),
+('SUSCRIPCION_ANUAL_PRECIO',     '90000', 'Precio del plan anual de suscripción, en pesos',            'RF-13'),
 ('SUSCRIPCION_SEGURO_DESCUENTO', '1.000', 'Bonificación del seguro para suscriptores (1 = sin cargo)', 'RN-37');
 GO
 ```
@@ -221,7 +225,7 @@ sobre la grilla de sectores.
 |---|---|---|
 | 8.1 | Menú del cliente | Tres botones iguales: «Eventos disponibles», «Mis eventos», «Mi suscripción»; «Volver al inicio» debajo, sin pisarse. Tabular recorre los tres botones en orden |
 | 8.2 | Menú del propietario (`admin@`) | «Mis locales», «Registrar local», «Listas de espera» y un hueco del alto de un botón antes de «Volver al inicio» (lugar de «Reportes», Sección 9) |
-| 8.3 | «Mi suscripción» con `plata@` | «No tenés una suscripción activa.», los tres beneficios, «Sin descuento extra: rige el de tu nivel.», opciones «Mensual: $ 12.000 por mes» y «Anual: $ 75.000 por año», «Cancelar suscripción» deshabilitado. Nada cortado |
+| 8.3 | «Mi suscripción» con `plata@` | «No tenés una suscripción activa.», los tres beneficios, «Sin descuento extra: rige el de tu nivel.», opciones «Mensual: $ 9.000 por mes» y «Anual: $ 90.000 por año» (precios de la Sección 9), «Cancelar suscripción» deshabilitado. Nada cortado |
 | 8.4 | Contratar el Mensual | Pide confirmación con el precio y el aviso de que no se renueva. Al aceptar: «Plan Mensual activo / Vence el (hoy + 1 mes) / No se renueva automáticamente»; las opciones y «Contratar» quedan deshabilitados y «Cancelar suscripción» habilitado |
 | 8.5 | RN-25 en pantalla: abrir la aplicación dos veces con `plata@`, abrir «Mi suscripción» en las dos (sin plan), contratar en una y después en la otra | La segunda muestra el mensaje de RN-25 con el vencimiento del plan vigente. En `Suscripciones` hay una sola fila con `Activa = 1` |
 | 8.6 | «Cancelar suscripción» | Pide confirmación con «No» por defecto. Al aceptar vuelve a «No tenés una suscripción activa.» |
@@ -273,6 +277,59 @@ preventa» en el hueco libre arriba de «Agregar sector»; no se movió nada.
 | C9.9 | Administrar un evento sin preventa | El selector aparece destildado |
 | C9.10 | Pagar con suscripción y seguro (como 8.7–8.8) | En `Compras` la fila tiene `ConSeguro = 1` y `MontoSeguro = 0`; en `Seguros`, una póliza por entrada con `Precio` 0 |
 | C9.11 | Pagar sin seguro | `ConSeguro = 0` y ninguna póliza |
+
+## Sección 9 — commit «Seccion 9: reportes y exportacion PDF»
+
+Antes de probar, en la base de desarrollo:
+
+```sql
+-- Precios de suscripción que implica el anexo A02 (RPT-04). Si el bloque de la Sección 8 ya
+-- se corrió con 12000 y 75000, esto los corrige; si no, no cambia nada.
+UPDATE Parametros SET Valor = '9000'  WHERE Clave = 'SUSCRIPCION_MENSUAL_PRECIO';
+UPDATE Parametros SET Valor = '90000' WHERE Clave = 'SUSCRIPCION_ANUAL_PRECIO';
+```
+
+Además, el `UPDATE Compras SET ConSeguro = 1 WHERE MontoSeguro > 0` del bloque de la
+Sección 8, si ese bloque ya se había corrido. Para ver los reportes con volumen, correr
+después `BaseDatos/03-datos-reporte.sql` (se puede repetir: borra lo que cargó antes).
+**Reiniciar la aplicación** después de tocar `Parametros`: se leen una sola vez.
+
+Los cinco reportes se verificaron con los gestores sobre una base temporal con los tres
+scripts: RPT-01 da 4.480 entradas, $ 86.710.000 y 81,0 %; RPT-02, $ 113.060.000 (diferencia de
+$ 26.350.000); RPT-03, 818 / 260 / 100 = 1.178 y 2.800 compras; RPT-04, 18,0 / 13,9 / 4,3 %;
+RPT-05, 705 / 4.030 = 17,5 %. También contra la semilla sola, sin excepciones, y RN-34 con un
+Cliente y sin sesión. Se exportaron los cinco PDF y se revisaron: cinco zonas, QR legible,
+nombre del archivo, y un reporte de prueba de 150 filas dio 5 páginas con «Página N de 5» y el
+QR en cada una. Las pantallas se abrieron desde una prueba automática, sin clics. El ticket
+promedio da $ 19.355 y no los $ 19.356 del anexo, que tiene la cuenta mal (ver
+`docs/05-reportes.md`).
+
+**Formulario modificado** (declarado): `frmMenuPropietario` volvió de 1020 a 714 de alto. La
+aplicación no declara compatibilidad con DPI y, en una pantalla de 1536 × 824 lógicos (1080p
+al 125 %), Windows recorta el formulario a la pantalla antes de escalarlo: con 1020,
+«Volver al inicio» quedaba fuera de la vista desde la Sección 8. Los cuatro botones se
+reacomodaron con un paso de 100 en lugar de 153; «Reportes» es el cuarto. **Reemplaza a 8.2.**
+`frmReportes` es nuevo.
+
+| # | Qué probar | Resultado esperado |
+|---|---|---|
+| 9.1 | Menú del propietario, en la pantalla habitual | Cuatro botones (Mis locales, Registrar local, Listas de espera, Reportes) y «Volver al inicio» visible y en uso |
+| 9.2 | Abrir «Reportes» | Combo con los cinco «RPT-0N · título»; período del primer día de hace dos meses a hoy; con RPT-01 el filtro «Categoría» en «Todas» |
+| 9.3 | Cambiar de reporte | RPT-02 y RPT-05: filtro «Evento» con «Todos» y los eventos del período; RPT-03: «Corte» con una fecha; RPT-04: sin filtro; RPT-05 además la casilla «Solo eventos agotados». La grilla se vacía y «Exportar PDF» se deshabilita |
+| 9.4 | Con `03-datos-reporte.sql` cargado: período 01/09/2025 a 30/11/2025, RPT-01, «Generar» | La tabla de la página 100 del anexo, con ticket total $ 19.355; números a la derecha; TOTAL en negrita y resaltado; la lectura debajo, sin cortarse. Las columnas no se reordenan con clic |
+| 9.5 | RPT-01 con Categoría «Concierto» | Duki y Airbag: 2.480 entradas, $ 57.100.000 |
+| 9.6 | RPT-02 | Cinco combinaciones, de «Solo entrada» (60,0 %) a «Entrada + Merchandising» (3,1 %); TOTAL $ 113.060.000 |
+| 9.7 | RPT-02 con Evento «Duki en Rosario» | 1.500 unidades en total |
+| 9.8 | RPT-03 con corte 30/11/2025, y después con corte 31/08/2025 | 818 / 260 / 100; con el segundo, todo en 0 y «—», sin error |
+| 9.9 | RPT-04 | 504 · 18,0 %, 164 · 13,9 %, 51 · 4,3 %, TOTAL SUSCRIPTOS 215 · 18,3 % |
+| 9.10 | RPT-05, y después con «Solo eventos agotados» | Tres eventos «Con cupo», 705 / 4.030 = 17,5 %; con la casilla, solo la fila TOTAL en 0 |
+| 9.11 | «Exportar PDF» | Mensaje con la ruta `Documentos\A1.Reportes EVENTAURA\EVAU_RPT0N_20250901_20251130.pdf`; «Sí» lo abre |
+| 9.12 | Mirar el PDF | Encabezado «EventAura» en violeta, título, código y período; bloque de filtros con «Solicitado por: Ana Administradora (admin@…)»; tabla con encabezado gris; lectura; pie con emisión, «Página 1 de 1» y QR. Escanear el QR con el celular: muestra `EVAU|RPT-0N|…` |
+| 9.13 | A02-6: abrir el mismo PDF en Edge, Chrome y Adobe Reader | Se ve igual en los tres |
+| 9.14 | Exportar de nuevo con el PDF abierto en Adobe Reader | Mensaje «No se pudo escribir el archivo…», sin cerrar la pantalla |
+| 9.15 | Sin `03-datos-reporte.sql` (semilla sola), período amplio | Los cinco se generan y exportan: el Festival aparece con 0 entradas y 0,0 %, ticket «—» |
+| 9.16 | Como cliente | No hay botón de reportes en su menú (RN-34 se verificó también en `GestorReportes`) |
+| 9.17 | Por la misma causa que 9.1: `frmAgregarEvento` (784 de alto desde C-9) | «Registrar» y «Volver» visibles. Está justo en el límite de una pantalla de 824 lógicos |
 
 ---
 

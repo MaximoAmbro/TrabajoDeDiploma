@@ -132,14 +132,7 @@ namespace Datos
         // Un evento sin sectores no está agotado: no tiene nada que vender.
         public bool EstaAgotado(int idEvento)
         {
-            const string consulta =
-                "SELECT CASE WHEN EXISTS (SELECT 1 FROM Sectores WHERE EventoID = @ID) " +
-                "             AND NOT EXISTS ( " +
-                "                 SELECT 1 FROM Sectores s " +
-                "                 WHERE s.EventoID = @ID " +
-                "                   AND s.Capacidad - ISNULL((SELECT SUM(e.CantidadVendida) FROM Entradas e " +
-                "                                             WHERE e.ID_Sector = s.ID AND e.Estado = 'Confirmada'), 0) > 0) " +
-                "        THEN 1 ELSE 0 END";
+            string consulta = "SELECT CASE WHEN " + CondicionAgotado("@ID") + " THEN 1 ELSE 0 END";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlCommand comando = CrearComando(conexion, consulta))
@@ -147,6 +140,17 @@ namespace Datos
                 AgregarParametro(comando, "@ID", idEvento);
                 return Convert.ToInt32(comando.ExecuteScalar()) == 1;
             }
+        }
+
+        // RN-10 como condición SQL sobre el evento idEvento (un parámetro o una columna, p. ej.
+        // "e.ID"). Única definición del criterio: la usan EstaAgotado y el reporte RPT-05.
+        internal static string CondicionAgotado(string idEvento)
+        {
+            return "(EXISTS (SELECT 1 FROM Sectores WHERE EventoID = " + idEvento + ") " +
+                   " AND NOT EXISTS (SELECT 1 FROM Sectores sa " +
+                   "                 WHERE sa.EventoID = " + idEvento +
+                   "                   AND sa.Capacidad - ISNULL((SELECT SUM(ea.CantidadVendida) FROM Entradas ea " +
+                   "                                              WHERE ea.ID_Sector = sa.ID AND ea.Estado = 'Confirmada'), 0) > 0))";
         }
 
         // Borra el evento junto con lo que cuelga de él. Las entradas no confirmadas (reservas

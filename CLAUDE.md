@@ -107,6 +107,7 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
 | `docs/02-reglas-negocio.md` | RN-01 a RN-37 y parámetros configurables |
 | `docs/03-esquema-datos.md` | DDL completo y datos semilla |
 | `docs/04-casos-prueba.md` | CP-01 a CP-10 |
+| `docs/05-reportes.md` | RPT-01 a RPT-05, PDF de salida y correcciones al anexo A02 |
 | `docs/GUIA-PROMPTS.md` | Orden de construcción, sección por sección |
 
 Cuando una tarea mencione una regla (`RN-19`) o un requerimiento (`RF-08`), leé su

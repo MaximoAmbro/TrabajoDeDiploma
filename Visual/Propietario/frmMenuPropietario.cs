@@ -48,6 +48,13 @@ namespace Visual
             frm.NombreUsuario = NombreUsuario;
             frm.Show(); this.Hide();
         }
+        private void btnReportes_Click(object sender, EventArgs e)
+        {
+            frmReportes frm = new frmReportes();
+            frm.IDUsuario = IDUsuario;
+            frm.NombreUsuario = NombreUsuario;
+            frm.Show(); this.Hide();
+        }
         private void lblvolver_Click(object sender, EventArgs e)
         {
             frmInicio frmInicio = new frmInicio();

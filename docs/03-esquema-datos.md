@@ -239,8 +239,10 @@ suscriptor que lo contrata tiene `MontoSeguro = 0`, igual que uno que no lo cont
 importe ya no distingue los dos casos. Al confirmar el pago hay que grabar una póliza por
 entrada aunque la prima sea 0, así que la elección se guarda en la fila. Mientras era solo
 una propiedad en memoria, quien releía la compra con `ObtenerPorId` y la confirmaba dejaba
-al suscriptor sin póliza, sin ningún error. Las compras anteriores quedan en 0: todas las
-que tenían seguro lo pagaron y ya tienen sus pólizas grabadas.
+al suscriptor sin póliza, sin ningún error. Las compras anteriores quedan en 0 por el
+`DEFAULT`; el dato histórico se reconstruye desde `MontoSeguro`
+(`UPDATE Compras SET ConSeguro = 1 WHERE MontoSeguro > 0`), porque antes de RN-37 la prima
+nunca era 0: toda compra con seguro lo pagó. Hace falta para RPT-04, que cuenta esta columna.
 
 **`Eventos.FinPreventa`.** RN-39 necesita saber hasta cuándo un evento se vende solo a
 suscriptores. Es un atributo del evento, no de la suscripción. NULL = sin preventa, que es
