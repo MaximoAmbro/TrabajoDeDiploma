@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
 using Visual.Vendedor;
 
 namespace Visual.Propietario
@@ -17,7 +16,6 @@ namespace Visual.Propietario
     public partial class frmAgregarEvento : Form
     {
         public int IDUsuario; public int IDlocal; public string NombreUsuario; public string NombreLocal;
-        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public frmAgregarEvento()
         {
             InitializeComponent();
@@ -70,7 +68,6 @@ namespace Visual.Propietario
         private void VolverAlListado()
         {
             frmEventosLocal frm = new frmEventosLocal();
-            frm.ConexionSql = ConexionSql;
             frm.NombreUsuario = NombreUsuario;
             frm.IDlocal = IDlocal;
             frm.IDUsuario = IDUsuario;

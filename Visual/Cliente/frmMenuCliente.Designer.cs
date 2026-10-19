@@ -30,6 +30,7 @@
         {
             this.btnEventos = new System.Windows.Forms.Button();
             this.btnHistorial = new System.Windows.Forms.Button();
+            this.btnSuscripcion = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.lblvolver = new System.Windows.Forms.Label();
             this.lblNombre = new System.Windows.Forms.Label();
@@ -62,6 +63,20 @@
             this.btnHistorial.Text = "Mis eventos";
             this.btnHistorial.UseVisualStyleBackColor = false;
             this.btnHistorial.Click += new System.EventHandler(this.btnHistorial_Click);
+            //
+            // btnSuscripcion
+            //
+            this.btnSuscripcion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
+            this.btnSuscripcion.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSuscripcion.ForeColor = System.Drawing.Color.White;
+            this.btnSuscripcion.Location = new System.Drawing.Point(67, 504);
+            this.btnSuscripcion.Margin = new System.Windows.Forms.Padding(2);
+            this.btnSuscripcion.Name = "btnSuscripcion";
+            this.btnSuscripcion.Size = new System.Drawing.Size(258, 77);
+            this.btnSuscripcion.TabIndex = 7;
+            this.btnSuscripcion.Text = "Mi suscripción";
+            this.btnSuscripcion.UseVisualStyleBackColor = false;
+            this.btnSuscripcion.Click += new System.EventHandler(this.btnSuscripcion_Click);
             // 
             // label1
             // 
@@ -82,7 +97,7 @@
             this.lblvolver.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblvolver.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblvolver.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
-            this.lblvolver.Location = new System.Drawing.Point(127, 508);
+            this.lblvolver.Location = new System.Drawing.Point(127, 636);
             this.lblvolver.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblvolver.Name = "lblvolver";
             this.lblvolver.Size = new System.Drawing.Size(127, 23);
@@ -108,10 +123,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(394, 595);
+            this.ClientSize = new System.Drawing.Size(394, 723);
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnSuscripcion);
             this.Controls.Add(this.btnHistorial);
             this.Controls.Add(this.btnEventos);
             this.Font = new System.Drawing.Font("Nirmala UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -129,6 +145,7 @@
         #endregion
         private System.Windows.Forms.Button btnEventos;
         private System.Windows.Forms.Button btnHistorial;
+        private System.Windows.Forms.Button btnSuscripcion;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblvolver;

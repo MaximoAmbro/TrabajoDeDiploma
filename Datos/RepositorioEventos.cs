@@ -7,7 +7,8 @@ namespace Datos
 {
     public sealed class RepositorioEventos : RepositorioBase
     {
-        private const string Columnas = "SELECT ID, Nombre, Fecha, LocalID, Categoria, Estado FROM Eventos ";
+        private const string Columnas =
+            "SELECT ID, Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa FROM Eventos ";
 
         private static RepositorioEventos _instance;
 
@@ -90,7 +91,7 @@ namespace Datos
         public List<Evento> Buscar(string estado, DateTime ahora, string texto, string categoria, DateTime? desde)
         {
             const string consulta =
-                "SELECT e.ID, e.Nombre, e.Fecha, e.LocalID, e.Categoria, e.Estado " +
+                "SELECT e.ID, e.Nombre, e.Fecha, e.LocalID, e.Categoria, e.Estado, e.FinPreventa " +
                 "FROM Eventos e JOIN Locales l ON l.ID = e.LocalID " +
                 "WHERE e.Estado = @Estado AND e.Fecha > @Valor " +
                 "  AND (@Texto IS NULL OR e.Nombre LIKE '%' + @Texto + '%' " +
@@ -109,17 +110,41 @@ namespace Datos
         }
 
         // RN-11: solo cuentan las ventas. Las reservas Pendiente y las Vencida no son ventas: una
-        // reserva abandonada no debe impedir eliminar el evento.
+        // reserva abandonada no debe impedir eliminar el evento. Una Reembolsada sí fue una venta
+        // (RN-29): su compra, su pago y su póliza quedan como rastro y la frenan las claves foráneas.
         public int ContarEntradas(int idEvento)
         {
             const string consulta =
-                "SELECT COUNT(*) FROM Entradas WHERE ID_Evento = @ID AND Estado = 'Confirmada'";
+                "SELECT COUNT(*) FROM Entradas " +
+                "WHERE ID_Evento = @ID AND Estado IN ('Confirmada', 'Reembolsada')";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlCommand comando = CrearComando(conexion, consulta))
             {
                 AgregarParametro(comando, "@ID", idEvento);
                 return Convert.ToInt32(comando.ExecuteScalar());
+            }
+        }
+
+        // RN-10: agotado cuando ningún sector tiene capacidad sin vender. Cuentan solo las entradas
+        // Confirmada: una reserva de RN-15 todavía puede liberarse y no agota el evento.
+        // Un evento sin sectores no está agotado: no tiene nada que vender.
+        public bool EstaAgotado(int idEvento)
+        {
+            const string consulta =
+                "SELECT CASE WHEN EXISTS (SELECT 1 FROM Sectores WHERE EventoID = @ID) " +
+                "             AND NOT EXISTS ( " +
+                "                 SELECT 1 FROM Sectores s " +
+                "                 WHERE s.EventoID = @ID " +
+                "                   AND s.Capacidad - ISNULL((SELECT SUM(e.CantidadVendida) FROM Entradas e " +
+                "                                             WHERE e.ID_Sector = s.ID AND e.Estado = 'Confirmada'), 0) > 0) " +
+                "        THEN 1 ELSE 0 END";
+
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@ID", idEvento);
+                return Convert.ToInt32(comando.ExecuteScalar()) == 1;
             }
         }
 
@@ -199,7 +224,8 @@ namespace Datos
                             Hora = fecha.TimeOfDay,
                             IdLocal = Convert.ToInt32(lector["LocalID"]),
                             Categoria = LeerString(lector, "Categoria"),
-                            Estado = LeerString(lector, "Estado")
+                            Estado = LeerString(lector, "Estado"),
+                            FinPreventa = LeerFechaNula(lector, "FinPreventa")
                         });
                     }
                 }

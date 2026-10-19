@@ -87,6 +87,7 @@ ALTER TABLE Usuario  ADD BloqueadoHasta DATETIME NULL;
 
 ALTER TABLE Eventos  ADD Categoria VARCHAR(20) NULL;   -- Concierto|Deportivo|Teatro|Cultural
 ALTER TABLE Eventos  ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Publicado';
+ALTER TABLE Eventos  ADD FinPreventa DATETIME NULL;    -- RN-39; NULL = sin preventa
 
 ALTER TABLE Sectores ADD CantidadReservada INT NOT NULL DEFAULT 0;  -- RN-08 + RN-15
 
@@ -149,7 +150,8 @@ CREATE TABLE Compras (
     MontoServicios    DECIMAL(12,2) NOT NULL,
     CargoServicio     DECIMAL(12,2) NOT NULL,
     MontoSeguro       DECIMAL(12,2) NOT NULL DEFAULT 0,   -- RN-28
-    TotalPagado       DECIMAL(12,2) NOT NULL,
+    TotalPagado       DECIMAL(12,2) NOT NULL,     -- lo que pagó el cliente; no cambia
+    MontoReembolsado  DECIMAL(12,2) NOT NULL DEFAULT 0,   -- RN-29; neto = TotalPagado - MontoReembolsado
     ReservaVence      DATETIME      NULL,       -- RN-15; NULL = sin cupo reservado
     CONSTRAINT FK_Compras_Usuario FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID),
     CONSTRAINT CK_Compras_Estado
@@ -234,6 +236,7 @@ CREATE TABLE ListaEspera (                -- RN-35, RN-36
     ID_Evento    INT      NOT NULL,
     ID_Usuario   INT      NOT NULL,
     FechaAlta    DATETIME NOT NULL,
+    ConSuscripcion BIT    NOT NULL DEFAULT 0,   -- RN-35: congelado al inscribirse
     CONSTRAINT UX_ListaEspera UNIQUE (ID_Evento, ID_Usuario),   -- RN-36
     FOREIGN KEY (ID_Evento)  REFERENCES Eventos(ID),
     FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID)

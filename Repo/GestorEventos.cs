@@ -106,6 +106,12 @@ namespace Negocio
             }
         }
 
+        // RN-10: todos los sectores vendieron su capacidad. Ahí se habilita la lista de espera.
+        public bool EstaAgotado(int idEvento)
+        {
+            return RepositorioEventos.Instance.EstaAgotado(idEvento);
+        }
+
         // RN-07
         public int CapacidadTotal(int idEvento)
         {

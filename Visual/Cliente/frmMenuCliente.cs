@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,7 +14,6 @@ namespace Visual
     public partial class frmMenuCliente : Form
     {
         public int IDUsuario;
-        public SqlConnection ConexionSql;
         public string NombreUsuario;
         public frmMenuCliente()
         {
@@ -32,7 +30,6 @@ namespace Visual
         {
             frmEventosCliente frm = new frmEventosCliente();
             frm.IDUsuario = IDUsuario;
-            frm.ConexionSql = ConexionSql;
             frm.NombreUsuario = NombreUsuario;
             frm.Show();
             this.Hide();
@@ -42,7 +39,14 @@ namespace Visual
             frmHistorialCliente frm = new frmHistorialCliente();
             frm.NombreUsuario = NombreUsuario;
             frm.IDUsuario = IDUsuario;
-            frm.ConexionSql = ConexionSql;
+            frm.Show();
+            this.Hide();
+        }
+        private void btnSuscripcion_Click(object sender, EventArgs e)
+        {
+            frmSuscripcion frm = new frmSuscripcion();
+            frm.NombreUsuario = NombreUsuario;
+            frm.IDUsuario = IDUsuario;
             frm.Show();
             this.Hide();
         }
@@ -50,7 +54,6 @@ namespace Visual
         {
             
             frmInicio frm = new frmInicio();
-            frm.ConexionSql = ConexionSql;
             frm.Show();
             this.Hide();
         }

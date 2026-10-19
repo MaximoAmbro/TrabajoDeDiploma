@@ -28,7 +28,10 @@ INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
 ('DESCUENTO_MAX_ADMISIBLE', '0.086', 'Tope de descuento admisible',                               'RN-20'),
 ('CARGO_SERVICIO',          '0.150', 'Cargo por servicio sobre el subtotal de entradas',          NULL),
 ('SEGURO_HORAS_COBERTURA',  '48',    'Horas antes del evento hasta las que el seguro reembolsa',  'RN-29'),
-('SEGURO_PRECIO',           '5000',  'Precio del seguro de entrada, en pesos',                    'RN-28');
+('SEGURO_PRECIO',           '5000',  'Precio del seguro de entrada, en pesos',                    'RN-28'),
+('SUSCRIPCION_MENSUAL_PRECIO',   '12000', 'Precio del plan mensual de suscripción, en pesos',     'RF-13'),
+('SUSCRIPCION_ANUAL_PRECIO',     '75000', 'Precio del plan anual de suscripción, en pesos',       'RF-13'),
+('SUSCRIPCION_SEGURO_DESCUENTO', '1.000', 'Bonificación del seguro para suscriptores (1 = sin cargo)', 'RN-37');
 
 -- ═══════════════ Usuarios: un Administrador y tres Clientes ═══════════════
 -- El perfil Administrador se guarda como 'Propietario', que es el valor que usa el login actual.
@@ -142,11 +145,14 @@ VALUES (@Oro, DATEADD(DAY, -15, GETDATE()), 'Confirmada', 'Plata', 0,
         220000.00, 0, 0, 33000.00, 253000.00);
 SET @CompraAgotado = SCOPE_IDENTITY();
 
--- Precio = importe de la fila (precio del sector × cantidad).
+-- Una fila por entrada, como graba la Sección 7: cada una con su QR (RN-18). Precio = el del sector.
 INSERT INTO Entradas (ID_Evento, ID_Sector, ID_Usuario, Precio, CantidadVendida, FechaVenta, ID_Compra, Estado, CodigoQR) VALUES
-(@Agotado, @AgPopular, @Oro,  40000, 2, DATEADD(DAY, -15, GETDATE()), @CompraAgotado, 'Confirmada', 'EA-SEED-' + CONVERT(VARCHAR(36), NEWID())),
-(@Agotado, @AgPlatea,  @Oro,  70000, 2, DATEADD(DAY, -15, GETDATE()), @CompraAgotado, 'Confirmada', 'EA-SEED-' + CONVERT(VARCHAR(36), NEWID())),
-(@Agotado, @AgPalco,   @Oro, 110000, 2, DATEADD(DAY, -15, GETDATE()), @CompraAgotado, 'Confirmada', 'EA-SEED-' + CONVERT(VARCHAR(36), NEWID()));
+(@Agotado, @AgPopular, @Oro, 20000, 1, DATEADD(DAY, -15, GETDATE()), @CompraAgotado, 'Confirmada', 'EA-SEED-' + CONVERT(VARCHAR(36), NEWID())),
+(@Agotado, @AgPopular, @Oro, 20000, 1, DATEADD(DAY, -15, GETDATE()), @CompraAgotado, 'Confirmada', 'EA-SEED-' + CONVERT(VARCHAR(36), NEWID())),
+(@Agotado, @AgPlatea,  @Oro, 35000, 1, DATEADD(DAY, -15, GETDATE()), @CompraAgotado, 'Confirmada', 'EA-SEED-' + CONVERT(VARCHAR(36), NEWID())),
+(@Agotado, @AgPlatea,  @Oro, 35000, 1, DATEADD(DAY, -15, GETDATE()), @CompraAgotado, 'Confirmada', 'EA-SEED-' + CONVERT(VARCHAR(36), NEWID())),
+(@Agotado, @AgPalco,   @Oro, 55000, 1, DATEADD(DAY, -15, GETDATE()), @CompraAgotado, 'Confirmada', 'EA-SEED-' + CONVERT(VARCHAR(36), NEWID())),
+(@Agotado, @AgPalco,   @Oro, 55000, 1, DATEADD(DAY, -15, GETDATE()), @CompraAgotado, 'Confirmada', 'EA-SEED-' + CONVERT(VARCHAR(36), NEWID()));
 
 COMMIT TRANSACTION;
 GO

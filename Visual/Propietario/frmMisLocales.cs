@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -18,7 +17,6 @@ namespace Visual
     {
         public int IDUsuario;
         public string NombreUsuario;
-        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public frmMisLocales()
         {
             InitializeComponent();
@@ -61,7 +59,6 @@ namespace Visual
                 frm.NombreLocal = nombreLocal;
                 frm.NombreUsuario = NombreUsuario;
                 frm.IDlocal = idLocalSeleccionado;
-                frm.ConexionSql = ConexionSql;
                 frm.IDUsuario = IDUsuario;
                 frm.Show();
                 this.Hide();
@@ -74,7 +71,6 @@ namespace Visual
         private void btnVolver_Click(object sender, EventArgs e)
         {
             frmMenuPropietario frm = new frmMenuPropietario();
-            frm.ConexionSql = ConexionSql;
             frm.NombreUsuario = NombreUsuario;
             frm.IDUsuario = IDUsuario;
             frm.Show(); this.Hide();

@@ -1,22 +1,15 @@
 ﻿using Entidades;
 using Negocio;
 using System;
-using System.Configuration;
-using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace Visual
 {
     public partial class frmInicio : Form
     {
-        // TODO Seccion N: quitar ConexionSql. Solo se pasa a los menús, que todavía la usan.
-        public SqlConnection ConexionSql;
+        // La cadena de conexión la lee Datos/Conexion.cs de App.config: Visual no abre conexiones.
         public frmInicio()
         {
-            string miConexion =
-            ConfigurationManager.ConnectionStrings["Visual.Properties.Settings.BddEventAura"].ConnectionString;
-            ConexionSql = new SqlConnection(miConexion);
-
             InitializeComponent();
         }
         
@@ -45,14 +38,12 @@ namespace Visual
         private void lblolividarcontra_Click(object sender, EventArgs e)
         {
             frmCambiarContraseña frm = new frmCambiarContraseña();
-            frm.ConexionSql = ConexionSql;
             frm.Show();
             this.Hide();
         } // Llama frmCambiarContraseña
         private void lblcrearcuenta_Click(object sender, EventArgs e)
         {
             frmCrearUsuario frm = new frmCrearUsuario();
-            frm.ConexionSql = ConexionSql;
             frm.Show();
             this.Hide();
         } // Llama a frmCrearCuenta
@@ -102,7 +93,6 @@ namespace Visual
                     frmMenuCliente frm = new frmMenuCliente();
                     frm.IDUsuario = usuario.Id;
                     frm.NombreUsuario = usuario.Nombre;
-                    frm.ConexionSql = ConexionSql;
                     frm.Show();
                     this.Hide();
                 } // Se abre el menu de cliente
@@ -111,7 +101,6 @@ namespace Visual
                     frmMenuPropietario frm = new frmMenuPropietario();
                     frm.IDUsuario = usuario.Id;
                     frm.NombreUsuario = usuario.Nombre;
-                    frm.ConexionSql = ConexionSql;
                     frm.Show();
                     this.Hide();
                 } // Se abre el menu de vendedor

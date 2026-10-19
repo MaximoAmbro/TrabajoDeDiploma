@@ -42,6 +42,8 @@ namespace Visual
             this.chkSeguro = new System.Windows.Forms.CheckBox();
             this.pnlResumen = new System.Windows.Forms.Panel();
             this.lblResumen = new System.Windows.Forms.Label();
+            this.lblAgotado = new System.Windows.Forms.Label();
+            this.btnListaEspera = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSectores)).BeginInit();
             this.pnlResumen.SuspendLayout();
             this.SuspendLayout();
@@ -127,6 +129,35 @@ namespace Visual
             this.dgvSectores.Size = new System.Drawing.Size(360, 170);
             this.dgvSectores.TabIndex = 36;
             //
+            // lblAgotado
+            //
+            this.lblAgotado.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAgotado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
+            this.lblAgotado.Location = new System.Drawing.Point(17, 158);
+            this.lblAgotado.Name = "lblAgotado";
+            this.lblAgotado.Size = new System.Drawing.Size(360, 84);
+            this.lblAgotado.TabIndex = 51;
+            this.lblAgotado.Text = "Entradas agotadas.\r\nAnotate en la lista de espera y te vamos a notificar si se libera un lugar.";
+            this.lblAgotado.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblAgotado.Visible = false;
+            //
+            // btnListaEspera
+            //
+            this.btnListaEspera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
+            this.btnListaEspera.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnListaEspera.FlatAppearance.BorderSize = 0;
+            this.btnListaEspera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnListaEspera.ForeColor = System.Drawing.Color.White;
+            this.btnListaEspera.Location = new System.Drawing.Point(62, 254);
+            this.btnListaEspera.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.btnListaEspera.Name = "btnListaEspera";
+            this.btnListaEspera.Size = new System.Drawing.Size(270, 44);
+            this.btnListaEspera.TabIndex = 52;
+            this.btnListaEspera.Text = "Anotarme en la lista de espera";
+            this.btnListaEspera.UseVisualStyleBackColor = false;
+            this.btnListaEspera.Visible = false;
+            this.btnListaEspera.Click += new System.EventHandler(this.btnListaEspera_Click);
+            //
             // chkHospedaje
             //
             this.chkHospedaje.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -203,6 +234,8 @@ namespace Visual
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(760, 595);
+            this.Controls.Add(this.btnListaEspera);
+            this.Controls.Add(this.lblAgotado);
             this.Controls.Add(this.pnlResumen);
             this.Controls.Add(this.chkSeguro);
             this.Controls.Add(this.chkVIP);
@@ -247,5 +280,7 @@ namespace Visual
         private System.Windows.Forms.CheckBox chkSeguro;
         private System.Windows.Forms.Panel pnlResumen;
         private System.Windows.Forms.Label lblResumen;
+        private System.Windows.Forms.Label lblAgotado;
+        private System.Windows.Forms.Button btnListaEspera;
     }
 }

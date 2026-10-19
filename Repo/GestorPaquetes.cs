@@ -34,10 +34,19 @@ namespace Negocio
         }
 
         // RN-09: solo se arma un paquete para un evento Publicado con fecha futura.
-        public Paquete Nuevo(int idEvento)
+        // RN-39: durante la preventa, solo para un cliente con suscripción activa.
+        public Paquete Nuevo(int idEvento, int idUsuario)
         {
-            VerificarEventoVigente(idEvento);
+            Evento evento = VerificarEventoVigente(idEvento);
+            VerificarPreventa(evento, idUsuario);
             return new Paquete { IdEvento = idEvento };
+        }
+
+        // RN-39: GestorCompras la vuelve a aplicar al iniciar la compra, por si la suscripción
+        // venció mientras el cliente armaba el paquete.
+        internal void VerificarPreventa(int idEvento, int idUsuario)
+        {
+            VerificarPreventa(VerificarEventoVigente(idEvento), idUsuario);
         }
 
         // Fija la cantidad pedida de un sector; 0 lo quita del paquete. Se llama cada vez que
@@ -171,7 +180,7 @@ namespace Negocio
 
         // ------------------------------------- privados -------------------------------------
 
-        private static void VerificarEventoVigente(int idEvento)
+        private static Evento VerificarEventoVigente(int idEvento)
         {
             Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
             if (evento == null)
@@ -182,6 +191,21 @@ namespace Negocio
             {
                 throw new ReglaNegocioException("RN-09",
                     "El evento no está disponible para la venta: ya pasó o no está publicado.");
+            }
+            return evento;
+        }
+
+        // RN-39: mientras la fecha actual sea anterior a FinPreventa, solo compra un suscriptor.
+        // FinPreventa en null: el evento no tiene preventa.
+        private static void VerificarPreventa(Evento evento, int idUsuario)
+        {
+            if (evento.FinPreventa.HasValue && DateTime.Now < evento.FinPreventa.Value
+                && !GestorSuscripciones.Instance.TieneActiva(idUsuario))
+            {
+                throw new ReglaNegocioException("RN-39",
+                    $"«{evento.Nombre}» está en preventa exclusiva para suscriptores hasta el " +
+                    $"{evento.FinPreventa.Value:dd/MM/yyyy} a las {evento.FinPreventa.Value:HH:mm}. " +
+                    "Contrate una suscripción desde «Mi suscripción» o vuelva cuando termine la preventa.");
             }
         }
 

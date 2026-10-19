@@ -16,6 +16,7 @@ namespace Entidades
         public List<Sector> Sectores { get; set; }
         public string Categoria { get; set; }     // Concierto|Deportivo|Teatro|Cultural
         public string Estado { get; set; }        // DEFAULT 'Publicado'
+        public DateTime? FinPreventa { get; set; } // RN-39; null = sin preventa
 
     }
 }

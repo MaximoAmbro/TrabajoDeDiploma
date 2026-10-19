@@ -63,7 +63,8 @@ namespace Negocio
 
         // RN-21: el porcentaje se aplica solo a las entradas. RN-22: se usa el nivel persistido del
         // cliente, sin recalcularlo, para que la compra en curso no se beneficie a sí misma.
-        // RN-37: la suscripción no suma porcentaje, por eso no se consulta.
+        // RN-37: la suscripción no suma porcentaje sobre las entradas. Su beneficio acá es el seguro:
+        // con suscripción activa la prima se multiplica por (1 − SUSCRIPCION_SEGURO_DESCUENTO).
         public ResumenDescuento CalcularDescuento(Cliente c, Paquete p)
         {
             if (c == null)
@@ -85,6 +86,12 @@ namespace Negocio
             decimal seguro = p.ConSeguro
                 ? GestorPaquetes.Instance.CantidadEntradas(p) * GestorParametros.Instance.ObtenerDecimal("SEGURO_PRECIO")
                 : 0m;
+            if (seguro > 0m && GestorSuscripciones.Instance.TieneActiva(c.Id))
+            {
+                // RN-37: con 1.000 queda en 0. La póliza se graba igual: hay cobertura sin cobro.
+                decimal bonificacion = GestorParametros.Instance.ObtenerDecimal("SUSCRIPCION_SEGURO_DESCUENTO");
+                seguro = Redondear(seguro * (1m - bonificacion));
+            }
 
             return new ResumenDescuento
             {

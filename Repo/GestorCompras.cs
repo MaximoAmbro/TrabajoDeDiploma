@@ -45,6 +45,7 @@ namespace Negocio
                 throw new ArgumentNullException(nameof(c));
             }
             GestorPaquetes.Instance.Validar(p);
+            GestorPaquetes.Instance.VerificarPreventa(p.IdEvento, c.Id);   // RN-39
             ResumenDescuento resumen = GestorFidelizacion.Instance.CalcularDescuento(c, p);
 
             DateTime ahora = DateTime.Now;
@@ -61,7 +62,8 @@ namespace Negocio
                 CargoServicio = resumen.CargoServicio,
                 MontoSeguro = resumen.Seguro,
                 TotalPagado = resumen.Total,
-                ReservaVence = ahora.AddMinutes(MinutosReserva())
+                ReservaVence = ahora.AddMinutes(MinutosReserva()),
+                ConSeguro = p.ConSeguro   // RN-37: con suscripción, MontoSeguro puede ser 0
             };
 
             // Una fila por entrada: cada una tendrá su QR y, si corresponde, su póliza.
@@ -162,7 +164,7 @@ namespace Negocio
             {
                 entrada.CodigoQR = GeneradorQR.Instance.NuevoCodigo();
             }
-            List<Seguro> seguros = PolizasDe(actual, entradas);
+            List<Seguro> seguros = PolizasDe(actual, c.ConSeguro, entradas);
 
             if (!RepositorioCompras.Instance.Confirmar(actual.Id, entradas, ahora, seguros))
             {
@@ -224,6 +226,92 @@ namespace Negocio
             return RepositorioPagos.Instance.ObtenerPorCompra(c.Id);
         }
 
+        public List<Seguro> SegurosDe(Compra c)
+        {
+            return RepositorioCompras.Instance.ObtenerSeguros(c.Id);
+        }
+
+        // CU-03: las compras del cliente. Pendiente y Vencida no van: son intentos que no se
+        // pagaron, no compras.
+        public List<Compra> HistorialDe(int idUsuario)
+        {
+            return RepositorioCompras.Instance.ObtenerPorUsuario(idUsuario,
+                new[] { EstadoCompra.Confirmada, EstadoCompra.Reembolsada });
+        }
+
+        // RN-29: devuelve las entradas elegidas, todas de una misma compra. Cada una tiene que estar
+        // Confirmada, tener póliza y faltar más de SEGURO_HORAS_COBERTURA para el evento.
+        //
+        // Se devuelve el precio congelado de cada entrada menos su parte del descuento por nivel, y
+        // los servicios solo si con esto no queda ninguna entrada Confirmada. Nunca el cargo por
+        // servicio ni la prima del seguro. El último reembolso de la compra devuelve lo que falte
+        // para llegar a Base − Descuento + Servicios, así los redondeos parciales no dejan centavos.
+        //
+        // RN-24: una compra Reembolsada deja de contar para el nivel, porque el conteo filtra por
+        // Confirmada. Una reembolsada en PARTE sigue Confirmada y sigue contando: la operación
+        // existió. RN-23: el nivel no baja en el momento; espera a la reevaluación mensual.
+        //
+        // El cupo vuelve solo: el disponible cuenta únicamente las entradas Confirmada.
+        // Devuelve el importe reembolsado.
+        public decimal Reembolsar(List<Entrada> entradas)
+        {
+            if (entradas == null || entradas.Count == 0)
+            {
+                throw new ArgumentException("Elija al menos una entrada para devolver.");
+            }
+            List<int> ids = entradas.Select(e => e.Id).Distinct().ToList();
+            int? idCompra = entradas[0].IdCompra;
+            if (!idCompra.HasValue || entradas.Any(e => e.IdCompra != idCompra))
+            {
+                throw new ArgumentException("Las entradas a devolver tienen que ser de una misma compra.");
+            }
+
+            // Se relee todo de la base: lo que muestra la pantalla puede estar viejo.
+            Compra compra = RepositorioCompras.Instance.ObtenerPorId(idCompra.Value);
+            if (compra == null || compra.Estado != EstadoCompra.Confirmada)
+            {
+                throw new ReglaNegocioException("RN-29", "La compra no está confirmada: no hay nada para devolver.");
+            }
+            List<Entrada> todas = RepositorioEntradas.Instance.ObtenerPorCompra(compra.Id);
+            List<Entrada> elegidas = todas.Where(e => ids.Contains(e.Id)).ToList();
+            if (elegidas.Count != ids.Count)
+            {
+                throw new ArgumentException("Alguna de las entradas no pertenece a la compra.");
+            }
+            if (elegidas.Any(e => e.Estado != EstadoEntrada.Confirmada))
+            {
+                throw new ReglaNegocioException("RN-29", "Solo se pueden devolver entradas confirmadas.");
+            }
+            var aseguradas = new HashSet<int>(
+                RepositorioCompras.Instance.ObtenerSeguros(compra.Id).Select(s => s.IdEntrada));
+            if (elegidas.Any(e => !aseguradas.Contains(e.Id)))
+            {
+                throw new ReglaNegocioException("RN-29",
+                    "Solo se pueden devolver entradas con seguro, y el seguro se contrata únicamente durante la compra.");
+            }
+            int horas = GestorParametros.Instance.ObtenerEntero("SEGURO_HORAS_COBERTURA");
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(elegidas[0].IdEvento);
+            DateTime limite = evento.Fecha.AddHours(-horas);
+            if (DateTime.Now >= limite)
+            {
+                throw new ReglaNegocioException("RN-29",
+                    $"El seguro permite devolver hasta {horas} horas antes del evento " +
+                    $"(hasta el {limite:dd/MM/yyyy HH:mm}). Ese plazo ya pasó.");
+            }
+
+            bool completa = todas.Count(e => e.Estado == EstadoEntrada.Confirmada) == elegidas.Count;
+            decimal monto = completa
+                ? compra.BaseEntradas - compra.MontoDescuento + compra.MontoServicios - compra.MontoReembolsado
+                : elegidas.Sum(e => e.Precio - ParteDelDescuento(compra, e.Precio));
+
+            if (!RepositorioCompras.Instance.Reembolsar(compra.Id, ids, monto, completa))
+            {
+                throw new InvalidOperationException(
+                    "La compra cambió mientras se procesaba la devolución. Vuelva a abrir el historial.");
+            }
+            return monto;
+        }
+
         // Formato de la tarjeta. Se valida antes de cobrar, así un dato mal tipeado no gasta un
         // intento en Pagos.
         public void ValidarTarjeta(DatosTarjeta t)
@@ -268,11 +356,12 @@ namespace Negocio
         }
 
         // RN-28 + RN-29: una póliza por entrada, al precio congelado al iniciar la compra. Cubre
-        // hasta SEGURO_HORAS_COBERTURA antes del evento.
-        private static List<Seguro> PolizasDe(Compra compra, List<Entrada> entradas)
+        // hasta SEGURO_HORAS_COBERTURA antes del evento. Con suscripción el precio puede ser 0
+        // (RN-37): la póliza se graba igual, porque el cliente tiene cobertura aunque no la pagó.
+        private static List<Seguro> PolizasDe(Compra compra, bool conSeguro, List<Entrada> entradas)
         {
             var seguros = new List<Seguro>();
-            if (compra.MontoSeguro <= 0m || entradas.Count == 0)
+            if (!(conSeguro || compra.MontoSeguro > 0m) || entradas.Count == 0)
             {
                 return seguros;
             }
@@ -289,6 +378,17 @@ namespace Negocio
                 });
             }
             return seguros;
+        }
+
+        // RN-21: el descuento por nivel se aplicó solo sobre las entradas; a cada una le toca la
+        // parte proporcional a su precio.
+        private static decimal ParteDelDescuento(Compra compra, decimal precio)
+        {
+            if (compra.BaseEntradas <= 0m)
+            {
+                return 0m;
+            }
+            return Math.Round(compra.MontoDescuento * precio / compra.BaseEntradas, 2, MidpointRounding.AwayFromZero);
         }
 
         private static ReglaNegocioException CupoAgotado(int idSector)

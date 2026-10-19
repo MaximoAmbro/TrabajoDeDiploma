@@ -178,6 +178,73 @@ Limitaciones conocidas, a resolver en la Sección 8 (no son fallas de esta secci
   también las reservas Pendiente y Vencida, y una fila por entrada.
 - La semilla todavía graba las entradas del Clásico Rosarino de a 2 por fila.
 
+Las dos quedan resueltas en la Sección 8 (ver abajo).
+
+## Sección 8 — commit «Seccion 8: suscripciones, seguro, historial y lista de espera»
+
+Antes de probar, aplicar a la base de desarrollo los tres cambios de esquema y los tres
+parámetros nuevos (están en `BaseDatos/01-esquema.sql` y `02-semilla.sql`, pero los scripts
+no se pueden volver a correr enteros):
+
+```sql
+ALTER TABLE Eventos     ADD FinPreventa      DATETIME      NULL;
+ALTER TABLE ListaEspera ADD ConSuscripcion   BIT           NOT NULL DEFAULT 0;
+ALTER TABLE Compras     ADD MontoReembolsado DECIMAL(12,2) NOT NULL DEFAULT 0;
+GO
+INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
+('SUSCRIPCION_MENSUAL_PRECIO',   '12000', 'Precio del plan mensual de suscripción, en pesos',          'RF-13'),
+('SUSCRIPCION_ANUAL_PRECIO',     '75000', 'Precio del plan anual de suscripción, en pesos',            'RF-13'),
+('SUSCRIPCION_SEGURO_DESCUENTO', '1.000', 'Bonificación del seguro para suscriptores (1 = sin cargo)', 'RN-37');
+GO
+```
+
+Los gestores se verificaron sobre una base temporal recreada con los dos scripts (2a a 2l:
+RN-25, RN-26, seguro sin cargo, referencia de $ 99.625, CP-10, RN-39, RN-35/36, RN-10,
+CP-09, devolución parcial, RN-29 y el cierre de todas las filas de `Compras`). Las
+pantallas nuevas se abrieron desde una prueba automática con capturas, sin hacer clics.
+Lo que sigue es lo que falta mirar a mano.
+
+**Reemplaza a las pruebas del historial de secciones anteriores** y a las dos limitaciones
+de la Sección 7: el historial ya no lee `Entradas` con SQL propio, muestra una fila por
+compra y solo las Confirmada y Reembolsada; la semilla graba el Clásico de a una entrada por
+fila. En una base de desarrollo cargada con la semilla vieja, las 3 filas del Clásico
+siguen siendo de a 2 entradas: el detalle de esa compra muestra 3 filas con el importe de 2.
+
+**Formularios agrandados** (declarado): `frmMenuCliente` de 595 a 723 de alto,
+`frmMenuPropietario` de 714 a 1020, con «Volver al inicio» bajado lo mismo.
+`frmHistorialCliente` se rehízo: de 412 a 560 de alto, con dos grillas en lugar de una.
+`FrmCompraCliente` suma dos controles ocultos (aviso de agotado y botón de lista de espera)
+sobre la grilla de sectores.
+
+| # | Qué probar | Resultado esperado |
+|---|---|---|
+| 8.1 | Menú del cliente | Tres botones iguales: «Eventos disponibles», «Mis eventos», «Mi suscripción»; «Volver al inicio» debajo, sin pisarse. Tabular recorre los tres botones en orden |
+| 8.2 | Menú del propietario (`admin@`) | «Mis locales», «Registrar local», «Listas de espera» y un hueco del alto de un botón antes de «Volver al inicio» (lugar de «Reportes», Sección 9) |
+| 8.3 | «Mi suscripción» con `plata@` | «No tenés una suscripción activa.», los tres beneficios, «Sin descuento extra: rige el de tu nivel.», opciones «Mensual: $ 12.000 por mes» y «Anual: $ 75.000 por año», «Cancelar suscripción» deshabilitado. Nada cortado |
+| 8.4 | Contratar el Mensual | Pide confirmación con el precio y el aviso de que no se renueva. Al aceptar: «Plan Mensual activo / Vence el (hoy + 1 mes) / No se renueva automáticamente»; las opciones y «Contratar» quedan deshabilitados y «Cancelar suscripción» habilitado |
+| 8.5 | RN-25 en pantalla: abrir la aplicación dos veces con `plata@`, abrir «Mi suscripción» en las dos (sin plan), contratar en una y después en la otra | La segunda muestra el mensaje de RN-25 con el vencimiento del plan vigente. En `Suscripciones` hay una sola fila con `Activa = 1` |
+| 8.6 | «Cancelar suscripción» | Pide confirmación con «No» por defecto. Al aceptar vuelve a «No tenés una suscripción activa.» |
+| 8.7 | Seguro sin cargo: con `plata@` suscripta, Festival, 2 Campo + seguro | El resumen dice «Seguro sin cargo (2 entradas) $ 0,00» y el TOTAL no sube. «Comprar» no pregunta por el seguro (H-04 sigue igual) |
+| 8.8 | Pagar esa compra | La confirmación muestra «Seguro $ 0,00». En `Seguros` hay 2 pólizas con `Precio` 0 |
+| 8.9 | La misma compra sin suscripción (cancelarla antes) | «Seguro (2 entradas) $ 10.000,00», como en 7.2 |
+| 8.10 | Historial (`plata@`, «Mis eventos») | Una fila por compra: Pedido, Evento, Fecha, Estado, Entradas, Total pagado, Devuelto. Las 3 compras de la semilla aparecen con Evento «—» y 0 entradas. No aparecen compras Pendiente ni Vencida (7.13 deja una Vencida para comparar) |
+| 8.11 | Elegir la compra de 8.8 | Abajo, «Entradas del pedido EA-…»: 2 filas con sector, precio, Estado Confirmada, Seguro Sí y el código. El botón dice «Devolver» y está deshabilitado |
+| 8.12 | Tildar una entrada | El botón pasa a «Devolver 1 entrada(s)». Destildar la vuelve a deshabilitar |
+| 8.13 | Devolver 1 de 2 | Confirmación con «No» por defecto; al aceptar, «Se reintegran …» con el precio menos el descuento del nivel con que se compró (con Plata, $ 23.750,00). La compra sigue Confirmada con ese importe en Devuelto; la entrada queda Reembolsada, en gris y sin poder tildarse |
+| 8.14 | Volver a la compra del Festival | Disponibles de Campo subió 1 respecto de antes de devolver |
+| 8.15 | Devolver la otra entrada | Se reintegra el resto (más los servicios, si la compra tenía); la compra pasa a Reembolsada |
+| 8.16 | Compra sin seguro: tildar una entrada | No se puede tildar: la fila está en gris |
+| 8.17 | RN-29 por plazo: `UPDATE Eventos SET Fecha = DATEADD(HOUR, 24, GETDATE())` en el evento de una compra con seguro y tratar de devolver | Mensaje de RN-29 con la fecha límite. **Restaurar la fecha después** |
+| 8.18 | RN-10: con `plata@`, Clásico Rosarino | En lugar de la grilla: «Entradas agotadas. Anotate en la lista de espera…» y el botón «Anotarme en la lista de espera». Servicios, seguro y «Comprar» deshabilitados |
+| 8.19 | Anotarse | «Te anotaste en la lista de espera…»; el botón pasa a «Ya estás en la lista de espera» y queda deshabilitado (RF-10) |
+| 8.20 | Volver al listado y reabrir el Clásico | El botón ya aparece como «Ya estás en la lista de espera» |
+| 8.21 | RN-39: `UPDATE Eventos SET FinPreventa = DATEADD(DAY, 3, GETDATE())` en el Festival; abrirlo con un cliente sin suscripción | El evento aparece en el listado; al «Comprar», mensaje de RN-39 con la fecha y hora de fin y vuelve al listado |
+| 8.22 | Lo mismo con un cliente suscripto | Abre la compra normal. **Volver a poner `FinPreventa = NULL`** |
+| 8.23 | Listas de espera como `admin@` | El combo trae el Clásico («… · agotado»). La grilla: Posición, Cliente, Mail, Suscriptor, Inscripto el; los suscriptores arriba; debajo, la cantidad de inscriptos y cuántos con suscripción. Las columnas no se reordenan con clic |
+| 8.24 | RN-35 congelada: anotar a `bronce@` sin suscripción y a `oro@` con suscripción; después cancelar la de `oro@` | `oro@` sigue primero aunque ya no sea suscriptor |
+| 8.25 | Sin eventos agotados (otro propietario) | Combo deshabilitado y el aviso «No hay eventos agotados ni listas de espera en sus locales.» |
+| 8.26 | Login y navegación completa (inicio → menús → cada pantalla → volver) | Todo funciona igual que antes sin `ConexionSql`: ningún formulario recibe ni abre una conexión |
+
 ---
 
 ## Riesgo asumido

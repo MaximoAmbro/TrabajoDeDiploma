@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -37,7 +36,6 @@ namespace Visual
     {
         public int IDUsuario;
         public int IDEvento;
-        public SqlConnection ConexionSql; // TODO Seccion 7: quitar ConexionSql (se devuelve a frmEventosCliente)
         public string NombreUsuario;
 
         // RF-05: lo que el cliente va armando. Vive en memoria hasta confirmar la compra.
@@ -57,7 +55,7 @@ namespace Visual
             GestorCompras.Instance.LiberarVencidas();
             try
             {
-                paquete = GestorPaquetes.Instance.Nuevo(IDEvento);
+                paquete = GestorPaquetes.Instance.Nuevo(IDEvento, IDUsuario);   // RN-09 + RN-39
             }
             catch (ReglaNegocioException ex)
             {
@@ -76,7 +74,60 @@ namespace Visual
             CargarServicios();
             chkSeguro.CheckedChanged += chkSeguro_CheckedChanged;
             lblResumen.UseMnemonic = false;   // «Meet & Greet»: el & no es tecla de acceso
+            MostrarSiAgotado();
             ActualizarResumen();
+        }
+
+        // RN-10: con el evento agotado, en lugar de la grilla de sectores se ofrece la lista de espera.
+        private void MostrarSiAgotado()
+        {
+            bool agotado = GestorEventos.Instance.EstaAgotado(IDEvento);
+            dgvSectores.Visible = !agotado;
+            lblAgotado.Visible = agotado;
+            btnListaEspera.Visible = agotado;
+            btnComprar.Enabled = !agotado;
+            chkSeguro.Enabled = !agotado;
+            if (agotado)
+            {
+                foreach (CheckBox chk in ChecksDeServicio())
+                {
+                    chk.Enabled = false;
+                }
+                MarcarInscripto(GestorListaEspera.Instance.EstaInscripto(IDEvento, IDUsuario));
+            }
+        }
+
+        // RF-10: después de anotarse el botón queda deshabilitado, diciendo que ya está en la lista.
+        private void MarcarInscripto(bool inscripto)
+        {
+            btnListaEspera.Enabled = !inscripto;
+            btnListaEspera.Text = inscripto ? "Ya estás en la lista de espera" : "Anotarme en la lista de espera";
+        }
+
+        private void btnListaEspera_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                GestorListaEspera.Instance.Inscribir(IDEvento, IDUsuario);
+            }
+            catch (ReglaNegocioException ex)
+            {
+                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (ex.Regla == "RN-36")
+                {
+                    MarcarInscripto(true);
+                }
+                else if (ex.Regla == "RN-10")
+                {
+                    MostrarSiAgotado();   // se liberó cupo: vuelve la grilla
+                    RecargarDisponibles();
+                }
+                return;
+            }
+            MarcarInscripto(true);
+            MessageBox.Show("Te anotaste en la lista de espera de «" + evento.Nombre + "». " +
+                            "Te vamos a notificar si se libera un lugar.",
+                            "Lista de espera", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         // RF-06: reserva el cupo y pasa a la pantalla de pago.
         private void btnComprar_Click(object sender, EventArgs e)
@@ -134,13 +185,23 @@ namespace Visual
             // RN-22: si la compra subió el nivel, rige desde esta operación siguiente.
             cliente = GestorFidelizacion.Instance.ObtenerCliente(IDUsuario);
             CargarNivel();
-            paquete = GestorPaquetes.Instance.Nuevo(IDEvento);
+            try
+            {
+                paquete = GestorPaquetes.Instance.Nuevo(IDEvento, IDUsuario);
+            }
+            catch (ReglaNegocioException ex)
+            {
+                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                VolverAlListado();
+                return;
+            }
             CargarSectores();
             foreach (CheckBox chk in ChecksDeServicio())
             {
                 chk.Checked = false;
             }
             chkSeguro.Checked = false;
+            MostrarSiAgotado();
             ActualizarResumen();
         }
 
@@ -378,8 +439,11 @@ namespace Visual
             texto.AppendLine(Importe("Subtotal servicios", resumen.Servicios));
             texto.AppendLine();
             texto.AppendLine(Importe("Cargo por servicio", resumen.CargoServicio));
+            int cantidad = GestorPaquetes.Instance.CantidadEntradas(paquete);
+            // RN-37: con suscripción activa el seguro sale sin cargo.
+            string seguro = cantidad > 0 && resumen.Seguro == 0m ? "Seguro sin cargo" : "Seguro";
             texto.AppendLine(paquete.ConSeguro
-                ? Importe($"Seguro ({GestorPaquetes.Instance.CantidadEntradas(paquete)} entradas)", resumen.Seguro)
+                ? Importe($"{seguro} ({cantidad} entradas)", resumen.Seguro)
                 : "Seguro: no");
             texto.AppendLine();
             texto.AppendLine(Importe("TOTAL", resumen.Total));
@@ -502,7 +566,6 @@ namespace Visual
         {
             frmEventosCliente frm = new frmEventosCliente();
             frm.IDUsuario = IDUsuario;
-            frm.ConexionSql = ConexionSql;
             frm.NombreUsuario = NombreUsuario;
             frm.Show();
             this.Hide();

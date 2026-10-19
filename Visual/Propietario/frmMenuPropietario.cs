@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,7 +14,6 @@ namespace Visual
     public partial class frmMenuPropietario : Form
     {
         public int IDUsuario;
-        public SqlConnection ConexionSql;
         public string NombreUsuario;
 
         public frmMenuPropietario()
@@ -32,7 +30,6 @@ namespace Visual
         private void btnMisLocales_Click(object sender, EventArgs e)
         {
             frmMisLocales frm = new frmMisLocales();
-            frm.ConexionSql = ConexionSql;
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;
             frm.Show(); this.Hide();
@@ -40,7 +37,13 @@ namespace Visual
         private void btnRegistrarLocal_Click(object sender, EventArgs e)
         {
             frmRegistrarLocal frm = new frmRegistrarLocal();
-            frm.ConexionSql = ConexionSql;
+            frm.IDUsuario = IDUsuario;
+            frm.NombreUsuario = NombreUsuario;
+            frm.Show(); this.Hide();
+        }
+        private void btnListasEspera_Click(object sender, EventArgs e)
+        {
+            frmListasEspera frm = new frmListasEspera();
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;
             frm.Show(); this.Hide();
@@ -48,7 +51,6 @@ namespace Visual
         private void lblvolver_Click(object sender, EventArgs e)
         {
             frmInicio frmInicio = new frmInicio();
-            frmInicio.ConexionSql = ConexionSql;
             frmInicio.Show(); this.Hide();
         }
     }

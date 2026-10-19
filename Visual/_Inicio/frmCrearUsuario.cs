@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,8 +13,6 @@ namespace Visual
 {
     public partial class frmCrearUsuario : Form
     {
-        // TODO Seccion N: quitar ConexionSql. Solo se devuelve a frmInicio al cerrar.
-        public SqlConnection ConexionSql;
         public frmCrearUsuario()
         {
             InitializeComponent();
@@ -110,7 +107,6 @@ namespace Visual
         private void Cerrar()
         {
             frmInicio frm = new frmInicio();
-            frm.ConexionSql = ConexionSql;
             frm.Show();
             this.Hide();
         } // cierra el form

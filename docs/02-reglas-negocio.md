@@ -23,6 +23,7 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 | RN-10 | Un evento está agotado cuando todos sus sectores alcanzaron su capacidad; ahí se habilita la lista de espera. | D |
 | RN-11 | Un evento con entradas vendidas no se elimina: se suspende o se reprograma. | A |
 | RN-38 | La suma de las capacidades de los sectores de un evento no puede superar la capacidad del local donde se realiza. Se verifica al agregar o modificar un sector. | E |
+| RN-39 | **Preventa.** Mientras la fecha actual sea anterior a `Eventos.FinPreventa`, solo un cliente con suscripción activa puede iniciar una compra de ese evento. El evento igual se ve en el listado. `FinPreventa` en NULL significa que el evento no tiene preventa. Es el beneficio de preventa de RN-37. | A |
 
 ## Compra y armado de paquetes
 
@@ -55,8 +56,8 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 | RN-26 | La suscripción no se renueva automáticamente. | A |
 | RN-27 | **DADA DE BAJA.** Permitía acumular descuentos hasta 20 %. Se retiró por inviabilidad económica. El número no se reasigna. | — |
 | RN-28 | El seguro se contrata solo durante la compra; no admite incorporación posterior. | A |
-| RN-29 | El seguro habilita devolución hasta 48 horas antes del evento. | A |
-| RN-37 | La suscripción **no** otorga descuento porcentual. Sus beneficios son en especie: seguro bonificado, preventa y prioridad en lista de espera. No se acumulan con el descuento por nivel. | A |
+| RN-29 | El seguro habilita devolución hasta 48 horas antes del evento. La devolución es **por entrada**: el cliente elige cuáles da de baja, y cada una tiene que estar confirmada y tener póliza. **Se devuelve** el precio congelado de cada entrada menos su parte proporcional del descuento por nivel y, si con eso no queda ninguna entrada confirmada en la compra, también los servicios complementarios. **No se devuelven** el cargo por servicio ni la prima del seguro. El costo de los servicios devueltos se recupera del proveedor: esa condición tiene que constar en el acuerdo con cada proveedor. | A |
+| RN-37 | La suscripción **no** otorga descuento porcentual y no se acumula con el descuento por nivel. Sus beneficios son en especie: **seguro sin cargo** (la prima se multiplica por 1 − `SUSCRIPCION_SEGURO_DESCUENTO`; con 1.000 queda en 0 y la póliza se graba igual), **preventa** según RN-39 y **prioridad en la lista de espera** según RN-35. | A |
 
 ## Pagos
 
@@ -72,7 +73,7 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 | ID | Regla | T |
 |---|---|---|
 | RN-34 | Los reportes son accesibles únicamente al perfil Administrador. | A |
-| RN-35 | La lista de espera respeta estrictamente el orden de inscripción. | E |
+| RN-35 | La lista de espera se ordena primero por los clientes que se inscribieron con suscripción activa y después por el resto; dentro de cada grupo, por orden de inscripción. La condición de suscriptor se **congela al inscribirse** (`ListaEspera.ConSuscripcion`): si después la suscripción vence o se cancela, el lugar no cambia. | E |
 | RN-36 | Un cliente se inscribe una sola vez en la lista de espera de un mismo evento. | E |
 
 ---
@@ -87,6 +88,7 @@ subtotalE  = base − monto
 servicios  = Σ precio de servicios complementarios          // sin descuento
 cargo      = redondear(subtotalE × 0,15 ; 2)
 seguro     = cantidad de entradas × SEGURO_PRECIO, si se contrata   // RN-28
+seguro     = redondear(seguro × (1 − SUSCRIPCION_SEGURO_DESCUENTO) ; 2), con suscripción activa  // RN-37
 total      = subtotalE + servicios + cargo + seguro
 ```
 
@@ -116,6 +118,9 @@ No escribir estos valores en el código. Van en la tabla `Parametros`.
 | `CARGO_SERVICIO` | — | 0.150 |
 | `SEGURO_HORAS_COBERTURA` | RN-29 | 48 |
 | `SEGURO_PRECIO` | RN-28 | 5000 |
+| `SUSCRIPCION_MENSUAL_PRECIO` | RF-13 | 12000 |
+| `SUSCRIPCION_ANUAL_PRECIO` | RF-13 | 75000 |
+| `SUSCRIPCION_SEGURO_DESCUENTO` | RN-37 | 1.000 (100 %: sin cargo) |
 
 ## Conflictos resueltos
 
@@ -124,3 +129,26 @@ No escribir estos valores en el código. Van en la tabla `Parametros`.
 | RN-08 vs RN-15 | El control de capacidad computa vendidas **más** reservadas vigentes. |
 | RN-22 vs RN-16 | Rige el nivel vigente al iniciar la operación. |
 | RN-23 vs RN-19 | El descenso se hace efectivo en la reevaluación mensual, nunca en medio de una compra. |
+| RN-35 vs RN-37 | RN-35 decía «orden estrictamente de inscripción» y RN-37 promete prioridad al suscriptor. Se reescribió RN-35: primero suscriptores, después el resto, cada grupo por orden de inscripción. La prioridad se **congela** al inscribirse, igual que `NivelAplicado` en `Compras`: si se consultara la suscripción al leer la lista, el orden cambiaría cada vez que a alguien se le vence el plan. |
+
+## Análisis económico: exposición del seguro sin cargo
+
+Con `SUSCRIPCION_SEGURO_DESCUENTO` = 1.000 el suscriptor no paga la prima de
+`SEGURO_PRECIO` = $5.000 por entrada (RN-37). Lo que se resigna:
+
+- **Sin tope.** La bonificación es de $5.000 por entrada, en todas las compras del período,
+  hasta el máximo de 6 entradas por operación (RN-12). Una sola compra de 6 entradas
+  bonifica $30.000.
+- **Selección adversa.** El beneficio atrae justamente a quien piensa comprar mucho y con
+  seguro, o a quien prevé que puede tener que devolver: el cliente puede suscribirse para
+  una compra concreta y cancelar después (RN-26 no lo impide).
+- **El plan mensual no se cubre.** Con $12.000 por mes, una sola compra de **3 entradas o
+  más** con seguro ya bonifica $15.000 o más: el plan se paga solo en la primera operación.
+  El anual ($75.000) equivale a 15 entradas aseguradas en el año.
+- La devolución (RN-29) no reintegra el cargo por servicio ni la prima, y el costo de los
+  servicios se recupera del proveedor; con el seguro sin cargo, la prima que no se
+  reintegra es 0, así que en una devolución de un suscriptor el único ingreso que queda es
+  el cargo por servicio.
+
+Si la exposición resulta excesiva, el ajuste es de parámetro, no de código: bajar
+`SUSCRIPCION_SEGURO_DESCUENTO` (por ejemplo a 0.500) o subir el precio de los planes.

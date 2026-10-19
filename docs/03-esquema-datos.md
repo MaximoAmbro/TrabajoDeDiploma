@@ -51,6 +51,7 @@ ALTER TABLE Usuario  ADD BloqueadoHasta DATETIME NULL;
 
 ALTER TABLE Eventos  ADD Categoria VARCHAR(20) NULL;   -- Concierto|Deportivo|Teatro|Cultural
 ALTER TABLE Eventos  ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Publicado';
+ALTER TABLE Eventos  ADD FinPreventa DATETIME NULL;    -- RN-39; NULL = sin preventa
 
 ALTER TABLE Sectores ADD CantidadReservada INT NOT NULL DEFAULT 0;  -- RN-08 + RN-15
 
@@ -81,7 +82,8 @@ CREATE TABLE Compras (
     MontoServicios    DECIMAL(12,2) NOT NULL,
     CargoServicio     DECIMAL(12,2) NOT NULL,
     MontoSeguro       DECIMAL(12,2) NOT NULL DEFAULT 0,   -- RN-28
-    TotalPagado       DECIMAL(12,2) NOT NULL,
+    TotalPagado       DECIMAL(12,2) NOT NULL,     -- lo que pagó el cliente; no cambia
+    MontoReembolsado  DECIMAL(12,2) NOT NULL DEFAULT 0,   -- RN-29; neto = TotalPagado − MontoReembolsado
     ReservaVence      DATETIME      NULL,       -- RN-15; NULL = sin cupo reservado
     CONSTRAINT FK_Compras_Usuario FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID),
     CONSTRAINT CK_Compras_Estado
@@ -164,6 +166,7 @@ CREATE TABLE ListaEspera (                -- RN-35, RN-36
     ID_Evento    INT      NOT NULL,
     ID_Usuario   INT      NOT NULL,
     FechaAlta    DATETIME NOT NULL,
+    ConSuscripcion BIT    NOT NULL DEFAULT 0,   -- RN-35: congelado al inscribirse
     CONSTRAINT UX_ListaEspera UNIQUE (ID_Evento, ID_Usuario),   -- RN-36
     FOREIGN KEY (ID_Evento)  REFERENCES Eventos(ID),
     FOREIGN KEY (ID_Usuario) REFERENCES Usuario(ID)
@@ -219,6 +222,45 @@ borrar la fila perdería el rastro del intento que pide RN-31.
   `Vencida` (devolviendo el cupo que retengan en otros sectores) y se borran las entradas
   `Pendiente` y `Vencida`, que si no frenarían el borrado por clave foránea. `Compras` y
   `Pagos` quedan como rastro (RN-31).
+
+## Cambios de la Sección 8: suscripciones, devolución y lista de espera
+
+```sql
+ALTER TABLE Eventos     ADD FinPreventa      DATETIME      NULL;
+ALTER TABLE ListaEspera ADD ConSuscripcion   BIT           NOT NULL DEFAULT 0;
+ALTER TABLE Compras     ADD MontoReembolsado DECIMAL(12,2) NOT NULL DEFAULT 0;
+```
+
+**`Eventos.FinPreventa`.** RN-39 necesita saber hasta cuándo un evento se vende solo a
+suscriptores. Es un atributo del evento, no de la suscripción. NULL = sin preventa, que es
+el caso de todos los eventos existentes: el `ALTER` no cambia el comportamiento de nada que
+ya esté publicado.
+
+**`ListaEspera.ConSuscripcion`.** RN-35 ordena primero a los suscriptores. La condición se
+**congela al inscribirse**, igual que `NivelAplicado` en `Compras`: si se consultara la
+suscripción en el momento de leer la lista, el orden cambiaría cada vez que a alguien se le
+vence el plan, y eso rompe la estabilidad que pide RN-35. El orden es
+`ORDER BY ConSuscripcion DESC, FechaAlta`.
+
+**`Compras.MontoReembolsado`.** `TotalPagado` es lo que el cliente pagó y no se toca. Lo
+devuelto por RN-29 se acumula aparte; el neto de la operación es
+`TotalPagado − MontoReembolsado`. Sin esta columna la fila no cuenta la devolución, y en una
+devolución parcial la compra sigue `Confirmada` sin rastro de lo reintegrado. La igualdad
+`Base − Descuento + Servicios + Cargo + Seguro = TotalPagado` se sigue cumpliendo.
+
+### Devolución (RN-29)
+
+| | `Compras` | `Entradas` | Cupo |
+|---|---|---|---|
+| Parcial | sigue `Confirmada`; `MontoReembolsado` += lo devuelto | las elegidas pasan a `Reembolsada` | vuelve solo: el disponible cuenta únicamente las `Confirmada` |
+| Completa (no queda ninguna `Confirmada`) | pasa a `Reembolsada` | ídem | ídem |
+
+- Una compra `Reembolsada` deja de contar para el nivel (RN-24), porque la ventana cuenta
+  solo `Confirmada`. Una reembolsada **en parte** sigue contando: la operación existió.
+  El nivel no baja en el momento: espera la reevaluación mensual (RN-23).
+- Las pólizas de `Seguros` se conservan como rastro.
+- RN-11 cuenta como venta una entrada `Reembolsada`: el evento o el sector que la tienen no
+  se eliminan (su compra, su pago y su póliza son historia y las frenan las claves foráneas).
 
 ## Estados de un evento
 
@@ -338,7 +380,7 @@ Convención de nombres: la columna `ID_Usuario` se mapea como `IdUsuario`, `Loca
 
 ## Datos semilla mínimos
 
-- Los 14 registros de `Parametros` de `docs/02-reglas-negocio.md`.
+- Los 17 registros de `Parametros` de `docs/02-reglas-negocio.md`.
 - Un usuario Administrador y tres Clientes, uno por nivel.
 - Un local con tres eventos: uno vigente con cupo, uno agotado, uno con fecha pasada.
 - Tres sectores por evento con precios distintos.

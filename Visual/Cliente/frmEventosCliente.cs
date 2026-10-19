@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,7 +14,6 @@ namespace Visual
     public partial class frmEventosCliente : Form
     {
         public int IDUsuario;
-        public SqlConnection ConexionSql; // TODO Seccion 7: quitar ConexionSql (frmMenuCliente y frmHistorialCliente la usan)
         public string NombreUsuario;
         public frmEventosCliente()
         {
@@ -114,7 +112,6 @@ namespace Visual
                 frm.IDUsuario = IDUsuario;
                 frm.IDEvento = Convert.ToInt32(dgveventos.CurrentRow.Cells["ID"].Value);
                 frm.NombreUsuario = NombreUsuario;
-                frm.ConexionSql = ConexionSql;
                 frm.Show();
                 this.Hide();
             }
@@ -129,7 +126,6 @@ namespace Visual
         {
             frmMenuCliente frm = new frmMenuCliente();
             frm.IDUsuario = IDUsuario;
-            frm.ConexionSql = ConexionSql;
             frm.NombreUsuario = NombreUsuario;
             frm.Show();
             this.Hide();

@@ -15,7 +15,17 @@ namespace Entidades
         public decimal MontoServicios { get; set; }
         public decimal CargoServicio { get; set; }
         public decimal MontoSeguro { get; set; }               // RN-28, sin descuento ni cargo
-        public decimal TotalPagado { get; set; }
+        public decimal TotalPagado { get; set; }               // lo que el cliente pagó; no cambia
+        public decimal MontoReembolsado { get; set; }          // RN-29; neto = TotalPagado − MontoReembolsado
         public DateTime? ReservaVence { get; set; }            // RN-15; null = sin cupo reservado
+
+        // Sin columna. RN-28: el cliente eligió el seguro. Con suscripción activa la prima puede
+        // ser 0 (RN-37), así que MontoSeguro > 0 no alcanza para saber si se contrató.
+        // Solo vive mientras dura el pago: Iniciar la fija y Confirmar la lee.
+        public bool ConSeguro { get; set; }
+
+        // Sin columna: los completa la consulta del historial (CU-03).
+        public int CantidadEntradas { get; set; }
+        public string NombreEvento { get; set; }
     }
 }

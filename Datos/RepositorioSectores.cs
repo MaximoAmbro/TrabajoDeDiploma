@@ -216,11 +216,12 @@ namespace Datos
         }
 
         // RN-11: solo cuentan las ventas. Las reservas Pendiente y las Vencida no son ventas: una
-        // reserva abandonada no debe impedir eliminar el sector.
+        // reserva abandonada no debe impedir eliminar el sector. Una Reembolsada sí fue una venta.
         public int ContarEntradas(int idSector)
         {
             const string consulta =
-                "SELECT COUNT(*) FROM Entradas WHERE ID_Sector = @ID AND Estado = 'Confirmada'";
+                "SELECT COUNT(*) FROM Entradas " +
+                "WHERE ID_Sector = @ID AND Estado IN ('Confirmada', 'Reembolsada')";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlCommand comando = CrearComando(conexion, consulta))

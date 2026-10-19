@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Entidades;
-using Microsoft.Data.SqlClient;
 using Negocio;
 
 namespace Visual.Vendedor
@@ -18,7 +17,6 @@ namespace Visual.Vendedor
     {
         public string NombreUsuario; public int IDlocal; public int IDEvento; public string NombreLocal; public int IDUsuario;
         public string NombreEvento;
-        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public frmAgregarSector()
         {
             InitializeComponent();
@@ -54,7 +52,6 @@ namespace Visual.Vendedor
         private void lblVolver_Click(object sender, EventArgs e)
         {
             frmAdministrarEvento form = new frmAdministrarEvento();
-            form.ConexionSql = ConexionSql;
             form.IDlocal = IDlocal;
             form.IDEvento = IDEvento;
             form.NombreEvento = NombreEvento;

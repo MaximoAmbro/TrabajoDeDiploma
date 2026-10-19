@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,8 +13,6 @@ namespace Visual
 {
     public partial class frmCambiarContraseña : Form
     {
-        // TODO Seccion N: quitar ConexionSql. Solo se devuelve a frmInicio al volver.
-        public SqlConnection ConexionSql;
         public frmCambiarContraseña()
         {
             InitializeComponent();
@@ -68,7 +65,6 @@ namespace Visual
         private void btnVolver_Click(object sender, EventArgs e)
         {
             frmInicio frm = new frmInicio();
-            frm.ConexionSql = ConexionSql;
             frm.Show();
             this.Hide();
         } // Boton volver

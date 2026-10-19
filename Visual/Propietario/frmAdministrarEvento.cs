@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
 using System.Runtime.Versioning;
 
 namespace Visual.Vendedor
@@ -17,7 +16,6 @@ namespace Visual.Vendedor
     public partial class frmAdministrarEvento : Form
     {
         public int IDUsuario; public int IDlocal; public int IDEvento;
-        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public string NombreUsuario;
         public string NombreLocal;
         public string NombreEvento { get; set; }
@@ -29,7 +27,6 @@ namespace Visual.Vendedor
         private void btnVolver_Click(object sender, EventArgs e)
         {
             frmEventosLocal form = new frmEventosLocal();
-            form.ConexionSql = ConexionSql;
             form.IDlocal = IDlocal;
             form.NombreUsuario = NombreUsuario;
             form.IDUsuario = IDUsuario;
@@ -66,7 +63,6 @@ namespace Visual.Vendedor
             frm.IDlocal = IDlocal;
             frm.NombreUsuario = NombreUsuario;
             frm.IDUsuario = IDUsuario;
-            frm.ConexionSql = ConexionSql;
             frm.IDEvento = IDEvento;
             frm.NombreEvento = NombreEvento;
             frm.NombreLocal=NombreLocal;
@@ -99,7 +95,6 @@ namespace Visual.Vendedor
         private void btnVolver_Click1(object sender, EventArgs e)
         {
             frmEventosLocal frmEventosLocal = new frmEventosLocal();
-            frmEventosLocal.ConexionSql = ConexionSql;
             frmEventosLocal.IDlocal = IDlocal;
             frmEventosLocal.IDUsuario = IDUsuario;
             frmEventosLocal.NombreUsuario = NombreUsuario;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,7 +16,6 @@ namespace Visual
     {
         public int IDUsuario;
         public string NombreUsuario;
-        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public frmRegistrarLocal()
         {
             InitializeComponent();
@@ -58,7 +56,6 @@ namespace Visual
         private void Cerrar()
         {
             frmMenuPropietario frm = new frmMenuPropietario();
-            frm.ConexionSql = ConexionSql;
             frm.NombreUsuario = NombreUsuario;
             frm.IDUsuario = IDUsuario;
             frm.Show(); this.Hide();

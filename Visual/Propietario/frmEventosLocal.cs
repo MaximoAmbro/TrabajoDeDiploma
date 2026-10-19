@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Negocio;
+﻿using Negocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +15,6 @@ namespace Visual.Vendedor
     public partial class frmEventosLocal : Form
     {
         public int IDUsuario; public int IDlocal;
-        public SqlConnection ConexionSql; // TODO Seccion 5-7: quitar ConexionSql
         public string NombreLocal { get; set; } public string NombreUsuario { get; set; }
         public frmEventosLocal()
         {
@@ -62,7 +60,6 @@ namespace Visual.Vendedor
         private void btnVolver_Click(object sender, EventArgs e)
         {
             frmMisLocales frm = new frmMisLocales();
-            frm.ConexionSql = ConexionSql;
             frm.NombreUsuario = NombreUsuario;
             frm.IDUsuario = IDUsuario;
             frm.Show(); this.Hide();
@@ -72,7 +69,6 @@ namespace Visual.Vendedor
             Propietario.frmAgregarEvento frm = new Propietario.frmAgregarEvento();
             frm.IDlocal = IDlocal;
             frm.NombreUsuario = NombreUsuario;
-            frm.ConexionSql = ConexionSql;
             frm.IDUsuario = IDUsuario;
             frm.NombreLocal = NombreLocal;
             frm.Show(); this.Close();
@@ -87,7 +83,6 @@ namespace Visual.Vendedor
             frmAdministrarEvento frm = new frmAdministrarEvento();
             int EventoSeleccionado = Convert.ToInt32(dgvEventos.CurrentRow.Cells["ID"].Value);
             frm.IDlocal = IDlocal;
-            frm.ConexionSql = ConexionSql;
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;
             frm.NombreLocal = NombreLocal;
