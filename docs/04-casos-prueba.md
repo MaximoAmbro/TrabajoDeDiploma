@@ -2,6 +2,33 @@
 
 Proyecto `Pruebas/` con MSTest. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 
+> **Los diez casos son pruebas de integración contra SQL Server, no pruebas unitarias.**
+> No hay ningún punto de inyección: `GestorParametros` lee los valores de las reglas de la
+> tabla `Parametros` por `RepositorioParametros`, y siete archivos de `Repo/` dependen de él.
+> Hasta CP-01 (Bronce, 0 %) necesita la base para resolver `PorcentajePara`. Se decidió no
+> abrir un seam para las pruebas: cada caso usa la base real, por los mismos gestores que usa
+> la aplicación.
+>
+> **Cómo se prepara la base.** `Pruebas/BaseDePrueba.cs`, en `[AssemblyInitialize]`, una vez
+> por corrida: borra `BddEventAura_Pruebas` si existe (antes cierra el pool de conexiones y la
+> pone en `SINGLE_USER`), la crea de nuevo desde `master` y le aplica `01-esquema.sql` y
+> `02-semilla.sql`, partidos por las líneas que son exactamente `GO`. Después recarga
+> `GestorParametros`. Se niega a correr si la cadena del `App.config` de `Pruebas/` no apunta a
+> un catálogo terminado en `_Pruebas`: nunca toca la base de desarrollo.
+>
+> **Aislamiento.** Sin paralelismo (`[assembly: DoNotParallelize]`): comparten la base y los
+> singletons. Cada prueba arma sus datos con `Pruebas/Fake.cs`, que marca todo lo que crea
+> (mails `test…@pruebas.eventaura.com`, locales y servicios «test …») y lo borra por esa marca
+> antes de cada prueba y al final. Nunca modifica la semilla. La sesión (`GestorSesion`) se
+> cierra antes y después de cada prueba.
+>
+> **Cómo correrlas.** Tarea «Probar» de VS Code: compila con el MSBuild de Visual Studio y
+> corre `vstest.console.exe`, ubicado con `vswhere`. `dotnet test` no sirve: no puede compilar
+> los `.resx` de `Visual.csproj`, que es un proyecto de .NET Framework.
+>
+> Además de los diez casos y la verificación de referencia, `Pruebas/PruebasFormularios.cs`
+> verifica RNF-03: ningún formulario declara más de 790 px de alto (ver CLAUDE.md).
+
 | CP | Condición de entrada | Resultado esperado | Reglas |
 |---|---|---|---|
 | CP-01 | Cliente con 2 compras confirmadas en 12 meses | Bronce, descuento 0 % | RN-19, RN-20 |

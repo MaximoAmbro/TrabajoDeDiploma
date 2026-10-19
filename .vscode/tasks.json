@@ -19,6 +19,15 @@
       "presentation": { "reveal": "silent", "panel": "shared" }
     },
     {
+      "label": "Probar",
+      "type": "shell",
+      "command": "& 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe' SistemaEntradas.sln -restore -p:Configuration=Debug -v:minimal -nologo; if ($LASTEXITCODE -eq 0) { $vstest = & \"${env:ProgramFiles(x86)}\\Microsoft Visual Studio\\Installer\\vswhere.exe\" -latest -products '*' -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -find '**\\TestPlatform\\vstest.console.exe' | Select-Object -First 1; & $vstest .\\Pruebas\\bin\\Debug\\net48\\Pruebas.dll /Logger:console`;verbosity=normal }",
+      "options": { "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] } },
+      "group": "test",
+      "problemMatcher": "$msCompile",
+      "presentation": { "reveal": "always", "panel": "shared", "clear": true }
+    },
+    {
       "label": "Compilar y ejecutar",
       "dependsOrder": "sequence",
       "dependsOn": ["Compilar", "Ejecutar"],

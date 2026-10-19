@@ -207,8 +207,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtHora;
         private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblEvento;

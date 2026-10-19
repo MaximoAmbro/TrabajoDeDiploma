@@ -59,18 +59,13 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
 | `Visual/` | Visual.csproj | `Visual` | Formularios WinForms |
 | `Pruebas/` | Pruebas.csproj | `Pruebas` | MSTest |
 
-> **Dos inconsistencias heredadas del proyecto original:**
+> **Una inconsistencia heredada del proyecto original:** la carpeta del proyecto de
+> negocio se llama `Repo/` pero el proyecto es `Repositorio.csproj`. No la renombres.
 >
-> 1. La carpeta del proyecto de negocio se llama `Repo/` pero el proyecto es
->    `Repositorio.csproj`. No la renombres.
-> 2. Dentro de ese proyecto conviven **dos namespaces**:
->    `Negocio` en `GestorClientes.cs` y `GestorEventos.cs`;
->    `Repositorio` en `GestorUsuarios.cs` y `GestorPropietario.cs`.
->    Los formularios importan uno u otro según el gestor que usen.
->
-> El destino es unificar todo en `Negocio`. Cada sección migra los archivos que toca
-> y actualiza el `using` de los formularios afectados. **Antes de escribir un
-> `namespace`, verificá cuál usa el archivo que estás modificando.**
+> La otra, los dos namespaces dentro de ese proyecto, **quedó cerrada en la Sección 10**:
+> el último archivo en `Repositorio`, `GestorPropietario.cs`, pasó a `Negocio`. Todo
+> `Repo/` está en `Negocio` y ya no existe el namespace `Repositorio`: un archivo nuevo de
+> negocio va en `Negocio`, y un `using Repositorio;` no compila.
 
 **Carpetas eliminadas** (eran código muerto fuera de la solución): `Entidades/`,
 `Negocio/`, `Visual_/`. Si volvés a verlas, están de más.
@@ -96,6 +91,17 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
   - corregir el **texto visible** de etiquetas y botones.
   Ante la duda, preguntá antes de tocar. El formato de un `DataGridView` va por código en el
   `Load`, no en el Designer.
+- **Alto máximo de un formulario**: `ClientSize` no pasa de **790 px de alto**. El área útil
+  de la pantalla de desarrollo es 824 px y la barra de título suma unos 30: un formulario más
+  alto lo recorta Windows y los controles de abajo quedan inalcanzables. Ya pasó una vez:
+  `frmMenuPropietario` llegó a 1020 px y dejó «Volver al inicio» fuera de la vista, así que el
+  administrador no tenía forma de volver al inicio de sesión. Si lo que hay que agregar no
+  entra, **compactá el espaciado; no agrandes el formulario**. En una máquina con escala de
+  Windows al 125 % el área útil es menor todavía, así que 790 es un techo y no un objetivo.
+  Lo exige RNF-03 (compatibilidad multipantalla).
+  Nota heredada: 11 formularios declaran `AutoScaleDimensions` 120F y 8 declaran 144F, porque
+  se diseñaron en dos máquinas con escalados distintos. No unificarlo sin rehacer la
+  verificación visual de los 19.
 
 ---
 
@@ -104,7 +110,7 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
 | Archivo | Contenido |
 |---|---|
 | `docs/01-requerimientos.md` | RF-01 a RF-13 y RNF-01 a RNF-05 |
-| `docs/02-reglas-negocio.md` | RN-01 a RN-37 y parámetros configurables |
+| `docs/02-reglas-negocio.md` | RN-01 a RN-39, parámetros configurables y factibilidad económica |
 | `docs/03-esquema-datos.md` | DDL completo y datos semilla |
 | `docs/04-casos-prueba.md` | CP-01 a CP-10 |
 | `docs/05-reportes.md` | RPT-01 a RPT-05, PDF de salida y correcciones al anexo A02 |
@@ -117,11 +123,27 @@ definición del archivo correspondiente. No la deduzcas.
 
 ## Estado actual
 
-Construido: login, alta de usuarios, listado de eventos, alta de eventos/sectores/locales,
-compra de entradas por sector, emisión de ticket PDF con QR.
+Secciones 0 a 10 de `docs/GUIA-PROMPTS.md` construidas, más las correcciones C-1 a C-9.
 
-Sin construir: servicios complementarios, paquetes, seguro, suscripciones, descuentos por
-nivel, lista de espera, reportes, recomendaciones.
+Construido: login con PBKDF2 y bloqueo por intentos, alta de usuarios, gestión de eventos
+con estados y sectores, búsqueda y filtros, armado de paquete con servicios y seguro,
+descuento por nivel de fidelidad, reserva de cupo con vencimiento, pago simulado con
+tokenización, confirmación y ticket PDF con QR por entrada, suscripciones con preventa y
+seguro sin cargo, devolución por entrada, historial de compras, lista de espera, y los
+cinco reportes con exportación a PDF.
+
+Pruebas: el proyecto `Pruebas/` corre CP-01 a CP-10, la verificación de referencia de
+$99.625 y RNF-03. Son de integración contra `BddEventAura_Pruebas`, que se recrea en cada
+corrida (ver `docs/04-casos-prueba.md`). Se corren con la tarea «Probar» de VS Code; `dotnet
+test` no sirve porque no compila los `.resx` de `Visual`.
+
+Sin construir: **RF-09, recomendaciones personalizadas** (Could, 8 puntos; nunca entró en
+ninguna sección).
+
+Pendiente que no es código: las 4 capturas del instructivo (PDF, páginas 52 y 53), las 5
+sesiones reales de usabilidad, el historial de revisión con las fechas reales, la
+regeneración de las páginas del anexo A02 con las correcciones de `docs/05-reportes.md`, y
+correr las pruebas manuales acumuladas en `docs/PRUEBAS-PENDIENTES.md`.
 
 ---
 

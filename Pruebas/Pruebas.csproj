@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- net48 y no netstandard: tiene que poder referenciar Visual, que es un WinExe de .NET Framework. -->
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>Pruebas</RootNamespace>
+    <AssemblyName>Pruebas</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <LangVersion>7.3</LangVersion>
+    <!-- Pruebas.dll.config con los binding redirects de SqlClient e iText, como Visual.exe.config. -->
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <!-- Mismo caso que en Datos: SqlClient 6.x usa los binarios net462, que son los que corren. -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.4" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.4" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Entidade\Entidades.csproj" />
+    <ProjectReference Include="..\Datos\Datos.csproj" />
+    <ProjectReference Include="..\Repo\Repositorio.csproj" />
+    <!-- Solo para PruebasFormularios (RNF-03). -->
+    <ProjectReference Include="..\Visual\Visual.csproj" />
+  </ItemGroup>
+
+</Project>

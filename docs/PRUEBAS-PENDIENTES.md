@@ -331,13 +331,40 @@ reacomodaron con un paso de 100 en lugar de 153; «Reportes» es el cuarto. **Re
 | 9.16 | Como cliente | No hay botón de reportes en su menú (RN-34 se verificó también en `GestorReportes`) |
 | 9.17 | Por la misma causa que 9.1: `frmAgregarEvento` (784 de alto desde C-9) | «Registrar» y «Volver» visibles. Está justo en el límite de una pantalla de 824 lógicos |
 
+## Sección 10 — commit «Seccion 10: pruebas de los diez casos y cierre»
+
+Esta sección no agrega pantallas. Lo automático ya corre: tarea «Probar» de VS Code, 12
+pruebas (CP-01 a CP-10, la referencia de $ 99.625 y RNF-03), dos corridas seguidas con el
+mismo resultado. Las pruebas de interfaz que quedan son de las cuatro tareas de cierre.
+
+**Cambios en Designer** (declarado): se borraron tres campos que no usaba nadie
+(`frmMenuCliente.label2`, `frmAdministrarEvento.label5` y `frmAdministrarEvento.txtHora`).
+Eran solo declaraciones: no se creaban ni se agregaban al formulario, así que no cambia nada
+en pantalla.
+
+| # | Qué probar | Resultado esperado |
+|---|---|---|
+| 10.1 | Tarea «Probar» desde VS Code (Terminal → Ejecutar tarea) | Compila y muestra las 12 pruebas «Correctas»; al final queda la base `BddEventAura_Pruebas` sin datos de prueba |
+| 10.2 | Correrla con la base de desarrollo abierta en SSMS | No la toca: las pruebas usan solo `BddEventAura_Pruebas` |
+| 10.3 | Correrla con `BddEventAura_Pruebas` abierta en SSMS | Igual pasa: la preparación corta las conexiones (`SINGLE_USER WITH ROLLBACK IMMEDIATE`) antes de borrarla |
+| 10.4 | Menú del cliente y Administrar evento | Se ven igual que antes de borrar los campos muertos |
+| 10.5 | Compra de entradas y PDF del ticket (FrmCompraCliente sin `using Repositorio` ni el `using` duplicado) | Igual que 7.10 |
+
 ---
 
 ## Riesgo asumido
 
-Al diferir las pruebas, un fallo de interfaz introducido en una sección no se detecta
-hasta el final. Mitigación: cada sección está en su propio commit, de modo que
-`git bisect` o un `checkout` por commit permiten aislar dónde se rompió.
+Las pruebas manuales de interfaz se difirieron mientras se construían las diez secciones.
+**Las diez ya están construidas**: lo que queda es correr las tablas de este archivo, de
+arriba hacia abajo, sobre la base de desarrollo con los `ALTER` de cada sección aplicados.
+Donde una fila dice que «reemplaza» a otra, la vieja no se prueba.
 
-Secciones que más dependen de que la anterior funcione: **5 → 6 → 7**. Son el flujo
-de compra completo y se construyen una sobre otra.
+Un fallo de interfaz que aparezca ahora puede venir de cualquier sección. Mitigación: cada
+sección está en su propio commit, de modo que `git bisect` o un `checkout` por commit
+permiten aislar dónde se rompió.
+
+Lo que ya no depende de la interfaz está cubierto por la batería automática de `Pruebas/`
+(tarea «Probar»): niveles, descuentos, precio congelado, ascenso, reembolso, suscripción y
+la referencia de $ 99.625. Si una prueba manual del flujo de compra (secciones **5 → 6 →
+7**) falla, corré primero la batería: si pasa, el problema está en el formulario y no en
+los gestores.
