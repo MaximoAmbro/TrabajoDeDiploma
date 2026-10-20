@@ -23,3 +23,8 @@ A1.Reportes EVENTAURA/
 
 # ── Backups de base de datos ─────────────────────────────────
 BaseDatos/backup/
+
+# ── Paquete para pruebas de terceros ─────────────────────────
+# Lleva los binarios de Visual/bin/Debug, que ya están ignorados más arriba.
+# Se regenera cuando se necesita; no va a git. Se comparte por Drive o WhatsApp.
+EventAura-pruebas.zip
