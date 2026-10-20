@@ -54,6 +54,17 @@ sin verificación no se da cuenta de que se equivocó.
 Las secciones 5, 6 y 7 son el corazón. Si el tiempo se acorta, recortá la 8 y la 9 —
 son Should y Could en la priorización MoSCoW.
 
+> **Las diez secciones están construidas**, más nueve correcciones (C-1 a C-9) que salieron
+> de verificar cada una contra el código real. Lo que queda son las tareas de «Al terminar»,
+> al final de este archivo.
+>
+> Los prompts que siguen son **los que efectivamente se usaron**, no los borradores
+> iniciales. Varios cambiaron bastante entre el plan y la ejecución, porque auditar el
+> repositorio antes de escribir cada prompt sacó a la luz huecos del esquema, reglas
+> contradictorias entre sí y partes del PDF desactualizadas respecto del código. Cuando un
+> prompt tiene un bloque **ESTADO ACTUAL (verificado)**, ese bloque es el que evitó que el
+> agente reconstruyera algo que ya existía.
+
 ---
 
 # Sección 0 — Preparación
@@ -516,30 +527,132 @@ regla ni un requerimiento: abrí el archivo y leelo. Si una regla no está en lo
 archivos, preguntá; no la inventes.
 
 OBJETIVO
-Implementar los diez casos de prueba de la lógica de fidelización.
+El proyecto Pruebas/ con los diez casos de docs/04-casos-prueba.md, más cuatro tareas de
+cierre del proyecto.
+
+ESTADO ACTUAL (verificado, no lo deduzcas)
+- Pruebas/ NO existe. La solución tiene 4 proyectos: Visual, Repositorio, Entidades, Datos.
+- NO HAY NINGÚN PUNTO DE INYECCIÓN. GestorParametros lee de RepositorioParametros, que lee
+  de SQL Server, y 7 archivos de Repo/ dependen de GestorParametros. Hasta CP-01 —Bronce,
+  0 %— necesita base de datos para resolver PorcentajePara.
+  Los diez casos son PRUEBAS DE INTEGRACIÓN. No intentes mockear ni abrir un seam: está
+  decidido. Si una prueba necesita la base, la usa.
+- Conexion es singleton y cachea la cadena de conexión la primera vez que se usa.
+- GestorParametros cachea los parámetros en memoria; tiene Recargar() para descartarlos.
+- GestorSesion es singleton y el usuario en sesión SOBREVIVE entre pruebas.
+- Las entradas se graban de a una por fila, con Precio unitario y CantidadVendida = 1.
 
 ARCHIVOS
-- Crear el proyecto Pruebas/Pruebas.csproj (MSTest) y agregarlo a la solución.
-- Pruebas/PruebasFidelizacion.cs y Pruebas/Fake.cs (constructor de datos de prueba).
+Crear:
+  Pruebas/Pruebas.csproj · App.config · BaseDePrueba.cs · Fake.cs
+  Pruebas/PruebasFidelizacion.cs (CP-01 a CP-10) · PruebasFormularios.cs (RNF-03)
+Modificar:
+  SistemaEntradas.sln · .vscode/tasks.json · Repo/GestorPropietario.cs
+  Visual/Cliente/FrmCompraCliente.cs y dos Designer · CLAUDE.md · docs/04-casos-prueba.md
 
-CONTEXTO
-Los diez casos están en docs/04-casos-prueba.md con su condición de entrada, resultado
-esperado y regla verificada. CP-01 a CP-04 van en un único [DataTestMethod] con [DataRow].
+EL PROYECTO
+SDK-style, net48: tiene que ser net48 para referenciar Visual, que es WinExe de .NET
+Framework. Paquetes: Microsoft.NET.Test.Sdk, MSTest.TestAdapter, MSTest.TestFramework.
+Referencia Entidades, Datos, Repositorio y Visual (Visual solo la usa PruebasFormularios).
+App.config con la MISMA clave que lee Datos/Conexion.cs,
+"Visual.Properties.Settings.BddEventAura", apuntando a Initial Catalog=BddEventAura_Pruebas.
+
+PREPARACIÓN DE LA BASE — [AssemblyInitialize]
+Borra BddEventAura_Pruebas, la crea y le aplica 01-esquema.sql y 02-semilla.sql. NO aplica
+03-datos-reporte.sql: son 4.480 entradas que ninguna de estas pruebas necesita.
+Cuatro cosas que muerden si no se hacen así:
+1. PARTIR LOS SCRIPTS POR «GO» POR LÍNEA: una línea que, sin espacios, sea exactamente
+   «GO», sin distinguir mayúsculas. NUNCA un Split sobre la cadena "GO": la semilla
+   contiene «Agotado», que lleva «go» adentro, y un split ingenuo corta el script al medio
+   y deja la base a medio crear SIN DAR NINGÚN ERROR.
+2. SqlConnection.ClearAllPools() y ALTER DATABASE ... SET SINGLE_USER WITH ROLLBACK
+   IMMEDIATE antes del DROP. Sin eso una conexión del pool bloquea el borrado y la prueba
+   falla de forma intermitente.
+3. Conexion apunta a la base de pruebas y cachea. Para crear y borrar, derivá otra cadena
+   cambiando el Initial Catalog a master con SqlConnectionStringBuilder.
+4. Después de poblar, GestorParametros.Instance.Recargar().
+Para encontrar los scripts: subí directorios desde AppDomain.CurrentDomain.BaseDirectory
+hasta la carpeta que contiene SistemaEntradas.sln. Nunca rutas con «..\..\..».
+
+AISLAMIENTO
+- Sin paralelismo: [assembly: DoNotParallelize]. Comparten base y singletons.
+- [TestInitialize] limpia lo de Fake y deja GestorSesion cerrado; [TestCleanup] también la
+  cierra. Una prueba que deja un Cliente en sesión rompe la siguiente por un motivo que no
+  tiene nada que ver con lo que esa prueba verifica.
+- Fake marca lo que crea con un prefijo y limpia por ese prefijo. Las pruebas NO modifican
+  los datos de la semilla: si necesitan algo de ahí, lo leen.
 
 CONTRATO
-    Fake.ClienteCon(int compras, int dentroDeMeses)
-    Fake.ClienteNivel(NivelFidelidad nivel)
-    Fake.Paquete(decimal entradas, decimal servicios)
-    Fake.CambiarTarifaDelEvento(Evento e, decimal nuevoPrecio)
+    void Fake.Limpiar()
+    Cliente Fake.Cliente(NivelFidelidad nivel)
+    Cliente Fake.ClienteConCompras(int cantidad, int haceMeses)
+    void Fake.AgregarCompra(Cliente c, int haceMeses, EstadoCompra estado)
+    Evento Fake.EventoPublicado(decimal precio, int capacidad)
+    Sector Fake.AgregarSector(Evento e, decimal precio, int capacidad)
+    Servicio Fake.ServicioHabilitado(Evento e, string tipo, decimal precio)
+    Paquete Fake.Paquete(Evento e, int entradasPorSector, bool conSeguro)
+    void Fake.CambiarPrecioDeSector(int idSector, decimal nuevoPrecio)
+    Suscripcion Fake.SuscripcionActiva(Cliente c, string plan)
+    Compra Fake.CompraConfirmada(Cliente c, Evento e, int entradas, bool conSeguro)
+
+Por qué así: ClienteConCompras y AgregarCompra van separados porque CP-06 necesita 6
+compras dentro de la ventana MÁS una de hace 13 meses, y con un solo parámetro de meses no
+se puede expresar. Paquete recibe el evento y la cantidad, no un importe suelto, porque el
+seguro se cobra por entrada y la verificación de referencia son 2 entradas de $25.000, no
+un total de $50.000. EventoPublicado y AgregarSector porque CP-07 y CP-08 necesitan un
+evento real con cupo para iniciar y confirmar una compra.
+
+LOS DIEZ CASOS
+  CP-01 a CP-04  un [DataTestMethod] con [DataRow]: compras → nivel y porcentaje
+  CP-05          entradas $40.000 + servicio $30.000: el servicio no recibe descuento
+  CP-06          6 compras recientes + 1 de hace 13 meses → Plata
+  CP-07          iniciar, cambiar el precio del sector, confirmar: se cobra el congelado
+  CP-08          el único que recorre Iniciar y Confirmar enteros
+  CP-09          reembolso completo: el contador baja, el nivel persistido no
+  CP-10          Oro con suscripción: 7,5 % y ni un punto más
+Y la verificación de referencia: Plata, 2 entradas Campo a $25.000 y hospedaje de $45.000
+debe dar EXACTAMENTE $99.625. Es la prueba que cierra todo el proyecto.
+
+LAS CUATRO TAREAS DE CIERRE
+1. Las 4 advertencias: CS0105 (using duplicado de iText.Layout.Element en
+   FrmCompraCliente) y CS0169 ×3 (label2 de frmMenuCliente, label5 y txtHora de
+   frmAdministrarEvento). Quitar un campo muerto de un Designer no es rediseñar. El
+   proyecto cierra con CERO advertencias propias.
+2. GestorPropietario.cs es el último archivo en namespace Repositorio: migralo a Negocio,
+   actualizá los «using Repositorio» y la nota de CLAUDE.md.
+3. Tarea «Probar» en .vscode/tasks.json, con el estilo de Compilar y Ejecutar.
+4. PruebasFormularios.cs: RNF-03 quedó con un bug documentado y ninguna prueba. Recorré
+   todos los Form de Visual y verificá que ninguno declara más de 790 px de alto, el
+   límite de CLAUDE.md. Instanciarlos alcanza: el alto se lee del constructor, sin
+   disparar el Load. Hoy el más alto es frmAgregarEvento con 784: la prueba tiene que pasar.
 
 RESTRICCIONES
-- Las pruebas corren contra una base de datos de prueba separada, no contra la de
-  desarrollo.
-- Fake crea y limpia sus propios datos en cada corrida.
+- No modifiques ningún gestor ni repositorio para que una prueba pase. Si una no pasa, es
+  un hallazgo: anotalo y avisá. No ajustes producción al resultado.
+- Pruebas/ es la única excepción a la regla de que el SQL vive en Datos/, y solo en
+  BaseDePrueba y Fake, para preparar y limpiar datos.
+- Las pruebas NUNCA corren contra BddEventAura. Si el Initial Catalog del App.config no
+  termina en «_Pruebas», abortá con un mensaje claro ANTES de borrar nada. Obligatorio.
+- Nada de Thread.Sleep: si algo tiene que vencer, movele la fecha en la base.
 
 VERIFICACIÓN
-Los diez casos pasan. El caso de la verificación numérica da exactamente $99.625.
+1. La solución compila con CERO advertencias propias.
+2. Los diez casos pasan y la referencia da exactamente $99.625.
+3. Corré la batería DOS VECES seguidas sin tocar nada: mismo resultado. Si la segunda
+   falla, el borrado de la base o la limpieza de Fake están mal.
+4. La prueba de RNF-03 pasa con los 19 formularios.
+5. Con el App.config apuntando a BddEventAura, la batería aborta sin tocar la base.
+6. Anotá lo de esta sección en docs/PRUEBAS-PENDIENTES.md y actualizá la nota de «Riesgo
+   asumido»: ya no son 10 secciones por delante.
+7. En docs/04-casos-prueba.md declará que los diez son de integración, por qué y cómo se
+   prepara la base.
+8. Commiteá: Seccion 10: pruebas de los diez casos y cierre
 ```
+
+**Cómo quedó.** `dotnet test` no sirve: no compila los `.resx` de `Visual`. La tarea
+«Probar» compila la solución con MSBuild y corre `vstest.console.exe`, ubicado con
+`vswhere`. La guarda de la base vive en `BaseDePrueba.SufijoObligatorio`. `Fake` terminó con
+un método más que el contrato, `Tarjeta()`, para el flujo de pago de CP-07 y CP-08.
 
 ---
 
@@ -553,9 +666,40 @@ Los diez casos pasan. El caso de la verificación numérica da exactamente $99.6
 | Hardcodea 0.075 o 7 | No usó Parametros | Citá la tabla de parámetros configurables de `docs/02-reglas-negocio.md` |
 | Los totales no cierran | Aplicó el descuento sobre los servicios | RN-21: la base son solo las entradas |
 | La conversación se vuelve lenta y cara | Historial demasiado largo | Cerrá el chat y abrí uno nuevo para la sección siguiente |
+| Rehace algo que ya estaba construido | `CLAUDE.md` tenía el estado desactualizado | Mantené al día la sección «Estado actual». Pasó una vez: decía que las suscripciones y los reportes estaban sin construir cuando ya estaban |
+| Dos versiones del mismo prompt | Una en el chat y otra en esta guía | **Esta guía es la única fuente de verdad.** Si un prompt cambia durante la conversación, actualizalo acá antes de pegarlo |
+| El agente copia SQL del PDF y no compila | El anexo A02 quedó desactualizado | Las correcciones están en `docs/05-reportes.md`. Donde el PDF y `docs/` difieran, manda `docs/` |
+
+---
 
 ## Al terminar
 
-Actualizá el historial de revisión del informe con las fechas reales de construcción y
-sacá las cuatro capturas de pantalla que faltan en el Instructivo del requerimiento core,
-páginas 52 y 53 del PDF.
+Las diez secciones están construidas. Lo que queda **no es código**:
+
+| # | Tarea | Dónde |
+|---|---|---|
+| 1 | Correr las pruebas manuales acumuladas | `docs/PRUEBAS-PENDIENTES.md`. Son las de todas las secciones; aplicá primero los `ALTER` que cada una lista al principio |
+| 2 | Las 4 capturas que faltan del Instructivo | PDF, páginas 52 y 53 |
+| 3 | Las 5 sesiones reales de usabilidad | Hoy están simuladas y declaradas como tales. Los hallazgos H-01 a H-06 ya están implementados |
+| 4 | Historial de revisión con las fechas reales | PDF, página 6 |
+| 5 | Regenerar las páginas del anexo A02 | Las correcciones están listadas en `docs/05-reportes.md`: tres errores en el SQL de RPT-01, dos de redondeo y el estado «Agotado» de RPT-05 |
+| 6 | Completar legajos y comisión | Portada y encabezado del PDF dicen «completar» |
+
+**Lo único de código que quedó sin hacer es RF-09, recomendaciones personalizadas** (Could,
+8 puntos). Nunca entró en ninguna sección. Si se decide dejarlo afuera, conviene declararlo
+en `docs/01-requerimientos.md` en lugar de que figure como pendiente silencioso.
+
+### Deuda técnica conocida
+
+- El mensaje de intentos restantes del login solo aparece cuando el correo existe, así que
+  permite averiguar qué correos tienen cuenta (enumeración de usuarios). Declarado en RNF-04
+  en `docs/01-requerimientos.md`: corregirlo exigiría dejar de mostrar los intentos
+  restantes, que RN-04 pide de forma explícita.
+- La contratación de una suscripción registra el precio pero no cobra: no pasa por la
+  pasarela. Declarado en el criterio de aceptación de RF-13 en `docs/01-requerimientos.md`.
+- El plan mensual a $9.000 no cubre el costo del seguro sin cargo. La cuenta está en la
+  sección de factibilidad económica de `docs/02-reglas-negocio.md`.
+- 11 formularios declaran `AutoScaleDimensions` 120F y 8 declaran 144F. No unificar sin
+  rehacer la verificación visual de los 19.
+- La ventana entre un pago aprobado y una reserva que vence deja una fila en `Pagos` sin
+  entradas emitidas. Queda registrada a propósito, para poder devolver el dinero.

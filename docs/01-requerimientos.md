@@ -16,7 +16,7 @@
 | RF-10 | Lista de espera para eventos agotados | Could | 3 | Registra al usuario e informa que será notificado. |
 | RF-11 | Generación de reportes de ventas | Should | 8 | Tablas o gráficos con datos exportables. |
 | RF-12 | Gestión de eventos | Must | 8 | Impide publicar sin sector con capacidad > 0; impide eliminar con ventas. |
-| RF-13 | Contratación de suscripciones | Should | 5 | Impide dos suscripciones activas; beneficios en especie, sin descuento porcentual. |
+| RF-13 | Contratación de suscripciones | Should | 5 | Impide dos suscripciones activas; beneficios en especie, sin descuento porcentual. La contratación registra el plan y su precio; **el cobro queda fuera del alcance de esta versión**: no pasa por la pasarela simulada, porque `Pagos.ID_Compra` es obligatorio y admitir una suscripción exigiría dos columnas anulables más una restricción, para un requerimiento Should. |
 
 Total: 78 puntos (1 punto = 4 horas). Must 49 (62,8 %), Should 18 (23,1 %), Could 11 (14,1 %).
 
@@ -27,7 +27,7 @@ Total: 78 puntos (1 punto = 4 horas). Must 49 (62,8 %), Should 18 (23,1 %), Coul
 | RNF-01 | Usabilidad | Must | El flujo completo de compra se resuelve en menos de 5 minutos. Línea base medida: 4 min 40 s. |
 | RNF-02 | Experiencia de usuario | Must | Navegación fluida; acciones principales siempre visibles. |
 | RNF-03 | Compatibilidad multipantalla | Should | Adaptable a notebook y monitor de escritorio. |
-| RNF-04 | Seguridad conceptual | Must | HTTPS y tokenización representados; no se almacenan datos sensibles. |
+| RNF-04 | Seguridad conceptual | Must | HTTPS y tokenización representados; no se almacenan datos sensibles. Contraseñas con PBKDF2 y del número de tarjeta solo se guardan los últimos 4 dígitos y un token (RN-30). **Limitación declarada:** el mensaje de intentos restantes de RN-04 solo aparece cuando el correo existe, mientras que un correo no registrado recibe «Mail o contraseña incorrecta». Esa diferencia permite averiguar qué correos tienen cuenta (enumeración de usuarios). Se declara en lugar de corregirse porque este requerimiento es de seguridad **conceptual**: unificar los dos mensajes dejaría sin mostrar los intentos restantes, que RN-04 pide de forma explícita. |
 | RNF-05 | Mantenibilidad | Must | Documentación que permita retomar el proyecto. |
 
 ## Casos de uso
