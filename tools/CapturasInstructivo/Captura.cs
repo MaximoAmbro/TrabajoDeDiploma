@@ -15,6 +15,7 @@ using System.Windows.Forms;
 static class Captura
 {
     [DllImport("dwmapi.dll")] static extern int DwmGetWindowAttribute(IntPtr h, int attr, out RECT r, int size);
+    [DllImport("dwmapi.dll")] static extern int DwmSetWindowAttribute(IntPtr h, int attr, ref int valor, int size);
     [DllImport("user32.dll")] static extern bool EnumThreadWindows(uint id, EnumProc cb, IntPtr p);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetClassName(IntPtr h, StringBuilder s, int n);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetWindowText(IntPtr h, StringBuilder s, int n);
@@ -45,22 +46,25 @@ static class Captura
 
     static void Correr()
     {
-        const int Paula = 3, Festival = 1;
+        const int Paula = 3, Duki = 1;   // ejemplo de la página 54 del documento
 
-        // Figura 1 — listado de eventos (pasos 1 y 2), con el Festival seleccionado.
+        // Figura 1 — listado de eventos (pasos 1 y 2), con «Duki en Rosario» seleccionado.
         var eventos = new Visual.frmEventosCliente { IDUsuario = Paula, NombreUsuario = "Paula" };
         eventos.Show(); Esperar(800);
         var grilla = Buscar<DataGridView>(eventos, "dgveventos");
         // Por ID y no por nombre: el evento 1 de la semilla es el del ejemplo del documento.
         foreach (DataGridViewRow fila in grilla.Rows)
-            if (Convert.ToString(fila.Cells["ID"].Value) == Festival.ToString())
+            if (Convert.ToString(fila.Cells["ID"].Value) == Duki.ToString())
                 grilla.CurrentCell = fila.Cells["Nombre"];
         Guardar(eventos, "figura1-listado-eventos.png");
-        eventos.Hide();
 
         // Figuras 2 y 3 — armado del paquete del ejemplo: Plata, 2 Campo a $25.000, hospedaje.
-        var compra = new Visual.FrmCompraCliente { IDEvento = Festival, IDUsuario = Paula, NombreUsuario = "Paula" };
-        compra.Show(); Esperar(800);
+        // La compra se muestra ANTES de ocultar el listado: si no, Windows le da el foco a
+        // otra aplicación y la figura sale con la barra de título gris de ventana inactiva.
+        var compra = new Visual.FrmCompraCliente { IDEvento = Duki, IDUsuario = Paula, NombreUsuario = "Paula" };
+        compra.Show(); Esperar(300);
+        eventos.TopMost = false; eventos.Hide();
+        Esperar(500);
         var sectores = Buscar<DataGridView>(compra, "dgvSectores");
         foreach (DataGridViewRow fila in sectores.Rows)
             foreach (DataGridViewCell celda in fila.Cells)
@@ -189,8 +193,13 @@ static class Captura
 
     static void Traer(Form f)
     {
+        // Windows 11 redondea las esquinas y deja ver lo que hay detrás de la ventana: en una
+        // figura del documento aparecían píxeles de otras aplicaciones. Esquinas rectas.
+        int sinRedondear = 1;   // DWMWCP_DONOTROUND
+        DwmSetWindowAttribute(f.Handle, 33, ref sinRedondear, sizeof(int));   // DWMWA_WINDOW_CORNER_PREFERENCE
         f.TopMost = true; f.Activate(); SetForegroundWindow(f.Handle);
         Esperar(500);
+        if (Form.ActiveForm != f) log.Add("AVISO: " + f.Name + " no quedó como ventana activa al capturarla");
     }
 
     static void Esperar(int ms)
