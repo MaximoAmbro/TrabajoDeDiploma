@@ -1,0 +1,6 @@
+1. Login con la base de datos inaccesible: clic en «Iniciar sesión».
+2. Ventana que ve el usuario: tipo System.Windows.Forms.ThreadExceptionDialog, título «Microsoft .NET Framework».
+   Label: «Excepción no controlada en la aplicación. Si hace clic en Continuar, la aplicación omitirá este error e intentará continuar. Si hace clic en Salir, la aplicación se cerrará inmediatamente. ⏎  ⏎ Cannot open database "BddEventAura_NoExiste" r»
+   Button: «&Detalles»
+   Button: «&Continuar»
+   Button: «&Salir»
