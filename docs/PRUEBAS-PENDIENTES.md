@@ -561,3 +561,16 @@ escanearlos: el código del QR se compara con el impreso en el ticket, no con la
 
 El ejemplo del instructivo se reproduce entrando como `plata@`, eligiendo «Duki en Rosario», 2
 entradas de Campo y el hospedaje: total $99.625.
+
+## Estado al 04/11/2026, después de T-22 a T-26 (commits `272c864`, `309b9be` y `bb41f23`)
+
+Batería: **60 de 60**. Cerrar con la X verificado sobre el ejecutable con UI Automation:
+«proceso vivo = False». La usabilidad se volvió a medir (`docs/usabilidad/`).
+
+| ID | Qué probar | Resultado esperado | De quién |
+|---|---|---|---|
+| CX-03 | **Después de T-28.** Abrir en Visual Studio el diseñador de `FrmCompraCliente` y el de `frmInicio` | Los dos se dibujan sin error. Con la base abstracta de T-24, el diseñador no puede abrirlos; T-28 la vuelve no abstracta | JC o Máximo |
+| CX-04 | **Después de T-27**, a mano y una vez: con la aplicación abierta en el login, detener el servicio de SQL Server (`services.msc` → «SQL Server (SQLEXPRESS)» → Detener) e intentar iniciar sesión. Después volver a iniciar el servicio | Aparece «EventAura: No se pudo conectar con la base de datos…», en castellano y sin detalles técnicos, y **no** el cuadro «Microsoft .NET Framework – Excepción no controlada». Claude Code lo verifica antes con `tools/Excepciones/VerificarErrorNoControlado.ps1` | JC |
+
+Siguen abiertas JC-R01, JC-R10, JC-R11 y CX-02, como se describe más arriba, y la parte de
+Máximo (64 pruebas).

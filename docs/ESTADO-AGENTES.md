@@ -19,31 +19,28 @@ y avisa a JC.
 
 | | |
 |---|---|
-| **Turno actual** | **JC**: revisar `git status` y los commits de este turno |
-| Próximo turno | **Codex**: cuarta tanda, T-22 a T-26, en `docs/TAREAS-CODEX-PRUEBAS.md` |
-| Después | **Claude Code**: volver a medir la usabilidad sobre la aplicación corregida (ver «Dependencia») |
-| Rama y publicación | `main`, adelantada respecto de `origin`; **sin push** hasta que JC hable con Máximo |
+| **Turno actual** | **JC**: revisar los commits de este turno |
+| Próximo turno | **Codex**: quinta tanda, T-27 a T-29, en `docs/TAREAS-CODEX-PRUEBAS.md` |
+| Después | **Claude Code**: verificar T-27 sobre la aplicación con la base caída y regenerar las figuras después de T-29 |
+| Ramas | `main` local con todo. Subidas: `respaldo/jc-2026-11-04` (copia de `main`) y `JC` (avance directo autorizado por JC). **`main` de GitHub no se toca** hasta que Máximo confirme si tiene trabajo sin subir |
 
-## ⚠ Dependencia que no se puede saltear
+## Estudio de usabilidad: definitivo, con antes y después
 
-**El estudio de usabilidad (`docs/usabilidad/`) describe la interfaz anterior a T-22 a T-26.**
-Cuando Codex aplique esas correcciones, cambian las mediciones:
-- las 18 acciones y los 15 clics de la tarea;
-- los hallazgos U-01, U-04 y U-05, que pasan a corregidos;
-- los tiempos, la satisfacción (66,7 % y 4,08) y el SUS (70,0) de los perfiles.
+La dependencia anotada en el turno anterior se cumplió:
+1. **Codex corrigió**: T-22 a T-26, con 60 de 60.
+2. **Claude Code volvió a medir** con el mismo método.
+3. **El informe quedó definitivo**, con las dos mediciones.
 
-El orden obligatorio es:
-1. **Codex** aplica T-22 a T-26 y la batería da 60 de 60.
-2. **Claude Code** vuelve a medir:
-   - `tools/Usabilidad/Medir.ps1`;
-   - `VerificarCierreConX.ps1`, que tiene que informar «proceso vivo = False»;
-   - `modelo.py`, ajustando las reglas a los hallazgos corregidos.
+| Métrica | Antes | Después |
+|---|---|---|
+| Perfiles sin asistencia | 4 de 6 | 6 de 6 |
+| Satisfacción buena o muy buena (umbral 70 %) | 66,7 % — no alcanzaba | **100 % — cumple** |
+| SUS | 70,0 | 78,8 |
+| Hallazgos abiertos | 13 (2 mayores) | 11 (ninguno mayor; incluye U-14, nuevo) |
 
-   Con eso actualiza el informe y los ítems de `CORRECCIONES-DOCUMENTO.md` que citan el
-   estudio: 3, 4, 11b, 18, 19, 20 y 21.
-3. Recién entonces el informe es **definitivo** y se puede pasar al documento.
-
-El informe y el ítem 11b de la lista de correcciones tienen un aviso en este mismo sentido.
+La segunda medición encontró **U-14**: el encabezado «Cantidad (escribí aquí)» se corta a
+100 %. Está encargado como T-29. Las figuras del instructivo se regeneran una vez más después
+de T-29.
 
 ## Quién hace qué
 
@@ -59,60 +56,63 @@ El informe y el ítem 11b de la lista de correcciones tienen un aviso en este mi
 
 | Tarea | Estado | Dónde |
 |---|---|---|
-| T-01 a T-21 | Terminadas | `docs/RESULTADOS-TAREAS-CODEX-2026-11-04*.md` |
-| **T-22: el alta pública crea solo clientes** (seguridad; autoriza cambiar el Designer de `frmCrearUsuario`) | **Lista para ejecutar**, prioridad 1 | `TAREAS-CODEX-PRUEBAS.md`, «Cuarta tanda» |
-| **T-23: «Volver al inicio» cierra la sesión** | Lista, prioridad 2 | Ídem |
-| **T-24: la X no deja la aplicación corriendo; confirmar antes de cerrar la compra** | Lista, prioridad 3 | Ídem |
-| **T-25: indicar dónde se escribe la cantidad** | Lista, prioridad 4 | Ídem |
-| **T-26: «Comprar» y el seguro deshabilitados sin entradas** (con un ajuste autorizado de CP-24) | Lista, prioridad 5 | Ídem |
+| T-01 a T-26 | Terminadas. La última tanda está en los commits `272c864`, `309b9be` y `bb41f23` | `docs/RESULTADOS-TAREAS-CODEX-2026-11-04*.md` |
+| **T-27: manejador global de errores; el pago con el evento eliminado** | **Lista para ejecutar.** Aprobada por JC | `TAREAS-CODEX-PRUEBAS.md`, «Quinta tanda» |
+| **T-28: la base de formularios no abstracta** | Lista. Corrige un desvío de T-24: con la base abstracta, el diseñador de Visual Studio no puede abrir los formularios | Ídem |
+| **T-29: el encabezado de la cantidad completo** | Lista. Corrige U-14, encontrado al volver a medir | Ídem |
 
-Batería esperada al terminar: **60 de 60**, con los casos nuevos CP-44 a CP-50.
+Batería esperada al terminar: **66 de 66**, con los casos CP-51 a CP-54.
 
 ### Claude Code
 
 | Tarea | Estado |
 |---|---|
-| Encargo T-22 a T-26 | Terminado |
-| Historia de las pruebas, para la defensa | Terminada: `docs/COMO-SE-PROBO.md` |
-| Manejo de excepciones, diseño y pruebas, para la defensa | Terminada: `docs/EXCEPCIONES.md`. Error no controlado **verificado** sobre la aplicación: llega el cuadro genérico de .NET |
-| Volver a medir la usabilidad | **En espera** de T-22 a T-26 |
+| Revisión y commits de T-22 a T-26 | Terminado |
+| Nueva medición de la usabilidad, con antes y después | Terminada: `docs/usabilidad/` |
+| Lista de correcciones del documento con las cifras finales y CP-44 a CP-50 | Terminada |
+| Encargo T-27 a T-29 | Terminado |
+| Verificar T-27 con la base caída (`tools/Excepciones/`, ajustando el programa para que instale el manejador) | **En espera** de Codex |
+| Regenerar las figuras después de T-29 | **En espera** de Codex |
 
 ## Decisiones pendientes de JC
 
 | Decisión | Contexto |
 |---|---|
-| **Manejador global de errores** y captura de `InvalidOperationException` en el pago | Verificado: un error de base de datos llega al usuario como «Excepción no controlada en la aplicación», en inglés y con botones Detalles, Continuar y Salir. Además, si se elimina un evento mientras un cliente paga, el pago termina en ese mismo cuadro. Menos de 2 horas en `Visual/`. Detalle en `docs/EXCEPCIONES.md`. **No está encargado** |
-| T01 a T08 | Según la respuesta del docente; ver `ANEXOS-TECNICOS-T01-T08.md` |
+| Push a `main` de GitHub | Esperando que Máximo confirme si tiene trabajo sin subir |
+| T-28 y T-29 | No estaban en tu lista; las incluí en la quinta tanda porque corrigen desvíos de T-24 y T-25. Si no las querés, se sacan del encargo antes de darle el turno a Codex |
+| T01 a T08 | Según la respuesta del docente |
 
 ## Pendiente de JC
 
 | Pendiente | Por qué es de JC |
 |---|---|
-| Revisar `git status` y los commits de este turno, y darle el turno a Codex | Regla común |
+| Revisar los commits de este turno y darle el turno a Codex | Regla común |
+| Hablar con Máximo: trabajo sin subir, RN-35, rediseño de FrmCompraCliente, sus 64 pruebas, y abrir el diseñador después de T-28 (CX-03) | Coordinación |
 | Fuente del documento: esperar a Máximo hasta el 08/11; después, plan B2 | Decisión tomada |
-| Consultar a Máximo sobre RN-35, avisarle del rediseño de FrmCompraCliente y recordarle sus 64 pruebas manuales | Coordinación (ver `docs/COMO-SE-PROBO.md`) |
 | Mail al docente sobre T01 a T08 | Coordinación |
 | Datos de la carátula | Datos personales |
-| JC-R01 a mano, JC-R10 con el celular, JC-R11 con el teclado, CX-02 por reloj | Necesitan a una persona |
-| Iniciar sesión en Word con la cuenta de la UAI | Para automatizar Word |
+| JC-R01, JC-R10, JC-R11, CX-02 y, después de T-27, CX-04 (base caída) | Necesitan a una persona |
 
 ## Bloqueado
 
 | Qué | Bloqueado por |
 |---|---|
-| Informe de usabilidad definitivo, y los ítems de la lista de correcciones que lo citan | T-22 a T-26 (Codex), y después la nueva medición (Claude Code) |
+| Figuras definitivas del instructivo | T-29 |
+| Verificar el manejador global sobre la aplicación | T-27 |
 | Aplicar `CORRECCIONES-DOCUMENTO.md` | El fuente del documento (Máximo, hasta el 08/11) o el plan B2 |
-| Push a `origin` | Que JC hable con Máximo |
+| Push a `main` | Que Máximo confirme |
 
 ## Qué debería hacer el próximo agente
 
 **Codex**, cuando JC le dé el turno:
-1. leer este archivo y la «Cuarta tanda» de `TAREAS-CODEX-PRUEBAS.md`;
-2. hacer T-22 a T-26 en orden;
-3. parar y dejar el reporte en `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-T22-T26.md`.
+1. leer este archivo y la «Quinta tanda» de `TAREAS-CODEX-PRUEBAS.md`;
+2. hacer T-27, T-28 y T-29;
+3. parar y dejar el reporte en `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-T27-T29.md`.
 
 **Claude Code**, después:
 1. mover ese reporte a `docs/`;
-2. hacer la nueva medición de la sección «Dependencia»;
-3. actualizar el informe de usabilidad, la lista de correcciones, `docs/COMO-SE-PROBO.md`
-   (CP-44 a CP-50) y `docs/04-casos-prueba.md`.
+2. ajustar `tools/Excepciones/ErrorNoControlado.cs` para que llame a
+   `ManejadorErrores.Instalar()` y verificar el mensaje en castellano con la base caída;
+3. regenerar las figuras del instructivo y verificar el encabezado completo;
+4. actualizar `EXCEPCIONES.md`, `04-casos-prueba.md` (CP-51 a CP-54), `COMO-SE-PROBO.md`,
+   la lista de correcciones y este archivo.
