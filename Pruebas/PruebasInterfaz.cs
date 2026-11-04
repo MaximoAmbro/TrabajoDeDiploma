@@ -25,7 +25,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Plata);
-                var evento = GestorEventos.Instance.ObtenerPorId(1); // Festival: tres sectores de la semilla.
+                var evento = GestorEventos.Instance.ObtenerPorId(1); // Duki en Rosario: tres sectores de la semilla.
                 using (var form = new Visual.FrmCompraCliente { IDEvento = evento.Id, IDUsuario = cliente.Id })
                 {
                     Cargar(form);

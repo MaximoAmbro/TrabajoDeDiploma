@@ -65,7 +65,7 @@ VALUES ('Estadio Rosario Arena', 'Av. Pellegrini 1500, Rosario', 5000, @Admin);
 SET @Local = SCOPE_IDENTITY();
 
 INSERT INTO Eventos (Nombre, Fecha, LocalID, Categoria, Estado)
-VALUES ('Festival de Rock Rosario', DATEADD(DAY, 60, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) + CAST('21:00' AS DATETIME),
+VALUES ('Duki en Rosario', DATEADD(DAY, 60, CAST(CAST(GETDATE() AS DATE) AS DATETIME)) + CAST('21:00' AS DATETIME),
         @Local, 'Concierto', 'Publicado');
 SET @Vigente = SCOPE_IDENTITY();
 
@@ -114,10 +114,10 @@ INSERT INTO ServiciosEvento (ID_Evento, ID_Servicio) VALUES
 (@Vigente, @Hospedaje), (@Vigente, @Traslado), (@Vigente, @Merch), (@Vigente, @VIP);
 
 -- ═══════════════ Historial de compras coherente con el nivel (RN-19) ═══════════════
--- Plata: 3 compras confirmadas en los últimos 12 meses. Oro: 7.
+-- Plata: 4 compras confirmadas en los últimos 12 meses. Oro: 7.
 -- Importe tipo: base 50.000, sin descuento, cargo 15 % = 7.500, total 57.500.
 DECLARE @i INT = 1;
-WHILE @i <= 3
+WHILE @i <= 4
 BEGIN
     INSERT INTO Compras (ID_Usuario, FechaCompra, Estado, NivelAplicado, DescuentoAplicado,
                          BaseEntradas, MontoDescuento, MontoServicios, CargoServicio, TotalPagado)
