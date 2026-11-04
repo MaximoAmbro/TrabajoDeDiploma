@@ -167,7 +167,7 @@
             this.Controls.Add(this.label1);
             this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "frmAgregarSector";
-            this.Text = "AgregarSectorEvento";
+            this.Text = "EventAura · Agregar sector";
             this.ResumeLayout(false);
             this.PerformLayout();
 

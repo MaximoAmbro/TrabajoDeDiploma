@@ -198,7 +198,7 @@
             this.Controls.Add(this.label1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmModificarSectoresEventos";
-            this.Text = "frmVolver";
+            this.Text = "EventAura · Administrar evento";
             this.Load += new System.EventHandler(this.frmAgregarEventoLocal_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSectores)).EndInit();
             this.ResumeLayout(false);

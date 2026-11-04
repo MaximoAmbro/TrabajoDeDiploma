@@ -117,7 +117,7 @@ namespace Visual
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmListasEspera";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmListasEspera";
+            this.Text = "EventAura · Listas de espera";
             this.Load += new System.EventHandler(this.frmListasEspera_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLista)).EndInit();
             this.ResumeLayout(false);

@@ -139,7 +139,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmHistorialCliente";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmHistorial";
+            this.Text = "EventAura · Mis eventos";
             this.Load += new System.EventHandler(this.frmHistorialCliente_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvCompras)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEntradas)).EndInit();

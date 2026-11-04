@@ -152,7 +152,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmMenuVendedor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MenuVendedor";
+            this.Text = "EventAura · Administración";
             this.Load += new System.EventHandler(this.frmMenuVendedor_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

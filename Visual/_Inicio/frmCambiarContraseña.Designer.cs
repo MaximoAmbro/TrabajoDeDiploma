@@ -186,7 +186,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmCambiarContraseña";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmCambiarContraseña";
+            this.Text = "EventAura · Cambiar contraseña";
             this.Load += new System.EventHandler(this.frmCambiarContraseña_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

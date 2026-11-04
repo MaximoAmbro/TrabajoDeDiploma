@@ -135,7 +135,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmMenuCliente";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmMenuUsuario";
+            this.Text = "EventAura · Mi cuenta";
             this.Load += new System.EventHandler(this.frmMenuCliente_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

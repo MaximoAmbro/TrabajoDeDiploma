@@ -159,7 +159,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmEventosLocal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmRegistrarEvento";
+            this.Text = "EventAura · Eventos del local";
             this.Load += new System.EventHandler(this.frmEventosLocal_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvEventos)).EndInit();
             this.ResumeLayout(false);

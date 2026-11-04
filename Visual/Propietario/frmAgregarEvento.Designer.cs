@@ -187,7 +187,7 @@
             this.Controls.Add(this.dtpFinPreventa);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmAgregarEventoo";
-            this.Text = "frmAgregarEventoo";
+            this.Text = "EventAura · Registrar evento";
             this.ResumeLayout(false);
             this.PerformLayout();
 

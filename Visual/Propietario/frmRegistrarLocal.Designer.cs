@@ -194,7 +194,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmRegistrarLocal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "RegistrarLocal";
+            this.Text = "EventAura · Registrar local";
             this.Load += new System.EventHandler(this.frmRegistrarLocal_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

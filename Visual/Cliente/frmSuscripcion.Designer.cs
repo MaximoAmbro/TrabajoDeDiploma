@@ -149,7 +149,7 @@ namespace Visual
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmSuscripcion";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmSuscripcion";
+            this.Text = "EventAura · Mi suscripción";
             this.Load += new System.EventHandler(this.frmSuscripcion_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

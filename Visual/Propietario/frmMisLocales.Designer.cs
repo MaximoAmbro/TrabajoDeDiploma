@@ -107,7 +107,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmMisLocales";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MisLocales";
+            this.Text = "EventAura · Mis locales";
             this.Load += new System.EventHandler(this.frmMisLocales_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLocales)).EndInit();
             this.ResumeLayout(false);

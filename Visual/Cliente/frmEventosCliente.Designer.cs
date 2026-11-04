@@ -174,7 +174,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmEventosCliente";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmEventos";
+            this.Text = "EventAura · Eventos disponibles";
             this.Load += new System.EventHandler(this.frmEventosCliente_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgveventos)).EndInit();
             this.ResumeLayout(false);
