@@ -11,7 +11,7 @@ namespace Visual
 {
     // CU-03: historial de compras del cliente, una fila por compra. Al elegir una compra se ve el
     // detalle de sus entradas y desde ahí se devuelven las que tienen seguro (RN-29).
-    public partial class frmHistorialCliente : Form
+    public partial class frmHistorialCliente : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario { get; set; }

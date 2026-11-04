@@ -13,7 +13,7 @@ using System.Runtime.Versioning;
 
 namespace Visual.Vendedor
 {
-    public partial class frmAdministrarEvento : Form
+    public partial class frmAdministrarEvento : FormularioEventAura
     {
         public int IDUsuario; public int IDlocal; public int IDEvento;
         public string NombreUsuario;

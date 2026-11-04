@@ -11,7 +11,7 @@ using Negocio;
 
 namespace Visual
 {
-    public partial class frmCambiarContraseña : Form
+    public partial class frmCambiarContraseña : FormularioEventAura
     {
         public frmCambiarContraseña()
         {

@@ -7,11 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Negocio;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace Visual
 {
-    public partial class frmMenuCliente : Form
+    public partial class frmMenuCliente : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario;
@@ -52,7 +53,7 @@ namespace Visual
         }
         private void lblvolver_Click(object sender, EventArgs e)
         {
-            
+            GestorSesion.Instance.Cerrar();
             frmInicio frm = new frmInicio();
             frm.Show();
             this.Hide();

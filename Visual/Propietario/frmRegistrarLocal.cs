@@ -12,7 +12,7 @@ using Negocio;
 
 namespace Visual
 {
-    public partial class frmRegistrarLocal : Form
+    public partial class frmRegistrarLocal : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario;

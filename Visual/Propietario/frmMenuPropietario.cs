@@ -8,10 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Negocio;
 
 namespace Visual
 {
-    public partial class frmMenuPropietario : Form
+    public partial class frmMenuPropietario : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario;
@@ -57,6 +58,7 @@ namespace Visual
         }
         private void lblvolver_Click(object sender, EventArgs e)
         {
+            GestorSesion.Instance.Cerrar();
             frmInicio frmInicio = new frmInicio();
             frmInicio.Show(); this.Hide();
         }

@@ -10,7 +10,7 @@ namespace Visual
 {
     // RF-10 + CU-07: consulta de las listas de espera, solo lectura en esta versión. Se elige un
     // evento agotado de los locales del administrador y se ve la lista en el orden de RN-35.
-    public partial class frmListasEspera : Form
+    public partial class frmListasEspera : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario;

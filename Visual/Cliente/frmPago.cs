@@ -8,7 +8,7 @@ namespace Visual
 {
     // RF-06: pago simulado de una compra ya iniciada (cupo reservado por RN-15).
     // Devuelve OK si se pagó, Abort si venció el plazo y Cancel si el cliente desistió.
-    public partial class frmPago : Form
+    public partial class frmPago : FormularioEventAura
     {
         public Compra Compra;
 

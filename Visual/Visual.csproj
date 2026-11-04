@@ -288,6 +288,7 @@
       <DependentUpon>frmEventosLocal.cs</DependentUpon>
     </Compile>
     <Compile Include="ExportadorPDF.cs" />
+    <Compile Include="FormularioEventAura.cs" />
     <Compile Include="Propietario\frmReportes.cs">
       <SubType>Form</SubType>
     </Compile>

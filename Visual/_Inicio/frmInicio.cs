@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Visual
 {
-    public partial class frmInicio : Form
+    public partial class frmInicio : FormularioEventAura
     {
         // La cadena de conexión la lee Datos/Conexion.cs de App.config: Visual no abre conexiones.
         public frmInicio()

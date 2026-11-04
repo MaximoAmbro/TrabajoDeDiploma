@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Visual
 {
-    public partial class frmCrearUsuario : Form
+    public partial class frmCrearUsuario : FormularioEventAura
     {
         public frmCrearUsuario()
         {
@@ -48,7 +48,7 @@ namespace Visual
             {
                 try
                 {
-                    GestorUsuarios.Instance.Registrar(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text, cbTipoUsuario.Text);
+                    GestorUsuarios.Instance.RegistrarCliente(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text);
                 }
                 catch (ReglaNegocioException ex)
                 {

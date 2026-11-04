@@ -8,7 +8,7 @@ namespace Visual
 {
     // RF-13 + CU-06: contratar o cancelar la suscripción. Un plan a la vez (RN-25) y sin
     // renovación automática (RN-26). Beneficios en especie, sin descuento porcentual (RN-37).
-    public partial class frmSuscripcion : Form
+    public partial class frmSuscripcion : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario;

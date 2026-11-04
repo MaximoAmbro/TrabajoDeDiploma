@@ -11,7 +11,7 @@ using Entidades;
 using Negocio;
 namespace Visual
 {
-    public partial class frmEventosCliente : Form
+    public partial class frmEventosCliente : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario;

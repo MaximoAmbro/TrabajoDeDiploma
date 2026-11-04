@@ -13,7 +13,7 @@ using Visual.Vendedor;
 
 namespace Visual
 {
-    public partial class frmMisLocales : Form
+    public partial class frmMisLocales : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario;

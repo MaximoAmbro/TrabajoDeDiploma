@@ -13,7 +13,7 @@ namespace Visual
 {
     // RF-11 + CU-08: el Administrador elige un reporte, el período y sus filtros, lo ve en la
     // grilla y lo exporta a PDF. RN-34 lo controla GestorReportes contra la sesión.
-    public partial class frmReportes : Form
+    public partial class frmReportes : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario;

@@ -12,7 +12,7 @@ using Visual.Propietario;
 
 namespace Visual.Vendedor
 {
-    public partial class frmEventosLocal : Form
+    public partial class frmEventosLocal : FormularioEventAura
     {
         public int IDUsuario; public int IDlocal;
         public string NombreLocal { get; set; } public string NombreUsuario { get; set; }

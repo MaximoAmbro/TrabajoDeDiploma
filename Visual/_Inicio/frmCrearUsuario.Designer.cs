@@ -42,7 +42,6 @@
             this.btnregistrarse = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.txtApellido = new System.Windows.Forms.TextBox();
-            this.cbTipoUsuario = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // checkbxShowPass
@@ -203,26 +202,12 @@
             this.txtApellido.Size = new System.Drawing.Size(252, 32);
             this.txtApellido.TabIndex = 36;
             // 
-            // cbTipoUsuario
-            // 
-            this.cbTipoUsuario.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.cbTipoUsuario.FormattingEnabled = true;
-            this.cbTipoUsuario.Items.AddRange(new object[] {
-            "Cliente",
-            "Propietario"});
-            this.cbTipoUsuario.Location = new System.Drawing.Point(74, 508);
-            this.cbTipoUsuario.Name = "cbTipoUsuario";
-            this.cbTipoUsuario.Size = new System.Drawing.Size(151, 31);
-            this.cbTipoUsuario.TabIndex = 37;
-            this.cbTipoUsuario.Text = "Cliente";
-            // 
             // frmAgregarEvento
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(473, 714);
-            this.Controls.Add(this.cbTipoUsuario);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtApellido);
             this.Controls.Add(this.btnregistrarse);
@@ -265,6 +250,5 @@
         private System.Windows.Forms.Button btnregistrarse;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtApellido;
-        private System.Windows.Forms.ComboBox cbTipoUsuario;
     }
 }

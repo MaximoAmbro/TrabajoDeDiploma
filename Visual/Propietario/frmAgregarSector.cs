@@ -13,7 +13,7 @@ using Negocio;
 
 namespace Visual.Vendedor
 {
-    public partial class frmAgregarSector: Form
+    public partial class frmAgregarSector: FormularioEventAura
     {
         public string NombreUsuario; public int IDlocal; public int IDEvento; public string NombreLocal; public int IDUsuario;
         public string NombreEvento;

@@ -10,7 +10,7 @@ using Negocio;
 namespace Visual
 {
     // RF-07: compra exitosa con la identificación del pedido, lo pagado y dónde quedaron los PDF.
-    public partial class frmConfirmacion : Form
+    public partial class frmConfirmacion : FormularioEventAura
     {
         public Compra Compra;
         public List<string> Rutas = new List<string>();

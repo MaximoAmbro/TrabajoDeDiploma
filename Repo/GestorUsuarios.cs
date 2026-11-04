@@ -65,6 +65,12 @@ namespace Negocio
             return usuario;
         }
 
+        // Alta pública: solo clientes. El perfil Propietario no se autoasigna (RN-05, RN-34).
+        public void RegistrarCliente(string mail, string pwd, string nombre, string apellido)
+        {
+            Registrar(mail, pwd, nombre, apellido, TipoCliente);
+        }
+
         public void Registrar(string mail, string pwd, string nombre, string apellido, string tipoUsuario)
         {
             if (string.IsNullOrWhiteSpace(mail))
