@@ -4,34 +4,82 @@
     {
       "label": "Compilar",
       "type": "shell",
-      "command": "& 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe' SistemaEntradas.sln -restore -p:Configuration=Debug -v:minimal -nologo",
-      "options": { "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] } },
-      "group": { "kind": "build", "isDefault": true },
+      "command": "& .\\tools\\Proyecto.ps1 -Accion Compilar",
+      "options": {
+        "shell": {
+          "executable": "powershell.exe",
+          "args": [
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-Command"
+          ]
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
       "problemMatcher": "$msCompile",
-      "presentation": { "reveal": "always", "panel": "shared", "clear": true }
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
     },
     {
       "label": "Ejecutar",
       "type": "shell",
       "command": ".\\Visual\\bin\\Debug\\Visual.exe",
-      "options": { "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] } },
+      "options": {
+        "shell": {
+          "executable": "powershell.exe",
+          "args": [
+            "-NoProfile",
+            "-Command"
+          ]
+        }
+      },
       "problemMatcher": [],
-      "presentation": { "reveal": "silent", "panel": "shared" }
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
     },
     {
       "label": "Probar",
       "type": "shell",
-      "command": "& 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe' SistemaEntradas.sln -restore -p:Configuration=Debug -v:minimal -nologo; if ($LASTEXITCODE -eq 0) { $vstest = & \"${env:ProgramFiles(x86)}\\Microsoft Visual Studio\\Installer\\vswhere.exe\" -latest -products '*' -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -find '**\\TestPlatform\\vstest.console.exe' | Select-Object -First 1; & $vstest .\\Pruebas\\bin\\Debug\\net48\\Pruebas.dll /Logger:console`;verbosity=normal }",
-      "options": { "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] } },
+      "command": "& .\\tools\\Proyecto.ps1 -Accion Probar",
+      "options": {
+        "shell": {
+          "executable": "powershell.exe",
+          "args": [
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-Command"
+          ]
+        }
+      },
       "group": "test",
       "problemMatcher": "$msCompile",
-      "presentation": { "reveal": "always", "panel": "shared", "clear": true }
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
     },
     {
       "label": "Compilar y ejecutar",
       "dependsOrder": "sequence",
-      "dependsOn": ["Compilar", "Ejecutar"],
-      "group": { "kind": "test", "isDefault": true },
+      "dependsOn": [
+        "Compilar",
+        "Ejecutar"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
       "problemMatcher": []
     }
   ]
