@@ -11,7 +11,7 @@ El sistema se probó de tres maneras que se complementan:
 1. **Pruebas manuales:** 129 en total, repartidas entre Máximo (64) y JC (65). Las de JC se
    ejecutaron todas el 03/11/2026, salvo dos que necesitan un celular. Las de Máximo todavía
    no se ejecutaron.
-2. **Pruebas automáticas:** 43 casos (CP-01 a CP-43) que hoy corren 49 veces, todas
+2. **Pruebas automáticas:** 50 casos (CP-01 a CP-50) que hoy corren 60 veces, todas
    correctas. Son las que cuenta la matriz de trazabilidad, porque se pueden repetir en
    cualquier momento y dan siempre el mismo resultado.
 3. **Inspecciones medidas sobre la aplicación:** el estudio de usabilidad, la verificación
@@ -96,6 +96,8 @@ La matriz de trazabilidad mostraba que solo 3 de los 13 requerimientos tenían p
 | T-01 a T-18 | CP-26 a CP-42, más el etiquetado de CP-11 a CP-25 | Registro, login y bloqueo; filtros; topes del paquete; pago aprobado, rechazado y vencido; reportes; los hallazgos de usabilidad H-02 a H-05 | 47 correctas y 1 omitida (CP-34) |
 | T-19 y T-20 | CP-43; CP-34 corregida | La omisión era un error de la preparación de la prueba, no de la aplicación. De paso se unificó el plazo de la reserva (RN-15) | 49 de 49 |
 | T-21 | — | La semilla reproduce el ejemplo del documento («Duki en Rosario», $99.625) | 49 de 49 |
+| T-22 a T-26 | CP-44 a CP-50; ajuste de CP-24 | Seguridad del alta y cierre de sesión; la aplicación termina al cerrar la última ventana; indicación de la cantidad; «Comprar» sin entradas | 60 de 60 |
+| T-27 a T-29 (encargadas) | CP-51 a CP-54 | Manejador global de errores; pago cuando se elimina el evento; base de formularios editable en el diseñador; encabezado de la cantidad completo | Esperado: 66 |
 
 ### Inspecciones medidas sobre la aplicación: 04/11/2026
 
@@ -115,7 +117,11 @@ Las hizo Claude Code. Los resultados están en `docs/`, y los scripts para repet
   - **Con UI Automation sobre el ejecutable:** se confirmó que cerrar una pantalla con la X
     deja la aplicación corriendo sin ventanas.
   - **Qué se derivó de esas mediciones:** los resultados de seis perfiles.
-  - **Resultado:** trece hallazgos (U-01 a U-13).
+  - **Resultado de la primera medición:** trece hallazgos (U-01 a U-13).
+  - **Se corrigieron los tres de mayor peso y se volvió a medir con el mismo método.** Los seis
+    perfiles completan la tarea sin asistencia, la satisfacción buena pasa del 66,7 % al 100 %
+    y el SUS de 70,0 a 78,8. La segunda medición encontró además un problema nuevo (U-14,
+    el encabezado cortado), que ya está encargado.
 
 ---
 
@@ -140,7 +146,7 @@ lectores, las pantallas del propietario y los reportes con volumen de datos.
 
 ---
 
-## 4. Cómo se relaciona todo con CP-01 a CP-43 y la matriz
+## 4. Cómo se relaciona todo con CP-01 a CP-50 y la matriz
 
 - **La matriz cuenta solo las pruebas automáticas.** Un caso CP se ejecuta igual cada vez y
   deja registro, así que puede respaldar «este requerimiento está verificado». Una prueba
@@ -153,7 +159,8 @@ lectores, las pantallas del propietario y los reportes con volumen de datos.
 | CP-11 y CP-12 | Ya existían en el código (la verificación de $99.625 y el alto máximo de las pantallas); se les dio ID el 04/11 |
 | CP-13 a CP-25 | Nacieron de las **pruebas manuales de JC**: cada falla u observación corregida tiene su caso |
 | CP-26 a CP-43 | Nacieron de la **matriz**: cubren los requerimientos y reglas que no tenían prueba, y los hallazgos de usabilidad H-02 a H-05 |
-| CP-44 a CP-50 | Están encargados a Codex: seguridad del alta, cierre de sesión, cierre con la X, indicación de la cantidad y «Comprar» sin entradas |
+| CP-44 a CP-50 | Nacieron del **estudio de usabilidad** y de la revisión de seguridad: alta, cierre de sesión, cierre con la X, indicación de la cantidad y «Comprar» sin entradas |
+| CP-51 a CP-54 | Están encargados a Codex: manejador global de errores, pago con el evento eliminado, base de formularios y encabezado de la cantidad |
 
 - **Cobertura de la matriz:** 12 de los 13 requerimientos (el que falta, RF-09, quedó
   excluido), 27 de 38 reglas de negocio y 6 de 6 hallazgos del primer estudio de usabilidad.
@@ -178,6 +185,7 @@ lectores, las pantallas del propietario y los reportes con volumen de datos.
 > se ejecutaron manejando la aplicación real con UI Automation, y encontraron cinco fallas de
 > presentación y ninguna de reglas de negocio. Cada falla corregida quedó como prueba
 > automática. Después usamos la matriz de trazabilidad para ver qué requerimientos no tenían
-> prueba, y escribimos casos hasta cubrir los doce que están en alcance. Hoy son 43 casos que
-> corren 49 veces sin fallas. Además, medimos la usabilidad sobre la aplicación real, y eso
-> nos dio los hallazgos que estamos corrigiendo ahora.»
+> prueba, y escribimos casos hasta cubrir los doce que están en alcance. Hoy son 50 casos que
+> corren 60 veces sin fallas. Además, medimos la usabilidad sobre la aplicación real,
+> corregimos lo que encontramos y volvimos a medir: los seis perfiles completan la compra
+> sin ayuda.»

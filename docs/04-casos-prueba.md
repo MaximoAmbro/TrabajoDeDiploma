@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 43 casos: CP-01 a CP-10 son los de la lógica de
-fidelización, que define el documento; CP-11 a CP-43 se agregaron en noviembre de 2026
-(ver «Casos CP-11 a CP-43» más abajo). CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 50 casos: CP-01 a CP-10 son los de la lógica de
+fidelización, que define el documento; CP-11 a CP-50 se agregaron en noviembre de 2026
+(ver «Casos CP-11 a CP-50» más abajo). CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -64,15 +64,15 @@ Si el cálculo no da exactamente $99.625, hay un error en la implementación.
 
 Este cálculo es el caso **CP-11**.
 
-## Casos CP-11 a CP-43
+## Casos CP-11 a CP-50
 
 Mismas condiciones que los diez anteriores: integración contra `BddEventAura_Pruebas`, datos
 de `Fake`, sesión cerrada antes y después. Los que dicen «interfaz» abren el formulario real
 en un hilo STA y responden sus MessageBox con `Pruebas/DialogosPrueba.cs`. Necesitan una
 sesión de escritorio abierta.
 
-Cuántas veces corre cada uno: CP-15 tiene 4 variantes, CP-20 tiene 2 y CP-25 tiene 3. Con
-CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **49 ejecuciones**.
+Cuántas veces corre cada uno: CP-15 tiene 4 variantes, CP-20 tiene 2, CP-25 tiene 3, CP-46 tiene 2 y CP-47 tiene 4. Con
+CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **60 ejecuciones**.
 
 | CP | Archivo | Condición de entrada | Resultado esperado | RF | Reglas | Hall. |
 |---|---|---|---|---|---|---|
@@ -89,7 +89,7 @@ CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **49 ejecuci
 | CP-21 | PruebasInterfaz | Eliminar un evento sin ventas y otro con ventas | Confirmación con No por defecto; sin ventas se elimina; con ventas se ofrece suspender | RF-12 | RN-11 | — |
 | CP-22 | PruebasInterfaz | Historial sin entradas elegidas | «Devolver» deshabilitado y gris | RF-05 | — | — |
 | CP-23 | PruebasInterfaz | Tildar y destildar una entrada asegurada | «Devolver 1 entrada(s)» habilitado; vuelve a deshabilitarse | RF-05 | — | — |
-| CP-24 | PruebasInterfaz | Evento agotado que recupera cupo por una devolución | Compra y servicios bloqueados; después, aviso RN-10, vuelve la grilla, solo los servicios del evento, sin inscribir en la lista | RF-05, RF-10 | RN-10, RN-14 | — |
+| CP-24 | PruebasInterfaz | Evento agotado que recupera cupo por una devolución | Compra y servicios bloqueados; después, aviso RN-10, vuelve la grilla, solo los servicios del evento, sin inscribir en la lista. Desde T-26, «Comprar» se habilita recién al elegir una entrada | RF-05, RF-10 | RN-10, RN-14 | — |
 | CP-25 | PruebasInterfaz | Compra a 125 % y 150 % en 1366 × 728 y 1920 × 1032 (3 variantes) | La ventana entra, se llega al final del resumen, «Volver» y «Comprar» a la vista | RF-05, RNF-03 | — | — |
 | CP-26 | PruebasCuentas | Alta de un cliente y segunda alta con el mismo correo | Nace Bronce y sin suscripción; la segunda alta lanza RN-01 | RF-01 | RN-01, RN-03 | — |
 | CP-27 | PruebasCuentas | Inicio de sesión correcto, con espacios alrededor del correo | Devuelve el usuario sin la contraseña y abre la sesión | RF-02 | — | — |
@@ -109,6 +109,13 @@ CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **49 ejecuci
 | CP-41 | PruebasInterfaz | Comprar sin tildar el seguro y responder No | Aviso «Seguro de entrada» con No por defecto; no se reserva nada | RF-05 | — | H-04 |
 | CP-42 | PruebasInterfaz | Clic en «¿Cómo funcionan los niveles?» | Aviso con los umbrales vigentes de `Parametros` | RF-08 | — | H-05 |
 | CP-43 | PruebasCompra | Compra iniciada cuya reserva registrada ya venció, aunque `FechaCompra` + `RESERVA_MINUTOS` todavía no | RN-15; compra Vencida; cupo devuelto; ningún pago. El plazo lo fija la reserva, no el parámetro vigente | RF-06 | RN-15 | — |
+| CP-44 | PruebasInterfaz | Abrir el alta de usuario y registrarse con datos válidos | No hay selector de perfil; el usuario creado es Cliente | RF-01 | — | — |
+| CP-45 | PruebasCuentas | `RegistrarCliente` con un correo nuevo | Crea un Cliente de nivel Bronce | RF-01 | RN-03 | — |
+| CP-46 | PruebasInterfaz | «Volver al inicio» desde el menú del cliente y desde el del administrador (2 variantes) | La sesión queda cerrada y se ve el login | RF-02 | — | — |
+| CP-47 | PruebasInterfaz | Decidir si la aplicación termina al cerrar una ventana (4 variantes) | Termina solo si el usuario cerró la última ventana visible | RNF-02 | — | — |
+| CP-48 | PruebasInterfaz | Cerrar «Armar paquete» con la X, con y sin paquete | Con paquete pide confirmación, con No por defecto; No conserva el paquete; sin paquete cierra sin preguntar | RF-05 | — | — |
+| CP-49 | PruebasInterfaz | Abrir la compra del evento 1 | Foco en la celda Cantidad del primer sector con cupo; encabezado con «escribí»; ayuda con el máximo por compra | RF-04 | — | H-03 |
+| CP-50 | PruebasInterfaz | Abrir la compra; poner 1 entrada; volver a 0 | «Comprar» y el seguro deshabilitados sin entradas y habilitados con una | RF-05 | — | — |
 
 CP-39 a CP-42 comprueban que la interfaz **comunica** RN-15, RN-08, RN-28 y RN-19. No las
 verifican: por eso esas reglas no figuran en su columna.
