@@ -100,6 +100,19 @@ namespace Pruebas
             Assert.IsNull(recuperado.BloqueadoHasta);
         }
 
+        // CP-45 — RF-01, RN-05: el alta pública de negocio crea exclusivamente clientes Bronce.
+        [TestMethod("CP-45: RegistrarCliente crea un cliente Bronce")]
+        public void CP45_AltaPublicaDeNegocioCreaClienteBronce()
+        {
+            string mail = Fake.MailNuevo();
+            GestorUsuarios.Instance.RegistrarCliente(mail, "Cliente123", "Nombre", "Prueba");
+
+            Usuario usuario = RepositorioUsuarios.Instance.ObtenerPorMail(mail);
+            Assert.IsNotNull(usuario);
+            Assert.AreEqual("Cliente", usuario.TipoUsuario);
+            Assert.AreEqual(NivelFidelidad.Bronce, GestorFidelizacion.Instance.ObtenerCliente(usuario.Id).Nivel);
+        }
+
         // CP-29 — RF-02: datos faltantes o correo inexistente no autentican ni abren sesión.
         [TestMethod("CP-29: Datos faltantes o correo inexistente sin sesión")]
         public void CP29_DatosFaltantesOCorreoInexistente()

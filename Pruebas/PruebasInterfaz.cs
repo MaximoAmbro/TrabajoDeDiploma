@@ -316,6 +316,8 @@ namespace Pruebas
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnListaEspera").PerformClick(),
                         new DialogoEsperado { Titulo = "RN-10", Texto = "El evento todavía tiene entradas" });
                     Assert.IsTrue(Control<DataGridView>(form, "dgvSectores").Visible);
+                    Assert.IsFalse(Control<Button>(form, "btnComprar").Enabled);
+                    Control<DataGridView>(form, "dgvSectores").Rows[0].Cells["Cantidad"].Value = 1;
                     Assert.IsTrue(Control<Button>(form, "btnComprar").Enabled);
                     Assert.IsTrue(Control<CheckBox>(form, "chkHospedaje").Enabled, "El servicio sigue bloqueado después de liberarse el cupo.");
                     Assert.IsFalse(Control<CheckBox>(form, "chkTraslado").Enabled, "No se debe habilitar un servicio que el evento no ofrece.");
@@ -524,6 +526,164 @@ namespace Pruebas
                             Titulo = "¿Cómo funcionan los niveles?",
                             Texto = $"Plata: de {plata} a {oro - 1} compras"
                         });
+                }
+            });
+        }
+
+        // CP-44 — RF-01, RN-05: el alta pública no permite elegir ni escribir un perfil privilegiado.
+        [TestMethod("CP-44: Registro sin selector de perfil crea solo clientes")]
+        public void CP44_AltaPublicaSinSelectorDePerfil()
+        {
+            EnSta(() =>
+            {
+                using (var form = new Visual.frmCrearUsuario())
+                {
+                    Cargar(form);
+                    Assert.IsFalse(Descendientes(form).OfType<ComboBox>().Any());
+                    Assert.AreEqual(0, form.Controls.Find("cbTipoUsuario", true).Length);
+                    string mail = Fake.MailNuevo();
+                    Control<TextBox>(form, "txtNombre").Text = "Nombre";
+                    Control<TextBox>(form, "txtApellido").Text = "Prueba";
+                    Control<TextBox>(form, "txtmail").Text = mail;
+                    Control<TextBox>(form, "TxtPassword").Text = "Cliente123";
+                    Control<TextBox>(form, "TxtConfirmpassword").Text = "Cliente123";
+
+                    DialogosPrueba.Comprobar(() => Control<Button>(form, "btnregistrarse").PerformClick(),
+                        new DialogoEsperado { Titulo = "", Texto = "Usuario creado" });
+
+                    Usuario usuario = Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail);
+                    Assert.IsNotNull(usuario);
+                    Assert.AreEqual("Cliente", usuario.TipoUsuario);
+                }
+            });
+        }
+
+        // CP-46 — RF-02: volver al inicio cierra la sesión de cliente o administrador y muestra el login.
+        [DataTestMethod]
+        [DataRow("cliente", DisplayName = "CP-46: Volver al inicio cierra sesión de cliente")]
+        [DataRow("administrador", DisplayName = "CP-46: Volver al inicio cierra sesión de administrador")]
+        public void CP46_VolverAlInicioCierraLaSesion(string perfil)
+        {
+            EnSta(() =>
+            {
+                Usuario usuario = perfil == "cliente" ? (Usuario)Fake.Cliente(NivelFidelidad.Bronce) : Fake.Administrador();
+                GestorSesion.Instance.Iniciar(usuario);
+                using (Form menu = perfil == "cliente"
+                    ? (Form)new Visual.frmMenuCliente { IDUsuario = usuario.Id, NombreUsuario = usuario.Nombre }
+                    : new Visual.frmMenuPropietario { IDUsuario = usuario.Id, NombreUsuario = usuario.Nombre })
+                {
+                    Cargar(menu);
+                    MethodInfo volver = menu.GetType().GetMethod("lblvolver_Click", BindingFlags.Instance | BindingFlags.NonPublic);
+                    Assert.IsNotNull(volver);
+                    volver.Invoke(menu, new object[] { menu, EventArgs.Empty });
+
+                    Assert.IsFalse(GestorSesion.Instance.HaySesion);
+                    Assert.IsTrue(Application.OpenForms.Cast<Form>().Any(f => f is Visual.frmInicio && f.Visible));
+                }
+            });
+        }
+
+        // CP-47 — RNF-02: cerrar la última ventana visible termina solo un cierre solicitado por el usuario.
+        [DataTestMethod]
+        [DataRow(CloseReason.UserClosing, true, false, false, DisplayName = "CP-47: Otra ventana visible mantiene la aplicación")]
+        [DataRow(CloseReason.UserClosing, false, false, true, DisplayName = "CP-47: Sin otras ventanas termina la aplicación")]
+        [DataRow(CloseReason.UserClosing, false, true, true, DisplayName = "CP-47: Solo ventanas ocultas no mantienen la aplicación")]
+        [DataRow(CloseReason.ApplicationExitCall, false, false, false, DisplayName = "CP-47: ApplicationExitCall no vuelve a pedir salida")]
+        public void CP47_CierreDeUltimaVentanaVisible(CloseReason motivo, bool otraVisible, bool otraOculta, bool esperado)
+        {
+            EnSta(() =>
+            {
+                using (var cerrado = new Form())
+                using (var otra = new Form())
+                {
+                    if (otraVisible) Cargar(otra);
+                    Form[] abiertos = otraVisible || otraOculta ? new[] { cerrado, otra } : new[] { cerrado };
+                    Assert.AreEqual(esperado, Visual.FormularioEventAura.DebeTerminarAplicacion(cerrado, motivo, abiertos));
+                }
+            });
+        }
+
+        // CP-48 — RF-05: la X confirma el descarte con No por defecto y cierra sin aviso un paquete vacío.
+        [TestMethod("CP-48: Cerrar la compra confirma el descarte del paquete")]
+        public void CP48_CerrarCompraConfirmaDescarte()
+        {
+            EnSta(() =>
+            {
+                Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
+                {
+                    Cargar(form);
+                    DataGridViewRow campo = Control<DataGridView>(form, "dgvSectores").Rows.Cast<DataGridViewRow>()
+                        .Single(f => Convert.ToString(f.Cells["Sector"].Value) == "Campo");
+                    campo.Cells["Cantidad"].Value = 2;
+                    DialogosPrueba.Comprobar(() => form.Close(),
+                        Confirmacion("Cerrar la compra", "se descarta el paquete", DialogResult.No));
+                    Assert.IsTrue(form.Visible);
+                    Assert.AreEqual(2, campo.Cells["Cantidad"].Value);
+                    DialogosPrueba.Comprobar(() => form.Close(),
+                        Confirmacion("Cerrar la compra", "se descarta el paquete", DialogResult.Yes));
+                    Assert.IsFalse(form.Visible);
+                }
+
+                using (var vacia = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
+                {
+                    Cargar(vacia);
+                    DialogosPrueba.Comprobar(() => vacia.Close());
+                    Assert.IsFalse(vacia.Visible);
+                }
+            });
+        }
+
+        // CP-49 — RF-04, H-03: la primera cantidad disponible queda seleccionada con encabezado y ayuda explícitos.
+        [TestMethod("CP-49: Cantidad seleccionada e indicación para escribir entradas")]
+        public void CP49_CantidadIndicadaYSeleccionada()
+        {
+            EnSta(() =>
+            {
+                Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
+                {
+                    Cargar(form);
+                    DataGridView grilla = Control<DataGridView>(form, "dgvSectores");
+                    Assert.IsNotNull(grilla.CurrentCell);
+                    Assert.AreEqual("Cantidad", grilla.CurrentCell.OwningColumn.Name);
+                    Assert.IsTrue(Convert.ToInt32(grilla.CurrentCell.OwningRow.Cells["Disponibles"].Value) > 0);
+                    StringAssert.Contains(grilla.Columns["Cantidad"].HeaderText, "escribí");
+                    int maximo = GestorParametros.Instance.ObtenerEntero("COMPRA_ENTRADAS_MAX");
+                    StringAssert.Contains(grilla.CurrentCell.ToolTipText, maximo.ToString());
+                }
+            });
+        }
+
+        // CP-50 — RF-05, RN-13, RN-28: Comprar y Seguro requieren entradas; quitarlas desactiva y destilda el seguro.
+        [TestMethod("CP-50: Comprar y Seguro se habilitan solo con entradas")]
+        public void CP50_CompraYSeguroRequierenEntradas()
+        {
+            EnSta(() =>
+            {
+                Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
+                {
+                    Cargar(form);
+                    Button comprar = Control<Button>(form, "btnComprar");
+                    CheckBox seguro = Control<CheckBox>(form, "chkSeguro");
+                    CheckBox hospedaje = Control<CheckBox>(form, "chkHospedaje");
+                    DataGridViewRow campo = Control<DataGridView>(form, "dgvSectores").Rows.Cast<DataGridViewRow>()
+                        .Single(f => Convert.ToString(f.Cells["Sector"].Value) == "Campo");
+                    Assert.IsFalse(comprar.Enabled);
+                    Assert.IsFalse(seguro.Enabled);
+                    Assert.IsTrue(hospedaje.Enabled);
+
+                    campo.Cells["Cantidad"].Value = 1;
+                    Assert.IsTrue(comprar.Enabled);
+                    Assert.IsTrue(seguro.Enabled);
+                    seguro.Checked = true;
+
+                    campo.Cells["Cantidad"].Value = 0;
+                    Assert.IsFalse(comprar.Enabled);
+                    Assert.IsFalse(seguro.Enabled);
+                    Assert.IsFalse(seguro.Checked);
+                    Assert.IsTrue(hospedaje.Enabled);
                 }
             });
         }
