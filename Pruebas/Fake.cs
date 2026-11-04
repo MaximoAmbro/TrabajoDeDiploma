@@ -21,6 +21,40 @@ namespace Pruebas
 
         private static int contador;
 
+        public static string MailNuevo()
+        {
+            return $"test{++contador:0000}{DominioMail}";
+        }
+
+        public static void VencerBloqueo(string mail)
+        {
+            Ejecutar("UPDATE Usuario SET BloqueadoHasta = @Pasado WHERE Mail = @Mail",
+                "@Pasado", DateTime.Now.AddMinutes(-1), "@Mail", mail);
+        }
+
+        public static void CambiarFechaDeEvento(int idEvento, DateTime fecha)
+        {
+            Ejecutar("UPDATE Eventos SET Fecha = @Fecha WHERE ID = @ID", "@Fecha", fecha, "@ID", idEvento);
+        }
+
+        public static void CambiarEstadoDeEvento(int idEvento, string estado)
+        {
+            Ejecutar("UPDATE Eventos SET Estado = @Estado WHERE ID = @ID", "@Estado", estado, "@ID", idEvento);
+        }
+
+        public static void RetrasarInicioDeCompra(int idCompra, int minutos)
+        {
+            Ejecutar("UPDATE Compras SET FechaCompra = DATEADD(MINUTE, -@Minutos, FechaCompra) WHERE ID = @ID",
+                "@Minutos", minutos, "@ID", idCompra);
+        }
+
+        public static Usuario Administrador()
+        {
+            string mail = Escalar<string>("SELECT TOP 1 Mail FROM Usuario WHERE TipoUsuario = @Tipo ORDER BY ID",
+                "@Tipo", "Propietario");
+            return RepositorioUsuarios.Instance.ObtenerPorMail(mail);
+        }
+
         public static void Limpiar()
         {
             const string consulta =

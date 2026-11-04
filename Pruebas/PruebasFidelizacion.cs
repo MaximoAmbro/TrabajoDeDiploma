@@ -168,7 +168,8 @@ namespace Pruebas
         // Verificación numérica de referencia: Plata, 2 entradas Campo a $25.000 y hospedaje de
         // $45.000 dan EXACTAMENTE $99.625. Si da otro número hay un error en la implementación o
         // en el documento.
-        [TestMethod]
+        // CP-11 — RF-05, RF-08, RN-20, RN-21: referencia de $99.625.
+        [TestMethod("CP-11: Referencia de $99.625")]
         public void Referencia_DaExactamente99625()
         {
             Cliente c = Fake.Cliente(NivelFidelidad.Plata);

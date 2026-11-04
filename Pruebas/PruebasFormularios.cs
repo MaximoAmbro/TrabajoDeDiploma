@@ -28,7 +28,8 @@ namespace Pruebas
         private static readonly Regex Escala =
             new Regex(@"this\.AutoScaleDimensions\s*=\s*new\s+System\.Drawing\.SizeF\(\s*([\d.]+)F\s*,\s*([\d.]+)F\s*\)");
 
-        [TestMethod]
+        // CP-12 — RNF-03: altura de los formularios.
+        [TestMethod("CP-12: Altura de los formularios")]
         public void RNF03_NingunFormularioPasaDe790DeAlto()
         {
             List<Type> formularios = typeof(Visual.frmInicio).Assembly.GetTypes()

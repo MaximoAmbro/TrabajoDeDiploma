@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Entidades;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,7 +18,8 @@ namespace Pruebas
     public class PruebasInterfaz
     {
         // Regresión de F-01 a F-03 (pruebas manuales del 03/11/2026) con datos aislados; nunca usa la base de desarrollo.
-        [TestMethod]
+        // CP-13 — RF-05, RN-10, H-01: paquete máximo y título largo sin recortes.
+        [TestMethod("CP-13: Paquete máximo y título largo sin recortes")]
         public void Compra_PaqueteMaximoYNombreLargoSinRecortes()
         {
             EnSta(() =>
@@ -75,7 +77,8 @@ namespace Pruebas
             });
         }
 
-        [TestMethod]
+        // CP-14 — RF-01: registro sin datos precargados.
+        [TestMethod("CP-14: Registro sin datos precargados")]
         public void Registro_AbreSinDatosPrecargados()
         {
             EnSta(() =>
@@ -90,7 +93,8 @@ namespace Pruebas
             });
         }
 
-        [TestMethod]
+        // CP-16 — RF-03: búsqueda sin filas editables.
+        [TestMethod("CP-16: Búsqueda sin filas editables")]
         public void Eventos_SinResultadosNoPermiteAgregarFilas()
         {
             EnSta(() =>
@@ -112,7 +116,8 @@ namespace Pruebas
             });
         }
 
-        [TestMethod]
+        // CP-22 — RF-05: devolver deshabilitado sin selección.
+        [TestMethod("CP-22: Devolver deshabilitado sin selección")]
         public void Historial_SinSeleccionDistingueBotonDeshabilitado()
         {
             EnSta(() =>
@@ -128,7 +133,8 @@ namespace Pruebas
             });
         }
 
-        [TestMethod]
+        // CP-17 — RF-03: aviso al comprar sin resultados.
+        [TestMethod("CP-17: Aviso al comprar sin resultados")]
         public void Eventos_ComprarSinResultadosMuestraAvisoCorrecto()
         {
             EnSta(() =>
@@ -146,7 +152,8 @@ namespace Pruebas
             });
         }
 
-        [TestMethod]
+        // CP-19 — RF-05, H-06: confirmación al descartar el paquete.
+        [TestMethod("CP-19: Confirmación al descartar el paquete")]
         public void Compra_VolverConfirmaSinPerderPaqueteAlCancelar()
         {
             EnSta(() =>
@@ -171,9 +178,10 @@ namespace Pruebas
             });
         }
 
+        // CP-20 — RF-04: cantidad inválida restaura el paquete.
         [DataTestMethod]
-        [DataRow("abc")]
-        [DataRow("-1")]
+        [DataRow("abc", DisplayName = "CP-20: Cantidad inválida restaura el paquete (variante 1)")]
+        [DataRow("-1", DisplayName = "CP-20: Cantidad inválida restaura el paquete (variante 2)")]
         public void Compra_CantidadInvalidaRestauraElPaquete(string cantidad)
         {
             EnSta(() =>
@@ -193,11 +201,12 @@ namespace Pruebas
             });
         }
 
+        // CP-15 — RF-01, RN-02: registro rechaza datos inválidos.
         [DataTestMethod]
-        [DataRow("txtNombre", " ", "", "Ingrese su nombre.")]
-        [DataRow("txtApellido", " ", "", "Ingrese su apellido.")]
-        [DataRow("txtmail", " ", "", "Ingrese su correo electrónico.")]
-        [DataRow("TxtPassword", "abc", "No se pudo crear la cuenta", "La contraseña debe tener al menos")]
+        [DataRow("txtNombre", " ", "", "Ingrese su nombre.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 1)")]
+        [DataRow("txtApellido", " ", "", "Ingrese su apellido.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 2)")]
+        [DataRow("txtmail", " ", "", "Ingrese su correo electrónico.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 3)")]
+        [DataRow("TxtPassword", "abc", "No se pudo crear la cuenta", "La contraseña debe tener al menos", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 4)")]
         public void Registro_RechazaDatosInvalidosSinCrearUsuario(string campo, string valor, string titulo, string mensaje)
         {
             EnSta(() =>
@@ -221,7 +230,8 @@ namespace Pruebas
             });
         }
 
-        [TestMethod]
+        // CP-21 — RF-12, RN-11: confirmación y protección de eventos con ventas.
+        [TestMethod("CP-21: Confirmación y protección de eventos con ventas")]
         public void Propietario_EliminarRequiereConfirmacionYPreservaVentas()
         {
             EnSta(() =>
@@ -261,7 +271,8 @@ namespace Pruebas
             });
         }
 
-        [TestMethod]
+        // CP-23 — RF-05: selección actualiza devolver.
+        [TestMethod("CP-23: Selección actualiza Devolver")]
         public void Historial_TildarYDestildarActualizaEstadoYColor()
         {
             EnSta(() =>
@@ -286,7 +297,8 @@ namespace Pruebas
             });
         }
 
-        [TestMethod]
+        // CP-24 — RF-05, RF-10, RN-10, RN-14: servicios al recuperar cupo.
+        [TestMethod("CP-24: Servicios al recuperar cupo")]
         public void Compra_CupoLiberadoVuelveAHabilitarServiciosDisponibles()
         {
             EnSta(() =>
@@ -318,7 +330,8 @@ namespace Pruebas
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         private static extern IntPtr SendMessage(IntPtr ventana, int mensaje, StringBuilder texto, IntPtr longitud);
 
-        [TestMethod]
+        // CP-18 — RF-03: guía de búsqueda con foco.
+        [TestMethod("CP-18: Guía de búsqueda con foco")]
         public void Eventos_GuiaRegistradaConFocoEnLaBusqueda()
         {
             EnSta(() =>
@@ -344,10 +357,11 @@ namespace Pruebas
             });
         }
 
+        // CP-25 — RF-05, RNF-03: acciones visibles en escala simulada.
         [DataTestMethod]
-        [DataRow(1.25f, 1366, 728)]
-        [DataRow(1.50f, 1366, 728)]
-        [DataRow(1.50f, 1920, 1032)]
+        [DataRow(1.25f, 1366, 728, DisplayName = "CP-25: Acciones visibles en escala simulada (variante 1)")]
+        [DataRow(1.50f, 1366, 728, DisplayName = "CP-25: Acciones visibles en escala simulada (variante 2)")]
+        [DataRow(1.50f, 1920, 1032, DisplayName = "CP-25: Acciones visibles en escala simulada (variante 3)")]
         public void Compra_EscalaSimuladaMantieneAccionesDentroDelArea(float factor, int ancho, int alto)
         {
             EnSta(() =>
@@ -396,6 +410,119 @@ namespace Pruebas
                         form.DrawToBitmap(imagen, new Rectangle(0, 0, form.Width, form.Height));
                         imagen.Save(Path.Combine(carpeta, $"compra-simulada-{(int)(factor * 100)}-{ancho}x{alto}.png"));
                     }
+                }
+            });
+        }
+
+        // CP-39 — RF-06, RN-15, H-02: cuenta regresiva visible y aviso rojo durante el último minuto.
+        [TestMethod("CP-39: Temporizador de reserva normal y en el último minuto")]
+        public void CP39_TemporizadorDeReservaALaVista()
+        {
+            EnSta(() =>
+            {
+                Evento evento = Fake.EventoPublicado(1000m, 5);
+                Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                int minutos = GestorParametros.Instance.ObtenerEntero("RESERVA_MINUTOS");
+                Compra compra = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 1, false), cliente);
+                using (var form = new Visual.frmPago { Compra = compra })
+                {
+                    Cargar(form);
+                    Label temporizador = Control<Label>(form, "lblTemporizador");
+                    Match formato = Regex.Match(temporizador.Text, @"^Reserva: (\d{2}):(\d{2})$");
+                    Assert.IsTrue(formato.Success, "Formato de cuenta regresiva incorrecto: " + temporizador.Text);
+                    Assert.IsTrue(int.Parse(formato.Groups[1].Value) <= minutos);
+                    Assert.AreEqual(Color.FromArgb(116, 86, 174), temporizador.ForeColor);
+                    Assert.IsTrue(temporizador.Visible);
+                    form.Close();
+                }
+
+                Compra porVencer = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 1, false), cliente);
+                porVencer.FechaCompra = DateTime.Now.AddMinutes(-minutos).AddSeconds(45);
+                using (var form = new Visual.frmPago { Compra = porVencer })
+                {
+                    Cargar(form);
+                    Assert.AreEqual(Color.Firebrick, Control<Label>(form, "lblTemporizador").ForeColor);
+                    form.Close();
+                }
+            });
+        }
+
+        // CP-40 — RF-04, RN-08, H-03: cupo restante por sector y edición exclusiva de Cantidad.
+        [TestMethod("CP-40: Cupo restante por sector y única columna editable")]
+        public void CP40_CupoRestantePorSector()
+        {
+            EnSta(() =>
+            {
+                Evento evento = Fake.EventoPublicado(1000m, 5);
+                Cliente comprador = Fake.Cliente(NivelFidelidad.Bronce);
+                Cliente interesado = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.CompraConfirmada(comprador, evento, 1, false);
+                using (var form = new Visual.FrmCompraCliente { IDEvento = evento.Id, IDUsuario = interesado.Id })
+                {
+                    Cargar(form);
+                    DataGridView grilla = Control<DataGridView>(form, "dgvSectores");
+                    DataGridViewRow fila = grilla.Rows.Cast<DataGridViewRow>()
+                        .Single(f => Convert.ToInt32(f.Cells["IdSector"].Value) == evento.Sectores.Single().Id);
+                    Assert.AreEqual(4, Convert.ToInt32(fila.Cells["Disponibles"].Value));
+                    foreach (DataGridViewColumn columna in grilla.Columns)
+                        Assert.AreEqual(columna.Name != "Cantidad", columna.ReadOnly, "Edición incorrecta en " + columna.Name + ".");
+                }
+            });
+        }
+
+        // CP-41 — RF-05, RN-28, H-04: cancelar la advertencia de compra sin seguro no reserva cupo.
+        [TestMethod("CP-41: Confirmación al comprar sin seguro con No por defecto")]
+        public void CP41_ConfirmacionAlComprarSinSeguro()
+        {
+            EnSta(() =>
+            {
+                Evento evento = Fake.EventoPublicado(1000m, 5);
+                Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                using (var form = new Visual.FrmCompraCliente { IDEvento = evento.Id, IDUsuario = cliente.Id })
+                {
+                    Cargar(form);
+                    Control<DataGridView>(form, "dgvSectores").Rows[0].Cells["Cantidad"].Value = 1;
+                    Assert.IsFalse(Control<CheckBox>(form, "chkSeguro").Checked);
+
+                    DialogosPrueba.Comprobar(() => Control<Button>(form, "btnComprar").PerformClick(),
+                        new DialogoEsperado
+                        {
+                            Titulo = "Seguro de entrada",
+                            Texto = "¿Continuar sin seguro?",
+                            Predeterminado = DialogResult.No,
+                            Respuesta = DialogResult.No
+                        });
+
+                    Assert.AreEqual(5, GestorPaquetes.Instance.DisponiblesDe(evento.Sectores.Single().Id));
+                    Assert.IsTrue(form.Visible);
+                }
+            });
+        }
+
+        // CP-42 — RF-08, RN-19, RN-20, H-05: enlace visible y explicación con umbrales configurados.
+        [TestMethod("CP-42: Explicación de niveles con los umbrales vigentes")]
+        public void CP42_ExplicacionDeLosNiveles()
+        {
+            EnSta(() =>
+            {
+                Evento evento = Fake.EventoPublicado(1000m, 5);
+                Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                int plata = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_PLATA");
+                int oro = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_ORO");
+                using (var form = new Visual.FrmCompraCliente { IDEvento = evento.Id, IDUsuario = cliente.Id })
+                {
+                    Cargar(form);
+                    LinkLabel enlace = Control<LinkLabel>(form, "lnkNiveles");
+                    Assert.IsTrue(enlace.Visible);
+                    Assert.AreEqual("¿Cómo funcionan los niveles?", enlace.Text);
+                    MethodInfo manejador = form.GetType().GetMethod("lnkNiveles_LinkClicked", BindingFlags.Instance | BindingFlags.NonPublic);
+                    Assert.IsNotNull(manejador);
+                    DialogosPrueba.Comprobar(() => manejador.Invoke(form, new object[] { enlace, null }),
+                        new DialogoEsperado
+                        {
+                            Titulo = "¿Cómo funcionan los niveles?",
+                            Texto = $"Plata: de {plata} a {oro - 1} compras"
+                        });
                 }
             });
         }
