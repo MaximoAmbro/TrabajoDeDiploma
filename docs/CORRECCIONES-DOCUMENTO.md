@@ -362,6 +362,12 @@ reproducir el ejemplo exacto.
 
 ## 11b. Páginas 90 a 97 — Informe de pruebas de usabilidad
 
+> ⚠ **Bloqueado hasta volver a medir.** El informe describe la interfaz anterior a T-22 a
+> T-26. Después de que Codex aplique esas correcciones, Claude Code vuelve a medir y
+> actualiza el informe. Recién entonces cambian las cifras de este ítem y de los ítems 3, 4,
+> 18, 19, 20 y 21 que citan el estudio: SUS, éxito, tiempo, satisfacción y hallazgos
+> corregidos de G-06.
+
 **Título de la sección** (y su entrada en el índice): **reemplazar** «Informe de pruebas de
 usabilidad» **por** «Informe de pruebas de usabilidad (simulado)», igual que las minutas
 llevan «(simuladas)».

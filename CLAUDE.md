@@ -206,6 +206,8 @@ reportes se escriben para el otro agente, no solo para JC.
 | `docs/DOCUMENTO-ENTREGABLE.md` | Estado del documento: el PDF es un armado con pypdf, el fuente no está versionado, y plan B |
 | `docs/usabilidad/INFORME-USABILIDAD.md` | Estudio de usabilidad simulado, medido sobre la aplicación real; hallazgos U-01 a U-13 y plan de mejora |
 | `docs/ANEXOS-TECNICOS-T01-T08.md` | Mapa de los anexos técnicos de la Carpeta Modelo: qué existe, qué falta, horas y orden |
+| `docs/COMO-SE-PROBO.md` | Historia completa de las pruebas: manuales, automáticas e inspecciones; quién, cuándo y cómo |
+| `docs/EXCEPCIONES.md` | Diseño del manejo de excepciones y qué caminos de error están probados |
 | `docs/TAREAS-CODEX-PRUEBAS.md` | Encargos para Codex y su estado |
 | `docs/PRUEBAS-PENDIENTES.md` | Pruebas manuales por hacer |
 
@@ -239,7 +241,9 @@ Herramientas en `tools/`: `Proyecto.ps1` (compilar/probar, encuentra MSBuild sol
 (`Generar.ps1` rehace las figuras del instructivo; `VerificarEscala.ps1` comprueba la compra a
 la escala de Windows vigente) y `Usabilidad/` (`Medir.ps1` mide el flujo de compra;
 `VerificarCierreConX.ps1` prueba con UI Automation el cierre con la X sobre el ejecutable;
-`modelo.py` deriva tiempos, satisfacción y SUS por perfil). Las de `CapturasInstructivo/` y
+`modelo.py` deriva tiempos, satisfacción y SUS por perfil) y `Excepciones/`
+(`VerificarErrorNoControlado.ps1` muestra qué ve el usuario ante un error que nadie
+captura). Las de `CapturasInstructivo/` y
 `Medir.ps1` abren la aplicación real contra `BddEventAura_Pruebas` con su propia
 configuración, sin tocar los `App.config`.
 

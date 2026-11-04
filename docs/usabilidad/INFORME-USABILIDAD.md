@@ -1,5 +1,13 @@
 # Informe de pruebas de usabilidad (simulado)
 
+> ⚠ **NO ES DEFINITIVO.** Este informe mide la interfaz **anterior** a las correcciones
+> T-22 a T-26, que JC decidió el 04/11/2026: alta solo de clientes, cierre de sesión, cierre
+> con la X, indicación de la cantidad, y «Comprar» deshabilitado sin entradas. Cuando Codex
+> las aplique, cambian las mediciones: las 18 acciones, los 15 clics, el SUS de 70,0 y el
+> 66,7 % de satisfacción, entre otras. Claude Code vuelve a medir con `tools/Usabilidad/`
+> sobre la aplicación corregida, y recién entonces el informe queda definitivo. Hasta ese
+> momento no se pasa al documento.
+
 EventAura · Trabajo de Campo I · noviembre de 2026. Reemplaza los resultados de las páginas 90
 a 97 del documento, con la misma estructura.
 
