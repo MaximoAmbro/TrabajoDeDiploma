@@ -6,7 +6,9 @@ Moran y Newell, 1980; valores de Kieras, 2001). Los ERRORES, la SATISFACCIÓN y 
 derivan con reglas explícitas a partir de los puntos de fricción medidos. Nada de esto es
 una sesión con personas: es un modelo, y cada número se puede rastrear hasta una regla.
 
-Uso:  python tools/Usabilidad/modelo.py docs/usabilidad/modelo-resultados.md
+Uso:  python tools/Usabilidad/modelo.py <archivo de salida> [antes|despues]
+      «antes»: la interfaz medida antes de T-22 a T-26 (docs/usabilidad/medicion-antes-T22.txt).
+      «despues» (por defecto): la interfaz corregida (docs/usabilidad/medicion.txt).
 """
 
 # Operadores KLM (segundos)
@@ -64,6 +66,34 @@ ASISTENCIA = {"P3": "paso 3: nada indica que la cantidad se escribe en la celda"
               "P6": "paso 3: con el teclado hay que llegar con flechas a la celda Cantidad de Campo, sin indicación"}
 
 
+# Si cerrar con la X deja la aplicación sin ventanas (U-01). Lo cambia la versión.
+CIERRE_X_DEJA_PROCESO = True
+VERSION = "antes"
+
+
+def aplicar_version(v):
+    """Ajusta el modelo a la interfaz medida. Solo cambia lo que la nueva medición cambió."""
+    global ASISTENCIA, CIERRE_X_DEJA_PROCESO, VERSION
+    VERSION = v
+    if v == "antes":
+        return
+    # Después de T-22 a T-26 (medición del 04/11/2026):
+    # - T-25: la columna dice «Cantidad (escribí aquí)», tiene ayuda y el foco arranca en la
+    #   Cantidad de la primera fila con cupo: el paso 3 deja de necesitar asistencia, y con el
+    #   teclado ya no hay que moverse tres columnas (Abajo ×2, «2», Enter = 4 teclas).
+    PASOS[3] = (3, "Elegir sector y cantidad", 40,
+                dict(m=1, k=2, p=1, b=1, h=1, palabras=20), dict(m=1, k=4, palabras=20))
+    ASISTENCIA = {}
+    # - T-26: «Comprar» deshabilitado sin entradas: ya no se llega al aviso «RN-13» (medición S8 y S10).
+    ERRORES["E-A"]["perfiles"] = []
+    # - E-B sigue: el foco arranca en la fila de VIP; quien no mira la columna Sector escribe la
+    #   cantidad ahí en lugar de Campo, y tiene que corregirla.
+    ERRORES["E-B"]["hecho"] = ("el foco arranca en la Cantidad de la primera fila (VIP); quien no lee la columna "
+                               "Sector escribe ahí en lugar de en Campo (medición, recorrido)")
+    # - T-24: cerrar con la X termina la aplicación y la compra pide confirmación (medición S14;
+    #   UI Automation sobre el ejecutable: proceso vivo = False).
+    CIERRE_X_DEJA_PROCESO = False
+
 def tiempo(op, perfil):
     k = op.get("k", 0) * perfil["k"]
     leer = op.get("palabras", 0) / perfil["ppm"] * 60
@@ -80,7 +110,7 @@ def mmss(s):
 
 
 def main():
-    print("# Resultados del modelo (generado por tools/Usabilidad/modelo.py)\n")
+    print(f"# Resultados del modelo — interfaz «{VERSION}» (generado por tools/Usabilidad/modelo.py)\n")
     print("> Estudio de usabilidad **simulado**. Las acciones salen de la medición sobre la aplicación real;")
     print("> los tiempos, errores, satisfacción y SUS se derivan con las reglas del script.\n")
 
@@ -142,7 +172,7 @@ def main():
     crit = ["Claridad de la navegación", "Facilidad para armar el paquete", "Comprensión del resumen y del descuento",
             "Claridad de los mensajes de error", "Confianza en el proceso de pago", "Satisfacción general"]
     reglas = {
-        "Claridad de la navegación": lambda p: 5 - 1 - (p in FRICCIONES["F-1"]["perfiles"]) - (p == "P6") - (p in ("P3", "P6")),
+        "Claridad de la navegación": lambda p: 5 - 1 - (p in FRICCIONES["F-1"]["perfiles"]) - (p == "P6") - (CIERRE_X_DEJA_PROCESO and p in ("P3", "P6")),
         "Facilidad para armar el paquete": lambda p: 5 - (p in ERRORES["E-A"]["perfiles"]) - (p in ERRORES["E-B"]["perfiles"]) - (p in ASISTENCIA),
         "Comprensión del resumen y del descuento": lambda p: 5 - (p in ("P3", "P6")) - (p in ("P2", "P5")),
         "Claridad de los mensajes de error": lambda p: 5 - (p in ERRORES["E-A"]["perfiles"]) - (p in ERRORES["E-C"]["perfiles"]) - (p in ERRORES["E-D"]["perfiles"]),
@@ -199,6 +229,7 @@ def main():
 
 if __name__ == "__main__":
     import io, sys
+    aplicar_version(sys.argv[2] if len(sys.argv) > 2 else "despues")
     if len(sys.argv) > 1:   # escribir directo en UTF-8, sin pasar por la consola
         sys.stdout = io.open(sys.argv[1], "w", encoding="utf-8", newline="\n")
     main()

@@ -1,4 +1,4 @@
-# Resultados del modelo (generado por tools/Usabilidad/modelo.py)
+# Resultados del modelo — interfaz «despues» (generado por tools/Usabilidad/modelo.py)
 
 > Estudio de usabilidad **simulado**. Las acciones salen de la medición sobre la aplicación real;
 > los tiempos, errores, satisfacción y SUS se derivan con las reglas del script.
@@ -24,13 +24,13 @@
 |---|---|---|---|---|---|---|
 | P1 | 21, estudiante universitario, experiencia alta | 1:26 | 1:15 | 0 (—) | — | No |
 | P2 | 34, empleada administrativa, experiencia media | 1:42 | 1:28 | 0 (—) | — | No |
-| P3 | 52, comerciante, sin experiencia en compras en línea | 4:16 | 3:33 | 3 (E-A, E-B, E-C) | — | Sí — paso 3: nada indica que la cantidad se escribe en la celda |
+| P3 | 52, comerciante, sin experiencia en compras en línea | 4:01 | 3:18 | 2 (E-B, E-C) | — | No |
 | P4 | 19, estudiante secundario, experiencia alta, usa más el celular | 1:41 | 1:23 | 0 (—) | F-1 | No |
 | P5 | 45, docente, experiencia media | 2:13 | 1:55 | 1 (E-B) | — | No |
-| P6 | 67, jubilado, baja visión, usa solo teclado y lupa | 4:30 | 3:46 | 2 (E-C, E-D) | F-1, F-2 | Sí — paso 3: con el teclado hay que llegar con flechas a la celda Cantidad de Campo, sin indicación |
-| **Promedio** | | **2:38** | **2:13** | **1.0** | | **4 de 6 sin asistencia** |
+| P6 | 67, jubilado, baja visión, usa solo teclado y lupa | 4:27 | 3:43 | 2 (E-C, E-D) | F-1, F-2 | No |
+| **Promedio** | | **2:35** | **2:10** | **0.8** | | **6 de 6 sin asistencia** |
 
-Promedio sin los perfiles asistidos: 1:45.
+Promedio sin los perfiles asistidos: 2:35.
 
 ## Tiempo por paso y perfil (segundos, incluye errores y fricciones)
 
@@ -39,8 +39,8 @@ Promedio sin los perfiles asistidos: 1:45.
 | 0 | Iniciar sesión | 10 | 14 | 44 | 18 | 18 | 44 | 25 | — |
 | 1 | Buscar el evento | 7 | 8 | 12 | 7 | 9 | 13 | 9 | 45 |
 | 2 | Seleccionar el evento | 4 | 4 | 6 | 4 | 5 | 10 | 6 | 15 |
-| 3 | Elegir sector y cantidad | 8 | 9 | 33 | 9 | 23 | 20 | 17 | 40 |
-| 4 | Agregar servicios | 6 | 7 | 25 | 6 | 8 | 11 | 10 | 60 |
+| 3 | Elegir sector y cantidad | 8 | 9 | 33 | 9 | 23 | 17 | 17 | 40 |
+| 4 | Agregar servicios | 6 | 7 | 10 | 6 | 8 | 11 | 8 | 60 |
 | 5 | Decidir el seguro | 10 | 12 | 17 | 10 | 13 | 48 | 18 | 20 |
 | 6 | Revisar el resumen | 12 | 14 | 21 | 12 | 16 | 28 | 17 | 30 |
 | 7 | Completar el pago | 18 | 23 | 82 | 24 | 29 | 75 | 42 | 60 |
@@ -52,15 +52,15 @@ Regla: se parte de 5 y se resta 1 por cada fricción medida que el perfil encuen
 
 | Criterio | P1 | P2 | P3 | P4 | P5 | P6 | Prom. |
 |---|---|---|---|---|---|---|---|
-| Claridad de la navegación | 4 | 4 | 3 | 3 | 4 | 1 | 3.2 |
-| Facilidad para armar el paquete | 5 | 5 | 2 | 5 | 4 | 4 | 4.2 |
+| Claridad de la navegación | 4 | 4 | 4 | 3 | 4 | 2 | 3.5 |
+| Facilidad para armar el paquete | 5 | 5 | 4 | 5 | 4 | 5 | 4.7 |
 | Comprensión del resumen y del descuento | 5 | 4 | 4 | 5 | 4 | 4 | 4.3 |
-| Claridad de los mensajes de error | 5 | 5 | 3 | 5 | 5 | 3 | 4.3 |
+| Claridad de los mensajes de error | 5 | 5 | 4 | 5 | 5 | 3 | 4.5 |
 | Confianza en el proceso de pago | 5 | 5 | 4 | 5 | 5 | 4 | 4.7 |
-| Satisfacción general | 5 | 5 | 2 | 5 | 4 | 2 | 3.8 |
-| **Promedio global** | | | | | | | **4.08** |
+| Satisfacción general | 5 | 5 | 4 | 5 | 4 | 4 | 4.5 |
+| **Promedio global** | | | | | | | **4.36** |
 
-Perfiles con satisfacción general buena o muy buena (4 o 5): 4 de 6 (67 %).
+Perfiles con satisfacción general buena o muy buena (4 o 5): 6 de 6 (100 %).
 
 ## System Usability Scale — derivado
 
@@ -70,8 +70,8 @@ Reglas de las respuestas (1 a 5) en el informe, sección «System Usability Scal
 |---|---|---|---|
 | P1 | 4 1 5 1 5 2 5 2 5 1 | 92.5 | A |
 | P2 | 4 1 5 1 5 2 4 2 5 2 | 87.5 | B |
-| P3 | 2 4 2 4 2 3 2 3 4 4 | 35.0 | F |
+| P3 | 4 2 4 2 4 2 2 2 4 4 | 65.0 | D |
 | P4 | 4 1 5 1 5 3 5 3 5 1 | 87.5 | B |
 | P5 | 4 2 4 2 4 2 4 2 5 2 | 77.5 | C |
-| P6 | 2 2 2 4 4 3 2 5 4 4 | 40.0 | F |
-| **Promedio** | | **70.0** | |
+| P6 | 4 1 4 2 5 3 2 4 4 4 | 62.5 | D |
+| **Promedio** | | **78.8** | |

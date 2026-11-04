@@ -18,8 +18,7 @@ Saltos de tabulación contra el orden visual: 0
 
 ## Crear cuenta — frmCrearUsuario — título «EventAura · Crear cuenta» — área cliente 315 × 476
 Enter (AcceptButton): ninguno | Esc (CancelButton): ninguno | control con foco al abrir: TxtPassword
-Controles visibles: 15 | campos de texto: 5 | botones: 1 | casillas: 1 | enlaces (Label/LinkLabel con Click): 1
-  · ComboBox cbTipoUsuario «Cliente» en (49,339)
+Controles visibles: 14 | campos de texto: 5 | botones: 1 | casillas: 1 | enlaces (Label/LinkLabel con Click): 1
   · TextBox txtApellido «» en (73,143)
   · Button btnregistrarse «Registrarse» en (73,386)
   · Label lblyatengocuen «Ya tengo cuenta» en (106,437) [sin tabulación]
@@ -28,8 +27,8 @@ Controles visibles: 15 | campos de texto: 5 | botones: 1 | casillas: 1 | enlaces
   · TextBox TxtConfirmpassword «» en (73,306)
   · TextBox TxtPassword «» en (73,251)
   · TextBox txtNombre «» en (73,93)
-Orden de tabulación real (8): TxtPassword → TxtConfirmpassword → checkbxShowPass → txtmail → btnregistrarse → txtNombre → txtApellido → cbTipoUsuario
-Orden de lectura visual:            txtNombre → txtApellido → txtmail → TxtPassword → TxtConfirmpassword → cbTipoUsuario → checkbxShowPass → btnregistrarse
+Orden de tabulación real (7): TxtPassword → TxtConfirmpassword → checkbxShowPass → txtmail → btnregistrarse → txtNombre → txtApellido
+Orden de lectura visual:            txtNombre → txtApellido → txtmail → TxtPassword → TxtConfirmpassword → checkbxShowPass → btnregistrarse
   SALTO HACIA ATRÁS: checkbxShowPass (189,339) → txtmail (73,197)
   SALTO HACIA ATRÁS: btnregistrarse (73,386) → txtNombre (73,93)
 Saltos de tabulación contra el orden visual: 2
@@ -68,21 +67,22 @@ Saltos de tabulación contra el orden visual: 1
   campo txtBuscar: rótulo más cercano «Eventos» a 6 px | texto guía «Evento o dirección del local»
 
 ## Armar paquete — FrmCompraCliente — título «EventAura · Armar paquete» — área cliente 880 × 544
-Enter (AcceptButton): ninguno | Esc (CancelButton): ninguno | control con foco al abrir: dgvSectores
-Controles visibles: 16 | campos de texto: 0 | botones: 2 | casillas: 5 | enlaces (Label/LinkLabel con Click): 1
-  · CheckBox chkSeguro «Seguro de entrada (devolución hasta 48 h antes)» en (16,414)
+Enter (AcceptButton): ninguno | Esc (CancelButton): ninguno | control con foco al abrir: 
+Controles visibles: 18 | campos de texto: 1 | botones: 2 | casillas: 5 | enlaces (Label/LinkLabel con Click): 1
+  · CheckBox chkSeguro «Seguro de entrada (devolución hasta 48 h antes)» [deshabilitado] en (16,414)
   · CheckBox chkVIP «VIP $ 80.000» en (16,382)
   · CheckBox chkMerch «Merchandising $ 18.000» en (16,354)
   · CheckBox chkTraslado «Traslado $ 12.000» en (16,327)
   · CheckBox chkHospedaje «Hospedaje $ 45.000» en (16,300)
   · DataGridView dgvSectores «» en (16,116)
+  · DataGridViewTextBoxEditingControl  «0» en (344,143) [sin tabulación]
   · LinkLabel lnkNiveles «¿Cómo funcionan los niveles?» en (207,90)
   · Button btnVolver «Volver al listado» en (16,509)
-  · Button btnComprar «Comprar» en (686,505)
-Orden de tabulación real (8): dgvSectores → chkHospedaje → chkTraslado → chkMerch → chkVIP → chkSeguro → btnComprar → btnVolver
-Orden de lectura visual:            dgvSectores → chkHospedaje → chkTraslado → chkMerch → chkVIP → chkSeguro → btnVolver → btnComprar
-  SALTO HACIA ATRÁS: btnComprar (686,505) → btnVolver (16,509)
-Saltos de tabulación contra el orden visual: 1
+  · Button btnComprar «Comprar» [deshabilitado] en (686,505)
+Orden de tabulación real (6): dgvSectores → chkHospedaje → chkTraslado → chkMerch → chkVIP → btnVolver
+Orden de lectura visual:            dgvSectores → chkHospedaje → chkTraslado → chkMerch → chkVIP → btnVolver
+Saltos de tabulación contra el orden visual: 0
+  campo : rótulo más cercano «RESUMEN DEL PAQUETE    Entradas (0)    (ninguna)  Base entra…» a 23 px
 
 ## Pago seguro — frmPago — título «Pago seguro» — área cliente 365 × 390
 Enter (AcceptButton): btnPagar | Esc (CancelButton): ninguno | control con foco al abrir: txtTitular
@@ -107,13 +107,13 @@ Enter en la contraseña inicia sesión: NO — hay que hacer clic en «Iniciar s
 Menú del cliente: «Paula»; opciones: Mi suscripción, Mis eventos, Eventos disponibles
 Listado al abrir: 2 eventos; fila seleccionada por defecto: «(ninguna)»
 Pantalla que abre «Comprar» del listado: «EventAura · Armar paquete»
-Celda activa al abrir la compra: Sector de «3»; columnas editables: Cantidad
+Celda activa al abrir la compra: Cantidad de «3»; columnas editables: Cantidad (escribí aquí)
 Resumen tras elegir: RESUMEN DEL PAQUETE /  / Entradas (2) /   2 x Campo                $ 50.000,00 / Base entradas              $ 50.000,00 / Desc. Plata 5,0 %          -$ 2.500,00 / Subtotal entradas          $ 47.500,00 /  / Servicios (sin descuento) /   Hotel Ríos 1 noche       $ 45.000,00 / Subtotal servicios         $ 45.000,00 /  / Cargo por servicio          $ 7.125,00 / Seguro: no /  / TOTAL                  …
 Pago: foco al abrir en «txtTitular»; temporizador «Reserva: 09:59»
-Confirmación: «Pedido EA-000071»; foco en «btnAceptar»
+Confirmación: «Pedido EA-000070»; foco en «btnAceptar»
 Diálogos durante la tarea:
   «Seguro de entrada» | No agregaste el seguro de entrada. Solo se puede contratar ahora: después de pagar no se puede incorporar. ⏎  ⏎ ¿Continuar sin seguro? | botones: Sí#6, No#7 | por defecto: No#7
-RESULTADO: tarea completa = True | Pedido EA-000071
+RESULTADO: tarea completa = True | Pedido EA-000070
 ACCIONES: clics 15 | campos completados 7 | caracteres tipeados 65 | teclas especiales 2
 PANTALLAS distintas: 7 → Iniciar sesión → Mi cuenta (menú) → Eventos disponibles → Armar paquete → Pago seguro → Compra confirmada → Diálogo «Seguro de entrada»
 Secuencia de acciones:
@@ -135,10 +135,10 @@ Secuencia de acciones:
   16. tecla: Enter para pagar (AcceptButton)
   17. clic: Aceptar (confirmación)
   18. clic: Sí, continuar sin seguro (diálogo)
-Duración de la ejecución automatizada (sin tiempos humanos): 7,4 s
+Duración de la ejecución automatizada (sin tiempos humanos): 7,5 s
 Después de «Aceptar»: ventanas visibles = EventAura · Armar paquete; resumen ahora: RESUMEN DEL PAQUETE /  / Entradas (0) /   (ninguna) / Base entradas                   $ 0,00 / Desc. Plata 5,0 %        …
 Ventanas ocultas acumuladas en memoria: 9 (frmInicio, frmCrearUsuario, frmMenuCliente, frmEventosCliente, FrmCompraCliente, frmPago, frmInicio, frmMenuCliente, frmEventosCliente)
-Tickets de prueba EA-000071 eliminados de la carpeta del usuario.
+Tickets de prueba EA-000070 eliminados de la carpeta del usuario.
 
 # 3. SONDEOS: ERRORES, PÉRDIDAS Y CALLEJONES
 S1 login con todo vacío → «Campo vacíos» | Por favor, ingrese usuario | botones: Aceptar#2 | por defecto: id 1
@@ -148,21 +148,21 @@ S4 casilla para ver la contraseña: «Show Password»; botón «Modificar» visi
 S5 filtros del listado: categoría = ComboBox «Todas»; fecha = DateTimePicker con casilla (desmarcada: True); rótulos de texto en la pantalla: «Eventos»
 S6 «Comprar» con búsqueda sin resultados → «Seleccionar evento» | Debe seleccionar un evento para comprar | botones: Aceptar#2 | por defecto: id 1
 S7 al limpiar, fila seleccionada sin que el usuario elija: «(ninguna)»
-S8 sin entradas: «Comprar» habilitado = True; hospedaje habilitado = True; seguro habilitado = True
+S8 sin entradas: «Comprar» habilitado = False; hospedaje habilitado = True; seguro habilitado = False
 S9 tildar hospedaje sin entradas → (sin diálogo); resumen: RESUMEN DEL PAQUETE /  / Entradas (0) /   (ninguna) / Base entradas                   $ 0,00 / Desc. Plata 5,0 %               $ 0,00 / Subtotal entradas               $ 0,00 /  / Servicios (sin descu…
-S10 «Comprar» con solo un servicio → «RN-13» | El paquete debe tener al menos una entrada: los servicios no se venden solos. | botones: Aceptar#2 | por defecto: id 1
+S10 «Comprar» con solo un servicio → (sin diálogo)
 S11 cantidad 7 (tope 6) → «RN-12» | Se pueden comprar como máximo 6 entradas por operación. | botones: Aceptar#2 | por defecto: id 1; queda 0
 S12 cantidad «dos» → «» | La cantidad debe ser un número entero de 0 en adelante. | botones: Aceptar#2 | por defecto: id 1
 S13 evento agotado: aviso «Entradas agotadas.  Anotate en la lista de espera y te vamos…» visible = True; botón «Anotarme en la lista de espera»
-S14 cerrar «Armar paquete» con la X con un paquete armado → se cierra SIN preguntar; ventanas visibles después: 0; ventanas ocultas que siguen vivas: 12
+S14 cerrar «Armar paquete» con la X con un paquete armado → «Cerrar la compra» | Si cierra la ventana se descarta el paquete que armó. ¿Desea cerrar? | botones: Sí#6, No#7 | por defecto: No#7; ventanas visibles después: 1; ventanas ocultas que siguen vivas: 12
 S15 pago, sin titular → etiqueta «Ingrese el nombre del titular de la tarjeta.» | ¿borró lo tipeado? número «4111111111111111», CVV «»
 S15 pago, número de 12 dígitos → etiqueta «El número de tarjeta debe tener entre 13 y 19 dígitos.» | ¿borró lo tipeado? número «411111111111», CVV «»
 S15 pago, vencimiento 1228 sin barra → etiqueta «El vencimiento debe tener el formato MM/AA.» | ¿borró lo tipeado? número «4111111111111111», CVV «»
 S15 pago, tarjeta vencida 01/20 → etiqueta «La tarjeta está vencida.» | ¿borró lo tipeado? número «4111111111111111», CVV «»
 S15 pago, CVV de 2 dígitos → etiqueta «El código de seguridad debe tener 3 o 4 dígitos.» | ¿borró lo tipeado? número «4111111111111111», CVV «»
 S15 pago, tarjeta rechazada (termina en 0000) → etiqueta «Pago rechazado: Rechazada por el emisor (simulación: tarjeta terminada en 0000). ⏎ Se liberaron las entradas. Puede reintentar antes de que venza la reserva.» | ¿borró lo tipeado? número «», CVV «»
-S16 cupo del sector tras el rechazo: disponibles 1995
+S16 cupo del sector tras el rechazo: disponibles 1997
 S17 «Cancelar pago» → «Cancelar pago» | Si cancela el pago se liberan las entradas reservadas. ¿Desea cancelar? | botones: Sí#6, No#7 | por defecto: Sí#6
-S18 cerrar el pago con la X → se cierra SIN preguntar; disponibles del sector antes 1995 y después 1995
+S18 cerrar el pago con la X → se cierra SIN preguntar; disponibles del sector antes 1997 y después 1997
 
-Ventanas de la aplicación que quedan vivas al final (todas ocultas): 12
+Ventanas de la aplicación que quedan vivas al final (todas ocultas): 13
