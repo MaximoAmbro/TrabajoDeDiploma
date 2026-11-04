@@ -202,7 +202,8 @@ reportes se escriben para el otro agente, no solo para JC.
 | `docs/05-reportes.md` | RPT-01 a RPT-05, PDF de salida y correcciones al anexo A02 |
 | `docs/GUIA-PROMPTS.md` | Orden de construcción, sección por sección |
 | `docs/ESTADO-AGENTES.md` | Turno, tareas, pendientes y bloqueos de cada agente. **Leerlo antes de empezar** |
-| `docs/MATRIZ-TRAZABILIDAD-v2.5.md` | Texto para actualizar la matriz y las reglas en el documento entregable |
+| `docs/CORRECCIONES-DOCUMENTO.md` | **Lista única** de correcciones al documento entregable (reglas, instructivo, A02, matriz, carátula), por página |
+| `docs/DOCUMENTO-ENTREGABLE.md` | Estado del documento: el PDF es un armado con pypdf, el fuente no está versionado, y plan B |
 | `docs/TAREAS-CODEX-PRUEBAS.md` | Encargos para Codex y su estado |
 | `docs/PRUEBAS-PENDIENTES.md` | Pruebas manuales por hacer |
 
@@ -222,8 +223,8 @@ tokenización, confirmación y ticket PDF con QR por entrada, suscripciones con 
 seguro sin cargo, devolución por entrada, historial de compras, lista de espera, y los
 cinco reportes con exportación a PDF.
 
-Pruebas: el proyecto `Pruebas/` corre los casos CP-01 a CP-42 (`docs/04-casos-prueba.md`):
-48 ejecuciones, 47 correctas y CP-34 omitida hasta que se corrija su preparación (T-19).
+Pruebas: el proyecto `Pruebas/` corre los casos CP-01 a CP-43 (`docs/04-casos-prueba.md`):
+49 ejecuciones, todas correctas.
 Los de `PruebasInterfaz.cs` abren formularios reales y responden sus MessageBox. Son de integración contra
 `BddEventAura_Pruebas`, que se recrea en cada corrida (ver `docs/04-casos-prueba.md`). Se
 corren con la tarea «Probar» de VS Code, que llama a `tools/Proyecto.ps1`; `dotnet test` no
@@ -231,17 +232,23 @@ sirve porque no compila los `.resx` de `Visual`. Las pruebas de interfaz necesit
 de escritorio abierta y guardan capturas en `TestResults/` (ignorada por git).
 
 Herramientas en `tools/`: `Proyecto.ps1` (compilar/probar, encuentra MSBuild solo),
-`AuditarBaseJc.sql` (compara la base de desarrollo con la de pruebas) y
-`VerificarQrTickets.py` (decodifica los QR de los tickets PDF).
+`AuditarBaseJc.sql` (compara la base de desarrollo con la de pruebas),
+`VerificarQrTickets.py` (decodifica los QR de los tickets PDF) y `CapturasInstructivo/`
+(`Generar.ps1` rehace las figuras del instructivo; `VerificarEscala.ps1` comprueba la compra a
+la escala de Windows vigente). Las dos últimas abren la aplicación real contra
+`BddEventAura_Pruebas` con su propia configuración, sin tocar los `App.config`.
 
 Sin construir: **RF-09, recomendaciones personalizadas** (Could, 8 puntos; nunca entró en
 ninguna sección).
 
-Pendiente que no es código: las 4 capturas del instructivo (PDF, páginas 52 y 53), las 5
-sesiones reales de usabilidad, el historial de revisión con las fechas reales, la
-regeneración de las páginas del anexo A02 con las correcciones de `docs/05-reportes.md`, y
-cerrar las pruebas manuales que siguen abiertas en `docs/PRUEBAS-PENDIENTES.md` (la parte de
-JC se corrió el 03/11/2026: ver `docs/RESULTADOS-PRUEBAS-JC.md`).
+Pendiente que no es código:
+- aplicar `docs/CORRECCIONES-DOCUMENTO.md` al documento entregable, bloqueado hasta tener su
+  fuente (ver `docs/DOCUMENTO-ENTREGABLE.md`);
+- las 5 sesiones reales de usabilidad;
+- cerrar las pruebas manuales abiertas de `docs/PRUEBAS-PENDIENTES.md`.
+
+Las 4 capturas del instructivo ya están en `docs/capturas/instructivo/`; se regeneran
+después de alinear la semilla (T-21).
 
 ---
 
