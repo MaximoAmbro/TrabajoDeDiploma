@@ -492,3 +492,206 @@ recrearla borra los datos de las pruebas manuales y lo decide JC.
 - comprueba que la figura 2 diga «Duki en Rosario» y la figura 3 dé $99.625.
 
 Reporte de Codex: `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-T21.md`.
+
+**Estado al 04/11/2026:** T-21 terminada (commit `7907fc6`). 49 de 49.
+
+---
+
+# Cuarta tanda — T-22 a T-26: seguridad, sesión, cierre y armado del paquete
+
+Decididas por JC el 04/11/2026, **en este orden de prioridad**. Valen las reglas 1 a 8 de la
+primera tanda, con una excepción explícita de JC: **T-22 puede modificar
+`Visual/_Inicio/frmCrearUsuario.Designer.cs`**, y el cambio se declara en el reporte. Base: el
+commit que deje JC después de esta revisión.
+
+**Origen:**
+- T-22 y T-23 son hallazgos de seguridad: el alta como «Propietario» y la falta de logout, de
+  `docs/ANEXOS-TECNICOS-T01-T08.md`.
+- T-24 a T-26 son U-01, U-04 y U-05 de `docs/usabilidad/INFORME-USABILIDAD.md`.
+
+**Batería esperada al terminar: 60 ejecuciones**, todas correctas: las 49 actuales más 11
+nuevas. Los IDs nuevos son CP-44 a CP-50.
+
+## T-22. El alta pública crea solo clientes (prioridad 1)
+
+**Problema.** `frmCrearUsuario` pasa a `GestorUsuarios.Registrar` el texto del combo
+`cbTipoUsuario`, que ofrece «Cliente» y «Propietario». Cualquiera puede registrarse sola como
+administrador y entrar a la gestión de eventos y a los reportes: RN-34 solo verifica ese
+perfil. Además, el combo no es de solo lectura (`DropDownStyle` por defecto): aunque se quite
+el ítem, se puede **escribir** «Propietario» a mano. Por eso el arreglo va en las dos capas.
+
+1. **`Repo/GestorUsuarios.cs`.** Agregar, junto a `Registrar`:
+   ```csharp
+   // Alta pública: solo clientes. El perfil Propietario no se autoasigna (RN-05, RN-34).
+   public void RegistrarCliente(string mail, string pwd, string nombre, string apellido)
+   {
+       Registrar(mail, pwd, nombre, apellido, TipoCliente);
+   }
+   ```
+   `Registrar` queda como está: la usa la semilla y la usaría un alta hecha por un
+   administrador (T04).
+2. **`Visual/_Inicio/frmCrearUsuario.cs`, línea 51.** Llamar a
+   `GestorUsuarios.Instance.RegistrarCliente(txtmail.Text, TxtPassword.Text, txtNombre.Text,
+   txtApellido.Text)`. No queda ninguna referencia a `cbTipoUsuario`.
+3. **`Visual/_Inicio/frmCrearUsuario.Designer.cs`.** Eliminar el control `cbTipoUsuario`
+   completo: la declaración, el `new`, el bloque de propiedades y el `Controls.Add`. No se
+   reposiciona ni se redimensiona ningún otro control.
+4. **CP-44 en `PruebasInterfaz.cs`** (RF-01; RN-05):
+   - en `frmCrearUsuario` no hay ningún `ComboBox` ni ningún control llamado `cbTipoUsuario`;
+   - completar nombre, apellido, `Fake.MailNuevo()` y «Cliente123» en las dos contraseñas;
+   - pulsar «Registrarse» y responder el aviso de éxito con `DialogosPrueba` (texto que
+     contiene «Usuario creado»);
+   - `RepositorioUsuarios.Instance.ObtenerPorMail(mail).TipoUsuario == "Cliente"`.
+5. **CP-45 en `PruebasCuentas.cs`** (RF-01; RN-05): `RegistrarCliente` con `Fake.MailNuevo()`
+   crea un usuario con `TipoUsuario == "Cliente"` y nivel Bronce.
+
+## T-23. «Volver al inicio» cierra la sesión (prioridad 2)
+
+**Problema.** Ninguna pantalla llama a `GestorSesion.Instance.Cerrar()`. «Volver al inicio»
+muestra el login, pero la sesión anterior sigue abierta.
+
+1. **`Visual/Cliente/frmMenuCliente.cs`, `lblvolver_Click`** y
+   **`Visual/Propietario/frmMenuPropietario.cs`, `lblvolver_Click`:** la primera línea del
+   método es `GestorSesion.Instance.Cerrar();`. El resto no cambia.
+2. **CP-46 en `PruebasInterfaz.cs`** (RF-02), `[DataTestMethod]` con dos filas:
+   - **«cliente»:** iniciar sesión con `GestorSesion.Instance.Iniciar` usando un
+     `Fake.Cliente(Bronce)` y abrir `frmMenuCliente`;
+   - **«administrador»:** lo mismo con `Fake.Administrador()` y `frmMenuPropietario`;
+   - en las dos filas, invocar `lblvolver_Click` por reflexión. Después,
+     `GestorSesion.Instance.HaySesion == false` y hay un `frmInicio` visible.
+
+## T-24. Cerrar con la X no deja la aplicación corriendo (prioridad 3)
+
+**Problema, medido sobre el ejecutable con UI Automation.** Todas las pantallas navegan con
+`Hide()`, y la principal (`frmInicio`) queda oculta. Si el usuario cierra una pantalla con la
+X, el proceso sigue vivo sin ninguna ventana. Además, en «Armar paquete» la X descarta el
+paquete sin preguntar, aunque «Volver al listado» sí pregunta.
+
+1. **Archivo nuevo `Visual/FormularioEventAura.cs`:**
+   ```csharp
+   // Base de los formularios de EventAura. Si el usuario cierra la última ventana visible,
+   // termina la aplicación: antes quedaba un proceso sin ventanas (hallazgo U-01).
+   public class FormularioEventAura : Form
+   {
+       public static bool DebeTerminarAplicacion(Form cerrado, CloseReason motivo, IEnumerable<Form> abiertos)
+       {
+           return motivo == CloseReason.UserClosing &&
+                  !abiertos.Any(f => f != cerrado && !f.IsDisposed && f.Visible);
+       }
+
+       protected override void OnFormClosed(FormClosedEventArgs e)
+       {
+           base.OnFormClosed(e);
+           // Application.MessageLoop es false en las pruebas: ahí nunca se termina el proceso.
+           if (Application.MessageLoop &&
+               DebeTerminarAplicacion(this, e.CloseReason, Application.OpenForms.Cast<Form>().ToList()))
+           {
+               Application.Exit();
+           }
+       }
+   }
+   ```
+   Es pública para que la pruebe `Pruebas/`. Con los `using` que correspondan.
+2. **En las 19 clases de formulario de `Visual/`** (los `.cs`, no los `.Designer.cs`), cambiar
+   `public partial class X : Form` por `public partial class X : FormularioEventAura`. Son:
+   - en `_Inicio/`: frmInicio, frmCrearUsuario, frmCambiarContraseña;
+   - en `Cliente/`: frmMenuCliente, frmEventosCliente, FrmCompraCliente, frmPago,
+     frmConfirmacion, frmHistorialCliente, frmSuscripcion;
+   - en `Propietario/`: frmMenuPropietario, frmMisLocales, frmRegistrarLocal, frmEventosLocal,
+     frmAgregarEvento, frmAgregarSector, frmAdministrarEvento, frmListasEspera, frmReportes.
+
+   Ojo: `frmAgregarSector` está declarada sin espacio antes de los dos puntos
+   (`frmAgregarSector: Form`). Si la cuenta no da 19, se informa la diferencia en el reporte.
+3. **`Visual/Cliente/FrmCompraCliente.cs`.** Sobrescribir `OnFormClosing`:
+   - si `e.CloseReason == CloseReason.UserClosing && !PaqueteVacio()`, mostrar
+     `MessageBox.Show("Si cierra la ventana se descarta el paquete que armó. ¿Desea cerrar?",
+     "Cerrar la compra", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+     MessageBoxDefaultButton.Button2)`;
+   - si la respuesta no es `Yes`, `e.Cancel = true`;
+   - después, `base.OnFormClosing(e)`.
+
+   «Volver al listado» usa `Hide()` y no pasa por acá. Con el paquete vacío no pregunta.
+4. **CP-47 en `PruebasInterfaz.cs`** (RNF-02), `[DataTestMethod]` con cuatro filas sobre
+   `DebeTerminarAplicacion`, con formularios creados sin mostrar o mostrados según el caso:
+
+   | Fila | Motivo | Otras ventanas | Resultado esperado |
+   |---|---|---|---|
+   | 1 | `UserClosing` | otra visible | `false` |
+   | 2 | `UserClosing` | ninguna otra | `true` |
+   | 3 | `UserClosing` | solo ocultas | `true` |
+   | 4 | `ApplicationExitCall` | ninguna otra | `false` |
+
+5. **CP-48 en `PruebasInterfaz.cs`** (RF-05):
+   - en `FrmCompraCliente` del evento 1, con `"Cantidad" = 2` en Campo, `form.Close()` muestra
+     «Cerrar la compra» con «No» por defecto; respondiendo «No», el formulario sigue visible y
+     la cantidad sigue en 2;
+   - otro `form.Close()`, respondiendo «Sí»: el formulario ya no está visible;
+   - en un `FrmCompraCliente` nuevo, sin entradas, `Close()` no muestra ningún diálogo.
+
+**Verificación sobre el ejecutable, la hace Claude Code después:**
+`tools/Usabilidad/VerificarCierreConX.ps1` tiene que informar «proceso vivo = False».
+
+## T-25. Indicar dónde se escribe la cantidad (prioridad 4)
+
+**Problema, medido.** La cantidad se escribe en una celda de la grilla sin ninguna
+indicación, y al abrir la pantalla la celda activa es «Sector» de la primera fila.
+
+Todo en **`Visual/Cliente/FrmCompraCliente.cs`, método `CargarSectores`**. No se toca el
+Designer.
+
+1. La columna sigue llamándose `"Cantidad"`, porque las pruebas la usan por nombre. Su
+   encabezado visible pasa a `"Cantidad (escribí aquí)"`.
+2. Cada celda de Cantidad tiene `ToolTipText = $"Escribí cuántas entradas querés de este
+   sector (hasta {max} por compra)."`, con `max` leído de `COMPRA_ENTRADAS_MAX`.
+3. Al terminar de cargar, `dgvSectores.CurrentCell` es la celda Cantidad de la **primera
+   fila con `Disponibles` > 0**. Si no hay ninguna (evento agotado), no se cambia.
+4. **CP-49 en `PruebasInterfaz.cs`** (RF-04; H-03): al abrir `FrmCompraCliente` del evento 1,
+   - `CurrentCell.OwningColumn.Name == "Cantidad"`;
+   - el `"Disponibles"` de esa fila es mayor que 0;
+   - el encabezado de la columna contiene «escribí»;
+   - el `ToolTipText` de la celda contiene el valor de `COMPRA_ENTRADAS_MAX`.
+
+## T-26. «Comprar» y el seguro deshabilitados sin entradas (prioridad 5)
+
+**Problema, medido.** «Comprar» y el seguro están habilitados sin ninguna entrada, aunque la
+página 51 del documento dice que «Comprar» «permanece deshabilitado mientras no haya al menos
+una entrada» y que el seguro «se habilita sólo cuando hay al menos una entrada». Los
+servicios **no** cambian: la página 51 solo los deshabilita si el evento no los ofrece, y RN-13
+ya se valida al comprar.
+
+Todo en **`Visual/Cliente/FrmCompraCliente.cs`**:
+
+1. Un campo `private bool agotado;`. `MostrarSiAgotado` asigna el campo en lugar de declarar
+   una variable local con el mismo nombre.
+2. Un método `private void ActualizarHabilitados()`:
+   - `bool hayEntradas = GestorPaquetes.Instance.CantidadEntradas(paquete) > 0;`
+   - `btnComprar.Enabled = hayEntradas && !agotado;`
+   - `chkSeguro.Enabled = hayEntradas && !agotado;`
+   - si `chkSeguro` queda deshabilitado y estaba tildado, se destilda.
+3. Llamarlo al final de `ActualizarResumen()` y al final de `MostrarSiAgotado()`. En
+   `MostrarSiAgotado` se quitan las asignaciones directas a `btnComprar.Enabled` y
+   `chkSeguro.Enabled`, que pasan a este método.
+4. **CP-50 en `PruebasInterfaz.cs`** (RF-05; RN-13, RN-28), sobre el evento 1:
+   - al abrir, `btnComprar` y `chkSeguro` están deshabilitados;
+   - con `"Cantidad" = 1` en Campo, los dos se habilitan;
+   - con `"Cantidad" = 0`, se vuelven a deshabilitar.
+5. **Ajuste autorizado de CP-24** (`PruebasInterfaz.cs`, línea 319). Hoy afirma que «Comprar»
+   queda habilitado apenas se libera el cupo, sin entradas elegidas. Con T-26 eso cambia por
+   decisión de JC. Se reemplaza esa aserción por esta secuencia:
+   - `btnComprar` **deshabilitado** con la grilla visible;
+   - poner `"Cantidad" = 1` en el sector;
+   - `btnComprar` **habilitado**.
+
+   Es la única aserción existente que se modifica en esta tanda.
+
+## Criterio de terminado de la cuarta tanda
+
+- **Batería:** 60 ejecuciones, todas correctas: 49 más CP-44, CP-45, CP-46 (2 filas), CP-47
+  (4 filas), CP-48, CP-49 y CP-50. Sin advertencias nuevas de compilación.
+- **Reporte:** `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-T22-T26.md`, con los archivos tocados,
+  el cambio de Designer declarado (T-22), la cantidad de formularios (19 esperados) que pasaron a
+  `FormularioEventAura` y cualquier hallazgo.
+- **Lo que sigue lo hace Claude Code.** El estudio de usabilidad describe la interfaz
+  **anterior** a esta tanda. Después, Claude Code vuelve a medir con `tools/Usabilidad/` y
+  actualiza el informe y la lista de correcciones del documento. Hasta entonces, el informe no
+  es definitivo.
