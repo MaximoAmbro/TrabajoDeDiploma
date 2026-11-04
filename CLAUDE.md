@@ -23,6 +23,7 @@ La documentación completa está en `Documentacion/EventAura_v2.pdf` (112 págin
 
 ---
 
+<!-- compartido:arquitectura (igual en AGENTS.md; verificar con tools/VerificarReglasAgentes.ps1) -->
 ## Arquitectura — 4 capas, obligatorio
 
 ```
@@ -46,6 +47,7 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
   (seguir el estilo ya existente en `Repo/GestorClientes.cs`).
 - **Composite** para el árbol de permisos (anexo T04, futuro).
 - **Observer** para el cambio de idioma (anexo T05, futuro).
+<!-- /compartido -->
 
 ---
 
@@ -72,6 +74,7 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
 
 ---
 
+<!-- compartido:convenciones -->
 ## Convenciones de código
 
 - Nombres en **español**, igual que el dominio: `GestorEventos`, `RepositorioCompras`.
@@ -102,6 +105,64 @@ Visual  (WinForms)     →  Negocio  (Gestores)  →  Datos  (Repositorios)  →
   Nota heredada: 11 formularios declaran `AutoScaleDimensions` 120F y 8 declaran 144F, porque
   se diseñaron en dos máquinas con escalados distintos. No unificarlo sin rehacer la
   verificación visual de los 19.
+<!-- /compartido -->
+
+---
+
+<!-- compartido:convivencia -->
+## Reglas de convivencia entre agentes
+
+En este repositorio trabajan dos agentes, **Claude Code** y **Codex**, siempre a pedido de
+JC (Juan Cruz Riggio). El repositorio es compartido con Máximo Ambrosino: lo que se publica
+le llega a él.
+
+### Reparto de carpetas
+
+| Agente | Puede modificar |
+|---|---|
+| Codex | `Visual/`, `Repo/`, `Datos/`, `Pruebas/` |
+| Claude Code | `docs/`, `tools/`, `CLAUDE.md`, `AGENTS.md` |
+
+- Fuera de su zona, un agente **solo lee**. Si la tarea necesita un cambio en la zona del
+  otro, no lo hace: lo describe en su reporte final.
+- Lo que no figura en la tabla (`Entidade/`, `BaseDatos/`, `.vscode/`, `.gitignore`,
+  `README.md`, `SistemaEntradas.sln`, `Documentacion/`) no se toca sin que JC lo autorice
+  de forma explícita en esa sesión.
+- Las pruebas manuales que surjan del trabajo de Codex van en su reporte final, con qué
+  probar y qué resultado se espera. Claude Code las pasa a `docs/PRUEBAS-PENDIENTES.md`.
+
+### Un agente por vez
+
+- **Nunca trabajan los dos agentes al mismo tiempo.**
+- Al empezar, el agente corre `git status`. Si hay cambios sin commitear que no son de su
+  sesión, se detiene y avisa a JC antes de modificar nada.
+
+### Commits y publicación
+
+- **Ningún agente commitea sin que JC haya revisado `git status`** y lo haya autorizado en
+  esa sesión.
+- Commits por tema (interfaz, pruebas, herramientas, documentación), nunca uno gigante.
+- **Ningún agente hace `git push`**, `push --force` ni abre pull requests. Publicar lo decide
+  y lo hace JC, de acuerdo con Máximo.
+
+### Configuración local: los `App.config` nunca se publican
+
+- `Visual/App.config` y `Pruebas/App.config` guardan la cadena de conexión de cada máquina.
+  En la PC de JC apuntan a `.\SQLEXPRESS`; en el repositorio, a la instancia de Máximo. Si
+  se publica la de JC, la aplicación de Máximo deja de conectarse.
+- En la PC de JC los dos están marcados con `git update-index --skip-worktree`: `git status`
+  no los muestra y `git add -A` no los incluye. Para comprobarlo:
+  `git ls-files -v Visual/App.config Pruebas/App.config` (la `S` inicial indica que siguen
+  protegidos).
+- La marca se revierte **solo** en dos casos: (a) un `git pull` trae cambios a esos archivos
+  y git avisa que se sobrescribirían; (b) hay que cambiar a propósito algo compartido en
+  ellos, por ejemplo un `bindingRedirect`. Procedimiento, que hace JC y no un agente:
+  1. `git update-index --no-skip-worktree Visual/App.config Pruebas/App.config`
+  2. `git stash push -- Visual/App.config Pruebas/App.config` (guarda la cadena local)
+  3. `git pull`, o hacer el cambio compartido y commitearlo con la cadena de Máximo
+  4. `git stash pop` y, si hay conflicto, conservar `.\SQLEXPRESS`
+  5. `git update-index --skip-worktree Visual/App.config Pruebas/App.config`
+<!-- /compartido -->
 
 ---
 
@@ -133,9 +194,16 @@ seguro sin cargo, devolución por entrada, historial de compras, lista de espera
 cinco reportes con exportación a PDF.
 
 Pruebas: el proyecto `Pruebas/` corre CP-01 a CP-10, la verificación de referencia de
-$99.625 y RNF-03. Son de integración contra `BddEventAura_Pruebas`, que se recrea en cada
-corrida (ver `docs/04-casos-prueba.md`). Se corren con la tarea «Probar» de VS Code; `dotnet
-test` no sirve porque no compila los `.resx` de `Visual`.
+$99.625, RNF-03 y 19 pruebas de interfaz (`PruebasInterfaz.cs`) que abren formularios
+reales y responden sus MessageBox (31 en total). Son de integración contra
+`BddEventAura_Pruebas`, que se recrea en cada corrida (ver `docs/04-casos-prueba.md`). Se
+corren con la tarea «Probar» de VS Code, que llama a `tools/Proyecto.ps1`; `dotnet test` no
+sirve porque no compila los `.resx` de `Visual`. Las pruebas de interfaz necesitan una sesión
+de escritorio abierta y guardan capturas en `TestResults/` (ignorada por git).
+
+Herramientas en `tools/`: `Proyecto.ps1` (compilar/probar, encuentra MSBuild solo),
+`AuditarBaseJc.sql` (compara la base de desarrollo con la de pruebas) y
+`VerificarQrTickets.py` (decodifica los QR de los tickets PDF).
 
 Sin construir: **RF-09, recomendaciones personalizadas** (Could, 8 puntos; nunca entró en
 ninguna sección).
@@ -143,10 +211,12 @@ ninguna sección).
 Pendiente que no es código: las 4 capturas del instructivo (PDF, páginas 52 y 53), las 5
 sesiones reales de usabilidad, el historial de revisión con las fechas reales, la
 regeneración de las páginas del anexo A02 con las correcciones de `docs/05-reportes.md`, y
-correr las pruebas manuales acumuladas en `docs/PRUEBAS-PENDIENTES.md`.
+cerrar las pruebas manuales que siguen abiertas en `docs/PRUEBAS-PENDIENTES.md` (la parte de
+JC se corrió el 03/11/2026: ver `docs/RESULTADOS-PRUEBAS-JC.md`).
 
 ---
 
+<!-- compartido:terminado -->
 ## Definición de terminado
 
 Una tarea está completa cuando:
@@ -154,10 +224,12 @@ Una tarea está completa cuando:
 1. La solución compila sin errores ni advertencias nuevas.
 2. No hay SQL fuera de `Datos/`.
 3. Las reglas de negocio citadas en la tarea están implementadas y son verificables.
-4. Los casos de prueba asociados pasan.
-5. **Las pruebas de interfaz que no pudiste ejecutar quedaron anotadas** en
-   `docs/PRUEBAS-PENDIENTES.md`, con qué probar, qué resultado se espera y el commit
-   que las introduce. Agregá tu sección al final del archivo antes de commitear.
+4. Los casos de prueba asociados pasan (tarea «Probar» o `tools/Proyecto.ps1 -Accion Probar`).
+5. **Las pruebas de interfaz que no pudiste ejecutar quedaron anotadas**, con qué probar y
+   qué resultado se espera: Claude Code las escribe al final de `docs/PRUEBAS-PENDIENTES.md`;
+   Codex las lista en su reporte final para que se transcriban.
+6. El reporte final declara todo cambio en un `.Designer.cs` y lista los archivos tocados,
+   para que JC revise `git status` antes de autorizar el commit.
 
-> Las pruebas manuales de interfaz están diferidas hasta terminar las 10 secciones.
-> No las des por verificadas ni las omitas: anotalas.
+> No des por verificada una prueba manual que no corriste ni la omitas: anotala.
+<!-- /compartido -->
