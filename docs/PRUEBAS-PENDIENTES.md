@@ -536,3 +536,28 @@ negro, así que fuera de los 4 módulos blancos de silencio la página es oscura
 norma, pero no deja margen. Si alguna cámara tarda en enfocar, la mejora sería un margen
 blanco de 2 módulos más alrededor del QR. No la abro como tarea: la decide JC si el escaneo
 real falla.
+
+## Estado al 04/11/2026, después de T-21 (semilla alineada con el documento)
+
+| ID | Estado | Qué queda |
+|---|---|---|
+| JC-R01 | **Abierta, con alcance reducido por decisión de JC.** No se activa la compatibilidad con DPI: queda como limitación conocida de RNF-03, ítem 4b de `CORRECCIONES-DOCUMENTO.md`. A 100 % real está verificada | JC confirma a mano que a 125 % y 150 % la compra se ve completa y se puede operar, aunque el texto se vea menos nítido. Puede usar `tools/CapturasInstructivo/VerificarEscala.ps1` (pasos más arriba) |
+| JC-R10 | Abierta | Escanear dos tickets con el celular. Si falla, agregar margen blanco alrededor del QR (decisión de JC) |
+| CX-02 | Abierta | Vencimiento de la reserva por reloj, una vez. Ahora se puede hacer con la base de desarrollo recién creada |
+| Sesiones de usabilidad con personas | **Ya no es un pendiente.** JC aclaró que la cátedra acepta estudios simulados. El estudio rehecho está en `docs/usabilidad/` | — |
+
+**La base de desarrollo se recreó el 04/11/2026** con la semilla de T-21, por decisión de JC,
+para que una demostración muestre exactamente los números de la página 54. Antes se guardó:
+- una copia completa en `C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\Backup\BddEventAura-antes-de-recrear-2026-11-04.bak`,
+  verificada con `RESTORE VERIFYONLY`;
+- los códigos de los 6 tickets reales en `TestResults/JC/codigos-tickets-reales-antes-de-recrear.txt`.
+
+Los PDF de esos tickets siguen en `Documentos\A1.Tickets EVENTAURA`. Para JC-R10 alcanza con
+escanearlos: el código del QR se compara con el impreso en el ticket, no con la base.
+
+**Credenciales de la semilla para la demostración:**
+- `plata@eventaura.com`, `bronce@eventaura.com` y `oro@eventaura.com` usan la contraseña `Cliente123`;
+- el administrador es `admin@eventaura.com` (ver `BaseDatos/02-semilla.sql`).
+
+El ejemplo del instructivo se reproduce entrando como `plata@`, eligiendo «Duki en Rosario», 2
+entradas de Campo y el hospedaje: total $99.625.

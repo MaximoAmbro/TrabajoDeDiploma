@@ -204,6 +204,8 @@ reportes se escriben para el otro agente, no solo para JC.
 | `docs/ESTADO-AGENTES.md` | Turno, tareas, pendientes y bloqueos de cada agente. **Leerlo antes de empezar** |
 | `docs/CORRECCIONES-DOCUMENTO.md` | **Lista única** de correcciones al documento entregable (reglas, instructivo, A02, matriz, carátula), por página |
 | `docs/DOCUMENTO-ENTREGABLE.md` | Estado del documento: el PDF es un armado con pypdf, el fuente no está versionado, y plan B |
+| `docs/usabilidad/INFORME-USABILIDAD.md` | Estudio de usabilidad simulado, medido sobre la aplicación real; hallazgos U-01 a U-13 y plan de mejora |
+| `docs/ANEXOS-TECNICOS-T01-T08.md` | Mapa de los anexos técnicos de la Carpeta Modelo: qué existe, qué falta, horas y orden |
 | `docs/TAREAS-CODEX-PRUEBAS.md` | Encargos para Codex y su estado |
 | `docs/PRUEBAS-PENDIENTES.md` | Pruebas manuales por hacer |
 
@@ -235,8 +237,11 @@ Herramientas en `tools/`: `Proyecto.ps1` (compilar/probar, encuentra MSBuild sol
 `AuditarBaseJc.sql` (compara la base de desarrollo con la de pruebas),
 `VerificarQrTickets.py` (decodifica los QR de los tickets PDF) y `CapturasInstructivo/`
 (`Generar.ps1` rehace las figuras del instructivo; `VerificarEscala.ps1` comprueba la compra a
-la escala de Windows vigente). Las dos últimas abren la aplicación real contra
-`BddEventAura_Pruebas` con su propia configuración, sin tocar los `App.config`.
+la escala de Windows vigente) y `Usabilidad/` (`Medir.ps1` mide el flujo de compra;
+`VerificarCierreConX.ps1` prueba con UI Automation el cierre con la X sobre el ejecutable;
+`modelo.py` deriva tiempos, satisfacción y SUS por perfil). Las de `CapturasInstructivo/` y
+`Medir.ps1` abren la aplicación real contra `BddEventAura_Pruebas` con su propia
+configuración, sin tocar los `App.config`.
 
 Sin construir: **RF-09, recomendaciones personalizadas** (Could, 8 puntos; nunca entró en
 ninguna sección).
@@ -244,11 +249,14 @@ ninguna sección).
 Pendiente que no es código:
 - aplicar `docs/CORRECCIONES-DOCUMENTO.md` al documento entregable, bloqueado hasta tener su
   fuente (ver `docs/DOCUMENTO-ENTREGABLE.md`);
-- las 5 sesiones reales de usabilidad;
 - cerrar las pruebas manuales abiertas de `docs/PRUEBAS-PENDIENTES.md`.
 
-Las 4 capturas del instructivo ya están en `docs/capturas/instructivo/`; se regeneran
-después de alinear la semilla (T-21).
+**Simulados por diseño, aceptado por la cátedra:** las minutas y el estudio de usabilidad no
+requieren personas reales. El estudio rehecho en `docs/usabilidad/` mide la interfaz sobre la
+aplicación real y deriva de esa medición los resultados por perfil.
+
+Las 4 figuras del instructivo están en `docs/capturas/instructivo/` y ya son las definitivas:
+reproducen el ejemplo de la página 54 con la semilla de T-21.
 
 ---
 
