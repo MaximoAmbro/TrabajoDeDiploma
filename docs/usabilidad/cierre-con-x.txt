@@ -1,0 +1,4 @@
+﻿1. Sesión iniciada; ventanas visibles del proceso: 1
+2. Listado abierto; ventanas visibles: 1
+3. Listado cerrado con la X: proceso vivo = True; ventanas visibles = 0; memoria = 56 MB
+4. Proceso detenido por la prueba.
