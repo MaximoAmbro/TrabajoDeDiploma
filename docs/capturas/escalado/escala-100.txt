@@ -1,0 +1,7 @@
+Escala 100: área útil vista por la aplicación 1920 x 1032; ventana 886 x 573 en {X=517,Y=229}
+OK  ventana dentro del área útil
+OK  btnComprar visible en {X=1206,Y=760,Width=178,Height=35}
+OK  btnVolver visible en {X=536,Y=764,Width=120,Height=27}
+Desplazamiento del contenido: no hace falta
+escala-100-compra-paquete-maximo.png: 882 x 571
+escala-100-compra-final-del-resumen.png: 882 x 571
