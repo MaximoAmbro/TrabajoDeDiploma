@@ -438,6 +438,7 @@ namespace Pruebas
 
                 Compra porVencer = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 1, false), cliente);
                 porVencer.FechaCompra = DateTime.Now.AddMinutes(-minutos).AddSeconds(45);
+                porVencer.ReservaVence = porVencer.FechaCompra.AddMinutes(minutos);
                 using (var form = new Visual.frmPago { Compra = porVencer })
                 {
                     Cargar(form);

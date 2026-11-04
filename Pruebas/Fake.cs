@@ -44,8 +44,15 @@ namespace Pruebas
 
         public static void RetrasarInicioDeCompra(int idCompra, int minutos)
         {
-            Ejecutar("UPDATE Compras SET FechaCompra = DATEADD(MINUTE, -@Minutos, FechaCompra) WHERE ID = @ID",
+            Ejecutar("UPDATE Compras SET FechaCompra = DATEADD(MINUTE, -@Minutos, FechaCompra), " +
+                "ReservaVence = DATEADD(MINUTE, -@Minutos, ReservaVence) WHERE ID = @ID",
                 "@Minutos", minutos, "@ID", idCompra);
+        }
+
+        public static void VencerReserva(int idCompra)
+        {
+            Ejecutar("UPDATE Compras SET ReservaVence = DATEADD(MINUTE, -1, GETDATE()) WHERE ID = @ID",
+                "@ID", idCompra);
         }
 
         public static Usuario Administrador()

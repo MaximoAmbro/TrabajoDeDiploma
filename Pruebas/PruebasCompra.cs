@@ -148,7 +148,6 @@ namespace Pruebas
         }
 
         // CP-34 — RF-06, RN-15: reserva vencida rechaza el cobro, vence la compra y devuelve el cupo.
-        [Ignore("Hallazgo: CP-34 devuelve RN-15 pero la compra persiste Pendiente; se esperaba Vencida al retrasar FechaCompra.")]
         [TestMethod("CP-34: Reserva vencida libera el cupo sin cobrar")]
         public void CP34_ReservaVencida()
         {
@@ -162,6 +161,27 @@ namespace Pruebas
 
             ReglaNegocioException error = Assert.ThrowsException<ReglaNegocioException>(() =>
                 GestorCompras.Instance.Confirmar(compra, Fake.Tarjeta()));
+            Assert.AreEqual("RN-15", error.Regla);
+            Assert.AreEqual(EstadoCompra.Vencida, GestorCompras.Instance.ObtenerPorId(compra.Id).Estado);
+            Assert.AreEqual(5, GestorPaquetes.Instance.DisponiblesDe(sector));
+            Assert.AreEqual(0, GestorCompras.Instance.PagosDe(compra).Count);
+        }
+
+        // CP-43 — RF-06, RN-15: el plazo lo fija la reserva persistida, no el parámetro vigente.
+        [TestMethod("CP-43: El plazo lo fija la reserva, no el parámetro vigente")]
+        public void CP43_PlazoFijadoPorLaReservaPersistida()
+        {
+            Evento evento = Fake.EventoPublicado(1000m, 5);
+            Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            int sector = evento.Sectores.Single().Id;
+            Compra compra = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 2, false), cliente);
+            Assert.AreEqual(3, GestorPaquetes.Instance.DisponiblesDe(sector));
+
+            // El objeto en memoria conserva el vencimiento original: Confirmar debe releer la base.
+            Fake.VencerReserva(compra.Id);
+            ReglaNegocioException error = Assert.ThrowsException<ReglaNegocioException>(() =>
+                GestorCompras.Instance.Confirmar(compra, Fake.Tarjeta()));
+
             Assert.AreEqual("RN-15", error.Regla);
             Assert.AreEqual(EstadoCompra.Vencida, GestorCompras.Instance.ObtenerPorId(compra.Id).Estado);
             Assert.AreEqual(5, GestorPaquetes.Instance.DisponiblesDe(sector));

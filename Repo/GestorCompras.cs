@@ -201,14 +201,14 @@ namespace Negocio
             return RepositorioCompras.Instance.MarcarVencidas(DateTime.Now, MinutosReserva());
         }
 
-        // Momento en que vence la reserva de la compra (RN-15), haya o no un rechazo en el medio.
+        // RN-15: usar ReservaVence persistida; si es NULL (reintento), calcular desde FechaCompra y el parámetro vigente.
         public DateTime VencimientoDe(Compra c)
         {
             if (c == null)
             {
                 throw new ArgumentNullException(nameof(c));
             }
-            return c.FechaCompra.AddMinutes(MinutosReserva());
+            return c.ReservaVence ?? c.FechaCompra.AddMinutes(MinutosReserva());
         }
 
         public Compra ObtenerPorId(int idCompra)
