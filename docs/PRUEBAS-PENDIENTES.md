@@ -395,3 +395,55 @@ Lo que ya no depende de la interfaz está cubierto por la batería automática d
 la referencia de $ 99.625. Si una prueba manual del flujo de compra (secciones **5 → 6 →
 7**, parte de JC) falla, corré primero la batería: si pasa, el problema está en el
 formulario y no en los gestores.
+
+## Reverificación de correcciones de JC — 03/11/2026, commits `4ee99d3`, `35624de` y `861b02b`
+
+Las correcciones se hicieron como cambios locales sobre `9e9bbbe` y se commitearon el
+04/11/2026: títulos de ventana (`4ee99d3`), compra a cualquier escala (`35624de`),
+confirmaciones y validaciones (`861b02b`). Las pruebas automáticas están en `95bd727`.
+
+Informe y resultados: [CORRECCIONES-JC-2026-11-03.md](CORRECCIONES-JC-2026-11-03.md).
+Se corrigieron F-01 a F-03 y O-01 a O-11 de la corrida inicial. Las pruebas automáticas
+pasan (16/16); esto no sustituye una nueva corrida de las 65 filas manuales.
+
+| ID | Qué probar | Resultado esperado |
+|---|---|---|
+| JC-R01 | Compra a 125 % y 150 %, notebook y monitor; nombre de 100 caracteres, 2 entradas por sector, 4 servicios y seguro | Título completo, enlace visible, precios de servicios completos, TOTAL y leyenda accesibles; botones dentro de la pantalla |
+| JC-R02 | Abrir evento agotado | Casillas con «(no disponible)» completas y deshabilitadas; lista de espera disponible |
+| JC-R03 | Buscar sin resultados y Comprar | Una sola fila de mensaje sin «*»; aviso titulado «Seleccionar evento» |
+| JC-R04 | Foco en búsqueda al abrir | Guía «Evento o dirección del local» visible con foco y sin texto ingresado |
+| JC-R05 | Volver con paquete cargado, primero No y después Sí | No es el botón por defecto; No conserva el paquete y Sí vuelve al listado |
+| JC-R06 | Cantidad abc o -1 | Mensaje «número entero de 0 en adelante»; se restaura la cantidad anterior |
+| JC-R07 | Historial con entrada asegurada: tildar y destildar | Botón habilitado violeta al tildar; deshabilitado gris al destildar |
+| JC-R08 | Eliminar evento de prueba: No y luego Sí; repetir con evento con ventas | No por defecto y sin eliminación al cancelar; Sí elimina si corresponde; con ventas sigue vigente RN-11 y la oferta de suspensión tiene No por defecto |
+| JC-R09 | Registro con apellido vacío o espacios y demás campos completos | Solicita apellido y no registra; mensajes coherentes para nombre y correo vacíos |
+| JC-R10 | Escanear dos tickets con cámara de celular | Muestra dos códigos distintos EA-…; la decodificación local de los seis PDF ya coincide con PDF y base |
+| JC-R11 | Recorrer formularios no incluidos en las pruebas automáticas nuevas | Títulos visibles legibles con EventAura y sin cambios funcionales |
+
+Los cambios en Designer están declarados en el informe. Las conexiones locales a
+SQLEXPRESS se conservan fuera del conjunto de cambios a publicar.
+
+## Cierre parcial de JC — 04/11/2026, commits `35624de` y `95bd727`
+
+Informe: [VERIFICACION-JC-2026-11-04.md](VERIFICACION-JC-2026-11-04.md).
+La batería ampliada pasa **31/31**. Se conservan arriba los pendientes originales como
+historial; el estado posterior es:
+
+| ID | Estado al 04/11 | Qué queda |
+|---|---|---|
+| JC-R01 | Comprobado por simulación geométrica a 125 %/150 %; se corrigió el recorte de la ventana con una franja fija de acciones y contenido desplazable | Verificación con Windows a 125 % y 150 % reales, notebook y monitor |
+| JC-R02 | Comprobado por interfaz real a 96 DPI | Incluir en la verificación real de otras escalas |
+| JC-R03 | Comprobado con diálogo nativo y ausencia de una compra nueva | — |
+| JC-R04 | Comprobados foco, guía de Windows y representación visual a 96 DPI | — |
+| JC-R05 | Comprobados No por defecto, conservación del paquete y salida con Sí | — |
+| JC-R06 | Comprobados abc y -1, aviso y restauración de la cantidad | — |
+| JC-R07 | Comprobados selección/deselección y colores del botón | — |
+| JC-R08 | Comprobados cancelación/eliminación y No/Sí de suspensión de un evento con ventas | — |
+| JC-R09 | Comprobados nombre/apellido/correo con espacios y contraseña abc, sin alta | — |
+| JC-R10 | Contenido del QR validado localmente el 03/11 | Escaneo con cámara de celular |
+| JC-R11 | Sigue pendiente el recorrido integral | Recorrer los demás formularios y navegación por teclado |
+
+Además se agregó una regresión del evento agotado que recupera cupo por una devolución:
+se corrigió la rehabilitación de los servicios disponibles, sin habilitar servicios que
+el evento no ofrece y sin inscribir al cliente indebidamente en la lista de espera.
+Los escenarios usan solo `BddEventAura_Pruebas`; no se prepararon alterando la base de desarrollo.
