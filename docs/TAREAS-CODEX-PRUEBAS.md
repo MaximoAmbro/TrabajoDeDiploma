@@ -695,3 +695,155 @@ Todo en **`Visual/Cliente/FrmCompraCliente.cs`**:
   **anterior** a esta tanda. Después, Claude Code vuelve a medir con `tools/Usabilidad/` y
   actualiza el informe y la lista de correcciones del documento. Hasta entonces, el informe no
   es definitivo.
+
+**Estado al 04/11/2026:** T-22 a T-26 terminadas (commits `272c864`, `309b9be` y `bb41f23`).
+60 de 60. Claude Code volvió a medir la usabilidad sobre la aplicación corregida.
+
+---
+
+# Quinta tanda — T-27 a T-29: errores no controlados, base de formularios y encabezado
+
+Valen las reglas 1 a 8 de la primera tanda. Base: el commit que deje JC después de esta
+revisión. **Batería esperada al terminar: 66 ejecuciones**, todas correctas: 60 más 6 nuevas,
+con los IDs CP-51 a CP-54.
+
+## T-27. Manejador global de errores (aprobado por JC el 04/11/2026)
+
+**Problema, verificado sobre la aplicación** con `tools/Excepciones/VerificarErrorNoControlado.ps1`:
+- **sin manejador global**, un error de base de datos (SQL Server detenido, base inexistente)
+  llega al usuario como el cuadro de .NET «Microsoft .NET Framework – Excepción no controlada
+  en la aplicación», en inglés y con los botones Detalles, Continuar y Salir;
+- **si un propietario elimina un evento mientras un cliente paga**, `GestorCompras.Confirmar`
+  lanza `InvalidOperationException` («La compra ya no está pendiente de pago.»), que
+  `frmPago` no captura, y termina en el mismo cuadro.
+
+Detalle en `docs/EXCEPCIONES.md`.
+
+1. **Archivo nuevo `Visual/ManejadorErrores.cs`**, con su entrada `<Compile Include>` en
+   `Visual/Visual.csproj`, como se hizo con `FormularioEventAura.cs`:
+   ```csharp
+   // Último recurso ante errores que ninguna pantalla captura: el usuario ve un mensaje en
+   // castellano, sin detalles técnicos, en lugar del cuadro de .NET.
+   public static class ManejadorErrores
+   {
+       public const string Titulo = "EventAura";
+       public const string MensajeBaseDeDatos =
+           "No se pudo conectar con la base de datos. Verifique que SQL Server esté en funcionamiento y vuelva a intentar.";
+       public const string MensajeGeneral =
+           "Ocurrió un error inesperado y la operación no se completó. Si se repite, avise al administrador.";
+
+       // Lo llama Program.Main antes de crear cualquier formulario.
+       public static void Instalar()
+       {
+           Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+           Application.ThreadException += (s, e) => Mostrar(e.Exception);
+           AppDomain.CurrentDomain.UnhandledException += (s, e) => Mostrar(e.ExceptionObject as Exception);
+       }
+
+       public static string MensajeParaUsuario(Exception ex)
+       {
+           if (ex is System.Data.Common.DbException) return MensajeBaseDeDatos;   // SqlException hereda de DbException
+           // Los mensajes que escribe Negocio ya están en castellano y dicen qué pasó.
+           if (ex != null && ex.Source == "Repositorio" && !string.IsNullOrWhiteSpace(ex.Message)) return ex.Message;
+           return MensajeGeneral;
+       }
+
+       public static void Mostrar(Exception ex)
+       {
+           MessageBox.Show(MensajeParaUsuario(ex), Titulo, MessageBoxButtons.OK, MessageBoxIcon.Error);
+       }
+   }
+   ```
+   Con los `using` que correspondan. No escribe bitácora: eso es el anexo T06.
+2. **`Visual/Program.cs`, `Main`.** La primera línea es `ManejadorErrores.Instalar();`, antes
+   de `Application.EnableVisualStyles()`. Se borra el comentario suelto `/// //aaaa`.
+3. **`Visual/Cliente/frmPago.cs`, `btnPagar_Click`.** Agregar, después del
+   `catch (ReglaNegocioException ex)`:
+   ```csharp
+   catch (InvalidOperationException ex)
+   {
+       // La compra dejó de estar pendiente por fuera de esta pantalla (por ejemplo, el evento
+       // se eliminó mientras se pagaba). El cupo ya se liberó: se vuelve al listado.
+       tmrReserva.Stop();
+       cerrada = true;
+       MessageBox.Show(ex.Message + "\n\nVuelva a armar la compra desde el listado.",
+           "Pago no realizado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+       DialogResult = DialogResult.Abort;
+       return;
+   }
+   ```
+   `DialogResult.Abort` ya lleva a «Armar paquete» a volver al listado, como cuando vence la
+   reserva.
+4. **CP-51 en `PruebasInterfaz.cs`**, `[DataTestMethod]` con tres filas sobre
+   `ManejadorErrores.MensajeParaUsuario`:
+
+   | Fila | Excepción | Resultado esperado |
+   |---|---|---|
+   | «base de datos» | Una subclase de prueba de `System.Data.Common.DbException`, declarada en la clase de prueba | `MensajeBaseDeDatos` |
+   | «negocio» | La `InvalidOperationException` real de `GestorPaquetes.Instance.Nuevo(999999, 3)`, capturada en la prueba | Su propio mensaje, «No se encontró ningún evento con ese ID.» |
+   | «general» | `new Exception("detalle técnico")` | `MensajeGeneral`, que no contiene «detalle técnico» |
+
+5. **CP-52 en `PruebasInterfaz.cs`** (RF-06; RN-11), el caso encontrado:
+   - **preparación:** un cliente con `Fake`, un evento con `Fake.EventoPublicado(1000m, 5)` y
+     una compra iniciada de 1 entrada; abrir `new Visual.frmPago { Compra = compra }`;
+   - **la eliminación:** `GestorEventos.Instance.Eliminar(evento.Id)`. No tiene ventas, así
+     que RN-11 la permite, y pasa a Vencida la compra abierta;
+   - **el pago:** completar la tarjeta válida de `Fake.Tarjeta()` y, con `DialogosPrueba`,
+     pulsar «Pagar» esperando el título «Pago no realizado» y un texto que contenga «ya no
+     está pendiente»;
+   - **resultado esperado:** `pago.DialogResult == DialogResult.Abort` y
+     `GestorCompras.Instance.PagosDe(compra)` vacío.
+6. **CP-53 en `PruebasFormularios.cs`:** el texto de `Visual/Program.cs` contiene
+   `ManejadorErrores.Instalar();` antes de `Application.Run`. Se lee el archivo como hace CP-12
+   con los `.Designer.cs`.
+
+**La verificación sobre la aplicación la hace Claude Code después.** Va a ajustar
+`tools/Excepciones/ErrorNoControlado.cs` para que instale el manejador, igual que
+`Program.Main`, y comprobar que con la base caída aparece el mensaje en castellano y ya no
+`ThreadExceptionDialog`.
+
+## T-28. La base de formularios no debe ser abstracta (corrige un desvío de T-24)
+
+**Problema.** En T-24 el encargo pedía `public class FormularioEventAura`, y se implementó
+`public abstract class`. Codex lo hizo para que CP-12 no la exigiera como formulario con
+`.Designer.cs`. El costo es que **el diseñador de formularios de Visual Studio no puede abrir
+un formulario cuya clase base es abstracta**: necesita crear una instancia de la base para
+dibujarlo. Los 19 formularios quedarían sin poder editarse en el diseñador, que es justo lo
+que Máximo usa.
+
+1. **`Visual/FormularioEventAura.cs`.** `public abstract class` pasa a `public class`. Nada
+   más cambia.
+2. **`Pruebas/PruebasFormularios.cs`, CP-12.** En el filtro de tipos, agregar
+   `&& t != typeof(Visual.FormularioEventAura)` junto a `!t.IsAbstract`, con un comentario:
+   «la base común no es una pantalla y no tiene Designer».
+3. **Verificación manual de JC o Máximo** (no automatizable): abrir en Visual Studio el
+   diseñador de `FrmCompraCliente` y de `frmInicio` y confirmar que se dibujan. Claude Code lo
+   anota en `docs/PRUEBAS-PENDIENTES.md`.
+
+## T-29. El encabezado «Cantidad (escribí aquí)» se ve completo (corrige T-25)
+
+**Problema, visto en la figura 2 del instructivo regenerada el 04/11/2026.** A escala 100 %,
+la columna es más angosta que el encabezado nuevo, y se lee «Cantidad (escribí», sin el
+«aquí)». La indicación de T-25 pierde justo la parte que dice qué hacer.
+
+1. **`Visual/Cliente/FrmCompraCliente.cs`, `CargarSectores`.** Después de crear las columnas:
+   ```csharp
+   dgvSectores.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+   dgvSectores.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+   ```
+   El encabezado pasa a dos renglones si no entra en uno. No se cambia el texto ni el ancho
+   de las columnas.
+2. **CP-54 en `PruebasInterfaz.cs`** (RF-04; H-03): al abrir `FrmCompraCliente` del evento 1,
+   para cada columna visible de `dgvSectores`, el alto del texto del encabezado, medido con
+   `TextRenderer.MeasureText(texto, fuente, new Size(ancho de la columna − 8, int.MaxValue),
+   TextFormatFlags.WordBreak)`, no supera `dgvSectores.ColumnHeadersHeight`.
+3. **CP-13 y CP-25 tienen que seguir pasando:** el encabezado más alto corre las filas unos
+   píxeles.
+
+Después, Claude Code regenera las figuras del instructivo.
+## Criterio de terminado de la quinta tanda
+
+- **Batería:** 66 ejecuciones, todas correctas: 60 más CP-51 (3 filas), CP-52, CP-53 y CP-54.
+  CP-12 sigue pasando con la base no abstracta. Sin advertencias nuevas.
+- **Reporte:** `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-T27-T29.md`, con los archivos tocados
+  y la entrada nueva del `.csproj`.

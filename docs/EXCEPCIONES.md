@@ -167,20 +167,30 @@ provoca el error y comprueba la regla**:
 | Situación | Excepción | Dónde se escapa | Estado |
 |---|---|---|---|
 | **SQL Server detenido o base inexistente**, en cualquier pantalla | `SqlException` | Ninguna pantalla la captura | **Verificado** al iniciar sesión |
-| **Un propietario elimina el evento mientras un cliente está pagando** | `InvalidOperationException` («La compra ya no está pendiente de pago.») | `frmPago.btnPagar_Click` captura `ArgumentException` y `ReglaNegocioException`, pero no `InvalidOperationException`. Al eliminar el evento, la base pasa a Vencida sus compras abiertas | Leído en el código; no reproducido |
+| **Un propietario elimina el evento mientras un cliente está pagando** | `InvalidOperationException` («La compra ya no está pendiente de pago.») | `frmPago.btnPagar_Click` captura `ArgumentException` y `ReglaNegocioException`, pero no `InvalidOperationException`. Al eliminar el evento, la base pasa a Vencida sus compras abiertas | Leído en el código. **Encargado: T-27, con su prueba CP-52**, que lo reproduce |
 | El pago se aprueba pero la reserva ya no estaba vigente | `InvalidOperationException` («El pago se aprobó pero la reserva ya no estaba vigente.») | Ídem | Leído en el código. Muy improbable desde T-20 |
-| El evento se elimina entre el listado y la apertura del armado | `InvalidOperationException` («No se encontró ningún evento con ese ID.») | La carga de `FrmCompraCliente` solo captura `ReglaNegocioException` | Leído en el código; no reproducido |
+| El evento se elimina entre el listado y la apertura del armado | `InvalidOperationException` («No se encontró ningún evento con ese ID.») | La carga de `FrmCompraCliente` solo captura `ReglaNegocioException` | Leído en el código. Con T-27 lo atrapa el manejador global y muestra el mensaje de Negocio |
 | ~~Cambiar `RESERVA_MINUTOS` con una compra en curso~~ | ~~`InvalidOperationException` en el pago~~ | **Resuelto por T-20**: el plazo sale de la reserva registrada y CP-43 lo prueba | Cerrado |
 
-**Recomendación**, para que JC decida; no está encargada a Codex:
-- registrar un manejador global en `Program.cs` (`Application.ThreadException` y
-  `AppDomain.CurrentDomain.UnhandledException`) que muestre un mensaje en castellano («No se
-  pudo completar la operación. Si se repite, verifique la conexión con la base de datos.»),
-  sin detalles técnicos;
-- que en `frmPago` se capture también `InvalidOperationException`.
+**Corrección aprobada por JC y encargada a Codex: T-27** (`docs/TAREAS-CODEX-PRUEBAS.md`,
+«Quinta tanda»):
+- **`ManejadorErrores`** se instala en `Program.Main` (`Application.ThreadException` y
+  `AppDomain.CurrentDomain.UnhandledException`) y muestra un mensaje en castellano, sin
+  detalles técnicos:
+  - ante un error de base de datos: «No se pudo conectar con la base de datos. Verifique que
+    SQL Server esté en funcionamiento y vuelva a intentar.»;
+  - ante una `InvalidOperationException` de Negocio, su propio mensaje, que ya está en
+    castellano;
+  - ante cualquier otro error, un mensaje general.
+- **`frmPago` captura `InvalidOperationException`:** avisa «Pago no realizado» y vuelve al
+  listado.
+- **Pruebas:** CP-51 (el mensaje según el tipo de error), CP-52 (el pago con el evento
+  eliminado) y CP-53 (`Program.Main` instala el manejador).
+- **Después, Claude Code** vuelve a correr `tools/Excepciones/VerificarErrorNoControlado.ps1`
+  con el manejador instalado, para comprobar que con la base caída ya no aparece el cuadro de
+  .NET.
 
-Son menos de dos horas en `Visual/`, y es la base natural de la bitácora (T06) si el docente
-pide los anexos técnicos.
+Es la base natural de la bitácora (T06) si el docente pide los anexos técnicos.
 
 ---
 
@@ -192,5 +202,5 @@ pide los anexos técnicos.
 > pantalla captura esas excepciones y muestra el mensaje. Doce de las diecinueve reglas que
 > rechazan operaciones tienen una prueba automática que provoca el error. Lo que identificamos
 > como débil es que no hay un manejador global: un error no previsto, como la base caída, llega
-> al usuario con el cuadro estándar de .NET. Lo verificamos y tenemos propuesta la
-> corrección.»
+> al usuario con el cuadro estándar de .NET. Lo verificamos sobre la aplicación y lo
+> corregimos con un manejador global que muestra un mensaje en castellano.»
