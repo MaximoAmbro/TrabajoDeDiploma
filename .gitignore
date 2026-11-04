@@ -28,3 +28,6 @@ BaseDatos/backup/
 # Lleva los binarios de Visual/bin/Debug, que ya están ignorados más arriba.
 # Se regenera cuando se necesita; no va a git. Se comparte por Drive o WhatsApp.
 EventAura-pruebas.zip
+
+# Evidencias locales de las corridas (incluyen códigos de tickets y rutas personales).
+TestResults/
