@@ -68,7 +68,14 @@ static class Captura
         var sectores = Buscar<DataGridView>(compra, "dgvSectores");
         foreach (DataGridViewRow fila in sectores.Rows)
             foreach (DataGridViewCell celda in fila.Cells)
-                if (Convert.ToString(celda.Value) == "Campo") fila.Cells["Cantidad"].Value = 2;
+                if (Convert.ToString(celda.Value) == "Campo")
+                {
+                    // Como el usuario: el cursor queda en la celda donde escribió. Primero el
+                    // valor y después el cursor: si no, la celda entra en edición con el 0 viejo.
+                    fila.Cells["Cantidad"].Value = 2;
+                    sectores.CurrentCell = fila.Cells["Cantidad"];
+                    sectores.EndEdit();
+                }
         Buscar<CheckBox>(compra, "chkHospedaje").Checked = true;
         Esperar(500);
         string resumen = Buscar<Label>(compra, "lblResumen").Text;
