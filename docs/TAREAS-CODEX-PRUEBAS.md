@@ -1,7 +1,7 @@
 # Tareas para Codex — pruebas CP-26 a CP-42 y etiquetado de CP-11 a CP-25
 
 Encargo cerrado. Objetivo: cerrar las brechas G-02 (RF sin pruebas) y G-04 (hallazgos sin
-regresión) de la matriz de trazabilidad (`docs/MATRIZ-TRAZABILIDAD-v2.5.md`, sección 10).
+regresión) de la matriz de trazabilidad (hoy en `docs/CORRECCIONES-DOCUMENTO.md`, ítems 17 a 21).
 Base: commit `f550199`. Batería actual: 31 ejecuciones, todas correctas.
 
 ## Reglas de esta tanda
@@ -413,6 +413,10 @@ modifica `Repo/`.
 **No se agrega** un `catch (InvalidOperationException)` en `frmPago`: con T-20, el caso que
 lo provocaba deja de ocurrir.
 
+**Estado al 04/11/2026:** T-19 y T-20 terminadas (commit `3af4154`; reporte en
+[RESULTADOS-TAREAS-CODEX-2026-11-04-T19-T20.md](RESULTADOS-TAREAS-CODEX-2026-11-04-T19-T20.md)).
+49 de 49 correctas.
+
 ## Lo que no se hace: probar el vencimiento esperando el reloj
 
 Esperar el plazo real llevaría `RESERVA_MINUTOS` (10 minutos) por corrida. Con el parámetro
@@ -424,3 +428,67 @@ dos columnas atrasadas juntas), así que esperar no agrega cobertura.
 Lo que sí vale es **una comprobación manual por reloj, una sola vez**: dejar vencer una
 reserva en la aplicación (`docs/PRUEBAS-PENDIENTES.md`, CX-02). Verifica el temporizador y
 el aviso de `frmPago`, que ninguna prueba automática cubre de punta a punta.
+
+---
+
+# Tercera tanda — T-21: la semilla reproduce el ejemplo del documento
+
+Base: el commit que deje JC después de esta revisión. Valen las reglas 1 a 8 de la primera
+tanda, con una excepción: **esta tarea modifica `BaseDatos/02-semilla.sql`**. `BaseDatos/` no
+tiene dueño y JC autoriza a Codex solo para esta tarea.
+
+**Por qué.** El instructivo del documento (página 54) resuelve un ejemplo con «Duki en
+Rosario» y una clienta Plata con 4 compras confirmadas: 2 entradas de Campo a $25.000 y
+hospedaje de $45.000, total $99.625. La semilla tiene los mismos importes, pero el evento se
+llama «Festival de Rock Rosario» y la clienta Plata tiene 3 compras. JC decidió alinear la
+semilla con el documento, no al revés. Así el docente puede seguir el instructivo en la
+aplicación y obtener exactamente lo que muestra el texto.
+
+## T-21. Cambios en `BaseDatos/02-semilla.sql`
+
+1. **Nombre del evento vigente** (línea 68): `'Festival de Rock Rosario'` pasa a
+   `'Duki en Rosario'`. No cambia nada más del evento: fecha (hoy + 60 días, 21:00), local,
+   categoría «Concierto», estado, sus tres sectores (Campo $25.000 / 2000, Platea $40.000 /
+   800, VIP $60.000 / 100) y sus cuatro servicios (Hotel Ríos 1 noche $45.000, Traslado,
+   Remera, Meet & Greet). Sigue siendo el primer evento insertado, así que conserva el ID 1
+   en una base recién creada.
+2. **Compras de la clienta Plata** (líneas 116 a 127): el bucle pasa de `WHILE @i <= 3` a
+   `WHILE @i <= 4`, y el comentario de la línea 117 dice «Plata: 4 compras confirmadas en
+   los últimos 12 meses». Las fechas quedan en 2, 4, 6 y 8 meses atrás, dentro de la ventana
+   de 12 meses. Con 4 compras sigue siendo Plata (umbrales 3 a 6), así que no cambia su
+   nivel ni el de nadie.
+3. **No se toca** `03-datos-reporte.sql`. Ese script crea otro «Duki en Rosario», pasado
+   (27/09/2025) y en otro local («Predio Rosario (datos de reporte)»), y borra lo suyo por
+   local, no por nombre: no afecta al evento de la semilla. Si alguien carga los dos
+   scripts, va a haber dos eventos con ese nombre en fechas distintas, y el cliente solo ve
+   el vigente (RN-09).
+
+## T-21. Cambios en `Pruebas/`
+
+4. En `PruebasInterfaz.cs`, línea 28, el comentario `// Festival: tres sectores de la
+   semilla.` pasa a `// Duki en Rosario: tres sectores de la semilla.` Los textos «Gran
+   Festival Internacional…» de las líneas 33 y 373 no cambian: son títulos largos inventados
+   para la prueba de recortes, no el nombre del evento.
+5. Buscar en `Pruebas/` cualquier otra dependencia del nombre del evento 1 o de que la
+   clienta Plata tenga 3 compras. Al 04/11 no hay ninguna: las pruebas usan el evento por ID
+   y crean sus propios clientes con `Fake`.
+6. Correr la batería: esperado **49 de 49**. La base de pruebas se recrea con la semilla
+   nueva en `[AssemblyInitialize]`.
+
+## T-21. Comprobación adicional, sin cambiar código
+
+7. Con `sqlcmd` contra `BddEventAura_Pruebas`, después de la corrida, informar en el reporte
+   el resultado de:
+   `SELECT Nombre FROM Eventos WHERE ID = 1;` (esperado: Duki en Rosario) y
+   `SELECT COUNT(*) FROM Compras c JOIN Usuario u ON u.ID = c.ID_Usuario WHERE u.Mail = 'plata@eventaura.com' AND c.Estado = 'Confirmada';`
+   (esperado: 4).
+
+**Fuera de alcance:** la base de desarrollo `BddEventAura`. No se recrea ni se modifica:
+recrearla borra los datos de las pruebas manuales y lo decide JC.
+
+**Después de T-21, Claude Code:**
+- regenera las figuras del instructivo con `tools/CapturasInstructivo/Generar.ps1`;
+- actualiza `docs/capturas/instructivo/LEEME.md`;
+- comprueba que la figura 2 diga «Duki en Rosario» y la figura 3 dé $99.625.
+
+Reporte de Codex: `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-T21.md`.

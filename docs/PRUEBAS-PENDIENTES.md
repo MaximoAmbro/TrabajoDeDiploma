@@ -457,3 +457,82 @@ Batería: 48 ejecuciones, 47 correctas y 1 omitida (CP-34). Quedan dos pendiente
 |---|---|---|
 | CX-01 | CP-34 (RN-15, reserva vencida). **Bloqueada** hasta que Codex haga T-19 (`TAREAS-CODEX-PRUEBAS.md`, «Segunda tanda»): corregir el helper que atrasa la compra y quitar el `Ignore` | La batería da 48 de 48: RN-15, compra Vencida, cupo devuelto y ningún pago. Hasta entonces, CP-34 no cuenta como aprobada en la matriz |
 | CX-02 | Manual, una vez y por reloj, sin tocar fechas, en la aplicación contra la base de desarrollo: iniciar una compra, abrir el pago y esperar `RESERVA_MINUTOS` sin pagar | El temporizador baja hasta 00:00 y pasa a rojo en el último minuto; aparece «Reserva vencida»; se vuelve al listado; al reabrir el evento, el cupo está completo; en «Mis eventos» no figura la compra. Es la única comprobación de RN-15 de punta a punta: CP-34 prueba la regla y CP-39 solo el temporizador |
+
+## Estado al 04/11/2026, después de T-19 y T-20 (commit `3af4154`)
+
+| ID | Estado | Qué queda |
+|---|---|---|
+| CX-01 | **Cerrada.** CP-34 pasa sin cambiar sus aserciones: la falla la causaba la preparación (atrasaba `FechaCompra` y no `ReservaVence`), no la aplicación. Con T-20, el plazo sale de `ReservaVence` y CP-43 lo comprueba. Batería: 49 de 49 | — |
+| CX-02 | Abierta | La comprobación manual por reloj, una vez, como se describe arriba |
+| JC-R01 | **Abierta. Se verificó solo la escala de 100 %.** Ver la sección siguiente | Las escalas 125 %, 150 % y 175 % reales, con los pasos de abajo |
+| JC-R10 | **Abierta, con bajo riesgo.** Los QR cumplen los parámetros de ISO/IEC 18004 para lectura con cámara (ver abajo), pero ninguna cámara los leyó todavía | Escanear dos tickets con el celular |
+
+### JC-R01 — escalado real: qué se verificó y qué falta
+
+**La aplicación no declara compatibilidad con DPI**: ni el manifiesto de `Visual.exe` ni el
+`App.config` la configuran. Cuando Windows está por encima de 100 %, la dibuja a 96 DPI y
+estira la imagen. La aplicación ve una pantalla más chica: a 125 % sobre 1920 × 1080 ve
+1536 × 864; a 150 % ve 1280 × 720.
+
+- **Sin cambiar la escala del sistema no hay forma de verificarlo.** El override de
+  compatibilidad (`AppCompatFlags\Layers`) y los contextos de DPI solo deciden quién escala
+  cuando Windows ya está por encima de 100 %. Con el sistema al 100 % no cambian nada, así
+  que no se usaron.
+- **Sí se puede sin cerrar sesión.** En Windows 11 la escala se aplica en el acto, y una
+  aplicación sin compatibilidad con DPI se estira enseguida. El aviso de «cerrar sesión» es
+  opcional.
+- **La simulación de CP-25 modela otra cosa.** Agranda controles y fuentes como lo haría una
+  aplicación compatible con DPI, y este caso es al revés. Sirve como regresión del diseño,
+  pero no reemplaza la prueba real.
+
+**Verificado el 04/11/2026, a escala real de 100 %**, con
+`tools/CapturasInstructivo/VerificarEscala.ps1 -Nombre 100` (paquete máximo: título de 100
+caracteres, 2 entradas por sector, 4 servicios y seguro). La ventana mide 886 × 573 dentro
+de un área útil de 1920 × 1032, «Comprar» y «Volver» se ven, y no hace falta desplazar.
+Captura: `docs/capturas/escalado/escala-100-compra-paquete-maximo.png`.
+
+**Pasos para JC.** Unos 3 minutos por escala, sin cerrar sesión:
+
+1. Cerrá EventAura si está abierta.
+2. Inicio → Configuración → Sistema → Pantalla → «Escala» → elegí **125 %**. Si Windows
+   ofrece cerrar sesión, ignoralo.
+3. Avisale a Claude Code «escala 125 lista», o corré vos, desde la carpeta del repo:
+   `powershell -ExecutionPolicy Bypass -File tools\CapturasInstructivo\VerificarEscala.ps1 -Nombre 125`
+   Se abre la compra unos 5 segundos y se cierra sola.
+4. Repetí los pasos 2 y 3 con **150 %** y con **175 %**. La de 175 % en este monitor es
+   equivalente a una notebook de 1366 × 768 al 125 %: la aplicación ve casi la misma
+   pantalla, 1097 × 617 contra 1093 × 614.
+5. Volvé a **100 %**.
+6. Con la aplicación real, a ojo, en 150 %: abrí una compra y fijate si el texto se ve
+   borroso. Es esperable por el estiramiento de Windows; anotalo si molesta para leer.
+
+**Capturas que necesito de cada escala.** Las genera solas el script, en
+`docs/capturas/escalado/`:
+- `escala-<N>-compra-paquete-maximo.png`;
+- `escala-<N>-compra-final-del-resumen.png`;
+- `escala-<N>.txt`, con el área útil, la ventana y «OK» o «FALLA» de cada botón.
+
+**Qué no cubre esta PC:** una notebook de 1366 × 768 al 150 %, donde la aplicación vería
+911 × 512. Con la escala de 175 % se acerca, pero no es igual. Si Máximo tiene una notebook,
+puede correr el mismo script ahí.
+
+JC-R01 se cierra cuando 125 % y 150 % (y, si se puede, 175 %) den «OK» en todo.
+
+### JC-R10 — legibilidad de los QR, medida sobre el ticket real
+
+Medido sobre `Ticket_EA-000011_Campo_1.PDF`. Los demás se generan con el mismo código.
+
+| Parámetro | Medido | Referencia | Cumple |
+|---|---|---|---|
+| Ticket | A6 apaisado, 148,2 × 105,1 mm | — | — |
+| Símbolo | Versión 3, 29 × 29 módulos; impreso a 35,3 × 35,3 mm con la zona de silencio | — | — |
+| Tamaño del módulo | **0,95 mm** | La norma no fija un mínimo; la práctica para lectura con celular es 0,33 a 0,5 mm como mínimo, y 35 mm de lado alcanza para leerlo a unos 30 cm | Sí, con amplio margen |
+| Zona de silencio | **4 módulos** de cada lado, blanca | ISO/IEC 18004: al menos 4 módulos | Sí, justo en el mínimo |
+| Corrección de errores | **Q** (recupera hasta 25 %) | L 7 %, M 15 %, Q 25 %, H 30 %. Q es lo habitual en entradas impresas | Sí |
+| Contraste | **100 %** en el archivo: módulos negros sobre blanco puro | ISO/IEC 15415, grado A: contraste de símbolo de 70 % o más | Sí en el archivo. Impreso depende de la impresora; una láser común da más de 80 % |
+
+**No hace falta agrandar el QR.** Una sola observación, sin tarea: el ticket tiene fondo
+negro, así que fuera de los 4 módulos blancos de silencio la página es oscura. Cumple la
+norma, pero no deja margen. Si alguna cámara tarda en enfocar, la mejora sería un margen
+blanco de 2 módulos más alrededor del QR. No la abro como tarea: la decide JC si el escaneo
+real falla.

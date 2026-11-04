@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 42 casos: CP-01 a CP-10 son los de la lógica de
-fidelización, que define el documento; CP-11 a CP-42 se agregaron en noviembre de 2026
-(ver «Casos CP-11 a CP-42» más abajo). CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 43 casos: CP-01 a CP-10 son los de la lógica de
+fidelización, que define el documento; CP-11 a CP-43 se agregaron en noviembre de 2026
+(ver «Casos CP-11 a CP-43» más abajo). CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -64,7 +64,7 @@ Si el cálculo no da exactamente $99.625, hay un error en la implementación.
 
 Este cálculo es el caso **CP-11**.
 
-## Casos CP-11 a CP-42
+## Casos CP-11 a CP-43
 
 Mismas condiciones que los diez anteriores: integración contra `BddEventAura_Pruebas`, datos
 de `Fake`, sesión cerrada antes y después. Los que dicen «interfaz» abren el formulario real
@@ -72,7 +72,7 @@ en un hilo STA y responden sus MessageBox con `Pruebas/DialogosPrueba.cs`. Neces
 sesión de escritorio abierta.
 
 Cuántas veces corre cada uno: CP-15 tiene 4 variantes, CP-20 tiene 2 y CP-25 tiene 3. Con
-CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **48 ejecuciones**.
+CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **49 ejecuciones**.
 
 | CP | Archivo | Condición de entrada | Resultado esperado | RF | Reglas | Hall. |
 |---|---|---|---|---|---|---|
@@ -99,7 +99,7 @@ CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **48 ejecuci
 | CP-31 | PruebasCompra | Más entradas que el cupo del sector; más que `COMPRA_ENTRADAS_MAX` sumando sectores; un servicio sin entradas | RN-08, RN-12 y RN-13 respectivamente | RF-04, RF-05 | RN-08, RN-12, RN-13 | — |
 | CP-32 | PruebasCompra | Pago aprobado de 3 entradas | Compra Confirmada; 3 QR `EA-` + 32 hexadecimales, distintos; un pago Aprobado con los últimos 4 y el token, sin el número completo | RF-06, RF-07 | RN-17, RN-18, RN-30, RN-31 | — |
 | CP-33 | PruebasCompra | Pago rechazado (tarjeta terminada en 0000) en un sector de capacidad 1 | Compra Pendiente; pago Rechazado registrado; el cupo vuelve y otro cliente puede reservarlo | RF-06, RF-07 | RN-17, RN-31, RN-32 | — |
-| CP-34 | PruebasCompra | Reserva vencida al confirmar | RN-15; compra Vencida; cupo devuelto; ningún pago. **Omitida**: ver «Segunda tanda» en `TAREAS-CODEX-PRUEBAS.md` (T-19) | RF-06 | RN-15 | — |
+| CP-34 | PruebasCompra | Reserva vencida al confirmar | RN-15; compra Vencida; cupo devuelto; ningún pago. La preparación atrasa juntas `FechaCompra` y `ReservaVence`, como lo haría el paso del tiempo | RF-06 | RN-15 | — |
 | CP-35 | PruebasReportes | Pedir un reporte sin sesión, como Cliente y como Administrador | RN-34 en los dos primeros; el Administrador lo obtiene | RF-11 | RN-34 | — |
 | CP-36 | PruebasReportes | RPT-01 con 2 compras confirmadas (1 y 2 entradas) y una solo iniciada | 3 entradas, $75.000, ticket $25.000, 30,0 % de ocupación | RF-11 | — | — |
 | CP-37 | PruebasReportes | RPT-05 de un evento agotado con un inscripto; inscripción repetida; después, devolución | «Agotado» con 1 en espera; RN-36 al repetir; tras la devolución, «Con cupo», y con «solo agotados» no aparece | RF-10, RF-11 | RN-10, RN-36 | — |
@@ -108,6 +108,7 @@ CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **48 ejecuci
 | CP-40 | PruebasInterfaz | Evento de capacidad 5 con 1 vendida | La grilla muestra 4 disponibles; solo «Cantidad» es editable | RF-04 | — | H-03 |
 | CP-41 | PruebasInterfaz | Comprar sin tildar el seguro y responder No | Aviso «Seguro de entrada» con No por defecto; no se reserva nada | RF-05 | — | H-04 |
 | CP-42 | PruebasInterfaz | Clic en «¿Cómo funcionan los niveles?» | Aviso con los umbrales vigentes de `Parametros` | RF-08 | — | H-05 |
+| CP-43 | PruebasCompra | Compra iniciada cuya reserva registrada ya venció, aunque `FechaCompra` + `RESERVA_MINUTOS` todavía no | RN-15; compra Vencida; cupo devuelto; ningún pago. El plazo lo fija la reserva, no el parámetro vigente | RF-06 | RN-15 | — |
 
 CP-39 a CP-42 comprueban que la interfaz **comunica** RN-15, RN-08, RN-28 y RN-19. No las
 verifican: por eso esas reglas no figuran en su columna.
