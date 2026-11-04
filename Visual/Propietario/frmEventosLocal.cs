@@ -36,6 +36,13 @@ namespace Visual.Vendedor
             }
 
             int idEvento = Convert.ToInt32(dgvEventos.CurrentRow.Cells["ID"].Value);
+            string nombre = Convert.ToString(dgvEventos.CurrentRow.Cells["Nombre"].Value);
+            if (MessageBox.Show($"¿Eliminar el evento «{nombre}»? Esta acción no se puede deshacer.",
+                "Eliminar evento", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            {
+                return;
+            }
             try
             {
                 GestorEventos.Instance.Eliminar(idEvento);
@@ -43,7 +50,8 @@ namespace Visual.Vendedor
             catch (ReglaNegocioException ex)
             {
                 DialogResult respuesta = MessageBox.Show(ex.Message + "\n\n¿Desea suspenderlo?",
-                    ex.Regla, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    ex.Regla, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button2);
                 if (respuesta == DialogResult.Yes)
                 {
                     GestorEventos.Instance.Suspender(idEvento);
@@ -72,7 +80,7 @@ namespace Visual.Vendedor
             frm.IDUsuario = IDUsuario;
             frm.NombreLocal = NombreLocal;
             frm.Show(); this.Close();
-        } // este es modificar pero me da paja cambiar el nombre
+        }
         private void btnAdministrarEvento_Click(object sender, EventArgs e)
         {
             if (dgvEventos.CurrentRow == null)

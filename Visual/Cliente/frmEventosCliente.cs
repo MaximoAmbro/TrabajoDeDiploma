@@ -23,6 +23,13 @@ namespace Visual
 
         private void frmEventosCliente_Load(object sender, EventArgs e)
         {
+            dgveventos.ReadOnly = true;
+            dgveventos.AllowUserToAddRows = false;
+            dgveventos.AllowUserToDeleteRows = false;
+            dgveventos.RowHeadersVisible = false;
+            dgveventos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgveventos.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgveventos.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             cmbCategoria.Items.Add(TodasLasCategorias);
             cmbCategoria.Items.AddRange(GestorEventos.Categorias.ToArray<object>());
             cmbCategoria.SelectedIndex = 0;
@@ -92,6 +99,11 @@ namespace Visual
                 })
                 .ToList();
             dgveventos.Columns["ID"].Visible = false;
+            dgveventos.Columns["Categoria"].HeaderText = "Categoría";
+            dgveventos.Columns["Ubicacion"].HeaderText = "Ubicación";
+            dgveventos.Columns["Nombre"].FillWeight = 160;
+            dgveventos.Columns["Ubicacion"].FillWeight = 140;
+            dgveventos.Columns["Complejo"].FillWeight = 140;
         }
 
         // Texto guía dentro del TextBox (EM_SETCUEBANNER): .NET Framework no tiene PlaceholderText.
@@ -101,7 +113,7 @@ namespace Visual
         private static void PonerTextoGuia(TextBox caja, string texto)
         {
             const int EM_SETCUEBANNER = 0x1501;
-            SendMessage(caja.Handle, EM_SETCUEBANNER, IntPtr.Zero, texto);
+            SendMessage(caja.Handle, EM_SETCUEBANNER, new IntPtr(1), texto);
         }
 
         private void btnComprar_Click(object sender, EventArgs e)
@@ -117,7 +129,7 @@ namespace Visual
             }
             else
             {
-                MessageBox.Show("Debe seleccionar un evento para comprar", "Hola Pedro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Debe seleccionar un evento para comprar", "Seleccionar evento", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

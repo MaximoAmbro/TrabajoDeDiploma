@@ -241,9 +241,9 @@
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "frmAgregarEvento";
+            this.Name = "frmCrearUsuario";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmCrearUsuario";
+            this.Text = "EventAura · Crear cuenta";
             this.Load += new System.EventHandler(this.frmCrearUsuario_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

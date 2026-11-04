@@ -183,6 +183,8 @@ namespace Visual
         {
             int cantidad = EntradasElegidas().Count;
             btnDevolver.Enabled = cantidad > 0;
+            btnDevolver.BackColor = cantidad > 0 ? Violeta : Color.Gainsboro;
+            btnDevolver.ForeColor = cantidad > 0 ? Color.White : Color.DimGray;
             btnDevolver.Text = cantidad > 0 ? $"Devolver {cantidad} entrada(s)" : "Devolver";
         }
 

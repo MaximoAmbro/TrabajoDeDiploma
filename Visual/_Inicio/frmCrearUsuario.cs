@@ -20,10 +20,10 @@ namespace Visual
         private void frmCrearUsuario_Load(object sender, EventArgs e)
         {
             txtmail.Text="";
-            txtApellido.Text = "A";
-            txtNombre.Text = "A";
-            TxtPassword.Text = "A";
-            TxtConfirmpassword.Text = "A";
+            txtApellido.Clear();
+            txtNombre.Clear();
+            TxtPassword.Clear();
+            TxtConfirmpassword.Clear();
             TxtPassword.PasswordChar = '*';
             TxtConfirmpassword.PasswordChar='*';
         }  // El Load del formulario
@@ -67,21 +67,20 @@ namespace Visual
         // -------------------------------FUNCIONES DE CONTROL--------------------------------------------------------------------
         private bool RevisarTextbox()
         {
-            if (string.IsNullOrEmpty(txtmail.Text))
+            if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
-                MessageBox.Show("Ingrese nombre: ");
+                MessageBox.Show("Ingrese su nombre.");
                 return false;
             }
-            if (string.IsNullOrEmpty(txtNombre.Text))
+            if (string.IsNullOrWhiteSpace(txtApellido.Text))
             {
-                MessageBox.Show("Ingrese Usuario: ");
+                MessageBox.Show("Ingrese su apellido.");
                 return false;
             }
-            if (string.IsNullOrEmpty(txtmail.Text))
+            if (string.IsNullOrWhiteSpace(txtmail.Text))
             {
-                MessageBox.Show("Ingrese Mail: ");
+                MessageBox.Show("Ingrese su correo electrónico.");
                 return false;
-
             }
             if (string.IsNullOrEmpty(TxtPassword.Text))
             {
