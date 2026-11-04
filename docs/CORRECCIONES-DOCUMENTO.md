@@ -26,24 +26,26 @@ como tablas; si copiás el texto crudo, llegan como líneas con `|`.
 |---|---|---|---|
 | 1 | 1 y pie de todas | Carátula: comisión, turno, legajos y año | Pendiente de datos de JC |
 | 2 | 6 | Historial de revisión: cinco filas nuevas | Regla de la página 38 |
-| 3 | 7 | Resumen ejecutivo: 36 → 38 reglas | RN-38 y RN-39 |
-| 4 | 8 | Resumen ejecutivo: cobertura | Matriz |
+| 3 | 7 | Resumen ejecutivo: 36 → 38 reglas; resultados de usabilidad | RN-38 y RN-39; estudio v2.5 |
+| 4 | 8 | Resumen ejecutivo: cobertura; limitación de usabilidad | Matriz; estudio v2.5 |
+| 4b | 24 | RNF-03: WinForms en lugar de navegadores; limitación de DPI | Decisión de JC |
 | 5 | 26 | RN-06 alineada con `docs/`; RN-38 nueva | Decisión de JC |
 | 6 | 27 | RN-29 y RN-35 alineadas con `docs/`; RN-39 nueva | Decisión de JC |
-| 7 | 36 a 38 | RF-09 pasa a Won't have | Decisión de JC |
+| 7 | 36 a 38 | RF-09 pasa a Won't have; RNF-03 con su limitación | Decisión de JC |
 | 8 | 50 | Estado de implementación del instructivo | Decisión de JC |
 | 9 | 52 y 53 | Pegar las figuras 1 a 4 | Paso 1 del 04/11 |
 | 10 | 54 | Ejemplo resuelto: sin cambios de texto | Decisión de JC: se alinea la semilla |
 | 11 | 83 | CU-07: orden de la lista de espera | RN-35 |
+| 11b | 90 a 97 | Informe de usabilidad: rótulo «(simulado)» y contenido nuevo | Estudio v2.5 |
 | 12 | 99 | A02: catálogo e indicadores | `docs/05-reportes.md` |
 | 13 | 100 | A02: ejemplos RPT-01 y RPT-02 | `docs/05-reportes.md` |
 | 14 | 101 | A02: ejemplo RPT-05 | `docs/05-reportes.md` |
 | 15 | 102 y 103 | A02: diseño técnico | `docs/05-reportes.md` |
 | 16 | 104 y 105 | A02: SQL de RPT-01 y código de exportación | `docs/05-reportes.md` |
 | 17 | 106 | Matriz: criterio y nomenclatura | Matriz |
-| 18 | 107 | Matriz principal | Matriz |
-| 19 | 108 | Cobertura y catálogo CP-11 a CP-43 | Matriz |
-| 20 | 109 | Brechas G-02 a G-05 | Matriz |
+| 18 | 107 | Matriz principal; evidencia de OE-4 | Matriz; estudio v2.5 |
+| 19 | 108 | Advertencia sobre OE-4; cobertura y catálogo CP-11 a CP-43 | Matriz; estudio v2.5 |
+| 20 | 109 | Brechas G-02 a G-06 | Matriz; estudio v2.5 |
 | 21 | 110 y 111 | Conclusiones, limitaciones y trabajo futuro | Matriz |
 | 22 | 2 a 5 | Regenerar el índice | Al final |
 
@@ -81,6 +83,7 @@ en el Word.
 | «fecha» | 2.5 | Riggio, Juan Cruz | Instructivo del requerimiento core: estado de implementación actualizado e incorporación de las figuras 1 a 4. CU-07 alineado con RN-35. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-43 y cobertura recalculada sobre 38 reglas. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta; G-02 resuelta en requerimientos y abierta en reglas. |
+| «fecha» | 2.5 | Riggio, Juan Cruz | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles. Hallazgos U-01 a U-13 y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 > La página 38 exige que todo cambio de categoría MoSCoW quede en el historial «indicando
@@ -99,9 +102,41 @@ En la fila «Reglas de negocio», **reemplazar:**
 
 > Treinta y ocho reglas vigentes que fijan las condiciones bajo las cuales opera el sistema
 
+En la fila «Validación», **reemplazar:**
+
+> Informe de pruebas de usabilidad con cinco participantes y anexo A02 con cinco reportes de gestión.
+
+**Por:**
+
+> Informe de pruebas de usabilidad (simulado, medido sobre la aplicación) con seis perfiles, y
+> anexo A02 con cinco reportes de gestión.
+
+En «Resultados principales», **reemplazar** el punto «Usabilidad por encima del promedio»:
+
+> Usabilidad por encima del promedio. La evaluación arrojó un puntaje SUS de 74,5 frente a un
+> valor de referencia de 68, con una tasa de éxito del 80 % y un tiempo medio de 4 min 56 s,
+> dentro del límite comprometido de cinco minutos.
+
+**Por:**
+
+> Usabilidad dentro de lo comprometido, con dos perfiles en riesgo. El estudio, simulado
+> sobre mediciones de la aplicación real, arrojó un puntaje SUS de 70,0 frente a la
+> referencia de 68, una tasa de éxito sin asistencia del 66,7 % y un tiempo medio de 2 min 38 s,
+> dentro del límite de cinco minutos. Los perfiles sin experiencia y de solo teclado concentran
+> los problemas, con causas identificadas en la interfaz.
+
 ---
 
 ## 4. Página 8 — Resumen ejecutivo, «Limitaciones declaradas»
+
+Dos reemplazos. **Primero:**
+
+> Las sesiones de usabilidad son simuladas y deberán repetirse con participantes reales.
+
+**Por:**
+
+> Las sesiones de usabilidad son simuladas: el comportamiento de la interfaz se midió sobre la
+> aplicación real, y los tiempos y valoraciones de cada perfil se derivaron de esa medición.
 
 **Reemplazar:**
 
@@ -112,6 +147,38 @@ En la fila «Reglas de negocio», **reemplazar:**
 
 > Y la cobertura de verificación alcanza al 71,1 % de las reglas de negocio: once de las
 > treinta y ocho no tienen todavía un caso de prueba automatizado.
+
+---
+
+## 4b. Página 24 — Requerimientos no funcionales, punto 3 (RNF-03)
+
+El texto actual describe un prototipo web, pero la aplicación es Windows Forms, como dice el
+mismo documento en W-02 («Fuera del alcance tecnológico definido (interfaz en Windows
+Forms)»). Se aplica el criterio que JC decidió para RN-35: el documento se alinea con el
+producto. La limitación de escalado la decidió JC el 04/11/2026: no se activa la
+compatibilidad con DPI, y queda documentada.
+
+**Reemplazar** el punto 3 completo:
+
+> 3. Compatibilidad técnica
+>    ○ El prototipo debe poder visualizarse correctamente en navegadores modernos (Chrome,
+>      Firefox, Edge) sin requerir instalación de software adicional.
+>    ○ El diseño debe adaptarse de forma adecuada a diferentes tamaños de pantalla (notebook,
+>      monitor de escritorio y, en la medida de lo posible, tablet o móvil).
+
+**Por:**
+
+> 3. Compatibilidad técnica
+>    ○ El prototipo es una aplicación de escritorio para Windows (Windows Forms, .NET Framework
+>      4.8) y debe ejecutarse en Windows 10 u 11 sin otro software que el motor de base de datos.
+>    ○ Las pantallas deben entrar completas en el área útil de una notebook y de un monitor de
+>      escritorio: ninguna supera los 790 píxeles de alto, y la de compra mantiene siempre a la
+>      vista sus acciones principales, con desplazamiento del contenido cuando hace falta.
+>    ○ **Limitación conocida.** La aplicación no declara compatibilidad con el escalado de
+>      pantalla de Windows (DPI). Con una escala superior al 100 %, Windows la amplía como una
+>      imagen: las pantallas mantienen su disposición y siguen siendo operables, pero el texto
+>      se ve menos nítido. Se aceptó para esta versión porque resolverlo exige revisar las
+>      diecinueve pantallas.
 
 ---
 
@@ -205,6 +272,18 @@ La tabla «Distribución del esfuerzo» **no se recalcula**: queda como la estim
 | W-07 | Recomendaciones personalizadas (RF-09) | Reclasificado desde Could en la versión 2.5. No responde a ningún objetivo específico ni tiene caso de uso, y es el requerimiento no obligatorio más costoso (8 puntos). |
 |---|---|---|
 
+### Página 37 — tabla «Priorización de requerimientos no funcionales», fila RNF-03
+
+**Reemplazar** la justificación:
+
+> Deseable, pero la evaluación del prototipo se realiza en escritorio.
+
+**Por:**
+
+> Deseable, pero la evaluación del prototipo se realiza en escritorio. Se cumple en tamaño de
+> pantalla (casos CP-12 y CP-25); la nitidez con escalado de Windows superior al 100 % queda
+> como limitación conocida (ver Definición de requerimientos, punto 3).
+
 ### Página 38 — tabla «Orden de implementación derivado», fila de la Fase 8
 
 **Reemplazar** en la columna Requerimientos:
@@ -252,10 +331,9 @@ correspondiente de `docs/capturas/instructivo/`. Los epígrafes no cambian.
 | Figura 3 — Resumen del paquete con el descuento aplicado (paso 6) | `figura3-resumen-descuento.png` |
 | Figura 4 — Confirmación de compra y comprobante emitido (pasos 7 y 8) | `figura4-confirmacion-y-comprobante.png` |
 
-> **Antes de pegarlas:** las capturas actuales muestran «Festival de Rock Rosario». Cuando
-> Codex alinee la semilla con el ejemplo de la página 54 (T-21, «Duki en Rosario», clienta
-> Plata con 4 compras), Claude Code las regenera con
-> `tools/CapturasInstructivo/Generar.ps1`. Pegar las regeneradas, no las de hoy.
+> Las figuras son las definitivas: se regeneraron el 04/11/2026, después de T-21, con
+> «Duki en Rosario» y la clienta Plata con 4 compras. El resumen coincide línea por línea con
+> la tabla de la página 54.
 
 ---
 
@@ -279,6 +357,29 @@ reproducir el ejemplo exacto.
 > 4. El sistema muestra la lista de Clientes en orden de prioridad: primero los inscriptos
 > con suscripción activa al momento de inscribirse y después el resto, cada grupo por orden
 > de inscripción (RN-35).
+
+---
+
+## 11b. Páginas 90 a 97 — Informe de pruebas de usabilidad
+
+**Título de la sección** (y su entrada en el índice): **reemplazar** «Informe de pruebas de
+usabilidad» **por** «Informe de pruebas de usabilidad (simulado)», igual que las minutas
+llevan «(simuladas)».
+
+**Contenido: reemplazar las páginas 90 a 97 completas** por el informe de
+[usabilidad/INFORME-USABILIDAD.md](usabilidad/INFORME-USABILIDAD.md). Tiene los mismos
+apartados, en el mismo orden:
+- objetivo, diseño, perfiles, tarea y protocolo, métricas;
+- resultados por perfil, tiempos contra la línea base, satisfacción, SUS y cumplimiento de
+  criterios;
+- hallazgos, plan de mejora, limitaciones y conclusión.
+
+Agrega tres apartados: lo medido sobre la aplicación, la evaluación heurística y el recorrido
+cognitivo. Las referencias nuevas (Nielsen, 1994; Wharton et al., 1994; Card, Moran y Newell,
+1980; Kieras, 2001) van a la Bibliografía de la página 112.
+
+La «Declaración sobre la naturaleza de los datos» del principio del informe **es la que
+sostiene el rótulo**: separa lo medido de lo derivado. No hay que acortarla.
 
 ---
 
@@ -534,13 +635,39 @@ El párrafo «La indicación "ind." en RF-10…» queda igual.
 > de uso. RNF-03 (compatibilidad multipantalla) cuenta con dos casos de prueba, CP-12 y
 > CP-25.
 
-La tabla «Trazabilidad inversa de los objetivos específicos» no cambia.
+En la tabla «Trazabilidad inversa de los objetivos específicos», fila OE-4, **reemplazar** la
+evidencia:
+
+> Informe de pruebas de usabilidad: SUS 74,5 y 80 % de satisfacción
+
+**Por:**
+
+> Informe de pruebas de usabilidad (simulado, medido sobre la aplicación): SUS 70,0 y
+> satisfacción promedio de 4,08
+
+El estado sigue «Cumplido». El resto de la tabla no cambia.
 
 ---
 
 ## 19. Página 108 — Cobertura
 
-La advertencia sobre OE-4, al principio de la página, no cambia.
+### Advertencia sobre OE-4, al principio de la página
+
+**Reemplazar:**
+
+> **Advertencia sobre OE-4.** El objetivo se declara cumplido sobre la base del Informe de
+> pruebas de usabilidad, cuyas sesiones son simuladas según se declara en su encabezado. El
+> cumplimiento quedará plenamente acreditado una vez ejecutadas las sesiones con participantes
+> reales, previstas para la Fase 8 del cronograma.
+
+**Por:**
+
+> **Advertencia sobre OE-4.** El objetivo se declara cumplido sobre la base del Informe de
+> pruebas de usabilidad, que es simulado según se declara en su encabezado, como las minutas.
+> A diferencia de un estudio enteramente supuesto, el comportamiento de la interfaz se midió
+> sobre la aplicación real y cada resultado por perfil se deriva de esa medición. El
+> porcentaje de perfiles con satisfacción buena o muy buena (66,7 %) queda por debajo de su
+> umbral; el objetivo se cumple por el promedio (4,08), que es el otro criterio admitido.
 
 ### Tabla «Cobertura de reglas de negocio por casos de prueba»
 
@@ -668,6 +795,15 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | Hallazgos de usabilidad con acción de mejora | 6 | 6 | — | 100 % |
 | Hallazgos con la acción implementada en el prototipo | 6 | 6 | — | 100 % |
 | Hallazgos con prueba de regresión asociada | 6 | 6 | — | 100 % |
+| Hallazgos del estudio v2.5 (U-01 a U-13) con acción de mejora | 13 | 13 | — | 100 % |
+| Hallazgos del estudio v2.5 ya corregidos | 13 | 0 | 13 hallazgos | 0 % |
+
+Las filas de hallazgos H-01 a H-06 corresponden al estudio de la versión 2.4, cuyas
+correcciones están hechas. Las dos últimas corresponden al estudio rehecho en la versión 2.5
+(ver la brecha G-06).
+
+> **Si antes de pasar esto al Word se corrigen hallazgos U-xx,** actualizar la última fila y
+> G-06 con los que tengan corrección y prueba de regresión.
 
 ### Lectura del cuadro
 
@@ -697,9 +833,9 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 
 **Por:**
 
-> El análisis identificó cinco brechas. G-01 se resolvió a partir de este mismo análisis.
-> En la versión 2.5 se cerró G-03, se resolvieron G-04 y G-05, y G-02 quedó resuelta en el
-> nivel de requerimientos y abierta en el de reglas.
+> El análisis identificó seis brechas. G-01 se resolvió a partir de este mismo análisis.
+> En la versión 2.5 se cerró G-03 y se resolvieron G-04 y G-05. G-02 quedó resuelta en el
+> nivel de requerimientos y abierta en el de reglas. G-06, nueva, queda abierta con su plan.
 
 **Reemplazar la tabla completa.** G-01 no cambia y se repite para que la tabla quede entera:
 
@@ -710,6 +846,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | G-03 | RF-09 (Recomendaciones personalizadas) no responde a ningún objetivo específico ni posee caso de uso asociado. | Media | Cerrada | Se reclasificó como Won't have en la Fase 8, según la regla de repriorización (W-07). |
 | G-04 | En la versión 2.4, ninguno de los seis hallazgos del informe de usabilidad tenía caso de prueba de regresión. | Media | Resuelta | Las seis acciones del plan de mejora están implementadas en el prototipo y cada hallazgo tiene su regresión automatizada: H-01 en CP-13, H-02 en CP-39, H-03 en CP-40, H-04 en CP-41, H-05 en CP-42 y H-06 en CP-19. |
 | G-05 | El documento no reflejaba tres reglas que el prototipo aplica: el tope de capacidad del local sobre la suma de sus sectores y la preventa exclusiva para suscriptores no estaban enunciadas, y la prioridad de los suscriptores en la lista de espera contradecía RN-35, que exigía orden estricto de inscripción. Era comportamiento implementado sin una regla documentada que lo respalde. | Alta | Resuelta | Se incorporaron RN-38 (RF-12 / CU-02) y RN-39 (RF-13 / CU-01), y se reescribió RN-35 en coherencia con RN-37. Las tres quedan sin caso de prueba, dentro de la parte abierta de G-02. |
+| G-06 | El estudio de usabilidad de la versión 2.5, medido sobre la aplicación real, identificó trece hallazgos nuevos (U-01 a U-13). Dos son de severidad mayor: cerrar una pantalla con la X deja la aplicación en ejecución y sin ventanas, y nada indica dónde se escribe la cantidad de entradas. Ninguno está corregido. | Media | Abierta | Plan de mejora priorizado del informe de usabilidad. ⚠ DECISIÓN DE JC: la propuesta es aplicar antes de la entrega las prioridades 1 a 3 (U-01, U-04 y U-05; 10 horas), cada una con su prueba de regresión como se hizo con H-01 a H-06, y dejar el resto como trabajo futuro. Si se decide otra cosa, ajustar este texto y el punto 1 del trabajo futuro. |
 
 ### Observación sobre G-03
 
@@ -744,6 +881,26 @@ Debajo de la observación sobre G-03:
 
 ## 21. Páginas 110 y 111 — Conclusiones
 
+### Página 110 — «Sobre la validación con usuarios»
+
+**Reemplazar** el párrafo completo:
+
+> El hallazgo más consistente de las pruebas de usabilidad es que las dificultades no
+> aparecen al operar el sistema sino al comprender sus decisiones. El resumen del paquete, el
+> nivel de fidelidad y la vigencia de la reserva son reglas correctamente definidas que la
+> interfaz no logra comunicar. Ninguna de las seis acciones del plan de mejora introduce un
+> requerimiento nuevo: todas consisten en explicar mejor algo que el sistema ya hace.
+
+**Por:**
+
+> La primera ronda de usabilidad mostró que las dificultades estaban en comprender las
+> decisiones del sistema; sus seis correcciones están hechas y verificadas. La segunda ronda,
+> medida sobre la aplicación real, desplazó el problema: ahora está en el control de la
+> navegación. La aplicación no termina cuando el usuario cierra una ventana, y la acción
+> central del armado, escribir la cantidad, no se anuncia. Los dos perfiles que fallan son los
+> que RNF-01 nombra: quien no tiene experiencia técnica y quien no puede usar el mouse.
+> Ninguna de las acciones del nuevo plan introduce un requerimiento.
+
 ### Página 110 — «Sobre las reglas de negocio»
 
 **Reemplazar:**
@@ -753,6 +910,18 @@ Debajo de la observación sobre G-03:
 **Por:**
 
 > Explicitar las treinta y ocho reglas resultó más productivo de lo esperado.
+
+### Página 110 — tabla «Limitaciones del trabajo», primera fila
+
+**Reemplazar:**
+
+| Las sesiones de usabilidad son simuladas. | El objetivo específico 4 se considera cumplido de manera provisoria hasta su ejecución con participantes reales. |
+|---|---|
+
+**Por:**
+
+| Las sesiones de usabilidad son simuladas. | La interfaz se midió sobre la aplicación real; los tiempos y las valoraciones de cada perfil son derivaciones de esa medición y deben leerse como predicciones. |
+|---|---|
 
 ### Página 110 — tabla «Limitaciones del trabajo», tercera fila
 
@@ -767,6 +936,16 @@ Debajo de la observación sobre G-03:
 |---|---|
 
 ### Página 111 — Trabajo futuro
+
+**Reemplazar** el punto 1:
+
+> Ejecutar las sesiones de usabilidad con participantes reales y contrastar los resultados con
+> la línea base establecida en este informe.
+
+**Por:**
+
+> Aplicar el resto del plan de mejora del estudio de usabilidad (U-02, U-03 y U-06 a U-13) y
+> repetir la medición con las mismas herramientas para contrastar los resultados.
 
 **Reemplazar** el punto 2:
 
