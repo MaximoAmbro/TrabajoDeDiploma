@@ -31,7 +31,7 @@ using Microsoft.Identity.Client;
 
 namespace Visual
 {
-    public partial class FrmCompraCliente : Form
+    public partial class FrmCompraCliente : FormularioEventAura
     {
         public int IDUsuario;
         public int IDEvento;
@@ -43,6 +43,7 @@ namespace Visual
         private Cliente cliente;   // RN-22: su nivel persistido es el que se aplica
         private Dictionary<int, Sector> sectores = new Dictionary<int, Sector>();
         private bool cargandoGrilla;
+        private bool agotado;
         private Panel contenidoCompra;
         private Panel accionesCompra;
 
@@ -145,12 +146,10 @@ namespace Visual
         // RN-10: con el evento agotado, en lugar de la grilla de sectores se ofrece la lista de espera.
         private void MostrarSiAgotado()
         {
-            bool agotado = GestorEventos.Instance.EstaAgotado(IDEvento);
+            agotado = GestorEventos.Instance.EstaAgotado(IDEvento);
             dgvSectores.Visible = !agotado;
             lblAgotado.Visible = agotado;
             btnListaEspera.Visible = agotado;
-            btnComprar.Enabled = !agotado;
-            chkSeguro.Enabled = !agotado;
             foreach (CheckBox chk in ChecksDeServicio())
             {
                 // Si una devolución libera cupo mientras esta ventana está abierta,
@@ -160,6 +159,18 @@ namespace Visual
             if (agotado)
             {
                 MarcarInscripto(GestorListaEspera.Instance.EstaInscripto(IDEvento, IDUsuario));
+            }
+            ActualizarHabilitados();
+        }
+
+        private void ActualizarHabilitados()
+        {
+            bool hayEntradas = GestorPaquetes.Instance.CantidadEntradas(paquete) > 0;
+            btnComprar.Enabled = hayEntradas && !agotado;
+            chkSeguro.Enabled = hayEntradas && !agotado;
+            if (!chkSeguro.Enabled && chkSeguro.Checked)
+            {
+                chkSeguro.Checked = false;
             }
         }
 
@@ -335,7 +346,7 @@ namespace Visual
             dgvSectores.Columns.Add("Sector", "Sector");
             dgvSectores.Columns.Add("Precio", "Precio");
             dgvSectores.Columns.Add("Disponibles", "Disponibles");
-            dgvSectores.Columns.Add("Cantidad", "Cantidad");
+            dgvSectores.Columns.Add("Cantidad", "Cantidad (escribí aquí)");
             dgvSectores.Columns["IdSector"].Visible = false;
             foreach (DataGridViewColumn columna in dgvSectores.Columns)
             {
@@ -351,11 +362,21 @@ namespace Visual
             dgvSectores.Columns["Cantidad"].DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(245, 241, 252);
 
             sectores.Clear();
+            int max = GestorParametros.Instance.ObtenerEntero("COMPRA_ENTRADAS_MAX");
             foreach (Sector sector in GestorEventos.Instance.Sectores(IDEvento))
             {
                 sectores[sector.Id] = sector;
-                dgvSectores.Rows.Add(sector.Id, sector.Nombre, sector.Precio,
+                int fila = dgvSectores.Rows.Add(sector.Id, sector.Nombre, sector.Precio,
                     GestorPaquetes.Instance.DisponiblesDe(sector.Id), 0);
+                dgvSectores.Rows[fila].Cells["Cantidad"].ToolTipText =
+                    $"Escribí cuántas entradas querés de este sector (hasta {max} por compra).";
+            }
+
+            DataGridViewRow primeraDisponible = dgvSectores.Rows.Cast<DataGridViewRow>()
+                .FirstOrDefault(f => Convert.ToInt32(f.Cells["Disponibles"].Value) > 0);
+            if (primeraDisponible != null)
+            {
+                dgvSectores.CurrentCell = primeraDisponible.Cells["Cantidad"];
             }
 
             dgvSectores.CellValueChanged -= dgvSectores_CellValueChanged;
@@ -517,6 +538,7 @@ namespace Visual
             texto.AppendLine("El descuento se aplica sobre el valor");
             texto.AppendLine("de las entradas.");
             lblResumen.Text = texto.ToString();
+            ActualizarHabilitados();
         }
 
         // RN-33: importes en pesos argentinos.
@@ -627,6 +649,22 @@ namespace Visual
                 }
             }
             VolverAlListado();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing && !PaqueteVacio())
+            {
+                DialogResult respuesta = MessageBox.Show(
+                    "Si cierra la ventana se descarta el paquete que armó. ¿Desea cerrar?",
+                    "Cerrar la compra", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+                if (respuesta != DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                }
+            }
+            base.OnFormClosing(e);
         }
 
         private void VolverAlListado()
