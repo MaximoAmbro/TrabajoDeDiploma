@@ -51,7 +51,7 @@ namespace Visual
             // btnVolver
             //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(9, 552);
+            this.btnVolver.Location = new System.Drawing.Point(20, 630);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(150, 34);
@@ -67,7 +67,7 @@ namespace Visual
             this.btnComprar.FlatAppearance.BorderSize = 0;
             this.btnComprar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnComprar.ForeColor = System.Drawing.Color.White;
-            this.btnComprar.Location = new System.Drawing.Point(82, 466);
+            this.btnComprar.Location = new System.Drawing.Point(165, 567);
             this.btnComprar.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnComprar.Name = "btnComprar";
             this.btnComprar.Size = new System.Drawing.Size(222, 44);
@@ -87,13 +87,14 @@ namespace Visual
             //
             // label1
             //
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.AutoSize = false;
+            this.label1.UseMnemonic = false;
+            this.label1.Font = new System.Drawing.Font("Nirmala UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.label1.Location = new System.Drawing.Point(33, 68);
+            this.label1.Location = new System.Drawing.Point(20, 12);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(329, 50);
+            this.label1.Size = new System.Drawing.Size(1060, 96);
             this.label1.TabIndex = 27;
             this.label1.Text = "Selecciona tickets";
             //
@@ -101,7 +102,7 @@ namespace Visual
             //
             this.lblNivel.AutoSize = true;
             this.lblNivel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.lblNivel.Location = new System.Drawing.Point(17, 122);
+            this.lblNivel.Location = new System.Drawing.Point(20, 112);
             this.lblNivel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNivel.Name = "lblNivel";
             this.lblNivel.Size = new System.Drawing.Size(40, 19);
@@ -112,7 +113,7 @@ namespace Visual
             //
             this.lnkNiveles.AutoSize = true;
             this.lnkNiveles.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.lnkNiveles.Location = new System.Drawing.Point(230, 122);
+            this.lnkNiveles.Location = new System.Drawing.Point(310, 112);
             this.lnkNiveles.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lnkNiveles.Name = "lnkNiveles";
             this.lnkNiveles.Size = new System.Drawing.Size(147, 19);
@@ -123,19 +124,19 @@ namespace Visual
             //
             // dgvSectores
             //
-            this.dgvSectores.Location = new System.Drawing.Point(17, 148);
+            this.dgvSectores.Location = new System.Drawing.Point(20, 145);
             this.dgvSectores.Margin = new System.Windows.Forms.Padding(2);
             this.dgvSectores.Name = "dgvSectores";
-            this.dgvSectores.Size = new System.Drawing.Size(360, 170);
+            this.dgvSectores.Size = new System.Drawing.Size(545, 215);
             this.dgvSectores.TabIndex = 36;
             //
             // lblAgotado
             //
             this.lblAgotado.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAgotado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.lblAgotado.Location = new System.Drawing.Point(17, 158);
+            this.lblAgotado.Location = new System.Drawing.Point(20, 155);
             this.lblAgotado.Name = "lblAgotado";
-            this.lblAgotado.Size = new System.Drawing.Size(360, 84);
+            this.lblAgotado.Size = new System.Drawing.Size(545, 84);
             this.lblAgotado.TabIndex = 51;
             this.lblAgotado.Text = "Entradas agotadas.\r\nAnotate en la lista de espera y te vamos a notificar si se libera un lugar.";
             this.lblAgotado.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -148,10 +149,10 @@ namespace Visual
             this.btnListaEspera.FlatAppearance.BorderSize = 0;
             this.btnListaEspera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnListaEspera.ForeColor = System.Drawing.Color.White;
-            this.btnListaEspera.Location = new System.Drawing.Point(62, 254);
+            this.btnListaEspera.Location = new System.Drawing.Point(130, 260);
             this.btnListaEspera.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnListaEspera.Name = "btnListaEspera";
-            this.btnListaEspera.Size = new System.Drawing.Size(270, 44);
+            this.btnListaEspera.Size = new System.Drawing.Size(320, 44);
             this.btnListaEspera.TabIndex = 52;
             this.btnListaEspera.Text = "Anotarme en la lista de espera";
             this.btnListaEspera.UseVisualStyleBackColor = false;
@@ -161,9 +162,9 @@ namespace Visual
             // chkHospedaje
             //
             this.chkHospedaje.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkHospedaje.Location = new System.Drawing.Point(17, 326);
+            this.chkHospedaje.Location = new System.Drawing.Point(20, 375);
             this.chkHospedaje.Name = "chkHospedaje";
-            this.chkHospedaje.Size = new System.Drawing.Size(175, 23);
+            this.chkHospedaje.Size = new System.Drawing.Size(545, 30);
             this.chkHospedaje.TabIndex = 37;
             this.chkHospedaje.Text = "Hospedaje";
             this.chkHospedaje.UseVisualStyleBackColor = true;
@@ -171,9 +172,9 @@ namespace Visual
             // chkTraslado
             //
             this.chkTraslado.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkTraslado.Location = new System.Drawing.Point(200, 326);
+            this.chkTraslado.Location = new System.Drawing.Point(20, 409);
             this.chkTraslado.Name = "chkTraslado";
-            this.chkTraslado.Size = new System.Drawing.Size(175, 23);
+            this.chkTraslado.Size = new System.Drawing.Size(545, 30);
             this.chkTraslado.TabIndex = 38;
             this.chkTraslado.Text = "Traslado";
             this.chkTraslado.UseVisualStyleBackColor = true;
@@ -181,9 +182,9 @@ namespace Visual
             // chkMerch
             //
             this.chkMerch.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkMerch.Location = new System.Drawing.Point(17, 352);
+            this.chkMerch.Location = new System.Drawing.Point(20, 443);
             this.chkMerch.Name = "chkMerch";
-            this.chkMerch.Size = new System.Drawing.Size(175, 23);
+            this.chkMerch.Size = new System.Drawing.Size(545, 30);
             this.chkMerch.TabIndex = 39;
             this.chkMerch.Text = "Merchandising";
             this.chkMerch.UseVisualStyleBackColor = true;
@@ -191,9 +192,9 @@ namespace Visual
             // chkVIP
             //
             this.chkVIP.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkVIP.Location = new System.Drawing.Point(200, 352);
+            this.chkVIP.Location = new System.Drawing.Point(20, 477);
             this.chkVIP.Name = "chkVIP";
-            this.chkVIP.Size = new System.Drawing.Size(175, 23);
+            this.chkVIP.Size = new System.Drawing.Size(545, 30);
             this.chkVIP.TabIndex = 40;
             this.chkVIP.Text = "Experiencia VIP";
             this.chkVIP.UseVisualStyleBackColor = true;
@@ -201,31 +202,33 @@ namespace Visual
             // chkSeguro
             //
             this.chkSeguro.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkSeguro.Location = new System.Drawing.Point(17, 384);
+            this.chkSeguro.Location = new System.Drawing.Point(20, 517);
             this.chkSeguro.Name = "chkSeguro";
-            this.chkSeguro.Size = new System.Drawing.Size(360, 23);
+            this.chkSeguro.Size = new System.Drawing.Size(545, 32);
             this.chkSeguro.TabIndex = 41;
             this.chkSeguro.Text = "Seguro de entrada (devolución hasta 48 h antes)";
             this.chkSeguro.UseVisualStyleBackColor = true;
             //
             // pnlResumen
             //
+            this.pnlResumen.AutoScroll = true;
             this.pnlResumen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlResumen.Controls.Add(this.lblResumen);
-            this.pnlResumen.Location = new System.Drawing.Point(395, 68);
+            this.pnlResumen.Location = new System.Drawing.Point(585, 145);
             this.pnlResumen.Name = "pnlResumen";
-            this.pnlResumen.Size = new System.Drawing.Size(350, 442);
+            this.pnlResumen.Size = new System.Drawing.Size(495, 470);
             this.pnlResumen.TabIndex = 42;
             //
             // lblResumen
             //
-            this.lblResumen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblResumen.AutoSize = true;
+            this.lblResumen.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblResumen.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblResumen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblResumen.Location = new System.Drawing.Point(0, 0);
             this.lblResumen.Name = "lblResumen";
             this.lblResumen.Padding = new System.Windows.Forms.Padding(8);
-            this.lblResumen.Size = new System.Drawing.Size(348, 440);
+            this.lblResumen.Size = new System.Drawing.Size(493, 468);
             this.lblResumen.TabIndex = 0;
             //
             // FrmCompraCliente
@@ -233,7 +236,7 @@ namespace Visual
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(760, 595);
+            this.ClientSize = new System.Drawing.Size(1100, 680);
             this.Controls.Add(this.btnListaEspera);
             this.Controls.Add(this.lblAgotado);
             this.Controls.Add(this.pnlResumen);
@@ -255,7 +258,7 @@ namespace Visual
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmCompraCliente";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FrmCompra";
+            this.Text = "EventAura · Armar paquete";
             this.Load += new System.EventHandler(this.FrmCompraCliente_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSectores)).EndInit();
             this.pnlResumen.ResumeLayout(false);

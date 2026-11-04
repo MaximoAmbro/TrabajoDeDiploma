@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using Point = System.Drawing.Point;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -42,10 +43,73 @@ namespace Visual
         private Cliente cliente;   // RN-22: su nivel persistido es el que se aplica
         private Dictionary<int, Sector> sectores = new Dictionary<int, Sector>();
         private bool cargandoGrilla;
+        private Panel contenidoCompra;
+        private Panel accionesCompra;
 
         public FrmCompraCliente()
         {
             InitializeComponent();
+            ConfigurarAreaDeCompra();
+        }
+
+        // RNF-02/RNF-03: las acciones quedan visibles aun si el contenido necesita
+        // desplazamiento en una notebook o con texto ampliado por Windows.
+        private void ConfigurarAreaDeCompra()
+        {
+            int margen = Math.Max(4, btnVolver.Height / 8);
+            accionesCompra = new Panel
+            {
+                Name = "pnlAccionesCompra",
+                Dock = DockStyle.Bottom,
+                Height = Math.Max(btnComprar.Height, btnVolver.Height) + 2 * margen,
+                Padding = new Padding(btnVolver.Left, margen, btnVolver.Left, margen),
+                TabIndex = 1
+            };
+            contenidoCompra = new Panel
+            {
+                Name = "pnlContenidoCompra",
+                Dock = DockStyle.Fill,
+                AutoScroll = true,
+                AutoScrollMargin = new Size(margen, margen),
+                TabIndex = 0
+            };
+            SuspendLayout();
+            foreach (Control control in Controls.Cast<Control>().ToArray())
+            {
+                if (control != btnComprar && control != btnVolver)
+                    contenidoCompra.Controls.Add(control);
+            }
+            accionesCompra.Controls.Add(btnVolver);
+            accionesCompra.Controls.Add(btnComprar);
+            btnVolver.TabIndex = 1;
+            btnComprar.TabIndex = 0;
+            Controls.Add(contenidoCompra);
+            Controls.Add(accionesCompra);
+            accionesCompra.Resize += (sender, e) => AlinearAcciones();
+            accionesCompra.Layout += (sender, e) => AlinearAcciones();
+            ResumeLayout(true);
+            AlinearAcciones();
+        }
+
+        private void AlinearAcciones()
+        {
+            btnVolver.Location = new Point(accionesCompra.Padding.Left, (accionesCompra.Height - btnVolver.Height) / 2);
+            btnComprar.Location = new Point(accionesCompra.ClientSize.Width - accionesCompra.Padding.Right - btnComprar.Width,
+                (accionesCompra.Height - btnComprar.Height) / 2);
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            AjustarAreaVisible(Screen.FromControl(this).WorkingArea);
+        }
+
+        private void AjustarAreaVisible(System.Drawing.Rectangle areaTrabajo)
+        {
+            Size = new Size(Math.Min(Width, areaTrabajo.Width), Math.Min(Height, areaTrabajo.Height));
+            Location = new Point(areaTrabajo.Left + (areaTrabajo.Width - Width) / 2,
+                areaTrabajo.Top + (areaTrabajo.Height - Height) / 2);
+            AlinearAcciones();
         }
         private void FrmCompraCliente_Load(object sender, EventArgs e)
         {
@@ -71,6 +135,8 @@ namespace Visual
             CargarSectores();
             CargarServicios();
             chkSeguro.CheckedChanged += chkSeguro_CheckedChanged;
+            lblResumen.MaximumSize = new Size(pnlResumen.ClientSize.Width - SystemInformation.VerticalScrollBarWidth, 0);
+            lblResumen.MinimumSize = new Size(lblResumen.MaximumSize.Width, 0);
             lblResumen.UseMnemonic = false;   // «Meet & Greet»: el & no es tecla de acceso
             MostrarSiAgotado();
             ActualizarResumen();
@@ -85,12 +151,14 @@ namespace Visual
             btnListaEspera.Visible = agotado;
             btnComprar.Enabled = !agotado;
             chkSeguro.Enabled = !agotado;
+            foreach (CheckBox chk in ChecksDeServicio())
+            {
+                // Si una devolución libera cupo mientras esta ventana está abierta,
+                // rehabilitar solo los servicios que el evento realmente ofrece (RN-14).
+                chk.Enabled = !agotado && chk.Tag is Servicio;
+            }
             if (agotado)
             {
-                foreach (CheckBox chk in ChecksDeServicio())
-                {
-                    chk.Enabled = false;
-                }
                 MarcarInscripto(GestorListaEspera.Instance.EstaInscripto(IDEvento, IDUsuario));
             }
         }
@@ -308,9 +376,9 @@ namespace Visual
 
             int cantidad;
             string texto = Convert.ToString(fila.Cells["Cantidad"].Value);
-            if (!int.TryParse(string.IsNullOrWhiteSpace(texto) ? "0" : texto.Trim(), out cantidad))
+            if (!int.TryParse(string.IsNullOrWhiteSpace(texto) ? "0" : texto.Trim(), out cantidad) || cantidad < 0)
             {
-                MessageBox.Show("La cantidad debe ser un número entero.");
+                MessageBox.Show("La cantidad debe ser un número entero de 0 en adelante.");
                 RestaurarCantidad(fila, anterior);
                 return;
             }
@@ -551,7 +619,8 @@ namespace Visual
             {
                 DialogResult respuesta = MessageBox.Show(
                     "Si vuelve al listado se descarta el paquete que armó. ¿Desea volver?",
-                    "Volver al listado", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    "Volver al listado", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
                 if (respuesta != DialogResult.Yes)
                 {
                     return;
