@@ -21,6 +21,24 @@ En este repositorio trabajan dos agentes, **Claude Code** y **Codex**, siempre a
 JC (Juan Cruz Riggio). El repositorio es compartido con Máximo Ambrosino: lo que se publica
 le llega a él.
 
+**Hay otro agente trabajando hacia el mismo entregable**: la entrega final del Trabajo de
+Campo, a principios de diciembre de 2026. Cada uno lee la salida del otro, así que los
+reportes se escriben para el otro agente, no solo para JC.
+
+| Quién | Qué hace |
+|---|---|
+| JC | Decide el alcance, habla con el docente y con Máximo, hace las pruebas manuales, revisa `git status` y autoriza commits y push |
+| Claude Code | Revisión, documentación, matriz de trazabilidad, planificación y encargos para Codex |
+| Codex | Implementación y pruebas automáticas |
+
+### Antes de empezar: `docs/ESTADO-AGENTES.md`
+
+- **Los dos agentes lo leen antes de hacer cualquier cosa.** Dice de quién es el turno, en
+  qué tarea está cada uno, qué quedó pendiente y qué está bloqueado.
+- Lo escribe solo Claude Code. Codex no lo modifica: reporta sus cambios de estado en su
+  reporte final, y JC se los pasa a Claude Code.
+- Si el turno no es tuyo, no toques nada y avisá a JC.
+
 ### Reparto de carpetas
 
 | Agente | Puede modificar |
@@ -35,12 +53,19 @@ le llega a él.
   de forma explícita en esa sesión.
 - Las pruebas manuales que surjan del trabajo de Codex van en su reporte final, con qué
   probar y qué resultado se espera. Claude Code las pasa a `docs/PRUEBAS-PENDIENTES.md`.
+- Codex deja sus reportes en `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>.md`. Claude Code los
+  mueve a `docs/` en su turno siguiente.
 
 ### Un agente por vez
 
-- **Nunca trabajan los dos agentes al mismo tiempo.**
+- **Nunca trabajan los dos agentes al mismo tiempo.** El turno está en
+  `docs/ESTADO-AGENTES.md`.
 - Al empezar, el agente corre `git status`. Si hay cambios sin commitear que no son de su
   sesión, se detiene y avisa a JC antes de modificar nada.
+- Cuando el agente termina su lista, **para**: no busca qué más mejorar por su cuenta. Si ve
+  algo, lo anota en el reporte para que decida JC.
+- El reporte final dice qué se hizo, qué quedó pendiente, qué se encontró fuera de la zona
+  propia y qué debería hacer el otro agente después.
 
 ### Commits y publicación
 
@@ -148,6 +173,10 @@ Una tarea está completa cuando:
    Codex las lista en su reporte final para que se transcriban.
 6. El reporte final declara todo cambio en un `.Designer.cs` y lista los archivos tocados,
    para que JC revise `git status` antes de autorizar el commit.
+7. Toda prueba automática nueva tiene un ID `CP-xx` correlativo, registrado en
+   `docs/04-casos-prueba.md`. Lleva un comentario `// CP-xx — RF-yy, RN-zz: …` y el ID en el
+   nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName` en cada `DataRow`. Con MSTest
+   3.6.4, `[TestMethod(DisplayName = …)]` no compila.
 
 > No des por verificada una prueba manual que no corriste ni la omitas: anotala.
 <!-- /compartido -->
