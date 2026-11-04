@@ -1,6 +1,10 @@
-# Casos de prueba — lógica de fidelización
+# Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 42 casos: CP-01 a CP-10 son los de la lógica de
+fidelización, que define el documento; CP-11 a CP-42 se agregaron en noviembre de 2026
+(ver «Casos CP-11 a CP-42» más abajo). CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
+en cada `DataRow`.
 
 > **Los diez casos son pruebas de integración contra SQL Server, no pruebas unitarias.**
 > No hay ningún punto de inyección: `GestorParametros` lee los valores de las reglas de la
@@ -57,6 +61,56 @@ Cliente Plata, 2 entradas Campo a $25.000, hospedaje $45.000:
 | 7 | **Total a pagar** | **$99.625** |
 
 Si el cálculo no da exactamente $99.625, hay un error en la implementación.
+
+Este cálculo es el caso **CP-11**.
+
+## Casos CP-11 a CP-42
+
+Mismas condiciones que los diez anteriores: integración contra `BddEventAura_Pruebas`, datos
+de `Fake`, sesión cerrada antes y después. Los que dicen «interfaz» abren el formulario real
+en un hilo STA y responden sus MessageBox con `Pruebas/DialogosPrueba.cs`. Necesitan una
+sesión de escritorio abierta.
+
+Cuántas veces corre cada uno: CP-15 tiene 4 variantes, CP-20 tiene 2 y CP-25 tiene 3. Con
+CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **48 ejecuciones**.
+
+| CP | Archivo | Condición de entrada | Resultado esperado | RF | Reglas | Hall. |
+|---|---|---|---|---|---|---|
+| CP-11 | PruebasFidelizacion | Plata, 2 entradas Campo a $25.000, hospedaje $45.000 | Los siete pasos de la verificación de referencia, total $99.625 | RF-05, RF-08 | RN-20, RN-21 | — |
+| CP-12 | PruebasFormularios | Los 19 formularios de `Visual` | Ninguno declara más de 790 px de alto | RNF-03 | — | — |
+| CP-13 | PruebasInterfaz | Compra con título de 100 caracteres, 2 entradas por sector, 4 servicios y seguro; después, un evento agotado | Título, nivel y enlace sin superponerse; cada importe y el TOTAL completos, con la leyenda del descuento. En el agotado, servicios deshabilitados | RF-05 | RN-10 | H-01 |
+| CP-14 | PruebasInterfaz | Abrir el alta de usuario | Todos los campos vacíos | RF-01 | — | — |
+| CP-15 | PruebasInterfaz | Nombre, apellido o correo con solo espacios, o contraseña «abc» (4 variantes) | Aviso correspondiente; no se crea la cuenta | RF-01 | RN-02 | — |
+| CP-16 | PruebasInterfaz | Búsqueda sin resultados | Una fila de aviso; grilla de solo lectura | RF-03 | — | — |
+| CP-17 | PruebasInterfaz | «Comprar» sin evento elegido | Aviso «Seleccionar evento»; no abre la compra | RF-03 | — | — |
+| CP-18 | PruebasInterfaz | Foco en la caja de búsqueda | Texto guía «Evento o dirección del local» visible | RF-03 | — | — |
+| CP-19 | PruebasInterfaz | «Volver al listado» con paquete armado: No y después Sí | No es el botón por defecto; No conserva el paquete; Sí vuelve al listado | RF-05 | — | H-06 |
+| CP-20 | PruebasInterfaz | Cantidad «abc» o «-1» (2 variantes) | Aviso y se restaura la cantidad anterior | RF-04 | — | — |
+| CP-21 | PruebasInterfaz | Eliminar un evento sin ventas y otro con ventas | Confirmación con No por defecto; sin ventas se elimina; con ventas se ofrece suspender | RF-12 | RN-11 | — |
+| CP-22 | PruebasInterfaz | Historial sin entradas elegidas | «Devolver» deshabilitado y gris | RF-05 | — | — |
+| CP-23 | PruebasInterfaz | Tildar y destildar una entrada asegurada | «Devolver 1 entrada(s)» habilitado; vuelve a deshabilitarse | RF-05 | — | — |
+| CP-24 | PruebasInterfaz | Evento agotado que recupera cupo por una devolución | Compra y servicios bloqueados; después, aviso RN-10, vuelve la grilla, solo los servicios del evento, sin inscribir en la lista | RF-05, RF-10 | RN-10, RN-14 | — |
+| CP-25 | PruebasInterfaz | Compra a 125 % y 150 % en 1366 × 728 y 1920 × 1032 (3 variantes) | La ventana entra, se llega al final del resumen, «Volver» y «Comprar» a la vista | RF-05, RNF-03 | — | — |
+| CP-26 | PruebasCuentas | Alta de un cliente y segunda alta con el mismo correo | Nace Bronce y sin suscripción; la segunda alta lanza RN-01 | RF-01 | RN-01, RN-03 | — |
+| CP-27 | PruebasCuentas | Inicio de sesión correcto, con espacios alrededor del correo | Devuelve el usuario sin la contraseña y abre la sesión | RF-02 | — | — |
+| CP-28 | PruebasCuentas | `LOGIN_INTENTOS_MAX` intentos fallidos; después, contraseña correcta; después, bloqueo vencido | Avisos con los intentos restantes; bloqueo por `LOGIN_BLOQUEO_MIN`; rechaza la contraseña correcta mientras dura; al vencer, entra y el contador vuelve a 0 | RF-02 | RN-04 | — |
+| CP-29 | PruebasCuentas | Correo inexistente, correo vacío o contraseña vacía | Devuelve null; no hay sesión | RF-02 | — | — |
+| CP-30 | PruebasCompra | Búsqueda por nombre, dirección, categoría y fecha; evento pasado; evento suspendido | Cada filtro incluye o excluye según corresponde. El evento pasado no aparece y rechaza paquete y lista de espera con RN-09. El suspendido no aparece | RF-03 | RN-09 | — |
+| CP-31 | PruebasCompra | Más entradas que el cupo del sector; más que `COMPRA_ENTRADAS_MAX` sumando sectores; un servicio sin entradas | RN-08, RN-12 y RN-13 respectivamente | RF-04, RF-05 | RN-08, RN-12, RN-13 | — |
+| CP-32 | PruebasCompra | Pago aprobado de 3 entradas | Compra Confirmada; 3 QR `EA-` + 32 hexadecimales, distintos; un pago Aprobado con los últimos 4 y el token, sin el número completo | RF-06, RF-07 | RN-17, RN-18, RN-30, RN-31 | — |
+| CP-33 | PruebasCompra | Pago rechazado (tarjeta terminada en 0000) en un sector de capacidad 1 | Compra Pendiente; pago Rechazado registrado; el cupo vuelve y otro cliente puede reservarlo | RF-06, RF-07 | RN-17, RN-31, RN-32 | — |
+| CP-34 | PruebasCompra | Reserva vencida al confirmar | RN-15; compra Vencida; cupo devuelto; ningún pago. **Omitida**: ver «Segunda tanda» en `TAREAS-CODEX-PRUEBAS.md` (T-19) | RF-06 | RN-15 | — |
+| CP-35 | PruebasReportes | Pedir un reporte sin sesión, como Cliente y como Administrador | RN-34 en los dos primeros; el Administrador lo obtiene | RF-11 | RN-34 | — |
+| CP-36 | PruebasReportes | RPT-01 con 2 compras confirmadas (1 y 2 entradas) y una solo iniciada | 3 entradas, $75.000, ticket $25.000, 30,0 % de ocupación | RF-11 | — | — |
+| CP-37 | PruebasReportes | RPT-05 de un evento agotado con un inscripto; inscripción repetida; después, devolución | «Agotado» con 1 en espera; RN-36 al repetir; tras la devolución, «Con cupo», y con «solo agotados» no aparece | RF-10, RF-11 | RN-10, RN-36 | — |
+| CP-38 | PruebasReportes | Exportar con un exportador de prueba; período invertido; código inexistente | El exportador recibe las mismas filas; las dos llamadas inválidas lanzan `ArgumentException` | RF-11 | — | — |
+| CP-39 | PruebasInterfaz | Pantalla de pago recién abierta y con la reserva en el último minuto | «Reserva: mm:ss» a la vista, en violeta; en rojo en el último minuto | RF-06 | — | H-02 |
+| CP-40 | PruebasInterfaz | Evento de capacidad 5 con 1 vendida | La grilla muestra 4 disponibles; solo «Cantidad» es editable | RF-04 | — | H-03 |
+| CP-41 | PruebasInterfaz | Comprar sin tildar el seguro y responder No | Aviso «Seguro de entrada» con No por defecto; no se reserva nada | RF-05 | — | H-04 |
+| CP-42 | PruebasInterfaz | Clic en «¿Cómo funcionan los niveles?» | Aviso con los umbrales vigentes de `Parametros` | RF-08 | — | H-05 |
+
+CP-39 a CP-42 comprueban que la interfaz **comunica** RN-15, RN-08, RN-28 y RN-19. No las
+verifican: por eso esas reglas no figuran en su columna.
 
 ## Hallazgos de usabilidad a contemplar en la UI
 

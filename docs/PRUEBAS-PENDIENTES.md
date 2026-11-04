@@ -447,3 +447,13 @@ Además se agregó una regresión del evento agotado que recupera cupo por una d
 se corrigió la rehabilitación de los servicios disponibles, sin habilitar servicios que
 el evento no ofrece y sin inscribir al cliente indebidamente en la lista de espera.
 Los escenarios usan solo `BddEventAura_Pruebas`; no se prepararon alterando la base de desarrollo.
+
+## Pruebas automáticas CP-26 a CP-42 (Codex) — 04/11/2026, commit `5eabe41`
+
+Reporte: [RESULTADOS-TAREAS-CODEX-2026-11-04.md](RESULTADOS-TAREAS-CODEX-2026-11-04.md).
+Batería: 48 ejecuciones, 47 correctas y 1 omitida (CP-34). Quedan dos pendientes:
+
+| ID | Qué probar | Resultado esperado |
+|---|---|---|
+| CX-01 | CP-34 (RN-15, reserva vencida). **Bloqueada** hasta que Codex haga T-19 (`TAREAS-CODEX-PRUEBAS.md`, «Segunda tanda»): corregir el helper que atrasa la compra y quitar el `Ignore` | La batería da 48 de 48: RN-15, compra Vencida, cupo devuelto y ningún pago. Hasta entonces, CP-34 no cuenta como aprobada en la matriz |
+| CX-02 | Manual, una vez y por reloj, sin tocar fechas, en la aplicación contra la base de desarrollo: iniciar una compra, abrir el pago y esperar `RESERVA_MINUTOS` sin pagar | El temporizador baja hasta 00:00 y pasa a rojo en el último minuto; aparece «Reserva vencida»; se vuelve al listado; al reabrir el evento, el cupo está completo; en «Mis eventos» no figura la compra. Es la única comprobación de RN-15 de punta a punta: CP-34 prueba la regla y CP-39 solo el temporizador |
