@@ -138,8 +138,8 @@ Las hizo Claude Code. Los resultados están en `docs/`, y los scripts para repet
 | Qué | Cuántas | Por qué no se ejecutó | De quién |
 |---|---|---|---|
 | Parte de Máximo | 64 | No hay resultados en el repositorio | **Máximo** |
-| JC-R10: escanear dos QR con el celular | 1 | Hace falta un celular | **JC** |
-| CX-03: abrir dos formularios en el diseñador de Visual Studio | 1 | Hace falta Visual Studio. La condición técnica ya se verificó por reflexión | **JC o Máximo** |
+| JC-R10: escanear dos QR con el celular | 1 | Hace falta una cámara: la PC de desarrollo no tiene | **JC** |
+| CX-03: abrir dos formularios en el diseñador de Visual Studio | 1 | Hace falta Visual Studio. Lo demás ya se comprobó, por reflexión y con el host de diseño de .NET | **Máximo** |
 
 **Se cerraron el 05/11/2026**, ejecutadas por Claude Code sobre la aplicación real
 (`docs/PRUEBAS-PENDIENTES.md`, «Estado al 05/11/2026»):
@@ -190,8 +190,8 @@ lectores, las pantallas del propietario y los reportes con volumen de datos.
 
 | Persona | Qué le falta | Dónde está |
 |---|---|---|
-| **Máximo** | Sus 64 pruebas. Además, mirar la pantalla de compra en su PC al 125 %, porque se rediseñó | `docs/PRUEBAS-PENDIENTES.md`, secciones A, B, C, D, F y G |
-| **JC** | JC-R10 (celular) y CX-03 (diseñador de Visual Studio, si no lo hace Máximo) | `docs/PRUEBAS-PENDIENTES.md`, al final |
+| **Máximo** | Sus 64 pruebas y CX-03 (abrir dos formularios en el diseñador de Visual Studio). Además, mirar la pantalla de compra en su PC al 125 %, porque se rediseñó | `docs/PRUEBAS-PENDIENTES.md`, secciones A, B, C, D, F y G |
+| **JC** | JC-R10 (celular) | `docs/PRUEBAS-PENDIENTES.md`, al final |
 
 ---
 

@@ -587,7 +587,56 @@ persona. Las evidencias están en `docs/verificaciones/`, `docs/excepciones/` y
 | CX-04 | **Cerrada** | `tools/Excepciones/VerificarBaseCaida.ps1`: con el servicio de SQL Server detenido, `Visual.exe` muestra «EventAura: No se pudo conectar con la base de datos…» y no el cuadro de .NET. La aplicación sigue abierta. El servicio se volvió a iniciar | — |
 | JC-R01 | **Cerrada en este monitor** (1920 × 1080) | `VerificarEscala.ps1` con la escala de Windows cambiada de verdad a 125 %, 150 % y 175 % (`tools/VerificacionesManuales/Escala.ps1`), y restaurada a 100 %. Las tres dan OK: la ventana, «Comprar» y «Volver» entran en el área útil. A 175 % el contenido se desplaza. Se ve algo borroso, por la limitación de DPI ya declarada en RNF-03 | Opcional: mirarla en una notebook |
 | JC-R11 | **Cerrada, con hallazgos** | Recorrido del ejecutable solo con teclado (`docs/verificaciones/recorrido-teclado.md`). El circuito del cliente se completa entero. Cinco acciones son etiquetas y no se alcanzan con teclado; tres pantallas del administrador quedan sin salida | Opcional: Shift+Tab y Ctrl+Tab con el teclado físico (5 min). Decidir si se corrigen T-1 a T-5 |
-| CX-03 | **Parte técnica cerrada** | `tools/VerificacionesManuales/VerificarDisenador.ps1`, por reflexión: la base no es abstracta, tiene constructor público sin parámetros y vacío, se puede instanciar; los 19 formularios heredan de ella y cumplen las condiciones del diseñador | **JC o Máximo:** abrir `FrmCompraCliente` y `frmInicio` en el diseñador de Visual Studio (5 min) |
-| JC-R10 | Abierta | — | **JC:** escanear dos tickets con el celular (10 min) |
+| CX-03 | **Parte técnica cerrada; falta la visual** | Ver «CX-03 en detalle», abajo | **Máximo:** abrir `FrmCompraCliente` y `frmInicio` en el diseñador de Visual Studio (5 min) |
+| JC-R10 | **Abierta: es de JC.** Esta PC no tiene cámara (ningún dispositivo de clase `Camera` ni `Image`; revisado el 05/11). No se reemplazó por una simulación | Ver «JC-R10 en detalle», abajo | **JC:** escanear dos tickets con el celular (10 min) |
 
 Sigue abierta la parte de Máximo (64 pruebas).
+
+### JC-R10 en detalle: qué está cubierto y qué no
+
+| Aspecto | Estado | Evidencia |
+|---|---|---|
+| El contenido del QR es el correcto | Cubierto | Codex decodificó los seis QR desde el PDF (03/11) |
+| Medidas de impresión: módulo de 0,95 mm, 4 módulos de zona de silencio, corrección de errores Q, contraste de 100 % | Cubierto | `tools/VerificarQrTickets.py`; cumplen ISO/IEC 18004 para lectura con cámara |
+| **Lectura óptica con una cámara real** (enfoque, distancia, inclinación, reflejo de la pantalla o del papel) | **Sin cubrir** | Esta PC no tiene webcam. No se simuló: una imagen degradada a mano no es una lectura óptica |
+
+**Para cerrarla (10 min):** abrir dos tickets distintos (por ejemplo, `Ticket_EA-…_Campo_1.PDF`
+y `_2.PDF`) al 100 % en pantalla o impresos. Escanear cada uno con la cámara del celular a
+unos 15 y 30 cm, derecho y un poco inclinado. Cada uno tiene que mostrar un código `EA-`
+seguido de 32 caracteres hexadecimales, distinto en los dos tickets e igual al que figura
+impreso. Si alguno no se lee, agregar margen blanco alrededor del QR (decisión de JC del
+04/11).
+
+### CX-03 en detalle: qué está comprobado y qué no
+
+Dos verificaciones, las dos sobre `Visual\bin\Debug\Visual.exe`:
+
+1. **Reflexión** (`VerificarDisenador.ps1` → `docs/verificaciones/disenador-reflexion.txt`):
+   - la base no es abstracta;
+   - tiene un constructor público sin parámetros, sin código propio, y se puede instanciar;
+   - los 19 formularios heredan de ella, tienen constructor público sin parámetros e
+     `InitializeComponent`;
+   - en cada `.cs`, la primera clase es el formulario.
+
+   0 fallas.
+2. **Host de diseño de .NET** (`VerificarDisenadorHost.ps1` →
+   `docs/verificaciones/disenador-host.txt`). `DesignSurface` es el host de diseñadores que
+   trae .NET en `System.Design.dll`, el mismo tipo de host que usa Visual Studio:
+   - **la base como raíz, que es lo que instancia Visual Studio al abrir cualquiera de los 19
+     formularios:** carga en modo diseño, con su `FormDocumentDesigner`. OK;
+   - **cada formulario como raíz.** Es más exigente que Visual Studio, porque corre el
+     constructor y los eventos del formulario. 16 cargan enteros en modo diseño. Tres
+     (`FrmCompraCliente`, `frmConfirmacion` y `frmPago`) fallan **en su evento `Load`**, que
+     espera el evento o la compra que les pasa la pantalla anterior. Visual Studio no ejecuta
+     ese código, porque instancia la base y no el formulario. La pila de cada falla está en el
+     archivo;
+   - **los 19 solo con su constructor**, sin mostrarlos: `InitializeComponent` corre sin
+     excepciones y crea todos sus controles (de 6 a 20). OK;
+   - **los 12 tipos de control** que usan los Designer (todos estándar de WinForms, ninguno
+     con recursos `.resx`): el host los crea con su diseñador. OK.
+
+**Lo que queda sin comprobar:** que Visual Studio **lea el código** de `InitializeComponent`
+desde el `.cs` y dibuje la pantalla. Ese paso (el «serializador» de CodeDOM de Visual
+Studio) no existe fuera de Visual Studio. Si fallara, Visual Studio lo mostraría como una
+página de error en lugar del formulario. Es la confirmación visual que va a hacer **Máximo**:
+abrir `FrmCompraCliente` y `frmInicio` en el diseñador. Tienen que dibujarse sin errores.

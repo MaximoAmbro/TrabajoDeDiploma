@@ -11,7 +11,7 @@ Antes de empezar cualquier tarea, cada agente:
 Si el turno no es suyo, o si hay cambios sin commitear que no son de su sesión, no toca nada
 y avisa a JC.
 
-Última actualización: **05/11/2026**, por Claude Code, al cerrar su turno.
+Última actualización: **05/11/2026**, por Claude Code, al cerrar su turno (JC-R10 y CX-03).
 
 ---
 
@@ -51,12 +51,11 @@ aprueba (`docs/PLAN-RENOVACION-VISUAL.md`).
 
 | ID | Qué | Tiempo |
 |---|---|---|
-| JC-R10 | Escanear dos tickets con el celular | 10 min |
-| CX-03 | Abrir `FrmCompraCliente` y `frmInicio` en el diseñador de Visual Studio (o lo hace Máximo) | 5 min |
+| JC-R10 | Escanear dos tickets con el celular. **Esta PC no tiene cámara** (revisado el 05/11): la lectura óptica no se pudo hacer desde acá y no se simuló | 10 min |
 | (opcional) | Shift+Tab en el login y Ctrl+Tab en una grilla, con el teclado físico | 5 min |
 | (opcional) | Mirar la compra en una notebook a 125 % o 150 % | 10 min |
 
-**Total: 15 minutos obligatorios.** Claude Code cerró el 05/11 JC-R01 (escala real a 125 %,
+**Total: 10 minutos obligatorios.** CX-03 pasó a Máximo (ver abajo). Claude Code cerró el 05/11 JC-R01 (escala real a 125 %,
 150 % y 175 %), JC-R11 (recorrido con teclado), CX-02 (reserva vencida por reloj) y CX-04
 (base caída). Detalle en `docs/PRUEBAS-PENDIENTES.md`, «Estado al 05/11/2026».
 
@@ -67,7 +66,7 @@ aprueba (`docs/PLAN-RENOVACION-VISUAL.md`).
 | El fuente editable del documento | **08/11** | El 09/11 arranca el plan B2 (`DOCUMENTO-ENTREGABLE.md`) |
 | Sus 64 pruebas manuales (propietario, reportes, suscripción) | 25/11 | Buena parte tiene prueba automática (CP-21, CP-35 a CP-38, CP-56, CP-58, CP-60); lo visual queda sin mirar |
 | Confirmar RN-35 reescrita (prioridad de suscriptores en la lista de espera) | Antes de aplicar las correcciones del documento | Queda como está en `docs/` |
-| CX-03, si tiene Visual Studio | Cuando pueda | Lo hace JC |
+| CX-03: abrir `FrmCompraCliente` y `frmInicio` en el diseñador de Visual Studio (5 min). Todo lo demás ya se comprobó: reflexión y host de diseño de .NET, 0 fallas (`PRUEBAS-PENDIENTES.md`, «CX-03 en detalle») | Antes de que Codex arranque la renovación visual, que edita los Designer | Queda como el único paso sin comprobar |
 
 ### Lo que depende del docente
 

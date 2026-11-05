@@ -1,0 +1,73 @@
+CX-03 (host de diseño) — 05/11/2026 01:54
+
+1. La clase base como raíz del diseñador (lo que hace Visual Studio)
+OK     FormularioEventAura        raíz FormularioEventAura; modo diseño sí; diseñador FormDocumentDesigner; controles creados 0
+
+2. Cada formulario como raíz: constructor e InitializeComponent en modo diseño
+OK     frmAdministrarEvento       raíz frmAdministrarEvento; modo diseño sí; diseñador FormDocumentDesigner; controles creados 12
+OK     frmAgregarEvento           raíz frmAgregarEvento; modo diseño sí; diseñador FormDocumentDesigner; controles creados 11
+OK     frmAgregarSector           raíz frmAgregarSector; modo diseño sí; diseñador FormDocumentDesigner; controles creados 9
+OK     frmCambiarContraseña       raíz frmCambiarContraseña; modo diseño sí; diseñador FormDocumentDesigner; controles creados 10
+LOAD   FrmCompraCliente: falla en su evento Load, que el diseñador de Visual Studio no ejecuta: InvalidOperationException: No se encontró ningún evento con ese ID.
+         en Negocio.GestorPaquetes.VerificarEventoVigente(Int32 idEvento)
+         en Negocio.GestorPaquetes.Nuevo(Int32 idEvento, Int32 idUsuario)
+         en Visual.FrmCompraCliente.FrmCompraCliente_Load(Object sender, EventArgs e)
+         en System.Windows.Forms.Form.OnLoad(EventArgs e)
+LOAD   frmConfirmacion: falla en su evento Load, que el diseñador de Visual Studio no ejecuta: NullReferenceException: Referencia a objeto no establecida como instancia de un objeto.
+         en Visual.frmConfirmacion.NumeroPedido(Compra compra)
+         en Visual.frmConfirmacion.frmConfirmacion_Load(Object sender, EventArgs e)
+         en System.Windows.Forms.Form.OnLoad(EventArgs e)
+OK     frmCrearUsuario            raíz frmCrearUsuario; modo diseño sí; diseñador FormDocumentDesigner; controles creados 14
+OK     frmEventosCliente          raíz frmEventosCliente; modo diseño sí; diseñador FormDocumentDesigner; controles creados 11
+OK     frmEventosLocal            raíz frmEventosLocal; modo diseño sí; diseñador FormDocumentDesigner; controles creados 9
+OK     frmHistorialCliente        raíz frmHistorialCliente; modo diseño sí; diseñador FormDocumentDesigner; controles creados 11
+OK     frmInicio                  raíz frmInicio; modo diseño sí; diseñador FormDocumentDesigner; controles creados 10
+OK     frmListasEspera            raíz frmListasEspera; modo diseño sí; diseñador FormDocumentDesigner; controles creados 8
+OK     frmMenuCliente             raíz frmMenuCliente; modo diseño sí; diseñador FormDocumentDesigner; controles creados 6
+OK     frmMenuPropietario         raíz frmMenuPropietario; modo diseño sí; diseñador FormDocumentDesigner; controles creados 7
+OK     frmMisLocales              raíz frmMisLocales; modo diseño sí; diseñador FormDocumentDesigner; controles creados 6
+LOAD   frmPago: falla en su evento Load, que el diseñador de Visual Studio no ejecuta: ArgumentNullException: El valor no puede ser nulo.
+Nombre del parámetro: c
+         en Negocio.GestorCompras.VencimientoDe(Compra c)
+         en Visual.frmPago.frmPago_Load(Object sender, EventArgs e)
+         en System.Windows.Forms.Form.OnLoad(EventArgs e)
+OK     frmRegistrarLocal          raíz frmRegistrarLocal; modo diseño sí; diseñador FormDocumentDesigner; controles creados 11
+OK     frmReportes                raíz frmReportes; modo diseño sí; diseñador FormDocumentDesigner; controles creados 18
+OK     frmSuscripcion             raíz frmSuscripcion; modo diseño sí; diseñador FormDocumentDesigner; controles creados 8
+
+2b. Cada formulario solo con su constructor (InitializeComponent, sin mostrarlo ni correr Load)
+OK     frmAdministrarEvento       construido; controles creados 12
+OK     frmAgregarEvento           construido; controles creados 11
+OK     frmAgregarSector           construido; controles creados 9
+OK     frmCambiarContraseña       construido; controles creados 10
+OK     FrmCompraCliente           construido; controles creados 20
+OK     frmConfirmacion            construido; controles creados 8
+OK     frmCrearUsuario            construido; controles creados 14
+OK     frmEventosCliente          construido; controles creados 11
+OK     frmEventosLocal            construido; controles creados 9
+OK     frmHistorialCliente        construido; controles creados 11
+OK     frmInicio                  construido; controles creados 10
+OK     frmListasEspera            construido; controles creados 8
+OK     frmMenuCliente             construido; controles creados 6
+OK     frmMenuPropietario         construido; controles creados 7
+OK     frmMisLocales              construido; controles creados 6
+OK     frmPago                    construido; controles creados 15
+OK     frmRegistrarLocal          construido; controles creados 11
+OK     frmReportes                construido; controles creados 18
+OK     frmSuscripcion             construido; controles creados 8
+
+3. Cada tipo de control de los Designer, creado por el host sobre la base
+OK     Label                      creado y con diseñador LabelDesigner
+OK     Button                     creado y con diseñador ButtonBaseDesigner
+OK     TextBox                    creado y con diseñador TextBoxDesigner
+OK     DataGridView               creado y con diseñador DataGridViewDesigner
+OK     CheckBox                   creado y con diseñador ButtonBaseDesigner
+OK     DateTimePicker             creado y con diseñador DateTimePickerDesigner
+OK     ComboBox                   creado y con diseñador ComboBoxDesigner
+OK     RadioButton                creado y con diseñador RadioButtonDesigner
+OK     Panel                      creado y con diseñador PanelDesigner
+OK     ListBox                    creado y con diseñador ListBoxDesigner
+OK     LinkLabel                  creado y con diseñador LabelDesigner
+OK     Timer                      creado y con diseñador ComponentDesigner
+
+Formularios: 19. Fallas: 0. Fallas en Load (fuera de lo que ejecuta Visual Studio): 3.
