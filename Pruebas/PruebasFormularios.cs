@@ -33,7 +33,8 @@ namespace Pruebas
         public void RNF03_NingunFormularioPasaDe790DeAlto()
         {
             List<Type> formularios = typeof(Visual.frmInicio).Assembly.GetTypes()
-                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract)
+                // La base común no es una pantalla y no tiene Designer.
+                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Visual.FormularioEventAura))
                 .OrderBy(t => t.Name)
                 .ToList();
             Dictionary<string, string> designers = LeerDesigners();
@@ -76,6 +77,18 @@ namespace Pruebas
 
             Assert.AreEqual(19, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
+        }
+
+        // CP-53 — RNF-02: el punto de entrada instala el manejador antes del bucle de formularios.
+        [TestMethod("CP-53: Program instala el manejador global antes de ejecutar formularios")]
+        public void CP53_ProgramInstalaManejadorGlobal()
+        {
+            string ruta = Path.Combine(BaseDePrueba.RaizDelRepositorio(), "Visual", "Program.cs");
+            string fuente = File.ReadAllText(ruta);
+            int instalacion = fuente.IndexOf("ManejadorErrores.Instalar();", StringComparison.Ordinal);
+            int ejecucion = fuente.IndexOf("Application.Run", StringComparison.Ordinal);
+            Assert.IsTrue(instalacion >= 0, "Falta instalar el manejador en Program.Main.");
+            Assert.IsTrue(ejecucion > instalacion, "El manejador debe instalarse antes de Application.Run.");
         }
 
         // Nombre de la clase → texto de su .Designer.cs.

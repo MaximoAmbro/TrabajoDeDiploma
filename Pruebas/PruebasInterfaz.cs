@@ -688,6 +688,97 @@ namespace Pruebas
             });
         }
 
+        // CP-51 — RNF-02: mensajes seguros en castellano para errores de base, negocio y generales.
+        [DataTestMethod]
+        [DataRow("base de datos", DisplayName = "CP-51: Error de base de datos sin detalle técnico")]
+        [DataRow("negocio", DisplayName = "CP-51: Error real de negocio conserva su mensaje")]
+        [DataRow("general", DisplayName = "CP-51: Error inesperado sin detalle técnico")]
+        public void CP51_MensajeDeErrorParaUsuario(string caso)
+        {
+            EnSta(() =>
+            {
+                Exception error;
+                string esperado;
+                if (caso == "base de datos")
+                {
+                    error = new ErrorDeBaseDeDatosDePrueba();
+                    esperado = Visual.ManejadorErrores.MensajeBaseDeDatos;
+                }
+                else if (caso == "negocio")
+                {
+                    error = Assert.ThrowsException<InvalidOperationException>(() => GestorPaquetes.Instance.Nuevo(999999, 3));
+                    esperado = "No se encontró ningún evento con ese ID.";
+                    Assert.AreEqual(esperado, error.Message);
+                }
+                else
+                {
+                    error = new Exception("detalle técnico");
+                    esperado = Visual.ManejadorErrores.MensajeGeneral;
+                }
+
+                string mensaje = Visual.ManejadorErrores.MensajeParaUsuario(error);
+                Assert.AreEqual(esperado, mensaje);
+                Assert.IsFalse(mensaje.Contains("detalle técnico"));
+            });
+        }
+
+        private sealed class ErrorDeBaseDeDatosDePrueba : System.Data.Common.DbException
+        {
+            public ErrorDeBaseDeDatosDePrueba() : base("detalle técnico") { }
+        }
+
+        // CP-52 — RF-06, RN-11: eliminar un evento durante el pago aborta con aviso y no registra un cobro.
+        [TestMethod("CP-52: Pago de evento eliminado vuelve al listado sin cobrar")]
+        public void CP52_PagoDeEventoEliminado()
+        {
+            EnSta(() =>
+            {
+                Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Evento evento = Fake.EventoPublicado(1000m, 5);
+                Compra compra = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 1, false), cliente);
+                using (var pago = new Visual.frmPago { Compra = compra })
+                {
+                    Cargar(pago);
+                    GestorEventos.Instance.Eliminar(evento.Id);
+                    DatosTarjeta tarjeta = Fake.Tarjeta();
+                    Control<TextBox>(pago, "txtTitular").Text = tarjeta.Titular;
+                    Control<TextBox>(pago, "txtNumero").Text = tarjeta.Numero;
+                    Control<TextBox>(pago, "txtVencimiento").Text = tarjeta.Vencimiento;
+                    Control<TextBox>(pago, "txtCvv").Text = tarjeta.Cvv;
+
+                    DialogosPrueba.Comprobar(() => Control<Button>(pago, "btnPagar").PerformClick(),
+                        new DialogoEsperado { Titulo = "Pago no realizado", Texto = "ya no está pendiente" });
+
+                    Assert.AreEqual(DialogResult.Abort, pago.DialogResult);
+                    Assert.AreEqual(0, GestorCompras.Instance.PagosDe(compra).Count);
+                }
+            });
+        }
+
+        // CP-54 — RF-04, H-03: el alto automático permite leer cada encabezado completo a su ancho real.
+        [TestMethod("CP-54: Encabezados de sectores completos con ajuste de línea")]
+        public void CP54_EncabezadosDeSectoresCompletos()
+        {
+            EnSta(() =>
+            {
+                Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
+                {
+                    Cargar(form);
+                    DataGridView grilla = Control<DataGridView>(form, "dgvSectores");
+                    foreach (DataGridViewColumn columna in grilla.Columns)
+                    {
+                        if (!columna.Visible) continue;
+                        Font fuente = columna.HeaderCell.InheritedStyle.Font;
+                        Size texto = TextRenderer.MeasureText(columna.HeaderText, fuente,
+                            new Size(columna.Width - 8, int.MaxValue), TextFormatFlags.WordBreak);
+                        Assert.IsTrue(texto.Height <= grilla.ColumnHeadersHeight,
+                            $"Encabezado recortado: {columna.HeaderText}; necesita {texto.Height} y tiene {grilla.ColumnHeadersHeight} px.");
+                    }
+                }
+            });
+        }
+
         private static System.Collections.Generic.IEnumerable<Control> Descendientes(Control padre)
         {
             foreach (Control control in padre.Controls)
