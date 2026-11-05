@@ -46,8 +46,8 @@ Plata con 4 compras, en Windows 11 a escala 100 %, 1920 × 1080:
 | Cerrar una pantalla con la X | Aplicación viva sin ventanas | La aplicación termina (UI Automation: «proceso vivo = False») | — | ▲ |
 | Cerrar la compra con la X con un paquete armado | Se descarta sin preguntar | Pregunta, con «No» por defecto | — | ▲ |
 | «Comprar» sin entradas | Habilitado; lleva al aviso «RN-13» | Deshabilitado | — | ▲ |
-| Hallazgos abiertos | 13 (2 de severidad mayor) | **11 (ninguno mayor)**: 3 resueltos y 1 nuevo, U-14 | — | ▲ |
-| Plan de mejora pendiente | 5,5 pt (22 h) | **3,25 pt (13 h)** | — | ▲ |
+| Hallazgos abiertos | 13 (2 de severidad mayor) | **10 (ninguno mayor)**: 3 resueltos, 1 nuevo (U-14) que también se resolvió | — | ▲ |
+| Plan de mejora pendiente | 5,5 pt (22 h) | **3,0 pt (12 h)** | — | ▲ |
 
 **Lectura.**
 - **Las métricas de la tarea no cambiaron, y no debían cambiar.** El ejemplo del documento
@@ -217,9 +217,10 @@ enlace de los niveles y «Volver al listado» con confirmación.
 **Hallazgo nuevo de la segunda medición (U-14).** A escala 100 %, la columna es más angosta
 que el encabezado nuevo, y se lee «Cantidad (escribí», sin el «aquí)». Se vio en la figura 2
 del instructivo regenerada, no en la medición instrumentada, que no mide el ancho de los
-encabezados. La corrección (T-29: encabezado en dos renglones) está encargada a Codex.
-Volver a medir encontró un defecto que introdujo la propia corrección, que es justamente para
-lo que sirve.
+encabezados. **Se corrigió el 05/11/2026** (T-29): los encabezados ajustan línea y alto, y
+«Cantidad (escribí aquí)» se lee completo en dos renglones, como muestra la figura 2
+regenerada. CP-54 comprueba que cada encabezado entra en su alto. Volver a medir encontró un
+defecto que introdujo la propia corrección, que es justamente para lo que sirve.
 
 **Otra observación de la segunda medición.** Al abrir el armado, la celda Cantidad de VIP
 queda en modo edición mostrando «0». Escribir «2» funciona, porque el valor se interpreta
@@ -411,9 +412,9 @@ promedio.
 | U-12 | Campos sin nombre accesible; botones como «Pane» | 2 | Abierto |
 | U-11 | «Show Password» en inglés | 1 | Abierto |
 | U-13 | Botón «Modificar» residual en el login | 1 | Abierto |
-| U-14 | El encabezado «Cantidad (escribí aquí)» se corta a 100 %: se lee «Cantidad (escribí» | 2 | **Nuevo** en la segunda medición. Encargado (T-29) |
+| U-14 | El encabezado «Cantidad (escribí aquí)» se cortaba a 100 %: se leía «Cantidad (escribí» | 2 | **Resuelto** (T-29; CP-54; figura 2). Lo encontró la segunda medición |
 
-**3 resueltos y 11 abiertos, contando uno nuevo (U-14); ninguno de severidad mayor.**
+**4 resueltos, contando el nuevo (U-14), y 10 abiertos; ninguno de severidad mayor.**
 
 ### Plan de mejora recalculado
 
@@ -424,7 +425,7 @@ promedio.
 | ~~1~~ | ~~Terminar la aplicación al cerrar la última ventana; confirmar en el armado~~ | U-01 | Hecho |
 | ~~2~~ | ~~Foco y rótulo en la cantidad~~ | U-04 | Hecho |
 | ~~3~~ | ~~«Comprar» y el seguro sin entradas~~ | U-05 | Hecho |
-| 0 | Encabezado de la cantidad en dos renglones, ya encargado (T-29) | U-14 | 0,25 pt |
+| ~~0~~ | ~~Encabezado de la cantidad en dos renglones~~ | U-14 | Hecho (T-29) |
 | 1 | Login: «Iniciar sesión» como botón de Enter; Mail con tabulación y primero en el orden | U-02 | 0,25 pt |
 | 2 | «Cancelar pago» con «No» por defecto | U-07 | 0,25 pt |
 | 3 | Títulos de los avisos en lenguaje del usuario; «Campos vacíos»; «Ingrese su mail» | U-03 | 0,5 pt |
@@ -434,7 +435,7 @@ promedio.
 | 7 | Orden de tabulación de «Crear cuenta» y del listado | U-10 | 0,25 pt |
 | 8 | Nombres accesibles en campos y botones del flujo de compra | U-12 | 0,5 pt |
 | 9 | «Mostrar contraseña»; quitar el botón «Modificar» del login | U-11, U-13 | 0,25 pt |
-| | **Total pendiente** | | **3,25 pt (13 h)**, antes 5,5 pt (22 h) |
+| | **Total pendiente** | | **3,0 pt (12 h)**, antes 5,5 pt (22 h) |
 
 **Las prioridades 1, 2 y 4 son las que más pesan en la experiencia de P3 y P6**, los perfiles
 con SUS «D». Corrigen la fricción F-1 y los errores E-C y E-D. Suman 0,75 puntos (3 horas).
@@ -468,8 +469,9 @@ con SUS «D». Corrigen la fricción F-1 y los errores E-C y E-D. Suman 0,75 pun
     tarea sin asistencia, la satisfacción buena pasa del 66,7 % al 100 % y el SUS sube de
     70,0 a 78,8.
 - **Todos los criterios comprometidos se cumplen.**
-- **Lo que queda son once hallazgos menores**, por 13 horas, contando uno que encontró la
-  propia segunda medición (el encabezado cortado, ya encargado). Los encabeza el teclado en el
+- **La segunda medición encontró un hallazgo nuevo**, el encabezado cortado, que también se
+  corrigió.
+- **Lo que queda son diez hallazgos menores**, por 12 horas. Los encabeza el teclado en el
   login y el pago.
 
 ## 13. Fuera del alcance de este informe

@@ -18,9 +18,8 @@ $7.125, **total $99.625**. Para regenerarlas: `tools/CapturasInstructivo/Generar
 
 ## Observaciones para quien pegue las figuras en el documento
 
-1. **Reproducen el ejemplo de la página 54**, con la semilla alineada en T-21. Las definitivas
-   son las que se generen después de T-29 (ver el punto 4). Un docente puede reproducirlas
-   siguiendo el instructivo:
+1. **Reproducen el ejemplo de la página 54**, con la semilla alineada en T-21. **Son las
+   definitivas** (ver el punto 4). Un docente puede reproducirlas siguiendo el instructivo:
    iniciar sesión como `plata@eventaura.com`, elegir «Duki en Rosario», 2 entradas de Campo
    y el hospedaje.
 2. **La ruta de la figura 4 es neutra:** `C:\Users\Cliente\Documents\A1.Tickets EVENTAURA`.
@@ -28,7 +27,9 @@ $7.125, **total $99.625**. Para regenerarlas: `tools/CapturasInstructivo/Generar
 3. **Todo lo que hay que cambiar en el texto del documento** (por ejemplo, el estado de
    implementación de la página 50) está en `docs/CORRECCIONES-DOCUMENTO.md`.
 
-4. **Regeneradas otra vez el 04/11/2026 después de T-22 a T-26.** La figura 2 muestra el
-   encabezado nuevo de la columna y el cursor en la cantidad de Campo. **El encabezado se ve
-   cortado, «Cantidad (escribí»:** es el hallazgo U-14, encargado a Codex como T-29. Después
-   de T-29 hay que regenerarlas una vez más con `Generar.ps1`, y esas van al documento.
+4. **Definitivas: regeneradas el 05/11/2026, después de T-29.** La figura 2 muestra el
+   encabezado «Cantidad (escribí aquí)» completo, en dos renglones (antes se cortaba: hallazgo
+   U-14), y el cursor en la cantidad de Campo. **Si cambia la visual de las pantallas, hay que
+   regenerarlas** con `Generar.ps1`.
+5. **`Generar.ps1` necesita `pymupdf`** para pasar el ticket a imagen. En esta PC está
+   instalado en `D:\jc-tools`: correr con `$env:PYTHONPATH = 'D:\jc-tools'`.

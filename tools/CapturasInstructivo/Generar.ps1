@@ -35,6 +35,9 @@ Move-Item (Join-Path $tickets "Ticket_${pedido}_*.PDF") $png -Force
 
 # Figura 4: confirmación a la izquierda y el primer ticket a la derecha, a la misma altura.
 # El ticket se pasa a imagen con PyMuPDF (python -m pip install pymupdf).
+# Si pymupdf está instalado en otra carpeta (pip install --target), apuntar PYTHONPATH a ella.
+python -c "import pymupdf" 2>$null
+if ($LASTEXITCODE -ne 0) { throw 'Falta pymupdf: python -m pip install pymupdf, o PYTHONPATH apuntando a donde esté instalado.' }
 $ticket = Get-ChildItem $png -Filter "Ticket_${pedido}_*_1.PDF" | Select-Object -First 1
 python -c "import sys,pymupdf; pymupdf.open(sys.argv[1])[0].get_pixmap(matrix=pymupdf.Matrix(2,2),alpha=False).save(sys.argv[2])" $ticket.FullName (Join-Path $png 'ticket.png')
 Add-Type -AssemblyName System.Drawing
