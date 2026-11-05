@@ -11,7 +11,7 @@ Antes de empezar cualquier tarea, cada agente:
 Si el turno no es suyo, o si hay cambios sin commitear que no son de su sesión, no toca nada
 y avisa a JC.
 
-Última actualización: **04/11/2026**, por Claude Code, al cerrar su turno.
+Última actualización: **05/11/2026**, por Claude Code, al cerrar su turno.
 
 ---
 
@@ -19,28 +19,79 @@ y avisa a JC.
 
 | | |
 |---|---|
-| **Turno actual** | **JC**: revisar los commits de este turno |
-| Próximo turno | **Codex**: quinta tanda, T-27 a T-29, en `docs/TAREAS-CODEX-PRUEBAS.md` |
-| Después | **Claude Code**: verificar T-27 sobre la aplicación con la base caída y regenerar las figuras después de T-29 |
-| Ramas | `main` local con todo. Subidas: `respaldo/jc-2026-11-04` (copia de `main`) y `JC` (avance directo autorizado por JC). **`main` de GitHub no se toca** hasta que Máximo confirme si tiene trabajo sin subir |
+| **Turno actual** | **JC**: decidir V-1 a V-6 de `docs/PLAN-RENOVACION-VISUAL.md` |
+| Próximo turno | **Claude Code**: escribir el encargo de la fase 0 (tema) para Codex, según lo que decida JC |
+| Después | **Codex**: fase 0 de la renovación visual |
+| Ramas | `main` local = `main`, `JC` y `respaldo/jc-2026-11-04` en GitHub. Push autorizado por JC el 05/11 |
 
-## Estudio de usabilidad: definitivo, con antes y después
+**Codex no tiene tareas pendientes.** La quinta tanda está terminada (73 de 73).
 
-La dependencia anotada en el turno anterior se cumplió:
-1. **Codex corrigió**: T-22 a T-26, con 60 de 60.
-2. **Claude Code volvió a medir** con el mismo método.
-3. **El informe quedó definitivo**, con las dos mediciones.
+---
 
-| Métrica | Antes | Después |
+## La foto: dónde estamos
+
+### Código: cerrado
+
+| Qué | Estado |
+|---|---|
+| Funcionalidad del sistema (secciones 1 a 10) | Completa |
+| Correcciones de las pruebas manuales de JC (F-01 a F-03, O-01 a O-11) | Hechas, con prueba automática cada una |
+| Seguridad: alta sin elegir perfil (T-22), cierre de sesión (T-23) | Hechas |
+| Cerrar con la X termina la aplicación (T-24); base de formularios editable (T-28) | Hechas y verificadas sobre el ejecutable |
+| Compra: indicación de la cantidad, «Comprar» sin entradas, encabezado completo (T-25, T-26, T-29) | Hechas |
+| Manejador global de errores; pago con el evento eliminado (T-27) | Hechos y verificados con SQL Server detenido |
+| Pruebas automáticas | **61 casos, 73 ejecuciones, todas correctas** |
+| Cobertura de la matriz | 12 de 12 requerimientos en alcance; **33 de 38 reglas (86,8 %)**, con las 19 que rechazan operaciones |
+| Usabilidad | Criterio del 70 % cumplido (100 %); SUS 78,8; 10 hallazgos menores abiertos (12 h) |
+
+**Lo único que cambiaría el código de acá a la entrega es la renovación visual**, si JC la
+aprueba (`docs/PLAN-RENOVACION-VISUAL.md`).
+
+### Pruebas manuales: lo que le queda a JC de verdad
+
+| ID | Qué | Tiempo |
 |---|---|---|
-| Perfiles sin asistencia | 4 de 6 | 6 de 6 |
-| Satisfacción buena o muy buena (umbral 70 %) | 66,7 % — no alcanzaba | **100 % — cumple** |
-| SUS | 70,0 | 78,8 |
-| Hallazgos abiertos | 13 (2 mayores) | 11 (ninguno mayor; incluye U-14, nuevo) |
+| JC-R10 | Escanear dos tickets con el celular | 10 min |
+| CX-03 | Abrir `FrmCompraCliente` y `frmInicio` en el diseñador de Visual Studio (o lo hace Máximo) | 5 min |
+| (opcional) | Shift+Tab en el login y Ctrl+Tab en una grilla, con el teclado físico | 5 min |
+| (opcional) | Mirar la compra en una notebook a 125 % o 150 % | 10 min |
 
-La segunda medición encontró **U-14**: el encabezado «Cantidad (escribí aquí)» se corta a
-100 %. Está encargado como T-29. Las figuras del instructivo se regeneran una vez más después
-de T-29.
+**Total: 15 minutos obligatorios.** Claude Code cerró el 05/11 JC-R01 (escala real a 125 %,
+150 % y 175 %), JC-R11 (recorrido con teclado), CX-02 (reserva vencida por reloj) y CX-04
+(base caída). Detalle en `docs/PRUEBAS-PENDIENTES.md`, «Estado al 05/11/2026».
+
+### Lo que depende de Máximo
+
+| Qué | Para cuándo | Si no llega |
+|---|---|---|
+| El fuente editable del documento | **08/11** | El 09/11 arranca el plan B2 (`DOCUMENTO-ENTREGABLE.md`) |
+| Sus 64 pruebas manuales (propietario, reportes, suscripción) | 25/11 | Buena parte tiene prueba automática (CP-21, CP-35 a CP-38, CP-56, CP-58, CP-60); lo visual queda sin mirar |
+| Confirmar RN-35 reescrita (prioridad de suscriptores en la lista de espera) | Antes de aplicar las correcciones del documento | Queda como está en `docs/` |
+| CX-03, si tiene Visual Studio | Cuando pueda | Lo hace JC |
+
+### Lo que depende del docente
+
+| Qué | Por qué importa |
+|---|---|
+| Si pide los anexos T01 a T08 | Completos son 100 a 144 h: no entran junto con la renovación. El subconjunto mínimo (T01, T02, T03 y T06a) son 30 a 42 h |
+| Que acepte el rótulo «(simulado)» del estudio de usabilidad | El documento ya lo declara así; mejor saberlo antes de la defensa |
+
+**El mail al docente conviene que salga esta semana**: su respuesta define cuánto tiempo
+queda para la renovación.
+
+### La última semana (26/11 al 04/12)
+
+1. **27/11: congelamiento del código.** Desde ahí, solo correcciones.
+2. Figuras definitivas (`Generar.ps1`) y, si hubo renovación, la tercera medición de
+   usabilidad cerrada.
+3. Aplicar al documento las últimas cifras de `CORRECCIONES-DOCUMENTO.md`, regenerar el
+   índice y exportar el PDF.
+4. Última batería, último push a `main`.
+5. Ensayo de la defensa con `COMO-SE-PROBO.md` y `EXCEPCIONES.md`.
+
+El cronograma semana por semana está en `docs/PLAN-RENOVACION-VISUAL.md`, sección 10.
+
+---
 
 ## Quién hace qué
 
@@ -50,69 +101,39 @@ de T-29.
 | Claude Code | Revisión, documentación, matriz de trazabilidad, planificación y encargos para Codex | `docs/`, `tools/`, `CLAUDE.md`, `AGENTS.md` |
 | Codex | Implementación y pruebas automáticas | `Visual/`, `Repo/`, `Datos/`, `Pruebas/`; `BaseDatos/` y Designer solo con autorización de JC |
 
-## Tareas por agente
-
-### Codex
-
-| Tarea | Estado | Dónde |
-|---|---|---|
-| T-01 a T-26 | Terminadas. La última tanda está en los commits `272c864`, `309b9be` y `bb41f23` | `docs/RESULTADOS-TAREAS-CODEX-2026-11-04*.md` |
-| **T-27: manejador global de errores; el pago con el evento eliminado** | **Lista para ejecutar.** Aprobada por JC | `TAREAS-CODEX-PRUEBAS.md`, «Quinta tanda» |
-| **T-28: la base de formularios no abstracta** | Lista. Corrige un desvío de T-24: con la base abstracta, el diseñador de Visual Studio no puede abrir los formularios | Ídem |
-| **T-29: el encabezado de la cantidad completo** | Lista. Corrige U-14, encontrado al volver a medir | Ídem |
-
-Batería esperada al terminar: **66 de 66**, con los casos CP-51 a CP-54.
-
-### Claude Code
-
-| Tarea | Estado |
-|---|---|
-| Revisión y commits de T-22 a T-26 | Terminado |
-| Nueva medición de la usabilidad, con antes y después | Terminada: `docs/usabilidad/` |
-| Lista de correcciones del documento con las cifras finales y CP-44 a CP-50 | Terminada |
-| Encargo T-27 a T-29 | Terminado |
-| Verificar T-27 con la base caída (`tools/Excepciones/`, ajustando el programa para que instale el manejador) | **En espera** de Codex |
-| Regenerar las figuras después de T-29 | **En espera** de Codex |
-
 ## Decisiones pendientes de JC
 
-| Decisión | Contexto |
-|---|---|
-| Push a `main` de GitHub | Esperando que Máximo confirme si tiene trabajo sin subir |
-| T-28 y T-29 | No estaban en tu lista; las incluí en la quinta tanda porque corrigen desvíos de T-24 y T-25. Si no las querés, se sacan del encargo antes de darle el turno a Codex |
-| T01 a T08 | Según la respuesta del docente |
+| # | Decisión | Recomendación de Claude Code |
+|---|---|---|
+| V-1 | Camino de la renovación visual: A (estándar con sistema de diseño), B (biblioteca) o C (dibujado) | A |
+| V-2 | Compatibilidad con DPI por el manifiesto, sin tocar `App.config` | Sí, en la fase 0 |
+| V-3 | Tercera medición de usabilidad después de la renovación | Sí |
+| V-4 | Rediseño del ticket PDF | Sí |
+| V-5 | Corregir los callejones del teclado (T-1 a T-5) dentro de la renovación | Sí |
+| V-6 | Títulos de los avisos en castellano (U-03) | Sí |
+| — | T01 a T08 | Según la respuesta del docente |
 
-## Pendiente de JC
+La renovación toca los Designer de las 19 pantallas: **necesita la autorización de JC para
+que Codex los edite.**
 
-| Pendiente | Por qué es de JC |
-|---|---|
-| Revisar los commits de este turno y darle el turno a Codex | Regla común |
-| Hablar con Máximo: trabajo sin subir, RN-35, rediseño de FrmCompraCliente, sus 64 pruebas, y abrir el diseñador después de T-28 (CX-03) | Coordinación |
-| Fuente del documento: esperar a Máximo hasta el 08/11; después, plan B2 | Decisión tomada |
-| Mail al docente sobre T01 a T08 | Coordinación |
-| Datos de la carátula | Datos personales |
-| JC-R01, JC-R10, JC-R11, CX-02 y, después de T-27, CX-04 (base caída) | Necesitan a una persona |
+## Observaciones de este turno
 
-## Bloqueado
-
-| Qué | Bloqueado por |
-|---|---|
-| Figuras definitivas del instructivo | T-29 |
-| Verificar el manejador global sobre la aplicación | T-27 |
-| Aplicar `CORRECCIONES-DOCUMENTO.md` | El fuente del documento (Máximo, hasta el 08/11) o el plan B2 |
-| Push a `main` | Que Máximo confirme |
+- **El aviso del pago con el evento eliminado es genérico**: «La compra ya no está pendiente de
+  pago». Es correcto pero no dice que el evento se eliminó. Es un cambio de texto en `frmPago`,
+  si JC lo quiere.
+- **La escala de Windows:** el primer intento de cambiarla (con `SPI_SETLOGICALDPIOVERRIDE`)
+  dejó guardado 125 % sin aplicarlo. Se restauró a 100 % antes de seguir. Queda la clave
+  `HKCU\Control Panel\Desktop\PerMonitorSettings\<monitor>` con `DpiValue = 0`, que significa
+  «la recomendada» (100 %); antes no existía. El efecto es el mismo.
+- **`Generar.ps1` necesita `pymupdf`**, instalado en `D:\jc-tools`: correr con
+  `$env:PYTHONPATH = 'D:\jc-tools'`.
 
 ## Qué debería hacer el próximo agente
 
-**Codex**, cuando JC le dé el turno:
-1. leer este archivo y la «Quinta tanda» de `TAREAS-CODEX-PRUEBAS.md`;
-2. hacer T-27, T-28 y T-29;
-3. parar y dejar el reporte en `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-T27-T29.md`.
+**Claude Code**, cuando JC decida V-1 a V-6:
+1. escribir en `docs/TAREAS-CODEX-PRUEBAS.md` la «Sexta tanda»: la fase 0 del plan
+   (`Tema.cs`, la base aplica el tema, componentes, ícono, una sola escala de diseño, y DPI si
+   JC aprueba V-2), con sus pruebas y la regla de no renombrar controles;
+2. pasarle el turno a Codex a través de JC.
 
-**Claude Code**, después:
-1. mover ese reporte a `docs/`;
-2. ajustar `tools/Excepciones/ErrorNoControlado.cs` para que llame a
-   `ManejadorErrores.Instalar()` y verificar el mensaje en castellano con la base caída;
-3. regenerar las figuras del instructivo y verificar el encabezado completo;
-4. actualizar `EXCEPCIONES.md`, `04-casos-prueba.md` (CP-51 a CP-54), `COMO-SE-PROBO.md`,
-   la lista de correcciones y este archivo.
+**Codex**, cuando JC le dé el turno: la sexta tanda, y parar al terminarla.
