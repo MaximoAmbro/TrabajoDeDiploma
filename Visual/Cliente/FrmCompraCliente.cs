@@ -347,6 +347,8 @@ namespace Visual
             dgvSectores.Columns.Add("Precio", "Precio");
             dgvSectores.Columns.Add("Disponibles", "Disponibles");
             dgvSectores.Columns.Add("Cantidad", "Cantidad (escribí aquí)");
+            dgvSectores.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgvSectores.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvSectores.Columns["IdSector"].Visible = false;
             foreach (DataGridViewColumn columna in dgvSectores.Columns)
             {

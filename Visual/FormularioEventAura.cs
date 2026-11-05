@@ -6,7 +6,7 @@ namespace Visual
 {
     // Base de los formularios de EventAura. Si el usuario cierra la última ventana visible,
     // termina la aplicación: antes quedaba un proceso sin ventanas (hallazgo U-01).
-    public abstract class FormularioEventAura : Form
+    public class FormularioEventAura : Form
     {
         public static bool DebeTerminarAplicacion(Form cerrado, CloseReason motivo, IEnumerable<Form> abiertos)
         {
