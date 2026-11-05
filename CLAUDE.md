@@ -227,8 +227,10 @@ tokenización, confirmación y ticket PDF con QR por entrada, suscripciones con 
 seguro sin cargo, devolución por entrada, historial de compras, lista de espera, y los
 cinco reportes con exportación a PDF.
 
-Pruebas: el proyecto `Pruebas/` corre los casos CP-01 a CP-50 (`docs/04-casos-prueba.md`):
-60 ejecuciones, todas correctas.
+Pruebas: el proyecto `Pruebas/` corre los casos CP-01 a CP-61 (`docs/04-casos-prueba.md`):
+73 ejecuciones, todas correctas.
+Errores no previstos: `Visual/ManejadorErrores.cs`, instalado en `Program.Main`, los muestra
+como un aviso en castellano (ver `docs/EXCEPCIONES.md`).
 Los de `PruebasInterfaz.cs` abren formularios reales y responden sus MessageBox. Son de integración contra
 `BddEventAura_Pruebas`, que se recrea en cada corrida (ver `docs/04-casos-prueba.md`). Se
 corren con la tarea «Probar» de VS Code, que llama a `tools/Proyecto.ps1`; `dotnet test` no

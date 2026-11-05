@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 50 casos: CP-01 a CP-10 son los de la lógica de
-fidelización, que define el documento; CP-11 a CP-50 se agregaron en noviembre de 2026
-(ver «Casos CP-11 a CP-50» más abajo). CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 61 casos: CP-01 a CP-10 son los de la lógica de
+fidelización, que define el documento; CP-11 a CP-61 se agregaron en noviembre de 2026
+(ver «Casos CP-11 a CP-61» más abajo). CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -64,15 +64,16 @@ Si el cálculo no da exactamente $99.625, hay un error en la implementación.
 
 Este cálculo es el caso **CP-11**.
 
-## Casos CP-11 a CP-50
+## Casos CP-11 a CP-61
 
 Mismas condiciones que los diez anteriores: integración contra `BddEventAura_Pruebas`, datos
 de `Fake`, sesión cerrada antes y después. Los que dicen «interfaz» abren el formulario real
 en un hilo STA y responden sus MessageBox con `Pruebas/DialogosPrueba.cs`. Necesitan una
 sesión de escritorio abierta.
 
-Cuántas veces corre cada uno: CP-15 tiene 4 variantes, CP-20 tiene 2, CP-25 tiene 3, CP-46 tiene 2 y CP-47 tiene 4. Con
-CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **60 ejecuciones**.
+Cuántas veces corre cada uno: CP-15 tiene 4 variantes, CP-20 tiene 2, CP-25 tiene 3, CP-46
+tiene 2, CP-47 tiene 4 y CP-51 tiene 3. Con CP-01 a CP-04, que son 4 filas de un solo método,
+la batería suma **73 ejecuciones**.
 
 | CP | Archivo | Condición de entrada | Resultado esperado | RF | Reglas | Hall. |
 |---|---|---|---|---|---|---|
@@ -116,9 +117,26 @@ CP-01 a CP-04, que son 4 filas de un solo método, la batería suma **60 ejecuci
 | CP-48 | PruebasInterfaz | Cerrar «Armar paquete» con la X, con y sin paquete | Con paquete pide confirmación, con No por defecto; No conserva el paquete; sin paquete cierra sin preguntar | RF-05 | — | — |
 | CP-49 | PruebasInterfaz | Abrir la compra del evento 1 | Foco en la celda Cantidad del primer sector con cupo; encabezado con «escribí»; ayuda con el máximo por compra | RF-04 | — | H-03 |
 | CP-50 | PruebasInterfaz | Abrir la compra; poner 1 entrada; volver a 0 | «Comprar» y el seguro deshabilitados sin entradas y habilitados con una | RF-05 | — | — |
+| CP-51 | PruebasInterfaz | Error de base de datos, error de Negocio real (`GestorPaquetes.Nuevo` con un evento inexistente) y error genérico (3 variantes) | El manejador global devuelve el mensaje de base de datos, el de Negocio y el general; ninguno con detalle técnico | RNF-02 | — | — |
+| CP-52 | PruebasInterfaz | Pantalla de pago abierta; se elimina el evento; «Pagar» | Aviso «Pago no realizado»; la pantalla devuelve Abort; ningún pago registrado | RF-06 | — | — |
+| CP-53 | PruebasFormularios | Texto de `Visual/Program.cs` | `ManejadorErrores.Instalar();` está antes de `Application.Run` | RNF-02 | — | — |
+| CP-54 | PruebasInterfaz | Abrir la compra del evento 1 | Cada encabezado visible de la grilla de sectores entra completo en su alto, con ajuste de línea | RF-04 | — | H-03 |
+| CP-55 | PruebasRechazosNegocio | `Registrar` con un perfil inexistente | RN-05; no se crea la cuenta | RF-01, RF-02 | RN-05 | — |
+| CP-56 | PruebasRechazosNegocio | Eliminar el único sector de un evento publicado | RN-06; el sector y el estado del evento no cambian | RF-12 | RN-06 | — |
+| CP-57 | PruebasRechazosNegocio | Agregar al paquete un servicio de otro evento | RN-14; el paquete conserva sus entradas y no suma el servicio | RF-05 | RN-14 | — |
+| CP-58 | PruebasRechazosNegocio | Contratar el plan anual con el mensual activo | RN-25; sigue activa la suscripción original, con su plan | RF-13 | RN-25 | — |
+| CP-59 | PruebasRechazosNegocio | Devolver una compra sin seguro; devolver una asegurada fuera del plazo | RN-29 en los dos; las compras siguen confirmadas y sin reembolso | RF-05 | RN-29 | — |
+| CP-60 | PruebasRechazosNegocio | Agregar un sector que, sumado al existente, supera la capacidad del local | RN-38; no se inserta y el sector original no cambia | RF-12 | RN-38 | — |
+| CP-61 | PruebasRechazosNegocio | Iniciar un paquete en preventa sin suscripción activa | RN-39; el cupo no cambia | RF-05, RF-13 | RN-39 | — |
 
 CP-39 a CP-42 comprueban que la interfaz **comunica** RN-15, RN-08, RN-28 y RN-19. No las
 verifican: por eso esas reglas no figuran en su columna.
+
+CP-55 a CP-61 provocan el rechazo de las siete reglas que lanzaban `ReglaNegocioException` sin
+una prueba de ese camino, y comprueban que el estado queda como estaba. Cubren el rechazo
+documentado, no todas sus variantes: CP-56 prueba eliminar el último sector, no publicar sin
+sectores; CP-60 prueba agregar un sector, no modificarlo. En la matriz, RN-05 está en la fila
+de RF-02 y RN-39 en la de RF-13: por eso CP-55 y CP-61 llevan dos requerimientos.
 
 ## Hallazgos de usabilidad a contemplar en la UI
 

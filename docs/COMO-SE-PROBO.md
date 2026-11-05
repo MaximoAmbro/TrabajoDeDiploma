@@ -11,7 +11,7 @@ El sistema se probó de tres maneras que se complementan:
 1. **Pruebas manuales:** 129 en total, repartidas entre Máximo (64) y JC (65). Las de JC se
    ejecutaron todas el 03/11/2026, salvo dos que necesitan un celular. Las de Máximo todavía
    no se ejecutaron.
-2. **Pruebas automáticas:** 50 casos (CP-01 a CP-50) que hoy corren 60 veces, todas
+2. **Pruebas automáticas:** 61 casos (CP-01 a CP-61) que hoy corren 73 veces, todas
    correctas. Son las que cuenta la matriz de trazabilidad, porque se pueden repetir en
    cualquier momento y dan siempre el mismo resultado.
 3. **Inspecciones medidas sobre la aplicación:** el estudio de usabilidad, la verificación
@@ -97,7 +97,8 @@ La matriz de trazabilidad mostraba que solo 3 de los 13 requerimientos tenían p
 | T-19 y T-20 | CP-43; CP-34 corregida | La omisión era un error de la preparación de la prueba, no de la aplicación. De paso se unificó el plazo de la reserva (RN-15) | 49 de 49 |
 | T-21 | — | La semilla reproduce el ejemplo del documento («Duki en Rosario», $99.625) | 49 de 49 |
 | T-22 a T-26 | CP-44 a CP-50; ajuste de CP-24 | Seguridad del alta y cierre de sesión; la aplicación termina al cerrar la última ventana; indicación de la cantidad; «Comprar» sin entradas | 60 de 60 |
-| T-27 a T-29 (encargadas) | CP-51 a CP-54 | Manejador global de errores; pago cuando se elimina el evento; base de formularios editable en el diseñador; encabezado de la cantidad completo | Esperado: 66 |
+| T-27 a T-29 | CP-51 a CP-54 | Manejador global de errores; pago cuando se elimina el evento; base de formularios editable en el diseñador; encabezado de la cantidad completo | 66 de 66 |
+| Rechazos de negocio | CP-55 a CP-61 | El camino de error de las siete reglas que lanzaban un rechazo sin prueba: RN-05, RN-06, RN-14, RN-25, RN-29, RN-38 y RN-39 | 73 de 73 |
 
 ### Inspecciones medidas sobre la aplicación: 04/11/2026
 
@@ -121,7 +122,14 @@ Las hizo Claude Code. Los resultados están en `docs/`, y los scripts para repet
   - **Se corrigieron los tres de mayor peso y se volvió a medir con el mismo método.** Los seis
     perfiles completan la tarea sin asistencia, la satisfacción buena pasa del 66,7 % al 100 %
     y el SUS de 70,0 a 78,8. La segunda medición encontró además un problema nuevo (U-14,
-    el encabezado cortado), que ya está encargado.
+    el encabezado cortado), que también se corrigió (T-29, CP-54).
+- **Errores no previstos (05/11/2026):**
+  - **con SQL Server detenido**, el ejecutable real muestra el aviso en castellano del
+    manejador global, no el cuadro de .NET, y sigue abierto (CX-04);
+  - **con el evento eliminado por otro proceso mientras el cliente paga**, aparece «Pago no
+    realizado», no se cobra y la aplicación vuelve al listado.
+
+  Detalle en `docs/EXCEPCIONES.md`.
 
 ---
 
@@ -146,7 +154,7 @@ lectores, las pantallas del propietario y los reportes con volumen de datos.
 
 ---
 
-## 4. Cómo se relaciona todo con CP-01 a CP-50 y la matriz
+## 4. Cómo se relaciona todo con CP-01 a CP-61 y la matriz
 
 - **La matriz cuenta solo las pruebas automáticas.** Un caso CP se ejecuta igual cada vez y
   deja registro, así que puede respaldar «este requerimiento está verificado». Una prueba
@@ -160,10 +168,13 @@ lectores, las pantallas del propietario y los reportes con volumen de datos.
 | CP-13 a CP-25 | Nacieron de las **pruebas manuales de JC**: cada falla u observación corregida tiene su caso |
 | CP-26 a CP-43 | Nacieron de la **matriz**: cubren los requerimientos y reglas que no tenían prueba, y los hallazgos de usabilidad H-02 a H-05 |
 | CP-44 a CP-50 | Nacieron del **estudio de usabilidad** y de la revisión de seguridad: alta, cierre de sesión, cierre con la X, indicación de la cantidad y «Comprar» sin entradas |
-| CP-51 a CP-54 | Están encargados a Codex: manejador global de errores, pago con el evento eliminado, base de formularios y encabezado de la cantidad |
+| CP-51 a CP-54 | Nacieron de la **revisión de excepciones** y de la **segunda medición de usabilidad**: manejador global de errores, pago con el evento eliminado y encabezado de la cantidad |
+| CP-55 a CP-61 | Nacieron de **`EXCEPCIONES.md`**: las siete reglas que rechazaban operaciones sin una prueba de ese rechazo |
 
 - **Cobertura de la matriz:** 12 de los 13 requerimientos (el que falta, RF-09, quedó
-  excluido), 27 de 38 reglas de negocio y 6 de 6 hallazgos del primer estudio de usabilidad.
+  excluido), 33 de 38 reglas de negocio (86,8 %, con las 19 que rechazan operaciones) y 6 de
+  6 hallazgos del primer estudio de usabilidad. Las cinco reglas sin caso (RN-07, RN-26,
+  RN-28, RN-33 y RN-35) no rechazan operaciones: describen cálculos, plazos u orden.
 - **Las pruebas manuales siguen siendo necesarias** para lo que una prueba automática no
   puede juzgar: si algo se ve bien, si se entiende, si un QR impreso se lee con una cámara.
 
@@ -185,7 +196,7 @@ lectores, las pantallas del propietario y los reportes con volumen de datos.
 > se ejecutaron manejando la aplicación real con UI Automation, y encontraron cinco fallas de
 > presentación y ninguna de reglas de negocio. Cada falla corregida quedó como prueba
 > automática. Después usamos la matriz de trazabilidad para ver qué requerimientos no tenían
-> prueba, y escribimos casos hasta cubrir los doce que están en alcance. Hoy son 50 casos que
-> corren 60 veces sin fallas. Además, medimos la usabilidad sobre la aplicación real,
+> prueba, y escribimos casos hasta cubrir los doce que están en alcance y todas las reglas que
+> rechazan operaciones. Hoy son 61 casos que corren 73 veces sin fallas. Además, medimos la usabilidad sobre la aplicación real,
 > corregimos lo que encontramos y volvimos a medir: los seis perfiles completan la compra
 > sin ayuda.»

@@ -6,8 +6,9 @@ editable. Está ordenada por página, para aplicarla de corrido de la primera a 
 Por qué el fuente no está en el repositorio y cuál es el plan B: ver
 [DOCUMENTO-ENTREGABLE.md](DOCUMENTO-ENTREGABLE.md).
 
-Cifras al 04/11/2026, verificadas contra el código y la batería del commit `3af4154`:
-**50 casos de prueba y 60 ejecuciones, todas correctas; 38 reglas vigentes.**
+Cifras al 05/11/2026, verificadas contra el código y la batería del commit `51735a8`:
+**61 casos de prueba y 73 ejecuciones, todas correctas; 38 reglas vigentes, 33 con caso de
+prueba (86,8 %).**
 
 **Cómo copiar al Word sin perder las tablas.** Abrí este archivo en VS Code y la vista previa
 (`Ctrl+Shift+V`). Seleccioná desde la vista previa, copiá y pegá en Word. Las tablas llegan
@@ -44,7 +45,7 @@ como tablas; si copiás el texto crudo, llegan como líneas con `|`.
 | 16 | 104 y 105 | A02: SQL de RPT-01 y código de exportación | `docs/05-reportes.md` |
 | 17 | 106 | Matriz: criterio y nomenclatura | Matriz |
 | 18 | 107 | Matriz principal; evidencia de OE-4 | Matriz; estudio v2.5 |
-| 19 | 108 | Advertencia sobre OE-4; cobertura y catálogo CP-11 a CP-50 | Matriz; estudio v2.5 |
+| 19 | 108 | Advertencia sobre OE-4; cobertura y catálogo CP-11 a CP-61 | Matriz; estudio v2.5 |
 | 20 | 109 | Brechas G-02 a G-06 | Matriz; estudio v2.5 |
 | 21 | 110 y 111 | Conclusiones, limitaciones y trabajo futuro | Matriz |
 | 22 | 2 a 5 | Regenerar el índice | Al final |
@@ -82,8 +83,8 @@ en el Word.
 | «fecha» | 2.5 | Riggio, Juan Cruz | Reglas de negocio alineadas con el prototipo: se incorporan RN-38 (capacidad del local) y RN-39 (preventa para suscriptores), que el sistema ya aplicaba, y se reescribe RN-35 (prioridad de los suscriptores en la lista de espera, coherente con RN-37). Se detallan RN-06 y RN-29. Reglas vigentes: 38 (brecha G-05). |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Instructivo del requerimiento core: estado de implementación actualizado e incorporación de las figuras 1 a 4. CU-07 alineado con RN-35. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-50 y cobertura recalculada sobre 38 reglas. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta; G-02 resuelta en requerimientos y abierta en reglas. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, tres de ellos corregidos con prueba de regresión, y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
+| «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-61 y cobertura recalculada sobre 38 reglas. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta; G-02 resuelta en requerimientos y abierta en reglas. |
+| «fecha» | 2.5 | Riggio, Juan Cruz | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, cuatro de ellos corregidos con prueba de regresión (U-14, el que encontró la segunda medición, también), y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 > La página 38 exige que todo cambio de categoría MoSCoW quede en el historial «indicando
@@ -145,8 +146,9 @@ Dos reemplazos. **Primero:**
 
 **Por:**
 
-> Y la cobertura de verificación alcanza al 71,1 % de las reglas de negocio: once de las
-> treinta y ocho no tienen todavía un caso de prueba automatizado.
+> Y la cobertura de verificación alcanza al 86,8 % de las reglas de negocio: cinco de las
+> treinta y ocho no tienen todavía un caso de prueba automatizado, y ninguna de esas cinco
+> rechaza operaciones.
 
 ---
 
@@ -331,8 +333,9 @@ correspondiente de `docs/capturas/instructivo/`. Los epígrafes no cambian.
 | Figura 3 — Resumen del paquete con el descuento aplicado (paso 6) | `figura3-resumen-descuento.png` |
 | Figura 4 — Confirmación de compra y comprobante emitido (pasos 7 y 8) | `figura4-confirmacion-y-comprobante.png` |
 
-> Las figuras son las definitivas: se regeneraron el 04/11/2026, después de T-21, con
-> «Duki en Rosario» y la clienta Plata con 4 compras. El resumen coincide línea por línea con
+> Las figuras son las definitivas: se regeneraron el 05/11/2026, después de T-29, con
+> «Duki en Rosario» y la clienta Plata con 4 compras. La figura 2 muestra el encabezado
+> «Cantidad (escribí aquí)» completo, en dos renglones. El resumen coincide línea por línea con
 > la tabla de la página 54.
 
 ---
@@ -362,8 +365,9 @@ reproducir el ejemplo exacto.
 
 ## 11b. Páginas 90 a 97 — Informe de pruebas de usabilidad
 
-> **Definitivo.** El informe tiene las dos mediciones: antes y después de T-22 a T-26. La
-> tabla «Antes y después» del principio del informe es buen material para la defensa.
+> **Definitivo.** El informe tiene las dos mediciones: antes y después de T-22 a T-26. U-14,
+> el hallazgo que encontró la segunda medición, se corrigió después (T-29). La tabla «Antes y
+> después» del principio del informe es buen material para la defensa.
 
 **Título de la sección** (y su entrada en el índice): **reemplazar** «Informe de pruebas de
 usabilidad» **por** «Informe de pruebas de usabilidad (simulado)», igual que las minutas
@@ -588,7 +592,7 @@ ORDER BY IngresoBruto DESC;
 **Por:**
 
 > Una grilla que cruce los seis objetivos con los trece requerimientos, las treinta y ocho
-> reglas, los ocho casos de uso y los cincuenta casos de prueba resulta ilegible en
+> reglas, los ocho casos de uso y los sesenta y un casos de prueba resulta ilegible en
 > formato A4
 
 ### Tabla «Nomenclatura de los ejes»
@@ -603,7 +607,7 @@ ORDER BY IngresoBruto DESC;
 
 | Reglas de negocio | RN-xx | 38 | Reglas de negocio (RN-27 dada de baja) |
 |---|---|---|---|
-| Casos de prueba | CP-xx | 50 | CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-50: Matriz de trazabilidad, catálogo de casos incorporados |
+| Casos de prueba | CP-xx | 61 | CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-61: Matriz de trazabilidad, catálogo de casos incorporados |
 
 ---
 
@@ -615,19 +619,19 @@ categoría de RF-09.
 
 | RF | OE | MoSCoW | Reglas de negocio | CU | Casos de prueba | Hall. |
 |---|---|---|---|---|---|---|
-| RF-01 | OE-2 | Must | RN-01, RN-02, RN-03 | CU-04 | CP-14, CP-15, CP-26, CP-44, CP-45 | — |
-| RF-02 | OE-2 | Must | RN-04, RN-05 | CU-05 | CP-27, CP-28, CP-29, CP-46 | — |
+| RF-01 | OE-2 | Must | RN-01, RN-02, RN-03 | CU-04 | CP-14, CP-15, CP-26, CP-44, CP-45, CP-55 | — |
+| RF-02 | OE-2 | Must | RN-04, RN-05 | CU-05 | CP-27, CP-28, CP-29, CP-46, CP-55 | — |
 | RF-03 | OE-2 | Must | RN-09 | CU-01 | CP-16, CP-17, CP-18, CP-30 | — |
-| RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49 | H-03 |
-| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01 | CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50 | H-04 |
-| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43 | H-02 |
+| RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49, CP-54 | H-03 |
+| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01 | CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61 | H-04 |
+| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43, CP-52 | H-02 |
 | RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01 | CP-32, CP-33 | — |
 | RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08, CP-09, CP-11, CP-42 | H-01, H-05 |
 | RF-09 | — | Won't | — | — | — | — |
 | RF-10 | OE-6 ind. | Could | RN-10, RN-35, RN-36 | CU-07 | CP-24, CP-37 | — |
 | RF-11 | OE-6 | Should | RN-34 | CU-08 | CP-35, CP-36, CP-37, CP-38 | — |
-| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38 | CU-02 | CP-21 | — |
-| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10 | — |
+| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38 | CU-02 | CP-21, CP-56, CP-60 | — |
+| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-61 | — |
 
 El párrafo «La indicación "ind." en RF-10…» queda igual.
 
@@ -636,8 +640,10 @@ El párrafo «La indicación "ind." en RF-10…» queda igual.
 > La categoría Won't de RF-09 corresponde a la reclasificación de la versión 2.5 (brecha
 > G-03). Los requerimientos no funcionales no figuran en la matriz porque no originan casos
 > de uso. RNF-03 (compatibilidad multipantalla) cuenta con dos casos de prueba, CP-12 y
-> CP-25, y RNF-02 (experiencia de usuario) con CP-47, que verifica que la aplicación termina
-> al cerrar su última ventana.
+> CP-25, y RNF-02 (experiencia de usuario) con tres: CP-47, que verifica que la aplicación
+> termina al cerrar su última ventana, y CP-51 y CP-53, que verifican que un error no previsto
+> llega al usuario como un mensaje en castellano. CP-55 figura en RF-01 y RF-02, y CP-61 en
+> RF-05 y RF-13, porque prueban una regla de una fila desde la operación de la otra.
 
 En la tabla «Trazabilidad inversa de los objetivos específicos», fila OE-4, **reemplazar** la
 evidencia:
@@ -730,6 +736,17 @@ El estado sigue «Cumplido». El resto de la tabla no cambia.
 | CP-48 — Cerrar la compra confirma el descarte | — |
 | CP-49 — Indicación de dónde se escribe la cantidad | — |
 | CP-50 — Comprar y seguro requieren entradas | — |
+| CP-51 — Mensaje del manejador global según el error | — (RNF-02) |
+| CP-52 — Pago de un evento eliminado | — |
+| CP-53 — El manejador se instala al iniciar | — (RNF-02) |
+| CP-54 — Encabezados de la grilla completos | — |
+| CP-55 — Perfil de usuario inválido | RN-05 |
+| CP-56 — Último sector de un evento publicado | RN-06 |
+| CP-57 — Servicio que el evento no ofrece | RN-14 |
+| CP-58 — Segunda suscripción activa | RN-25 |
+| CP-59 — Devolución sin seguro o fuera de plazo | RN-29 |
+| CP-60 — Sectores que superan la capacidad del local | RN-38 |
+| CP-61 — Preventa sin suscripción | RN-39 |
 
 **Reemplazar** el párrafo que sigue a la tabla:
 
@@ -739,10 +756,14 @@ El estado sigue «Cumplido». El resto de la tabla no cambia.
 
 **Por:**
 
-> Los cincuenta casos verifican veintisiete reglas distintas sobre un total de treinta
-> y ocho vigentes, lo que arroja una cobertura del 71,1 %. Son RN-01 a RN-04, RN-08 a RN-24,
-> RN-30 a RN-32, RN-34, RN-36 y RN-37. Las once restantes carecen de verificación
-> automatizada: RN-05, RN-06, RN-07, RN-25, RN-26, RN-28, RN-29, RN-33, RN-35, RN-38 y RN-39.
+> Los sesenta y un casos verifican treinta y tres reglas distintas sobre un total de
+> treinta y ocho vigentes, lo que arroja una cobertura del 86,8 %. Son RN-01 a RN-06, RN-08 a
+> RN-25, RN-29 a RN-32, RN-34 y RN-36 a RN-39. Las diecinueve reglas que rechazan una
+> operación tienen un caso que provoca ese rechazo y comprueba que el sistema queda como
+> estaba. Las cinco restantes carecen de verificación automatizada: RN-07, RN-26, RN-28, RN-33
+> y RN-35. Ninguna rechaza operaciones: describen un cálculo (RN-07), la ausencia de
+> renovación automática (RN-26), el momento de contratar el seguro (RN-28), la moneda (RN-33)
+> y el orden de la lista de espera (RN-35).
 >
 > Varios casos no suman reglas porque verifican otra cosa: que la interfaz comunique al
 > usuario reglas que ya funcionan, que es el problema que señaló el informe de usabilidad.
@@ -798,6 +819,17 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-48 | Cerrar la compra con un paquete armado pide confirmación, con No por defecto | `CP48_CerrarCompraConfirmaDescarte` | RF-05 | — | 1 |
 | CP-49 | La compra arranca en la celda Cantidad, con encabezado y ayuda | `CP49_CantidadIndicadaYSeleccionada` | RF-04 | — | 1 |
 | CP-50 | «Comprar» y el seguro se habilitan solo con al menos una entrada | `CP50_CompraYSeguroRequierenEntradas` | RF-05 | — | 1 |
+| CP-51 | Ante un error de base de datos, uno de Negocio y uno genérico, el usuario recibe un mensaje en castellano sin detalle técnico | `CP51_MensajeDeErrorParaUsuario` | RNF-02 | — | 3 |
+| CP-52 | Si el evento se elimina mientras el cliente paga, el pago se rechaza con aviso y no se cobra | `CP52_PagoDeEventoEliminado` | RF-06 | — | 1 |
+| CP-53 | La aplicación instala el manejador de errores antes de abrir su primera pantalla | `CP53_ProgramInstalaManejadorGlobal` | RNF-02 | — | 1 |
+| CP-54 | Los encabezados de la grilla de sectores se leen completos | `CP54_EncabezadosDeSectoresCompletos` | RF-04 | H-03 | 1 |
+| CP-55 | Un perfil de usuario inexistente se rechaza sin crear la cuenta | `CP55_RegistroRechazaPerfilInvalido` | RF-01, RF-02 | — | 1 |
+| CP-56 | No se elimina el último sector de un evento publicado | `CP56_RechazaEliminarUltimoSectorPublicado` | RF-12 | — | 1 |
+| CP-57 | Un servicio de otro evento no entra al paquete | `CP57_RechazaServicioDeOtroEvento` | RF-05 | — | 1 |
+| CP-58 | Un cliente con suscripción activa no contrata otra | `CP58_RechazaSegundaSuscripcionActiva` | RF-13 | — | 1 |
+| CP-59 | La devolución sin seguro o fuera de plazo se rechaza sin reembolso | `CP59_RechazaDevolucionSinSeguroOFueraDePlazo` | RF-05 | — | 1 |
+| CP-60 | Un sector que supera la capacidad del local no se agrega | `CP60_RechazaSectorQueSuperaCapacidadDelLocal` | RF-12 | — | 1 |
+| CP-61 | En preventa, un cliente sin suscripción no inicia la compra | `CP61_RechazaPreventaSinSuscripcion` | RF-05, RF-13 | — | 1 |
 
 ### Tabla «Análisis de cobertura»
 
@@ -810,20 +842,20 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | Casos de uso con requerimiento que los origine | 8 | 8 | — | 100 % |
 | Reglas de negocio con origen declarado | 38 | 38 | — | 100 % |
 | Requerimientos funcionales con caso de prueba | 13 | 12 | RF-09 (Won't) | 92,3 % |
-| Reglas de negocio verificadas por caso de prueba | 38 | 27 | 11 reglas | 71,1 % |
+| Reglas de negocio verificadas por caso de prueba | 38 | 33 | 5 reglas | 86,8 % |
 | Hallazgos de usabilidad con acción de mejora | 6 | 6 | — | 100 % |
 | Hallazgos con la acción implementada en el prototipo | 6 | 6 | — | 100 % |
 | Hallazgos con prueba de regresión asociada | 6 | 6 | — | 100 % |
 | Hallazgos del estudio v2.5 (U-01 a U-14) con acción de mejora | 14 | 14 | — | 100 % |
-| Hallazgos del estudio v2.5 corregidos, con prueba de regresión | 14 | 3 | 11 hallazgos | 21,4 % |
+| Hallazgos del estudio v2.5 corregidos, con prueba de regresión | 14 | 4 | 10 hallazgos | 28,6 % |
 
 Las filas de hallazgos H-01 a H-06 corresponden al estudio de la versión 2.4, cuyas
 correcciones están hechas. Las dos últimas corresponden al estudio rehecho en la versión 2.5
 (ver la brecha G-06).
 
-> Los tres hallazgos corregidos son U-01, U-04 y U-05, con sus regresiones CP-47 y CP-48,
-> CP-49, y CP-50. **Si antes de pasar esto al Word se corrigen otros,** actualizar esta fila y
-> G-06.
+> Los cuatro hallazgos corregidos son U-01, U-04, U-05 y U-14, con sus regresiones CP-47 y
+> CP-48, CP-49, CP-50 y CP-54. **Si antes de pasar esto al Word se corrigen otros,**
+> actualizar esta fila y G-06.
 
 ### Lectura del cuadro
 
@@ -838,9 +870,9 @@ correcciones están hechas. Las dos últimas corresponden al estudio rehecho en 
 > La trazabilidad hacia adelante, del requerimiento a su verificación, pasó de ser el punto
 > débil del proyecto a estar completa en el nivel de requerimientos: los doce en alcance
 > cuentan con pruebas, contra tres de trece en la versión 2.4. El único sin pruebas es
-> RF-09, excluido. Lo que queda abierto está en el nivel de reglas: once de treinta y ocho
-> no tienen caso automatizado, entre ellas las tres que esta versión incorporó o reescribió
-> (RN-35, RN-38 y RN-39).
+> RF-09, excluido. En el nivel de reglas, treinta y tres de treinta y ocho tienen caso
+> automatizado, incluidas todas las que rechazan una operación. Quedan cinco, entre ellas
+> RN-35, que esta versión reescribió.
 
 ---
 
@@ -856,18 +888,19 @@ correcciones están hechas. Las dos últimas corresponden al estudio rehecho en 
 > El análisis identificó seis brechas. G-01 se resolvió a partir de este mismo análisis.
 > En la versión 2.5 se cerró G-03 y se resolvieron G-04 y G-05. G-02 quedó resuelta en el
 > nivel de requerimientos y abierta en el de reglas. G-06, nueva, quedó resuelta en sus tres
-> hallazgos de mayor peso y abierta en el resto, con su plan.
+> hallazgos de mayor peso y en el que encontró la segunda medición, y abierta en el resto,
+> con su plan.
 
 **Reemplazar la tabla completa.** G-01 no cambia y se repite para que la tabla quede entera:
 
 | Nº | Brecha | Sev. | Estado | Acción |
 |---|---|---|---|---|
 | G-01 | Los casos de uso CU-02 (Gestionar eventos) y CU-06 (Suscribirse) no contaban con un requerimiento funcional que los originara, pese a que las reglas RN-06, RN-07 y RN-11 por un lado, y RN-25, RN-26 y RN-37 por el otro, presuponen su existencia. | Alta | Resuelta | Se incorporaron los requerimientos RF-12 (Gestión de eventos) y RF-13 (Contratación de suscripciones) a la Definición de requerimientos, y se recalculó la priorización MoSCoW. |
-| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a CP-50. Los doce requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 71,1 % (27 de 38); quedan once reglas sin caso. |
+| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a CP-61. Los doce requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 86,8 % (33 de 38), con todas las reglas que rechazan operaciones; quedan cinco reglas sin caso (RN-07, RN-26, RN-28, RN-33 y RN-35). |
 | G-03 | RF-09 (Recomendaciones personalizadas) no responde a ningún objetivo específico ni posee caso de uso asociado. | Media | Cerrada | Se reclasificó como Won't have en la Fase 8, según la regla de repriorización (W-07). |
 | G-04 | En la versión 2.4, ninguno de los seis hallazgos del informe de usabilidad tenía caso de prueba de regresión. | Media | Resuelta | Las seis acciones del plan de mejora están implementadas en el prototipo y cada hallazgo tiene su regresión automatizada: H-01 en CP-13, H-02 en CP-39, H-03 en CP-40, H-04 en CP-41, H-05 en CP-42 y H-06 en CP-19. |
-| G-05 | El documento no reflejaba tres reglas que el prototipo aplica: el tope de capacidad del local sobre la suma de sus sectores y la preventa exclusiva para suscriptores no estaban enunciadas, y la prioridad de los suscriptores en la lista de espera contradecía RN-35, que exigía orden estricto de inscripción. Era comportamiento implementado sin una regla documentada que lo respalde. | Alta | Resuelta | Se incorporaron RN-38 (RF-12 / CU-02) y RN-39 (RF-13 / CU-01), y se reescribió RN-35 en coherencia con RN-37. Las tres quedan sin caso de prueba, dentro de la parte abierta de G-02. |
-| G-06 | El estudio de usabilidad de la versión 2.5, medido sobre la aplicación real, identificó trece hallazgos nuevos (U-01 a U-13), y la segunda medición uno más (U-14). Dos eran de severidad mayor: cerrar una pantalla con la X dejaba la aplicación en ejecución y sin ventanas, y nada indicaba dónde se escribe la cantidad de entradas. | Media | Parcialmente resuelta | Se corrigieron U-01, U-04 y U-05, cada uno con su prueba de regresión (CP-47 a CP-50), y se volvió a medir: los seis perfiles completan la tarea sin asistencia y la satisfacción buena pasa del 66,7 % al 100 %. Quedan once hallazgos menores (13 horas); el del encabezado cortado (U-14) ya está encargado y el resto pasa a trabajo futuro. |
+| G-05 | El documento no reflejaba tres reglas que el prototipo aplica: el tope de capacidad del local sobre la suma de sus sectores y la preventa exclusiva para suscriptores no estaban enunciadas, y la prioridad de los suscriptores en la lista de espera contradecía RN-35, que exigía orden estricto de inscripción. Era comportamiento implementado sin una regla documentada que lo respalde. | Alta | Resuelta | Se incorporaron RN-38 (RF-12 / CU-02) y RN-39 (RF-13 / CU-01), y se reescribió RN-35 en coherencia con RN-37. RN-38 y RN-39 tienen su caso de prueba (CP-60 y CP-61); RN-35 queda sin caso, dentro de la parte abierta de G-02. |
+| G-06 | El estudio de usabilidad de la versión 2.5, medido sobre la aplicación real, identificó trece hallazgos nuevos (U-01 a U-13), y la segunda medición uno más (U-14). Dos eran de severidad mayor: cerrar una pantalla con la X dejaba la aplicación en ejecución y sin ventanas, y nada indicaba dónde se escribe la cantidad de entradas. | Media | Parcialmente resuelta | Se corrigieron U-01, U-04 y U-05, cada uno con su prueba de regresión (CP-47 a CP-50), y se volvió a medir: los seis perfiles completan la tarea sin asistencia y la satisfacción buena pasa del 66,7 % al 100 %. La segunda medición encontró U-14, el encabezado de la cantidad cortado, que también se corrigió (CP-54). Quedan diez hallazgos menores (12 horas), que pasan a trabajo futuro. |
 
 ### Observación sobre G-03
 
@@ -955,7 +988,7 @@ Debajo de la observación sobre G-03:
 
 **Por:**
 
-| La cobertura de pruebas alcanza el 71,1 % de las reglas. | Todos los requerimientos en alcance tienen pruebas, pero once reglas carecen de verificación automatizada. |
+| La cobertura de pruebas alcanza el 86,8 % de las reglas. | Todos los requerimientos en alcance tienen pruebas, pero cinco reglas, ninguna de las que rechazan operaciones, carecen de verificación automatizada. |
 |---|---|
 
 ### Página 111 — Trabajo futuro
@@ -967,7 +1000,7 @@ Debajo de la observación sobre G-03:
 
 **Por:**
 
-> Aplicar el resto del plan de mejora del estudio de usabilidad (U-02, U-03 y U-06 a U-14) y
+> Aplicar el resto del plan de mejora del estudio de usabilidad (U-02, U-03 y U-06 a U-13) y
 > repetir la medición con las mismas herramientas para contrastar los resultados.
 
 **Reemplazar** el punto 2:
@@ -977,9 +1010,9 @@ Debajo de la observación sobre G-03:
 
 **Por:**
 
-> Completar los casos de prueba de las once reglas sin verificación, empezando por las
-> incorporadas en la versión 2.5 (RN-35, RN-38 y RN-39), de modo de cerrar la brecha G-02 de
-> la matriz de trazabilidad.
+> Completar los casos de prueba de las cinco reglas sin verificación, empezando por RN-35,
+> el orden de la lista de espera que esta versión reescribió, de modo de cerrar la brecha
+> G-02 de la matriz de trazabilidad.
 
 **Reemplazar** el punto 4:
 

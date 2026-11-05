@@ -703,6 +703,12 @@ Todo en **`Visual/Cliente/FrmCompraCliente.cs`**:
 
 # Quinta tanda — T-27 a T-29: errores no controlados, base de formularios y encabezado
 
+> **Terminada el 05/11/2026.** Codex hizo T-27 a T-29 (66 de 66) y agregó CP-55 a CP-61, las
+> pruebas del camino de error de siete reglas: batería final **73 de 73**. Reporte:
+> `docs/RESULTADOS-TAREAS-CODEX-2026-11-05-T27-T29.md`. Claude Code verificó el manejador con
+> SQL Server detenido y el pago con el evento eliminado (`docs/EXCEPCIONES.md`), y regeneró
+> las figuras con el encabezado completo.
+
 Valen las reglas 1 a 8 de la primera tanda. Base: el commit que deje JC después de esta
 revisión. **Batería esperada al terminar: 66 ejecuciones**, todas correctas: 60 más 6 nuevas,
 con los IDs CP-51 a CP-54.
