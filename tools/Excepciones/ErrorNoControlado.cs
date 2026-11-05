@@ -1,3 +1,6 @@
+// REGISTRO DEL «ANTES» de T-27: no instala ManejadorErrores, para mostrar lo que veía el usuario
+// sin él (el cuadro de .NET). Lo que ve ahora la aplicación real con la base caída lo comprueba
+// VerificarBaseCaida.ps1 (CX-04).
 // ¿Qué ve el usuario ante un error que nadie captura? Corre la aplicación real con su bucle de
 // mensajes (Application.Run, igual que Program.cs), contra una base INEXISTENTE (ver el .config
 // que arma VerificarErrorNoControlado.ps1), e intenta iniciar sesión. Registra la ventana que

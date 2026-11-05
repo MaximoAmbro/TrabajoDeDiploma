@@ -1,0 +1,13 @@
+CX-04 — 05/11/2026 00:58 — ejecutable: Visual\bin\Debug\Visual.exe
+1. Servicio MSSQL$SQLEXPRESS: Stopped
+2. La aplicación abre sin la base: ventana «EventAura · Iniciar sesión».
+3. Clic en «Iniciar sesión» con plata@eventaura.com.
+4. A los 14,8 s aparece una ventana: título «EventAura», clase #32770.
+   Texto: «No se pudo conectar con la base de datos. Verifique que SQL Server esté en funcionamiento y vuelva a intentar.»
+   Botones: «Aceptar»
+5. Cuadro de excepción de .NET: no
+   Captura: docs/excepciones/base-caida.png (410 x 508).
+   Ventana abierta: «EventAura · Iniciar sesión» (WindowsForms10.Window.8.app.0.141b42a_r7_ad1), cuadros encima: 0
+6. Después de «Aceptar»: la aplicación sigue abierta en el inicio de sesión.
+7. Cerrar con la X: el proceso termina.
+8. Servicio MSSQL$SQLEXPRESS otra vez: Running; consulta de prueba: 1

@@ -1,0 +1,16 @@
+Evento eliminado durante el pago — 05/11/2026 01:06 — BddEventAura_Pruebas
+1. Cliente Paula arma el paquete de «Duki en Rosario»: 2 entradas de Campo. Clic en «Comprar».
+2. «Seguro de entrada»: Sí, continuar sin seguro.
+3. Pantalla de pago abierta. Compra 72, pendiente, con el cupo reservado.
+4. Otro proceso (el propietario) llama a GestorEventos.Eliminar(1): «Evento 1 eliminado.».
+5. El cliente, que no se enteró, pulsa «Pagar».
+6. Aparece un cuadro: título «Pago no realizado».
+   Texto: «La compra ya no está pendiente de pago. ⏎  ⏎ Vuelva a armar la compra desde el listado.»
+   Cuadro de excepción de .NET: no
+   Captura: docs/excepciones/evento-eliminado-en-pago.png (367 x 417).
+7. Resultado de la pantalla de pago: Abort. Ventanas visibles después: «EventAura · Eventos disponibles».
+8. Estado en la base después:
+   Compra 72: estado Vencida, importe del pedido 54625.00 (se calcula al iniciar; el cobro es la tabla Pagos)
+   Pagos de la compra: 0
+   Entradas de la compra: 0
+   Evento 1 en la base: 0
