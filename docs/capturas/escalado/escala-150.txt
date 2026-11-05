@@ -1,0 +1,7 @@
+Escala 150: área útil vista por la aplicación 1280 x 672; ventana 886 x 573 en {X=197,Y=49}
+OK  ventana dentro del área útil
+OK  btnComprar visible en {X=886,Y=580,Width=178,Height=35}
+OK  btnVolver visible en {X=216,Y=584,Width=120,Height=27}
+Desplazamiento del contenido: no hace falta
+escala-150-compra-paquete-maximo.png: 1323 x 857
+escala-150-compra-final-del-resumen.png: 1323 x 857

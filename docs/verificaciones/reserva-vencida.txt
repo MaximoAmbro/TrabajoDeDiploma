@@ -1,0 +1,24 @@
+CX-02 — reserva vencida por reloj — 05/11/2026 — BddEventAura_Pruebas, RESERVA_MINUTOS = 10
+01:15:51  1. Paula arma 2 entradas de Campo de «Duki en Rosario». Disponibles en Campo: 2000. Clic en «Comprar».
+01:15:52  2. «Seguro de entrada»: Sí, continuar sin seguro.
+01:15:52  3. Pantalla de pago: compra 72, Reserva: 09:59. Tarjeta cargada; NO se pulsa «Pagar». Disponibles en Campo: 1998 (reservadas: 2).
+01:16:53     Reserva: 08:59
+01:17:53     Reserva: 07:59
+01:18:53     Reserva: 07:00
+01:19:53     Reserva: 05:59
+01:20:53     Reserva: 04:59
+01:21:52     Reserva: 04:00
+01:22:52     Reserva: 02:59
+01:23:52     Reserva: 01:59
+01:24:52     Reserva: 00:59
+01:25:02  4. Último minuto: «Reserva: 00:49», color Firebrick.
+01:25:03     Captura: reserva-ultimo-minuto.png (367 x 417).
+01:25:52  5. A los 09:59 de abrir el pago aparece un cuadro: «Reserva vencida».
+01:25:52     Texto: «Venció el plazo de la reserva y se liberaron las entradas. Vuelva a armar la compra desde el listado.»
+01:25:52     Captura: reserva-vencida.png (382 x 417).
+01:25:53  6. Resultado de la pantalla de pago: Abort. Ventanas visibles: «EventAura · Eventos disponibles».
+01:25:53  7. Disponibles en Campo: 2000 (el cupo volvió).
+8. Estado en la base después:
+   Compra 72: estado Vencida; reserva de 10 min
+   Pagos de la compra: 0
+   Entradas de la compra por estado: Vencida 2

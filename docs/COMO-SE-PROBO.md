@@ -138,10 +138,16 @@ Las hizo Claude Code. Los resultados están en `docs/`, y los scripts para repet
 | Qué | Cuántas | Por qué no se ejecutó | De quién |
 |---|---|---|---|
 | Parte de Máximo | 64 | No hay resultados en el repositorio | **Máximo** |
-| JC-R01: confirmar a mano la compra a 125 % y 150 % | 1 | Hay que cambiar la escala de Windows | **JC** |
 | JC-R10: escanear dos QR con el celular | 1 | Hace falta un celular | **JC** |
-| JC-R11: recorrer el resto de las pantallas con el teclado | 1 | No entró en las tandas automáticas | **JC** |
-| CX-02: dejar vencer una reserva por reloj | 1 | Tarda 10 minutos reales. La regla ya está probada (CP-34 y CP-43); esta prueba verifica el temporizador y el aviso de punta a punta | **JC** |
+| CX-03: abrir dos formularios en el diseñador de Visual Studio | 1 | Hace falta Visual Studio. La condición técnica ya se verificó por reflexión | **JC o Máximo** |
+
+**Se cerraron el 05/11/2026**, ejecutadas por Claude Code sobre la aplicación real
+(`docs/PRUEBAS-PENDIENTES.md`, «Estado al 05/11/2026»):
+- **JC-R01:** escala de Windows cambiada de verdad a 125 %, 150 % y 175 %, y restaurada;
+- **JC-R11:** recorrido solo con teclado, que encontró siete acciones en etiquetas que el
+  teclado no alcanza (`docs/verificaciones/recorrido-teclado.md`);
+- **CX-02:** reserva vencida a los 10 minutos reales, sin cobro y con el cupo devuelto;
+- **CX-04:** SQL Server detenido, con el aviso en castellano del manejador.
 
 **Sobre la parte de Máximo:** buena parte de lo que cubre ya tiene prueba automática, aunque
 eso no reemplaza mirar las pantallas:
@@ -185,7 +191,7 @@ lectores, las pantallas del propietario y los reportes con volumen de datos.
 | Persona | Qué le falta | Dónde está |
 |---|---|---|
 | **Máximo** | Sus 64 pruebas. Además, mirar la pantalla de compra en su PC al 125 %, porque se rediseñó | `docs/PRUEBAS-PENDIENTES.md`, secciones A, B, C, D, F y G |
-| **JC** | JC-R01 (a mano), JC-R10 (celular), JC-R11 (recorrido con teclado) y CX-02 (reloj) | `docs/PRUEBAS-PENDIENTES.md`, al final |
+| **JC** | JC-R10 (celular) y CX-03 (diseñador de Visual Studio, si no lo hace Máximo) | `docs/PRUEBAS-PENDIENTES.md`, al final |
 
 ---
 

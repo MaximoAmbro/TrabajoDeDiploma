@@ -1,0 +1,7 @@
+Escala 175: área útil vista por la aplicación 1097 x 569; ventana 886 x 515 en {X=105,Y=27}
+OK  ventana dentro del área útil
+OK  btnComprar visible en {X=794,Y=500,Width=178,Height=35}
+OK  btnVolver visible en {X=124,Y=504,Width=120,Height=27}
+Desplazamiento del contenido: sí
+escala-175-compra-paquete-maximo.png: 1543 x 897
+escala-175-compra-final-del-resumen.png: 1543 x 897

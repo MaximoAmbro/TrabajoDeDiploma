@@ -1,0 +1,32 @@
+CX-03 (reflexión) — 05/11/2026 01:16 — Visual.exe del 05/11/2026 01:15
+
+Clase base Visual.FormularioEventAura
+OK     no es abstracta
+OK     hereda de System.Windows.Forms.Form
+OK     tiene constructor público sin parámetros
+OK     el constructor no tiene código propio (8 bytes de IL)
+OK     se puede instanciar, como hace el diseñador
+
+Formularios que heredan de la base
+OK     frmAdministrarEvento       base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmAdministrarEvento
+OK     frmAgregarEvento           base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmAgregarEvento
+OK     frmAgregarSector           base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmAgregarSector
+OK     frmCambiarContraseña       base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmCambiarContraseña
+OK     FrmCompraCliente           base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: FrmCompraCliente
+OK     frmConfirmacion            base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmConfirmacion
+OK     frmCrearUsuario            base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmCrearUsuario
+OK     frmEventosCliente          base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmEventosCliente
+OK     frmEventosLocal            base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmEventosLocal
+OK     frmHistorialCliente        base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmHistorialCliente
+OK     frmInicio                  base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmInicio
+OK     frmListasEspera            base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmListasEspera
+OK     frmMenuCliente             base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmMenuCliente
+OK     frmMenuPropietario         base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmMenuPropietario
+OK     frmMisLocales              base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmMisLocales
+OK     frmPago                    base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmPago
+OK     frmRegistrarLocal          base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmRegistrarLocal
+OK     frmReportes                base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmReportes
+OK     frmSuscripcion             base FormularioEventAura; constructor sin parámetros sí; InitializeComponent sí; primera clase del .cs: frmSuscripcion
+
+Formularios: 19. Fallas: 0.
+Falta la confirmación visual: abrir FrmCompraCliente y frmInicio en el diseñador de Visual Studio.

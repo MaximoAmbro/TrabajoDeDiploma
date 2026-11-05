@@ -574,3 +574,20 @@ Batería: **60 de 60**. Cerrar con la X verificado sobre el ejecutable con UI Au
 
 Siguen abiertas JC-R01, JC-R10, JC-R11 y CX-02, como se describe más arriba, y la parte de
 Máximo (64 pruebas).
+
+## Estado al 05/11/2026, después de T-27 a T-29 (commits `63a9bb8` a `51735a8`)
+
+Batería: **73 de 73**. Claude Code ejecutó todas las verificaciones que no necesitan una
+persona. Las evidencias están en `docs/verificaciones/`, `docs/excepciones/` y
+`docs/capturas/escalado/`.
+
+| ID | Estado | Cómo se verificó | Qué queda |
+|---|---|---|---|
+| CX-02 | **Cerrada** | `tools/VerificacionesManuales/VerificarReservaVencida.ps1`: formularios reales, tarjeta cargada sin pagar, 10 minutos reales. El reloj pasa a rojo en el último minuto; a los 09:59 aparece «Reserva vencida»; el cupo de Campo vuelve de 1998 a 2000; la compra queda Vencida, con sus 2 entradas Vencidas y **ningún pago** | — |
+| CX-04 | **Cerrada** | `tools/Excepciones/VerificarBaseCaida.ps1`: con el servicio de SQL Server detenido, `Visual.exe` muestra «EventAura: No se pudo conectar con la base de datos…» y no el cuadro de .NET. La aplicación sigue abierta. El servicio se volvió a iniciar | — |
+| JC-R01 | **Cerrada en este monitor** (1920 × 1080) | `VerificarEscala.ps1` con la escala de Windows cambiada de verdad a 125 %, 150 % y 175 % (`tools/VerificacionesManuales/Escala.ps1`), y restaurada a 100 %. Las tres dan OK: la ventana, «Comprar» y «Volver» entran en el área útil. A 175 % el contenido se desplaza. Se ve algo borroso, por la limitación de DPI ya declarada en RNF-03 | Opcional: mirarla en una notebook |
+| JC-R11 | **Cerrada, con hallazgos** | Recorrido del ejecutable solo con teclado (`docs/verificaciones/recorrido-teclado.md`). El circuito del cliente se completa entero. Cinco acciones son etiquetas y no se alcanzan con teclado; tres pantallas del administrador quedan sin salida | Opcional: Shift+Tab y Ctrl+Tab con el teclado físico (5 min). Decidir si se corrigen T-1 a T-5 |
+| CX-03 | **Parte técnica cerrada** | `tools/VerificacionesManuales/VerificarDisenador.ps1`, por reflexión: la base no es abstracta, tiene constructor público sin parámetros y vacío, se puede instanciar; los 19 formularios heredan de ella y cumplen las condiciones del diseñador | **JC o Máximo:** abrir `FrmCompraCliente` y `frmInicio` en el diseñador de Visual Studio (5 min) |
+| JC-R10 | Abierta | — | **JC:** escanear dos tickets con el celular (10 min) |
+
+Sigue abierta la parte de Máximo (64 pruebas).

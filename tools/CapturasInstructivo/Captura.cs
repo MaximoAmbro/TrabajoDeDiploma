@@ -160,7 +160,9 @@ static class Captura
         contenido.ScrollControlIntoView(resumen); Esperar(400);
         Guardar(compra, "escala-" + nombre + "-compra-final-del-resumen.png");
         if (!dentro) log.Add("ERROR: algo queda fuera del área útil a escala " + nombre);
-        compra.Close();
+        // Hide y no Close: desde T-24, cerrar con el paquete armado pide confirmación y colgaba
+        // esta verificación esperando una respuesta.
+        compra.Hide();
     }
 
     static bool ResponderDialogo(string titulo, int boton)

@@ -1,0 +1,7 @@
+Escala 125: área útil vista por la aplicación 1536 x 816; ventana 886 x 573 en {X=325,Y=121}
+OK  ventana dentro del área útil
+OK  btnComprar visible en {X=1014,Y=652,Width=178,Height=35}
+OK  btnVolver visible en {X=344,Y=656,Width=120,Height=27}
+Desplazamiento del contenido: no hace falta
+escala-125-compra-paquete-maximo.png: 1102 x 713
+escala-125-compra-final-del-resumen.png: 1102 x 713
