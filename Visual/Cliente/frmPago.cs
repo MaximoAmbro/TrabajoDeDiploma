@@ -88,6 +88,17 @@ namespace Visual
                 DialogResult = cerrada ? DialogResult.Abort : DialogResult.Cancel;
                 return;
             }
+            catch (InvalidOperationException ex)
+            {
+                // La compra dejó de estar pendiente por fuera de esta pantalla (por ejemplo, el evento
+                // se eliminó mientras se pagaba). El cupo ya se liberó: se vuelve al listado.
+                tmrReserva.Stop();
+                cerrada = true;
+                MessageBox.Show(ex.Message + "\n\nVuelva a armar la compra desde el listado.",
+                    "Pago no realizado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DialogResult = DialogResult.Abort;
+                return;
+            }
             finally
             {
                 txtCvv.Clear();

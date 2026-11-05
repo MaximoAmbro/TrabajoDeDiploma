@@ -11,10 +11,10 @@ namespace Visual
         /// <summary>
         /// Punto de entrada principal para la aplicación.
         /// </summary>
-        /// //aaaa
         [STAThread]
         static void Main()
         {
+            ManejadorErrores.Instalar();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new frmInicio());
