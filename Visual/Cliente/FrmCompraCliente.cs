@@ -46,6 +46,7 @@ namespace Visual
         private bool agotado;
         private Panel contenidoCompra;
         private Panel accionesCompra;
+        private bool distribuyendoCompra;
 
         public FrmCompraCliente()
         {
@@ -57,39 +58,101 @@ namespace Visual
         // desplazamiento en una notebook o con texto ampliado por Windows.
         private void ConfigurarAreaDeCompra()
         {
-            int margen = Math.Max(4, btnVolver.Height / 8);
-            accionesCompra = new Panel
-            {
-                Name = "pnlAccionesCompra",
-                Dock = DockStyle.Bottom,
-                Height = Math.Max(btnComprar.Height, btnVolver.Height) + 2 * margen,
-                Padding = new Padding(btnVolver.Left, margen, btnVolver.Left, margen),
-                TabIndex = 1
-            };
-            contenidoCompra = new Panel
-            {
-                Name = "pnlContenidoCompra",
-                Dock = DockStyle.Fill,
-                AutoScroll = true,
-                AutoScrollMargin = new Size(margen, margen),
-                TabIndex = 0
-            };
-            SuspendLayout();
-            foreach (Control control in Controls.Cast<Control>().ToArray())
-            {
-                if (control != btnComprar && control != btnVolver)
-                    contenidoCompra.Controls.Add(control);
-            }
-            accionesCompra.Controls.Add(btnVolver);
-            accionesCompra.Controls.Add(btnComprar);
-            btnVolver.TabIndex = 1;
-            btnComprar.TabIndex = 0;
-            Controls.Add(contenidoCompra);
-            Controls.Add(accionesCompra);
+            accionesCompra = pnlAccionesCompra;
+            contenidoCompra = pnlContenidoCompra;
+            // El panel pinta el fondo; las etiquetas hermanas deben quedar delante.
+            pnlEncabezadoCompra.SendToBack();
             accionesCompra.Resize += (sender, e) => AlinearAcciones();
             accionesCompra.Layout += (sender, e) => AlinearAcciones();
-            ResumeLayout(true);
+            pnlEncabezadoCompra.Paint += PintarSeparadorInferior;
+            accionesCompra.Paint += PintarSeparadorSuperior;
+            pnlTarjetaEntradas.Paint += PintarTarjeta;
+            pnlTarjetaServicios.Paint += PintarTarjeta;
+            pnlResumen.Paint += PintarTarjeta;
+            label1.TextChanged += (sender, e) => AjustarEncabezado();
+            label1.FontChanged += (sender, e) => AjustarEncabezado();
+            contenidoCompra.AutoScrollMargin = Size.Empty;
+            contenidoCompra.SizeChanged += (sender, e) => AjustarEncabezado();
+            lblResumen.SizeChanged += (sender, e) => AjustarEncabezado();
+            AjustarEncabezado();
             AlinearAcciones();
+        }
+
+        // El contenedor asigna columnas seg?n la vista disponible. La tarjeta del resumen
+        // ocupa como m?ximo una vista; su documento mantiene fuente y contenido y se desplaza
+        // dentro de ella cuando no entra. No se confunde el alto del documento con el de la vista.
+        private void AjustarEncabezado()
+        {
+            if (distribuyendoCompra) return;
+            distribuyendoCompra = true;
+            int anchoUsado = contenidoCompra.ClientSize.Width;
+            try
+            {
+                float escala = DeviceDpi / Tema.DpiDiseno * Font.SizeInPoints / Tema.Cuerpo.SizeInPoints;
+                int margen = (int)Math.Round(Tema.Espacio.XL * escala);
+                int relleno = (int)Math.Round(Tema.Espacio.L * escala);
+                int separacion = (int)Math.Round(Tema.Espacio.S * escala);
+                Point desplazamiento = contenidoCompra.AutoScrollPosition;
+                contenidoCompra.SuspendLayout();
+                int ancho = Math.Max(0, anchoUsado - margen * 2);
+                label1.SetBounds(margen + desplazamiento.X, (int)(Tema.Espacio.XS * escala) + desplazamiento.Y,
+                    ancho, label1.GetPreferredSize(new Size(ancho, 0)).Height);
+                lblNivel.Location = new Point(margen + desplazamiento.X, label1.Bottom + separacion);
+                lnkNiveles.Location = new Point(lblNivel.Right + separacion, lblNivel.Top);
+                int altoEncabezado = Math.Max((int)(Tema.AltoEncabezadoVentana * escala),
+                    Math.Max(lblNivel.Bottom, lnkNiveles.Bottom) - desplazamiento.Y + separacion);
+                pnlEncabezadoCompra.SetBounds(desplazamiento.X, desplazamiento.Y, anchoUsado, altoEncabezado);
+                int inicio = altoEncabezado + margen + desplazamiento.Y;
+                int columna = Math.Max(0, (ancho - margen) / 2);
+                pnlTarjetaEntradas.SetBounds(margen + desplazamiento.X, inicio, columna, pnlTarjetaEntradas.Height);
+                dgvSectores.Width = Math.Max(0, columna - relleno * 2);
+                lblAgotado.Width = dgvSectores.Width;
+                btnListaEspera.Left = (columna - btnListaEspera.Width) / 2;
+                pnlTarjetaServicios.SetBounds(margen + desplazamiento.X, pnlTarjetaEntradas.Bottom + margen,
+                    columna, pnlTarjetaServicios.Height);
+                foreach (CheckBox casilla in ChecksDeServicio().Concat(new[] { chkSeguro }))
+                    casilla.Width = Math.Max(0, columna - relleno * 2);
+                int anchoResumen = Math.Max(0, ancho - margen - columna);
+                pnlResumen.Width = anchoResumen;
+                int anchoDocumento = Math.Max(0, anchoResumen - relleno * 2 - SystemInformation.VerticalScrollBarWidth);
+                lblResumen.MinimumSize = new Size(anchoDocumento, 0);
+                lblResumen.MaximumSize = new Size(anchoDocumento, 0);
+                int altoDocumento = lblResumen.GetPreferredSize(new Size(anchoDocumento, 0)).Height;
+                int altoNatural = lblResumen.Top - pnlResumen.AutoScrollPosition.Y + altoDocumento + relleno;
+                int altoVista = Math.Max(0, contenidoCompra.ClientSize.Height - margen * 2);
+                pnlResumen.SetBounds(margen + columna + margen + desplazamiento.X, inicio,
+                    anchoResumen, Math.Min(altoNatural, altoVista));
+            }
+            finally
+            {
+                contenidoCompra.ResumeLayout(true);
+                distribuyendoCompra = false;
+            }
+            // Una barra vertical puede cambiar el ancho ?til durante la distribuci?n.
+            if (anchoUsado != contenidoCompra.ClientSize.Width) AjustarEncabezado();
+        }
+
+        private static void PintarTarjeta(object sender, PaintEventArgs e)
+        {
+            var panel = (Panel)sender;
+            using (var lapiz = new Pen(Tema.Borde, Tema.BordeNormal))
+                e.Graphics.DrawRectangle(lapiz, 0, 0, panel.ClientSize.Width - Tema.BordeNormal,
+                    panel.ClientSize.Height - Tema.BordeNormal);
+        }
+
+        private static void PintarSeparadorInferior(object sender, PaintEventArgs e)
+        {
+            var panel = (Panel)sender;
+            using (var lapiz = new Pen(Tema.Borde, Tema.BordeNormal))
+                e.Graphics.DrawLine(lapiz, 0, panel.ClientSize.Height - Tema.BordeNormal,
+                    panel.ClientSize.Width, panel.ClientSize.Height - Tema.BordeNormal);
+        }
+
+        private static void PintarSeparadorSuperior(object sender, PaintEventArgs e)
+        {
+            var panel = (Panel)sender;
+            using (var lapiz = new Pen(Tema.Borde, Tema.BordeNormal))
+                e.Graphics.DrawLine(lapiz, 0, 0, panel.ClientSize.Width, 0);
         }
 
         private void AlinearAcciones()
@@ -110,6 +173,7 @@ namespace Visual
             Size = new Size(Math.Min(Width, areaTrabajo.Width), Math.Min(Height, areaTrabajo.Height));
             Location = new Point(areaTrabajo.Left + (areaTrabajo.Width - Width) / 2,
                 areaTrabajo.Top + (areaTrabajo.Height - Height) / 2);
+            AjustarEncabezado();
             AlinearAcciones();
         }
         private void FrmCompraCliente_Load(object sender, EventArgs e)
@@ -122,7 +186,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("No se puede armar el paquete", ex);
                 VolverAlListado();
                 return;
             }
@@ -136,8 +200,7 @@ namespace Visual
             CargarSectores();
             CargarServicios();
             chkSeguro.CheckedChanged += chkSeguro_CheckedChanged;
-            lblResumen.MaximumSize = new Size(pnlResumen.ClientSize.Width - SystemInformation.VerticalScrollBarWidth, 0);
-            lblResumen.MinimumSize = new Size(lblResumen.MaximumSize.Width, 0);
+            AjustarEncabezado();
             lblResumen.UseMnemonic = false;   // «Meet & Greet»: el & no es tecla de acceso
             MostrarSiAgotado();
             ActualizarResumen();
@@ -189,7 +252,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Avisos.Regla("No se puede armar el paquete", ex);
                 if (ex.Regla == "RN-36")
                 {
                     MarcarInscripto(true);
@@ -230,7 +293,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("No se puede completar la compra", ex);
                 RecargarDisponibles();
                 return;
             }
@@ -268,7 +331,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("No se puede armar el paquete", ex);
                 VolverAlListado();
                 return;
             }
@@ -300,7 +363,8 @@ namespace Visual
         {
             decimal porcentaje = GestorFidelizacion.Instance.PorcentajePara(cliente.Nivel);
             lblNivel.Text = $"Tu nivel: {cliente.Nivel} · {porcentaje.ToString("P1", Pesos)} de descuento";
-            lnkNiveles.Left = lblNivel.Right + 2;
+            lnkNiveles.Left = lblNivel.Right + Tema.Espacio.S;
+            AjustarEncabezado();
         }
 
         // H-05: explica los niveles con los valores vigentes de la tabla Parametros.
@@ -339,7 +403,7 @@ namespace Visual
             dgvSectores.RowHeadersVisible = false;
             dgvSectores.SelectionMode = DataGridViewSelectionMode.CellSelect;
             dgvSectores.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvSectores.BackgroundColor = System.Drawing.Color.White;
+            Tema.EstiloGrilla(dgvSectores);
             dgvSectores.EditMode = DataGridViewEditMode.EditOnEnter;
 
             dgvSectores.Columns.Add("IdSector", "IdSector");
@@ -361,7 +425,7 @@ namespace Visual
             {
                 dgvSectores.Columns[nombre].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
-            dgvSectores.Columns["Cantidad"].DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(245, 241, 252);
+            dgvSectores.Columns["Cantidad"].DefaultCellStyle.BackColor = Tema.PrimarioSuave;
 
             sectores.Clear();
             int max = GestorParametros.Instance.ObtenerEntero("COMPRA_ENTRADAS_MAX");
@@ -401,7 +465,7 @@ namespace Visual
             string texto = Convert.ToString(fila.Cells["Cantidad"].Value);
             if (!int.TryParse(string.IsNullOrWhiteSpace(texto) ? "0" : texto.Trim(), out cantidad) || cantidad < 0)
             {
-                MessageBox.Show("La cantidad debe ser un número entero de 0 en adelante.");
+                MessageBox.Show("La cantidad debe ser un número entero de 0 en adelante.", "Revisá los datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 RestaurarCantidad(fila, anterior);
                 return;
             }
@@ -411,13 +475,13 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("No se puede armar el paquete", ex);
                 RestaurarCantidad(fila, anterior);
                 return;
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "No se puede modificar la cantidad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 RestaurarCantidad(fila, anterior);
                 return;
             }
@@ -450,7 +514,7 @@ namespace Visual
                 chk.Enabled = servicio != null;
                 chk.Text = servicio == null
                     ? par.Value + " (no disponible)"
-                    : $"{par.Value} {servicio.Precio.ToString("C0", Pesos)}";
+                    : $"{par.Value} \u00b7 {servicio.Precio.ToString("C0", Pesos)}";
                 chk.CheckedChanged -= chkServicio_CheckedChanged;
                 chk.CheckedChanged += chkServicio_CheckedChanged;
             }
@@ -482,7 +546,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("No se puede armar el paquete", ex);
                 chk.Checked = false;
             }
             ActualizarResumen();
@@ -609,32 +673,80 @@ namespace Visual
         }
         public void GenerarPDF(string ruta, string mensaje, byte[] QR)
         {
-            PdfWriter pw = new PdfWriter(ruta);
-            PdfDocument pdf = new PdfDocument(pw);
-            // aca elegimos el tamaño de la pagina
-            Document doc = new Document(pdf, PageSize.A6.Rotate());
-            // aca seteamos el color de la pagina
-            PdfPage page = pdf.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            canvas.SetFillColor(ColorConstants.BLACK);
-            canvas.Rectangle(0, 0, page.GetPageSize().GetWidth(), page.GetPageSize().GetHeight());
-            canvas.Fill();
+            string[] lineas = mensaje.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string nombre = lineas.FirstOrDefault() ?? string.Empty;
+            if (nombre.StartsWith("ENTRADA ", StringComparison.Ordinal)) nombre = nombre.Substring("ENTRADA ".Length);
+            Func<string, string> dato = rotulo =>
+            {
+                string prefijo = rotulo + ":";
+                string linea = lineas.FirstOrDefault(x => x.StartsWith(prefijo, StringComparison.Ordinal));
+                return linea == null ? string.Empty : linea.Substring(prefijo.Length).Trim();
+            };
+            using (var escritor = new PdfWriter(ruta))
+            using (var pdf = new PdfDocument(escritor))
+            {
+                PdfPage pagina = pdf.AddNewPage(PageSize.A6.Rotate());
+                float ancho = pagina.GetPageSize().GetWidth();
+                float alto = pagina.GetPageSize().GetHeight();
+                float margen = Tema.Ticket.Margen;
+                float anchoTexto = ancho - margen * 2 - Tema.Ticket.LadoQr - Tema.Ticket.Separacion;
+                PdfFont normal = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                PdfFont negrita = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+                PdfFont codigo = PdfFontFactory.CreateFont(StandardFonts.COURIER);
+                var lienzo = new PdfCanvas(pagina);
+                // El papel queda blanco; solo se imprime la franja de marca.
+                lienzo.SetFillColor(ColorPdf(Tema.Primario));
+                lienzo.Rectangle(0, alto - Tema.Ticket.Franja, ancho, Tema.Ticket.Franja).Fill();
+                using (var franja = new Canvas(lienzo, new iText.Kernel.Geom.Rectangle(
+                    margen, alto - Tema.Ticket.Franja, ancho - margen * 2, Tema.Ticket.Franja)))
+                {
+                    franja.Add(new Paragraph("EventAura \u00b7 Entrada").SetFont(negrita).SetFontSize(Tema.Ticket.Dato)
+                        .SetFontColor(ColorPdf(Tema.Superficie)).SetMargin(0));
+                }
+                // El nombre usa el ancho disponible sobre los datos y el QR para admitir varias l?neas.
+                float baseTitulo = Tema.Ticket.BaseQr + Tema.Ticket.LadoQr + Tema.Ticket.EspacioTitulo;
+                using (var titulo = new Canvas(lienzo, new iText.Kernel.Geom.Rectangle(margen, baseTitulo,
+                    ancho - margen * 2, alto - Tema.Ticket.Franja - margen - baseTitulo)))
+                {
+                    titulo.Add(new Paragraph(nombre).SetFont(negrita).SetFontSize(Tema.Ticket.Titulo)
+                        .SetFontColor(ColorPdf(Tema.Texto)).SetMargin(0).SetMultipliedLeading(1));
+                }
+                using (var datos = new Canvas(lienzo, new iText.Kernel.Geom.Rectangle(margen, Tema.Ticket.BaseDatos,
+                    anchoTexto, Tema.Ticket.BaseQr + Tema.Ticket.LadoQr - Tema.Ticket.BaseDatos)))
+                {
+                    var tabla = new Table(UnitValue.CreatePercentArray(new[] { Tema.Ticket.PesoRotulo, Tema.Ticket.PesoDato }))
+                        .UseAllAvailableWidth();
+                    foreach (string rotulo in new[] { "SECTOR", "FECHA", "PRECIO", "PEDIDO" })
+                    {
+                        tabla.AddCell(new Cell().SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetPadding(0)
+                            .SetPaddingBottom(Tema.Ticket.EspacioFila).Add(new Paragraph(rotulo).SetFont(normal)
+                                .SetFontSize(Tema.Ticket.Rotulo).SetFontColor(ColorPdf(Tema.TextoSecundario)).SetMargin(0)));
+                        tabla.AddCell(new Cell().SetBorder(iText.Layout.Borders.Border.NO_BORDER).SetPadding(0)
+                            .SetPaddingBottom(Tema.Ticket.EspacioFila).Add(new Paragraph(dato(rotulo)).SetFont(normal)
+                                .SetFontSize(Tema.Ticket.Dato).SetFontColor(ColorPdf(Tema.Texto)).SetMargin(0)));
+                    }
+                    datos.Add(tabla);
+                }
+                var imagen = new iText.Layout.Element.Image(ImageDataFactory.Create(QR));
+                imagen.ScaleAbsolute(Tema.Ticket.LadoQr, Tema.Ticket.LadoQr);
+                using (var qr = new Canvas(lienzo, new iText.Kernel.Geom.Rectangle(
+                    ancho - margen - Tema.Ticket.LadoQr, Tema.Ticket.BaseQr, Tema.Ticket.LadoQr, Tema.Ticket.LadoQr)))
+                    qr.Add(imagen);
+                using (var pie = new Canvas(lienzo, pagina.GetPageSize()))
+                {
+                    pie.ShowTextAligned(new Paragraph("C\u00f3digo " + dato("C\u00d3DIGO")).SetFont(codigo)
+                        .SetFontSize(Tema.Ticket.Rotulo).SetFontColor(ColorPdf(Tema.Texto)),
+                        margen, Tema.Ticket.BaseCodigo, TextAlignment.LEFT);
+                    pie.ShowTextAligned(new Paragraph("Present\u00e1 este c\u00f3digo en el ingreso.").SetFont(normal)
+                        .SetFontSize(Tema.Ticket.Rotulo).SetFontColor(ColorPdf(Tema.TextoSecundario)),
+                        margen, Tema.Ticket.BaseAyuda, TextAlignment.LEFT);
+                }
+            }
+        }
 
-            // aca seteamos el color del texto
-            doc.Add(new Paragraph(mensaje)
-                .SetTextAlignment(TextAlignment.CENTER)
-               .SetFontColor(ColorConstants.WHITE)
-               .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD))
-               .SetFontSize(10))
-               .SetBottomMargin(50);
-
-            // aca se agrega el QR y se setea tamaño y ubicacion
-            var img = new iText.Layout.Element.Image(ImageDataFactory.Create(QR));
-            img.ScaleAbsolute(100, 100);
-            img.SetHorizontalAlignment(iText.Layout.Properties.HorizontalAlignment.CENTER);
-            doc.Add(img);
-
-            doc.Close();
+        private static DeviceRgb ColorPdf(System.Drawing.Color color)
+        {
+            return new DeviceRgb(color.R, color.G, color.B);
         }
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void btnVolver_Click(object sender, EventArgs e)

@@ -2,34 +2,19 @@ namespace Visual
 {
     partial class FrmCompraCliente
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && components != null) components.Dispose();
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            this.btnVolver = new System.Windows.Forms.Button();
-            this.btnComprar = new System.Windows.Forms.Button();
+            this.btnVolver = new Visual.Componentes.BotonSecundario();
+            this.btnComprar = new Visual.Componentes.BotonPrimario();
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblNivel = new System.Windows.Forms.Label();
@@ -43,234 +28,311 @@ namespace Visual
             this.pnlResumen = new System.Windows.Forms.Panel();
             this.lblResumen = new System.Windows.Forms.Label();
             this.lblAgotado = new System.Windows.Forms.Label();
-            this.btnListaEspera = new System.Windows.Forms.Button();
+            this.btnListaEspera = new Visual.Componentes.BotonSecundario();
+            this.pnlEncabezadoCompra = new System.Windows.Forms.Panel();
+            this.pnlContenidoCompra = new System.Windows.Forms.Panel();
+            this.pnlAccionesCompra = new System.Windows.Forms.Panel();
+            this.pnlTarjetaEntradas = new System.Windows.Forms.Panel();
+            this.pnlTarjetaServicios = new System.Windows.Forms.Panel();
+            this.lblTituloEntradas = new System.Windows.Forms.Label();
+            this.lblTituloServicios = new System.Windows.Forms.Label();
+            this.lblTituloResumen = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSectores)).BeginInit();
+            this.pnlEncabezadoCompra.SuspendLayout();
+            this.pnlContenidoCompra.SuspendLayout();
+            this.pnlAccionesCompra.SuspendLayout();
+            this.pnlTarjetaEntradas.SuspendLayout();
+            this.pnlTarjetaServicios.SuspendLayout();
             this.pnlResumen.SuspendLayout();
             this.SuspendLayout();
             //
             // btnVolver
             //
-            this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(20, 630);
-            this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(150, 34);
-            this.btnVolver.TabIndex = 1;
+            this.btnVolver.Size = Tema.Compra.BotonVolver;
             this.btnVolver.Text = "Volver al listado";
-            this.btnVolver.UseVisualStyleBackColor = true;
+            this.btnVolver.TabIndex = 0;
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
             //
             // btnComprar
             //
-            this.btnComprar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.btnComprar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnComprar.FlatAppearance.BorderSize = 0;
-            this.btnComprar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnComprar.ForeColor = System.Drawing.Color.White;
-            this.btnComprar.Location = new System.Drawing.Point(165, 567);
-            this.btnComprar.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnComprar.Name = "btnComprar";
-            this.btnComprar.Size = new System.Drawing.Size(222, 44);
-            this.btnComprar.TabIndex = 35;
+            this.btnComprar.Size = Tema.Compra.BotonComprar;
             this.btnComprar.Text = "Comprar";
-            this.btnComprar.UseVisualStyleBackColor = false;
+            this.btnComprar.TabIndex = 1;
             this.btnComprar.Click += new System.EventHandler(this.btnComprar_Click);
             //
             // label4
             //
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 192);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(0, 19);
-            this.label4.TabIndex = 32;
+            this.label4.AutoSize = true;
+            this.label4.Visible = false;
+            this.label4.Text = "";
             //
             // label1
             //
-            this.label1.AutoSize = false;
-            this.label1.UseMnemonic = false;
-            this.label1.Font = new System.Drawing.Font("Nirmala UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.label1.Location = new System.Drawing.Point(20, 12);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(1060, 96);
-            this.label1.TabIndex = 27;
-            this.label1.Text = "Selecciona tickets";
+            this.label1.Font = Tema.Titulo;
+            this.label1.BackColor = Tema.Superficie;
+            this.label1.ForeColor = Tema.Texto;
+            this.label1.Location = Tema.Compra.Titulo;
+            this.label1.Size = Tema.Compra.NombreEvento;
+            this.label1.UseMnemonic = false;
+            this.label1.Text = "Seleccioná tus entradas";
             //
             // lblNivel
             //
-            this.lblNivel.AutoSize = true;
-            this.lblNivel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.lblNivel.Location = new System.Drawing.Point(20, 112);
-            this.lblNivel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNivel.Name = "lblNivel";
-            this.lblNivel.Size = new System.Drawing.Size(40, 19);
-            this.lblNivel.TabIndex = 49;
+            this.lblNivel.AutoSize = true;
+            this.lblNivel.Font = Tema.Ayuda;
+            this.lblNivel.BackColor = Tema.Superficie;
+            this.lblNivel.ForeColor = Tema.TextoSecundario;
+            this.lblNivel.Location = Tema.Compra.Nivel;
             this.lblNivel.Text = "Nivel";
             //
             // lnkNiveles
             //
-            this.lnkNiveles.AutoSize = true;
-            this.lnkNiveles.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.lnkNiveles.Location = new System.Drawing.Point(310, 112);
-            this.lnkNiveles.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lnkNiveles.Name = "lnkNiveles";
-            this.lnkNiveles.Size = new System.Drawing.Size(147, 19);
-            this.lnkNiveles.TabIndex = 50;
-            this.lnkNiveles.TabStop = true;
+            this.lnkNiveles.AutoSize = true;
+            this.lnkNiveles.Font = Tema.Ayuda;
+            this.lnkNiveles.BackColor = Tema.Superficie;
+            this.lnkNiveles.ForeColor = Tema.TextoSecundario;
+            this.lnkNiveles.Location = Tema.Compra.Enlace;
             this.lnkNiveles.Text = "¿Cómo funcionan los niveles?";
+            this.lnkNiveles.LinkColor = Tema.Primario;
+            this.lnkNiveles.ActiveLinkColor = Tema.PrimarioPresionado;
+            this.lnkNiveles.VisitedLinkColor = Tema.Primario;
+            this.lnkNiveles.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lnkNiveles.TabIndex = 0;
+            this.lnkNiveles.TabStop = true;
             this.lnkNiveles.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkNiveles_LinkClicked);
             //
             // dgvSectores
             //
-            this.dgvSectores.Location = new System.Drawing.Point(20, 145);
-            this.dgvSectores.Margin = new System.Windows.Forms.Padding(2);
             this.dgvSectores.Name = "dgvSectores";
-            this.dgvSectores.Size = new System.Drawing.Size(545, 215);
-            this.dgvSectores.TabIndex = 36;
-            //
-            // lblAgotado
-            //
-            this.lblAgotado.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAgotado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.lblAgotado.Location = new System.Drawing.Point(20, 155);
-            this.lblAgotado.Name = "lblAgotado";
-            this.lblAgotado.Size = new System.Drawing.Size(545, 84);
-            this.lblAgotado.TabIndex = 51;
-            this.lblAgotado.Text = "Entradas agotadas.\r\nAnotate en la lista de espera y te vamos a notificar si se libera un lugar.";
-            this.lblAgotado.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblAgotado.Visible = false;
-            //
-            // btnListaEspera
-            //
-            this.btnListaEspera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
-            this.btnListaEspera.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnListaEspera.FlatAppearance.BorderSize = 0;
-            this.btnListaEspera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnListaEspera.ForeColor = System.Drawing.Color.White;
-            this.btnListaEspera.Location = new System.Drawing.Point(130, 260);
-            this.btnListaEspera.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.btnListaEspera.Name = "btnListaEspera";
-            this.btnListaEspera.Size = new System.Drawing.Size(320, 44);
-            this.btnListaEspera.TabIndex = 52;
-            this.btnListaEspera.Text = "Anotarme en la lista de espera";
-            this.btnListaEspera.UseVisualStyleBackColor = false;
-            this.btnListaEspera.Visible = false;
-            this.btnListaEspera.Click += new System.EventHandler(this.btnListaEspera_Click);
+            this.dgvSectores.Location = Tema.Compra.Grilla;
+            this.dgvSectores.Size = Tema.Compra.Sectores;
+            this.dgvSectores.TabIndex = 0;
+            this.dgvSectores.StandardTab = true;
             //
             // chkHospedaje
             //
-            this.chkHospedaje.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkHospedaje.Location = new System.Drawing.Point(20, 375);
             this.chkHospedaje.Name = "chkHospedaje";
-            this.chkHospedaje.Size = new System.Drawing.Size(545, 30);
-            this.chkHospedaje.TabIndex = 37;
+            this.chkHospedaje.Font = Tema.Cuerpo;
+            this.chkHospedaje.ForeColor = Tema.Texto;
+            this.chkHospedaje.Location = Tema.Compra.Hospedaje;
+            this.chkHospedaje.Size = Tema.Compra.Casilla;
+            this.chkHospedaje.TabIndex = 0;
             this.chkHospedaje.Text = "Hospedaje";
-            this.chkHospedaje.UseVisualStyleBackColor = true;
             //
             // chkTraslado
             //
-            this.chkTraslado.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkTraslado.Location = new System.Drawing.Point(20, 409);
             this.chkTraslado.Name = "chkTraslado";
-            this.chkTraslado.Size = new System.Drawing.Size(545, 30);
-            this.chkTraslado.TabIndex = 38;
+            this.chkTraslado.Font = Tema.Cuerpo;
+            this.chkTraslado.ForeColor = Tema.Texto;
+            this.chkTraslado.Location = Tema.Compra.Traslado;
+            this.chkTraslado.Size = Tema.Compra.Casilla;
+            this.chkTraslado.TabIndex = 1;
             this.chkTraslado.Text = "Traslado";
-            this.chkTraslado.UseVisualStyleBackColor = true;
             //
             // chkMerch
             //
-            this.chkMerch.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkMerch.Location = new System.Drawing.Point(20, 443);
             this.chkMerch.Name = "chkMerch";
-            this.chkMerch.Size = new System.Drawing.Size(545, 30);
-            this.chkMerch.TabIndex = 39;
+            this.chkMerch.Font = Tema.Cuerpo;
+            this.chkMerch.ForeColor = Tema.Texto;
+            this.chkMerch.Location = Tema.Compra.Merch;
+            this.chkMerch.Size = Tema.Compra.Casilla;
+            this.chkMerch.TabIndex = 2;
             this.chkMerch.Text = "Merchandising";
-            this.chkMerch.UseVisualStyleBackColor = true;
             //
             // chkVIP
             //
-            this.chkVIP.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkVIP.Location = new System.Drawing.Point(20, 477);
             this.chkVIP.Name = "chkVIP";
-            this.chkVIP.Size = new System.Drawing.Size(545, 30);
-            this.chkVIP.TabIndex = 40;
+            this.chkVIP.Font = Tema.Cuerpo;
+            this.chkVIP.ForeColor = Tema.Texto;
+            this.chkVIP.Location = Tema.Compra.Vip;
+            this.chkVIP.Size = Tema.Compra.Casilla;
+            this.chkVIP.TabIndex = 3;
             this.chkVIP.Text = "Experiencia VIP";
-            this.chkVIP.UseVisualStyleBackColor = true;
             //
             // chkSeguro
             //
-            this.chkSeguro.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkSeguro.Location = new System.Drawing.Point(20, 517);
             this.chkSeguro.Name = "chkSeguro";
-            this.chkSeguro.Size = new System.Drawing.Size(545, 32);
-            this.chkSeguro.TabIndex = 41;
+            this.chkSeguro.Font = Tema.Cuerpo;
+            this.chkSeguro.ForeColor = Tema.Texto;
+            this.chkSeguro.Location = Tema.Compra.Seguro;
+            this.chkSeguro.Size = Tema.Compra.CasillaSeguro;
+            this.chkSeguro.TabIndex = 4;
             this.chkSeguro.Text = "Seguro de entrada (devolución hasta 48 h antes)";
-            this.chkSeguro.UseVisualStyleBackColor = true;
             //
             // pnlResumen
             //
-            this.pnlResumen.AutoScroll = true;
-            this.pnlResumen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlResumen.Controls.Add(this.lblResumen);
-            this.pnlResumen.Location = new System.Drawing.Point(585, 145);
             this.pnlResumen.Name = "pnlResumen";
-            this.pnlResumen.Size = new System.Drawing.Size(495, 470);
-            this.pnlResumen.TabIndex = 42;
+            this.pnlResumen.BackColor = Tema.Superficie;
+            this.pnlResumen.Location = Tema.Compra.Resumen;
+            this.pnlResumen.Size = Tema.Compra.TarjetaResumen;
+            this.pnlResumen.TabIndex = 2;
+            this.pnlResumen.AutoScroll = true;
+            this.pnlResumen.Controls.Add(this.lblResumen);
+            this.pnlResumen.Controls.Add(this.lblTituloResumen);
             //
             // lblResumen
             //
-            this.lblResumen.AutoSize = true;
-            this.lblResumen.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblResumen.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblResumen.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblResumen.Location = new System.Drawing.Point(0, 0);
             this.lblResumen.Name = "lblResumen";
-            this.lblResumen.Padding = new System.Windows.Forms.Padding(8);
-            this.lblResumen.Size = new System.Drawing.Size(493, 468);
-            this.lblResumen.TabIndex = 0;
+            this.lblResumen.AutoSize = true;
+            this.lblResumen.Font = Tema.Comprobante;
+            this.lblResumen.ForeColor = Tema.Texto;
+            this.lblResumen.Location = Tema.Compra.Grilla;
+            this.lblResumen.Padding = new System.Windows.Forms.Padding(Tema.Espacio.S);
+            this.lblResumen.UseMnemonic = false;
+            //
+            // lblAgotado
+            //
+            this.lblAgotado.Name = "lblAgotado";
+            this.lblAgotado.Font = Tema.Cuerpo;
+            this.lblAgotado.ForeColor = Tema.Texto;
+            this.lblAgotado.Location = Tema.Compra.Agotado;
+            this.lblAgotado.Size = Tema.Compra.AvisoAgotado;
+            this.lblAgotado.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblAgotado.Visible = false;
+            this.lblAgotado.Text = "Entradas agotadas.\r\nAnotate en la lista de espera y te vamos a notificar si se libera un lugar.";
+            //
+            // btnListaEspera
+            //
+            this.btnListaEspera.Name = "btnListaEspera";
+            this.btnListaEspera.Size = Tema.Compra.BotonEspera;
+            this.btnListaEspera.Text = "Anotarme en la lista de espera";
+            this.btnListaEspera.TabIndex = 1;
+            this.btnListaEspera.Location = Tema.Compra.ListaEspera;
+            this.btnListaEspera.Visible = false;
+            this.btnListaEspera.Click += new System.EventHandler(this.btnListaEspera_Click);
+            //
+            // pnlEncabezadoCompra
+            //
+            this.pnlEncabezadoCompra.Name = "pnlEncabezadoCompra";
+            this.pnlEncabezadoCompra.BackColor = Tema.Superficie;
+            this.pnlEncabezadoCompra.Location = System.Drawing.Point.Empty;
+            this.pnlEncabezadoCompra.Width = Tema.Compra.Ventana.Width;
+            this.pnlEncabezadoCompra.Height = Tema.AltoEncabezadoVentana;
+            this.pnlEncabezadoCompra.TabIndex = 0;
+            this.pnlContenidoCompra.Controls.Add(this.label1);
+            this.pnlContenidoCompra.Controls.Add(this.lblNivel);
+            this.pnlContenidoCompra.Controls.Add(this.lnkNiveles);
+            this.pnlContenidoCompra.Controls.Add(this.label4);
+            //
+            // pnlContenidoCompra
+            //
+            this.pnlContenidoCompra.Name = "pnlContenidoCompra";
+            this.pnlContenidoCompra.BackColor = Tema.Superficie;
+            this.pnlContenidoCompra.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlContenidoCompra.AutoScroll = true;
+            this.pnlContenidoCompra.BackColor = Tema.Fondo;
+            this.pnlContenidoCompra.AutoScrollMargin = new System.Drawing.Size(Tema.Espacio.XL, Tema.Espacio.XL);
+            this.pnlContenidoCompra.TabIndex = 1;
+            this.pnlContenidoCompra.Controls.Add(this.pnlTarjetaEntradas);
+            this.pnlContenidoCompra.Controls.Add(this.pnlTarjetaServicios);
+            this.pnlContenidoCompra.Controls.Add(this.pnlResumen);
+            //
+            // pnlAccionesCompra
+            //
+            this.pnlAccionesCompra.Name = "pnlAccionesCompra";
+            this.pnlAccionesCompra.BackColor = Tema.Superficie;
+            this.pnlAccionesCompra.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlAccionesCompra.Height = Tema.AltoPie;
+            this.pnlAccionesCompra.Padding = new System.Windows.Forms.Padding(Tema.Espacio.XL, Tema.Espacio.M, Tema.Espacio.XL, Tema.Espacio.M);
+            this.pnlAccionesCompra.TabIndex = 2;
+            this.pnlAccionesCompra.Controls.Add(this.btnVolver);
+            this.pnlAccionesCompra.Controls.Add(this.btnComprar);
+            //
+            // pnlTarjetaEntradas
+            //
+            this.pnlTarjetaEntradas.Name = "pnlTarjetaEntradas";
+            this.pnlTarjetaEntradas.BackColor = Tema.Superficie;
+            this.pnlTarjetaEntradas.Location = Tema.Compra.Entradas;
+            this.pnlTarjetaEntradas.Size = Tema.Compra.TarjetaEntradas;
+            this.pnlTarjetaEntradas.TabIndex = 0;
+            this.pnlTarjetaEntradas.Controls.Add(this.lblTituloEntradas);
+            this.pnlTarjetaEntradas.Controls.Add(this.dgvSectores);
+            this.pnlTarjetaEntradas.Controls.Add(this.lblAgotado);
+            this.pnlTarjetaEntradas.Controls.Add(this.btnListaEspera);
+            //
+            // pnlTarjetaServicios
+            //
+            this.pnlTarjetaServicios.Name = "pnlTarjetaServicios";
+            this.pnlTarjetaServicios.BackColor = Tema.Superficie;
+            this.pnlTarjetaServicios.Location = Tema.Compra.Servicios;
+            this.pnlTarjetaServicios.Size = Tema.Compra.TarjetaServicios;
+            this.pnlTarjetaServicios.TabIndex = 1;
+            this.pnlTarjetaServicios.Controls.Add(this.lblTituloServicios);
+            this.pnlTarjetaServicios.Controls.Add(this.chkHospedaje);
+            this.pnlTarjetaServicios.Controls.Add(this.chkTraslado);
+            this.pnlTarjetaServicios.Controls.Add(this.chkMerch);
+            this.pnlTarjetaServicios.Controls.Add(this.chkVIP);
+            this.pnlTarjetaServicios.Controls.Add(this.chkSeguro);
+            //
+            // lblTituloEntradas
+            //
+            this.lblTituloEntradas.Name = "lblTituloEntradas";
+            this.lblTituloEntradas.AutoSize = true;
+            this.lblTituloEntradas.Font = Tema.Seccion;
+            this.lblTituloEntradas.ForeColor = Tema.Texto;
+            this.lblTituloEntradas.Location = Tema.Compra.TituloTarjeta;
+            this.lblTituloEntradas.Text = "Entradas";
+            //
+            // lblTituloServicios
+            //
+            this.lblTituloServicios.Name = "lblTituloServicios";
+            this.lblTituloServicios.AutoSize = true;
+            this.lblTituloServicios.Font = Tema.Seccion;
+            this.lblTituloServicios.ForeColor = Tema.Texto;
+            this.lblTituloServicios.Location = Tema.Compra.TituloTarjeta;
+            this.lblTituloServicios.Text = "Servicios y seguro";
+            //
+            // lblTituloResumen
+            //
+            this.lblTituloResumen.Name = "lblTituloResumen";
+            this.lblTituloResumen.AutoSize = true;
+            this.lblTituloResumen.Font = Tema.Seccion;
+            this.lblTituloResumen.ForeColor = Tema.Texto;
+            this.lblTituloResumen.Location = Tema.Compra.TituloTarjeta;
+            this.lblTituloResumen.Text = "Resumen";
             //
             // FrmCompraCliente
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1100, 680);
-            this.Controls.Add(this.btnListaEspera);
-            this.Controls.Add(this.lblAgotado);
-            this.Controls.Add(this.pnlResumen);
-            this.Controls.Add(this.chkSeguro);
-            this.Controls.Add(this.chkVIP);
-            this.Controls.Add(this.chkMerch);
-            this.Controls.Add(this.chkTraslado);
-            this.Controls.Add(this.chkHospedaje);
-            this.Controls.Add(this.dgvSectores);
-            this.Controls.Add(this.lnkNiveles);
-            this.Controls.Add(this.lblNivel);
-            this.Controls.Add(this.btnComprar);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnVolver);
-            this.Font = new System.Drawing.Font("Nirmala UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
+            this.BackColor = Tema.Fondo;
+            this.ClientSize = new System.Drawing.Size(880, 544);
+            this.Font = Tema.Cuerpo;
+            this.ForeColor = Tema.Texto;
+            this.CancelButton = this.btnVolver;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmCompraCliente";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventAura · Armar paquete";
             this.Load += new System.EventHandler(this.FrmCompraCliente_Load);
+            this.Controls.Add(this.pnlContenidoCompra);
+            this.Controls.Add(this.pnlAccionesCompra);
+            this.pnlContenidoCompra.Controls.Add(this.pnlEncabezadoCompra);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSectores)).EndInit();
+            this.pnlEncabezadoCompra.ResumeLayout(false);
+            this.pnlEncabezadoCompra.PerformLayout();
+            this.pnlContenidoCompra.ResumeLayout(false);
+            this.pnlContenidoCompra.PerformLayout();
+            this.pnlAccionesCompra.ResumeLayout(false);
+            this.pnlAccionesCompra.PerformLayout();
+            this.pnlTarjetaEntradas.ResumeLayout(false);
+            this.pnlTarjetaEntradas.PerformLayout();
+            this.pnlTarjetaServicios.ResumeLayout(false);
+            this.pnlTarjetaServicios.PerformLayout();
             this.pnlResumen.ResumeLayout(false);
+            this.pnlResumen.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
-
         }
-
         #endregion
 
-        private System.Windows.Forms.Button btnVolver;
-        private System.Windows.Forms.Button btnComprar;
+        private Visual.Componentes.BotonSecundario btnVolver;
+        private Visual.Componentes.BotonPrimario btnComprar;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblNivel;
@@ -284,6 +346,14 @@ namespace Visual
         private System.Windows.Forms.Panel pnlResumen;
         private System.Windows.Forms.Label lblResumen;
         private System.Windows.Forms.Label lblAgotado;
-        private System.Windows.Forms.Button btnListaEspera;
+        private Visual.Componentes.BotonSecundario btnListaEspera;
+        private System.Windows.Forms.Panel pnlEncabezadoCompra;
+        private System.Windows.Forms.Panel pnlContenidoCompra;
+        private System.Windows.Forms.Panel pnlAccionesCompra;
+        private System.Windows.Forms.Panel pnlTarjetaEntradas;
+        private System.Windows.Forms.Panel pnlTarjetaServicios;
+        private System.Windows.Forms.Label lblTituloEntradas;
+        private System.Windows.Forms.Label lblTituloServicios;
+        private System.Windows.Forms.Label lblTituloResumen;
     }
 }

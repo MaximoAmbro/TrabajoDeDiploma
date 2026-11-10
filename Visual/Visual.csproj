@@ -8,6 +8,8 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Visual</RootNamespace>
     <AssemblyName>Visual</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Recursos\EventAura.ico</ApplicationIcon>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -290,6 +292,14 @@
     <Compile Include="ExportadorPDF.cs" />
     <Compile Include="FormularioEventAura.cs" />
     <Compile Include="ManejadorErrores.cs" />
+    <Compile Include="Tema.cs" />
+    <Compile Include="Avisos.cs" />
+    <EmbeddedResource Include="Recursos\EventAura.ico">
+      <LogicalName>Visual.Recursos.EventAura.ico</LogicalName>
+    </EmbeddedResource>
+    <Compile Include="Componentes\BotonPrimario.cs" />
+    <Compile Include="Componentes\BotonSecundario.cs" />
+    <Compile Include="Componentes\BotonPeligro.cs" />
     <Compile Include="Propietario\frmReportes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -392,6 +402,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="packages.config" />
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

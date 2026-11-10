@@ -194,7 +194,7 @@ namespace Pruebas
                     celda.Value = 2;
                     string resumen = Control<Label>(form, "lblResumen").Text;
                     DialogosPrueba.Comprobar(() => celda.Value = cantidad,
-                        new DialogoEsperado { Titulo = "", Texto = "La cantidad debe ser un número entero de 0 en adelante." });
+                        new DialogoEsperado { Titulo = "Revisá los datos", Texto = "La cantidad debe ser un número entero de 0 en adelante." });
                     Assert.AreEqual(2, celda.Value);
                     Assert.AreEqual(resumen, Control<Label>(form, "lblResumen").Text);
                 }
@@ -314,7 +314,7 @@ namespace Pruebas
                     Assert.IsFalse(Control<Button>(form, "btnComprar").Enabled);
                     GestorCompras.Instance.Reembolsar(GestorCompras.Instance.EntradasDe(compra));
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnListaEspera").PerformClick(),
-                        new DialogoEsperado { Titulo = "RN-10", Texto = "El evento todavía tiene entradas" });
+                        new DialogoEsperado { Titulo = "No se puede armar el paquete", Texto = "El evento todavía tiene entradas" });
                     Assert.IsTrue(Control<DataGridView>(form, "dgvSectores").Visible);
                     Assert.IsFalse(Control<Button>(form, "btnComprar").Enabled);
                     Control<DataGridView>(form, "dgvSectores").Rows[0].Cells["Cantidad"].Value = 1;
@@ -774,6 +774,50 @@ namespace Pruebas
                             new Size(columna.Width - 8, int.MaxValue), TextFormatFlags.WordBreak);
                         Assert.IsTrue(texto.Height <= grilla.ColumnHeadersHeight,
                             $"Encabezado recortado: {columna.HeaderText}; necesita {texto.Height} y tiene {grilla.ColumnHeadersHeight} px.");
+                    }
+                }
+            });
+        }
+
+        // CP-65 — RF-07, RN-18: PDF temporal con los datos y el QR de una entrada confirmada.
+        [TestMethod("CP-65: Ticket PDF conserva evento, sector, pedido y código completo")]
+        public void CP65_TicketPdfConDatosDeCompraConfirmada()
+        {
+            EnSta(() =>
+            {
+                Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Evento evento = Fake.EventoPublicado(1000m, 5);
+                Compra compra = Fake.CompraConfirmada(cliente, evento, 1, false);
+                Entrada entrada = GestorCompras.Instance.EntradasDe(compra).Single();
+                Sector sector = GestorEventos.Instance.Sectores(evento.Id).Single();
+                string pedido = Visual.frmConfirmacion.NumeroPedido(compra);
+                string mensaje = "ENTRADA " + evento.Nombre + "\nSECTOR: " + sector.Nombre +
+                    "\nPRECIO: " + entrada.Precio.ToString("C2", new System.Globalization.CultureInfo("es-AR")) +
+                    "\nFECHA: " + evento.Fecha.ToString("dd/MM/yyyy HH:mm") +
+                    "\nPEDIDO: " + pedido + "\nCÓDIGO: " + entrada.CodigoQR;
+                string ruta = Path.GetTempFileName();
+                Exception fallo = null;
+                try
+                {
+                    using (var form = new Visual.FrmCompraCliente())
+                        form.GenerarPDF(ruta, mensaje, GeneradorQR.Instance.Imagen(entrada.CodigoQR));
+                    using (var lector = new iText.Kernel.Pdf.PdfReader(ruta))
+                    using (var pdf = new iText.Kernel.Pdf.PdfDocument(lector))
+                    {
+                        Assert.AreEqual(1, pdf.GetNumberOfPages());
+                        string texto = iText.Kernel.Pdf.Canvas.Parser.PdfTextExtractor.GetTextFromPage(pdf.GetPage(1));
+                        foreach (string esperado in new[] { evento.Nombre, sector.Nombre, pedido, entrada.CodigoQR })
+                            StringAssert.Contains(texto, esperado);
+                    }
+                }
+                catch (Exception ex) { fallo = ex; throw; }
+                finally
+                {
+                    try { File.Delete(ruta); }
+                    catch (IOException ex)
+                    {
+                        if (fallo != null) throw new AggregateException("Fallaron el PDF y su limpieza temporal.", fallo, ex);
+                        throw;
                     }
                 }
             });

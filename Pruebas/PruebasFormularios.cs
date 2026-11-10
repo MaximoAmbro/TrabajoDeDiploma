@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Pruebas
@@ -89,6 +91,74 @@ namespace Pruebas
             int ejecucion = fuente.IndexOf("Application.Run", StringComparison.Ordinal);
             Assert.IsTrue(instalacion >= 0, "Falta instalar el manejador en Program.Main.");
             Assert.IsTrue(ejecucion > instalacion, "El manejador debe instalarse antes de Application.Run.");
+        }
+
+        // CP-62 — RNF-02: contraste WCAG y familias tipográficas reales del tema.
+        [TestMethod("CP-62: Contraste y fuentes del sistema de diseño")]
+        public void CP62_ContrasteYFuentesDelTema()
+        {
+            foreach (Color fondo in new[] { Visual.Tema.Superficie, Visual.Tema.Fondo })
+                foreach (Color texto in new[] { Visual.Tema.Texto, Visual.Tema.TextoSecundario })
+                    Assert.IsTrue(Contraste(texto, fondo) >= 4.5, $"Contraste insuficiente: {texto} sobre {fondo}.");
+            Assert.IsTrue(Contraste(Visual.Tema.Superficie, Visual.Tema.Primario) >= 4.5);
+            Assert.IsTrue(Contraste(Visual.Tema.Error, Visual.Tema.Superficie) >= 4.5);
+            Assert.IsTrue(Contraste(Visual.Tema.BordeControl, Visual.Tema.Superficie) >= 3.0);
+            Assert.AreEqual(Color.Firebrick, Visual.Tema.Error);
+            Assert.AreEqual(Color.Gainsboro, Visual.Tema.FondoDeshabilitado);
+            foreach (Font fuente in new[] { Visual.Tema.Marca, Visual.Tema.Titulo, Visual.Tema.Seccion,
+                Visual.Tema.Boton, Visual.Tema.Rotulo }) Assert.AreEqual("Segoe UI Semibold", fuente.Name);
+            Assert.AreEqual("Segoe UI", Visual.Tema.Cuerpo.Name);
+            Assert.AreEqual("Segoe UI", Visual.Tema.Ayuda.Name);
+            Assert.AreEqual("Consolas", Visual.Tema.Comprobante.Name);
+        }
+
+        private static double Contraste(Color a, Color b)
+        {
+            double la = Luminancia(a), lb = Luminancia(b);
+            return (Math.Max(la, lb) + 0.05) / (Math.Min(la, lb) + 0.05);
+        }
+
+        private static double Luminancia(Color color)
+        {
+            Func<byte, double> lineal = canal =>
+            {
+                double s = canal / 255.0;
+                return s <= 0.04045 ? s / 12.92 : Math.Pow((s + 0.055) / 1.055, 2.4);
+            };
+            return 0.2126 * lineal(color.R) + 0.7152 * lineal(color.G) + 0.0722 * lineal(color.B);
+        }
+
+        // CP-63 — RNF-02: el piloto usa el tema y declara diseño a 96 DPI.
+        [TestMethod("CP-63: Piloto sin colores ni fuentes propios y diseñado a 96 DPI")]
+        public void CP63_PilotoUsaTemaY96Dpi()
+        {
+            string carpeta = Path.Combine(BaseDePrueba.RaizDelRepositorio(), "Visual", "Cliente");
+            foreach (string archivo in new[] { "FrmCompraCliente.cs", "FrmCompraCliente.Designer.cs" })
+            {
+                string fuente = File.ReadAllText(Path.Combine(carpeta, archivo));
+                Assert.IsFalse(Regex.IsMatch(fuente, @"\bColor\s*\.\s*\w+"), archivo + ": color fuera de Tema.");
+                Assert.IsFalse(Regex.IsMatch(fuente, @"new\s+(?:System\.Drawing\.)?Font\s*\("),
+                    archivo + ": fuente fuera de Tema.");
+            }
+            Match escala = Escala.Match(File.ReadAllText(Path.Combine(carpeta, "FrmCompraCliente.Designer.cs")));
+            Assert.IsTrue(escala.Success);
+            Assert.AreEqual(96f, float.Parse(escala.Groups[1].Value, CultureInfo.InvariantCulture));
+            Assert.AreEqual(96f, float.Parse(escala.Groups[2].Value, CultureInfo.InvariantCulture));
+        }
+
+        // CP-64 — RNF-03: el proyecto usa el manifiesto de DPI, sin API manual en Program.
+        [TestMethod("CP-64: DPI de sistema declarado mediante el manifiesto")]
+        public void CP64_DpiEnManifiesto()
+        {
+            string visual = Path.Combine(BaseDePrueba.RaizDelRepositorio(), "Visual");
+            var proyecto = new XmlDocument();
+            proyecto.Load(Path.Combine(visual, "Visual.csproj"));
+            Assert.AreEqual("app.manifest", proyecto.SelectSingleNode("//*[local-name()='ApplicationManifest']")?.InnerText);
+            var manifiesto = new XmlDocument();
+            manifiesto.Load(Path.Combine(visual, "app.manifest"));
+            Assert.AreEqual("true", manifiesto.SelectSingleNode("//*[local-name()='dpiAware']")?.InnerText.Trim());
+            Assert.AreEqual("system", manifiesto.SelectSingleNode("//*[local-name()='dpiAwareness']")?.InnerText.Trim());
+            Assert.IsFalse(File.ReadAllText(Path.Combine(visual, "Program.cs")).Contains("SetProcessDPIAware"));
         }
 
         // Nombre de la clase → texto de su .Designer.cs.
