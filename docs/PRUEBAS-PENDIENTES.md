@@ -597,10 +597,10 @@ Sigue abierta la parte de Máximo (64 pruebas).
 | Aspecto | Estado | Evidencia |
 |---|---|---|
 | El contenido del QR es el correcto | Cubierto | Codex decodificó los seis QR desde el PDF (03/11) |
-| Medidas de impresión: módulo de 0,95 mm, 4 módulos de zona de silencio, corrección de errores Q, contraste de 100 % | Cubierto | `tools/VerificarQrTickets.py`; cumplen ISO/IEC 18004 para lectura con cámara |
+| Medidas de impresión: módulo de 0,95 mm, 4 módulos de zona de silencio, corrección de errores Q, contraste de 100 % | Cubierto | Medidas el 04/11 sobre el ticket real (sección «JC-R10 — legibilidad de los QR», arriba); cumplen ISO/IEC 18004. `tools/VerificarQrTickets.py` decodifica y compara el código | 
 | **Lectura óptica con una cámara real** (enfoque, distancia, inclinación, reflejo de la pantalla o del papel) | **Sin cubrir** | Esta PC no tiene webcam. No se simuló: una imagen degradada a mano no es una lectura óptica |
 
-**Para cerrarla (10 min):** abrir dos tickets distintos (por ejemplo, `Ticket_EA-…_Campo_1.PDF`
+**Para cerrarla (10 min), con el ticket nuevo de V-4** (parte 6A de la sexta tanda: fondo blanco y QR de 120 pt; Claude Code avisa cuando esté). Abrir dos tickets distintos (por ejemplo, `Ticket_EA-…_Campo_1.PDF`
 y `_2.PDF`) al 100 % en pantalla o impresos. Escanear cada uno con la cámara del celular a
 unos 15 y 30 cm, derecho y un poco inclinado. Cada uno tiene que mostrar un código `EA-`
 seguido de 32 caracteres hexadecimales, distinto en los dos tickets e igual al que figura

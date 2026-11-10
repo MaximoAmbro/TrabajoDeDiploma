@@ -853,3 +853,250 @@ Después, Claude Code regenera las figuras del instructivo.
   CP-12 sigue pasando con la base no abstracta. Sin advertencias nuevas.
 - **Reporte:** `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-T27-T29.md`, con los archivos tocados
   y la entrada nueva del `.csproj`.
+
+---
+
+# Sexta tanda — renovación visual, fase 0 (T-30 a T-40)
+
+Aprobada por JC el 05/11/2026: decisiones V-1 a V-6 (`docs/PLAN-RENOVACION-VISUAL.md`,
+sección 9), **todas como se recomendaron**. La referencia de diseño es
+**`docs/SISTEMA-DISENO.md`**: cada color, fuente y medida de esta tanda sale de ahí.
+
+**JC autoriza a editar los Designer de las 19 pantallas, con una condición: primero UNO.**
+La tanda tiene dos partes y **un punto de parada obligatorio**:
+
+| Parte | Qué | Cuándo |
+|---|---|---|
+| **6A** | La infraestructura (tema, componentes, DPI, ícono), el formulario piloto `FrmCompraCliente` y el ticket nuevo (V-4) | Ahora |
+| — | **PARAR.** Máximo abre el piloto en Visual Studio; JC revisa las capturas y escanea el ticket nuevo | — |
+| **6B** | Los otros 18 formularios | **Solo cuando `ESTADO-AGENTES.md` diga «piloto confirmado»** |
+
+**Por qué `FrmCompraCliente` es el piloto:** es la pantalla más completa (título, enlace,
+grilla editable, casillas, resumen, pie fijo, botón primario y secundario) y la que aparece en
+las figuras del documento. Si su diseñador abre, abren los demás. Además, el ticket
+(`GenerarPDF`) está en el mismo archivo.
+
+## Reglas de esta tanda
+
+1. **Zona:** `Visual/` y `Pruebas/`. No se toca `Repo/`, `Datos/`, `Entidades/` ni
+   `BaseDatos/`. Los `App.config` no se tocan nunca: la compatibilidad con DPI va por el
+   **manifiesto**.
+2. **No se renombran controles ni se cambia su tipo.** Únicas excepciones:
+   - `Button` → `BotonPrimario`, `BotonSecundario` o `BotonPeligro`, que heredan de `Button`;
+   - en 6B, `Label` con evento `Click` → `LinkLabel`, que hereda de `Label`.
+
+   Las pruebas buscan 32 controles por nombre y tipo.
+3. **Ningún color, fuente ni medida nueva fuera de `Visual/Tema.cs`.** Lo controla CP-63.
+4. **Los Designer quedan editables en Visual Studio:**
+   - nada de código que consulte la base o lea datos en el constructor de un componente;
+   - solo tipos de WinForms o del proyecto `Visual`;
+   - `InitializeComponent` con el formato que genera Visual Studio: asignaciones simples, sin
+     lógica;
+   - `AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F)` en cada Designer que se
+     edite, con todas sus medidas convertidas a 96 DPI.
+5. **Ninguna prueba existente se debilita.**
+   - Si una cambia porque cambió a propósito un texto o un título (V-6), se actualiza el valor
+     esperado y se anota en el reporte cuál y por qué.
+   - Si falla una prueba de tamaños (CP-12, CP-13, CP-25, CP-54), **se corrige la pantalla, no
+     la prueba**.
+6. **La batería se corre al terminar cada tarea.**
+7. **Sin commit y sin push.** Al terminar 6A, **PARAR** y dejar el reporte. No arrancar 6B.
+
+---
+
+## Parte 6A
+
+### T-30. `Visual/Tema.cs`
+
+Clase estática con los tokens de `SISTEMA-DISENO.md`, secciones 1 a 3, con exactamente esos
+valores.
+
+- **Colores** como `public static readonly Color`. Dos excepciones obligatorias:
+  - `Error = Color.Firebrick` y `FondoDeshabilitado = Color.Gainsboro`, **con nombre**. Para
+    `Assert.AreEqual`, `Color.Firebrick` no es igual a `Color.FromArgb(178, 34, 34)`, y
+    CP-22, CP-23 y CP-39 comparan esos colores con nombre;
+  - `Primario = Color.FromArgb(116, 86, 174)`, igual que hoy.
+- **Fuentes** como `public static readonly Font`, creadas una sola vez y nunca liberadas:
+  `Marca`, `Titulo`, `Seccion`, `Cuerpo`, `Boton`, `Rotulo`, `Ayuda` y `Comprobante`. Las
+  semibold usan la familia «Segoe UI Semibold». Si una familia no está instalada, .NET pone
+  otra sin avisar: CP-62 comprueba el `Name` de cada una.
+- **Espaciado:** `public static class Espacio` con `XS = 4`, `S = 8`, `M = 12`, `L = 16`,
+  `XL = 24`, `XXL = 32` y `XXXL = 48`. Además, las medidas de la sección 3: `AltoBoton = 32`,
+  `AltoBotonPrimario = 36`, `AnchoMinimoBoton = 120`, `AltoFila = 32`,
+  `AltoEncabezadoVentana = 72` y `AltoPie = 60`.
+- **`public static void EstiloGrilla(DataGridView g)`:** todo lo de la sección 5.2.
+- **`public static void Normalizar(Control raiz)`:** la pasada automática para las pantallas
+  que todavía no se rediseñaron. Recorre todos los controles y **solo** hace esto:
+  - cambia las familias «Nirmala UI», «MS Gothic» y «Microsoft Sans Serif» por Segoe UI (o
+    Segoe UI Semibold, si era negrita), **conservando el tamaño**. Consolas no se toca;
+  - cambia el color de texto `#A4A5A9` por `TextoSecundario`, y `#404040` por `Texto`;
+  - a los `Button` que no son `BotonPrimario`, `BotonSecundario` ni `BotonPeligro`: si el
+    fondo es el violeta, les aplica el estilo primario; si es `#E6E7E9`, el secundario. Así una
+    pantalla sin rediseñar ya tiene los estados encima, presionado y con foco;
+  - a cada `DataGridView`, `EstiloGrilla`.
+
+  No cambia posiciones, tamaños, textos ni el fondo de la ventana.
+
+### T-31. Componentes `BotonPrimario`, `BotonSecundario` y `BotonPeligro`
+
+En `Visual/Componentes/`, cada uno hereda de `Button`. En el constructor:
+- `FlatStyle.Flat`, los colores, `FlatAppearance` (borde, `MouseOverBackColor` y
+  `MouseDownBackColor`) y `Font = Tema.Boton`;
+- `MinimumSize` con 120 px de ancho y el alto de la sección 5.1;
+- `UseVisualStyleBackColor = false` y `Cursor = Cursors.Hand`.
+
+Además:
+- **foco:** en `OnGotFocus` y `OnLostFocus`, borde de 2 px `Primario`, y vuelta al borde
+  normal;
+- **deshabilitado:** en `OnEnabledChanged`, fondo `FondoDeshabilitado`; al habilitar, vuelve
+  al fondo del estilo;
+- sin acceso a datos ni código que dependa de estar en ejecución: el diseñador construye
+  estos botones.
+
+### T-32. La base común aplica el tema
+
+En `FormularioEventAura`:
+- **constructor:** `Font = Tema.Cuerpo`, `BackColor = Tema.Superficie` e `Icon = Tema.Icono`
+  (T-34), y nada más, porque el diseñador ejecuta este constructor;
+- **`OnLoad`:** si no está en diseño (`!DesignMode && LicenseManager.UsageMode !=
+  LicenseUsageMode.Designtime`), llamar a `Tema.Normalizar(this)` **antes** de
+  `base.OnLoad(e)`. Así el tema ya está aplicado cuando corre el `Load` de cada pantalla, y lo
+  que ese `Load` configure (columnas, colores de estado) queda por encima;
+- la lógica de cierre de T-24 no cambia.
+
+### T-33. Compatibilidad con DPI (V-2)
+
+- `Visual/app.manifest` con `<dpiAware>true</dpiAware>` y `<dpiAwareness>system</dpiAwareness>`
+  dentro de `<windowsSettings>`, más el bloque `<compatibility>` para Windows 10 y 11.
+- `<ApplicationManifest>app.manifest</ApplicationManifest>` en `Visual.csproj`.
+- **No** se toca `App.config` ni se llama a `SetProcessDPIAware` en el código.
+- **En el reporte:** confirmar que el manifiesto queda incrustado en `Visual.exe` y que la
+  batería pasa. La comprobación a 125 % y 150 % la hace Claude Code con
+  `tools/VerificacionesManuales/Escala.ps1`.
+
+### T-34. Ícono
+
+- `Visual/Recursos/EventAura.ico` con 16, 24, 32, 48 y 256 px: una «E» blanca en Segoe UI
+  Semibold, centrada, sobre un cuadrado `Primario` (sección 5.5). Generarlo con un script de
+  System.Drawing, con el de 256 px como PNG dentro del `.ico`. Dejar el script en el reporte
+  para poder regenerarlo.
+- `<ApplicationIcon>Recursos\EventAura.ico</ApplicationIcon>`, y el `.ico` también como
+  `EmbeddedResource`.
+- `Tema.Icono` se carga una sola vez desde el recurso incrustado, dentro de un `try/catch` que
+  devuelve `null` si falla, para no romper el diseñador.
+
+### T-35. Piloto: rediseño de `FrmCompraCliente`
+
+Destino (sección 4 del sistema de diseño), sin cambiar el flujo:
+
+```
+┌ ENCABEZADO (Superficie, 72 px, línea inferior Borde) ──────────────────────────┐
+│ label1: nombre del evento, Tema.Titulo, Texto                                  │
+│ lblNivel (Tema.Ayuda, TextoSecundario) · lnkNiveles (enlace)                   │
+├ CONTENIDO (pnlContenidoCompra, Fondo, margen 24) ──────────────────────────────┤
+│ ┌ tarjeta Entradas ───────────────────────┐  ┌ pnlResumen (tarjeta) ─────────┐ │
+│ │ «Entradas», Tema.Seccion                 │  │ «Resumen», Tema.Seccion       │ │
+│ │ dgvSectores (EstiloGrilla; Cantidad en   │  │ lblResumen: Tema.Comprobante, │ │
+│ │ PrimarioSuave)                           │  │ Texto (sigue en Consolas)     │ │
+│ │ lblAgotado + btnListaEspera (secundario) │  │                               │ │
+│ └──────────────────────────────────────────┘  │                               │ │
+│ ┌ tarjeta Servicios ──────────────────────┐   │                               │ │
+│ │ «Servicios y seguro», Tema.Seccion       │  │                               │ │
+│ │ chkHospedaje … chkVIP, chkSeguro (Texto) │  │                               │ │
+│ └──────────────────────────────────────────┘  └───────────────────────────────┘ │
+├ PIE (pnlAccionesCompra, Superficie, 60 px, línea superior Borde) ──────────────┤
+│ btnVolver: BotonSecundario                         btnComprar: BotonPrimario    │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+- **Designer:**
+  - `AutoScaleDimensions` a 96F, con todas las medidas convertidas (hoy está a 120F:
+    multiplicar por 0,8) y llevadas a la escala de 8 px;
+  - quitar las fuentes y los colores escritos;
+  - `btnComprar` → `BotonPrimario`; `btnVolver` y `btnListaEspera` → `BotonSecundario`;
+  - agregar dos paneles de tarjeta (`pnlTarjetaEntradas` y `pnlTarjetaServicios`) y sus
+    títulos (`lblTituloEntradas`, «Entradas», y `lblTituloServicios`, «Servicios y seguro»);
+  - `label4`: si no tiene uso visible, informarlo en el reporte. **No borrarlo** sin
+    preguntar.
+- **Código:**
+  - las tarjetas, con borde de 1 px `Borde`, dibujado en el `Paint` del panel o con un
+    componente `Tarjeta : Panel` en `Visual/Componentes/`;
+  - el encabezado y el pie, con su línea de 1 px;
+  - el color de la celda Cantidad, la grilla y los colores de estado salen de `Tema`.
+- **Teclado:**
+  - `StandardTab = true` en `dgvSectores`;
+  - sin `AcceptButton`, porque Enter confirma la cantidad en la grilla;
+  - `CancelButton = btnVolver`: Esc vuelve, con la confirmación de siempre si hay paquete.
+- **V-6 en esta pantalla:**
+  - crear `Visual/Avisos.cs` con `Avisos.Regla(string titulo, ReglaNegocioException ex)`. Muestra
+    el texto de la regla con «(RN-xx)» al final, el título dado y el ícono de advertencia;
+  - en `FrmCompraCliente`, reemplazar cada `MessageBox.Show(ex.Message, ex.Regla, …)` por
+    `Avisos.Regla("No se puede armar el paquete", ex)`, o por «No se puede completar la
+    compra» en `btnComprar_Click`;
+  - el título «Advertencia» (cerca de la línea 421) pasa a uno que diga qué pasó;
+  - los títulos que ya están en castellano («Seguro de entrada», «Cerrar la compra», «Volver
+    al listado», «Lista de espera») no cambian.
+- **Pruebas que van a necesitar el título nuevo:** CP-20 y CP-24, que hoy esperan «RN-10» o el
+  título viejo. Se actualiza solo el título esperado; el texto se sigue comprobando.
+
+### T-36. Ticket nuevo (V-4)
+
+`GenerarPDF`, en `FrmCompraCliente.cs`, según `SISTEMA-DISENO.md`, sección 5.6:
+- A6 apaisada, **sin el rectángulo negro**: fondo blanco;
+- franja `Primario` de 28 pt arriba, con «EventAura · Entrada» en blanco;
+- nombre del evento en Helvetica Bold 16;
+- rótulos SECTOR, FECHA, PRECIO y PEDIDO en Helvetica 8, `TextoSecundario`, y los datos en
+  Helvetica 11, `Texto`;
+- el código completo en Courier 8, y «Presentá este código en el ingreso.» en Helvetica 8;
+- **QR de 120 × 120 pt** a la derecha, a 24 pt como mínimo de cualquier borde y de la franja;
+- **el contenido del QR no cambia.**
+
+Los colores del PDF salen de `Tema`, convertidos a `DeviceRgb`; no se escriben aparte.
+
+### T-37. Pruebas nuevas
+
+| ID | Archivo | Qué comprueba | RF / RNF |
+|---|---|---|---|
+| CP-62 | `PruebasFormularios.cs` | Contraste WCAG de al menos 4,5:1 para `Texto` y `TextoSecundario` sobre `Superficie` y `Fondo`, blanco sobre `Primario` y `Error` sobre `Superficie`; de al menos 3:1 para `BordeControl` sobre `Superficie`. Además, que cada fuente de `Tema` tenga el `Name` pedido | RNF-02 |
+| CP-63 | `PruebasFormularios.cs` | Ni `FrmCompraCliente.cs` ni su Designer contienen `Color.FromArgb`, `Color.<nombre>`, `new Font(` ni `new System.Drawing.Font(`, y su `AutoScaleDimensions` es 96F. En 6B se extiende a las 19 pantallas | RNF-02 |
+| CP-64 | `PruebasFormularios.cs` | `Visual.csproj` declara `app.manifest`, el manifiesto declara `dpiAware` en `true`, y `Program.cs` no llama a `SetProcessDPIAware` | RNF-03 |
+| CP-65 | `PruebasInterfaz.cs` | `GenerarPDF` escrito en una **ruta temporal** (`Path.GetTempFileName()`), nunca en Documentos, con los datos y el QR de una entrada de una compra confirmada de `Fake`: el texto extraído con `iText.Kernel.Pdf.Canvas.Parser.PdfTextExtractor` contiene el nombre del evento, el sector, el pedido y el código. El archivo se borra al final. Si `Pruebas.csproj` no ve `itext.kernel`, agregar la referencia al mismo paquete que usa `Visual` (9.2.0) | RF-07 |
+
+**Batería esperada al terminar 6A: 77 ejecuciones** (las 73 actuales más CP-62 a CP-65),
+todas correctas.
+
+### Reporte de 6A
+
+`Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-6A.md`, con:
+- los archivos tocados y las entradas nuevas del `.csproj`;
+- cada prueba existente modificada, con su motivo (regla 5);
+- qué hace `label4`;
+- **las dudas de diseño**: todo lo que el sistema de diseño no definía y tuviste que decidir.
+
+**Y PARAR.** Después de 6A, en este orden:
+1. **Claude Code:** saca capturas del piloto a 100 %, 125 % y 150 % (ya con DPI), mide el QR
+   del ticket nuevo con `tools/VerificarQrTickets.py` y regenera las figuras;
+2. **Máximo:** abre `FrmCompraCliente` en el diseñador de Visual Studio;
+3. **JC:** aprueba las capturas, que quedan como referencia, y escanea el ticket nuevo con el
+   celular, lo que cierra JC-R10.
+
+---
+
+## Parte 6B — NO ARRANCAR hasta que `ESTADO-AGENTES.md` diga «piloto confirmado»
+
+Valen las mismas reglas, más lo que JC y Máximo hayan corregido sobre el piloto. El orden es
+el de lo que ve primero el docente. **La batería se corre al terminar cada pantalla.**
+
+| # | Pantallas | Además del sistema de diseño |
+|---|---|---|
+| T-38 | `frmInicio`, `frmCrearUsuario`, `frmCambiarContraseña` | `lblcrearcuenta`, `lblolividarcontra` y `lblyatengocuen` → `LinkLabel` (T-1). `AcceptButton = btninicio`, y Mail en el orden de Tab (U-02). «Mostrar contraseña» en castellano (U-11). Quitar del Designer el botón residual «Modificar» **solo si no tiene código asociado** (U-13). `txtmail` con `Tema.Cuerpo`: hoy está en MS Gothic |
+| T-39 | `frmMenuCliente`, `frmEventosCliente`, `frmPago`, `frmConfirmacion`, `frmHistorialCliente`, `frmSuscripcion` | `lblvolver` → `LinkLabel` «Cerrar sesión» o `BotonSecundario` (T-2). Rótulos «Categoría» y «Desde» en los filtros (U-08). «Cancelar pago» como `BotonPeligro`, con «No» por defecto (U-07). Enter busca en el listado. `StandardTab` en todas las grillas (T-8) |
+| T-40 | `frmMenuPropietario`, `frmReportes`, `frmListasEspera`, `frmMisLocales`, `frmEventosLocal`, `frmAdministrarEvento`, `frmAgregarEvento`, `frmAgregarSector`, `frmRegistrarLocal` | `lblVolver`, `lblvolver` y `lblyatengocuen` → `BotonSecundario` en el pie (T-3 a T-5). Orden de Tab igual al de lectura. Foco inicial en el primer campo, nunca en «Registrar» (T-5). «Eliminar evento» y «Eliminar sector» como `BotonPeligro` |
+
+En las tres tareas:
+- V-6 con `Avisos.Regla` en todas las pantallas, actualizando el título esperado en las
+  pruebas que lo comprueben (CP-15, 17, 19, 21, 41, 42, 44, 48 y 52, si corresponde);
+- CP-63 se extiende a las 19 pantallas.
+
+**Batería esperada al terminar 6B:** 77 ejecuciones, más las filas que agregue la extensión de
+CP-63. **Reporte:** `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-6B.md`.

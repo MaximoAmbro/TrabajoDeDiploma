@@ -92,6 +92,10 @@ antes de retocar ninguna a mano.
 
 ## 4. Sistema de diseño (camino A)
 
+> **Reemplazada por `docs/SISTEMA-DISENO.md`** (05/11/2026), que es la versión para aplicar,
+> con los contrastes calculados y lo que WinForms no da bien. Esta sección queda como la
+> propuesta original.
+
 Todo vive en un archivo, `Visual/Tema.cs`, con constantes. Ninguna pantalla escribe un color o
 una fuente: los pide al tema. Medidas en píxeles a 100 %.
 
@@ -363,16 +367,35 @@ y otra vez al final si algo de la compra cambió.
 
 ## 10. Cronograma del mes
 
+> **Actualizado el 05/11/2026 con las decisiones de JC:** V-1 a V-6 aprobadas; la fase 0
+> empieza por un **piloto** (`FrmCompraCliente`) que Máximo verifica en Visual Studio antes de
+> tocar los otros 18; y **V-4, el ticket nuevo, va al principio**, en la misma tanda que el
+> piloto, para que JC escanee el QR una sola vez. El encargo está en
+> `TAREAS-CODEX-PRUEBAS.md`, «Sexta tanda», partes 6A y 6B. El sistema de diseño, en
+> `SISTEMA-DISENO.md`.
+
 Supuesto: entrega el **viernes 04/12/2026**, y JC trabaja todos los días. Corren en paralelo
 tres frentes: la renovación (Codex implementa, JC revisa), el documento (Claude Code prepara,
-JC aplica) y lo que depende de otros (Máximo, docente).
+JC aplica) y lo que depende de otros (Máximo y el docente).
+
+### Las dos primeras semanas, día por día
+
+| Día | Renovación visual | Pruebas y otros |
+|---|---|---|
+| **Jue 05/11** | Encargo de 6A listo (Claude Code). JC revisa `git status` y da el turno a Codex | JC: mail al docente sobre T01 a T08; datos de la carátula |
+| **Vie 06 y sáb 07/11** | **6A (Codex):** tema, componentes, DPI, ícono, **ticket nuevo (V-4)** y piloto `FrmCompraCliente`. Batería esperada: 77 | — |
+| **Dom 08/11** | Claude Code: capturas del piloto a 100 %, 125 % y 150 %; mide el QR del ticket nuevo; regenera las figuras | **Máximo:** abre el piloto en Visual Studio. **JC:** aprueba las capturas y **escanea el ticket nuevo: cierra JC-R10**. Vence la espera del fuente del documento |
+| **Lun 09/11** | JC confirma el piloto → arranca **6B**. Si algo falló, se corrige el piloto antes de seguir | Si no llegó el fuente: arranca el plan B2 del documento |
+| **09 al 11/11** | T-38: entrada (login, crear cuenta, cambiar contraseña) | Claude Code: correcciones del documento hasta la página 54 |
+| **12 al 15/11** | T-39: el resto del cliente. **15/11: congelar el circuito de compra** y regenerar las figuras definitivas | Máximo: arranca sus 64 pruebas (lo funcional no cambia con la renovación) |
+
+### Las dos últimas semanas
 
 | Semana | Renovación visual | Documento | Pruebas y otros |
 |---|---|---|---|
-| **1 · 05 al 11/11** | 06/11: encargo de la fase 0 (Claude Code). 07 y 08/11: fase 0 (Codex). 09 y 10/11: fase 1 (entrada) | **08/11:** vence la espera del fuente de Máximo; el 09/11 arranca el plan B2 | JC: JC-R10 (QR, 10 min), CX-03 (diseñador, 5 min), mail al docente sobre T01 a T08, datos de la carátula |
-| **2 · 12 al 18/11** | Fases 2 y 3 (compra y ticket). **18/11: congelar la compra** y regenerar las figuras | Aplicar `CORRECCIONES-DOCUMENTO.md` hasta la página 54 | Máximo: arranca sus 64 pruebas sobre las pantallas del propietario que todavía no cambian (funcionales) |
-| **3 · 19 al 25/11** | Fases 4 y 5. **21/11: punto de control**: si la fase 5 no arrancó, queda con tema automático | Resto de la lista de correcciones; anexos T01 a T08 si el docente los pidió | 24 y 25/11: tercera medición de usabilidad (Claude Code). Máximo: termina sus pruebas |
-| **4 · 26/11 al 04/12** | **27/11: congelamiento del código.** Solo correcciones | Cifras finales de usabilidad, figuras definitivas, índice, PDF | Última batería, último push, ensayo de la defensa |
+| **3 · 16 al 22/11** | T-40: administración. **21/11, punto de control:** las pantallas que no lleguen quedan con el tema automático (`Tema.Normalizar`), sin rediseño a mano | Resto de la lista de correcciones; anexos T01 a T08 si el docente los pidió | Claude Code repite las verificaciones sobre la aplicación nueva: teclado, escala, excepciones y reserva |
+| **4 · 23 al 29/11** | 23 al 25/11: **tercera medición de usabilidad** (Claude Code). **27/11: congelamiento del código.** Solo correcciones | Cifras finales de usabilidad y figuras definitivas en el documento | Máximo termina sus pruebas el 25/11 |
+| **30/11 al 04/12** | — | Índice, PDF, revisión final | Última batería, último push, ensayo de la defensa |
 
 **Lo que no tiene margen:** el fuente del documento (08/11) y la respuesta del docente sobre
 T01 a T08 (`ANEXOS-TECNICOS-T01-T08.md`):
