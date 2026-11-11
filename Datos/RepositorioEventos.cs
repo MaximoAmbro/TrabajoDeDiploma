@@ -80,6 +80,12 @@ namespace Datos
             return Consultar(Columnas + "WHERE LocalID = @Valor ORDER BY Fecha", idLocal);
         }
 
+        public List<Evento> DelDia(DateTime dia)
+        {
+            return Consultar(Columnas + "WHERE Fecha >= @Valor AND Fecha < @Hasta AND Estado = 'Publicado' ORDER BY Fecha",
+                dia.Date, comando => AgregarParametro(comando, "@Hasta", dia.Date.AddDays(1)));
+        }
+
         public List<Evento> ObtenerPorEstadoPosterioresA(string estado, DateTime fecha)
         {
             return Consultar(Columnas + "WHERE Estado = @Estado AND Fecha > @Valor ORDER BY Fecha", fecha,
@@ -104,7 +110,8 @@ namespace Datos
             return Consultar(consulta, ahora, comando =>
             {
                 AgregarParametro(comando, "@Estado", estado);
-                AgregarParametro(comando, "@Texto", texto);
+                AgregarParametro(comando, "@Texto", texto == null ? null :
+                    texto.Replace("[", "[[]").Replace("%", "[%]").Replace("_", "[_]"));
                 AgregarParametro(comando, "@Categoria", categoria);
                 AgregarParametro(comando, "@Desde", desde);
             });
@@ -144,6 +151,7 @@ namespace Datos
 
         // RN-10 como condición SQL sobre el evento idEvento (un parámetro o una columna, p. ej.
         // "e.ID"). Única definición del criterio: la usan EstaAgotado y el reporte RPT-05.
+        // Solo expresiones SQL constantes del código ("@ID", "e.ID"). Nunca valores del usuario.
         internal static string CondicionAgotado(string idEvento)
         {
             return "(EXISTS (SELECT 1 FROM Sectores WHERE EventoID = " + idEvento + ") " +

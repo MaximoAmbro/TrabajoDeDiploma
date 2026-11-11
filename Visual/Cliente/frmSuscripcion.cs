@@ -76,7 +76,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("Suscripción", ex);
             }
             MostrarEstado();
         }

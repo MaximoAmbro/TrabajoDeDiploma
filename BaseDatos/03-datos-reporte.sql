@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════════════════
    EventAura — 03-datos-reporte.sql
    Juego de datos simulados para los reportes del anexo A02 (RPT-01 a RPT-05).
 
@@ -132,12 +132,12 @@ JOIN (VALUES ('D', @SvTraslado), ('D', @SvHospedaje), ('D', @SvMerch), ('D', @Sv
 
 -- ═══════════════ 5. Clientes ═══════════════
 -- n 1..818 Bronce (1 compra), 819..1026 Plata (4), 1027..1078 Plata (5),
--- 1079..1088 Oro (8), 1089..1178 Oro (9). Las contraseñas se migran a PBKDF2 al
--- primer inicio de sesión, igual que las de la semilla.
+-- 1079..1088 Oro (8), 1089..1178 Oro (9). Contraseñas guardadas como hash PBKDF2
+-- de demostración, regenerable con Pruebas/GenerarHashesSemilla.ps1.
 INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, FechaUltimaEvaluacion)
 SELECT N'Cliente', N'Reporte ' + RIGHT('000' + CAST(n AS VARCHAR(4)), 4),
        'rpt' + RIGHT('000' + CAST(n AS VARCHAR(4)), 4) + '@datos.eventaura.com',
-       'Cliente123', 'Cliente',
+       'PBKDF2$310000$KV/dZk+9huEPBtAM2mpBSQ==$bNLNWj5C/VqgxqOgyF5aANRLOjFWXZvwWOJR8JFbEZs=', 'Cliente',
        CASE WHEN n <= 818 THEN 'Bronce' WHEN n <= 1078 THEN 'Plata' ELSE 'Oro' END,
        '2025-11-01'
 FROM @Numeros WHERE n <= 1178;

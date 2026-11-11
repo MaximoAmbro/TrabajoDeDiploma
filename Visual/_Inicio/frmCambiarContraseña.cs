@@ -21,9 +21,10 @@ namespace Visual
 
         private void frmCambiarContraseña_Load(object sender, EventArgs e)
         {
-            txtMail.Text = "A";
-            TxtPassword.Text = "B";
-            TxtConfirmpassword.Text = "B";
+            txtActual.BackColor = TxtPassword.BackColor;
+            txtActual.BorderStyle = TxtPassword.BorderStyle;
+            txtActual.Font = TxtPassword.Font;
+            txtActual.PasswordChar = '*';
             TxtPassword.PasswordChar = '*';
             TxtConfirmpassword.PasswordChar = '*';
         } // el load 
@@ -31,11 +32,13 @@ namespace Visual
         {
             if (checkbxShowPass.Checked == true)
             {
+                txtActual.PasswordChar = '\0';
                 TxtPassword.PasswordChar = '\0';
                 TxtConfirmpassword.PasswordChar = '\0';
             }
             else
             {
+                txtActual.PasswordChar = '*';
                 TxtPassword.PasswordChar = '*';
                 TxtConfirmpassword.PasswordChar = '*';
             }
@@ -46,19 +49,19 @@ namespace Visual
             {
                 try
                 {
-                    GestorUsuarios.Instance.CambiarContrasena(txtMail.Text, TxtPassword.Text);
+                    GestorUsuarios.Instance.CambiarContrasena(txtMail.Text, txtActual.Text, TxtPassword.Text);
                 }
                 catch (ReglaNegocioException ex)
                 {
-                    MessageBox.Show(ex.Message, "No se pudo cambiar la contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Avisos.Regla("Cambiar contraseña", ex);
                     return;
                 }
-                MessageBox.Show("Contraseña cambiada");
+                txtActual.Clear();
+                TxtPassword.Clear();
+                TxtConfirmpassword.Clear();
+                MessageBox.Show("La contraseña se cambió correctamente.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } // se carga a la bdd
-            else
-            {
-                MessageBox.Show("Dale, son 3 cositos nomas cargalos viejo");
-            }
+
         } // el boton confirmar
 
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
@@ -72,24 +75,29 @@ namespace Visual
         // -------------------------------FUNCIONES DE CONTROL----------------------------------------------------
         public bool ControlarTxt()
         {
+            if (string.IsNullOrEmpty(txtActual.Text))
+            {
+                MessageBox.Show("Ingrese la contraseña actual.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
             if (string.IsNullOrEmpty(TxtPassword.Text))
             {
-                MessageBox.Show("Ingrese contraseña: ");
+                MessageBox.Show("Ingrese contraseña: ", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrEmpty(TxtConfirmpassword.Text))
             {
-                MessageBox.Show("Ingrese confirmacion de contraseña: ");
+                MessageBox.Show("Ingrese la confirmación de la nueva contraseña.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrEmpty(txtMail.Text))
             {
-                MessageBox.Show("Ingrese Mail: ");
+                MessageBox.Show("Ingrese su correo electrónico.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (TxtPassword.Text != TxtConfirmpassword.Text)
             {
-                MessageBox.Show("Las contraseñas no coinciden");
+                MessageBox.Show("Las contraseñas no coinciden", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             else

@@ -37,6 +37,7 @@ namespace Negocio
         // RN-39: durante la preventa, solo para un cliente con suscripción activa.
         public Paquete Nuevo(int idEvento, int idUsuario)
         {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
             Evento evento = VerificarEventoVigente(idEvento);
             VerificarPreventa(evento, idUsuario);
             return new Paquete { IdEvento = idEvento };

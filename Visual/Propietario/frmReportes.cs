@@ -120,7 +120,7 @@ namespace Visual
                 }
                 catch (ReglaNegocioException ex)
                 {
-                    MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Avisos.Regla("Reportes", ex);
                 }
                 cmbFiltro.SelectedIndex = 0;
             }
@@ -159,7 +159,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("Reportes", ex);
                 return null;
             }
             catch (ArgumentException ex)
@@ -213,7 +213,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("Reportes", ex);
                 return;
             }
             reporte = r;
@@ -238,7 +238,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("Reportes", ex);
                 return;
             }
             catch (IOException ex)

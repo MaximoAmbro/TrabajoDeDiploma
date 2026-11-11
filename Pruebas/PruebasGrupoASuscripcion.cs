@@ -22,6 +22,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 using (var form = SuscripcionDe(cliente))
                 {
                     Mostrar(form);
@@ -59,6 +60,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 if (cancelar) Fake.SuscripcionActiva(cliente, GestorSuscripciones.PlanMensual);
                 using (var form = SuscripcionDe(cliente))
                 {
@@ -96,6 +98,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 using (var primera = SuscripcionDe(cliente))
                 using (var segunda = SuscripcionDe(cliente))
                 {
@@ -104,7 +107,7 @@ namespace Pruebas
                     ContratarDesde(primera);
                     Suscripcion activa = GestorSuscripciones.Instance.ActivaDe(cliente.Id);
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(segunda, "btnContratar").PerformClick(),
-                        ConfirmarContrato(), new DialogoEsperado { Titulo = "RN-25", Texto = "vence el " + activa.FechaFin.ToString("dd/MM/yyyy") });
+                        ConfirmarContrato(), new DialogoEsperado { Titulo = "Suscripción", Texto = "vence el " + activa.FechaFin.ToString("dd/MM/yyyy") });
                     Assert.AreEqual(1, Fake.ContarSuscripcionesVigentes(cliente.Id));
                     Assert.AreEqual(activa.Id, GestorSuscripciones.Instance.ActivaDe(cliente.Id).Id);
                 }
@@ -120,6 +123,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 if (suscripto) Fake.SuscripcionActiva(cliente, GestorSuscripciones.PlanMensual);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
                 {
@@ -162,6 +166,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 Fake.SuscripcionActiva(cliente, GestorSuscripciones.PlanMensual);
                 Compra compra = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 2, seguro), cliente);

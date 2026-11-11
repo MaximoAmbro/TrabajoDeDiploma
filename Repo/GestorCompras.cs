@@ -36,6 +36,7 @@ namespace Negocio
         // cliente (RN-22); quedan congelados en la fila de Compras.
         public Compra Iniciar(Paquete p, Cliente c)
         {
+            GestorSesion.Instance.RequerirUsuario(c == null ? 0 : c.Id);
             if (p == null)
             {
                 throw new ArgumentNullException(nameof(p));
@@ -104,6 +105,7 @@ namespace Negocio
         // el cupo se libera en el acto (RN-32) y la compra sigue Pendiente para un reintento.
         public bool Confirmar(Compra c, DatosTarjeta t)
         {
+            RequerirCompra(c == null ? 0 : c.Id);
             if (c == null)
             {
                 throw new ArgumentNullException(nameof(c));
@@ -186,6 +188,7 @@ namespace Negocio
         // reintento dentro del plazo, y si no hay ninguno LiberarVencidas la cierra como Vencida.
         public void Liberar(Compra c)
         {
+            RequerirCompra(c == null ? 0 : c.Id);
             if (c == null)
             {
                 throw new ArgumentNullException(nameof(c));
@@ -213,21 +216,24 @@ namespace Negocio
 
         public Compra ObtenerPorId(int idCompra)
         {
-            return RepositorioCompras.Instance.ObtenerPorId(idCompra);
+            return RequerirCompra(idCompra);
         }
 
         public List<Entrada> EntradasDe(Compra c)
         {
+            RequerirCompra(c == null ? 0 : c.Id);
             return RepositorioEntradas.Instance.ObtenerPorCompra(c.Id);
         }
 
         public List<Pago> PagosDe(Compra c)
         {
+            RequerirCompra(c == null ? 0 : c.Id);
             return RepositorioPagos.Instance.ObtenerPorCompra(c.Id);
         }
 
         public List<Seguro> SegurosDe(Compra c)
         {
+            RequerirCompra(c == null ? 0 : c.Id);
             return RepositorioCompras.Instance.ObtenerSeguros(c.Id);
         }
 
@@ -235,6 +241,7 @@ namespace Negocio
         // pagaron, no compras.
         public List<Compra> HistorialDe(int idUsuario)
         {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
             return RepositorioCompras.Instance.ObtenerPorUsuario(idUsuario,
                 new[] { EstadoCompra.Confirmada, EstadoCompra.Reembolsada });
         }
@@ -255,6 +262,7 @@ namespace Negocio
         // Devuelve el importe reembolsado.
         public decimal Reembolsar(List<Entrada> entradas)
         {
+            GestorSesion.Instance.RequerirUsuario(GestorSesion.Instance.UsuarioActual == null ? 0 : GestorSesion.Instance.UsuarioActual.Id);
             if (entradas == null || entradas.Count == 0)
             {
                 throw new ArgumentException("Elija al menos una entrada para devolver.");
@@ -267,7 +275,7 @@ namespace Negocio
             }
 
             // Se relee todo de la base: lo que muestra la pantalla puede estar viejo.
-            Compra compra = RepositorioCompras.Instance.ObtenerPorId(idCompra.Value);
+            Compra compra = RequerirCompra(idCompra.Value);
             if (compra == null || compra.Estado != EstadoCompra.Confirmada)
             {
                 throw new ReglaNegocioException("RN-29", "La compra no está confirmada: no hay nada para devolver.");
@@ -346,6 +354,15 @@ namespace Negocio
             {
                 throw new ArgumentException("La tarjeta está vencida.");
             }
+        }
+
+        private static Compra RequerirCompra(int idCompra)
+        {
+            GestorSesion.Instance.RequerirUsuario(GestorSesion.Instance.UsuarioActual == null ? 0 : GestorSesion.Instance.UsuarioActual.Id);
+            Compra actual = RepositorioCompras.Instance.ObtenerPorId(idCompra);
+            if (actual == null) throw new InvalidOperationException("No se encontró la compra.");
+            GestorSesion.Instance.RequerirUsuario(actual.IdUsuario);
+            return actual;
         }
 
         // ------------------------------------- privados -------------------------------------

@@ -21,6 +21,16 @@ namespace Pruebas
 
         private static int contador;
 
+        public static void ComoCliente(Entidades.Cliente cliente)
+        {
+            GestorSesion.Instance.Iniciar(cliente);
+        }
+
+        public static void ComoAdministrador()
+        {
+            GestorSesion.Instance.Iniciar(Administrador());
+        }
+
         public static string MailNuevo()
         {
             return $"test{++contador:0000}{DominioMail}";
@@ -35,6 +45,11 @@ namespace Pruebas
         public static void CambiarFechaDeEvento(int idEvento, DateTime fecha)
         {
             Ejecutar("UPDATE Eventos SET Fecha = @Fecha WHERE ID = @ID", "@Fecha", fecha, "@ID", idEvento);
+        }
+
+        public static void CambiarNombreDeEvento(int idEvento, string nombre)
+        {
+            Ejecutar("UPDATE Eventos SET Nombre = @Nombre WHERE ID = @ID", "@Nombre", nombre, "@ID", idEvento);
         }
 
         public static void CambiarEstadoDeEvento(int idEvento, string estado)
@@ -106,7 +121,7 @@ namespace Pruebas
                 "@Apellido", "Prueba " + n, "@Mail", $"test{n:0000}{DominioMail}",
                 "@Nivel", nivel.ToString(), "@Hoy", DateTime.Today);
             Ejecutar("INSERT INTO Cliente (ID) VALUES (@ID)", "@ID", id);
-            return GestorFidelizacion.Instance.ObtenerCliente(id);
+            return RepositorioFidelizacion.Instance.ObtenerCliente(id);
         }
 
         // Cliente con «cantidad» compras confirmadas de hace «haceMeses» meses. El nivel persistido
@@ -118,9 +133,10 @@ namespace Pruebas
             {
                 AgregarCompra(c, haceMeses, EstadoCompra.Confirmada);
             }
+            ComoCliente(c);
             NivelFidelidad nivel = GestorFidelizacion.Instance.DeterminarNivel(c.Id, DateTime.Now);
             Ejecutar("UPDATE Usuario SET Nivel = @Nivel WHERE ID = @ID", "@Nivel", nivel.ToString(), "@ID", c.Id);
-            return GestorFidelizacion.Instance.ObtenerCliente(c.Id);
+            return RepositorioFidelizacion.Instance.ObtenerCliente(c.Id);
         }
 
         // Una compra histórica, sin entradas: para la ventana de RN-19 solo cuenta la fila de
@@ -235,7 +251,7 @@ namespace Pruebas
         // Los eventos de Fake no tienen preventa, así que el usuario de Nuevo no interviene (RN-39).
         public static Paquete Paquete(Evento e, int entradasPorSector, bool conSeguro)
         {
-            Paquete p = GestorPaquetes.Instance.Nuevo(e.Id, 0);
+            Paquete p = GestorPaquetes.Instance.Nuevo(e.Id, GestorSesion.Instance.UsuarioActual.Id);
             foreach (Sector s in GestorEventos.Instance.Sectores(e.Id))
             {
                 GestorPaquetes.Instance.AgregarEntradas(p, s.Id, entradasPorSector);
@@ -259,13 +275,14 @@ namespace Pruebas
                 "@Usuario", c.Id, "@Plan", plan, "@Inicio", hoy,
                 "@Fin", plan == GestorSuscripciones.PlanAnual ? hoy.AddYears(1) : hoy.AddMonths(1),
                 "@Precio", GestorSuscripciones.Instance.PrecioDe(plan));
-            return GestorSuscripciones.Instance.ActivaDe(c.Id);
+            return RepositorioSuscripciones.Instance.ObtenerActiva(c.Id);
         }
 
         // Compra completa con los gestores: Nuevo, AgregarEntradas, Iniciar y Confirmar con una
         // tarjeta que la pasarela simulada aprueba. Devuelve la compra releída de la base.
         public static Compra CompraConfirmada(Entidades.Cliente c, Evento e, int entradas, bool conSeguro)
         {
+            ComoCliente(c);
             Paquete p = GestorPaquetes.Instance.Nuevo(e.Id, c.Id);
             GestorPaquetes.Instance.AgregarEntradas(p, GestorEventos.Instance.Sectores(e.Id).First().Id, entradas);
             p.ConSeguro = conSeguro;

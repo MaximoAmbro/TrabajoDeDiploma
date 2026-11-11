@@ -38,6 +38,17 @@
             this.btnconfirmar = new System.Windows.Forms.Button();
             this.txtMail = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.txtActual = new System.Windows.Forms.TextBox();
+            this.lblActual = new System.Windows.Forms.Label();
+            this.txtActual.Location = new System.Drawing.Point(49, 272);
+            this.txtActual.Size = new System.Drawing.Size(378, 32);
+            this.txtActual.Name = "txtActual";
+            this.txtActual.TabIndex = 1;
+            this.lblActual.AutoSize = true;
+            this.lblActual.Location = new System.Drawing.Point(45, 242);
+            this.lblActual.Text = "Contraseña actual";
+            this.Controls.Add(this.txtActual);
+            this.Controls.Add(this.lblActual);
             this.SuspendLayout();
             // 
             // btnVolver
@@ -49,7 +60,7 @@
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(134, 42);
-            this.btnVolver.TabIndex = 1;
+            this.btnVolver.TabIndex = 6;
             this.btnVolver.Text = "Volver ";
             this.btnVolver.UseVisualStyleBackColor = false;
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
@@ -59,12 +70,12 @@
             this.checkbxShowPass.AutoSize = true;
             this.checkbxShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
             this.checkbxShowPass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.checkbxShowPass.Location = new System.Drawing.Point(284, 477);
+            this.checkbxShowPass.Location = new System.Drawing.Point(49, 500);
             this.checkbxShowPass.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(143, 24);
-            this.checkbxShowPass.TabIndex = 36;
-            this.checkbxShowPass.Text = "Show Password";
+            this.checkbxShowPass.TabIndex = 4;
+            this.checkbxShowPass.Text = "Mostrar contraseñas";
             this.checkbxShowPass.UseVisualStyleBackColor = true;
             this.checkbxShowPass.CheckedChanged += new System.EventHandler(this.checkbxShowPass_CheckedChanged);
             // 
@@ -73,17 +84,17 @@
             this.TxtConfirmpassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.TxtConfirmpassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TxtConfirmpassword.Font = new System.Drawing.Font("MS Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtConfirmpassword.Location = new System.Drawing.Point(49, 410);
+            this.TxtConfirmpassword.Location = new System.Drawing.Point(49, 435);
             this.TxtConfirmpassword.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.TxtConfirmpassword.Multiline = true;
             this.TxtConfirmpassword.Name = "TxtConfirmpassword";
             this.TxtConfirmpassword.Size = new System.Drawing.Size(378, 42);
-            this.TxtConfirmpassword.TabIndex = 35;
+            this.TxtConfirmpassword.TabIndex = 3;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(45, 379);
+            this.label4.Location = new System.Drawing.Point(45, 405);
             this.label4.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(165, 20);
@@ -95,18 +106,18 @@
             this.TxtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.TxtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TxtPassword.Font = new System.Drawing.Font("MS Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtPassword.Location = new System.Drawing.Point(49, 297);
+            this.TxtPassword.Location = new System.Drawing.Point(49, 350);
             this.TxtPassword.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.TxtPassword.Multiline = true;
             this.TxtPassword.Name = "TxtPassword";
             this.TxtPassword.Size = new System.Drawing.Size(378, 42);
-            this.TxtPassword.TabIndex = 33;
+            this.TxtPassword.TabIndex = 2;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label3.Location = new System.Drawing.Point(45, 267);
+            this.label3.Location = new System.Drawing.Point(45, 320);
             this.label3.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(141, 20);
@@ -137,7 +148,7 @@
             this.btnconfirmar.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.btnconfirmar.Name = "btnconfirmar";
             this.btnconfirmar.Size = new System.Drawing.Size(297, 52);
-            this.btnconfirmar.TabIndex = 40;
+            this.btnconfirmar.TabIndex = 5;
             this.btnconfirmar.Text = "Confirmar";
             this.btnconfirmar.UseVisualStyleBackColor = false;
             this.btnconfirmar.Click += new System.EventHandler(this.btnconfirmar_Click);
@@ -152,7 +163,7 @@
             this.txtMail.Multiline = true;
             this.txtMail.Name = "txtMail";
             this.txtMail.Size = new System.Drawing.Size(378, 42);
-            this.txtMail.TabIndex = 42;
+            this.txtMail.TabIndex = 0;
             // 
             // label5
             // 
@@ -195,6 +206,8 @@
 
         #endregion
 
+        private System.Windows.Forms.TextBox txtActual;
+        private System.Windows.Forms.Label lblActual;
         private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.CheckBox checkbxShowPass;
         private System.Windows.Forms.TextBox TxtConfirmpassword;

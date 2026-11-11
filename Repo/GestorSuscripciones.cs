@@ -39,6 +39,7 @@ namespace Negocio
         // índice UX_Suscripcion_Activa cubre la carrera entre dos ventanas.
         public Suscripcion Contratar(int idUsuario, string plan)
         {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
             decimal precio = PrecioDe(plan);
             if (TieneActiva(idUsuario))
             {
@@ -69,6 +70,7 @@ namespace Negocio
         // RN-26: la baja es manual. Pone Activa en 0, lo que libera el índice para contratar otra.
         public void Cancelar(int idUsuario)
         {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
             if (!RepositorioSuscripciones.Instance.Cancelar(idUsuario))
             {
                 throw new InvalidOperationException("No tiene una suscripción activa para cancelar.");
@@ -78,6 +80,7 @@ namespace Negocio
         // La suscripción vigente del usuario, o null si no tiene o se le venció (RN-26).
         public Suscripcion ActivaDe(int idUsuario)
         {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
             Suscripcion suscripcion = RepositorioSuscripciones.Instance.ObtenerActiva(idUsuario);
             return suscripcion != null && EstaVigente(suscripcion, DateTime.Today) ? suscripcion : null;
         }

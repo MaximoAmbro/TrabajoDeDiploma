@@ -135,7 +135,7 @@ namespace Pruebas
                     var registro = Visible<Visual.frmCrearUsuario>();
                     Texto(registro, "txtNombre", "Investigación"); Texto(registro, "txtApellido", "Preventa"); Texto(registro, "txtmail", mail);
                     Texto(registro, "TxtPassword", clave); Texto(registro, "TxtConfirmpassword", clave);
-                    Aviso(() => Click(registro, "btnregistrarse"), "Usuario creado con exito.");
+                    Aviso(() => Click(registro, "btnregistrarse"), "Usuario creado con éxito.");
                     usuarioId = RepositorioUsuarios.Instance.ObtenerPorMail(mail).Id; break;
                 case 17:
                     var acceso = Visible<Visual.frmInicio>();

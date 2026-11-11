@@ -56,6 +56,11 @@ namespace Visual
             frm.NombreUsuario = NombreUsuario;
             frm.Show(); this.Hide();
         }
+        private void btnControlIngreso_Click(object sender, EventArgs e)
+        {
+            using (var control = new frmControlIngreso()) control.ShowDialog(this);
+        }
+
         private void lblvolver_Click(object sender, EventArgs e)
         {
             GestorSesion.Instance.Cerrar();

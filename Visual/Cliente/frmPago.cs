@@ -84,7 +84,7 @@ namespace Visual
             {
                 tmrReserva.Stop();
                 cerrada = ex.Regla == "RN-15";
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("Pago", ex);
                 DialogResult = cerrada ? DialogResult.Abort : DialogResult.Cancel;
                 return;
             }

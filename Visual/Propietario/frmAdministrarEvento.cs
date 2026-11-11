@@ -64,7 +64,7 @@ namespace Visual.Vendedor
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Administrar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 CargarPreventa();
                 return;
             }
@@ -114,17 +114,17 @@ namespace Visual.Vendedor
                 }
                 catch (ReglaNegocioException ex)
                 {
-                    MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Avisos.Regla("Administrar evento", ex);
                 }
                 catch (InvalidOperationException ex)
                 {
-                    MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(ex.Message, "Administrar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 CargarDGV();
             }
             else
             {
-                MessageBox.Show("Por favor, selecciona un sector para eliminar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, selecciona un sector para eliminar.", "Administrar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         private void btnVolver_Click1(object sender, EventArgs e)

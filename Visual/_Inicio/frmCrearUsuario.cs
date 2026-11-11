@@ -52,10 +52,10 @@ namespace Visual
                 }
                 catch (ReglaNegocioException ex)
                 {
-                    MessageBox.Show(ex.Message, "No se pudo crear la cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Avisos.Regla("Crear cuenta", ex);
                     return;
                 }
-                MessageBox.Show("Usuario creado con exito."); Cerrar();
+                MessageBox.Show("Usuario creado con éxito.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Information); Cerrar();
             }
             else { return; }
         }
@@ -69,33 +69,33 @@ namespace Visual
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
-                MessageBox.Show("Ingrese su nombre.");
+                MessageBox.Show("Ingrese su nombre.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtApellido.Text))
             {
-                MessageBox.Show("Ingrese su apellido.");
+                MessageBox.Show("Ingrese su apellido.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtmail.Text))
             {
-                MessageBox.Show("Ingrese su correo electrónico.");
+                MessageBox.Show("Ingrese su correo electrónico.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrEmpty(TxtPassword.Text))
             {
-                MessageBox.Show("Ingrese contraseña: ");
+                MessageBox.Show("Ingrese contraseña: ", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
 
             }
             if (string.IsNullOrEmpty(TxtConfirmpassword.Text))
             {
-                MessageBox.Show("Ingrese segunda contraseña: ");
+                MessageBox.Show("Ingrese segunda contraseña: ", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (TxtPassword.Text != TxtConfirmpassword.Text)
             {
-                MessageBox.Show("Las contraseñas no coinciden");
+                MessageBox.Show("Las contraseñas no coinciden", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             else

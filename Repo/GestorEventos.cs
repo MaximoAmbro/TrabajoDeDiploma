@@ -52,6 +52,7 @@ namespace Negocio
         // con su primer sector con capacidad (AgregarSector). Devuelve el Id generado.
         public int Crear(Evento e)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             ValidarEvento(e);
             e.Sectores = new List<Sector>();
             e.Estado = EstadoBorrador;
@@ -62,6 +63,7 @@ namespace Negocio
         // Devuelve el Id generado.
         public int Publicar(Evento e)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             if (e == null)
             {
                 throw new ArgumentNullException(nameof(e));
@@ -86,6 +88,7 @@ namespace Negocio
         // el formulario ofrece Suspender en su lugar.
         public void Eliminar(int idEvento)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             if (RepositorioEventos.Instance.ContarEntradas(idEvento) > 0)
             {
                 throw new ReglaNegocioException("RN-11",
@@ -100,6 +103,7 @@ namespace Negocio
         // RN-11: alternativa a Eliminar. Vale tenga o no entradas vendidas.
         public void Suspender(int idEvento)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             if (!RepositorioEventos.Instance.ActualizarEstado(idEvento, EstadoSuspendido))
             {
                 throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
@@ -115,6 +119,7 @@ namespace Negocio
         // RN-39: fija o saca (null) la preventa de un evento ya creado.
         public void CambiarPreventa(int idEvento, DateTime? finPreventa)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
             if (evento == null)
             {
@@ -165,6 +170,7 @@ namespace Negocio
 
         public void AgregarSector(int idEvento, Sector s)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             if (s == null)
             {
                 throw new ArgumentNullException(nameof(s));
@@ -192,6 +198,7 @@ namespace Negocio
 
         public void EliminarSector(int idSector)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             Sector sector = RepositorioSectores.Instance.ObtenerPorId(idSector);
             if (sector == null)
             {

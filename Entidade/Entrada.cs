@@ -20,6 +20,7 @@ namespace Entidades
         public int? IdCompra { get; set; }
         public EstadoEntrada Estado { get; set; }
         public string CodigoQR { get; set; }          // RN-18
+        public DateTime? FechaIngreso { get; set; }    // RN-18: un único ingreso
 
     } 
 }

@@ -65,7 +65,7 @@ namespace Visual
             }
             else
             {
-                MessageBox.Show("Debe seleccionar un local");
+                MessageBox.Show("Debe seleccionar un local", "Mis locales", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         private void btnVolver_Click(object sender, EventArgs e)

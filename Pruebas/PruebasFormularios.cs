@@ -77,7 +77,8 @@ namespace Pruebas
                 }
             }
 
-            Assert.AreEqual(19, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
+            // SEG-2 incorpora frmControlIngreso; conserva la verificación de todos los Designer.
+            Assert.AreEqual(20, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
 

@@ -37,6 +37,7 @@ namespace Pruebas
             Usuario usuario = RepositorioUsuarios.Instance.ObtenerPorMail(mail);
 
             Assert.IsNotNull(usuario);
+            GestorSesion.Instance.Iniciar(usuario);
             Assert.AreEqual(NivelFidelidad.Bronce, GestorFidelizacion.Instance.ObtenerCliente(usuario.Id).Nivel);
             Assert.IsNull(GestorSuscripciones.Instance.ActivaDe(usuario.Id));
             ReglaNegocioException error = Assert.ThrowsException<ReglaNegocioException>(() =>
@@ -110,6 +111,7 @@ namespace Pruebas
             Usuario usuario = RepositorioUsuarios.Instance.ObtenerPorMail(mail);
             Assert.IsNotNull(usuario);
             Assert.AreEqual("Cliente", usuario.TipoUsuario);
+            GestorSesion.Instance.Iniciar(usuario);
             Assert.AreEqual(NivelFidelidad.Bronce, GestorFidelizacion.Instance.ObtenerCliente(usuario.Id).Nivel);
         }
 

@@ -35,6 +35,14 @@
             this.btnMisLocales = new System.Windows.Forms.Button();
             this.btnListasEspera = new System.Windows.Forms.Button();
             this.btnReportes = new System.Windows.Forms.Button();
+            this.btnControlIngreso = new Visual.Componentes.BotonPrimario();
+            this.btnControlIngreso.Location = new System.Drawing.Point(65, 554);
+            this.btnControlIngreso.Size = new System.Drawing.Size(348, 60);
+            this.btnControlIngreso.Name = "btnControlIngreso";
+            this.btnControlIngreso.Text = "Control de ingreso";
+            this.btnControlIngreso.TabIndex = 41;
+            this.btnControlIngreso.Click += new System.EventHandler(this.btnControlIngreso_Click);
+            this.Controls.Add(this.btnControlIngreso);
             this.SuspendLayout();
             // 
             // lblNombre
@@ -82,10 +90,10 @@
             this.btnRegistrarLocal.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRegistrarLocal.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRegistrarLocal.ForeColor = System.Drawing.Color.White;
-            this.btnRegistrarLocal.Location = new System.Drawing.Point(65, 342);
+            this.btnRegistrarLocal.Location = new System.Drawing.Point(65, 320);
             this.btnRegistrarLocal.Margin = new System.Windows.Forms.Padding(2);
             this.btnRegistrarLocal.Name = "btnRegistrarLocal";
-            this.btnRegistrarLocal.Size = new System.Drawing.Size(348, 84);
+            this.btnRegistrarLocal.Size = new System.Drawing.Size(348, 60);
             this.btnRegistrarLocal.TabIndex = 35;
             this.btnRegistrarLocal.Text = "Registrar local";
             this.btnRegistrarLocal.UseVisualStyleBackColor = false;
@@ -100,7 +108,7 @@
             this.btnMisLocales.Location = new System.Drawing.Point(65, 242);
             this.btnMisLocales.Margin = new System.Windows.Forms.Padding(2);
             this.btnMisLocales.Name = "btnMisLocales";
-            this.btnMisLocales.Size = new System.Drawing.Size(348, 85);
+            this.btnMisLocales.Size = new System.Drawing.Size(348, 60);
             this.btnMisLocales.TabIndex = 34;
             this.btnMisLocales.Text = "Mis locales";
             this.btnMisLocales.UseVisualStyleBackColor = false;
@@ -112,10 +120,10 @@
             this.btnListasEspera.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnListasEspera.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnListasEspera.ForeColor = System.Drawing.Color.White;
-            this.btnListasEspera.Location = new System.Drawing.Point(65, 442);
+            this.btnListasEspera.Location = new System.Drawing.Point(65, 398);
             this.btnListasEspera.Margin = new System.Windows.Forms.Padding(2);
             this.btnListasEspera.Name = "btnListasEspera";
-            this.btnListasEspera.Size = new System.Drawing.Size(348, 84);
+            this.btnListasEspera.Size = new System.Drawing.Size(348, 60);
             this.btnListasEspera.TabIndex = 39;
             this.btnListasEspera.Text = "Listas de espera";
             this.btnListasEspera.UseVisualStyleBackColor = false;
@@ -127,10 +135,10 @@
             this.btnReportes.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnReportes.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReportes.ForeColor = System.Drawing.Color.White;
-            this.btnReportes.Location = new System.Drawing.Point(65, 542);
+            this.btnReportes.Location = new System.Drawing.Point(65, 476);
             this.btnReportes.Margin = new System.Windows.Forms.Padding(2);
             this.btnReportes.Name = "btnReportes";
-            this.btnReportes.Size = new System.Drawing.Size(348, 84);
+            this.btnReportes.Size = new System.Drawing.Size(348, 60);
             this.btnReportes.TabIndex = 40;
             this.btnReportes.Text = "Reportes";
             this.btnReportes.UseVisualStyleBackColor = false;
@@ -168,5 +176,6 @@
         private System.Windows.Forms.Button btnMisLocales;
         private System.Windows.Forms.Button btnListasEspera;
         private System.Windows.Forms.Button btnReportes;
+        private Visual.Componentes.BotonPrimario btnControlIngreso;
     }
 }

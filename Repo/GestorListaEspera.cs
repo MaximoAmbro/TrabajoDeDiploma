@@ -30,6 +30,7 @@ namespace Negocio
         // lugar en la lista no cambia.
         public void Inscribir(int idEvento, int idUsuario)
         {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
             Evento evento = GestorEventos.Instance.ObtenerPorId(idEvento);
             if (evento == null)
             {
@@ -69,12 +70,14 @@ namespace Negocio
 
         public bool EstaInscripto(int idEvento, int idUsuario)
         {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
             return RepositorioListaEspera.Instance.Existe(idEvento, idUsuario);
         }
 
         // RN-35: suscriptores primero y, dentro de cada grupo, por orden de inscripción.
         public List<ListaEspera> DeEvento(int idEvento)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             return RepositorioListaEspera.Instance.ObtenerPorEvento(idEvento);
         }
 

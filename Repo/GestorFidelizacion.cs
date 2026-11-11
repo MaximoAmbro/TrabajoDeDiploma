@@ -26,6 +26,7 @@ namespace Negocio
 
         public Cliente ObtenerCliente(int idUsuario)
         {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
             Cliente cliente = RepositorioFidelizacion.Instance.ObtenerCliente(idUsuario);
             if (cliente == null)
             {
@@ -36,6 +37,7 @@ namespace Negocio
 
         public int ComprasEnVentana(int idUsuario, DateTime fecha)
         {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
             int meses = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_VENTANA_MESES");
             return RepositorioFidelizacion.Instance.ContarComprasConfirmadas(
                 idUsuario, fecha.AddMonths(-meses), fecha);
@@ -67,6 +69,7 @@ namespace Negocio
         // con suscripción activa la prima se multiplica por (1 − SUSCRIPCION_SEGURO_DESCUENTO).
         public ResumenDescuento CalcularDescuento(Cliente c, Paquete p)
         {
+            GestorSesion.Instance.RequerirUsuario(c == null ? 0 : c.Id);
             if (c == null)
             {
                 throw new ArgumentNullException(nameof(c));
@@ -110,6 +113,7 @@ namespace Negocio
         // RN-23: el nivel se reevalúa una vez por mes. Si ya se evaluó en el mes de fecha, no cambia.
         public void ReevaluarNivel(Cliente c, DateTime fecha)
         {
+            GestorSesion.Instance.RequerirUsuario(c == null ? 0 : c.Id);
             if (c == null)
             {
                 throw new ArgumentNullException(nameof(c));
@@ -132,6 +136,7 @@ namespace Negocio
         // (RN-23; conflicto RN-23 vs RN-19 en docs/02-reglas-negocio.md).
         public void AscenderSiCorresponde(Cliente c, DateTime fecha)
         {
+            GestorSesion.Instance.RequerirUsuario(c == null ? 0 : c.Id);
             if (c == null)
             {
                 throw new ArgumentNullException(nameof(c));

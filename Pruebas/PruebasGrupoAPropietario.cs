@@ -20,6 +20,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
+                Fake.ComoAdministrador();
                 using (var form = new Visual.Propietario.frmAgregarEvento())
                 {
                     Mostrar(form);
@@ -57,7 +58,9 @@ namespace Pruebas
         {
             EnSta(() =>
             {
+                Fake.ComoAdministrador();
                 Usuario propietario = Fake.Administrador();
+                Fake.ComoAdministrador();
                 using (var form = new Visual.frmRegistrarLocal { IDUsuario = propietario.Id })
                 {
                     Mostrar(form);
@@ -77,7 +80,7 @@ namespace Pruebas
                     ControlDe<TextBox>(form, "txtAltura").Text = "123";
                     ControlDe<TextBox>(form, "txtCapacidad").Text = "500";
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnregistrarse").PerformClick(),
-                        new DialogoEsperado { Titulo = "", Texto = "Local registrado correctamente" });
+                        new DialogoEsperado { Titulo = "Registrar local", Texto = "Local registrado correctamente" });
                     Local local = GestorLocales.Instance.PorPropietario(propietario.Id).Single(l => l.Nombre == nombreLocal);
                     Assert.AreEqual(500, local.Capacidad);
                     Assert.AreEqual("Mitre 123", local.Direccion);
@@ -101,9 +104,11 @@ namespace Pruebas
         {
             EnSta(() =>
             {
+                Fake.ComoAdministrador();
                 Fake.EventoPublicado(1000m, 5);
                 Fake.EventoPublicado(1000m, 5);
                 Usuario propietario = Fake.Administrador();
+                Fake.ComoAdministrador();
                 using (var form = new Visual.frmMisLocales { IDUsuario = propietario.Id })
                 {
                     Mostrar(form);
@@ -143,6 +148,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
+                Fake.ComoAdministrador();
                 Evento evento = Fake.EventoBorradorSinSectores();
                 using (var form = SectorPara(evento))
                 {
@@ -151,7 +157,7 @@ namespace Pruebas
                     if (precio == "boton") { Assert.AreEqual("Agregar sector", boton.Text); return; }
                     CompletarSector(form, "Decimal", "10", precio);
                     DialogosPrueba.Comprobar(() => boton.PerformClick(),
-                        new DialogoEsperado { Titulo = "", Texto = "Sector agregado correctamente." });
+                        new DialogoEsperado { Titulo = "Agregar sector", Texto = "Sector agregado correctamente." });
                     Assert.AreEqual(12500.50m, GestorEventos.Instance.Sectores(evento.Id).Single().Precio);
                 }
             });
@@ -165,6 +171,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
+                Fake.ComoAdministrador();
                 Evento referencia = Fake.EventoBorradorSinSectores();
                 Local local = GestorLocales.Instance.PorId(referencia.IdLocal);
                 int antes = GestorEventos.Instance.PorLocal(local.Id).Count;
@@ -176,7 +183,7 @@ namespace Pruebas
                     ControlDe<DateTimePicker>(form, "dtEvento").Value = DateTime.Today.AddDays(30);
                     if (categoria) ControlDe<ComboBox>(form, "cmbCategoria").SelectedIndex = 0;
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnRegistrar").PerformClick(),
-                        new DialogoEsperado { Titulo = "", Texto = categoria ? "Evento guardado como borrador." : "Seleccione la categoría del evento." });
+                        new DialogoEsperado { Titulo = "Agregar evento", Texto = categoria ? "Evento guardado como borrador." : "Seleccione la categoría del evento." });
                     if (!categoria)
                     {
                         Assert.AreEqual(antes, GestorEventos.Instance.PorLocal(local.Id).Count);
@@ -201,6 +208,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
+                Fake.ComoAdministrador();
                 Evento evento = Fake.EventoBorradorSinSectores();
                 Local local = GestorLocales.Instance.PorId(evento.IdLocal);
                 using (var administrar = new Visual.Vendedor.frmAdministrarEvento
@@ -211,7 +219,7 @@ namespace Pruebas
                     Visual.Vendedor.frmAgregarSector sector = Application.OpenForms.OfType<Visual.Vendedor.frmAgregarSector>().Single(f => f.Visible);
                     CompletarSector(sector, "Nuevo", capacidad.ToString(), "1000");
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(sector, "btnregistrarse").PerformClick(),
-                        new DialogoEsperado { Titulo = "", Texto = "Sector agregado correctamente." });
+                        new DialogoEsperado { Titulo = "Agregar sector", Texto = "Sector agregado correctamente." });
                     Assert.AreEqual(capacidad, GestorEventos.Instance.Sectores(evento.Id).Single().Capacidad);
                     string estado = capacidad == 0 ? GestorEventos.EstadoBorrador : GestorEventos.EstadoPublicado;
                     Assert.AreEqual(estado, GestorEventos.Instance.ObtenerPorId(evento.Id).Estado);
@@ -234,6 +242,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
+                Fake.ComoAdministrador();
                 Evento evento = eliminar ? Fake.EventoPublicado(1000m, 5) : Fake.EventoBorradorSinSectores();
                 Local local = GestorLocales.Instance.PorId(evento.IdLocal);
                 if (!eliminar)
@@ -244,12 +253,13 @@ namespace Pruebas
                         Mostrar(form);
                         CompletarSector(form, "Excesivo", "1001", "1000");
                         DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnregistrarse").PerformClick(),
-                            new DialogoEsperado { Titulo = "RN-38", Texto = "Capacidad disponible para este evento: 1000." });
+                            new DialogoEsperado { Titulo = "Agregar sector", Texto = "Capacidad disponible para este evento: 1000." });
                         Assert.AreEqual(0, GestorEventos.Instance.Sectores(evento.Id).Count);
                     }
                     return;
                 }
                 int idSector = GestorEventos.Instance.Sectores(evento.Id).Single().Id;
+                Fake.ComoAdministrador();
                 using (var form = new Visual.Vendedor.frmAdministrarEvento
                     { IDEvento = evento.Id, IDlocal = local.Id, IDUsuario = local.IdPropietario })
                 {
@@ -259,7 +269,7 @@ namespace Pruebas
                     try
                     {
                         DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnEliminarSector").PerformClick(),
-                            new DialogoEsperado { Titulo = "RN-06", Texto = "(RN-06)" });
+                            new DialogoEsperado { Titulo = "Administrar evento", Texto = "(RN-06)" });
                     }
                     finally
                     {

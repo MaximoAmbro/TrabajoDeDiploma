@@ -47,6 +47,7 @@ namespace Pruebas
         public void CP56_RechazaEliminarUltimoSectorPublicado()
         {
             Evento evento = Fake.EventoPublicado(1000m, 5);
+            Fake.ComoAdministrador();
             Sector unico = evento.Sectores.Single();
 
             ReglaNegocioException error = Assert.ThrowsException<ReglaNegocioException>(() =>
@@ -64,6 +65,7 @@ namespace Pruebas
             Evento evento = Fake.EventoPublicado(1000m, 5);
             Evento otroEvento = Fake.EventoPublicado(1000m, 5);
             Servicio ajeno = Fake.ServicioHabilitado(otroEvento, "Hospedaje", 1000m);
+            Fake.ComoCliente(Fake.Cliente(NivelFidelidad.Bronce));
             Paquete paquete = Fake.Paquete(evento, 1, false);
 
             ReglaNegocioException error = Assert.ThrowsException<ReglaNegocioException>(() =>
@@ -79,6 +81,7 @@ namespace Pruebas
         public void CP58_RechazaSegundaSuscripcionActiva()
         {
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(cliente);
             Suscripcion primera = Fake.SuscripcionActiva(cliente, GestorSuscripciones.PlanMensual);
             Assert.IsNotNull(primera);
 
@@ -97,6 +100,7 @@ namespace Pruebas
         public void CP59_RechazaDevolucionSinSeguroOFueraDePlazo()
         {
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(cliente);
             Evento evento = Fake.EventoPublicado(1000m, 5);
             Compra sinSeguro = Fake.CompraConfirmada(cliente, evento, 1, false);
 
@@ -122,6 +126,7 @@ namespace Pruebas
         public void CP60_RechazaSectorQueSuperaCapacidadDelLocal()
         {
             Evento evento = Fake.EventoPublicado(1000m, 5);
+            Fake.ComoAdministrador();
             Sector original = evento.Sectores.Single();
             Local local = GestorLocales.Instance.PorId(evento.IdLocal);
             Sector excesivo = new Sector
@@ -146,10 +151,13 @@ namespace Pruebas
         public void CP61_RechazaPreventaSinSuscripcion()
         {
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(cliente);
             Evento evento = Fake.EventoPublicado(1000m, 5);
             Sector sector = evento.Sectores.Single();
             Assert.IsFalse(GestorSuscripciones.Instance.TieneActiva(cliente.Id));
+            Fake.ComoAdministrador();
             GestorEventos.Instance.CambiarPreventa(evento.Id, DateTime.Now.AddDays(1));
+            Fake.ComoCliente(cliente);
             int disponibles = GestorPaquetes.Instance.DisponiblesDe(sector.Id);
 
             ReglaNegocioException error = Assert.ThrowsException<ReglaNegocioException>(() =>

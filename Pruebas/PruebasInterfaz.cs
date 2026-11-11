@@ -25,6 +25,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Plata);
+                Fake.ComoCliente(cliente);
                 var evento = GestorEventos.Instance.ObtenerPorId(1); // Duki en Rosario: tres sectores de la semilla.
                 using (var form = new Visual.FrmCompraCliente { IDEvento = evento.Id, IDUsuario = cliente.Id })
                 {
@@ -123,6 +124,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 using (var form = new Visual.frmHistorialCliente { IDUsuario = cliente.Id })
                 {
                     Cargar(form);
@@ -159,6 +161,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Plata);
+                Fake.ComoCliente(cliente);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
                 {
                     Cargar(form);
@@ -187,6 +190,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
                 {
                     Cargar(form);
@@ -203,10 +207,10 @@ namespace Pruebas
 
         // CP-15 — RF-01, RN-02: registro rechaza datos inválidos.
         [DataTestMethod]
-        [DataRow("txtNombre", " ", "", "Ingrese su nombre.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 1)")]
-        [DataRow("txtApellido", " ", "", "Ingrese su apellido.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 2)")]
-        [DataRow("txtmail", " ", "", "Ingrese su correo electrónico.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 3)")]
-        [DataRow("TxtPassword", "abc", "No se pudo crear la cuenta", "La contraseña debe tener al menos", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 4)")]
+        [DataRow("txtNombre", " ", "Crear cuenta", "Ingrese su nombre.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 1)")]
+        [DataRow("txtApellido", " ", "Crear cuenta", "Ingrese su apellido.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 2)")]
+        [DataRow("txtmail", " ", "Crear cuenta", "Ingrese su correo electrónico.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 3)")]
+        [DataRow("TxtPassword", "abc", "Crear cuenta", "La contraseña debe tener al menos", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 4)")]
         public void Registro_RechazaDatosInvalidosSinCrearUsuario(string campo, string valor, string titulo, string mensaje)
         {
             EnSta(() =>
@@ -237,7 +241,9 @@ namespace Pruebas
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 var evento = Fake.EventoPublicado(1000m, 5);
+                Fake.ComoAdministrador();
                 using (var form = new Visual.Vendedor.frmEventosLocal { IDlocal = evento.IdLocal, IDUsuario = 1 })
                 {
                     Cargar(form);
@@ -253,6 +259,7 @@ namespace Pruebas
                 }
                 evento = Fake.EventoPublicado(1000m, 5);
                 Fake.CompraConfirmada(cliente, evento, 1, false);
+                Fake.ComoAdministrador();
                 using (var form = new Visual.Vendedor.frmEventosLocal { IDlocal = evento.IdLocal, IDUsuario = 1 })
                 {
                     Cargar(form);
@@ -261,11 +268,11 @@ namespace Pruebas
                     grilla.CurrentCell = grilla.Rows[0].Cells["Nombre"];
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnEliminarEvento").PerformClick(),
                         Confirmacion("Eliminar evento", evento.Nombre, DialogResult.Yes),
-                        Confirmacion("RN-11", "¿Desea suspenderlo?", DialogResult.No));
+                        Confirmacion("Suspender evento", "¿Desea suspenderlo?", DialogResult.No));
                     Assert.AreEqual(GestorEventos.EstadoPublicado, GestorEventos.Instance.ObtenerPorId(evento.Id).Estado);
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnEliminarEvento").PerformClick(),
                         Confirmacion("Eliminar evento", evento.Nombre, DialogResult.Yes),
-                        Confirmacion("RN-11", "¿Desea suspenderlo?", DialogResult.Yes));
+                        Confirmacion("Suspender evento", "¿Desea suspenderlo?", DialogResult.Yes));
                     Assert.AreEqual(GestorEventos.EstadoSuspendido, GestorEventos.Instance.ObtenerPorId(evento.Id).Estado);
                 }
             });
@@ -278,6 +285,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 var evento = Fake.EventoPublicado(1000m, 5);
                 Fake.CompraConfirmada(cliente, evento, 1, true);
                 using (var form = new Visual.frmHistorialCliente { IDUsuario = cliente.Id })
@@ -304,6 +312,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 var evento = Fake.EventoPublicado(1000m, 1);
                 Fake.ServicioHabilitado(evento, "Hospedaje", 45000m);
                 var compra = Fake.CompraConfirmada(cliente, evento, 1, true);
@@ -369,6 +378,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Plata);
+                Fake.ComoCliente(cliente);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
                 {
                     Cargar(form);
@@ -424,6 +434,7 @@ namespace Pruebas
             {
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 int minutos = GestorParametros.Instance.ObtenerEntero("RESERVA_MINUTOS");
                 Compra compra = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 1, false), cliente);
                 using (var form = new Visual.frmPago { Compra = compra })
@@ -458,8 +469,11 @@ namespace Pruebas
             {
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 Cliente comprador = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(comprador);
                 Cliente interesado = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(interesado);
                 Fake.CompraConfirmada(comprador, evento, 1, false);
+                Fake.ComoCliente(interesado);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = evento.Id, IDUsuario = interesado.Id })
                 {
                     Cargar(form);
@@ -481,6 +495,7 @@ namespace Pruebas
             {
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = evento.Id, IDUsuario = cliente.Id })
                 {
                     Cargar(form);
@@ -510,6 +525,7 @@ namespace Pruebas
             {
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 int plata = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_PLATA");
                 int oro = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_ORO");
                 using (var form = new Visual.FrmCompraCliente { IDEvento = evento.Id, IDUsuario = cliente.Id })
@@ -549,7 +565,7 @@ namespace Pruebas
                     Control<TextBox>(form, "TxtConfirmpassword").Text = "Cliente123";
 
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnregistrarse").PerformClick(),
-                        new DialogoEsperado { Titulo = "", Texto = "Usuario creado" });
+                        new DialogoEsperado { Titulo = "Crear cuenta", Texto = "Usuario creado" });
 
                     Usuario usuario = Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail);
                     Assert.IsNotNull(usuario);
@@ -610,6 +626,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
                 {
                     Cargar(form);
@@ -641,6 +658,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
                 {
                     Cargar(form);
@@ -662,6 +680,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
                 {
                     Cargar(form);
@@ -706,6 +725,7 @@ namespace Pruebas
                 }
                 else if (caso == "negocio")
                 {
+                    Fake.ComoAdministrador();
                     error = Assert.ThrowsException<InvalidOperationException>(() => GestorPaquetes.Instance.Nuevo(999999, 3));
                     esperado = "No se encontró ningún evento con ese ID.";
                     Assert.AreEqual(esperado, error.Message);
@@ -734,12 +754,15 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 Compra compra = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 1, false), cliente);
                 using (var pago = new Visual.frmPago { Compra = compra })
                 {
                     Cargar(pago);
+                    Fake.ComoAdministrador();
                     GestorEventos.Instance.Eliminar(evento.Id);
+                    Fake.ComoCliente(cliente);
                     DatosTarjeta tarjeta = Fake.Tarjeta();
                     Control<TextBox>(pago, "txtTitular").Text = tarjeta.Titular;
                     Control<TextBox>(pago, "txtNumero").Text = tarjeta.Numero;
@@ -762,6 +785,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 using (var form = new Visual.FrmCompraCliente { IDEvento = 1, IDUsuario = cliente.Id })
                 {
                     Cargar(form);
@@ -786,6 +810,7 @@ namespace Pruebas
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 Compra compra = Fake.CompraConfirmada(cliente, evento, 1, false);
                 Entrada entrada = GestorCompras.Instance.EntradasDe(compra).Single();

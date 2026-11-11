@@ -25,11 +25,57 @@ namespace Datos
 
         private RepositorioEntradas() { }
 
+        // RN-18: el predicado y la escritura son una única sentencia, también con dos lectores.
+        public bool RegistrarIngreso(string codigo, int idEvento, DateTime ahora)
+        {
+            const string sql = "UPDATE Entradas SET FechaIngreso = @Ahora " +
+                "WHERE CodigoQR = @Codigo AND ID_Evento = @IdEvento " +
+                "AND Estado = 'Confirmada' AND FechaIngreso IS NULL";
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, sql))
+            {
+                AgregarParametro(comando, "@Ahora", ahora);
+                AgregarParametro(comando, "@Codigo", codigo);
+                AgregarParametro(comando, "@IdEvento", idEvento);
+                return comando.ExecuteNonQuery() == 1;
+            }
+        }
+
+        public Entrada PorCodigo(string codigo)
+        {
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion,
+                "SELECT ID, ID_Evento, Estado, FechaIngreso FROM Entradas WHERE CodigoQR = @Codigo"))
+            {
+                AgregarParametro(comando, "@Codigo", codigo);
+                using (SqlDataReader lector = comando.ExecuteReader())
+                {
+                    if (!lector.Read()) return null;
+                    return new Entrada {
+                        Id = Convert.ToInt32(lector["ID"]), IdEvento = Convert.ToInt32(lector["ID_Evento"]),
+                        Estado = (EstadoEntrada)Enum.Parse(typeof(EstadoEntrada), LeerString(lector, "Estado")),
+                        FechaIngreso = lector["FechaIngreso"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(lector["FechaIngreso"])
+                    };
+                }
+            }
+        }
+
+        public int ContarIngresos(int idEvento)
+        {
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion,
+                "SELECT COUNT(*) FROM Entradas WHERE ID_Evento = @Evento AND FechaIngreso IS NOT NULL"))
+            {
+                AgregarParametro(comando, "@Evento", idEvento);
+                return Convert.ToInt32(comando.ExecuteScalar());
+            }
+        }
+
         public List<Entrada> ObtenerPorCompra(int idCompra)
         {
             const string consulta =
                 "SELECT ID, ID_Evento, ID_Sector, ID_Usuario, ID_Compra, Precio, CantidadVendida, " +
-                "       FechaVenta, Estado, CodigoQR " +
+                "       FechaVenta, Estado, CodigoQR, FechaIngreso " +
                 "FROM Entradas WHERE ID_Compra = @IdCompra ORDER BY ID";
             var entradas = new List<Entrada>();
 
@@ -54,7 +100,8 @@ namespace Datos
                             CantidadVendida = Convert.ToInt32(lector["CantidadVendida"]),
                             FechaVenta = Convert.ToDateTime(lector["FechaVenta"]),
                             Estado = estado,
-                            CodigoQR = LeerString(lector, "CodigoQR")
+                            CodigoQR = LeerString(lector, "CodigoQR"),
+                            FechaIngreso = lector["FechaIngreso"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(lector["FechaIngreso"])
                         });
                     }
                 }

@@ -31,6 +31,11 @@ namespace Negocio
         // que quedan, o si la cuenta está bloqueada, con los minutos que faltan.
         public Usuario Autenticar(string mail, string pwd)
         {
+            return AutenticarCuenta(mail, pwd, true, false);
+        }
+
+        private Usuario AutenticarCuenta(string mail, string pwd, bool iniciarSesion, bool ocultarCuenta)
+        {
             if (string.IsNullOrWhiteSpace(mail) || string.IsNullOrEmpty(pwd))
             {
                 return null;
@@ -50,7 +55,10 @@ namespace Negocio
 
             if (!ContrasenaValida(usuario, pwd))
             {
-                throw RegistrarIntentoFallido(usuario, ahora);
+                ReglaNegocioException fallo = RegistrarIntentoFallido(usuario, ahora);
+                if (ocultarCuenta && !RepositorioUsuarios.Instance.ObtenerPorMail(usuario.Mail).BloqueadoHasta.HasValue)
+                    throw CredencialIncorrecta();
+                throw fallo;
             }
 
             if (usuario.IntentosFallidos != 0 || usuario.BloqueadoHasta.HasValue)
@@ -61,7 +69,7 @@ namespace Negocio
             }
 
             usuario.Contraseña = null;   // el hash no sale de esta capa
-            GestorSesion.Instance.Iniciar(usuario);
+            if (iniciarSesion) GestorSesion.Instance.Iniciar(usuario);
             return usuario;
         }
 
@@ -71,7 +79,13 @@ namespace Negocio
             Registrar(mail, pwd, nombre, apellido, TipoCliente);
         }
 
-        public void Registrar(string mail, string pwd, string nombre, string apellido, string tipoUsuario)
+        public void CrearAdministrador(string mail, string pwd, string nombre, string apellido)
+        {
+            GestorSesion.Instance.RequerirAdministrador();
+            Registrar(mail, pwd, nombre, apellido, TipoPropietario);
+        }
+
+        internal void Registrar(string mail, string pwd, string nombre, string apellido, string tipoUsuario)
         {
             if (string.IsNullOrWhiteSpace(mail))
             {
@@ -111,16 +125,19 @@ namespace Negocio
             }
         }
 
-        // TODO Seccion N: exigir autenticación o un token por mail antes de cambiar la contraseña.
-        public void CambiarContrasena(string mail, string nueva)
+        // RN-40 propuesta: mismo control de credenciales e intentos que el inicio de sesión.
+        public void CambiarContrasena(string mail, string actual, string nueva)
         {
+            Usuario usuario = AutenticarCuenta(mail, actual, false, true);
+            if (usuario == null) throw CredencialIncorrecta();
             ValidarContrasena(nueva);
+            if (!RepositorioUsuarios.Instance.ActualizarContrasena(usuario.Mail, Seguridad.Hash(nueva)))
+                throw CredencialIncorrecta();
+        }
 
-            if (string.IsNullOrWhiteSpace(mail) ||
-                !RepositorioUsuarios.Instance.ActualizarContrasena(mail.Trim(), Seguridad.Hash(nueva)))
-            {
-                throw new ReglaNegocioException("RN-01", "No existe una cuenta con ese mail.");
-            }
+        private static ReglaNegocioException CredencialIncorrecta()
+        {
+            return new ReglaNegocioException("RN-04", "Mail o contraseña actual incorrectos.");
         }
 
         // RN-02: longitud mínima PWD_LONGITUD_MIN, al menos una letra y un dígito.
@@ -142,6 +159,8 @@ namespace Negocio
         {
             if (Seguridad.Verificar(pwd, usuario.Contraseña))
             {
+                if (Seguridad.NecesitaActualizar(usuario.Contraseña))
+                    RepositorioUsuarios.Instance.ActualizarContrasena(usuario.Mail, Seguridad.Hash(pwd));
                 return true;
             }
 

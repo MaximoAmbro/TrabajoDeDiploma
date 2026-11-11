@@ -30,7 +30,7 @@ namespace Visual
             int capacidad;
             if (!int.TryParse(txtCapacidad.Text.Trim(), out capacidad))
             {
-                MessageBox.Show("La capacidad debe ser un número entero.");
+                MessageBox.Show("La capacidad debe ser un número entero.", "Registrar local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -47,10 +47,10 @@ namespace Visual
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Registrar local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            MessageBox.Show("Local registrado correctamente");
+            MessageBox.Show("Local registrado correctamente", "Registrar local", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Cerrar();
         }
         private void Cerrar()

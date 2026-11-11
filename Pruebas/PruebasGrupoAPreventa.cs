@@ -23,10 +23,12 @@ namespace Pruebas
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 DateTime fin = DateTime.Today.AddDays(1).AddHours(20);
                 bool preventa = escenario != "sin-preventa";
+                Fake.ComoAdministrador();
                 if (preventa) GestorEventos.Instance.CambiarPreventa(evento.Id, fin);
                 foreach (bool suscripto in escenario == "sin-preventa" ? new[] { false, true } : new[] { escenario == "con-plan" })
                 {
                     Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                    Fake.ComoCliente(cliente);
                     if (suscripto) Fake.SuscripcionActiva(cliente, GestorSuscripciones.PlanMensual);
                     using (var listado = new Visual.frmEventosCliente { IDUsuario = cliente.Id })
                     {
@@ -69,6 +71,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
+                Fake.ComoAdministrador();
                 Evento referencia = Fake.EventoBorradorSinSectores();
                 Local local = GestorLocales.Instance.PorId(referencia.IdLocal);
                 DateTime fin = DateTime.Today.AddDays(1).AddHours(20);
@@ -86,7 +89,7 @@ namespace Pruebas
                         selector.Value = fin;
                         selector.Checked = true;
                         DialogosPrueba.Comprobar(() => ControlDe<Button>(alta, "btnRegistrar").PerformClick(),
-                            new DialogoEsperado { Titulo = escenario == "alta" ? "" : "Advertencia", Texto = escenario == "alta" ?
+                            new DialogoEsperado { Titulo = "Agregar evento", Texto = escenario == "alta" ?
                                 "Evento guardado como borrador." : "La preventa tiene que terminar antes de la fecha del evento." });
                         if (escenario == "posterior")
                         {
@@ -106,7 +109,7 @@ namespace Pruebas
                         ControlDe<TextBox>(sector, "txtCapacidad").Text = "10";
                         ControlDe<TextBox>(sector, "txtPrecio").Text = "1000";
                         DialogosPrueba.Comprobar(() => ControlDe<Button>(sector, "btnregistrarse").PerformClick(),
-                            new DialogoEsperado { Titulo = "", Texto = "Sector agregado correctamente." });
+                            new DialogoEsperado { Titulo = "Agregar sector", Texto = "Sector agregado correctamente." });
                     }
                     Evento publicado = GestorEventos.Instance.ObtenerPorId(creado.Id);
                     Assert.AreEqual(GestorEventos.EstadoPublicado, publicado.Estado);

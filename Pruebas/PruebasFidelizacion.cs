@@ -44,6 +44,7 @@ namespace Pruebas
         {
             Cliente c = Fake.ClienteConCompras(compras, 1);
 
+            Fake.ComoCliente(c);
             NivelFidelidad nivel = GestorFidelizacion.Instance.DeterminarNivel(c.Id, DateTime.Now);
 
             Assert.AreEqual(esperado, nivel);
@@ -57,6 +58,7 @@ namespace Pruebas
         public void CP05_ElDescuentoNoAlcanzaALosServicios()
         {
             Cliente c = Fake.Cliente(NivelFidelidad.Oro);
+            Fake.ComoCliente(c);
             Evento e = Fake.EventoPublicado(40000m, 100);
             Servicio hospedaje = Fake.ServicioHabilitado(e, "Hospedaje", 30000m);
             Paquete p = Fake.Paquete(e, 1, false);
@@ -76,6 +78,7 @@ namespace Pruebas
         public void CP06_LaCompraDeHace13MesesQuedaFueraDeLaVentana()
         {
             Cliente c = Fake.ClienteConCompras(6, 1);
+            Fake.ComoCliente(c);
             Fake.AgregarCompra(c, 13, EstadoCompra.Confirmada);
 
             Assert.AreEqual(6, GestorFidelizacion.Instance.ComprasEnVentana(c.Id, DateTime.Now));
@@ -87,6 +90,7 @@ namespace Pruebas
         public void CP07_SeFacturaElPrecioCongelado()
         {
             Cliente c = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(c);
             Evento e = Fake.EventoPublicado(25000m, 100);
             Paquete p = Fake.Paquete(e, 2, false);
             Compra compra = GestorCompras.Instance.Iniciar(p, c);
@@ -111,6 +115,7 @@ namespace Pruebas
         public void CP08_LaSeptimaSeCobraAl5YOroRigeDesdeLaOctava()
         {
             Cliente c = Fake.ClienteConCompras(6, 1);
+            Fake.ComoCliente(c);
             Assert.AreEqual(NivelFidelidad.Plata, c.Nivel);
             Evento e = Fake.EventoPublicado(25000m, 100);
 
@@ -134,6 +139,7 @@ namespace Pruebas
         public void CP09_ReembolsoBajaElContadorPeroNoElNivel()
         {
             Cliente c = Fake.ClienteConCompras(6, 1);
+            Fake.ComoCliente(c);
             Evento e = Fake.EventoPublicado(25000m, 100);
             Compra septima = Fake.CompraConfirmada(c, e, 2, true);
             Assert.AreEqual(NivelFidelidad.Oro, GestorFidelizacion.Instance.ObtenerCliente(c.Id).Nivel);
@@ -156,6 +162,7 @@ namespace Pruebas
         public void CP10_LaSuscripcionNoSumaPorcentaje()
         {
             Cliente c = Fake.Cliente(NivelFidelidad.Oro);
+            Fake.ComoCliente(c);
             Assert.IsNotNull(Fake.SuscripcionActiva(c, GestorSuscripciones.PlanAnual));
             Evento e = Fake.EventoPublicado(40000m, 100);
 
@@ -173,6 +180,7 @@ namespace Pruebas
         public void Referencia_DaExactamente99625()
         {
             Cliente c = Fake.Cliente(NivelFidelidad.Plata);
+            Fake.ComoCliente(c);
             Evento e = Fake.EventoPublicado(25000m, 100);
             Servicio hospedaje = Fake.ServicioHabilitado(e, "Hospedaje", 45000m);
             Paquete p = Fake.Paquete(e, 2, false);

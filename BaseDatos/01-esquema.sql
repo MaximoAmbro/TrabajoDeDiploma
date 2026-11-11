@@ -95,6 +95,7 @@ ALTER TABLE Entradas ADD ID_Compra INT NULL;
 ALTER TABLE Entradas ADD ID_Sector INT NULL;           -- RN-08: sin esto no hay cupo por sector
 ALTER TABLE Entradas ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Confirmada';
 ALTER TABLE Entradas ADD CodigoQR VARCHAR(64) NULL;    -- RN-18
+ALTER TABLE Entradas ADD FechaIngreso DATETIME NULL;  -- RN-18: no cambia el estado de venta
 
 -- Los importes van en decimal (ver CLAUDE.md). Entradas.Precio era INT.
 ALTER TABLE Entradas ALTER COLUMN Precio DECIMAL(12,2) NOT NULL;

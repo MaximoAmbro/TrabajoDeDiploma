@@ -35,16 +35,16 @@ namespace Visual.Vendedor
                 {
                     // Si el evento está en Borrador y el sector tiene capacidad, queda publicado.
                     GestorEventos.Instance.AgregarSector(IDEvento, sector);
-                    MessageBox.Show("Sector agregado correctamente.");
+                    MessageBox.Show("Sector agregado correctamente.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     txtCapacidad.Clear(); txtNombre.Clear(); txtPrecio.Clear();
                 }
                 catch (ReglaNegocioException ex)
                 {
-                    MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Avisos.Regla("Agregar sector", ex);
                 }
                 catch (Exception ex) when (ex is InvalidOperationException || ex is ArgumentException)
                 {
-                    MessageBox.Show(ex.Message, "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(ex.Message, "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace Visual.Vendedor
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtCapacidad.Text) || string.IsNullOrWhiteSpace(txtPrecio.Text))
             {
-                MessageBox.Show("Por favor, complete todos los campos.");
+                MessageBox.Show("Por favor, complete todos los campos.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             return true;
@@ -79,14 +79,14 @@ namespace Visual.Vendedor
             int capacidad;
             if (!int.TryParse(txtCapacidad.Text.Trim(), out capacidad))
             {
-                MessageBox.Show("La capacidad debe ser un número entero.");
+                MessageBox.Show("La capacidad debe ser un número entero.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             decimal precio;
             string textoPrecio = txtPrecio.Text.Trim().Replace(',', '.');
             if (!decimal.TryParse(textoPrecio, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out precio))
             {
-                MessageBox.Show("El precio debe ser un número, por ejemplo 12500.50.");
+                MessageBox.Show("El precio debe ser un número, por ejemplo 12500.50.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             sector = new Sector

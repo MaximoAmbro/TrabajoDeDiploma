@@ -55,9 +55,9 @@ namespace Pruebas
                 Usuario anterior = RepositorioUsuarios.Instance.ObtenerPorMail("admin@eventaura.com");
                 try
                 {
-                    // La semilla de la base aislada permite leer su credencial sin copiarla al código.
-                    string clave = anterior.Contraseña;
-                    Assert.IsFalse(Seguridad.EsHash(clave), "La preparación de esta prueba requiere la semilla heredada.");
+                    // SEG-5: la semilla ya guarda hashes; la migración heredada se prueba abajo con Fake.
+                    string clave = "Admin1234";
+                    Assert.IsTrue(Seguridad.EsHash(anterior.Contraseña), "La semilla no debe contener contraseñas en texto plano.");
                     string hashAnterior = null;
                     for (int acceso = 0; acceso < 2; acceso++)
                     {
@@ -69,7 +69,7 @@ namespace Pruebas
                         string guardada = RepositorioUsuarios.Instance.ObtenerPorMail(anterior.Mail).Contraseña;
                         Assert.IsTrue(guardada != clave && Seguridad.EsHash(guardada), "La credencial debe persistirse hasheada.");
                         Assert.IsTrue(Seguridad.Verificar(clave, guardada));
-                        if (hashAnterior != null) Assert.IsTrue(hashAnterior == guardada, "El segundo acceso debe usar el hash migrado.");
+                        if (hashAnterior != null) Assert.IsTrue(hashAnterior == guardada, "El segundo acceso debe usar el hash persistido.");
                         hashAnterior = guardada;
                     }
                 }

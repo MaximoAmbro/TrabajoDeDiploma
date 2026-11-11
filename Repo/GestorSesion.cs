@@ -33,6 +33,19 @@ namespace Negocio
             UsuarioActual = usuario;
         }
 
+        // RN-34 generalizada: toda gestión administrativa exige este perfil.
+        public void RequerirAdministrador()
+        {
+            if (UsuarioActual == null || UsuarioActual.TipoUsuario != "Propietario")
+                throw new ReglaNegocioException("RN-34", "Esta operación es solo para el Administrador");
+        }
+
+        public void RequerirUsuario(int idUsuario)
+        {
+            if (UsuarioActual == null || (UsuarioActual.TipoUsuario != "Propietario" && UsuarioActual.Id != idUsuario))
+                throw new ReglaNegocioException("RN-41", "Solo puede operar sobre los datos de su propia cuenta.");
+        }
+
         public void Cerrar()
         {
             UsuarioActual = null;

@@ -3,8 +3,8 @@
    Datos semilla mínimos (docs/03-esquema-datos.md). Ejecutar DESPUÉS de
    01-esquema.sql, sobre una base sin datos.
 
-   Contraseñas en texto plano a propósito: la sección 3 las migra a PBKDF2 en el
-   primer inicio de sesión exitoso. Todas cumplen RN-02.
+   Contraseñas de demostración guardadas como hashes PBKDF2 (SEG-5).
+   Regenerar con Pruebas/GenerarHashesSemilla.ps1 -ActualizarScripts.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 SET NOCOUNT ON;
@@ -15,6 +15,8 @@ BEGIN TRANSACTION;
 
 -- ═══════════════ Parámetros (docs/02-reglas-negocio.md) ═══════════════
 INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
+('INGRESO_HORAS_ANTES',      '6',     'Horas de ingreso antes del evento',                        'RN-18'),
+('INGRESO_HORAS_DESPUES',    '12',    'Horas de ingreso después del evento',                      'RN-18'),
 ('PWD_LONGITUD_MIN',        '8',     'Longitud mínima de la contraseña',                          'RN-02'),
 ('LOGIN_INTENTOS_MAX',      '5',     'Intentos fallidos consecutivos antes del bloqueo',          'RN-04'),
 ('LOGIN_BLOQUEO_MIN',       '15',    'Minutos de bloqueo de la cuenta',                           'RN-04'),
@@ -39,20 +41,20 @@ DECLARE @Admin INT, @Bronce INT, @Plata INT, @Oro INT;
 DECLARE @InicioMes DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);   -- RN-23
 
 INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, FechaUltimaEvaluacion)
-VALUES ('Ana', 'Administradora', 'admin@eventaura.com', 'Admin1234', 'Propietario', 'Bronce', @InicioMes);
+VALUES ('Ana', 'Administradora', 'admin@eventaura.com', 'PBKDF2$310000$Veuut8CZvZKsAl8hEXYc7g==$osxmqGy++c0EC4m0cjPaM2igpHaTPemd8UffcH9QOUE=', 'Propietario', 'Bronce', @InicioMes);
 SET @Admin = SCOPE_IDENTITY();
 INSERT INTO Propietario (ID) VALUES (@Admin);
 
 INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, FechaUltimaEvaluacion)
-VALUES ('Bruno', 'Bronce', 'bronce@eventaura.com', 'Cliente123', 'Cliente', 'Bronce', @InicioMes);
+VALUES ('Bruno', 'Bronce', 'bronce@eventaura.com', 'PBKDF2$310000$KV/dZk+9huEPBtAM2mpBSQ==$bNLNWj5C/VqgxqOgyF5aANRLOjFWXZvwWOJR8JFbEZs=', 'Cliente', 'Bronce', @InicioMes);
 SET @Bronce = SCOPE_IDENTITY();
 
 INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, FechaUltimaEvaluacion)
-VALUES ('Paula', 'Plata', 'plata@eventaura.com', 'Cliente123', 'Cliente', 'Plata', @InicioMes);
+VALUES ('Paula', 'Plata', 'plata@eventaura.com', 'PBKDF2$310000$KV/dZk+9huEPBtAM2mpBSQ==$bNLNWj5C/VqgxqOgyF5aANRLOjFWXZvwWOJR8JFbEZs=', 'Cliente', 'Plata', @InicioMes);
 SET @Plata = SCOPE_IDENTITY();
 
 INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, FechaUltimaEvaluacion)
-VALUES ('Oscar', 'Oro', 'oro@eventaura.com', 'Cliente123', 'Cliente', 'Oro', @InicioMes);
+VALUES ('Oscar', 'Oro', 'oro@eventaura.com', 'PBKDF2$310000$KV/dZk+9huEPBtAM2mpBSQ==$bNLNWj5C/VqgxqOgyF5aANRLOjFWXZvwWOJR8JFbEZs=', 'Cliente', 'Oro', @InicioMes);
 SET @Oro = SCOPE_IDENTITY();
 
 INSERT INTO Cliente (ID) VALUES (@Bronce), (@Plata), (@Oro);

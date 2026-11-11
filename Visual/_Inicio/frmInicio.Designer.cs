@@ -91,7 +91,7 @@
             this.lblolividarcontra.Name = "lblolividarcontra";
             this.lblolividarcontra.Size = new System.Drawing.Size(255, 28);
             this.lblolividarcontra.TabIndex = 18;
-            this.lblolividarcontra.Text = "¿Olvidaste tu contraseña?";
+            this.lblolividarcontra.Text = "Cambiar contraseña";
             this.lblolividarcontra.Click += new System.EventHandler(this.lblolividarcontra_Click);
             // 
             // lblcrearcuenta

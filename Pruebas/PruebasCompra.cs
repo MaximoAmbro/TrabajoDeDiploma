@@ -45,6 +45,7 @@ namespace Pruebas
             Evento pasado = Fake.EventoPublicado(1000m, 10);
             Fake.CambiarFechaDeEvento(pasado.Id, DateTime.Now.AddDays(-1));
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(cliente);
             Assert.IsFalse(GestorEventos.Instance.Buscar(pasado.Nombre, null, null).Any(e => e.Id == pasado.Id));
             ReglaNegocioException ventaPasada = Assert.ThrowsException<ReglaNegocioException>(() => GestorPaquetes.Instance.Nuevo(pasado.Id, cliente.Id));
             Assert.AreEqual("RN-09", ventaPasada.Regla);
@@ -65,6 +66,7 @@ namespace Pruebas
             Sector grande = Fake.AgregarSector(evento, 1000m, 100);
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
 
+            Fake.ComoCliente(cliente);
             Paquete paquete = GestorPaquetes.Instance.Nuevo(evento.Id, cliente.Id);
             ReglaNegocioException cupo = Assert.ThrowsException<ReglaNegocioException>(() =>
                 GestorPaquetes.Instance.AgregarEntradas(paquete, chico.Id, 4));
@@ -90,6 +92,7 @@ namespace Pruebas
         public void CP32_PagoAprobadoConfirmacionQrYRegistro()
         {
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(cliente);
             Evento evento = Fake.EventoPublicado(1000m, 10);
             Paquete paquete = Fake.Paquete(evento, 3, false);
             Compra compra = GestorCompras.Instance.Iniciar(paquete, cliente);
@@ -125,8 +128,11 @@ namespace Pruebas
         {
             Evento evento = Fake.EventoPublicado(1000m, 1);
             Cliente primero = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(primero);
             Cliente segundo = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(segundo);
             int sector = evento.Sectores.Single().Id;
+            Fake.ComoCliente(primero);
             Compra compra = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 1, false), primero);
             Assert.AreEqual(0, GestorPaquetes.Instance.DisponiblesDe(sector));
 
@@ -140,6 +146,7 @@ namespace Pruebas
             Assert.AreEqual(EstadoPago.Rechazado, pagos.Single().Estado);
             Assert.AreEqual("0000", pagos.Single().Ultimos4);
             Assert.AreEqual(1, GestorPaquetes.Instance.DisponiblesDe(sector));
+            Fake.ComoCliente(segundo);
             Paquete otroPaquete = GestorPaquetes.Instance.Nuevo(evento.Id, segundo.Id);
             GestorPaquetes.Instance.AgregarEntradas(otroPaquete, sector, 1);
             Compra otraCompra = GestorCompras.Instance.Iniciar(otroPaquete, segundo);
@@ -153,6 +160,7 @@ namespace Pruebas
         {
             Evento evento = Fake.EventoPublicado(1000m, 5);
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(cliente);
             int sector = evento.Sectores.Single().Id;
             Compra compra = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 2, false), cliente);
             Assert.AreEqual(3, GestorPaquetes.Instance.DisponiblesDe(sector));
@@ -173,6 +181,7 @@ namespace Pruebas
         {
             Evento evento = Fake.EventoPublicado(1000m, 5);
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(cliente);
             int sector = evento.Sectores.Single().Id;
             Compra compra = GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 2, false), cliente);
             Assert.AreEqual(3, GestorPaquetes.Instance.DisponiblesDe(sector));

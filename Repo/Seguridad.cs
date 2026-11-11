@@ -11,7 +11,7 @@ namespace Negocio
     {
         private const string Prefijo = "PBKDF2";
         private const char Separador = '$';
-        private const int Iteraciones = 100000;
+        private const int Iteraciones = 310000;
         private const int BytesSalt = 16;
         private const int BytesHash = 32;
 
@@ -41,6 +41,8 @@ namespace Negocio
                 int iteraciones = int.Parse(partes[1]);
                 byte[] salt = Convert.FromBase64String(partes[2]);
                 byte[] esperado = Convert.FromBase64String(partes[3]);
+                if (iteraciones <= 0 || salt.Length != BytesSalt || esperado.Length != BytesHash)
+                    return false;
                 byte[] calculado = Derivar(contrasena, salt, iteraciones, esperado.Length);
                 return SonIguales(esperado, calculado);
             }
@@ -48,6 +50,18 @@ namespace Negocio
             {
                 return false;
             }
+            catch (OverflowException)
+            {
+                return false;
+            }
+        }
+
+        // No degrada hashes con más iteraciones que las vigentes.
+        public static bool NecesitaActualizar(string almacenado)
+        {
+            int iteraciones;
+            return EsHash(almacenado) && int.TryParse(almacenado.Split(Separador)[1], out iteraciones)
+                && iteraciones > 0 && iteraciones < Iteraciones;
         }
 
         // Distingue un hash de una contraseña heredada en texto plano.

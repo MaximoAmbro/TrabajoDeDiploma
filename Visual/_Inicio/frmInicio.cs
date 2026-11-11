@@ -52,7 +52,7 @@ namespace Visual
             if (string.IsNullOrEmpty(txtMailLogin.Text))
             {
                 MessageBox.Show("Por favor, ingrese usuario",
-                              "Campo vacíos",
+                              "Inicio de sesión",
                               MessageBoxButtons.OK,
                               MessageBoxIcon.Warning);
                 return;
@@ -60,7 +60,7 @@ namespace Visual
             if (string.IsNullOrEmpty(txtContraseñaLogin.Text))
             {
                 MessageBox.Show("Por favor, ingrese contraseña",
-                              "Campo vacíos",
+                              "Inicio de sesión",
                               MessageBoxButtons.OK,
                               MessageBoxIcon.Warning);
                 return;
@@ -82,7 +82,7 @@ namespace Visual
             catch (ReglaNegocioException ex)
             {
                 // RN-04: intentos restantes o minutos de bloqueo.
-                MessageBox.Show(ex.Message, "Inicio de sesión", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("Inicio de sesión", ex);
                 return;
             }
 

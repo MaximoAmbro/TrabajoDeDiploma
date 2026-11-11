@@ -28,11 +28,15 @@ namespace Pruebas
                 {
                     evento = Agotar();
                     Cliente ordinario = Fake.Cliente(NivelFidelidad.Bronce);
+                    Fake.ComoCliente(ordinario);
                     primero = Fake.Cliente(NivelFidelidad.Oro);
                     Fake.SuscripcionActiva(primero, GestorSuscripciones.PlanMensual);
+                    Fake.ComoCliente(ordinario);
                     GestorListaEspera.Instance.Inscribir(evento.Id, ordinario.Id);
+                    Fake.ComoCliente(primero);
                     GestorListaEspera.Instance.Inscribir(evento.Id, primero.Id);
                 }
+                Fake.ComoAdministrador();
                 using (var form = new Visual.frmListasEspera { IDUsuario = propietario.Id })
                 {
                     Mostrar(form);
@@ -68,12 +72,17 @@ namespace Pruebas
             {
                 Evento evento = Agotar();
                 Cliente bronce = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(bronce);
                 Cliente oro = Fake.Cliente(NivelFidelidad.Oro);
+                Fake.ComoCliente(oro);
                 Fake.SuscripcionActiva(oro, GestorSuscripciones.PlanMensual);
+                Fake.ComoCliente(bronce);
                 GestorListaEspera.Instance.Inscribir(evento.Id, bronce.Id);
+                Fake.ComoCliente(oro);
                 GestorListaEspera.Instance.Inscribir(evento.Id, oro.Id);
                 GestorSuscripciones.Instance.Cancelar(oro.Id);
                 Assert.IsFalse(GestorSuscripciones.Instance.TieneActiva(oro.Id));
+                Fake.ComoAdministrador();
                 var lista = GestorListaEspera.Instance.DeEvento(evento.Id);
                 CollectionAssert.AreEqual(new[] { oro.Id, bronce.Id }, lista.Select(x => x.IdUsuario).ToArray());
                 Assert.IsTrue(lista[0].ConSuscripcion);
@@ -112,6 +121,7 @@ namespace Pruebas
                     }
                     return;
                 }
+                Fake.ComoAdministrador();
                 foreach (float escala in new[] { 1f, 1.5f })
                 using (var menu = new Visual.frmMenuPropietario { IDUsuario = Fake.Administrador().Id })
                 {

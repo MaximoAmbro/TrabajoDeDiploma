@@ -57,10 +57,14 @@ namespace Pruebas
         {
             Evento evento = Fake.EventoPublicado(25000m, 10);
             Cliente primero = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(primero);
             Cliente segundo = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(segundo);
             Cliente tercero = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(tercero);
             Fake.CompraConfirmada(primero, evento, 1, false);
             Fake.CompraConfirmada(segundo, evento, 2, false);
+            Fake.ComoCliente(tercero);
             GestorCompras.Instance.Iniciar(Fake.Paquete(evento, 1, false), tercero);
             GestorSesion.Instance.Iniciar(Fake.Administrador());
 
@@ -80,8 +84,11 @@ namespace Pruebas
         {
             Evento evento = Fake.EventoPublicado(1000m, 1);
             Cliente comprador = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(comprador);
             Cliente enEspera = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(enEspera);
             Compra compra = Fake.CompraConfirmada(comprador, evento, 1, true);
+            Fake.ComoCliente(enEspera);
             GestorListaEspera.Instance.Inscribir(evento.Id, enEspera.Id);
             ReglaNegocioException duplicada = Assert.ThrowsException<ReglaNegocioException>(() =>
                 GestorListaEspera.Instance.Inscribir(evento.Id, enEspera.Id));
@@ -111,6 +118,7 @@ namespace Pruebas
         {
             Evento evento = Fake.EventoPublicado(1000m, 10);
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            Fake.ComoCliente(cliente);
             Fake.CompraConfirmada(cliente, evento, 1, false);
             GestorSesion.Instance.Iniciar(Fake.Administrador());
             Reporte reporte = GestorReportes.Instance.Crear(ReporteVentasPorEvento.CodigoReporte, Desde, Hasta);

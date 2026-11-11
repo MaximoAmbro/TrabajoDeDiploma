@@ -300,6 +300,12 @@
     <Compile Include="Componentes\BotonPrimario.cs" />
     <Compile Include="Componentes\BotonSecundario.cs" />
     <Compile Include="Componentes\BotonPeligro.cs" />
+    <Compile Include="Propietario\frmControlIngreso.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Propietario\frmControlIngreso.Designer.cs">
+      <DependentUpon>frmControlIngreso.cs</DependentUpon>
+    </Compile>
     <Compile Include="Propietario\frmReportes.cs">
       <SubType>Form</SubType>
     </Compile>

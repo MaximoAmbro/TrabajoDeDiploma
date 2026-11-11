@@ -216,7 +216,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                MessageBox.Show(ex.Message, ex.Regla, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Regla("Devolución", ex);
                 return;
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)

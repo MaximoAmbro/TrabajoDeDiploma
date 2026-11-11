@@ -32,12 +32,14 @@ namespace Negocio
 
         public List<Local> PorPropietario(int idPropietario)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             return RepositorioLocales.Instance.ObtenerPorPropietario(idPropietario);
         }
 
         // Devuelve el Id generado.
         public int Registrar(Local l)
         {
+            GestorSesion.Instance.RequerirAdministrador();
             if (l == null)
             {
                 throw new ArgumentNullException(nameof(l));
