@@ -90,6 +90,7 @@ namespace Pruebas
                 "DELETE FROM Eventos WHERE ID IN (SELECT ID FROM @E); " +
                 "DELETE FROM Locales WHERE ID IN (SELECT ID FROM @L); " +
                 "DELETE FROM Cliente WHERE ID IN (SELECT ID FROM @U); " +
+                "DELETE FROM Propietario WHERE ID IN (SELECT ID FROM @U); " +
                 "DELETE FROM Usuario WHERE ID IN (SELECT ID FROM @U);";
             Ejecutar(consulta, "@Dominio", DominioMail, "@Prefijo", Prefijo);
         }
@@ -150,6 +151,63 @@ namespace Pruebas
             Ejecutar("INSERT INTO Sectores (EventoID, Nombre, Precio, Capacidad) VALUES (@Evento, 'Campo', @Precio, @Capacidad)",
                      "@Evento", evento, "@Precio", precio, "@Capacidad", capacidad);
             return Releer(evento);
+        }
+
+        public static Evento EventoBorradorSinSectores()
+        {
+            Evento evento = EventoPublicado(1000m, 0);
+            Ejecutar("DELETE FROM Sectores WHERE EventoID = @ID; UPDATE Eventos SET Estado = @Estado WHERE ID = @ID",
+                "@ID", evento.Id, "@Estado", GestorEventos.EstadoBorrador);
+            return Releer(evento.Id);
+        }
+
+        public static void CambiarCapacidadDeLocal(int idLocal, int capacidad)
+        {
+            Ejecutar("UPDATE Locales SET Capacidad = @Capacidad WHERE ID = @ID",
+                "@Capacidad", capacidad, "@ID", idLocal);
+        }
+
+        public static Usuario PropietarioSinLocales()
+        {
+            string mail = MailNuevo();
+            byte[] marca = Guid.NewGuid().ToByteArray();
+            string clave = ((char)('A' + marca[0] % 26)).ToString() + Guid.NewGuid().ToString("N") + marca[1].ToString();
+            GestorUsuarios.Instance.Registrar(mail, clave, "Propietario", "Prueba", "Propietario");
+            return RepositorioUsuarios.Instance.ObtenerPorMail(mail);
+        }
+
+        public static void LimpiarDatosReporte()
+        {
+            Ejecutar("DECLARE @L TABLE (ID INT PRIMARY KEY); " +
+                "INSERT INTO @L SELECT ID FROM Locales WHERE Nombre=@Nombre; " +
+                "DECLARE @E TABLE (ID INT PRIMARY KEY); INSERT INTO @E SELECT ID FROM Eventos WHERE LocalID IN (SELECT ID FROM @L); " +
+                "DECLARE @U TABLE (ID INT PRIMARY KEY); INSERT INTO @U SELECT ID FROM Usuario WHERE Mail LIKE @Mail; " +
+                "DECLARE @C TABLE (ID INT PRIMARY KEY); INSERT INTO @C SELECT ID FROM Compras WHERE ID_Usuario IN (SELECT ID FROM @U) " +
+                "UNION SELECT ID_Compra FROM Entradas WHERE ID_Evento IN (SELECT ID FROM @E) AND ID_Compra IS NOT NULL; " +
+                "DELETE s FROM Seguros s JOIN Entradas e ON e.ID=s.ID_Entrada WHERE e.ID_Compra IN (SELECT ID FROM @C) OR e.ID_Evento IN (SELECT ID FROM @E); " +
+                "DELETE FROM Entradas WHERE ID_Compra IN (SELECT ID FROM @C) OR ID_Evento IN (SELECT ID FROM @E); " +
+                "DELETE FROM CompraServicios WHERE ID_Compra IN (SELECT ID FROM @C); DELETE FROM Pagos WHERE ID_Compra IN (SELECT ID FROM @C); " +
+                "DELETE FROM Compras WHERE ID IN (SELECT ID FROM @C); " +
+                "DELETE FROM ListaEspera WHERE ID_Usuario IN (SELECT ID FROM @U) OR ID_Evento IN (SELECT ID FROM @E); " +
+                "DELETE FROM Suscripciones WHERE ID_Usuario IN (SELECT ID FROM @U); DELETE FROM ServiciosEvento WHERE ID_Evento IN (SELECT ID FROM @E); " +
+                "DELETE FROM Sectores WHERE EventoID IN (SELECT ID FROM @E); DELETE FROM Eventos WHERE ID IN (SELECT ID FROM @E); " +
+                "DELETE FROM Cliente WHERE ID IN (SELECT ID FROM @U); DELETE FROM Usuario WHERE ID IN (SELECT ID FROM @U); " +
+                "DELETE FROM Locales WHERE ID IN (SELECT ID FROM @L);",
+                "@Nombre", "Predio Rosario (datos de reporte)", "@Mail", "rpt[0-9][0-9][0-9][0-9]@datos.eventaura.com");
+        }
+
+        public static int ContarDatosReporte()
+        {
+            return Escalar<int>("SELECT (SELECT COUNT(*) FROM Locales WHERE Nombre=@Nombre) + " +
+                "(SELECT COUNT(*) FROM Usuario WHERE Mail LIKE @Mail)",
+                "@Nombre", "Predio Rosario (datos de reporte)", "@Mail", "rpt[0-9][0-9][0-9][0-9]@datos.eventaura.com");
+        }
+
+        public static int ContarSuscripcionesVigentes(int idUsuario)
+        {
+            return Escalar<int>("SELECT COUNT(*) FROM Suscripciones WHERE ID_Usuario = @Usuario " +
+                "AND Activa = 1 AND FechaInicio <= @Hoy AND FechaFin > @Hoy",
+                "@Usuario", idUsuario, "@Hoy", DateTime.Today);
         }
 
         public static Sector AgregarSector(Evento e, decimal precio, int capacidad)

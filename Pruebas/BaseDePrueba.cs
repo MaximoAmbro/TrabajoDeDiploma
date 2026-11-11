@@ -61,6 +61,14 @@ namespace Pruebas
             SqlConnection.ClearAllPools();
         }
 
+        public static void CargarDatosReporte()
+        {
+            string cadena = CadenaDePrueba();
+            if (!new SqlConnectionStringBuilder(cadena).InitialCatalog.EndsWith(SufijoObligatorio, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Los datos de reporte solo se cargan en la base de pruebas.");
+            EjecutarScript(cadena, Path.Combine(RaizDelRepositorio(), "BaseDatos", "03-datos-reporte.sql"));
+        }
+
         public static string CadenaDePrueba()
         {
             ConnectionStringSettings config = ConfigurationManager.ConnectionStrings[NombreCadena];

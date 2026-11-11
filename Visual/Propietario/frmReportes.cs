@@ -23,6 +23,14 @@ namespace Visual
 
         private Reporte reporte;
         private bool cargando;
+        private string carpetaExportacion;
+
+        // El valor por omisión conserva la ruta del usuario; las pruebas pueden aislar la salida.
+        internal string CarpetaExportacion
+        {
+            get { return carpetaExportacion ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "A1.Reportes EVENTAURA"); }
+            set { carpetaExportacion = value; }
+        }
 
         public frmReportes()
         {
@@ -222,7 +230,7 @@ namespace Visual
             {
                 return;
             }
-            string carpeta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "A1.Reportes EVENTAURA");
+            string carpeta = CarpetaExportacion;
             string ruta = Path.Combine(carpeta, reporte.NombreArchivo + ".pdf");
             try
             {

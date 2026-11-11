@@ -78,8 +78,8 @@ namespace Visual
             AlinearAcciones();
         }
 
-        // El contenedor asigna columnas seg?n la vista disponible. La tarjeta del resumen
-        // ocupa como m?ximo una vista; su documento mantiene fuente y contenido y se desplaza
+        // El contenedor asigna columnas según la vista disponible. La tarjeta del resumen
+        // ocupa como máximo una vista; su documento mantiene fuente y contenido y se desplaza
         // dentro de ella cuando no entra. No se confunde el alto del documento con el de la vista.
         private void AjustarEncabezado()
         {
@@ -128,7 +128,7 @@ namespace Visual
                 contenidoCompra.ResumeLayout(true);
                 distribuyendoCompra = false;
             }
-            // Una barra vertical puede cambiar el ancho ?til durante la distribuci?n.
+            // Una barra vertical puede cambiar el ancho útil durante la distribución.
             if (anchoUsado != contenidoCompra.ClientSize.Width) AjustarEncabezado();
         }
 
