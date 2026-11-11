@@ -1,5 +1,52 @@
 # Anexos técnicos T01 a T08 — mapa para el caso de que sean obligatorios
 
+## Re-estimación del 10/11/2026: los anexos como documentos
+
+**JC corrigió el supuesto.** La tabla original (más abajo) calculaba 100 a 144 h de
+**implementar** cada anexo. El trabajo se entrega con simulaciones, habladas con el docente.
+Los anexos se calculan ahora como **documentos verosímiles**:
+- **lo que ya está implementado** se describe sobre el código real;
+- **lo que no está implementado** se presenta como diseño, con el rótulo «Diseño propuesto (no
+  implementado en el prototipo)» (`CORRECCIONES-DOCUMENTO.md`, ítem 24).
+
+**Todas las horas de esta sección son estimadas.**
+
+**⚠ Inconcluso, y hay que preguntárselo al docente con estas palabras.** La Carpeta Modelo
+dice que cada anexo «deberá documentarse **y desarrollarse**» (sección T00). Lo que está
+hablado con el docente, según lo escrito, son las minutas y el estudio de usabilidad. No
+encontré nada escrito que diga que los anexos técnicos pueden entregarse como diseño sin
+implementar. Si el docente exige desarrollarlos, vuelve a valer la tabla original.
+
+**Qué cambió en el código desde el 04/11**, y pasa de diseño a descripción de lo real:
+- **T02:** el logout existe («Volver al inicio» cierra la sesión, T-23, CP-46);
+- **T02:** la aplicación termina al cerrar la última ventana (T-24, CP-47);
+- **T02:** hay un manejador global de errores (T-27).
+
+| Anexo | Real (sobre el código) | Diseño (rotulado) | Claude Code | JC |
+|---|---|---|---|---|
+| T01 Arquitectura | Las 4 capas; diagrama de componentes; persistencia (`Conexion`, transacciones, traducción de errores a reglas); mapa de navegación de las 19 pantallas con código jerárquico | Por qué no es MDI | 4 a 6 h | 0,5 h |
+| T02 Login / logout | Login con PBKDF2 y bloqueo; logout; cierre; manejador de errores | Auditoría (depende de T06) y verificación de integridad al iniciar (depende de T08) | 3 a 4 h | 0,5 h |
+| T03 Encriptado | Hash PBKDF2-HMAC-SHA256, salt, 100.000 iteraciones; la tarjeta no se guarda (RN-30) | Cifrado AES del token de pago, con la clave protegida por DPAPI | 3 a 4 h | 0,5 h |
+| T04 Perfiles | Los dos perfiles fijos y RN-34, como punto de partida | Composite de permisos: clases, DER, secuencia y árbol de ejemplo | 5 a 7 h | 1 h |
+| T05 Idiomas | — (el documento lo excluye, W-05) | Observer: clases, DER de idiomas y leyendas, secuencia del cambio. **JC decide si se hace o se mantiene la exclusión** | 3 a 5 h | 0,5 h |
+| T06a y T06b | El registro de pagos (RN-31) como antecedente | Bitácora con búsqueda combinada; historial de una entidad con restauración | 4 a 6 h | 1 h |
+| T07 Backup | El backup y el `RESTORE VERIFYONLY` hechos el 04/11, que sí ocurrieron | Catálogo, pantalla y restauración desde la aplicación | 3 a 4 h | 0,5 h |
+| T08 Dígitos verificadores | — | DVH y DVV con un **ejemplo calculado de verdad** sobre filas de la semilla, rotulado como ejemplo | 4 a 6 h | 0,5 h |
+| Armado | Pasar los ocho a Word con el formato del documento y agregarlos con pypdf | — | 1 h | 2 a 3 h |
+| **Total estimado** | | | **30 a 43 h** | **7 a 9 h** |
+
+**Total: 37 a 52 horas estimadas**, contra 100 a 144. El subconjunto mínimo (T01, T02, T03 y
+T06a) baja a unas **16 a 22 horas estimadas**.
+
+**Los diagramas (inconcluso).** En esta PC no hay PlantUML, Java ni Graphviz. Sí está Node,
+y con él se puede usar Mermaid (`npx @mermaid-js/mermaid-cli`), que descarga un navegador. No
+lo instalé: hace falta tu permiso. Sin herramienta, los diagramas se dibujan a mano, con 4 a
+8 h estimadas más de JC.
+
+---
+
+# Mapa original del 04/11/2026 (los anexos como implementación)
+
 Preparado el 04/11/2026, mientras se espera la respuesta del docente. **No se armó ningún
 anexo**: esto es el relevamiento de qué pide cada uno, qué existe hoy en el repositorio y
 cuánto falta.

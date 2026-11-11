@@ -1,8 +1,126 @@
 # Plan de la renovación visual de EventAura
 
-Propuesta del 05/11/2026. **No se implementó nada.** Todo lo que se afirma sobre el estado
-actual se midió en el código o sobre la aplicación. Las horas son de implementación (Codex) y
-de revisión; las decisiones son de JC.
+## 0. Plan vigente: orden, dependencias y horas
+
+**Cómo se planifica, por decisión de JC:**
+- por orden y dependencias, **sin fechas**;
+- cada tarea dice quién la hace, de qué depende y cuántas **horas estimadas** lleva;
+- **la entrega real es a principios de diciembre.** Se trabaja al máximo ritmo para terminar
+  antes y tener tiempo de corregir detalles o agregar lo que pida el docente;
+- **nada espera a Máximo:** quedó fuera del camino crítico, y lo que dependía de él lo hace JC;
+- **los agentes trabajan en paralelo** y nunca escriben los mismos archivos (`CLAUDE.md`);
+- **se hace 6B completo:** la limpieza, el rediseño de las 18 y los tres extras visuales. Los
+  recortes quedan en reserva (`ENCARGO-6B-BORRADOR.md`, sección 5).
+
+Las secciones 1 a 9 son el análisis de base del 05/11: siguen valiendo como fundamento. La
+sección 10 es historia (cronogramas con fechas, ya no vigentes).
+
+### 0.1 La secuencia
+
+La columna «Depende de» manda: una tarea arranca cuando terminaron todas las que nombra.
+Dentro de cada agente, el orden de la tabla es el orden de trabajo.
+
+| # | Tarea | Quién | Depende de | Horas estimadas |
+|---|---|---|---|---|
+| **Pruebas del grupo A** (`TANDAS-PRUEBAS-64.md`) | | | | |
+| S-1 | T-44: suscripción y preventa | Codex | — (en curso) | 5 a 7 |
+| S-2 | T-45: listas de espera y menús | Codex | S-1 | 3 a 4 |
+| S-3 | Las dos autorizaciones de T-46: la carpeta de exportación configurable en `Visual/`, y cargar `03-datos-reporte.sql` en la base de pruebas | JC | — | 0,2 |
+| S-4 | T-46: reportes | Codex | S-2, S-3 | 5 a 7 |
+| **Seguridad** (`ENCARGO-SEGURIDAD-BORRADOR.md`; hallazgos en `AUDITORIA-SEGURIDAD.md`) | | | | |
+| SG-0 | Decisiones D-1 (cambios en `BaseDatos/`), D-2 («Cambiar contraseña» en lugar de «¿Olvidaste tu contraseña?») y D-3 (cuándo va SEG-3) | JC | — | 0,2 |
+| SG-1 | SEG-1: cambiar la contraseña exige la actual (**alta**) | Codex | S-2, SG-0 | 3 a 4 |
+| SG-2 | SEG-2: control de ingreso, el QR vale para un único ingreso (**alta**) | Codex | S-2, SG-0 | 8 a 12 |
+| SG-3 | SEG-4 y SEG-5: el perfil Administrador no se asigna desde un método público; contraseñas de los scripts como hash | Codex | SG-1 | 2 a 3 |
+| SG-4 | SEG-3: el negocio verifica quién llama. **Según D-3:** acá (recomendado) o después de S-14 | Codex | SG-3 | 8 a 12 |
+| SG-5 | Prueba manual del control de ingreso con el celular (y un lector USB, si hay) | JC | SG-2 | 0,1 |
+| SG-6 | SEG-6 a SEG-10, las bajas | Codex | — (en cualquier hueco) | 2 |
+| **6B** (`ENCARGO-6B-BORRADOR.md`, versión 3) | | | | |
+| S-5 | T-41: el piloto corregido (R-1 a R-4, foco, `Disposicion.cs`, prueba de serialización). **Si S-3 todavía no está, va antes que S-4** | Codex | S-2, SG-1, SG-2, SG-3 (y SG-4 si D-3 lo pone acá) | 6 a 8 |
+| S-6 | Revisar el código de T-41; adaptar `Captura.exe` a DPI; capturas del piloto a 100, 125 y 150 % | Claude Code | S-5 | 3 a 4 |
+| S-7 | Aprobar las capturas y commitear T-41 | JC | S-6 | 0,25 |
+| S-8 | **Verificar el piloto en Visual Studio** (instrucciones en el encargo, sección 4) | JC | S-7 | 1 a 1,5 (con la instalación) |
+| S-9 | T-47: limpieza de los 18 Designer, con los roles | Codex | S-5 | 4 a 6 |
+| S-10 | T-48: lo que pisa el tema en ejecución, y CP-63 en las 19 | Codex | S-9 | 3 a 4 |
+| — | **Control de JC** (0.3) | JC | S-10 | 0,25 |
+| S-11 | T-39: el cliente, con el patrón en Eventos, Pago, Confirmación e Historial | Codex | S-10, S-8 | 10 a 14 |
+| S-12 | T-49: los tres extras visuales (indicador de pasos, TOTAL destacado, confirmación de éxito) | Codex | S-11 | 10 a 15 |
+| S-13 | T-38: la entrada | Codex | S-10, S-8 | 4 a 6 |
+| S-14 | T-40: la administración | Codex | S-10, S-8, S-4 (las pruebas de reportes protegen el rediseño de `frmReportes`) | 8 a 12 |
+| S-15 | T-50: el PDF de los reportes con los tokens | Codex | S-4 | 1 |
+| S-16 | Capturas de cada tarea de rediseño contra la referencia del piloto, para que JC apruebe | Claude Code | S-11, S-12, S-13, S-14 (una por tarea) | 4 a 6 |
+| — | Las pruebas que cambian a propósito (CP-21 y las de V-6) | Codex | Repartidas en S-11 a S-14 | 2 a 3 |
+| **Cierre de las pruebas** | | | | |
+| S-17 | AH-1 y AH-2 (10.2 y 10.3) como scripts | Claude Code | S-4 | 1 |
+| S-18 | Copiar los reportes de Codex a `docs/` y actualizar los casos, la matriz, `COMO-SE-PROBO.md` y `PRUEBAS-PENDIENTES.md` | Claude Code | S-4 | 2 a 3 |
+| S-19 | JC-R10: escanear dos tickets nuevos con el celular. **Ya se puede:** los PDF están en `TestResults/6A/Tickets/` | JC | — | 0,2 |
+| S-20 | La lista B y C de las 64 (PDF del reporte y pantallas del propietario) | JC | S-4, S-14 | 0,4 |
+| **Después de 6B** | | | | |
+| S-21 | Repetir las verificaciones sobre la aplicación nueva: escala real (125, 150 y 175 %), teclado, excepciones y reserva | Claude Code | S-12, S-13, S-14 | 3 a 4 |
+| S-22 | Regenerar las figuras del instructivo | Claude Code | S-12 | 1 |
+| S-23 | Corregir lo que encuentre S-21 | Codex | S-21 | Sin estimar: depende de lo que aparezca |
+| S-24 | **Tercera medición de usabilidad** e informe | Claude Code | S-21 (y S-23, si hubo) | 4 a 6 |
+
+*Nota:* S-8 suma 45 a 60 min de instalación y 20 a 30 min de verificación.
+
+**El camino crítico:** SG-1 → SG-2 → SG-3 → (SG-4) → S-5 → S-9 → S-10 → S-11 → S-12 → S-13
+→ S-14 → S-21 → S-24. La seguridad suma 13 a 19 h de Codex al principio, o 21 a 31 si SG-4
+también va antes de 6B. El detalle de abajo es solo de 6B.
+- **Codex:** 45 a 65 h estimadas.
+- **Claude Code:** 7 a 10 h.
+- **JC:** S-8 tiene que estar antes de S-11.
+
+**Totales estimados:**
+- **Codex:** 61 a 87 h (13 a 18 de pruebas, 48 a 69 de 6B), más S-23;
+- **Claude Code:** 18 a 25 h;
+- **JC:** unas 3 h de tareas propias, más la aprobación de las capturas.
+
+**Fuera de la secuencia, sin estimar todavía:**
+- **Seguridad: ahora está en la secuencia** (bloque SG-0 a SG-6), con 23 a 33 h estimadas de
+  Codex que se suman a los totales de abajo. Las dos altas (el QR sin control de ingreso y el
+  cambio de contraseña sin autenticar) van antes de 6B.
+- **El documento.** Está en pausa por decisión de JC. Las correcciones están en
+  `CORRECCIONES-DOCUMENTO.md`, y el plan B2 (8 a 12 h estimadas) en
+  `DOCUMENTO-ENTREGABLE.md`. Los anexos T01 a T08 los maneja JC con el docente.
+
+### 0.2 Reglas del trabajo en paralelo que afectan al orden
+
+- **Las herramientas de Claude Code no corren mientras Codex corre pruebas:**
+  - las que ejecutan la batería (S-17), porque las dos usan `BddEventAura_Pruebas`, que se
+    borra y se recrea en cada corrida;
+  - las que abren pantallas o cambian la escala de Windows (S-6, S-16, S-21, S-24), porque
+    comparten el escritorio y una prueba de interfaz de Codex fallaría.
+
+  **JC avisa cuándo Codex no está probando.**
+- **`ESTADO-AGENTES.md` y `TAREAS-CODEX-PRUEBAS.md`:**
+  - no se tocan mientras Codex trabaja;
+  - el encargo de 6B pasa a `TAREAS-CODEX-PRUEBAS.md` en una pausa de Codex, antes de S-5.
+
+### 0.3 El control de JC al cerrar T-47 y T-48
+
+**Por tarea terminada, no por fecha.** Cuando Codex entregue T-48, se compara su reporte con
+estos números del encargo:
+
+| Qué se compara | Estimado | Dónde lo da Codex |
+|---|---|---|
+| Horas reales de T-47 | **4 a 6 h** | Reporte de T-47 |
+| Horas reales de T-48 | **3 a 4 h** | Reporte de T-48 |
+| **Horas reales de las dos juntas** | **7 a 10 h** | Suma de las dos |
+| Líneas de fuente y color borradas de los 18 Designer | **314** (medidas el 10/11) | Reporte de T-47 |
+| Pantallas limpiadas en T-47 | **18** | Reporte de T-47 |
+| Asignaciones de estilo en ejecución reemplazadas | **23 líneas en 5 pantallas** (Historial 8, Reportes 6, Listas de espera 5, Pago 3, Mis locales 1), más la revisión de los pesos de columna de Eventos (auditoría de Codex) | Reporte de T-48 |
+| Filas nuevas de la batería | **25**: 7 de T-41 y 18 de T-48 | La batería al cerrar T-48 debe dar la de T-46 + 25, todas correctas |
+
+**Cómo se lee:**
+- **El factor** es las horas reales de las dos juntas divididas por **10** (el máximo
+  estimado).
+- **Factor de 1 o menos:** el plan sigue igual.
+- **Factor entre 1 y 1,5:** se multiplica el resto de 6B por ese factor (S-11 a S-15,
+  hoy 33 a 48 h) y se sigue sin recortar.
+- **Factor mayor que 1,5:** el encargo subestimó la limpieza. JC decide si saca algo de la
+  reserva.
+- **Si las líneas encontradas se apartan más de un 20 % de las 314,** el reporte tiene que
+  explicar por qué: o la medición del 10/11 estaba mal, o se borró algo de más.
 
 ---
 
@@ -244,7 +362,7 @@ puede comprar»), con el código al final del texto, entre paréntesis.
 
 ---
 
-## 5. Orden de aplicación
+## 5. Orden de aplicación (análisis del 05/11; el orden vigente es la sección 0)
 
 Primero la infraestructura, después lo que el docente ve primero.
 
@@ -322,7 +440,7 @@ y otra vez al final si algo de la compra cambió.
 
 ---
 
-## 7. Resumen de horas (camino A)
+## 7. Resumen de horas (camino A, estimación del 05/11; la vigente es la sección 0)
 
 | Rubro | Horas | Quién |
 |---|---|---|
@@ -365,7 +483,12 @@ y otra vez al final si algo de la compra cambió.
 
 ---
 
-## 10. Cronograma del mes
+## 10. Historia: los cronogramas con fechas (no vigentes)
+
+> **No es el plan.** Se conserva como registro de cómo se planificó entre el 05/11 y el 10/11.
+> JC dejó de planificar con fechas el 10/11: el plan vigente es la sección 0. Lo de abajo
+> incluye dependencias de Máximo que ya no existen y un congelamiento el 27/11 que no era un
+> plazo real.
 
 > **Actualizado el 05/11/2026 con las decisiones de JC:** V-1 a V-6 aprobadas; la fase 0
 > empieza por un **piloto** (`FrmCompraCliente`) que Máximo verifica en Visual Studio antes de
@@ -374,30 +497,72 @@ y otra vez al final si algo de la compra cambió.
 > `TAREAS-CODEX-PRUEBAS.md`, «Sexta tanda», partes 6A y 6B. El sistema de diseño, en
 > `SISTEMA-DISENO.md`.
 
-Supuesto: entrega el **viernes 04/12/2026**, y JC trabaja todos los días. Corren en paralelo
-tres frentes: la renovación (Codex implementa, JC revisa), el documento (Claude Code prepara,
-JC aplica) y lo que depende de otros (Máximo y el docente).
+> **Reemplazado por `ENCARGO-6B-BORRADOR.md` (versión 2), sección 5, el 10/11/2026, por la
+> tarde.**
+> - **Qué cambió:** 6B ahora incluye la limpieza del estilo escrito a mano y el piloto
+>   corregido; los agentes trabajan en paralelo; la verificación de Máximo se hace sobre el
+>   piloto corregido.
+> - **El congelamiento del 27/11 sigue en pie**, con unos 3 días de margen.
+> - **El día por día de abajo queda como historia.**
+>
+> **Re-fechado el 10/11/2026.** 6A terminó el 10/11 (77/77, commit `36a0d80`). Cambios desde
+> la versión del 05/11:
+> - las **64 pruebas de Máximo pasan a nosotros** (decisión de JC del 10/11): grupo A
+>   automatizado por Codex (`TANDAS-PRUEBAS-64.md`), y grupos B y C a cargo de JC (31 min);
+> - el fuente del documento no llegó al 08/11.
+>
+> **El congelamiento del 27/11 no se movió:** lo decide JC.
 
-### Las dos primeras semanas, día por día
+Supuesto: entrega el **viernes 04/12/2026**, y JC trabaja todos los días. **Los dos agentes
+nunca trabajan a la vez:** los días de Codex y los de Claude Code se suman, no se superponen.
 
-| Día | Renovación visual | Pruebas y otros |
+**Lo que no controlamos:**
+- **6B depende de que Máximo verifique el piloto en Visual Studio.** Mientras tanto, Codex hace
+  las pruebas del grupo A, que no dependen de 6B y además lo protegen.
+- **Si Máximo no confirmó al terminar el grupo A (14/11)**, cada día de demora corre 6B un día.
+  Y desde el 18/11 empieza a comerse el punto de control del 21/11 (ver «Si se atrasa»).
+
+### Día por día
+
+| Día | Quién | Qué |
 |---|---|---|
-| **Jue 05/11** | Encargo de 6A listo (Claude Code). JC revisa `git status` y da el turno a Codex | JC: mail al docente sobre T01 a T08; datos de la carátula |
-| **Vie 06 y sáb 07/11** | **6A (Codex):** tema, componentes, DPI, ícono, **ticket nuevo (V-4)** y piloto `FrmCompraCliente`. Batería esperada: 77 | — |
-| **Dom 08/11** | Claude Code: capturas del piloto a 100 %, 125 % y 150 %; mide el QR del ticket nuevo; regenera las figuras | **Máximo:** abre el piloto en Visual Studio. **JC:** aprueba las capturas y **escanea el ticket nuevo: cierra JC-R10**. Vence la espera del fuente del documento |
-| **Lun 09/11** | JC confirma el piloto → arranca **6B**. Si algo falló, se corrige el piloto antes de seguir | Si no llegó el fuente: arranca el plan B2 del documento |
-| **09 al 11/11** | T-38: entrada (login, crear cuenta, cambiar contraseña) | Claude Code: correcciones del documento hasta la página 54 |
-| **12 al 15/11** | T-39: el resto del cliente. **15/11: congelar el circuito de compra** y regenerar las figuras definitivas | Máximo: arranca sus 64 pruebas (lo funcional no cambia con la renovación) |
+| **Mar 10/11** | Claude Code | Planificación: borradores de 6B y de la séptima tanda, clasificación de las 64, este cronograma |
+| | JC | Manda el mensaje a Máximo: piloto en Visual Studio y fuente del documento |
+| **Mié 11/11** | Claude Code | Lo de después de 6A: mueve el reporte, adapta `Captura.exe` a DPI, captura el piloto a 100, 125 y 150 %, mide el QR del ticket nuevo y **avisa a JC que ya puede escanear** |
+| | JC | Aprueba las capturas, **escanea los tickets (JC-R10)** y da el turno a Codex |
+| **Jue 12 al sáb 14/11** | Codex | **Séptima tanda, T-42 a T-46**: grupo A de las 64. Batería esperada: 136. T-46 necesita dos decisiones previas de JC |
+| **Dom 15/11** | Claude Code | Revisa la tanda; actualiza casos, matriz y `COMO-SE-PROBO.md`; AH-1 y AH-2; prepara el PDF del reporte para la lista de JC |
+| | JC | Lista personal de las 64: 21 min. Con el sí de Máximo y el de JC: **«piloto confirmado»** |
+| **Lun 16 al jue 19/11** | Codex | **6B**: T-41 (`Disposicion.cs`), T-38, T-39 y T-40 (`ENCARGO-6B-BORRADOR.md`). Batería esperada: 136 + 48 |
+| | Claude Code | Entre tarea y tarea: capturas de cada tanda contra la referencia del piloto |
+| **Vie 20 y sáb 21/11** | Claude Code | Repite las verificaciones sobre la aplicación nueva (escala real, teclado, excepciones, reserva) y regenera las figuras del instructivo. **21/11, punto de control:** lo que no llegó queda con el tema automático |
+| **Dom 22 y lun 23/11** | Claude Code | **Tercera medición de usabilidad** |
+| | JC | **23/11: arranca la conversión del B2** (ver abajo) |
+| **Mar 24 y mié 25/11** | Claude Code | **Cierra la lista de correcciones**: todas las cifras (casos, cobertura, usabilidad), ítem 23 y figuras |
+| **Jue 26/11** | — | Único día de margen |
+| **Vie 27/11** | — | **Congelamiento del código** |
+| **Sáb 28 al lun 30/11** | JC y Claude Code | B2: aplicar las correcciones a las páginas convertidas, armar con pypdf y reemplazar encabezado y pie |
+| **Mar 01 al jue 03/12** | JC | Revisión final del PDF, última batería, último push, ensayo de la defensa |
+| **Vie 04/12** | | Entrega |
 
-### Las dos últimas semanas
+### Si se atrasa
 
-| Semana | Renovación visual | Documento | Pruebas y otros |
-|---|---|---|---|
-| **3 · 16 al 22/11** | T-40: administración. **21/11, punto de control:** las pantallas que no lleguen quedan con el tema automático (`Tema.Normalizar`), sin rediseño a mano | Resto de la lista de correcciones; anexos T01 a T08 si el docente los pidió | Claude Code repite las verificaciones sobre la aplicación nueva: teclado, escala, excepciones y reserva |
-| **4 · 23 al 29/11** | 23 al 25/11: **tercera medición de usabilidad** (Claude Code). **27/11: congelamiento del código.** Solo correcciones | Cifras finales de usabilidad y figuras definitivas en el documento | Máximo termina sus pruebas el 25/11 |
-| **30/11 al 04/12** | — | Índice, PDF, revisión final | Última batería, último push, ensayo de la defensa |
+| Si… | Entonces |
+|---|---|
+| Máximo confirma después del 15/11 | 6B arranca el día siguiente a su confirmación. Desde el 18/11 no llega T-40 entera: el administrador queda con el tema automático, salvo los botones «Volver» (T-3 a T-5, 2 h), que se hacen igual porque son de teclado |
+| Máximo no responde | JC decide si alcanza con la prueba del host de diseño de .NET, que ya pasó con 6A. Esa prueba no cubre la lectura del Designer por Visual Studio (`ENCARGO-6B-BORRADOR.md`, sección 0). **Si JC tiene Visual Studio en su PC, puede abrirlo él** |
+| Un caso del grupo A encuentra un defecto | Codex para y JC decide: se corrige antes de 6B o queda anotado |
+| El docente pide los anexos T01 a T08 | No entran. Ver «Lo que no tiene margen» |
 
-**Lo que no tiene margen:** el fuente del documento (08/11) y la respuesta del docente sobre
+**Re-estimación de los anexos (10/11).**
+- **Como documentos** (lo real descripto sobre el código y lo demás rotulado «diseño
+  propuesto»), los ocho son **37 a 52 horas estimadas**: 30 a 43 de Claude Code y 7 a 9 de JC.
+- **Entran** si Claude Code los redacta mientras Codex implementa, como ya se trabajó el 10/11.
+- **Depende del docente:** hay que confirmar que acepta los anexos como diseño, porque la
+  Carpeta Modelo dice «documentarse **y desarrollarse**».
+- **Si exige implementarlos**, vale lo de abajo.
+
+**Lo que decía antes (los anexos como implementación):** la respuesta del docente sobre
 T01 a T08 (`ANEXOS-TECNICOS-T01-T08.md`):
 - **los ocho anexos completos** son 100 a 144 horas: no entran junto con la renovación. Habría
   que elegir;

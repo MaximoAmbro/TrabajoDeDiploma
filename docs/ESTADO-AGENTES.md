@@ -11,7 +11,8 @@ Antes de empezar cualquier tarea, cada agente:
 Si el turno no es suyo, o si hay cambios sin commitear que no son de su sesión, no toca nada
 y avisa a JC.
 
-Última actualización: **05/11/2026**, por Claude Code, al cerrar su turno (encargo de la parte 6A y sistema de diseño).
+Última actualización: **10/11/2026**, por Claude Code. Cerró la planificación posterior a 6A:
+borradores de 6B y de la séptima tanda, clasificación de las 64 y cronograma re-fechado.
 
 ---
 
@@ -19,11 +20,14 @@ y avisa a JC.
 
 | | |
 |---|---|
-| **Turno actual** | **JC**: revisar `git status` del encargo y del sistema de diseño, commitear y darle el turno a Codex |
-| Próximo turno | **Codex**: sexta tanda, **solo la parte 6A** (`TAREAS-CODEX-PRUEBAS.md`): tema, componentes, DPI, ícono, ticket nuevo y el piloto `FrmCompraCliente`. Y **PARAR** |
-| Después | **Claude Code**: capturas del piloto, QR del ticket nuevo y figuras. **Máximo**: abre el piloto en Visual Studio. **JC**: aprueba y escanea el ticket |
-| Después de eso | **Codex**: parte 6B (los otros 18), solo si este archivo dice **«piloto confirmado»** |
-| Ramas | `main` local = `main`, `JC` y `respaldo/jc-2026-11-04` en GitHub hasta `98be355`. Los cambios de este turno están **sin commitear**, para que JC los revise |
+| **Turno actual** | **JC**: revisar `git status` de la planificación del 10/11 y mandar el mensaje a Máximo (abajo) |
+| Próximo turno | **Claude Code**: lo de después de 6A (lista al final de este archivo) |
+| Después | **Codex**: **séptima tanda** (`TANDAS-PRUEBAS-64.md`), solo cuando JC la apruebe y la pase a `TAREAS-CODEX-PRUEBAS.md` |
+| Después de eso | **Codex**: parte 6B (`ENCARGO-6B-BORRADOR.md`), solo si este archivo dice **«piloto confirmado»** |
+| Ramas | `main` local = `main` y `JC` en GitHub hasta `36a0d80` (6A). `respaldo/jc-2026-11-04` quedó en `98be355`. Los cambios de este turno están **sin commitear** |
+
+**Codex: 6A está cerrada (77/77) y no hay encargo vigente para vos.** Los dos borradores de
+`docs/` no son encargos hasta que JC los apruebe.
 
 **Estado del piloto: pendiente.** Esta línea la cambia Claude Code a «piloto confirmado» cuando
 JC lo indique.
@@ -65,10 +69,10 @@ aprueba (`docs/PLAN-RENOVACION-VISUAL.md`).
 
 | Qué | Para cuándo | Si no llega |
 |---|---|---|
-| El fuente editable del documento | **08/11** | El 09/11 arranca el plan B2 (`DOCUMENTO-ENTREGABLE.md`) |
-| Sus 64 pruebas manuales (propietario, reportes, suscripción) | 25/11 | Buena parte tiene prueba automática (CP-21, CP-35 a CP-38, CP-56, CP-58, CP-60); lo visual queda sin mirar |
-| Confirmar RN-35 reescrita (prioridad de suscriptores en la lista de espera) | Antes de aplicar las correcciones del documento | Queda como está en `docs/` |
-| **Verificar el piloto en Visual Studio** (cierra también CX-03): abrir `FrmCompraCliente` después de la parte 6A. Mensaje para mandarle: «Mensaje para Máximo», abajo | **08/11**: la parte 6B no arranca sin esto | La renovación se frena en el piloto |
+| El fuente editable del documento | Venció el 08/11; se le volvió a preguntar el 10/11 | Plan B2: conversión desde el 23/11 (`PLAN-RENOVACION-VISUAL.md`, sección 10) |
+| ~~Sus 64 pruebas manuales~~ | **Pasaron a nosotros el 10/11** (decisión de JC) | `PRUEBAS-64-CLASIFICACION.md` y `TANDAS-PRUEBAS-64.md` |
+| Confirmar RN-35 reescrita (prioridad de suscriptores en la lista de espera) | Antes de aplicar las correcciones del documento | Queda como está en `docs/`. La prueba PA-19 comprueba lo que el sistema hace hoy |
+| **Verificar el piloto en Visual Studio** (cierra también CX-03): abrir `FrmCompraCliente` **y `frmEventosCliente`**. Mensaje: «Mensaje para Máximo», abajo | **15/11**: desde ahí, cada día de demora corre 6B | La renovación se frena en el piloto |
 
 ### Lo que depende del docente
 
@@ -112,13 +116,29 @@ principio.
 **Pendiente de JC:** aprobar `docs/SISTEMA-DISENO.md` (la sección 7 dice qué no da WinForms y
 qué se hace en cambio) y, según el docente, T01 a T08.
 
-## Mensaje para Máximo (verificación del piloto)
+## Mensaje para Máximo (verificación del piloto y fuente del documento), del 10/11
 
-> Hacé pull de `main`, compilá la solución y abrí en Visual Studio el diseñador de
-> `Visual/Cliente/FrmCompraCliente.cs`: decime si se dibuja sin la página de error y mandame
-> una captura.
-> Antes de abrirlo, poné Windows al 100 % (o aceptá «reiniciar con escala al 100 %» si Visual
-> Studio lo ofrece), y cerralo **sin guardar**, aunque te pregunte.
+> Máxi, te pido dos cosas cuando puedas:
+>
+> **1) Una prueba rápida en Visual Studio.** Hacé pull de `main` y compilá. Antes de abrir
+> nada, poné Windows al 100 %. Si Visual Studio te ofrece «reiniciar con escala al 100 %»,
+> aceptá.
+>
+> Abrí en el diseñador estas dos pantallas:
+> - `Visual/Cliente/FrmCompraCliente.cs`, la de compra, que ya tiene el diseño nuevo;
+> - `Visual/Cliente/frmEventosCliente.cs`, el listado de eventos.
+>
+> Para cada una decime si se dibuja normal o si sale una página de error o de advertencias.
+> Si sale, copiame el texto que muestra. Mandame una captura de las dos.
+>
+> **Cerralas sin guardar**, aunque te pregunte. Vos trabajás al 150 % y, si guarda, Visual
+> Studio reescribe todas las medidas de la pantalla y pisa el diseño nuevo. Después podés
+> volver a tu escala.
+>
+> **2) ¿Conseguiste el Word editable del documento?** Necesito saberlo para organizar lo que
+> queda.
+
+Cómo se lee la respuesta: `ENCARGO-6B-BORRADOR.md`, sección 0.
 
 ## Observaciones de este turno
 
@@ -134,12 +154,11 @@ qué se hace en cambio) y, según el docente, T01 a T08.
 
 ## Qué debería hacer el próximo agente
 
-**Codex**, cuando JC le dé el turno: la **parte 6A** de la sexta tanda
-(`TAREAS-CODEX-PRUEBAS.md`), con `docs/SISTEMA-DISENO.md` como referencia. Batería esperada:
-77. Reporte en `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>-6A.md`. **Parar ahí: la 6B espera la
-confirmación del piloto.**
+**Codex:** nada hasta que JC apruebe la séptima tanda. 6A está terminada (reporte en
+`Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-10-6A.md`).
 
-**Claude Code**, después de 6A:
+**Claude Code**, después de 6A (pendiente; el 10/11 se hizo solo la planificación y se repitió
+el host de diseño sobre la compilación de 6A: `docs/verificaciones/disenador-host-6A.txt`):
 1. mover el reporte a `docs/` y revisar el código;
 2. **adaptar sus herramientas a la compatibilidad con DPI.** `Captura.exe` (figuras y
    `VerificarEscala`) se compila sin manifiesto y no escalaría como la aplicación: tiene que

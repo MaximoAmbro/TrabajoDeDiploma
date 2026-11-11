@@ -47,7 +47,7 @@ Plata con 4 compras, en Windows 11 a escala 100 %, 1920 × 1080:
 | Cerrar la compra con la X con un paquete armado | Se descarta sin preguntar | Pregunta, con «No» por defecto | — | ▲ |
 | «Comprar» sin entradas | Habilitado; lleva al aviso «RN-13» | Deshabilitado | — | ▲ |
 | Hallazgos abiertos | 13 (2 de severidad mayor) | **10 (ninguno mayor)**: 3 resueltos, 1 nuevo (U-14) que también se resolvió | — | ▲ |
-| Plan de mejora pendiente | 5,5 pt (22 h) | **3,0 pt (12 h)** | — | ▲ |
+| Plan de mejora pendiente (esfuerzo estimado) | 5,5 pt (22 h estimadas) | **3,0 pt (12 h estimadas)** | — | ▲ |
 
 **Lectura.**
 - **Las métricas de la tarea no cambiaron, y no debían cambiar.** El ejemplo del documento
@@ -418,9 +418,10 @@ promedio.
 
 ### Plan de mejora recalculado
 
-1 punto equivale a 4 horas. Todo cae en `Visual/`.
+El esfuerzo es **estimado**, no medido: 1 punto equivale a 4 horas estimadas. Todo cae en
+`Visual/`.
 
-| Prioridad | Acción correctiva | Hallazgo | Esfuerzo |
+| Prioridad | Acción correctiva | Hallazgo | Esfuerzo estimado |
 |---|---|---|---|
 | ~~1~~ | ~~Terminar la aplicación al cerrar la última ventana; confirmar en el armado~~ | U-01 | Hecho |
 | ~~2~~ | ~~Foco y rótulo en la cantidad~~ | U-04 | Hecho |
@@ -435,10 +436,10 @@ promedio.
 | 7 | Orden de tabulación de «Crear cuenta» y del listado | U-10 | 0,25 pt |
 | 8 | Nombres accesibles en campos y botones del flujo de compra | U-12 | 0,5 pt |
 | 9 | «Mostrar contraseña»; quitar el botón «Modificar» del login | U-11, U-13 | 0,25 pt |
-| | **Total pendiente** | | **3,0 pt (12 h)**, antes 5,5 pt (22 h) |
+| | **Total pendiente** | | **3,0 pt (12 h estimadas)**, antes 5,5 pt (22 h estimadas) |
 
 **Las prioridades 1, 2 y 4 son las que más pesan en la experiencia de P3 y P6**, los perfiles
-con SUS «D». Corrigen la fricción F-1 y los errores E-C y E-D. Suman 0,75 puntos (3 horas).
+con SUS «D». Corrigen la fricción F-1 y los errores E-C y E-D. Suman 0,75 puntos (3 horas estimadas).
 
 ## 11. Limitaciones del estudio
 
@@ -471,7 +472,7 @@ con SUS «D». Corrigen la fricción F-1 y los errores E-C y E-D. Suman 0,75 pun
 - **Todos los criterios comprometidos se cumplen.**
 - **La segunda medición encontró un hallazgo nuevo**, el encabezado cortado, que también se
   corrigió.
-- **Lo que queda son diez hallazgos menores**, por 12 horas. Los encabeza el teclado en el
+- **Lo que queda son diez hallazgos menores**, con un esfuerzo estimado de 12 horas. Los encabeza el teclado en el
   login y el pago.
 
 ## 13. Fuera del alcance de este informe

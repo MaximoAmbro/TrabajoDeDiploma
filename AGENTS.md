@@ -33,11 +33,11 @@ reportes se escriben para el otro agente, no solo para JC.
 
 ### Antes de empezar: `docs/ESTADO-AGENTES.md`
 
-- **Los dos agentes lo leen antes de hacer cualquier cosa.** Dice de quién es el turno, en
-  qué tarea está cada uno, qué quedó pendiente y qué está bloqueado.
+- **Los dos agentes lo leen antes de hacer cualquier cosa.** Dice en qué tarea está cada uno,
+  qué quedó pendiente y qué está bloqueado.
 - Lo escribe solo Claude Code. Codex no lo modifica: reporta sus cambios de estado en su
   reporte final, y JC se los pasa a Claude Code.
-- Si el turno no es tuyo, no toques nada y avisá a JC.
+- Si tu tarea no figura ahí ni te la dio JC en esta sesión, no empieces: avisá a JC.
 
 ### Reparto de carpetas
 
@@ -54,14 +54,23 @@ reportes se escriben para el otro agente, no solo para JC.
 - Las pruebas manuales que surjan del trabajo de Codex van en su reporte final, con qué
   probar y qué resultado se espera. Claude Code las pasa a `docs/PRUEBAS-PENDIENTES.md`.
 - Codex deja sus reportes en `Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>.md`. Claude Code los
-  mueve a `docs/` en su turno siguiente.
+  copia a `docs/`, y el original se borra recién cuando Codex no está trabajando.
 
-### Un agente por vez
+### Trabajo en paralelo: nunca los mismos archivos
 
-- **Nunca trabajan los dos agentes al mismo tiempo.** El turno está en
-  `docs/ESTADO-AGENTES.md`.
-- Al empezar, el agente corre `git status`. Si hay cambios sin commitear que no son de su
-  sesión, se detiene y avisa a JC antes de modificar nada.
+- **Los dos agentes pueden trabajar al mismo tiempo; es lo normal.** La regla es otra: **dos
+  agentes nunca escriben los mismos archivos.** Cada uno escribe solo en su zona (tabla de
+  arriba).
+- **Dos excepciones mientras Codex trabaja:** Claude Code no modifica
+  `docs/ESTADO-AGENTES.md` ni `docs/TAREAS-CODEX-PRUEBAS.md`, porque Codex los está usando para
+  orientarse. Los actualiza cuando JC avisa que Codex terminó. Mientras tanto, lo nuevo va en
+  borradores aparte.
+- Lo que un agente lee de la zona del otro mientras el otro trabaja puede estar a medio
+  escribir. Si algo se ve incompleto o inconsistente, se anota como «a confirmar cuando
+  termine», no como un hecho.
+- Al empezar, el agente corre `git status`. Los cambios sin commitear en la zona del otro
+  agente son esperables: no se tocan ni se commitean. Si hay cambios sin commitear **en la
+  zona propia** que no son de su sesión, se detiene y avisa a JC antes de modificar nada.
 - Cuando el agente termina su lista, **para**: no busca qué más mejorar por su cuenta. Si ve
   algo, lo anota en el reporte para que decida JC.
 - El reporte final dice qué se hizo, qué quedó pendiente, qué se encontró fuera de la zona
@@ -71,7 +80,8 @@ reportes se escriben para el otro agente, no solo para JC.
 
 - **Ningún agente commitea sin que JC haya revisado `git status`** y lo haya autorizado en
   esa sesión.
-- Commits por tema (interfaz, pruebas, herramientas, documentación), nunca uno gigante.
+- Commits por tema (interfaz, pruebas, herramientas, documentación), nunca uno gigante. Con
+  los dos agentes en paralelo, cada commit lleva solo archivos de una zona.
 - **Ningún agente hace `git push`**, `push --force` ni abre pull requests. Publicar lo decide
   y lo hace JC, de acuerdo con Máximo.
 
