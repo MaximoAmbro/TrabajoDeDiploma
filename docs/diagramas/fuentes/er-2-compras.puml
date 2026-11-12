@@ -1,0 +1,90 @@
+@startuml er-2-compras
+!include _estilo.iuml
+skinparam nodesep 22
+skinparam ranksep 40
+' DER, vista 2 de 2: compra, pago, entradas, servicios contratados y seguro.
+' Fuente: BaseDatos/01-esquema.sql y 04-seguridad-ingreso.sql, más el CHECK de Entradas.Estado.
+' Usuario, Eventos, Sectores y Servicios están completos en la vista 1: acá solo su clave.
+
+entity Usuario {
+  * ID : INT <<PK>>
+}
+entity Eventos {
+  * ID : INT <<PK>>
+}
+entity Sectores {
+  * ID : INT <<PK>>
+}
+entity Servicios {
+  * ID : INT <<PK>>
+}
+entity Compras {
+  * ID : INT <<PK>>
+  --
+  * ID_Usuario : INT <<FK>>
+  * FechaCompra : DATETIME
+  * Estado : VARCHAR(12) <<CK>>
+  * NivelAplicado : VARCHAR(8)
+  * DescuentoAplicado : DECIMAL(4,3)
+  * BaseEntradas : DECIMAL(12,2)
+  * MontoDescuento : DECIMAL(12,2)
+  * MontoServicios : DECIMAL(12,2)
+  * CargoServicio : DECIMAL(12,2)
+  * MontoSeguro : DECIMAL(12,2)
+  * ConSeguro : BIT
+  * TotalPagado : DECIMAL(12,2)
+  * MontoReembolsado : DECIMAL(12,2)
+  ReservaVence : DATETIME
+}
+entity Entradas {
+  * ID : INT <<PK>>
+  --
+  * ID_Evento : INT <<FK>>
+  * ID_Usuario : INT <<FK>>
+  ID_Compra : INT <<FK>>
+  ID_Sector : INT <<FK>>
+  * Precio : DECIMAL(12,2)
+  CantidadVendida : INT
+  * FechaVenta : DATETIME
+  * Estado : VARCHAR(12) <<CK>>
+  CodigoQR : VARCHAR(64) <<UQ>>
+  FechaIngreso : DATETIME
+}
+entity Pagos {
+  * ID : INT <<PK>>
+  --
+  * ID_Compra : INT <<FK>>
+  * FechaPago : DATETIME
+  * Estado : VARCHAR(10) <<CK>>
+  * Ultimos4 : CHAR(4) <<CK>>
+  * Token : VARCHAR(64)
+  Motivo : VARCHAR(80)
+}
+entity CompraServicios {
+  * ID : INT <<PK>>
+  --
+  * ID_Compra : INT <<FK>>
+  * ID_Servicio : INT <<FK>>
+  * Cantidad : INT
+  * PrecioUnit : DECIMAL(12,2)
+}
+entity Seguros {
+  * ID : INT <<PK>>
+  --
+  * ID_Entrada : INT <<FK>>
+  * Precio : DECIMAL(12,2)
+  * VenceEl : DATETIME
+}
+
+Usuario "1$_" ||--o{ "0..*$_" Compras
+Compras "1$_" ||-down-o{ "0..*$_" Pagos
+Compras "0..1$_" |o--o{ "$_ 0..*" Entradas
+Compras "1$_" ||--o{ "0..*$_" CompraServicios
+CompraServicios "0..*$_" }o-down-|| "1$_" Servicios
+Usuario "1$_" ||--o{ "0..*$_" Entradas
+Eventos "1$_" ||--o{ "0..*$_" Entradas
+Sectores "0..1$_" |o--o{ "0..*$_" Entradas
+Entradas "1$_" ||--o{ "0..*$_" Seguros
+
+Pagos -[hidden]down- CompraServicios
+@enduml

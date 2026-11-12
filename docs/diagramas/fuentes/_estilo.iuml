@@ -1,0 +1,36 @@
+' Estilo común de los diagramas de EventAura. Se incluye al principio de cada .puml.
+' Letra de 12 px: el renderizador calcula el ancho de inserción para que quede en 8,5 pt.
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam monochrome false
+skinparam backgroundColor white
+skinparam ArrowColor #333333
+skinparam ClassBorderColor #333333
+skinparam ClassBackgroundColor #F7F7F7
+skinparam ClassAttributeFontSize 12
+skinparam ClassStereotypeFontSize 12
+skinparam StateBorderColor #333333
+skinparam StateBackgroundColor #F7F7F7
+skinparam NoteBackgroundColor #FFFBE6
+skinparam NoteBorderColor #999999
+skinparam NoteFontSize 12
+skinparam UsecaseBorderColor #333333
+skinparam UsecaseBackgroundColor #F7F7F7
+skinparam ActorBorderColor #333333
+skinparam ParticipantBorderColor #333333
+skinparam ParticipantBackgroundColor #F7F7F7
+skinparam SequenceLifeLineBorderColor #888888
+skinparam EntityBorderColor #333333
+skinparam EntityBackgroundColor #F7F7F7
+skinparam RoundCorner 6
+skinparam ClassAttributeIconSize 0
+hide circle
+' Smetana apoya la multiplicidad del extremo de llegada sobre la punta de la flecha y la tapa.
+' $_ son cuatro espacios duros que la corren a la izquierda: se escribe "1$_", "0..*$_".
+!$_ = %chr(160) + %chr(160) + %chr(160) + %chr(160)
+skinparam SequenceGroupFontSize 12
+skinparam SequenceGroupHeaderFontSize 12
+skinparam SequenceDividerFontSize 12
+skinparam SequenceReferenceFontSize 12

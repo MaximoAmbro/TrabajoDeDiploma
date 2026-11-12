@@ -1,0 +1,29 @@
+@startuml secuencia-compra-3-emision
+!include _estilo.iuml
+hide footbox
+' Secuencia de CU «Comprar paquete», parte 3 de 3: emisión de las entradas con pago aprobado.
+' Fuente: Repo/GestorCompras.cs (Confirmar, segunda mitad) y Visual/Cliente/FrmCompraCliente.cs.
+
+boundary "Frm\nCompraCliente" as Frm
+boundary "frm\nPago" as FP
+control "Gestor\nCompras" as GC
+participant "Repositorio\nEntradas" as RE
+control "Generador\nQR" as QR
+participant "Repositorio\nCompras" as RC
+control "Gestor\nFidelizacion" as GF
+
+GC -> RE : ObtenerPorCompra\n(id)
+RE --> GC : entradas Pendiente
+loop por cada entrada
+  GC -> QR : NuevoCodigo()\n[RN-18]
+  QR --> GC : código QR
+end
+GC -> RC : Confirmar(..)\n[una transacción]
+RC --> GC : true
+GC -> GF : ObtenerCliente(id)
+GC -> GF : ReevaluarNivel(..)
+GC -> GF : AscenderSiCorresponde(..)\n[RN-22, RN-23]
+GC --> FP : true
+FP --> Frm : OK
+Frm -> Frm : genera el ticket\nPDF y abre\nfrmConfirmacion
+@enduml

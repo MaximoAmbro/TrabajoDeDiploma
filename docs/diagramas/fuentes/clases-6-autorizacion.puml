@@ -1,0 +1,40 @@
+@startuml clases-6-autorizacion
+!include _estilo.iuml
+left to right direction
+skinparam nodesep 12
+skinparam ranksep 140
+hide empty members
+' Diagrama de clases, vista 6 de 8: verificación de identidad y de perfil en el negocio.
+' Fuente: llamadas a GestorSesion en Repo/*.cs. Cada gestor verifica quién llama antes de
+' operar (RN-34, RN-41, RN-42). Las demás dependencias entre gestores están en la tabla de
+' justificación, y las operaciones de cada gestor en las vistas 4 y 5.
+
+class GestorUsuarios
+class GestorEventos
+class GestorLocales
+class GestorIngresos
+class GestorReportes
+class GestorCompras
+class GestorPaquetes
+class GestorFidelizacion
+class GestorSuscripciones
+class GestorListaEspera
+class GestorSesion <<Singleton>> {
+  + UsuarioActual : Usuario
+  + Iniciar(Usuario)
+  + RequerirAdministrador()
+  + RequerirUsuario(int)
+  + Cerrar()
+}
+
+GestorUsuarios ..> GestorSesion : Iniciar,\nRequerirAdministrador
+GestorEventos ..> GestorSesion : RequerirAdministrador
+GestorLocales ..> GestorSesion : RequerirAdministrador
+GestorIngresos ..> GestorSesion : RequerirAdministrador
+GestorReportes ..> GestorSesion : UsuarioActual
+GestorCompras ..> GestorSesion : RequerirUsuario
+GestorPaquetes ..> GestorSesion : RequerirUsuario
+GestorFidelizacion ..> GestorSesion : RequerirUsuario
+GestorSuscripciones ..> GestorSesion : RequerirUsuario
+GestorListaEspera ..> GestorSesion : RequerirUsuario,\nRequerirAdministrador
+@enduml

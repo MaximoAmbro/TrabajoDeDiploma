@@ -1,0 +1,70 @@
+@startuml clases-4-negocio-compra
+!include _estilo.iuml
+skinparam nodesep 8
+skinparam ranksep 40
+hide empty members
+' Diagrama de clases, vista 4 de 8: capa de Negocio, operaciones de los gestores de la compra
+' (proyecto Repositorio, namespace Negocio). Fuente: Repo/*.cs. Operaciones públicas con el tipo
+' de cada parámetro. Las dependencias entre gestores están en la vista 6; el Singleton, en la 8.
+
+class GestorCompras <<Singleton>> {
+  + Iniciar(Paquete, Cliente) : Compra
+  + Confirmar(Compra, DatosTarjeta) : bool
+  + Liberar(Compra)
+  + LiberarVencidas() : int
+  + VencimientoDe(Compra) : DateTime
+  + ObtenerPorId(int) : Compra
+  + EntradasDe(Compra) : List<Entrada>
+  + PagosDe(Compra) : List<Pago>
+  + SegurosDe(Compra) : List<Seguro>
+  + HistorialDe(int) : List<Compra>
+  + Reembolsar(List<Entrada>) : decimal
+  + ValidarTarjeta(DatosTarjeta)
+}
+class PasarelaSimulada <<Singleton>> {
+  + Cobrar(DatosTarjeta, decimal) : ResultadoPago
+}
+class GeneradorQR <<Singleton>> {
+  + NuevoCodigo() : string
+}
+class GestorPaquetes <<Singleton>> {
+  + ServiciosDe(int) : List<Servicio>
+  + Nuevo(int, int) : Paquete
+  + AgregarEntradas(Paquete, int, int)
+  + AgregarServicio(Paquete, int)
+  + QuitarServicio(Paquete, int)
+  + Validar(Paquete)
+  + DisponiblesDe(int) : int
+  + CantidadEntradas(Paquete) : int
+  + SubtotalEntradas(Paquete) : decimal
+  + SubtotalServicios(Paquete) : decimal
+}
+class GestorFidelizacion <<Singleton>> {
+  + ObtenerCliente(int) : Cliente
+  + ComprasEnVentana(int, DateTime) : int
+  + DeterminarNivel(int, DateTime) : NivelFidelidad
+  + PorcentajePara(NivelFidelidad) : decimal
+  + CalcularDescuento(Cliente, Paquete) : ResumenDescuento
+  + ReevaluarNivel(Cliente, DateTime)
+  + AscenderSiCorresponde(Cliente, DateTime)
+}
+class GestorSuscripciones <<Singleton>> {
+  + Contratar(int, string) : Suscripcion
+  + Cancelar(int)
+  + ActivaDe(int) : Suscripcion
+  + TieneActiva(int) : bool
+  + PrecioDe(string) : decimal
+}
+class GestorListaEspera <<Singleton>> {
+  + Inscribir(int, int)
+  + EstaInscripto(int, int) : bool
+  + DeEvento(int) : List<ListaEspera>
+}
+
+GestorCompras -[hidden]down- PasarelaSimulada
+PasarelaSimulada -[hidden]down- GeneradorQR
+GestorPaquetes -[hidden]down- GestorFidelizacion
+GestorFidelizacion -[hidden]down- GestorSuscripciones
+GestorSuscripciones -[hidden]down- GestorListaEspera
+GestorCompras -[hidden]right- GestorPaquetes
+@enduml

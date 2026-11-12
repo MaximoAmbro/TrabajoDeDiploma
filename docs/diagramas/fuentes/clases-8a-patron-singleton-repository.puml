@@ -1,0 +1,46 @@
+@startuml clases-8a-patron-singleton-repository
+!include _estilo.iuml
+skinparam nodesep 30
+skinparam ranksep 45
+hide empty members
+' Diagrama de clases, vista 8a: patrones Singleton y Repository, con un caso real de cada uno.
+' Fuente: Repo/GestorCompras.cs, Datos/RepositorioBase.cs, Datos/RepositorioCompras.cs,
+' Datos/Conexion.cs. La misma estructura de Singleton se repite en 28 clases (ver el texto).
+
+class GestorCompras <<Singleton>> {
+  - {static} <U+005F>instance : GestorCompras
+  + {static} Instance : GestorCompras
+  - GestorCompras()
+  + Iniciar(Paquete, Cliente) : Compra
+  + Confirmar(Compra, DatosTarjeta) : bool
+}
+abstract class RepositorioBase <<Repository>> {
+  # AbrirConexion() : SqlConnection
+  # CrearComando(…) : SqlCommand
+}
+class RepositorioCompras <<Singleton, Repository>> {
+  - {static} <U+005F>instance : RepositorioCompras
+  + {static} Instance : RepositorioCompras
+  - RepositorioCompras()
+  + ObtenerPorId(int) : Compra
+  + Confirmar(…) : bool
+}
+class Conexion <<Singleton>> {
+  - {static} <U+005F>instance : Conexion
+  + {static} Instance : Conexion
+  - Conexion()
+  + Crear() : SqlConnection
+}
+class Compra <<entidad>>
+
+GestorCompras ..> RepositorioCompras : Instance
+RepositorioBase <|-- RepositorioCompras
+RepositorioBase ..> Conexion : Instance
+RepositorioCompras ..> Compra : devuelve
+
+note bottom of RepositorioCompras
+  Repository: el único lugar con SQL
+  de Compras. El negocio pide y recibe
+  entidades, nunca filas ni SQL.
+end note
+@enduml

@@ -1,0 +1,32 @@
+@startuml secuencia-compra-1-reserva
+!include _estilo.iuml
+hide footbox
+' Secuencia de CU «Comprar paquete», parte 1 de 3: reserva del cupo.
+' Fuente: Visual/Cliente/FrmCompraCliente.cs y Repo/GestorCompras.cs (Iniciar).
+
+actor Cliente
+boundary "Frm\nCompraCliente" as Frm
+control "Gestor\nCompras" as GC
+control "Gestor\nSesion" as GS
+control "Gestor\nPaquetes" as GP
+control "Gestor\nFidelizacion" as GF
+participant "Repositorio\nCompras" as RC
+
+Cliente -> Frm : confirma
+Frm -> GC : Iniciar(p, c)
+GC -> GS : RequerirUsuario\n(c.Id) [RN-41]
+GC -> GP : Validar(p)
+GC -> GP : VerificarPreventa(..)\n[RN-39]
+GC -> GF : CalcularDescuento(c, p)
+GF --> GC : ResumenDescuento\n[RN-19, RN-22]
+GC -> RC : Iniciar(compra, servicios,\nentradas) [RN-15]
+alt hay cupo
+  RC --> GC
+  GC --> Frm : compra
+  Frm -> Frm : abre frmPago\n(parte 2)
+else sin cupo en un sector
+  RC --> GC : sin cupo
+  GC --> Frm : excepción
+  Frm --> Cliente : cupo agotado
+end
+@enduml

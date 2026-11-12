@@ -1,0 +1,66 @@
+@startuml clases-2-dominio-compra
+!include _estilo.iuml
+skinparam nodesep 22
+skinparam ranksep 32
+hide empty members
+' Diagrama de clases, vista 2 de 6: la compra y su pago (proyecto Entidades).
+' Fuente: Entidade/*.cs. Usuario, Evento y Servicio están completas en la vista 1, y Entrada
+' en la vista 3. Las propiedades IdX no se repiten como atributo (regla R1).
+
+class Usuario <<ver vista 1>>
+class Evento <<ver vista 1>>
+class Servicio <<ver vista 1>>
+class Entrada <<ver vista 3>>
+class Paquete <<en memoria>> {
+  + ConSeguro : bool
+}
+class Compra {
+  + Id : int
+  + FechaCompra : DateTime
+  + Estado : EstadoCompra
+  + NivelAplicado : NivelFidelidad
+  + DescuentoAplicado : decimal
+  + BaseEntradas : decimal
+  + MontoDescuento : decimal
+  + MontoServicios : decimal
+  + CargoServicio : decimal
+  + MontoSeguro : decimal
+  + ConSeguro : bool
+  + TotalPagado : decimal
+  + MontoReembolsado : decimal
+  + ReservaVence : DateTime?
+}
+class Pago {
+  + Id : int
+  + FechaPago : DateTime
+  + Estado : EstadoPago
+  + Ultimos4 : string
+  + Token : string
+  + Motivo : string
+}
+class CompraServicio {
+  + Id : int
+  + Cantidad : int
+  + PrecioUnit : decimal
+}
+enum EstadoCompra {
+  Pendiente
+  Confirmada
+  Reembolsada
+  Vencida
+}
+enum EstadoPago {
+  Aprobado
+  Rechazado
+}
+
+Paquete "0..*" --> "1$_" Evento : IdEvento
+Paquete "0..1" --> "0..*$_" Entrada : Entradas
+Paquete "0..*" --> "0..*$_" Servicio : Servicios
+Compra "0..*" --> "1$_" Usuario : IdUsuario
+Pago "0..*" --> "1$_" Compra : IdCompra
+CompraServicio "0..*" --> "1$_" Compra : IdCompra
+CompraServicio "0..*" --> "1$_" Servicio : IdServicio
+Usuario -[hidden]right- EstadoCompra
+EstadoCompra -[hidden]right- EstadoPago
+@enduml

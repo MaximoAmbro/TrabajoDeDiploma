@@ -1,0 +1,86 @@
+@startuml clases-1-dominio-catalogo
+!include _estilo.iuml
+skinparam nodesep 22
+skinparam ranksep 32
+hide empty members
+' Diagrama de clases, vista 1 de 6: entidades de cuentas y catálogo (proyecto Entidades).
+' Fuente: Entidade/*.cs. Las propiedades IdX que implementan una asociación no se repiten
+' como atributo: la asociación ya las representa (regla R1). Ver la tabla de justificación.
+
+class Usuario {
+  + Id : int
+  + Nombre : string
+  + Apellido : string
+  + Mail : string
+  + Contraseña : string
+  + TipoUsuario : string
+  + IntentosFallidos : int
+  + BloqueadoHasta : DateTime?
+}
+class Cliente {
+  + Nivel : NivelFidelidad
+  + FechaUltimaEvaluacion : DateTime?
+  + ComprasUltimos12Meses : int
+}
+class Propietario
+class Local {
+  + Id : int
+  + Nombre : string
+  + Direccion : string
+  + Capacidad : int
+}
+class Evento {
+  + Id : int
+  + Nombre : string
+  + Fecha : DateTime
+  + Hora : TimeSpan
+  + Categoria : string
+  + Estado : string
+  + FinPreventa : DateTime?
+}
+class Sector {
+  + Id : int
+  + Nombre : string
+  + Precio : decimal
+  + Capacidad : int
+  + CantidadReservada : int
+}
+class Servicio {
+  + Id : int
+  + Nombre : string
+  + Tipo : string
+  + Precio : decimal
+  + Activo : bool
+}
+class ServicioEvento
+class Suscripcion {
+  + Id : int
+  + Plan : string
+  + FechaInicio : DateTime
+  + FechaFin : DateTime
+  + Precio : decimal
+  + Activa : bool
+}
+class ListaEspera {
+  + Id : int
+  + FechaAlta : DateTime
+  + ConSuscripcion : bool
+}
+enum NivelFidelidad {
+  Bronce
+  Plata
+  Oro
+}
+
+Usuario <|-- Cliente
+Usuario <|-- Propietario
+Propietario "1" -- "0..*$_" Local : Locales / IdPropietario
+Local "1" -- "0..*$_" Evento : Eventos / IdLocal
+Cliente "0..*" --> "$_ 0..*" Evento : entradasUsuario
+Evento "1" -- "0..*$_" Sector : Sectores / IdEvento
+ServicioEvento "0..*" --> "1$_" Evento : IdEvento
+ServicioEvento "0..*$_$_" --> "1$_" Servicio : IdServicio
+Suscripcion "0..*" --> "1$_" Usuario : IdUsuario
+ListaEspera "0..*" --> "1$_" Evento : IdEvento
+ListaEspera "0..*" --> "1$_" Usuario : Usuario
+@enduml

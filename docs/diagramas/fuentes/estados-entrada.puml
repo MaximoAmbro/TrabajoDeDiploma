@@ -1,0 +1,30 @@
+@startuml estados-entrada
+!include _estilo.iuml
+' Fuente: Entidade/EstadoEntrada.cs, CHECK de Entradas.Estado, Repo/GestorCompras.cs,
+' Repo/GestorIngresos.cs, Datos/RepositorioCompras.cs, Datos/RepositorioEntradas.cs.
+' Los cuatro estados son exactamente los del enum y los del CHECK de la base.
+
+state Pendiente : reserva el cupo del sector\nsin QR
+state Confirmada {
+  state "Sin ingreso" as SinIngreso : FechaIngreso = NULL
+  state "Ingresada" as Ingresada : FechaIngreso = fecha y hora\nde la primera lectura
+  [*] --> SinIngreso
+  SinIngreso --> Ingresada : lectura del QR\ndentro de la ventana\n[RN-18]
+}
+state Reembolsada : el cupo vuelve\nal sector
+state Vencida : el cupo vuelve\nal sector
+
+[*] --> Pendiente : el cliente inicia\nla compra\n[RN-08, RN-15]
+Pendiente --> Pendiente : pago rechazado\n/ devuelve el cupo\n[RN-32]
+Pendiente --> Confirmada : pago aprobado\n/ asigna el QR\n[RN-17, RN-18]
+Pendiente --> Vencida : vence el plazo de reserva,\no se da de baja el evento\no el sector [RN-15]
+Confirmada --> Reembolsada : el cliente la devuelve\n[con seguro y faltando más\nde 48 h, RN-28, RN-29]
+Vencida --> [*] : baja del evento\n(se borra la fila)
+
+note bottom of Confirmada
+  El ingreso no es un estado de venta:
+  la entrada sigue Confirmada y solo se
+  completa FechaIngreso. Una segunda
+  lectura se rechaza (RN-18).
+end note
+@enduml

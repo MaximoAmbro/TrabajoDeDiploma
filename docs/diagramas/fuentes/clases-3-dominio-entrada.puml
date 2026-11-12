@@ -1,0 +1,43 @@
+@startuml clases-3-dominio-entrada
+!include _estilo.iuml
+skinparam nodesep 22
+skinparam ranksep 32
+hide empty members
+' Diagrama de clases, vista 3 de 6: la entrada y su seguro (proyecto Entidades).
+' Fuente: Entidade/*.cs. EstadoEntrada tiene los mismos cuatro valores que el CHECK de
+' Entradas.Estado y que el diagrama de estados (regla R13).
+
+class Usuario <<ver vista 1>>
+class Cliente <<ver vista 1>>
+class Evento <<ver vista 1>>
+class Sector <<ver vista 1>>
+class Compra <<ver vista 2>>
+class Entrada {
+  + Id : int
+  + Precio : decimal
+  + CantidadVendida : int
+  + FechaVenta : DateTime
+  + Estado : EstadoEntrada
+  + CodigoQR : string
+  + FechaIngreso : DateTime?
+}
+class Seguro {
+  + Id : int
+  + Precio : decimal
+  + VenceEl : DateTime
+}
+enum EstadoEntrada {
+  Pendiente
+  Confirmada
+  Reembolsada
+  Vencida
+}
+
+Entrada "0..*" --> "1$_" Evento : IdEvento
+Entrada "0..*" --> "0..1$_" Sector : IdSector
+Entrada "0..*" --> "0..1$_" Compra : IdCompra
+Entrada "0..*" --> "1$_" Usuario : IdUsuario
+Entrada "0..*" --> "0..1$_" Cliente : Cliente
+Seguro "0..*" --> "1$_" Entrada : IdEntrada
+Seguro -[hidden]right- EstadoEntrada
+@enduml

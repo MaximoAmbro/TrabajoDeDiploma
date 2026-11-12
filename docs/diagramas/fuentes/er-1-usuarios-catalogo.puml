@@ -1,0 +1,104 @@
+@startuml er-1-usuarios-catalogo
+!include _estilo.iuml
+skinparam nodesep 22
+skinparam ranksep 40
+' DER, vista 1 de 2: usuarios, catálogo de eventos, servicios, suscripciones y lista de espera.
+' Fuente: BaseDatos/01-esquema.sql. Convención: * = NOT NULL; PK, FK, UQ y CK al final.
+
+entity Usuario {
+  * ID : INT <<PK>>
+  --
+  Nombre : VARCHAR(100)
+  Apellido : VARCHAR(100)
+  Mail : VARCHAR(150) <<UQ>>
+  Contraseña : VARCHAR(100)
+  TipoUsuario : VARCHAR(20)
+  * Nivel : VARCHAR(8)
+  FechaUltimaEvaluacion : DATE
+  * IntentosFallidos : INT
+  BloqueadoHasta : DATETIME
+}
+entity Cliente {
+  * ID : INT <<PK, FK>>
+}
+entity Propietario {
+  * ID : INT <<PK, FK>>
+}
+entity Locales {
+  * ID : INT <<PK>>
+  --
+  Nombre : VARCHAR(100)
+  Direccion : VARCHAR(100)
+  * Capacidad : INT <<CK>>
+  * PropietarioID : INT
+}
+entity Eventos {
+  * ID : INT <<PK>>
+  --
+  Nombre : VARCHAR(100)
+  Fecha : DATETIME
+  * LocalID : INT <<FK>>
+  Categoria : VARCHAR(20)
+  * Estado : VARCHAR(12) <<CK>>
+  FinPreventa : DATETIME
+}
+entity Sectores {
+  * ID : INT <<PK>>
+  --
+  * EventoID : INT <<FK>>
+  Nombre : VARCHAR(50)
+  Precio : DECIMAL(12,2)
+  Capacidad : INT
+  * CantidadReservada : INT
+}
+entity Servicios {
+  * ID : INT <<PK>>
+  --
+  * Nombre : VARCHAR(60)
+  * Tipo : VARCHAR(20)
+  * Precio : DECIMAL(12,2)
+  * Activo : BIT
+}
+entity ServiciosEvento {
+  * ID_Evento : INT <<PK, FK>>
+  * ID_Servicio : INT <<PK, FK>>
+}
+entity Suscripciones {
+  * ID : INT <<PK>>
+  --
+  * ID_Usuario : INT <<FK>>
+  * Plan : VARCHAR(10)
+  * FechaInicio : DATE
+  * FechaFin : DATE
+  * Precio : DECIMAL(12,2)
+  * Activa : BIT
+}
+entity ListaEspera {
+  * ID : INT <<PK>>
+  --
+  * ID_Evento : INT <<FK, UQ1>>
+  * ID_Usuario : INT <<FK, UQ1>>
+  * FechaAlta : DATETIME
+  * ConSuscripcion : BIT
+}
+entity Parametros {
+  * Clave : VARCHAR(40) <<PK>>
+  --
+  * Valor : VARCHAR(40)
+  Descripcion : VARCHAR(160)
+  Regla : VARCHAR(10)
+}
+
+Usuario "1$_" ||--o| "0..1$_" Cliente
+Usuario "1$_" ||--o| "0..1$_" Propietario
+Propietario "1$_" ||..o{ "0..*$_" Locales
+Locales "1$_" ||--o{ "0..*$_" Eventos
+Eventos "1$_" ||--o{ "0..*$_" Sectores
+Eventos "1$_" ||--o{ "0..*$_" ServiciosEvento
+Servicios "1$_" ||--o{ "0..*$_" ServiciosEvento
+Usuario "1$_" ||--o{ "0..*$_" Suscripciones
+Eventos "1$_" ||--o{ "0..*$_" ListaEspera
+Usuario "1$_" ||--o{ "0..*$_" ListaEspera
+
+Cliente -[hidden]down- Parametros
+@enduml

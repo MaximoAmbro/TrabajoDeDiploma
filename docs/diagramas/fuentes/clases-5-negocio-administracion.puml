@@ -1,0 +1,70 @@
+@startuml clases-5-negocio-administracion
+!include _estilo.iuml
+skinparam nodesep 18
+skinparam ranksep 40
+hide empty members
+' Diagrama de clases, vista 5 de 8: capa de Negocio, operaciones de los gestores de
+' administración y de la cuenta (proyecto Repositorio, namespace Negocio). Fuente: Repo/*.cs.
+' Las dependencias entre gestores están en la vista 6; el Singleton, en la 8.
+
+class GestorEventos <<Singleton>> {
+  + Crear(Evento) : int
+  + Publicar(Evento) : int
+  + Eliminar(int)
+  + Suspender(int)
+  + EstaAgotado(int) : bool
+  + CambiarPreventa(int, DateTime?)
+  + CapacidadTotal(int) : int
+  + Vigentes() : List<Evento>
+  + Buscar(string, string, DateTime?) : List<Evento>
+  + ObtenerPorId(int) : Evento
+  + PorLocal(int) : List<Evento>
+  + Sectores(int) : List<Sector>
+  + AgregarSector(int, Sector)
+  + EliminarSector(int)
+}
+class GestorLocales <<Singleton>> {
+  + PorId(int) : Local
+  + PorPropietario(int) : List<Local>
+  + Registrar(Local) : int
+}
+class GestorIngresos <<Singleton>> {
+  + Registrar(string, int) : ResultadoIngreso
+  + Contar(int) : int
+  + EventosDeHoy() : List<Evento>
+}
+class GestorUsuarios <<Singleton>> {
+  + Autenticar(string, string) : Usuario
+  + RegistrarCliente(string, string, string, string)
+  + CrearAdministrador(string, string, string, string)
+  + CambiarContrasena(string, string, string)
+  + ValidarContrasena(string)
+}
+class GestorReportes <<Singleton>> {
+  + Crear(string, DateTime, DateTime) : Reporte
+  + Ejecutar(Reporte) : DataTable
+  + Exportar(Reporte, IExportador, string) : string
+  + TituloDe(string) : string
+  + EventosEntre(DateTime, DateTime) : List<Evento>
+}
+class GestorParametros <<Singleton>> {
+  + Obtener(string) : string
+  + ObtenerEntero(string) : int
+  + ObtenerDecimal(string) : decimal
+  + Recargar()
+}
+class GestorSesion <<Singleton>> {
+  + UsuarioActual : Usuario
+  + Iniciar(Usuario)
+  + RequerirAdministrador()
+  + RequerirUsuario(int)
+  + Cerrar()
+}
+
+GestorEventos -[hidden]down- GestorLocales
+GestorLocales -[hidden]down- GestorIngresos
+GestorUsuarios -[hidden]down- GestorReportes
+GestorReportes -[hidden]down- GestorParametros
+GestorParametros -[hidden]down- GestorSesion
+GestorEventos -[hidden]right- GestorUsuarios
+@enduml

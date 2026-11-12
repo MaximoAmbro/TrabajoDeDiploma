@@ -1,0 +1,40 @@
+@startuml secuencia-compra-2-pago
+!include _estilo.iuml
+hide footbox
+' Secuencia de CU «Comprar paquete», parte 2 de 3: pago.
+' Fuente: Visual/Cliente/frmPago.cs y Repo/GestorCompras.cs (Confirmar, primera mitad).
+
+actor Cliente
+boundary "frm\nPago" as FP
+control "Gestor\nCompras" as GC
+control "Gestor\nSesion" as GS
+participant "Repositorio\nCompras" as RC
+control "Pasarela\nSimulada" as PS
+participant "Repositorio\nPagos" as RP
+
+Cliente -> FP : tarjeta
+FP -> GC : Confirmar(c, t)
+GC -> GS : RequerirUsuario(..)\n[RN-41]
+GC -> GC : ValidarTarjeta(t)
+GC -> RC : ObtenerPorId(c.Id)
+RC --> GC : compra Pendiente
+alt venció el plazo de reserva
+  GC -> RC : MarcarVencidas(..)
+  GC --> FP : excepción\n[RN-15]
+else dentro del plazo
+  opt reintento después de un rechazo
+    GC -> RC : Rereservar(..)
+  end
+  GC -> PS : Cobrar(t, total)
+  PS --> GC : ResultadoPago
+  GC -> RP : Insertar(pago)\n[RN-30, RN-31]
+  alt pago aprobado
+    GC -> GC : emite las\nentradas (parte 3)
+    GC --> FP : true
+  else pago rechazado
+    GC -> RC : Liberar(c.Id)\n[RN-32]
+    GC --> FP : false
+    FP --> Cliente : reintentar
+  end
+end
+@enduml

@@ -1,0 +1,53 @@
+@startuml clases-7-datos
+!include _estilo.iuml
+left to right direction
+skinparam nodesep 8
+skinparam ranksep 60
+hide empty members
+' Diagrama de clases, vista 7 de 8: capa de Datos (proyecto Datos). Fuente: Datos/*.cs.
+' Cada repositorio es el único lugar con SQL de sus tablas. «(…)» abrevia la lista de
+' parámetros; las firmas completas y las dependencias entre repositorios están en la tabla.
+
+abstract class RepositorioBase {
+  # AbrirConexion() : SqlConnection
+  # CrearComando(…) : SqlCommand
+  # AgregarParametro(…)
+  # {static} LeerString(…) : string
+  # {static} LeerFechaNula(…) : DateTime?
+  # {static} LeerEntero(…) : int
+  # {static} LeerDecimal(…) : decimal
+  # {static} EsViolacionUnicidad(…) : bool
+}
+class Conexion <<Singleton>> {
+  + Cadena : string
+  + Crear() : SqlConnection
+}
+class RepositorioCompras <<Singleton>>
+class RepositorioEntradas <<Singleton>>
+class RepositorioEventos <<Singleton>>
+class RepositorioSectores <<Singleton>>
+class RepositorioPagos <<Singleton>>
+class RepositorioServicios <<Singleton>>
+class RepositorioFidelizacion <<Singleton>>
+class RepositorioListaEspera <<Singleton>>
+class RepositorioLocales <<Singleton>>
+class RepositorioParametros <<Singleton>>
+class RepositorioReportes <<Singleton>>
+class RepositorioSuscripciones <<Singleton>>
+class RepositorioUsuarios <<Singleton>>
+
+RepositorioBase ..> Conexion : Crear
+RepositorioBase <|-- RepositorioCompras
+RepositorioBase <|-- RepositorioEntradas
+RepositorioBase <|-- RepositorioEventos
+RepositorioBase <|-- RepositorioSectores
+RepositorioBase <|-- RepositorioPagos
+RepositorioBase <|-- RepositorioServicios
+RepositorioBase <|-- RepositorioFidelizacion
+RepositorioBase <|-- RepositorioListaEspera
+RepositorioBase <|-- RepositorioLocales
+RepositorioBase <|-- RepositorioParametros
+RepositorioBase <|-- RepositorioReportes
+RepositorioBase <|-- RepositorioSuscripciones
+RepositorioBase <|-- RepositorioUsuarios
+@enduml
