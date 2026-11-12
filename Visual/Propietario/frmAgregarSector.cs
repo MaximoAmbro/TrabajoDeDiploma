@@ -66,7 +66,7 @@ namespace Visual.Vendedor
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtCapacidad.Text) || string.IsNullOrWhiteSpace(txtPrecio.Text))
             {
-                MessageBox.Show("Por favor, complete todos los campos.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, completá todos los campos.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             return true;

@@ -12,7 +12,6 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
-using iText.Pdfa.Checker;
 using QRCoder;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Negocio;
 using Entidades;
-using Microsoft.Identity.Client;
 
 namespace Visual
 {
@@ -58,17 +56,23 @@ namespace Visual
         // desplazamiento en una notebook o con texto ampliado por Windows.
         private void ConfigurarAreaDeCompra()
         {
+            Tema.ComoFondo(this);
+            Tema.ComoFondo(pnlContenidoCompra);
+            foreach (Control superficie in new Control[] { pnlEncabezadoCompra, pnlAccionesCompra, pnlTarjetaEntradas, pnlTarjetaServicios, pnlResumen })
+                Tema.ComoSuperficie(superficie);
+            Tema.ComoDocumento(lblResumen);
+            Tema.ComoEnlace(lnkNiveles);
             accionesCompra = pnlAccionesCompra;
             contenidoCompra = pnlContenidoCompra;
             // El panel pinta el fondo; las etiquetas hermanas deben quedar delante.
             pnlEncabezadoCompra.SendToBack();
             accionesCompra.Resize += (sender, e) => AlinearAcciones();
             accionesCompra.Layout += (sender, e) => AlinearAcciones();
-            pnlEncabezadoCompra.Paint += PintarSeparadorInferior;
-            accionesCompra.Paint += PintarSeparadorSuperior;
-            pnlTarjetaEntradas.Paint += PintarTarjeta;
-            pnlTarjetaServicios.Paint += PintarTarjeta;
-            pnlResumen.Paint += PintarTarjeta;
+            pnlEncabezadoCompra.Paint += Disposicion.PintarSeparadorInferior;
+            accionesCompra.Paint += Disposicion.PintarSeparadorSuperior;
+            pnlTarjetaEntradas.Paint += Disposicion.PintarTarjeta;
+            pnlTarjetaServicios.Paint += Disposicion.PintarTarjeta;
+            pnlResumen.Paint += Disposicion.PintarTarjeta;
             label1.TextChanged += (sender, e) => AjustarEncabezado();
             label1.FontChanged += (sender, e) => AjustarEncabezado();
             contenidoCompra.AutoScrollMargin = Size.Empty;
@@ -85,10 +89,16 @@ namespace Visual
         {
             if (distribuyendoCompra) return;
             distribuyendoCompra = true;
+            try { Disposicion.RepetirUnaVez(contenidoCompra, DistribuirCompra); }
+            finally { distribuyendoCompra = false; }
+        }
+
+        private void DistribuirCompra()
+        {
             int anchoUsado = contenidoCompra.ClientSize.Width;
             try
             {
-                float escala = DeviceDpi / Tema.DpiDiseno * Font.SizeInPoints / Tema.Cuerpo.SizeInPoints;
+                float escala = Disposicion.Escala(this);
                 int margen = (int)Math.Round(Tema.Espacio.XL * escala);
                 int relleno = (int)Math.Round(Tema.Espacio.L * escala);
                 int separacion = (int)Math.Round(Tema.Espacio.S * escala);
@@ -114,52 +124,19 @@ namespace Visual
                     casilla.Width = Math.Max(0, columna - relleno * 2);
                 int anchoResumen = Math.Max(0, ancho - margen - columna);
                 pnlResumen.Width = anchoResumen;
-                int anchoDocumento = Math.Max(0, anchoResumen - relleno * 2 - SystemInformation.VerticalScrollBarWidth);
-                lblResumen.MinimumSize = new Size(anchoDocumento, 0);
-                lblResumen.MaximumSize = new Size(anchoDocumento, 0);
-                int altoDocumento = lblResumen.GetPreferredSize(new Size(anchoDocumento, 0)).Height;
-                int altoNatural = lblResumen.Top - pnlResumen.AutoScrollPosition.Y + altoDocumento + relleno;
                 int altoVista = Math.Max(0, contenidoCompra.ClientSize.Height - margen * 2);
-                pnlResumen.SetBounds(margen + columna + margen + desplazamiento.X, inicio,
-                    anchoResumen, Math.Min(altoNatural, altoVista));
+                pnlResumen.Location = new Point(margen + columna + margen + desplazamiento.X, inicio);
+                Disposicion.AjustarDocumento(pnlResumen, lblResumen, altoVista);
             }
             finally
             {
                 contenidoCompra.ResumeLayout(true);
-                distribuyendoCompra = false;
             }
-            // Una barra vertical puede cambiar el ancho útil durante la distribución.
-            if (anchoUsado != contenidoCompra.ClientSize.Width) AjustarEncabezado();
-        }
-
-        private static void PintarTarjeta(object sender, PaintEventArgs e)
-        {
-            var panel = (Panel)sender;
-            using (var lapiz = new Pen(Tema.Borde, Tema.BordeNormal))
-                e.Graphics.DrawRectangle(lapiz, 0, 0, panel.ClientSize.Width - Tema.BordeNormal,
-                    panel.ClientSize.Height - Tema.BordeNormal);
-        }
-
-        private static void PintarSeparadorInferior(object sender, PaintEventArgs e)
-        {
-            var panel = (Panel)sender;
-            using (var lapiz = new Pen(Tema.Borde, Tema.BordeNormal))
-                e.Graphics.DrawLine(lapiz, 0, panel.ClientSize.Height - Tema.BordeNormal,
-                    panel.ClientSize.Width, panel.ClientSize.Height - Tema.BordeNormal);
-        }
-
-        private static void PintarSeparadorSuperior(object sender, PaintEventArgs e)
-        {
-            var panel = (Panel)sender;
-            using (var lapiz = new Pen(Tema.Borde, Tema.BordeNormal))
-                e.Graphics.DrawLine(lapiz, 0, 0, panel.ClientSize.Width, 0);
         }
 
         private void AlinearAcciones()
         {
-            btnVolver.Location = new Point(accionesCompra.Padding.Left, (accionesCompra.Height - btnVolver.Height) / 2);
-            btnComprar.Location = new Point(accionesCompra.ClientSize.Width - accionesCompra.Padding.Right - btnComprar.Width,
-                (accionesCompra.Height - btnComprar.Height) / 2);
+            Disposicion.AlinearAcciones(accionesCompra, btnVolver, btnComprar);
         }
 
         protected override void OnShown(EventArgs e)
@@ -170,9 +147,7 @@ namespace Visual
 
         private void AjustarAreaVisible(System.Drawing.Rectangle areaTrabajo)
         {
-            Size = new Size(Math.Min(Width, areaTrabajo.Width), Math.Min(Height, areaTrabajo.Height));
-            Location = new Point(areaTrabajo.Left + (areaTrabajo.Width - Width) / 2,
-                areaTrabajo.Top + (areaTrabajo.Height - Height) / 2);
+            Disposicion.AjustarAreaVisible(this, areaTrabajo);
             AjustarEncabezado();
             AlinearAcciones();
         }
@@ -703,7 +678,7 @@ namespace Visual
                     franja.Add(new Paragraph("EventAura \u00b7 Entrada").SetFont(negrita).SetFontSize(Tema.Ticket.Dato)
                         .SetFontColor(ColorPdf(Tema.Superficie)).SetMargin(0));
                 }
-                // El nombre usa el ancho disponible sobre los datos y el QR para admitir varias l?neas.
+                // El nombre usa el ancho disponible sobre los datos y el QR para admitir varias líneas.
                 float baseTitulo = Tema.Ticket.BaseQr + Tema.Ticket.LadoQr + Tema.Ticket.EspacioTitulo;
                 using (var titulo = new Canvas(lienzo, new iText.Kernel.Geom.Rectangle(margen, baseTitulo,
                     ancho - margen * 2, alto - Tema.Ticket.Franja - margen - baseTitulo)))
@@ -754,7 +729,7 @@ namespace Visual
             if (!PaqueteVacio())
             {
                 DialogResult respuesta = MessageBox.Show(
-                    "Si vuelve al listado se descarta el paquete que armó. ¿Desea volver?",
+                    "Si volvés al listado se descarta el paquete que armaste. ¿Querés volver?",
                     "Volver al listado", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2);
                 if (respuesta != DialogResult.Yes)
@@ -770,7 +745,7 @@ namespace Visual
             if (e.CloseReason == CloseReason.UserClosing && !PaqueteVacio())
             {
                 DialogResult respuesta = MessageBox.Show(
-                    "Si cierra la ventana se descarta el paquete que armó. ¿Desea cerrar?",
+                    "Si cerrás la ventana se descarta el paquete que armaste. ¿Querés cerrar?",
                     "Cerrar la compra", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2);
                 if (respuesta != DialogResult.Yes)

@@ -201,7 +201,7 @@ namespace Datos
         {
             const string reembolsarEntrada =
                 "UPDATE Entradas SET Estado = 'Reembolsada' " +
-                "WHERE ID = @ID AND ID_Compra = @IdCompra AND Estado = 'Confirmada'";
+                "WHERE ID = @ID AND ID_Compra = @IdCompra AND Estado = 'Confirmada' AND FechaIngreso IS NULL";
             const string actualizarCompra =
                 "UPDATE Compras " +
                 "SET MontoReembolsado = MontoReembolsado + @Monto, " +

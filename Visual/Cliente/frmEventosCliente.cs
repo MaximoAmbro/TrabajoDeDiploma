@@ -72,7 +72,7 @@ namespace Visual
                 vacia.Columns.Add("Mensaje", typeof(string));
                 vacia.Rows.Add(texto == null && categoria == null && desde == null
                     ? "No hay eventos disponibles por el momento."
-                    : "No hay eventos que coincidan con la búsqueda. Pruebe con otros filtros o «Limpiar».");
+                    : "No hay eventos que coincidan con la búsqueda. Probá con otros filtros o «Limpiar».");
                 dgveventos.DataSource = vacia;
                 return;
             }
@@ -129,7 +129,7 @@ namespace Visual
             }
             else
             {
-                MessageBox.Show("Debe seleccionar un evento para comprar", "Seleccionar evento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Tenés que seleccionar un evento para comprar", "Seleccionar evento", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

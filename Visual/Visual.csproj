@@ -297,6 +297,9 @@
     <EmbeddedResource Include="Recursos\EventAura.ico">
       <LogicalName>Visual.Recursos.EventAura.ico</LogicalName>
     </EmbeddedResource>
+    <Compile Include="Componentes\BotonTematico.cs" />
+    <Compile Include="Componentes\Etiquetas.cs" />
+    <Compile Include="Disposicion.cs" />
     <Compile Include="Componentes\BotonPrimario.cs" />
     <Compile Include="Componentes\BotonSecundario.cs" />
     <Compile Include="Componentes\BotonPeligro.cs" />

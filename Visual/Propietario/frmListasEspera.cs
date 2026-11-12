@@ -86,7 +86,7 @@ namespace Visual
             if (cmbEventos.Items.Count == 0)
             {
                 cmbEventos.Enabled = false;
-                lblCantidad.Text = "No hay eventos agotados ni listas de espera en sus locales.";
+                lblCantidad.Text = "No hay eventos agotados ni listas de espera en tus locales.";
                 return;
             }
             cmbEventos.SelectedIndex = 0;

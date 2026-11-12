@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Visual.Componentes;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,6 +9,7 @@ namespace Visual
 {
     public static class Tema
     {
+        public static readonly Color Foco = Color.Black;
         public static readonly Color Primario = Color.FromArgb(116, 86, 174);
         public static readonly Color PrimarioEncima = Color.FromArgb(99, 70, 153);
         public static readonly Color PrimarioPresionado = Color.FromArgb(82, 58, 128);
@@ -46,38 +50,6 @@ namespace Visual
         public const int AltoBoton = 32, AltoBotonPrimario = 36, AnchoMinimoBoton = 120;
         public const int RellenoHorizontalBoton = 20, AltoFila = 32, AltoEncabezadoGrilla = 36;
         public const int AltoEncabezadoVentana = 72, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
-
-        // Geometría del piloto a 96 DPI (ventana heredada de 1100 × 680 a 120 DPI).
-        public static class Compra
-        {
-            public static readonly Size Ventana = new Size(880, 544);
-            public static readonly Point Entradas = new Point(Espacio.XL, Espacio.XL);
-            public static readonly Size TarjetaEntradas = new Size(400, 224);
-            public static readonly Point Servicios = new Point(Espacio.XL, 272);
-            public static readonly Size TarjetaServicios = new Size(400, 248);
-            public static readonly Point Resumen = new Point(448, Espacio.XL);
-            public static readonly Size TarjetaResumen = new Size(408, 496);
-            public static readonly Point Titulo = new Point(Espacio.XL, Espacio.XS);
-            public static readonly Size NombreEvento = new Size(832, 36);
-            public static readonly Point Nivel = new Point(Espacio.XL, 44);
-            public static readonly Point Enlace = new Point(320, 44);
-            public static readonly Point TituloTarjeta = new Point(Espacio.L, Espacio.L);
-            public static readonly Point Grilla = new Point(Espacio.L, 52);
-            public static readonly Size Sectores = new Size(368, 156);
-            public static readonly Point Agotado = new Point(Espacio.L, 52);
-            public static readonly Size AvisoAgotado = new Size(368, 80);
-            public static readonly Point ListaEspera = new Point(40, 152);
-            public static readonly Size BotonEspera = new Size(320, AltoBoton);
-            public static readonly Size BotonVolver = new Size(168, AltoBoton);
-            public static readonly Size BotonComprar = new Size(160, AltoBotonPrimario);
-            public static readonly Size Casilla = new Size(368, 24);
-            public static readonly Point Hospedaje = new Point(Espacio.L, 52);
-            public static readonly Point Traslado = new Point(Espacio.L, 84);
-            public static readonly Point Merch = new Point(Espacio.L, 116);
-            public static readonly Point Vip = new Point(Espacio.L, 148);
-            public static readonly Point Seguro = new Point(Espacio.L, 192);
-            public static readonly Size CasillaSeguro = new Size(368, 40);
-        }
 
         // Medidas del ticket en puntos PDF; no dependen de los DPI del monitor.
         public static class Ticket
@@ -135,11 +107,44 @@ namespace Visual
             g.StandardTab = true;
         }
 
+        private static readonly Dictionary<string, Font> fuentesNormalizadas = new Dictionary<string, Font>();
+        private static readonly ConditionalWeakTable<Button, object> botonesPreparados = new ConditionalWeakTable<Button, object>();
+
+        private static Font NormalizarFuente(Font fuente)
+        {
+            string familia = fuente.Bold ? "Segoe UI Semibold" : "Segoe UI";
+            string clave = familia + "|" + fuente.Size.ToString(System.Globalization.CultureInfo.InvariantCulture) + "|" +
+                fuente.Style + "|" + fuente.Unit + "|" + fuente.GdiCharSet + "|" + fuente.GdiVerticalFont;
+            lock (fuentesNormalizadas)
+            {
+                Font resultado;
+                if (!fuentesNormalizadas.TryGetValue(clave, out resultado))
+                {
+                    resultado = new Font(familia, fuente.Size, fuente.Style, fuente.Unit, fuente.GdiCharSet, fuente.GdiVerticalFont);
+                    fuentesNormalizadas.Add(clave, resultado);
+                }
+                return resultado;
+            }
+        }
+
+        public static void ComoSuperficie(Control control) { control.BackColor = Superficie; control.ForeColor = Texto; }
+        public static void ComoFondo(Control control) { control.BackColor = Fondo; control.ForeColor = Texto; }
+        public static void ComoDocumento(Label etiqueta) { etiqueta.Font = Comprobante; etiqueta.ForeColor = Texto; }
+        public static void ComoEnlace(LinkLabel enlace)
+        {
+            enlace.Font = Ayuda;
+            enlace.BackColor = Superficie;
+            enlace.LinkColor = Primario;
+            enlace.ActiveLinkColor = PrimarioPresionado;
+            enlace.VisitedLinkColor = Primario;
+            enlace.LinkBehavior = LinkBehavior.HoverUnderline;
+        }
+
         public static void Normalizar(Control raiz)
         {
             string familia = raiz.Font.Name;
             if (familia == "Nirmala UI" || familia == "MS Gothic" || familia == "Microsoft Sans Serif")
-                raiz.Font = new Font(raiz.Font.Bold ? "Segoe UI Semibold" : "Segoe UI", raiz.Font.SizeInPoints);
+                raiz.Font = NormalizarFuente(raiz.Font);
             if (raiz.ForeColor == TextoAnterior) raiz.ForeColor = TextoSecundario;
             if (raiz.ForeColor == TextoOscuroAnterior) raiz.ForeColor = Texto;
             var boton = raiz as Button;
@@ -154,21 +159,39 @@ namespace Visual
             foreach (Control hijo in raiz.Controls) Normalizar(hijo);
         }
 
-        // Los botones heredados conservan tamaño y posición: solo reciben estados visuales.
-        private static void EstiloBoton(Button boton, bool primario)
+        // Los componentes y los botones heredados comparten todos los estados de estilo.
+        public static void PrepararBoton(Button boton, RolBoton rol)
         {
+            boton.Font = Boton;
+            boton.MinimumSize = new Size(AnchoMinimoBoton, rol == RolBoton.Primario ? AltoBotonPrimario : AltoBoton);
+            boton.Padding = new Padding(RellenoHorizontalBoton, 0, RellenoHorizontalBoton, 0);
+            boton.Cursor = Cursors.Hand;
+            EstadoBoton(boton, rol);
+        }
+
+        public static void EstadoBoton(Button boton, RolBoton rol)
+        {
+            bool primario = rol == RolBoton.Primario, peligro = rol == RolBoton.Peligro;
             boton.FlatStyle = FlatStyle.Flat;
             boton.UseVisualStyleBackColor = false;
-            boton.ForeColor = primario ? Superficie : Primario;
-            boton.FlatAppearance.BorderSize = primario ? 0 : BordeNormal;
-            boton.FlatAppearance.BorderColor = BordeControl;
-            boton.FlatAppearance.MouseOverBackColor = primario ? PrimarioEncima : PrimarioSuave;
-            boton.FlatAppearance.MouseDownBackColor = primario ? PrimarioPresionado : SecundarioPresionado;
-            Color fondo = primario ? Primario : Superficie;
-            boton.BackColor = boton.Enabled ? fondo : FondoDeshabilitado;
-            boton.GotFocus += (s, e) => { boton.FlatAppearance.BorderSize = BordeFoco; boton.FlatAppearance.BorderColor = Primario; };
-            boton.LostFocus += (s, e) => { boton.FlatAppearance.BorderSize = primario ? 0 : BordeNormal; boton.FlatAppearance.BorderColor = BordeControl; };
-            boton.EnabledChanged += (s, e) => boton.BackColor = boton.Enabled ? fondo : FondoDeshabilitado;
+            boton.ForeColor = primario ? Superficie : peligro ? Error : Primario;
+            boton.FlatAppearance.BorderSize = boton.Focused ? BordeFoco : primario ? 0 : BordeNormal;
+            boton.FlatAppearance.BorderColor = boton.Focused ? (primario ? Foco : Primario) : BordeControl;
+            boton.FlatAppearance.MouseOverBackColor = primario ? PrimarioEncima : peligro ? ErrorFondo : PrimarioSuave;
+            boton.FlatAppearance.MouseDownBackColor = primario ? PrimarioPresionado : peligro ? PeligroPresionado : SecundarioPresionado;
+            boton.BackColor = boton.Enabled ? (primario ? Primario : Superficie) : FondoDeshabilitado;
+        }
+
+        private static void EstiloBoton(Button boton, bool primario)
+        {
+            RolBoton rol = primario ? RolBoton.Primario : RolBoton.Secundario;
+            EstadoBoton(boton, rol);
+            object marca;
+            if (botonesPreparados.TryGetValue(boton, out marca)) return;
+            botonesPreparados.Add(boton, new object());
+            boton.GotFocus += (s, e) => EstadoBoton(boton, rol);
+            boton.LostFocus += (s, e) => EstadoBoton(boton, rol);
+            boton.EnabledChanged += (s, e) => EstadoBoton(boton, rol);
         }
     }
 }

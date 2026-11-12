@@ -183,7 +183,7 @@ namespace Pruebas
                     ControlDe<DateTimePicker>(form, "dtEvento").Value = DateTime.Today.AddDays(30);
                     if (categoria) ControlDe<ComboBox>(form, "cmbCategoria").SelectedIndex = 0;
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnRegistrar").PerformClick(),
-                        new DialogoEsperado { Titulo = "Agregar evento", Texto = categoria ? "Evento guardado como borrador." : "Seleccione la categoría del evento." });
+                        new DialogoEsperado { Titulo = "Agregar evento", Texto = categoria ? "Evento guardado como borrador." : "Seleccioná la categoría del evento." });
                     if (!categoria)
                     {
                         Assert.AreEqual(antes, GestorEventos.Instance.PorLocal(local.Id).Count);

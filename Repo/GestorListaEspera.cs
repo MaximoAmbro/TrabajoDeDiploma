@@ -84,7 +84,7 @@ namespace Negocio
         private static ReglaNegocioException YaInscripto()
         {
             return new ReglaNegocioException("RN-36",
-                "Ya está en la lista de espera de este evento. Le avisaremos si se libera un lugar.");
+                "Ya estás en la lista de espera de este evento. Te avisaremos si se libera un lugar.");
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Visual
                 txtCodigo.Enabled = cmbEventos.Items.Count > 0;
                 btnRegistrar.Enabled = txtCodigo.Enabled;
                 lblResultado.Font = Tema.Titulo;
-                lblResultado.Text = txtCodigo.Enabled ? "Escanee una entrada." : "No hay eventos publicados para hoy.";
+                lblResultado.Text = txtCodigo.Enabled ? "Escaneá una entrada." : "No hay eventos publicados para hoy.";
                 ActualizarContador();
                 txtCodigo.Focus();
             }
@@ -51,7 +51,7 @@ namespace Visual
 
         private void EventoCambiado(object sender, EventArgs e)
         {
-            lblResultado.Text = "Escanee una entrada.";
+            lblResultado.Text = "Escaneá una entrada.";
             ActualizarContador();
         }
 

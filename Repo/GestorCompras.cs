@@ -126,7 +126,7 @@ namespace Negocio
                 LiberarVencidas();
                 c.Estado = EstadoCompra.Vencida;
                 throw new ReglaNegocioException("RN-15",
-                    "Venció el plazo de la reserva y se liberó el cupo. Vuelva a armar la compra.");
+                    "Venció el plazo de la reserva y se liberó el cupo. Volvé a armar la compra.");
             }
             if (!actual.ReservaVence.HasValue)
             {
@@ -172,7 +172,7 @@ namespace Negocio
             {
                 // El pago ya quedó registrado como aprobado: el rastro sirve para devolverlo.
                 throw new InvalidOperationException(
-                    "El pago se aprobó pero la reserva ya no estaba vigente. Consulte con soporte.");
+                    "El pago se aprobó pero la reserva ya no estaba vigente. Consultá con soporte.");
             }
             c.Estado = EstadoCompra.Confirmada;
 
@@ -265,7 +265,7 @@ namespace Negocio
             GestorSesion.Instance.RequerirUsuario(GestorSesion.Instance.UsuarioActual == null ? 0 : GestorSesion.Instance.UsuarioActual.Id);
             if (entradas == null || entradas.Count == 0)
             {
-                throw new ArgumentException("Elija al menos una entrada para devolver.");
+                throw new ArgumentException("Elegí al menos una entrada para devolver.");
             }
             List<int> ids = entradas.Select(e => e.Id).Distinct().ToList();
             int? idCompra = entradas[0].IdCompra;
@@ -289,6 +289,10 @@ namespace Negocio
             if (elegidas.Any(e => e.Estado != EstadoEntrada.Confirmada))
             {
                 throw new ReglaNegocioException("RN-29", "Solo se pueden devolver entradas confirmadas.");
+            }
+            if (elegidas.Any(e => e.FechaIngreso.HasValue))
+            {
+                throw new ReglaNegocioException("RN-29", "No podés devolver una entrada que ya se usó para ingresar.");
             }
             var aseguradas = new HashSet<int>(
                 RepositorioCompras.Instance.ObtenerSeguros(compra.Id).Select(s => s.IdEntrada));
@@ -315,7 +319,7 @@ namespace Negocio
             if (!RepositorioCompras.Instance.Reembolsar(compra.Id, ids, monto, completa))
             {
                 throw new InvalidOperationException(
-                    "La compra cambió mientras se procesaba la devolución. Vuelva a abrir el historial.");
+                    "La compra cambió mientras se procesaba la devolución. Volvé a abrir el historial.");
             }
             return monto;
         }
@@ -330,7 +334,7 @@ namespace Negocio
             }
             if (string.IsNullOrWhiteSpace(t.Titular))
             {
-                throw new ArgumentException("Ingrese el nombre del titular de la tarjeta.");
+                throw new ArgumentException("Ingresá el nombre del titular de la tarjeta.");
             }
             string numero = (t.Numero ?? "").Replace(" ", "").Replace("-", "");
             if (!numero.All(char.IsDigit) || numero.Length < DigitosTarjetaMin || numero.Length > DigitosTarjetaMax)
@@ -415,7 +419,7 @@ namespace Negocio
             int disponibles = Math.Max(0, RepositorioSectores.Instance.ObtenerDisponibles(idSector));
             return new ReglaNegocioException("RN-08",
                 $"En el sector {sector?.Nombre} quedan {disponibles} " +
-                (disponibles == 1 ? "entrada." : "entradas.") + " Ajuste la cantidad y vuelva a intentar.");
+                (disponibles == 1 ? "entrada." : "entradas.") + " Ajustá la cantidad y volvé a intentar.");
         }
     }
 }

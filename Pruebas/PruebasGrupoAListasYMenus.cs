@@ -45,7 +45,7 @@ namespace Pruebas
                     if (vacia)
                     {
                         Assert.IsFalse(combo.Enabled);
-                        Assert.AreEqual("No hay eventos agotados ni listas de espera en sus locales.", cantidad.Text);
+                        Assert.AreEqual("No hay eventos agotados ni listas de espera en tus locales.", cantidad.Text);
                         return;
                     }
                     string texto = evento.Nombre + " · " + evento.Fecha.ToString("dd/MM/yyyy HH:mm") + " · agotado";

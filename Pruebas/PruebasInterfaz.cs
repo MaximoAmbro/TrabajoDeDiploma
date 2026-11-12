@@ -147,7 +147,7 @@ namespace Pruebas
                     Control<TextBox>(form, "txtBuscar").Text = "evento-inexistente-prueba";
                     Control<Button>(form, "btnBuscar").PerformClick();
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnComprar").PerformClick(),
-                        new DialogoEsperado { Titulo = "Seleccionar evento", Texto = "Debe seleccionar un evento para comprar" });
+                        new DialogoEsperado { Titulo = "Seleccionar evento", Texto = "Tenés que seleccionar un evento para comprar" });
                     Assert.IsTrue(form.Visible);
                     Assert.IsFalse(Application.OpenForms.Cast<Form>().Any(f => f is Visual.FrmCompraCliente));
                 }
@@ -207,9 +207,9 @@ namespace Pruebas
 
         // CP-15 — RF-01, RN-02: registro rechaza datos inválidos.
         [DataTestMethod]
-        [DataRow("txtNombre", " ", "Crear cuenta", "Ingrese su nombre.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 1)")]
-        [DataRow("txtApellido", " ", "Crear cuenta", "Ingrese su apellido.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 2)")]
-        [DataRow("txtmail", " ", "Crear cuenta", "Ingrese su correo electrónico.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 3)")]
+        [DataRow("txtNombre", " ", "Crear cuenta", "Ingresá tu nombre.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 1)")]
+        [DataRow("txtApellido", " ", "Crear cuenta", "Ingresá tu apellido.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 2)")]
+        [DataRow("txtmail", " ", "Crear cuenta", "Ingresá tu correo electrónico.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 3)")]
         [DataRow("TxtPassword", "abc", "Crear cuenta", "La contraseña debe tener al menos", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 4)")]
         public void Registro_RechazaDatosInvalidosSinCrearUsuario(string campo, string valor, string titulo, string mensaje)
         {
@@ -268,11 +268,11 @@ namespace Pruebas
                     grilla.CurrentCell = grilla.Rows[0].Cells["Nombre"];
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnEliminarEvento").PerformClick(),
                         Confirmacion("Eliminar evento", evento.Nombre, DialogResult.Yes),
-                        Confirmacion("Suspender evento", "¿Desea suspenderlo?", DialogResult.No));
+                        Confirmacion("Suspender evento", "¿Querés suspenderlo?", DialogResult.No));
                     Assert.AreEqual(GestorEventos.EstadoPublicado, GestorEventos.Instance.ObtenerPorId(evento.Id).Estado);
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnEliminarEvento").PerformClick(),
                         Confirmacion("Eliminar evento", evento.Nombre, DialogResult.Yes),
-                        Confirmacion("Suspender evento", "¿Desea suspenderlo?", DialogResult.Yes));
+                        Confirmacion("Suspender evento", "¿Querés suspenderlo?", DialogResult.Yes));
                     Assert.AreEqual(GestorEventos.EstadoSuspendido, GestorEventos.Instance.ObtenerPorId(evento.Id).Estado);
                 }
             });

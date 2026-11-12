@@ -48,7 +48,7 @@ namespace Visual
                 GestorCompras.Instance.LiberarVencidas();
                 cerrada = true;
                 MessageBox.Show("Venció el plazo de la reserva y se liberaron las entradas. " +
-                                "Vuelva a armar la compra desde el listado.",
+                                "Volvé a armar la compra desde el listado.",
                                 "Reserva vencida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.Abort;
                 return;
@@ -94,7 +94,7 @@ namespace Visual
                 // se eliminó mientras se pagaba). El cupo ya se liberó: se vuelve al listado.
                 tmrReserva.Stop();
                 cerrada = true;
-                MessageBox.Show(ex.Message + "\n\nVuelva a armar la compra desde el listado.",
+                MessageBox.Show(ex.Message + "\n\nVolvé a armar la compra desde el listado.",
                     "Pago no realizado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.Abort;
                 return;
@@ -116,7 +116,7 @@ namespace Visual
             // RN-32: el cupo ya se liberó. Se puede reintentar dentro del plazo.
             Pago rechazo = GestorCompras.Instance.PagosDe(Compra).LastOrDefault();
             lblEstado.Text = "Pago rechazado: " + rechazo?.Motivo + "\n" +
-                             "Se liberaron las entradas. Puede reintentar antes de que venza la reserva.";
+                             "Se liberaron las entradas. Podés reintentar antes de que venza la reserva.";
             txtNumero.Clear();
             txtNumero.Focus();
         }
@@ -124,7 +124,7 @@ namespace Visual
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             DialogResult respuesta = MessageBox.Show(
-                "Si cancela el pago se liberan las entradas reservadas. ¿Desea cancelar?",
+                "Si cancelás el pago se liberan las entradas reservadas. ¿Querés cancelar?",
                 "Cancelar pago", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (respuesta == DialogResult.Yes)
             {

@@ -51,7 +51,7 @@ namespace Visual
         {
             if (string.IsNullOrEmpty(txtMailLogin.Text))
             {
-                MessageBox.Show("Por favor, ingrese usuario",
+                MessageBox.Show("Por favor, ingresá usuario",
                               "Inicio de sesión",
                               MessageBoxButtons.OK,
                               MessageBoxIcon.Warning);
@@ -59,7 +59,7 @@ namespace Visual
             }
             if (string.IsNullOrEmpty(txtContraseñaLogin.Text))
             {
-                MessageBox.Show("Por favor, ingrese contraseña",
+                MessageBox.Show("Por favor, ingresá contraseña",
                               "Inicio de sesión",
                               MessageBoxButtons.OK,
                               MessageBoxIcon.Warning);

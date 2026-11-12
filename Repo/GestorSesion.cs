@@ -43,7 +43,7 @@ namespace Negocio
         public void RequerirUsuario(int idUsuario)
         {
             if (UsuarioActual == null || (UsuarioActual.TipoUsuario != "Propietario" && UsuarioActual.Id != idUsuario))
-                throw new ReglaNegocioException("RN-41", "Solo puede operar sobre los datos de su propia cuenta.");
+                throw new ReglaNegocioException("RN-41", "Solo puede operar sobre los datos de tu propia cuenta.");
         }
 
         public void Cerrar()

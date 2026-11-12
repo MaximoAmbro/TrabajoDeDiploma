@@ -127,7 +127,7 @@ namespace Pruebas
                             {
                                 int restantes = 5 - intento;
                                 string texto = intento == 5 ? "en 15 minutos." :
-                                    "Le quedan " + restantes + (restantes == 1 ? " intento antes" : " intentos antes");
+                                    "Te quedan " + restantes + (restantes == 1 ? " intento antes" : " intentos antes");
                                 DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btninicio").PerformClick(),
                                     new DialogoEsperado { Titulo = "Inicio de sesión", Texto = texto });
                             }

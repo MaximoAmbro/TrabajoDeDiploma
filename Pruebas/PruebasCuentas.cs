@@ -75,7 +75,7 @@ namespace Pruebas
                 ReglaNegocioException error = Assert.ThrowsException<ReglaNegocioException>(() =>
                     GestorUsuarios.Instance.Autenticar(mail, "Incorrecta1"));
                 Assert.AreEqual("RN-04", error.Regla);
-                StringAssert.Contains(error.Message, "Le quedan " + (maximo - intento));
+                StringAssert.Contains(error.Message, "Te quedan " + (maximo - intento));
             }
 
             DateTime antes = DateTime.Now;

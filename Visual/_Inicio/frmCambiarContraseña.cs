@@ -77,22 +77,22 @@ namespace Visual
         {
             if (string.IsNullOrEmpty(txtActual.Text))
             {
-                MessageBox.Show("Ingrese la contraseña actual.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá la contraseña actual.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrEmpty(TxtPassword.Text))
             {
-                MessageBox.Show("Ingrese contraseña: ", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá contraseña: ", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrEmpty(TxtConfirmpassword.Text))
             {
-                MessageBox.Show("Ingrese la confirmación de la nueva contraseña.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá la confirmación de la nueva contraseña.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrEmpty(txtMail.Text))
             {
-                MessageBox.Show("Ingrese su correo electrónico.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá tu correo electrónico.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (TxtPassword.Text != TxtConfirmpassword.Text)

@@ -104,6 +104,7 @@ namespace Pruebas
             Assert.IsTrue(Contraste(Visual.Tema.Superficie, Visual.Tema.Primario) >= 4.5);
             Assert.IsTrue(Contraste(Visual.Tema.Error, Visual.Tema.Superficie) >= 4.5);
             Assert.IsTrue(Contraste(Visual.Tema.BordeControl, Visual.Tema.Superficie) >= 3.0);
+            Assert.IsTrue(Contraste(Visual.Tema.Foco, Visual.Tema.Primario) >= 3.0, "El foco del botón primario debe contrastar con su fondo.");
             Assert.AreEqual(Color.Firebrick, Visual.Tema.Error);
             Assert.AreEqual(Color.Gainsboro, Visual.Tema.FondoDeshabilitado);
             foreach (Font fuente in new[] { Visual.Tema.Marca, Visual.Tema.Titulo, Visual.Tema.Seccion,
@@ -142,6 +143,10 @@ namespace Pruebas
                     archivo + ": fuente fuera de Tema.");
             }
             Match escala = Escala.Match(File.ReadAllText(Path.Combine(carpeta, "FrmCompraCliente.Designer.cs")));
+            string designer = File.ReadAllText(Path.Combine(carpeta, "FrmCompraCliente.Designer.cs"));
+            Assert.IsFalse(Regex.IsMatch(designer, @"\bTema\s*\."), "El Designer debe contener geometría literal, sin referencias al tema.");
+            Assert.IsFalse(Regex.IsMatch(designer, @"\.(Font|ForeColor|BackColor|FlatStyle|FlatAppearance|LinkColor|ActiveLinkColor|VisitedLinkColor)\b"),
+                "El estilo debe vivir en componentes y código del tema.");
             Assert.IsTrue(escala.Success);
             Assert.AreEqual(96f, float.Parse(escala.Groups[1].Value, CultureInfo.InvariantCulture));
             Assert.AreEqual(96f, float.Parse(escala.Groups[2].Value, CultureInfo.InvariantCulture));

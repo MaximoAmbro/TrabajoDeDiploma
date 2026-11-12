@@ -73,7 +73,7 @@ namespace Negocio
             GestorSesion.Instance.RequerirUsuario(idUsuario);
             if (!RepositorioSuscripciones.Instance.Cancelar(idUsuario))
             {
-                throw new InvalidOperationException("No tiene una suscripción activa para cancelar.");
+                throw new InvalidOperationException("No tenés una suscripción activa para cancelar.");
             }
         }
 
@@ -115,9 +115,9 @@ namespace Negocio
         {
             string detalle = actual == null
                 ? ""
-                : $" Su plan {actual.Plan} vence el {actual.FechaFin:dd/MM/yyyy}.";
+                : $" Tu plan {actual.Plan} vence el {actual.FechaFin:dd/MM/yyyy}.";
             return new ReglaNegocioException("RN-25",
-                "Ya tiene una suscripción activa: no se pueden tener dos al mismo tiempo." + detalle);
+                "Ya tenés una suscripción activa: no se pueden tener dos al mismo tiempo." + detalle);
         }
     }
 }

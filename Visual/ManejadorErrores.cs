@@ -9,9 +9,9 @@ namespace Visual
     {
         public const string Titulo = "EventAura";
         public const string MensajeBaseDeDatos =
-            "No se pudo conectar con la base de datos. Verifique que SQL Server esté en funcionamiento y vuelva a intentar.";
+            "No se pudo conectar con la base de datos. Verificá que SQL Server esté en funcionamiento y volvé a intentar.";
         public const string MensajeGeneral =
-            "Ocurrió un error inesperado y la operación no se completó. Si se repite, avise al administrador.";
+            "Ocurrió un error inesperado y la operación no se completó. Si se repite, avisá al administrador.";
 
         // Lo llama Program.Main antes de crear cualquier formulario.
         public static void Instalar()

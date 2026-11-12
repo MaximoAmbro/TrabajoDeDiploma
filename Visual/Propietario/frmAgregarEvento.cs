@@ -30,12 +30,12 @@ namespace Visual.Propietario
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
-                MessageBox.Show("Ingrese el nombre del evento.", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá el nombre del evento.", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (cmbCategoria.SelectedItem == null)
             {
-                MessageBox.Show("Seleccione la categoría del evento.", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleccioná la categoría del evento.", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -58,7 +58,7 @@ namespace Visual.Propietario
                 MessageBox.Show(ex.Message, "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            MessageBox.Show("Evento guardado como borrador. Para publicarlo, agréguele un sector desde «Administrar Evento».", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Evento guardado como borrador. Para publicarlo, agregale un sector desde «Administrar Evento».", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Information);
             VolverAlListado();
         }
 

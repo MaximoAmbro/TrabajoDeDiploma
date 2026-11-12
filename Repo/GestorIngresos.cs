@@ -30,7 +30,7 @@ namespace Negocio
                 return Resultado(MotivoIngreso.Valido, "Ingreso válido. Bienvenido.", ahora);
             // Otra puerta pudo registrar o reembolsar la entrada entre la lectura y el UPDATE.
             return RechazoDe(RepositorioEntradas.Instance.PorCodigo(codigo), idEvento)
-                ?? Resultado(MotivoIngreso.NoConfirmado, "La entrada cambió. Vuelva a escanear.");
+                ?? Resultado(MotivoIngreso.NoConfirmado, "La entrada cambió. Volvé a escanear.");
         }
 
         public int Contar(int idEvento)

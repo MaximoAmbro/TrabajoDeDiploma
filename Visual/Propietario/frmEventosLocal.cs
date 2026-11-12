@@ -31,7 +31,7 @@ namespace Visual.Vendedor
         {
             if (dgvEventos.CurrentRow == null)
             {
-                MessageBox.Show("Debe seleccionar un evento", "Eventos del local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Tenés que seleccionar un evento", "Eventos del local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -49,7 +49,7 @@ namespace Visual.Vendedor
             }
             catch (ReglaNegocioException ex)
             {
-                DialogResult respuesta = MessageBox.Show(ex.Message + " (" + ex.Regla + ")\n\n¿Desea suspenderlo?",
+                DialogResult respuesta = MessageBox.Show(ex.Message + " (" + ex.Regla + ")\n\n¿Querés suspenderlo?",
                     "Suspender evento", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button2);
                 if (respuesta == DialogResult.Yes)
@@ -85,7 +85,7 @@ namespace Visual.Vendedor
         {
             if (dgvEventos.CurrentRow == null)
             {
-                MessageBox.Show("Debe seleccionar un evento", "Eventos del local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Tenés que seleccionar un evento", "Eventos del local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             frmAdministrarEvento frm = new frmAdministrarEvento();

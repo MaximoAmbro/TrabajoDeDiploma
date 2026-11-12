@@ -69,28 +69,28 @@ namespace Visual
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
-                MessageBox.Show("Ingrese su nombre.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá tu nombre.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtApellido.Text))
             {
-                MessageBox.Show("Ingrese su apellido.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá tu apellido.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtmail.Text))
             {
-                MessageBox.Show("Ingrese su correo electrónico.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá tu correo electrónico.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (string.IsNullOrEmpty(TxtPassword.Text))
             {
-                MessageBox.Show("Ingrese contraseña: ", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá contraseña: ", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
 
             }
             if (string.IsNullOrEmpty(TxtConfirmpassword.Text))
             {
-                MessageBox.Show("Ingrese segunda contraseña: ", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingresá segunda contraseña: ", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             if (TxtPassword.Text != TxtConfirmpassword.Text)

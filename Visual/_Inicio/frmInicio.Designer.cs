@@ -79,7 +79,7 @@
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(178, 32);
             this.checkbxShowPass.TabIndex = 10;
-            this.checkbxShowPass.Text = "Show Password";
+            this.checkbxShowPass.Text = "Mostrar contraseña";
             this.checkbxShowPass.UseVisualStyleBackColor = true;
             this.checkbxShowPass.CheckedChanged += new System.EventHandler(this.checkbxShowPass_CheckedChanged);
             // 

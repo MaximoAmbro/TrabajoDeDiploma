@@ -89,7 +89,7 @@ namespace Negocio
         {
             if (string.IsNullOrWhiteSpace(mail))
             {
-                throw new ReglaNegocioException("RN-01", "Ingrese un mail.");
+                throw new ReglaNegocioException("RN-01", "Ingresá un mail.");
             }
             if (tipoUsuario != TipoCliente && tipoUsuario != TipoPropietario)
             {
@@ -195,7 +195,7 @@ namespace Negocio
 
             int restantes = intentosMax - intentos;
             return new ReglaNegocioException("RN-04",
-                $"Mail o contraseña incorrectos. Le quedan {restantes} " +
+                $"Mail o contraseña incorrectos. Te quedan {restantes} " +
                 (restantes == 1 ? "intento" : "intentos") + " antes de que la cuenta se bloquee.");
         }
 
@@ -203,7 +203,7 @@ namespace Negocio
         {
             int minutos = Math.Max(1, (int)Math.Ceiling((hasta - ahora).TotalMinutes));
             return new ReglaNegocioException("RN-04",
-                $"La cuenta está bloqueada por demasiados intentos fallidos. Vuelva a intentar en {minutos} " +
+                $"La cuenta está bloqueada por demasiados intentos fallidos. Volvé a intentar en {minutos} " +
                 (minutos == 1 ? "minuto." : "minutos."));
         }
 

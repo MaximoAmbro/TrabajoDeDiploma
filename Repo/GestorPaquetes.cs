@@ -206,7 +206,7 @@ namespace Negocio
                 throw new ReglaNegocioException("RN-39",
                     $"«{evento.Nombre}» está en preventa exclusiva para suscriptores hasta el " +
                     $"{evento.FinPreventa.Value:dd/MM/yyyy} a las {evento.FinPreventa.Value:HH:mm}. " +
-                    "Contrate una suscripción desde «Mi suscripción» o vuelva cuando termine la preventa.");
+                    "Contratá una suscripción desde «Mi suscripción» o volvé cuando termine la preventa.");
             }
         }
 
@@ -229,7 +229,7 @@ namespace Negocio
             if (total > maximo)
             {
                 string detalle = enOtrosSectores > 0
-                    ? $" Ya tiene {enOtrosSectores} en otros sectores."
+                    ? $" Ya tenés {enOtrosSectores} en otros sectores."
                     : "";
                 throw new ReglaNegocioException("RN-12",
                     $"Se pueden comprar como máximo {maximo} entradas por operación.{detalle}");

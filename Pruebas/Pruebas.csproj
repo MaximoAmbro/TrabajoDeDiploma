@@ -28,6 +28,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Design" />
   </ItemGroup>
 
   <ItemGroup>

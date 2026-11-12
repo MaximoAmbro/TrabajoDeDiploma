@@ -124,7 +124,7 @@ namespace Visual.Vendedor
             }
             else
             {
-                MessageBox.Show("Por favor, selecciona un sector para eliminar.", "Administrar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, seleccioná un sector para eliminar.", "Administrar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         private void btnVolver_Click1(object sender, EventArgs e)

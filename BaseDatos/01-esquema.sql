@@ -124,6 +124,9 @@ GO
 
 -- Constraints sobre las columnas nuevas: van en otro lote porque SQL Server no resuelve
 -- en el mismo lote una columna agregada por ALTER TABLE.
+ALTER TABLE Entradas WITH CHECK ADD CONSTRAINT CK_Entradas_Estado
+    CHECK (Estado IN ('Pendiente','Confirmada','Reembolsada','Vencida'));
+
 ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Sectores
       FOREIGN KEY (ID_Sector) REFERENCES Sectores(ID);
 
