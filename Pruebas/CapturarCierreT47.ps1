@@ -1,4 +1,4 @@
-﻿param([Parameter(Mandatory=$true)][string]$Visual, [Parameter(Mandatory=$true)][string]$Salida, [int]$Escala=100)
+﻿param([Parameter(Mandatory=$true)][string]$Visual, [Parameter(Mandatory=$true)][string]$Salida, [int]$Escala=100, [string]$Pantallas="")
 $ErrorActionPreference='Stop'
 $raizCaptura = Split-Path $PSScriptRoot -Parent
 $binarioCaptura = [IO.Path]::GetFullPath((Join-Path $raizCaptura $Visual))
@@ -20,7 +20,7 @@ public class CapturaCierreT47 {
   Application.EnableVisualStyles();
   var ensamblado=Assembly.LoadFrom(args[0]); string salida=args[1]; int escala=int.Parse(args[2]);
   var lineas=new List<string>{"Pantalla;Control;Texto;Fuente;Puntos;Ancho;Alto;AnchoPreferido;AltoPreferido;TextoCompleto;Dpi;Cliente;Ventana;Dentro;WorkArea"};
-  foreach(string nombre in new[]{"frmEventosCliente","frmEventosLocal","frmReportes"}) {
+  foreach(string nombre in args.Length>3 && args[3].Length>0 ? args[3].Split(',') : new[]{"frmEventosCliente","frmEventosLocal","frmReportes"}) {
    using(var form=(Form)Activator.CreateInstance(ensamblado.GetTypes().Single(t=>t.Name==nombre))) {
     // Fixture de disposición sin datos: se abre el formulario real, sin consultar bases.
     object clave=typeof(Form).GetField("EVENT_LOAD",BindingFlags.NonPublic|BindingFlags.Static).GetValue(null);
@@ -30,8 +30,7 @@ public class CapturaCierreT47 {
     form.Show(); form.Refresh(); Application.DoEvents();
     int dpi=(int)GetDpiForWindow(form.Handle);
     if(dpi!=escala*96/100) throw new Exception("DPI real inesperado: "+dpi+" para "+escala);
-    var ids=nombre=="frmEventosCliente"?new[]{"btnBuscar","btnLimpiar","btnVolver"}:
-      nombre=="frmEventosLocal"?new[]{"btnAdministrarEvento","btnVolver"}:new[]{"btnGenerar","btnExportar","btnVolver"};
+    var ids = Hijos(form).OfType<Button>().Where(b=>b.Name.Length>0).Select(b=>b.Name).ToArray();
     foreach(string id in ids) {
      var boton=(Button)form.Controls.Find(id,true).Single(); boton.Enabled=true;
      boton.AutoSizeMode=AutoSizeMode.GrowAndShrink;
@@ -44,12 +43,14 @@ public class CapturaCierreT47 {
     }
     form.Refresh(); Application.DoEvents();
     using(var imagen=new Bitmap(form.Width,form.Height)) using(var g=Graphics.FromImage(imagen)) {
-     g.CopyFromScreen(form.Location,Point.Empty,form.Size); imagen.Save(Path.Combine(salida,nombre+".png"));
+     g.CopyFromScreen(form.Location,Point.Empty,form.Size); imagen.Save(Path.Combine(salida,nombre+"-escritorio.png"));
     }
+    using(var completa=new Bitmap(form.Width,form.Height)) {form.DrawToBitmap(completa,new Rectangle(Point.Empty,form.Size));completa.Save(Path.Combine(salida,nombre+".png"));}
    }
   }
   File.WriteAllLines(Path.Combine(salida,"medidas.csv"),lineas,System.Text.Encoding.UTF8);
  }
+ static IEnumerable<Control> Hijos(Control padre) { foreach(Control c in padre.Controls) {yield return c;foreach(var h in Hijos(c)) yield return h;} }
  static double Medir(Button boton) {
   using(var imagen=new Bitmap(boton.Width,boton.Height)) {
    boton.DrawToBitmap(imagen,new Rectangle(Point.Empty,imagen.Size)); double tinta=0; var fondo=boton.BackColor;
@@ -68,5 +69,5 @@ $exeCaptura=Join-Path (Split-Path $binarioCaptura -Parent) 'CapturaCierreT47.exe
 $cscCaptura=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 & $cscCaptura /nologo /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.Core.dll "/win32manifest:$(Join-Path $raizCaptura 'Visual/app.manifest')" "/out:$exeCaptura" $fuenteRutaCaptura
 if($LASTEXITCODE -ne 0) { throw 'No compiló la captura.' }
-& $exeCaptura $binarioCaptura $salidaCaptura $Escala
+& $exeCaptura $binarioCaptura $salidaCaptura $Escala $Pantallas
 if($LASTEXITCODE -ne 0) { throw 'Falló la captura.' }

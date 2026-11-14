@@ -79,7 +79,7 @@
             this.btnVolver.Location = new System.Drawing.Point(9, 375);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(113, 28);
+            this.btnVolver.Size = new System.Drawing.Size(116, 31);
             this.btnVolver.TabIndex = 42;
             this.btnVolver.Text = "Volver";
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
@@ -100,7 +100,7 @@
             this.btnAdministrarEvento.Location = new System.Drawing.Point(290, 306);
             this.btnAdministrarEvento.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnAdministrarEvento.Name = "btnAdministrarEvento";
-            this.btnAdministrarEvento.Size = new System.Drawing.Size(208, 35);
+            this.btnAdministrarEvento.Size = new System.Drawing.Size(215, 35);
             this.btnAdministrarEvento.TabIndex = 47;
             this.btnAdministrarEvento.Text = "Administrar Evento";
             this.btnAdministrarEvento.Click += new System.EventHandler(this.btnAdministrarEvento_Click);
@@ -120,7 +120,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(773, 412);
+            this.ClientSize = new System.Drawing.Size(773, 415);
             this.Controls.Add(this.btnAgregarEvento);
             this.Controls.Add(this.btnAdministrarEvento);
             this.Controls.Add(this.lblNombre);

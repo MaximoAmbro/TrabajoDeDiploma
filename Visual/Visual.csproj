@@ -299,6 +299,7 @@
     </EmbeddedResource>
     <Compile Include="Componentes\BotonTematico.cs" />
     <Compile Include="Componentes\Etiquetas.cs" />
+    <Compile Include="Componentes\ExtrasVisuales.cs" />
     <Compile Include="Disposicion.cs" />
     <Compile Include="Componentes\BotonPrimario.cs" />
     <Compile Include="Componentes\BotonSecundario.cs" />

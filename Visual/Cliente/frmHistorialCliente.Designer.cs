@@ -97,7 +97,7 @@
             this.btnDevolver.Location = new System.Drawing.Point(561, 466);
             this.btnDevolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnDevolver.Name = "btnDevolver";
-            this.btnDevolver.Size = new System.Drawing.Size(200, 36);
+            this.btnDevolver.Size = new System.Drawing.Size(232, 36);
             this.btnDevolver.TabIndex = 2;
             this.btnDevolver.Text = "Devolver";
             this.btnDevolver.Click += new System.EventHandler(this.btnDevolver_Click);
@@ -114,7 +114,7 @@
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(773, 560);
+            this.ClientSize = new System.Drawing.Size(805, 560);
             this.Controls.Add(this.lblAyuda);
             this.Controls.Add(this.btnDevolver);
             this.Controls.Add(this.dgvEntradas);

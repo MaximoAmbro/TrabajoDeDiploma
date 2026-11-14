@@ -41,36 +41,36 @@ namespace Visual
             // label1
             //
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(64, 30);
+            this.label1.Location = new System.Drawing.Point(24, 24);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(268, 50);
+            this.label1.Size = new System.Drawing.Size(392, 32);
             this.label1.TabIndex = 30;
             this.label1.Text = "Mi suscripción";
             //
             // lblEstado
             //
-            this.lblEstado.Location = new System.Drawing.Point(30, 96);
+            this.lblEstado.Location = new System.Drawing.Point(24, 72);
             this.lblEstado.Name = "lblEstado";
-            this.lblEstado.Size = new System.Drawing.Size(334, 78);
+            this.lblEstado.Size = new System.Drawing.Size(392, 48);
             this.lblEstado.TabIndex = 31;
             this.lblEstado.Text = "Estado";
             this.lblEstado.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             //
             // lblBeneficios
             //
-            this.lblBeneficios.Location = new System.Drawing.Point(30, 182);
+            this.lblBeneficios.Location = new System.Drawing.Point(24, 128);
             this.lblBeneficios.Name = "lblBeneficios";
-            this.lblBeneficios.Size = new System.Drawing.Size(334, 130);
+            this.lblBeneficios.Size = new System.Drawing.Size(392, 104);
             this.lblBeneficios.TabIndex = 32;
             this.lblBeneficios.Text = "Beneficios";
             //
             // rdbMensual
             //
             this.rdbMensual.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.rdbMensual.Location = new System.Drawing.Point(67, 318);
+            this.rdbMensual.Location = new System.Drawing.Point(24, 248);
             this.rdbMensual.Name = "rdbMensual";
-            this.rdbMensual.Size = new System.Drawing.Size(258, 26);
+            this.rdbMensual.Size = new System.Drawing.Size(392, 24);
             this.rdbMensual.TabIndex = 0;
             this.rdbMensual.TabStop = true;
             this.rdbMensual.Text = "Mensual";
@@ -78,19 +78,19 @@ namespace Visual
             // rdbAnual
             //
             this.rdbAnual.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.rdbAnual.Location = new System.Drawing.Point(67, 348);
+            this.rdbAnual.Location = new System.Drawing.Point(24, 280);
             this.rdbAnual.Name = "rdbAnual";
-            this.rdbAnual.Size = new System.Drawing.Size(258, 26);
+            this.rdbAnual.Size = new System.Drawing.Size(392, 24);
             this.rdbAnual.TabIndex = 1;
             this.rdbAnual.Text = "Anual";
             //
             // btnContratar
             //
             this.btnContratar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnContratar.Location = new System.Drawing.Point(67, 386);
+            this.btnContratar.Location = new System.Drawing.Point(232, 320);
             this.btnContratar.Margin = new System.Windows.Forms.Padding(2);
             this.btnContratar.Name = "btnContratar";
-            this.btnContratar.Size = new System.Drawing.Size(258, 60);
+            this.btnContratar.Size = new System.Drawing.Size(184, 40);
             this.btnContratar.TabIndex = 2;
             this.btnContratar.Text = "Contratar";
             this.btnContratar.Click += new System.EventHandler(this.btnContratar_Click);
@@ -98,10 +98,10 @@ namespace Visual
             // btnCancelar
             //
             this.btnCancelar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancelar.Location = new System.Drawing.Point(67, 458);
+            this.btnCancelar.Location = new System.Drawing.Point(24, 320);
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(258, 40);
+            this.btnCancelar.Size = new System.Drawing.Size(192, 40);
             this.btnCancelar.TabIndex = 3;
             this.btnCancelar.Text = "Cancelar suscripción";
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
@@ -109,19 +109,19 @@ namespace Visual
             // btnVolver
             //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(9, 548);
+            this.btnVolver.Location = new System.Drawing.Point(24, 384);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(113, 36);
+            this.btnVolver.Size = new System.Drawing.Size(136, 40);
             this.btnVolver.TabIndex = 4;
             this.btnVolver.Text = "Volver";
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
             //
             // frmSuscripcion
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(394, 595);
+            this.ClientSize = new System.Drawing.Size(440, 448);
             this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnContratar);

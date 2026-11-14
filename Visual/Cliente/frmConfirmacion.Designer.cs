@@ -95,7 +95,7 @@ namespace Visual
             this.btnAbrirCarpeta.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAbrirCarpeta.Location = new System.Drawing.Point(28, 520);
             this.btnAbrirCarpeta.Name = "btnAbrirCarpeta";
-            this.btnAbrirCarpeta.Size = new System.Drawing.Size(150, 44);
+            this.btnAbrirCarpeta.Size = new System.Drawing.Size(167, 44);
             this.btnAbrirCarpeta.TabIndex = 1;
             this.btnAbrirCarpeta.Text = "Abrir carpeta";
             this.btnAbrirCarpeta.Click += new System.EventHandler(this.btnAbrirCarpeta_Click);

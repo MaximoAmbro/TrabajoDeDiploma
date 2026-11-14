@@ -47,7 +47,7 @@
             this.btnVolver.Location = new System.Drawing.Point(12, 374);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(112, 28);
+            this.btnVolver.Size = new System.Drawing.Size(116, 31);
             this.btnVolver.TabIndex = 47;
             this.btnVolver.Text = "Volver";
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click1);
@@ -141,7 +141,7 @@
             this.btnGuardarPreventa.Location = new System.Drawing.Point(57, 128);
             this.btnGuardarPreventa.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnGuardarPreventa.Name = "btnGuardarPreventa";
-            this.btnGuardarPreventa.Size = new System.Drawing.Size(162, 40);
+            this.btnGuardarPreventa.Size = new System.Drawing.Size(202, 40);
             this.btnGuardarPreventa.TabIndex = 57;
             this.btnGuardarPreventa.Text = "Guardar preventa";
             this.btnGuardarPreventa.Click += new System.EventHandler(this.btnGuardarPreventa_Click);
@@ -150,7 +150,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(773, 412);
+            this.ClientSize = new System.Drawing.Size(773, 415);
             this.Controls.Add(this.btnGuardarPreventa);
             this.Controls.Add(this.dtpFinPreventa);
             this.Controls.Add(this.lblPreventa);

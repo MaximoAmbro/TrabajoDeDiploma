@@ -174,7 +174,7 @@ namespace Visual
             this.btnCancelar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCancelar.Location = new System.Drawing.Point(28, 424);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(150, 44);
+            this.btnCancelar.Size = new System.Drawing.Size(177, 44);
             this.btnCancelar.TabIndex = 5;
             this.btnCancelar.Text = "Cancelar pago";
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);

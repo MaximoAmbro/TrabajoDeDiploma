@@ -63,6 +63,7 @@ namespace Visual
                 Tema.ComoSuperficie(superficie);
             Tema.ComoDocumento(lblResumen);
             Tema.ComoEnlace(lnkNiveles);
+            Tema.ComoEnlace(lnkPosicionEspera);
             accionesCompra = pnlAccionesCompra;
             contenidoCompra = pnlContenidoCompra;
             // El panel pinta el fondo; las etiquetas hermanas deben quedar delante.
@@ -106,12 +107,13 @@ namespace Visual
                 Point desplazamiento = contenidoCompra.AutoScrollPosition;
                 contenidoCompra.SuspendLayout();
                 int ancho = Math.Max(0, anchoUsado - margen * 2);
-                label1.SetBounds(margen + desplazamiento.X, (int)(Tema.Espacio.XS * escala) + desplazamiento.Y,
+                indicadorPasos.SetBounds(margen, 0, ancho, (int)(Tema.AltoBoton * escala));
+                label1.SetBounds(margen, indicadorPasos.Bottom + separacion,
                     ancho, label1.GetPreferredSize(new Size(ancho, 0)).Height);
-                lblNivel.Location = new Point(margen + desplazamiento.X, label1.Bottom + separacion);
+                lblNivel.Location = new Point(margen, label1.Bottom + separacion);
                 lnkNiveles.Location = new Point(lblNivel.Right + separacion, lblNivel.Top);
                 int altoEncabezado = Math.Max((int)(Tema.AltoEncabezadoVentana * escala),
-                    Math.Max(lblNivel.Bottom, lnkNiveles.Bottom) - desplazamiento.Y + separacion);
+                    Math.Max(lblNivel.Bottom, lnkNiveles.Bottom) + separacion);
                 pnlEncabezadoCompra.SetBounds(desplazamiento.X, desplazamiento.Y, anchoUsado, altoEncabezado);
                 int inicio = altoEncabezado + margen + desplazamiento.Y;
                 int columna = Math.Max(0, (ancho - margen) / 2);
@@ -119,6 +121,8 @@ namespace Visual
                 dgvSectores.Width = Math.Max(0, columna - relleno * 2);
                 lblAgotado.Width = dgvSectores.Width;
                 btnListaEspera.Left = (columna - btnListaEspera.Width) / 2;
+                lnkPosicionEspera.Left = btnListaEspera.Left;
+                lnkPosicionEspera.Width = Math.Max(0,columna-relleno*2);
                 pnlTarjetaServicios.SetBounds(margen + desplazamiento.X, pnlTarjetaEntradas.Bottom + margen,
                     columna, pnlTarjetaServicios.Height);
                 foreach (CheckBox casilla in ChecksDeServicio().Concat(new[] { chkSeguro }))
@@ -128,6 +132,9 @@ namespace Visual
                 int altoVista = Math.Max(0, contenidoCompra.ClientSize.Height - margen * 2);
                 pnlResumen.Location = new Point(margen + columna + margen + desplazamiento.X, inicio);
                 Disposicion.AjustarDocumento(pnlResumen, lblResumen, altoVista);
+                lblTotalDestacado.MaximumSize = new Size(lblResumen.Width, 0);
+                lblTotalDestacado.Location = new Point(relleno, lblResumen.Bottom + separacion);
+                pnlResumen.AutoScrollMinSize = new Size(0, lblTotalDestacado.Bottom - pnlResumen.AutoScrollPosition.Y + relleno);
             }
             finally
             {
@@ -204,10 +211,7 @@ namespace Visual
                 // rehabilitar solo los servicios que el evento realmente ofrece (RN-14).
                 chk.Enabled = !agotado && chk.Tag is Servicio;
             }
-            if (agotado)
-            {
-                MarcarInscripto(GestorListaEspera.Instance.EstaInscripto(IDEvento, IDUsuario));
-            }
+            MarcarInscripto(GestorListaEspera.Instance.EstaInscripto(IDEvento, IDUsuario));
             ActualizarHabilitados();
         }
 
@@ -225,8 +229,16 @@ namespace Visual
         // RF-10: después de anotarse el botón queda deshabilitado, diciendo que ya está en la lista.
         private void MarcarInscripto(bool inscripto)
         {
+            lnkPosicionEspera.Visible = inscripto;
             btnListaEspera.Enabled = !inscripto;
             btnListaEspera.Text = inscripto ? "Ya estás en la lista de espera" : "Anotarme en la lista de espera";
+        }
+
+        private void lnkPosicionEspera_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            int? posicion = GestorListaEspera.Instance.ConsultarPosicion(IDEvento, IDUsuario);
+            MessageBox.Show(posicion.HasValue ? "Tu posición actual en la lista es " + posicion.Value + "." :
+                "No estás en la lista de espera de este evento.", "Mi posición", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnListaEspera_Click(object sender, EventArgs e)
@@ -251,7 +263,7 @@ namespace Visual
             }
             MarcarInscripto(true);
             MessageBox.Show("Te anotaste en la lista de espera de «" + evento.Nombre + "». " +
-                            "Te vamos a notificar si se libera un lugar.",
+                            "Podés consultar tu posición. Si vuelve a haber entradas, te lo mostramos al iniciar sesión.",
                             "Lista de espera", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         // RF-06: reserva el cupo y pasa a la pantalla de pago.
@@ -589,6 +601,8 @@ namespace Visual
             texto.AppendLine("El descuento se aplica sobre el valor");
             texto.AppendLine("de las entradas.");
             lblResumen.Text = texto.ToString();
+            lblTotalDestacado.Text = "TOTAL " + resumen.Total.ToString("C2", Pesos);
+            AjustarEncabezado();
             ActualizarHabilitados();
         }
 

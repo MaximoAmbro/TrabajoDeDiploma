@@ -27,6 +27,13 @@ namespace Visual
             this.chkSeguro = new System.Windows.Forms.CheckBox();
             this.pnlResumen = new System.Windows.Forms.Panel();
             this.lblResumen = new System.Windows.Forms.Label();
+            this.lnkPosicionEspera = new System.Windows.Forms.LinkLabel();
+            this.lnkPosicionEspera.Name = "lnkPosicionEspera";
+            this.lnkPosicionEspera.Text = "Consultar mi posición";
+            this.lnkPosicionEspera.Location = new System.Drawing.Point(40, 192);
+            this.lnkPosicionEspera.Size = new System.Drawing.Size(320, 24);
+            this.lnkPosicionEspera.Visible = false;
+            this.lnkPosicionEspera.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkPosicionEspera_LinkClicked);
             this.lblAgotado = new System.Windows.Forms.Label();
             this.btnListaEspera = new Visual.Componentes.BotonSecundario();
             this.pnlEncabezadoCompra = new System.Windows.Forms.Panel();
@@ -44,6 +51,18 @@ namespace Visual
             this.pnlTarjetaEntradas.SuspendLayout();
             this.pnlTarjetaServicios.SuspendLayout();
             this.pnlResumen.SuspendLayout();
+            this.indicadorPasos = new Visual.Componentes.IndicadorPasos();
+            this.indicadorPasos.Name = "indicadorPasos";
+            this.indicadorPasos.PasoActual = 2;
+            this.indicadorPasos.Location = new System.Drawing.Point(24, 8);
+            this.indicadorPasos.Size = new System.Drawing.Size(832, 32);
+            this.pnlEncabezadoCompra.Controls.Add(this.indicadorPasos);
+            this.lblTotalDestacado = new Visual.Componentes.EtiquetaTotal();
+            this.lblTotalDestacado.Name = "lblTotalDestacado";
+            this.lblTotalDestacado.AutoSize = true;
+            this.lblTotalDestacado.Location = new System.Drawing.Point(16, 80);
+            this.lblTotalDestacado.Size = new System.Drawing.Size(320, 40);
+            this.pnlResumen.Controls.Add(this.lblTotalDestacado);
             this.SuspendLayout();
             //
             // btnVolver
@@ -167,7 +186,7 @@ namespace Visual
             this.lblAgotado.Size = new System.Drawing.Size(368, 80);
             this.lblAgotado.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblAgotado.Visible = false;
-            this.lblAgotado.Text = "Entradas agotadas.\r\nAnotate en la lista de espera y te vamos a notificar si se libera un lugar.";
+            this.lblAgotado.Text = "Entradas agotadas.\r\nAnotate en la lista de espera. Los avisos de disponibilidad se muestran al iniciar sesión.";
             //
             // btnListaEspera
             //
@@ -186,9 +205,9 @@ namespace Visual
             this.pnlEncabezadoCompra.Width = 880;
             this.pnlEncabezadoCompra.Height = 72;
             this.pnlEncabezadoCompra.TabIndex = 0;
-            this.pnlContenidoCompra.Controls.Add(this.label1);
-            this.pnlContenidoCompra.Controls.Add(this.lblNivel);
-            this.pnlContenidoCompra.Controls.Add(this.lnkNiveles);
+            this.pnlEncabezadoCompra.Controls.Add(this.label1);
+            this.pnlEncabezadoCompra.Controls.Add(this.lblNivel);
+            this.pnlEncabezadoCompra.Controls.Add(this.lnkNiveles);
             this.pnlContenidoCompra.Controls.Add(this.label4);
             //
             // pnlContenidoCompra
@@ -222,6 +241,7 @@ namespace Visual
             this.pnlTarjetaEntradas.Controls.Add(this.dgvSectores);
             this.pnlTarjetaEntradas.Controls.Add(this.lblAgotado);
             this.pnlTarjetaEntradas.Controls.Add(this.btnListaEspera);
+            this.pnlTarjetaEntradas.Controls.Add(this.lnkPosicionEspera);
             //
             // pnlTarjetaServicios
             //
@@ -302,6 +322,9 @@ namespace Visual
         private System.Windows.Forms.CheckBox chkSeguro;
         private System.Windows.Forms.Panel pnlResumen;
         private System.Windows.Forms.Label lblResumen;
+        private Visual.Componentes.IndicadorPasos indicadorPasos;
+        private Visual.Componentes.EtiquetaTotal lblTotalDestacado;
+        private System.Windows.Forms.LinkLabel lnkPosicionEspera;
         private System.Windows.Forms.Label lblAgotado;
         private Visual.Componentes.BotonSecundario btnListaEspera;
         private System.Windows.Forms.Panel pnlEncabezadoCompra;

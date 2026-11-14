@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             this.lblNombre = new Visual.Componentes.EtiquetaTitulo();
-            this.lblvolver = new Visual.Componentes.EtiquetaRotulo();
+            this.lblvolver = new Visual.Componentes.BotonSecundario();
             this.label1 = new Visual.Componentes.EtiquetaTitulo();
             this.btnRegistrarLocal = new Visual.Componentes.BotonPrimario();
             this.btnMisLocales = new Visual.Componentes.BotonPrimario();
             this.btnListasEspera = new Visual.Componentes.BotonPrimario();
             this.btnReportes = new Visual.Componentes.BotonPrimario();
             this.btnControlIngreso = new Visual.Componentes.BotonPrimario();
-            this.btnControlIngreso.Location = new System.Drawing.Point(65, 554);
-            this.btnControlIngreso.Size = new System.Drawing.Size(348, 60);
+            this.btnControlIngreso.Location = new System.Drawing.Point(24, 304);
+            this.btnControlIngreso.Size = new System.Drawing.Size(352, 40);
             this.btnControlIngreso.Name = "btnControlIngreso";
             this.btnControlIngreso.Text = "Control de ingreso";
             this.btnControlIngreso.TabIndex = 41;
@@ -48,21 +48,21 @@
             // lblNombre
             // 
             this.lblNombre.AutoSize = true;
-            this.lblNombre.Location = new System.Drawing.Point(108, 145);
+            this.lblNombre.Location = new System.Drawing.Point(24, 64);
             this.lblNombre.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(252, 60);
+            this.lblNombre.Size = new System.Drawing.Size(352, 32);
             this.lblNombre.TabIndex = 38;
             this.lblNombre.Text = "[USUARIO]";
             this.lblNombre.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblvolver
             // 
-            this.lblvolver.AutoSize = true;
+            this.lblvolver.AutoSize = false;
             this.lblvolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblvolver.Location = new System.Drawing.Point(156, 662);
+            this.lblvolver.Location = new System.Drawing.Point(24, 384);
             this.lblvolver.Name = "lblvolver";
-            this.lblvolver.Size = new System.Drawing.Size(153, 28);
+            this.lblvolver.Size = new System.Drawing.Size(192, 40);
             this.lblvolver.TabIndex = 37;
             this.lblvolver.Text = "Volver al inicio";
             this.lblvolver.Click += new System.EventHandler(this.lblvolver_Click);
@@ -70,21 +70,21 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(108, 71);
+            this.label1.Location = new System.Drawing.Point(24, 24);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(271, 60);
+            this.label1.Size = new System.Drawing.Size(352, 32);
             this.label1.TabIndex = 36;
-            this.label1.Text = "Bienvenido ";
+            this.label1.Text = "Administración";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnRegistrarLocal
             // 
             this.btnRegistrarLocal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRegistrarLocal.Location = new System.Drawing.Point(65, 320);
+            this.btnRegistrarLocal.Location = new System.Drawing.Point(24, 160);
             this.btnRegistrarLocal.Margin = new System.Windows.Forms.Padding(2);
             this.btnRegistrarLocal.Name = "btnRegistrarLocal";
-            this.btnRegistrarLocal.Size = new System.Drawing.Size(348, 60);
+            this.btnRegistrarLocal.Size = new System.Drawing.Size(352, 40);
             this.btnRegistrarLocal.TabIndex = 35;
             this.btnRegistrarLocal.Text = "Registrar local";
             this.btnRegistrarLocal.Click += new System.EventHandler(this.btnRegistrarLocal_Click);
@@ -92,10 +92,10 @@
             // btnMisLocales
             // 
             this.btnMisLocales.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMisLocales.Location = new System.Drawing.Point(65, 242);
+            this.btnMisLocales.Location = new System.Drawing.Point(24, 112);
             this.btnMisLocales.Margin = new System.Windows.Forms.Padding(2);
             this.btnMisLocales.Name = "btnMisLocales";
-            this.btnMisLocales.Size = new System.Drawing.Size(348, 60);
+            this.btnMisLocales.Size = new System.Drawing.Size(352, 40);
             this.btnMisLocales.TabIndex = 34;
             this.btnMisLocales.Text = "Mis locales";
             this.btnMisLocales.Click += new System.EventHandler(this.btnMisLocales_Click);
@@ -103,10 +103,10 @@
             // btnListasEspera
             //
             this.btnListasEspera.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnListasEspera.Location = new System.Drawing.Point(65, 398);
+            this.btnListasEspera.Location = new System.Drawing.Point(24, 208);
             this.btnListasEspera.Margin = new System.Windows.Forms.Padding(2);
             this.btnListasEspera.Name = "btnListasEspera";
-            this.btnListasEspera.Size = new System.Drawing.Size(348, 60);
+            this.btnListasEspera.Size = new System.Drawing.Size(352, 40);
             this.btnListasEspera.TabIndex = 39;
             this.btnListasEspera.Text = "Listas de espera";
             this.btnListasEspera.Click += new System.EventHandler(this.btnListasEspera_Click);
@@ -114,19 +114,19 @@
             // btnReportes
             //
             this.btnReportes.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnReportes.Location = new System.Drawing.Point(65, 476);
+            this.btnReportes.Location = new System.Drawing.Point(24, 256);
             this.btnReportes.Margin = new System.Windows.Forms.Padding(2);
             this.btnReportes.Name = "btnReportes";
-            this.btnReportes.Size = new System.Drawing.Size(348, 60);
+            this.btnReportes.Size = new System.Drawing.Size(352, 40);
             this.btnReportes.TabIndex = 40;
             this.btnReportes.Text = "Reportes";
             this.btnReportes.Click += new System.EventHandler(this.btnReportes_Click);
             // 
             // frmMenuVendedor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(473, 714);
+            this.ClientSize = new System.Drawing.Size(400, 448);
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
             this.Controls.Add(this.label1);
@@ -147,7 +147,7 @@
         #endregion
 
         private Visual.Componentes.EtiquetaTitulo lblNombre;
-        private Visual.Componentes.EtiquetaRotulo lblvolver;
+        private Visual.Componentes.BotonSecundario lblvolver;
         private Visual.Componentes.EtiquetaTitulo label1;
         private Visual.Componentes.BotonPrimario btnRegistrarLocal;
         private Visual.Componentes.BotonPrimario btnMisLocales;

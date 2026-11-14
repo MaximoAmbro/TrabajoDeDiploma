@@ -158,7 +158,7 @@ namespace Visual
             this.btnGenerar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGenerar.Location = new System.Drawing.Point(852, 66);
             this.btnGenerar.Name = "btnGenerar";
-            this.btnGenerar.Size = new System.Drawing.Size(120, 34);
+            this.btnGenerar.Size = new System.Drawing.Size(127, 34);
             this.btnGenerar.TabIndex = 6;
             this.btnGenerar.Text = "Generar";
             this.btnGenerar.Click += new System.EventHandler(this.btnGenerar_Click);
@@ -169,7 +169,7 @@ namespace Visual
             this.btnExportar.Enabled = false;
             this.btnExportar.Location = new System.Drawing.Point(852, 104);
             this.btnExportar.Name = "btnExportar";
-            this.btnExportar.Size = new System.Drawing.Size(160, 34);
+            this.btnExportar.Size = new System.Drawing.Size(167, 35);
             this.btnExportar.TabIndex = 7;
             this.btnExportar.Text = "Exportar PDF";
             this.btnExportar.Click += new System.EventHandler(this.btnExportar_Click);
@@ -204,7 +204,7 @@ namespace Visual
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1024, 632);
+            this.ClientSize = new System.Drawing.Size(1031, 632);
             this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.lblLectura);
             this.Controls.Add(this.dgvReporte);
