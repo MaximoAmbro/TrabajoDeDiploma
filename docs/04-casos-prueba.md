@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 112 casos en 109 métodos, que suman **184 ejecuciones**.
-CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-112 se
-agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-112» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 115 casos en 112 métodos, que suman **198 ejecuciones** (contadas en la corrida del 14/11 sobre el commit `fe04b1f`).
+CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-115 se
+agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-115» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -138,7 +138,7 @@ documentado, no todas sus variantes: CP-56 prueba eliminar el último sector, no
 sectores; CP-60 prueba agregar un sector, no modificarlo. En la matriz, RN-05 está en la fila
 de RF-02 y RN-39 en la de RF-13: por eso CP-55 y CP-61 llevan dos requerimientos.
 
-## Casos CP-62 a CP-112
+## Casos CP-62 a CP-115
 
 Registrados por Claude Code el 13/11/2026. Salen del comentario `// CP-xx — RF, RN` y del nombre
 visible de cada prueba en `Pruebas/`, leídos uno por uno. **Ninguno se volvió a correr para
@@ -157,22 +157,26 @@ escritorio abierta.
 
 | Ejecuciones | Casos |
 |---|---|
-| 19 | CP-63 |
+| 20 | CP-63 |
 | 8 | CP-88 |
 | 7 | CP-112 |
 | 5 | CP-82 y CP-87 |
-| 3 | CP-72, CP-81 y CP-85 |
+| 6 | CP-115 |
+| 4 | CP-113 |
+| 3 | CP-72, CP-81, CP-85 y CP-114 |
 | 2 | CP-66, CP-68, CP-69, CP-70, CP-71, CP-73, CP-74, CP-75, CP-77, CP-79, CP-80, CP-83, CP-89, CP-105 y CP-111 |
 | 1 | El resto |
 
-CP-62 a CP-112 suman **111 ejecuciones**. Con las 73 de CP-01 a CP-61, la batería da **184**.
+CP-62 a CP-115 suman **125 ejecuciones**. Con las 73 de CP-01 a CP-61, la batería da **198**.
+Contadas en el resultado de la corrida completa del 14/11 (commit `fe04b1f`, copia de trabajo de la
+mutación con su propia base), no sumadas a mano.
 
-**Casos que fallan en la última batería: cuatro ejecuciones.**
-- Tres son de aspecto a escala 150 %:
-  - la fila «al 150 por ciento» de CP-69;
-  - CP-76;
-  - la fila «propietario» de CP-85.
-- Una es de comportamiento: CP-81, en la que la preventa rechazada deja visible la compra.
+**Casos que fallan en la corrida del 14/11: tres ejecuciones, las tres de aspecto a escala 150 %:**
+- la fila «al 150 por ciento» de CP-69;
+- CP-76;
+- la fila «propietario» de CP-85.
+
+CP-81, que fallaba en la batería del 12/11, pasa desde `2af267a` (Codex corrigió la preventa).
 
 **La columna «Hall.»** dice qué prueba manual reemplaza el caso. Los PA-xx son de
 `docs/PRUEBAS-64-CLASIFICACION.md`, y entre paréntesis van las filas de esa planilla. Los
@@ -185,7 +189,7 @@ sección 0).
 | CP | Archivo | Condición de entrada | Resultado esperado | RF | Reglas | Hall. |
 |---|---|---|---|---|---|---|
 | CP-62 | PruebasFormularios | Los colores y las fuentes de `Tema` | Cada par de texto y fondo cumple el contraste WCAG (el foco sobre el primario, al menos 3:1); las familias tipográficas existen en el sistema | RNF-02 | — | 6A |
-| CP-63 | PruebasFormularios | El código de cada una de las 19 pantallas originales y de su Designer (19 variantes) | Ninguna declara colores, fuentes ni medidas propias: el estilo sale de `Tema` | RNF-02 | — | T-48 |
+| CP-63 | PruebasFormularios | El código de cada una de las 20 pantallas y de su Designer (20 variantes) | Ninguna declara colores, fuentes ni medidas propias: el estilo sale de `Tema` | RNF-02 | — | T-48 |
 | CP-64 | PruebasFormularios | El proyecto `Visual` | El DPI se declara en el manifiesto, sin llamadas manuales en `Program` | RNF-03 | — | 6A |
 | CP-65 | PruebasInterfaz | Ticket PDF de una entrada confirmada, generado en una carpeta temporal | El texto del PDF conserva evento, sector, número de pedido y el código QR completo | RF-07 | RN-18 | — |
 | CP-66 | PruebasGrupoALogin | Abrir el login; iniciar sesión como Administrador (2 variantes) | El foco arranca en el correo; el Administrador llega al menú de propietario y queda en la sesión | RF-02 | RN-05 | PA-01 (3.1, C.1) |
@@ -235,6 +239,9 @@ sección 0).
 | CP-110 | PruebasIntegridadEntradas | Cada estado de `EstadoEntrada` y el estado ajeno «Usada», escritos en la tabla | La base admite los cuatro y rechaza el ajeno por `CK_Entradas_Estado`, que está activa y confiable | RF-07 | RN-18, RN-29 | — |
 | CP-111 | PruebasReembolsoConIngreso | Compra asegurada de 2 entradas: una ya ingresó; devolver las dos, en los dos órdenes (2 variantes) | RN-29 rechaza la devolución y no cambia nada, ni por el gestor ni por el repositorio. La entrada no usada se puede devolver sola | RF-07 | RN-18, RN-29 | SEG-2 |
 | CP-112 | PruebasSerializacionComponentes | Los siete componentes visuales en un host de diseño real (7 variantes) | Ninguno guarda su estilo en el Designer | RNF-01, RNF-02 | — | T-41 |
+| CP-113 | PruebasRevisionSeguridad | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41, RN-42 | K-6 (R-01) |
+| CP-114 | PruebasRevisionSeguridad | Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada (3 variantes) | El rechazo es idéntico en texto y título, sin revelar si la cuenta existe ni si está bloqueada; el bloqueo se registra igual | RF-02 | RN-04 | K-3 |
+| CP-115 | PruebasRevisionSeguridad | Descuento configurado de Plata y de Oro por debajo, igual y por encima de `DESCUENTO_MAX_ADMISIBLE` (6 variantes) | Por debajo o igual se aplica; por encima se rechaza con RN-20, sin recortarlo en silencio | RF-08 | RN-20 | K-4 |
 
 **Notas de lectura:**
 - **CP-105 y CP-109 son mediciones:** no verifican una defensa. CP-105 sí afirma que un hash más
@@ -243,8 +250,8 @@ sección 0).
   RN-26 sigue sin caso (criterio D-5 de la auditoría).
 - **CP-79 y CP-80 tocan el seguro,** pero no prueban que no se pueda agregar después de la compra.
   Por eso no llevan RN-28, aunque su comentario la nombre, y RN-28 sigue sin caso.
-- **El criterio D-5 está abierto.** Si JC elige contar estas tres, se agrega RN-26 a CP-77 y
-  RN-28 a CP-79 y CP-80. La cobertura pasa entonces de 37 a 39 de 41.
+- **Criterio D-5, resuelto por JC el 14/11: no se cuentan.** Codex escribe dos pruebas reales
+  para RN-26 y RN-28; cuando estén verdes, se registran y la cobertura pasa a 39 de 41.
 - **Las reglas de CP-91 a CP-104** son las que declara el comentario de la prueba. Si cada una
   resiste la mutación de su defensa, lo dice `docs/PLAN-MUTACION-SEGURIDAD.md` cuando se
   ejecute.

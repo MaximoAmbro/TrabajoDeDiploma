@@ -27,9 +27,9 @@ está al final, en «Para regenerar una imagen».
 | Página hoy | Qué hay | Qué va | Ficha |
 |---|---|---|---|
 | 71 | «Diagramas de caso de uso»: el general viejo | Dos diagramas: cliente y administrador | [1](#1-casos-de-uso) |
-| 72 a 85 | Especificaciones CU-01 a CU-08, cada una con un diagrama chico | **Sin cambios en esta entrega** (ver «Lo que no se hizo») | — |
+| 72 a 85 | Especificaciones CU-01 a CU-08, cada una con un diagrama chico | **Se quitan los ocho diagramas chicos** (D-7, 14/11): el general ya muestra todas sus relaciones | — |
 | 86, arriba | «Modelo de dominio conceptual» | El dominio conceptual nuevo | [7](#7-modelo-de-dominio-conceptual) |
-| 86, abajo | «Diagrama de clases» | Ocho vistas de clases más tres de patrones (11 figuras) | [2](#2-diagrama-de-clases) y [3](#3-patrones-de-diseño) |
+| 86, abajo | «Diagrama de clases» | Siete vistas de clases más tres de patrones (10 figuras) | [2](#2-diagrama-de-clases) y [3](#3-patrones-de-diseño) |
 | 87, arriba | «Diagrama de secuencia – Comprar paquete» | La secuencia en tres partes | [4](#4-secuencia-comprar-paquete) |
 | 87, abajo | «Diagrama de estados – Ciclo de vida de la entrada» | El diagrama de estados nuevo | [5](#5-transición-de-estados-de-la-entrada) |
 | 88, arriba | «Diagrama de robustez (ICONIX)» | La robustez de «Comprar paquete» | [9](#9-robustez-comprar-paquete) |
@@ -106,7 +106,7 @@ El diagrama del administrador va en la página siguiente, con el título «Diagr
 ## 2. Diagrama de clases
 
 El diagrama de clases completo tiene más de 40 clases y no entra legible en una página. Se
-presenta en ocho vistas, más tres de patrones (ficha 3).
+presenta en siete vistas, más tres de patrones (ficha 3).
 
 | Vista | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra |
 |---|---|---|---|
@@ -227,8 +227,8 @@ texto.
 > El sistema aplica cuatro patrones de diseño. Cada uno se muestra con su estructura y con un caso
 > real del código.
 >
-> **Singleton.** Todos los gestores de negocio, los repositorios de datos, la conexión, la pasarela
-> simulada y el generador de códigos QR tienen una única instancia: un campo estático privado
+> **Singleton.** Los doce gestores que aplican las reglas de negocio, los trece repositorios de
+> datos, la conexión, la pasarela simulada y el generador de códigos QR tienen una única instancia: un campo estático privado
 > `_instance`, un constructor privado y una propiedad estática `Instance` que crea la instancia la
 > primera vez que se pide (veintiocho clases en total). La implementación no usa bloqueo, porque la
 > aplicación es de escritorio y todas las llamadas ocurren en el hilo de la interfaz. En la figura,
@@ -378,7 +378,7 @@ página siguiente.
 **Texto para el documento:**
 
 > El diagrama entidad-relación se obtiene del script de creación de la base
-> (`BaseDatos/01-esquema.sql`) y muestra sus quince tablas en dos vistas. La primera reúne
+> (`BaseDatos/01-esquema.sql`) y muestra sus dieciséis tablas en dos vistas. La primera reúne
 > usuarios, locales, eventos, sectores, servicios, suscripciones, lista de espera y parámetros; la
 > segunda, la compra con sus pagos, entradas, servicios contratados y pólizas. Las tablas que
 > aparecen en las dos vistas se muestran completas en una sola y, en la otra, solo con su clave.

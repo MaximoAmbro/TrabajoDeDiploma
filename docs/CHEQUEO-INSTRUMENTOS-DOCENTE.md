@@ -62,11 +62,12 @@ Además se miraron los «Criterios de resolución» de la misma consigna, porque
 - **Costo:** el texto completo está en el Anexo 4 de `AUDITORIA-DOCUMENTO-CODIGO.md`.
   - Las horas son las de la escala de esfuerzo del documento: horas-persona de ingeniería, no
     tiempos de herramienta.
-  - El valor hora (V = $28.500) es un supuesto con fuente: Resolución 117 del Colegio de
-    Ingenieros Especialistas de Santa Fe, Analista Programador Junior. Lo confirma o lo cambia
+  - El valor hora (V = $30.500) es un supuesto con fuente: Resolución 123 del Colegio de
+    Ingenieros Especialistas de Santa Fe, vigente desde el 01/11/2026, Analista Programador
+    Junior. Lo confirma o lo cambia
     JC.
-  - Total: $8.892.000 para la estimación aprobada (312 h) y $7.980.000 para el alcance
-    construido (280 h). Con ±25 % en V, entre $6.669.000 y $11.115.000.
+  - Total: $9.516.000 para la estimación aprobada (312 h) y $8.540.000 para el alcance
+    construido (280 h). Con ±25 % en V, entre $7.137.000 y $11.895.000.
 
 ## 2. Los 16 errores frecuentes, sobre todo el documento
 
@@ -165,7 +166,8 @@ Lo que más cuesta, ordenado por horas de una persona:
 
 1. **D-4, las especificaciones: hechas el 14/11** (Anexo 3 de la auditoría). Falta que JC las
    revise y que Máximo pegue unas 8 páginas.
-   **D-7, los ocho diagramas chicos de CU-01 a CU-08 (pp. 72 a 85): decisión pendiente de JC.**
+   **D-7, los ocho diagramas chicos de CU-01 a CU-08 (pp. 72 a 85): resuelta el 14/11, se quitan**
+   (ver D-7 en la auditoría). Lo que sigue queda como historia de la decisión.
    Hoy pierden puntos por el error 12 (la pasarela como actor en CU-06) y, sin revisar, por los
    errores 8 y 16.
    - **(a) Quitarlos.** El diagrama general de casos de uso ya muestra cada caso con sus
@@ -196,7 +198,7 @@ Lo que más cuesta, ordenado por horas de una persona:
 **Portones humanos:**
 - **JC:**
   - datos de portada y fechas;
-  - confirmar o cambiar el valor hora de I-4 (V = $28.500);
+  - confirmar o cambiar el valor hora de I-4 (V = $30.500);
   - el rol de I-2;
   - D-2, D-3, D-5, D-6 y D-7;
   - pasar la matriz.

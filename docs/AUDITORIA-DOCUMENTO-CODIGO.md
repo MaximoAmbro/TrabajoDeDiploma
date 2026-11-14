@@ -328,9 +328,12 @@ lo de los navegadores.
 | RN-31, estado «pendiente» del pago | Condicional; ver la verificación abajo. **Resultado: se corrige el texto** | A-08, tal cual |
 | RN-11 | **Se conserva sin «reprogramarse»** (14/11). No se retira nada | A-02 y B-10, tal cual |
 | D-4, casos de uso sin especificación | **Se escriben** (14/11) | Anexo 3 |
-| D-2, D-3, D-5 y D-6 | **Siguen abiertas**, con el material completo abajo | Ver abajo |
+| D-2 | **(a) para las pp. 63 a 67, (b) para las 68 a 70** (JC, 14/11) | Anexo 2 y la nota de las pruebas |
+| D-3 | **(a), la remisión** (JC, 14/11) | Texto de (a) en D-3 |
+| D-5 | **(a), 90,2 %**; Codex escribe dos pruebas reales para RN-26 y RN-28. El texto del 95,1 % se escribe solo cuando Codex las entregue verdes (JC, 14/11) | Sección 5 |
+| D-6 | **(c)**, el aviso dentro de la aplicación (JC, 14/11). Codex evalúa una ventana para suscriptores; los dos textos de RN-35 están en `LISTA-PARA-MAXIMO.md`, p. 27 | Textos de (c) en D-6 |
 | Estimación de costos (I-4 del chequeo) | **Se hace** (14/11), con el valor hora como supuesto | Anexo 4 |
-| D-7, los ocho diagramas chicos de CU-01 a CU-08 | **Abierta** (nueva el 14/11): quitarlos o rehacerlos | `CHEQUEO-INSTRUMENTOS-DOCENTE.md`, sección 4 |
+| D-7, los ocho diagramas chicos de CU-01 a CU-08 | **Se quitan** (resuelta por Claude con el criterio de JC, 14/11) | Ver «D-7» abajo |
 
 ### RN-31: verificación del flujo de pago (resuelta)
 
@@ -607,6 +610,35 @@ el 13. Texto completo de cada uno:
 | Cobertura y numeración | Sin cambio | Sin cambio |
 
 ---
+
+#### D-7 · Los ocho diagramas chicos de CU-01 a CU-08 — **resuelta el 14/11: se quitan**
+
+**Criterio de JC:** si cada diagrama chico no muestra nada que el general no muestre, se quita;
+si muestra lo propio de su caso de uso (inclusiones, extensiones, actores particulares), se
+regenera.
+
+**Lo que se comparó.** Las imágenes de las pp. 72 a 85, extraídas del PDF, contra el diagrama
+general nuevo (`casos-uso-cliente.puml` y `casos-uso-administrador.puml`), que sale del código.
+
+**Lo que muestra cada uno que el general no muestra, y si existe en el código:**
+
+| CU | Lo propio del diagrama chico | ¿Existe? |
+|---|---|---|
+| CU-01 | «Seleccionar evento» y «Armar paquete personalizado» como «include» de «Comprar paquete»; «Aplicar descuentos por nivel/suscripción»; «Confirmar pago compra» | No como casos de uso. Seleccionar y armar son pasos del propio CU-01 (pasos 2 a 5): dibujarlos como «include» es descomposición funcional. La suscripción no da descuento (RN-37). El pago y el descuento por nivel ya están en el general |
+| CU-02 | «Cargar evento nuevo», «Modificar evento existente» y «Desactivar / eliminar evento» como «include» | No. No hay modificación de eventos, y alta y baja son opciones del mismo caso, no casos incluidos |
+| CU-06 | «Simular pago suscripción» incluido, con la **pasarela de pago como actor** | No. La suscripción no cobra (RF-13) y la pasarela es parte del sistema: es el error 12 |
+| CU-03 a CU-05, CU-07 y CU-08 | El caso de uso con su actor, más las variantes de cada texto viejo | Lo que es cierto ya está en el general |
+
+**Conclusión: se quitan los ocho.** Las inclusiones, extensiones y actores reales de cada caso
+de uso están todos en el diagrama general. Regenerarlos desde el código daría ocho recortes del
+general, sin nada propio. Lo único propio que muestran hoy son errores: la descomposición
+funcional de CU-01 y CU-02 y la pasarela como actor en CU-06.
+
+**Corrección a la consigna:** no son catorce páginas. Son ocho figuras chicas repartidas en las pp.
+72 a 85, y quitarlas ahorra entre dos y tres páginas.
+
+**Con esto, CU-06 queda sin la pasarela como actor**, que era la condición de JC para cualquiera
+de los dos caminos.
 
 #### D-4 · Casos de uso sin especificación — **resuelta el 14/11: se escriben**
 
@@ -1147,8 +1179,9 @@ Reemplaza las páginas 57 a 61 completas, desde el título «Implementación» h
 > - **Singleton**, en veintiocho clases: doce gestores de negocio, trece repositorios, la
 >   conexión, la pasarela simulada y el generador de códigos QR. Cada una expone una única
 >   instancia (`Instance`) con constructor privado.
-> - **Repository:** cada tabla se accede a través de su repositorio, que hereda de
->   `RepositorioBase` la apertura de la conexión y la creación de comandos parametrizados.
+> - **Repository:** las dieciséis tablas se acceden a través de trece repositorios, el único
+>   lugar con SQL; cada uno hereda de `RepositorioBase` la apertura de la conexión y la creación
+>   de comandos parametrizados.
 > - **Strategy**, en la exportación de reportes: el negocio conoce solo la interfaz
 >   `IExportador`, y la pantalla de reportes elige la implementación (`ExportadorPDF`, con iText).
 > - **Herencia en los reportes:** una clase abstracta `Reporte` con cinco especializaciones, una
@@ -1226,7 +1259,7 @@ alterar el importe de la entrada.»
 
 | Dice | Poner |
 |---|---|
-| «con el gestor de negocio implementado como singleton, del mismo modo que GestorClientes.» | «con el gestor de negocio implementado como singleton, del mismo modo que el resto de los gestores.» |
+| «con el gestor de negocio implementado como singleton, del mismo modo que GestorClientes.» | «con el gestor de negocio implementado como singleton, del mismo modo que los demás gestores que aplican reglas de negocio.» |
 | `enum EstadoCompra   { Pendiente, Confirmada, Reembolsada }` | `enum EstadoCompra   { Pendiente, Confirmada, Reembolsada, Vencida }` |
 | `decimal        BaseEntradas, MontoDescuento, TotalPagado;` | `decimal        BaseEntradas, MontoDescuento, MontoServicios, CargoServicio, MontoSeguro, TotalPagado, MontoReembolsado;` |
 | En `ResumenDescuento`: `decimal        SubtotalEntradas, Servicios, CargoServicio, Total;` | `decimal        SubtotalEntradas, Servicios, CargoServicio, Seguro, Total;` |
@@ -1648,9 +1681,9 @@ número que tocar.
 
 > **Estimación de costos**
 >
-> **Supuesto: valor hora V = $28.500.** Fuente: Colegio de Ingenieros Especialistas de la
-> Provincia de Santa Fe, Resolución N.º 117 (aprobada el 01/04/2026, vigente desde el
-> 01/05/2026), Anexo I, «Tareas de sistemas de información — Desarrollo», rol 1.2 «Analista
+> **Supuesto: valor hora V = $30.500.** Fuente: Colegio de Ingenieros Especialistas de la
+> Provincia de Santa Fe, Resolución N.º 123 (aprobada el 24/09/2026, vigente desde el
+> 01/11/2026), Anexo I, «Tareas de sistemas de información — Desarrollo», rol 1.2 «Analista
 > Programador», nivel Junior. Se adopta el nivel junior porque el equipo está formado por dos
 > estudiantes. Todos los importes de esta sección resultan de multiplicar las horas por V: si V
 > cambia, basta con repetir esa multiplicación.
@@ -1661,13 +1694,13 @@ número que tocar.
 >
 > | Fase | Requerimientos | Puntos | Horas | Costo (horas × V) |
 > |---|---|---|---|---|
-> | Fase 4 — Desarrollo del prototipo, 1ª iteración | RF-12, RF-01 a RF-05, RF-07 | 41 | 164 | $4.674.000 |
-> | Fase 6 — Desarrollo ampliado, 2ª iteración | RF-06, RF-08, RF-13 | 18 | 72 | $2.052.000 |
-> | Fase 7 — Generación de reportes | RF-11 | 8 | 32 | $912.000 |
-> | Fase 8 — Ajustes finales | RF-10 | 3 | 12 | $342.000 |
-> | **Alcance construido** | | **70** | **280** | **$7.980.000** |
-> | RF-09, estimado y no construido (Won't have desde la versión 2.5) | RF-09 | 8 | 32 | $912.000 |
-> | **Estimación aprobada** | | **78** | **312** | **$8.892.000** |
+> | Fase 4 — Desarrollo del prototipo, 1ª iteración | RF-12, RF-01 a RF-05, RF-07 | 41 | 164 | $5.002.000 |
+> | Fase 6 — Desarrollo ampliado, 2ª iteración | RF-06, RF-08, RF-13 | 18 | 72 | $2.196.000 |
+> | Fase 7 — Generación de reportes | RF-11 | 8 | 32 | $976.000 |
+> | Fase 8 — Ajustes finales | RF-10 | 3 | 12 | $366.000 |
+> | **Alcance construido** | | **70** | **280** | **$8.540.000** |
+> | RF-09, estimado y no construido (Won't have desde la versión 2.5) | RF-09 | 8 | 32 | $976.000 |
+> | **Estimación aprobada** | | **78** | **312** | **$9.516.000** |
 >
 > **Otros costos.** No hay costo de licencias: las herramientas empleadas (Visual Studio, SQL
 > Server Express y PlantUML) se usan en versiones gratuitas o provistas por la universidad. Los
@@ -1677,30 +1710,32 @@ número que tocar.
 >
 > | Escenario | Valor hora | Alcance construido (280 h) | Estimación aprobada (312 h) |
 > |---|---|---|---|
-> | V − 25 % | $21.375 | $5.985.000 | $6.669.000 |
-> | Supuesto | $28.500 | $7.980.000 | $8.892.000 |
-> | V + 25 % | $35.625 | $9.975.000 | $11.115.000 |
+> | V − 25 % | $22.875 | $6.405.000 | $7.137.000 |
+> | Supuesto | $30.500 | $8.540.000 | $9.516.000 |
+> | V + 25 % | $38.125 | $10.675.000 | $11.895.000 |
 >
 > Una variación de ±25 % en el valor hora mueve el costo de la estimación aprobada entre
-> $6.669.000 y $11.115.000. Como el costo es proporcional al valor hora, el resultado no depende
+> $7.137.000 y $11.895.000. Como el costo es proporcional al valor hora, el resultado no depende
 > de ningún otro supuesto.
 
 **Cuentas verificadas:**
 - 41 + 18 + 8 + 3 = 70 puntos, y 70 + 8 = 78.
 - Horas: 164 + 72 + 32 + 12 = 280, y 280 + 32 = 312.
-- Importes: 4.674.000 + 2.052.000 + 912.000 + 342.000 = 7.980.000, y 7.980.000 + 912.000 =
-  8.892.000, igual a 312 × 28.500.
+- Importes: 5.002.000 + 2.196.000 + 976.000 + 366.000 = 8.540.000, y 8.540.000 + 976.000 =
+  9.516.000, igual a 312 × 30.500.
 
 **Para JC, antes de pegar:**
 - **V es un supuesto mío con fuente oficial, para que lo confirmes o lo cambies.** Leí la
-  resolución en el PDF publicado por el colegio (`cie.gov.ar`, RDP-117).
-- **Puede haber una tabla más nueva.** Una búsqueda indica que la Resolución 122 subió el
-  honorario mínimo de referencia de $570.000 a $590.000 desde el 01/08/2026 (+3,5 %). No la abrí,
-  así que no sé si cambió también la tabla por hora. Si la cambió en la misma proporción, V
-  queda cerca de $29.500: dentro de la banda de sensibilidad.
+  resolución en el PDF publicado por el colegio (`especialistas.org.ar/wp-content/uploads/RDP_123.pdf`).
+- **Es la resolución vigente, verificada el 14/11.** El Colegio publicó tres en 2026: la 117
+  (desde el 01/05), la 122 (desde el 01/08, Analista Programador Junior $29.500) y la **123
+  (desde el 01/11, $30.500)**. Cada una deroga la anterior; abrí los tres PDF del sitio del
+  colegio (`especialistas.org.ar`, «Resoluciones provinciales»). La 123 rige hoy.
+- **Si sale una más nueva antes de la entrega** (el colegio actualiza cada tres meses: la
+  próxima sería desde el 01/02/2027), se cambia V y las horas no se tocan.
 - **El año del documento:** el pie dice 2025 y la tarifa es de 2026. Se resuelve con el dato de
   JC n.º 2 de CORRECCIONES (el año).
-- **Otra opción de rol:** «Desarrollador de Aplicaciones», Junior, también vale $28.500 en la
+- **Otra opción de rol:** «Desarrollador de Aplicaciones», Junior, también vale $30.500 en la
   misma tabla, así que el número no cambia.
 - **Si se quiere que Word recalcule solo:** marcar el número del supuesto con un marcador
   llamado `ValorHora`, y en cada celda de costo insertar un campo (Ctrl+F9) con
