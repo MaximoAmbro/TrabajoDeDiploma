@@ -1,7 +1,8 @@
 # Estado del documento entregable
 
 > **Desactualizado en el plan. El vigente es [PLAN-DOCUMENTO.md](PLAN-DOCUMENTO.md) (11/11):**
-> - Máximo quedó fuera del proyecto y el fuente no va a llegar;
+> - Máximo volvió al proyecto (JC lo confirmó el 13/11) y es quien aplica las correcciones en el
+>   Word; entre el 10/11 y el 13/11 se lo dio por fuera, y lo escrito en esos días lo refleja;
 > - Word ya está activado;
 > - el método de convertir y reinsertar páginas se probó sobre tres páginas y funciona.
 >

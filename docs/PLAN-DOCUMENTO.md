@@ -141,7 +141,7 @@ Relevado en el repositorio.
 
 | Ítem | Pág. | Por qué es imprescindible |
 |---|---|---|
-| 1 | 1 y encabezado de todas | «Comisión: «completar»», legajos vacíos y «Año: 2025» en **las 112 páginas**: es lo primero que se ve. ⚠ **Necesita los datos de JC**, y decidir cómo figura Máximo ahora que quedó fuera del proyecto |
+| 1 | 1 y encabezado de todas | «Comisión: «completar»», legajos vacíos y «Año: 2025» en **las 112 páginas**: es lo primero que se ve. ⚠ **Necesita los datos de JC**, los de JC y los de Máximo, que sigue en el proyecto (JC lo confirmó el 13/11) |
 | 3, 4 | 7 y 8 | El resumen ejecutivo dice 36 reglas y 22,2 % de cobertura. El resto del documento corregido dice otra cosa |
 | 4b | 24 | RNF-03 promete compatibilidad con navegadores: el sistema es de escritorio |
 | 5, 6 | 26 y 27 | Las reglas son el centro de la documentación de requerimientos. RN-06, RN-29 y RN-35 no coinciden con el sistema; faltan RN-38 y RN-39 |

@@ -7,7 +7,8 @@
 - cada tarea dice quién la hace, de qué depende y cuántas **horas estimadas** lleva;
 - **la entrega real es a principios de diciembre.** Se trabaja al máximo ritmo para terminar
   antes y tener tiempo de corregir detalles o agregar lo que pida el docente;
-- **nada espera a Máximo:** quedó fuera del camino crítico, y lo que dependía de él lo hace JC;
+- **nada de la renovación visual espera a Máximo:** lo que dependía de él lo hace JC. Máximo sigue
+  en el proyecto (volvió el 13/11) y aplica las correcciones del documento;
 - **los agentes trabajan en paralelo** y nunca escriben los mismos archivos (`CLAUDE.md`);
 - **se hace 6B completo:** la limpieza, el rediseño de las 18 y los tres extras visuales. Los
   recortes quedan en reserva (`ENCARGO-6B-BORRADOR.md`, sección 5).
@@ -487,8 +488,8 @@ y otra vez al final si algo de la compra cambió.
 
 > **No es el plan.** Se conserva como registro de cómo se planificó entre el 05/11 y el 10/11.
 > JC dejó de planificar con fechas el 10/11: el plan vigente es la sección 0. Lo de abajo
-> incluye dependencias de Máximo que ya no existen y un congelamiento el 27/11 que no era un
-> plazo real.
+> incluye dependencias de Máximo que se quitaron del plan visual y un congelamiento el 27/11 que
+> no era un plazo real.
 
 > **Actualizado el 05/11/2026 con las decisiones de JC:** V-1 a V-6 aprobadas; la fase 0
 > empieza por un **piloto** (`FrmCompraCliente`) que Máximo verifica en Visual Studio antes de

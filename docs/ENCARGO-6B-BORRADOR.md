@@ -6,8 +6,9 @@ trabaja, ese archivo no se toca).
 
 **Qué cambió en la versión 3:**
 - **Sin fechas.** El orden y las dependencias están en `PLAN-RENOVACION-VISUAL.md`, sección 0.
-- **Máximo queda fuera.** La verificación del piloto en Visual Studio la hace JC (sección 4).
-  Nada de este encargo espera a otra persona.
+- **La verificación del piloto en Visual Studio la hace JC** (sección 4). Nada de este encargo
+  espera a otra persona. (Al escribirse esta versión, Máximo estaba fuera del proyecto; volvió el
+  13/11.)
 - **6B completo:** la limpieza, el rediseño de las 18 y los tres extras visuales
   (`PROPUESTA-VISUAL-PANTALLAS-CLAVE.md`, E-1 a E-3). Los recortes pasan a reserva.
 
@@ -297,7 +298,8 @@ fechas.**
 | R-d. Tercera medición acotada a la compra | 4 h | Bajo |
 | R-e. Las 12 estándar sin pasar a 96 DPI | 8 a 12 h | Los Designer siguen en 120 y 144 DPI y se reescriben si alguien los abre en Visual Studio a otra escala |
 
-(R-a, «no esperar a Máximo», ya no existe: Máximo quedó fuera del camino.)
+(R-a, «no esperar a Máximo», ya no existe: ningún paso de 6B depende de él. Máximo sigue en el
+proyecto: volvió el 13/11.)
 
 ---
 
