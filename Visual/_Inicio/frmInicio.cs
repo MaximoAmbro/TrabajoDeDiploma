@@ -90,6 +90,11 @@ namespace Visual
             {
                 if (usuario.TipoUsuario == "Cliente")
                 {
+                    var avisos = GestorListaEspera.Instance.AvisosAlIngresar(usuario.Id);
+                    if (avisos.Count > 0)
+                        MessageBox.Show("Hay entradas disponibles nuevamente en:\n" + string.Join("\n", avisos) +
+                            "\nPodés volver al listado para consultar y comprar. No es una reserva de lugar.",
+                            "Lista de espera", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     frmMenuCliente frm = new frmMenuCliente();
                     frm.IDUsuario = usuario.Id;
                     frm.NombreUsuario = usuario.Nombre;

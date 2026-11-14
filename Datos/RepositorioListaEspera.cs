@@ -52,6 +52,41 @@ namespace Datos
             }
         }
 
+        // La ventana se calcula antes de filtrar al usuario: no se altera el orden de RN-35.
+        public int? Posicion(int idEvento, int idUsuario)
+        {
+            const string consulta = "WITH orden AS (SELECT ID_Usuario, ROW_NUMBER() OVER (ORDER BY ConSuscripcion DESC, FechaAlta, ID) AS Posicion " +
+                "FROM ListaEspera WHERE ID_Evento=@Evento) SELECT Posicion FROM orden WHERE ID_Usuario=@Usuario";
+            using (var conexion = AbrirConexion())
+            using (var comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@Evento", idEvento);
+                AgregarParametro(comando, "@Usuario", idUsuario);
+                object valor = comando.ExecuteScalar();
+                return valor == null || valor == DBNull.Value ? (int?)null : Convert.ToInt32(valor);
+            }
+        }
+
+        // Aviso calculado al ingresar; no hay estado de lectura ni reserva automática.
+        public List<string> EventosConLugar(int idUsuario)
+        {
+            string consulta = "SELECT e.Nombre FROM ListaEspera le JOIN Eventos e ON e.ID=le.ID_Evento " +
+                "WHERE le.ID_Usuario=@Usuario AND e.Estado='Publicado' AND e.Fecha>@Ahora " +
+                "AND EXISTS(SELECT 1 FROM Sectores s WHERE s.EventoID=e.ID AND s.Capacidad - s.CantidadReservada " +
+                "- ISNULL((SELECT SUM(en.CantidadVendida) FROM Entradas en WHERE en.ID_Sector=s.ID AND en.Estado='Confirmada'),0)>0) " +
+                "ORDER BY e.Fecha,e.ID";
+            var nombres = new List<string>();
+            using (var conexion = AbrirConexion())
+            using (var comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@Usuario", idUsuario);
+                AgregarParametro(comando, "@Ahora", DateTime.Now);
+                using (var lector = comando.ExecuteReader())
+                    while (lector.Read()) nombres.Add(LeerString(lector, "Nombre"));
+            }
+            return nombres;
+        }
+
         public bool Existe(int idEvento, int idUsuario)
         {
             const string consulta =

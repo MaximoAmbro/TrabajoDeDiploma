@@ -5,8 +5,7 @@ using Entidades;
 
 namespace Negocio
 {
-    // RF-10 + CU-07. En esta versión la lista es solo consulta: no se notifica a nadie ni se asigna
-    // el cupo que se libere.
+    // RF-10: posición privada y avisos al ingresar, sin asignación automática de cupo.
     public sealed class GestorListaEspera
     {
         private static GestorListaEspera _instance;
@@ -74,6 +73,18 @@ namespace Negocio
             return RepositorioListaEspera.Instance.Existe(idEvento, idUsuario);
         }
 
+        public int? ConsultarPosicion(int idEvento, int idUsuario)
+        {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
+            return RepositorioListaEspera.Instance.Posicion(idEvento, idUsuario);
+        }
+
+        public List<string> AvisosAlIngresar(int idUsuario)
+        {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
+            return RepositorioListaEspera.Instance.EventosConLugar(idUsuario);
+        }
+
         // RN-35: suscriptores primero y, dentro de cada grupo, por orden de inscripción.
         public List<ListaEspera> DeEvento(int idEvento)
         {
@@ -84,7 +95,7 @@ namespace Negocio
         private static ReglaNegocioException YaInscripto()
         {
             return new ReglaNegocioException("RN-36",
-                "Ya estás en la lista de espera de este evento. Te avisaremos si se libera un lugar.");
+                "Ya estás en la lista de espera de este evento. Podés consultar tu posición en la compra; los avisos de disponibilidad se muestran al iniciar sesión.");
         }
     }
 }
