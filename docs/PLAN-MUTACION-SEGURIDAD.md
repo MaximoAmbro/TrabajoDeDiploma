@@ -1,7 +1,19 @@
 # Plan de mutación de las defensas de seguridad
 
-Claude Code, 13/11/2026, a pedido de JC. **Solo lectura: no se ejecutó ninguna mutación.** Se
-ejecuta cuando Codex libere la base de pruebas y el escritorio.
+Claude Code, 13/11/2026, a pedido de JC.
+
+> **Ejecutado el 14/11/2026 sobre `fe04b1f`.** El resultado está en
+> `docs/INFORME-MUTACION-SEGURIDAD.md`:
+> - 51 de 77 mutaciones no equivalentes detectadas (66,2 %);
+> - los 23 «Sobrevive» sobrevivieron, como se pronosticó;
+> - M-07, M-08 y M-64 mueren;
+> - M-84 muere en la batería;
+> - M-81 y M-85 sobreviven a una corrida de la batería, pero la CP-104 nueva de Codex las
+>   detecta;
+> - **M-43, pronosticada «Muere», sobrevive**, porque es equivalente por la guarda de `ActivaDe`.
+>
+> Lo de abajo es el pronóstico tal como se escribió antes de correr; no se reescribió con el
+> resultado. Las pruebas que faltan están encargadas en `docs/ENCARGO-PRUEBAS-MUTACION.md`.
 
 El criterio es el de `docs/LISTA-REVISION-SEGURIDAD.md`, sección 0: una prueba de seguridad
 cuenta solo si cumple **P-1 a P-4**. Este plan prepara la condición **P-1**: la prueba falla cuando

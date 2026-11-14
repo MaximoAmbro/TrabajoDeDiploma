@@ -2362,9 +2362,35 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 > RF-09, excluido. En el nivel de reglas, treinta y siete de cuarenta y una tienen caso
 > automatizado, incluidas todas las que rechazan una operación.
 
-**⏸ ESPERA A JC: subsección nueva «Resistencia de las pruebas de seguridad»,** a continuación de
-«Lectura del cuadro». El texto está en `docs/INFORME-MUTACION-SEGURIDAD.md`, sección «Texto para
-el documento»; se pega cuando JC confirme los números de la mutación.
+**⏸ ESPERA A JC: subsección nueva, a continuación de «Lectura del cuadro».** El número está
+medido (14/11); falta que JC confirme si va con 51 o con 53, según la CP-104 nueva esté
+commiteada o no antes de entregar. **Título,** con el mismo estilo que «Lectura del cuadro»:
+«Resistencia de las pruebas de seguridad». **Texto:**
+
+> Para comprobar que las pruebas de seguridad detectan efectivamente la falta de cada defensa,
+> y no solo que el sistema funciona con las defensas en su lugar, se aplicó una prueba de
+> mutación sobre la versión entregada. Se identificaron ochenta y tres defensas: los controles
+> de sesión y de perfil de los gestores, la verificación y el almacenamiento de contraseñas,
+> el bloqueo por intentos fallidos, el control de ingreso por código QR y las restricciones de
+> la base de datos. Cada una se eliminó o alteró por separado, en una copia aislada del código
+> y con una base de datos propia, y después se corrió la batería completa de 198 ejecuciones.
+> Una mutación se considera detectada cuando falla al menos una prueba que sin la mutación
+> pasaba.
+>
+> Seis mutaciones resultaron equivalentes: el comportamiento no cambia porque otra defensa del
+> mismo camino ya rechaza la operación. Se excluyen del cálculo. De las setenta y siete
+> restantes, la batería detectó cincuenta y una (66,2 %). Las veintiséis no detectadas no son
+> vulnerabilidades: la defensa está en el código y funciona. Lo que falta es la prueba que lo
+> demuestre. Quedan registradas como trabajo pendiente, ordenadas por la consecuencia que
+> tendría la falta de cada defensa; las primeras son las que protegen los datos personales y
+> de pago de otros clientes.
+>
+> La medición no cubre la interfaz gráfica, los accesos que no pasan por la capa de negocio,
+> como una conexión directa a la base de datos, ni el tiempo de respuesta de la comparación de
+> contraseñas, que una prueba funcional no puede observar y se verificó leyendo el código.
+
+**Si JC dice «con 53»,** en ese texto: «cincuenta y una (66,2 %)» → «cincuenta y tres (68,8 %)», y
+«Las veintiséis» → «Las veinticuatro».
 
 ## Página 109 — Brechas detectadas
 
