@@ -21,16 +21,17 @@ namespace Negocio
 
         private GestorSesion() { }
 
-        public Usuario UsuarioActual { get; private set; }
+        public SesionAutenticada UsuarioActual { get; private set; }
 
         public bool HaySesion
         {
             get { return UsuarioActual != null; }
         }
 
-        public void Iniciar(Usuario usuario)
+        internal void Iniciar(Usuario usuario)
         {
-            UsuarioActual = usuario;
+            if (usuario == null) throw new System.ArgumentNullException(nameof(usuario));
+            UsuarioActual = new SesionAutenticada(usuario);
         }
 
         // RN-34 generalizada: toda gestión administrativa exige este perfil.

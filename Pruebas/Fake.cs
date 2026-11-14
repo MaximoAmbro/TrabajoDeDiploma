@@ -36,6 +36,24 @@ namespace Pruebas
             return $"test{++contador:0000}{DominioMail}";
         }
 
+        // Preparación aislada: nunca cambia parámetros en la base de desarrollo.
+        public static void ConfigurarParametro(string clave, string valor)
+        {
+            string cadena = BaseDePrueba.CadenaDePrueba();
+            if (!new SqlConnectionStringBuilder(cadena).InitialCatalog.EndsWith(BaseDePrueba.SufijoObligatorio, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Solo se preparan parámetros en la base de pruebas.");
+            using (var conexion = new SqlConnection(cadena))
+            using (var comando = conexion.CreateCommand())
+            {
+                conexion.Open();
+                comando.CommandText = "UPDATE Parametros SET Valor=@Valor WHERE Clave=@Clave";
+                comando.Parameters.AddWithValue("@Valor", valor);
+                comando.Parameters.AddWithValue("@Clave", clave);
+                if (comando.ExecuteNonQuery() != 1) throw new InvalidOperationException("No existe el parámetro de prueba.");
+            }
+            GestorParametros.Instance.Recargar();
+        }
+
         public static void VencerBloqueo(string mail)
         {
             Ejecutar("UPDATE Usuario SET BloqueadoHasta = @Pasado WHERE Mail = @Mail",

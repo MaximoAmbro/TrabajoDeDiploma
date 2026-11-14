@@ -21,17 +21,28 @@ namespace Negocio
             }
         }
 
+        public const string MensajeAccesoRechazado = "Mail o contraseña incorrectos.";
+        private static readonly string HashCuentaInexistente = Seguridad.Hash(Guid.NewGuid().ToString("N"));
+
         private const string TipoCliente = "Cliente";
         private const string TipoPropietario = "Propietario";
 
         private GestorUsuarios() { }
 
-        // Devuelve el usuario autenticado, o null si faltan datos o el mail no existe.
-        // Lanza ReglaNegocioException (RN-04) si la contraseña es incorrecta, con los intentos
-        // que quedan, o si la cuenta está bloqueada, con los minutos que faltan.
+        // RN-04 conserva el bloqueo, sin revelar si el correo existe, intentos ni plazos.
         public Usuario Autenticar(string mail, string pwd)
         {
-            return AutenticarCuenta(mail, pwd, true, false);
+            if (string.IsNullOrWhiteSpace(mail) || string.IsNullOrEmpty(pwd)) return null;
+            try
+            {
+                Usuario usuario = AutenticarCuenta(mail, pwd, true, false);
+                if (usuario == null) throw new ReglaNegocioException("RN-04", MensajeAccesoRechazado);
+                return usuario;
+            }
+            catch (ReglaNegocioException ex) when (ex.Regla == "RN-04")
+            {
+                throw new ReglaNegocioException("RN-04", MensajeAccesoRechazado);
+            }
         }
 
         private Usuario AutenticarCuenta(string mail, string pwd, bool iniciarSesion, bool ocultarCuenta)
@@ -44,12 +55,14 @@ namespace Negocio
             Usuario usuario = RepositorioUsuarios.Instance.ObtenerPorMail(mail.Trim());
             if (usuario == null)
             {
+                if (iniciarSesion) Seguridad.Verificar(pwd, HashCuentaInexistente);
                 return null;
             }
 
             DateTime ahora = DateTime.Now;
             if (usuario.BloqueadoHasta.HasValue && usuario.BloqueadoHasta.Value > ahora)
             {
+                if (iniciarSesion) Seguridad.Verificar(pwd, HashCuentaInexistente);
                 throw CuentaBloqueada(usuario.BloqueadoHasta.Value, ahora);
             }
 

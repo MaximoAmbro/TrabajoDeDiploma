@@ -90,10 +90,10 @@ namespace Pruebas
             });
         }
 
-        // CP-68 — RF-02, RN-04; PA-03, C.2/C.3: mensajes de intentos y minutos desde la pantalla.
+        // CP-68 — RF-02, RN-04; PA-03: bloqueo interno y rechazo uniforme desde la pantalla.
         [DataTestMethod]
-        [DataRow(false, DisplayName = "CP-68: Login muestra intentos restantes y bloqueo al quinto fallo")]
-        [DataRow(true, DisplayName = "CP-68: Login muestra diez y cinco minutos de bloqueo")]
+        [DataRow(false, DisplayName = "CP-68: Login conserva bloqueo al quinto fallo con mensaje uniforme")]
+        [DataRow(true, DisplayName = "CP-68: Login no revela diez ni cinco minutos de bloqueo")]
         public void CP68_AvisosDeIntentosYBloqueo(bool minutos)
         {
             EnSta(() =>
@@ -118,16 +118,14 @@ namespace Pruebas
                                 DateTime hasta = ahora.AddTicks(-(ahora.Ticks % TimeSpan.TicksPerSecond)).AddMinutes(restantes);
                                 RepositorioUsuarios.Instance.ActualizarIntentos(cliente.Id, 5, hasta);
                                 DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btninicio").PerformClick(),
-                                    new DialogoEsperado { Titulo = "Inicio de sesión", Texto = "en " + restantes + " minutos." });
+                                    new DialogoEsperado { Titulo = "Inicio de sesión", Texto = GestorUsuarios.MensajeAccesoRechazado });
                             }
                         }
                         else
                         {
                             for (int intento = 1; intento <= 5; intento++)
                             {
-                                int restantes = 5 - intento;
-                                string texto = intento == 5 ? "en 15 minutos." :
-                                    "Te quedan " + restantes + (restantes == 1 ? " intento antes" : " intentos antes");
+                                string texto = GestorUsuarios.MensajeAccesoRechazado;
                                 DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btninicio").PerformClick(),
                                     new DialogoEsperado { Titulo = "Inicio de sesión", Texto = texto });
                             }

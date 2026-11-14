@@ -81,7 +81,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                // RN-04: intentos restantes o minutos de bloqueo.
+                // RN-04: rechazo uniforme; el bloqueo se conserva sin revelar datos de cuenta.
                 Avisos.Regla("Inicio de sesión", ex);
                 return;
             }
@@ -107,7 +107,7 @@ namespace Visual
             }
             else
             {
-                MessageBox.Show ("Mail o contraseña incorrecta");
+                Avisos.Regla("Inicio de sesión", new ReglaNegocioException("RN-04", GestorUsuarios.MensajeAccesoRechazado));
             }
         }
     } // Valida la lista de usuarios

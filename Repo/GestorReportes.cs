@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -40,7 +40,7 @@ namespace Negocio
 
         public Reporte Crear(string codigo, DateTime desde, DateTime hasta)
         {
-            Usuario usuario = VerificarAdministrador();
+            var usuario = VerificarAdministrador();
             if (desde.Date > hasta.Date)
             {
                 throw new ArgumentException("La fecha «desde» no puede ser posterior a la fecha «hasta».");
@@ -108,9 +108,9 @@ namespace Negocio
         }
 
         // RN-34
-        private static Usuario VerificarAdministrador()
+        private static SesionAutenticada VerificarAdministrador()
         {
-            Usuario usuario = GestorSesion.Instance.UsuarioActual;
+            var usuario = GestorSesion.Instance.UsuarioActual;
             if (usuario == null || usuario.TipoUsuario != PerfilAdministrador)
             {
                 throw new ReglaNegocioException("RN-34", "Los reportes son accesibles únicamente al perfil Administrador.");

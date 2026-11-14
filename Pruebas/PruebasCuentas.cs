@@ -61,7 +61,7 @@ namespace Pruebas
             Assert.AreEqual(usuario.Id, GestorSesion.Instance.UsuarioActual.Id);
         }
 
-        // CP-28 — RF-02, RN-04: intentos restantes, bloqueo configurado y recuperación al vencer.
+        // CP-28 — RF-02, RN-04: bloqueo persistido y recuperación, sin revelar intentos.
         [TestMethod("CP-28: Bloqueo por intentos y recuperación tras el vencimiento")]
         public void CP28_BloqueoTrasIntentosFallidos()
         {
@@ -75,7 +75,8 @@ namespace Pruebas
                 ReglaNegocioException error = Assert.ThrowsException<ReglaNegocioException>(() =>
                     GestorUsuarios.Instance.Autenticar(mail, "Incorrecta1"));
                 Assert.AreEqual("RN-04", error.Regla);
-                StringAssert.Contains(error.Message, "Te quedan " + (maximo - intento));
+                Assert.AreEqual(GestorUsuarios.MensajeAccesoRechazado, error.Message);
+                Assert.AreEqual(intento, RepositorioUsuarios.Instance.ObtenerPorMail(mail).IntentosFallidos);
             }
 
             DateTime antes = DateTime.Now;
@@ -83,7 +84,7 @@ namespace Pruebas
                 GestorUsuarios.Instance.Autenticar(mail, "Incorrecta1"));
             DateTime despues = DateTime.Now;
             Assert.AreEqual("RN-04", bloqueo.Regla);
-            StringAssert.Contains(bloqueo.Message, "bloqueada");
+            Assert.AreEqual(GestorUsuarios.MensajeAccesoRechazado, bloqueo.Message);
             DateTime? hasta = RepositorioUsuarios.Instance.ObtenerPorMail(mail).BloqueadoHasta;
             Assert.IsTrue(hasta.HasValue);
             Assert.IsTrue(hasta.Value >= antes.AddMinutes(minutos - 1) && hasta.Value <= despues.AddMinutes(minutos),
@@ -92,7 +93,7 @@ namespace Pruebas
             ReglaNegocioException correctoPeroBloqueado = Assert.ThrowsException<ReglaNegocioException>(() =>
                 GestorUsuarios.Instance.Autenticar(mail, "Cliente123"));
             Assert.AreEqual("RN-04", correctoPeroBloqueado.Regla);
-            StringAssert.Contains(correctoPeroBloqueado.Message, "bloqueada");
+            Assert.AreEqual(GestorUsuarios.MensajeAccesoRechazado, correctoPeroBloqueado.Message);
 
             Fake.VencerBloqueo(mail);
             Assert.IsNotNull(GestorUsuarios.Instance.Autenticar(mail, "Cliente123"));
@@ -122,7 +123,8 @@ namespace Pruebas
             string mail = Fake.MailNuevo();
             GestorUsuarios.Instance.Registrar(mail, "Cliente123", "Nombre", "Prueba", "Cliente");
 
-            Assert.IsNull(GestorUsuarios.Instance.Autenticar(Fake.MailNuevo(), "Cliente123"));
+            Assert.AreEqual(GestorUsuarios.MensajeAccesoRechazado, Assert.ThrowsException<ReglaNegocioException>(() =>
+                GestorUsuarios.Instance.Autenticar(Fake.MailNuevo(), "Cliente123")).Message);
             Assert.IsNull(GestorUsuarios.Instance.Autenticar("", "Cliente123"));
             Assert.IsNull(GestorUsuarios.Instance.Autenticar(mail, ""));
             Assert.IsFalse(GestorSesion.Instance.HaySesion);

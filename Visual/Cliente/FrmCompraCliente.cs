@@ -37,6 +37,7 @@ namespace Visual
 
         // RF-05: lo que el cliente va armando. Vive en memoria hasta confirmar la compra.
         private Paquete paquete;
+        private bool accesoRechazado;
         private Evento evento;
         private Cliente cliente;   // RN-22: su nivel persistido es el que se aplica
         private Dictionary<int, Sector> sectores = new Dictionary<int, Sector>();
@@ -139,8 +140,16 @@ namespace Visual
             Disposicion.AlinearAcciones(accionesCompra, btnVolver, btnComprar);
         }
 
+        protected override void SetVisibleCore(bool value)
+        {
+            base.SetVisibleCore(value);
+            // Load puede rechazar el acceso durante Show: impedir que quede visible al regresar.
+            if (value && accesoRechazado) base.SetVisibleCore(false);
+        }
+
         protected override void OnShown(EventArgs e)
         {
+            if (accesoRechazado) return;
             base.OnShown(e);
             AjustarAreaVisible(Screen.FromControl(this).WorkingArea);
         }
@@ -161,6 +170,7 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
+                accesoRechazado = true;
                 Avisos.Regla("No se puede armar el paquete", ex);
                 VolverAlListado();
                 return;

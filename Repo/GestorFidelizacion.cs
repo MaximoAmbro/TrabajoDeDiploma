@@ -55,12 +55,19 @@ namespace Negocio
             switch (nivel)
             {
                 case NivelFidelidad.Oro:
-                    return GestorParametros.Instance.ObtenerDecimal("DESCUENTO_ORO");
+                    return DescuentoAdmisible(GestorParametros.Instance.ObtenerDecimal("DESCUENTO_ORO"));
                 case NivelFidelidad.Plata:
-                    return GestorParametros.Instance.ObtenerDecimal("DESCUENTO_PLATA");
+                    return DescuentoAdmisible(GestorParametros.Instance.ObtenerDecimal("DESCUENTO_PLATA"));
                 default:
                     return 0m;   // RN-20: Bronce no tiene descuento
             }
+        }
+
+        private static decimal DescuentoAdmisible(decimal porcentaje)
+        {
+            if (porcentaje > GestorParametros.Instance.ObtenerDecimal("DESCUENTO_MAX_ADMISIBLE"))
+                throw new ReglaNegocioException("RN-20", "El descuento configurado supera el máximo admisible.");
+            return porcentaje;
         }
 
         // RN-21: el porcentaje se aplica solo a las entradas. RN-22: se usa el nivel persistido del

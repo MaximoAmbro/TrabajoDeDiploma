@@ -14,6 +14,8 @@ namespace Pruebas
     {
         public string Titulo;
         public string Texto;
+        public string TextoObservado;
+        public string TituloObservado;
         public DialogResult Predeterminado = DialogResult.OK;
         public DialogResult Respuesta = DialogResult.OK;
     }
@@ -77,6 +79,8 @@ namespace Pruebas
                         if (esperado == null) errores.Add("Diálogo inesperado: " + titulo + " / " + texto);
                         else
                         {
+                            esperado.TextoObservado = texto;
+                            esperado.TituloObservado = titulo;
                             if (titulo != esperado.Titulo) errores.Add($"Título: '{titulo}', esperado '{esperado.Titulo}'.");
                             if (!texto.Contains(esperado.Texto)) errores.Add($"Texto: '{texto}', esperado '{esperado.Texto}'.");
                             if (defecto != (int)esperado.Predeterminado) errores.Add($"Botón por defecto de '{titulo}': {defecto}, esperado {(int)esperado.Predeterminado}.");
