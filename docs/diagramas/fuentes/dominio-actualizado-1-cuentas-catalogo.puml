@@ -1,0 +1,93 @@
+@startuml dominio-actualizado-1-cuentas-catalogo
+!include _estilo.iuml
+skinparam nodesep 25
+skinparam ranksep 45
+hide empty members
+' Modelo de dominio actualizado, vista 1 de 2: cuentas y catálogo. Los mismos conceptos del
+' dominio conceptual, con sus atributos y tipos. Sin identificadores ni claves foráneas: las
+' asociaciones las representan. El atributo «/» es derivado (se calcula, no se guarda).
+
+class Usuario {
+  nombre : string
+  apellido : string
+  mail : string
+  contraseña : string
+  intentosFallidos : int
+  bloqueadoHasta : DateTime?
+}
+class Cliente {
+  nivel : NivelFidelidad
+  fechaUltimaEvaluacion : DateTime?
+  /comprasUltimos12Meses : int
+}
+class Administrador
+enum NivelFidelidad {
+  Bronce
+  Plata
+  Oro
+}
+enum EstadoCompra {
+  Pendiente
+  Confirmada
+  Reembolsada
+  Vencida
+}
+enum EstadoEntrada {
+  Pendiente
+  Confirmada
+  Reembolsada
+  Vencida
+}
+enum EstadoPago {
+  Aprobado
+  Rechazado
+}
+class Suscripción {
+  plan : string
+  fechaInicio : DateTime
+  fechaFin : DateTime
+  precio : decimal
+  activa : bool
+}
+class Local {
+  nombre : string
+  direccion : string
+  capacidad : int
+}
+class Evento {
+  nombre : string
+  fecha : DateTime
+  categoria : string
+  estado : string
+  finPreventa : DateTime?
+}
+class Sector {
+  nombre : string
+  precio : decimal
+  capacidad : int
+  cantidadReservada : int
+}
+class "Servicio complementario" as Servicio {
+  nombre : string
+  tipo : string
+  precio : decimal
+  activo : bool
+}
+class "Inscripción en lista de espera" as Inscripcion {
+  fechaAlta : DateTime
+  conSuscripcion : bool
+}
+
+Usuario <|-- Cliente
+Usuario <|-- Administrador
+Administrador "1" -- "0..*$_" Local : administra
+Local "1" -- "0..*$_" Evento : se realiza en
+Evento "1" -- "0..*$_" Sector : se divide en
+Evento "0..*" -- "0..*$_" Servicio : ofrece
+Cliente "1" -- "0..*$_" Suscripción : contrata
+Cliente "1" -- "0..*$_" Inscripcion : se anota en
+Inscripcion "0..*" -- "1$_" Evento : es para
+NivelFidelidad -[hidden]down- EstadoCompra
+EstadoCompra -[hidden]down- EstadoEntrada
+EstadoEntrada -[hidden]down- EstadoPago
+@enduml

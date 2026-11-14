@@ -28,15 +28,16 @@ está al final, en «Para regenerar una imagen».
 |---|---|---|---|
 | 71 | «Diagramas de caso de uso»: el general viejo | Dos diagramas: cliente y administrador | [1](#1-casos-de-uso) |
 | 72 a 85 | Especificaciones CU-01 a CU-08, cada una con un diagrama chico | **Sin cambios en esta entrega** (ver «Lo que no se hizo») | — |
-| 86, arriba | «Modelo de dominio conceptual» | **Sin cambios en esta entrega** | — |
+| 86, arriba | «Modelo de dominio conceptual» | El dominio conceptual nuevo | [7](#7-modelo-de-dominio-conceptual) |
 | 86, abajo | «Diagrama de clases» | Ocho vistas de clases más tres de patrones (11 figuras) | [2](#2-diagrama-de-clases) y [3](#3-patrones-de-diseño) |
 | 87, arriba | «Diagrama de secuencia – Comprar paquete» | La secuencia en tres partes | [4](#4-secuencia-comprar-paquete) |
 | 87, abajo | «Diagrama de estados – Ciclo de vida de la entrada» | El diagrama de estados nuevo | [5](#5-transición-de-estados-de-la-entrada) |
-| 88 | Robustez y dominio actualizado | **Sin cambios en esta entrega** | — |
-| 89, arriba | Actividad (flujo del cliente) | **Sin cambios en esta entrega** | — |
+| 88, arriba | «Diagrama de robustez (ICONIX)» | La robustez de «Comprar paquete» | [9](#9-robustez-comprar-paquete) |
+| 88, medio | «Diagrama de dominio actualizado» | Dos vistas del dominio actualizado | [8](#8-modelo-de-dominio-actualizado) |
+| 88 abajo y 89 arriba | «Diagrama de Actividad (flujo del Cliente)» | La actividad del proceso de negocio en tres partes | [10](#10-actividad-del-proceso-de-negocio) |
 | 89, abajo | «DER – Diagrama entidad-relación», **con la página en blanco** | Dos vistas del entidad-relación | [6](#6-entidad-relación) |
 
-**Páginas nuevas.** Se agregan unas 14 páginas entre la 71 y la 89. Todo lo que sigue se corre, y
+**Páginas nuevas.** Se agregan unas 20 páginas entre la 71 y la 89. Todo lo que sigue se corre, y
 el índice (páginas 2 a 5) hay que regenerarlo.
 
 ---
@@ -431,6 +432,210 @@ página siguiente.
 
 ---
 
+## 7. Modelo de dominio conceptual
+
+| | |
+|---|---|
+| Fuente | `docs/diagramas/fuentes/dominio-conceptual.puml` |
+| Imagen | `docs/diagramas/dominio-conceptual.png` |
+| Insertar a | **16,0 cm** de ancho (14,8 de alto) |
+| Letra impresa | 9,1 pt |
+
+**Dónde va:** página 86, arriba, debajo de «Modelo de dominio conceptual». Reemplaza la figura de
+ahí. Como el diagrama de clases que sigue ocupa varias páginas nuevas, este queda solo en su
+página.
+
+**Texto para el documento:**
+
+> El modelo de dominio conceptual muestra los conceptos del negocio y cómo se relacionan, sin
+> atributos ni operaciones y sin clases de software. Surge de los requerimientos (RF-01 a RF-13) y
+> de las reglas de negocio. Los usuarios son de dos tipos, Cliente y Administrador. El
+> Administrador gestiona locales y los eventos que se realizan en ellos, divididos en sectores, y
+> cada evento ofrece servicios complementarios. El Cliente arma un paquete para un evento, con
+> entradas y servicios; al confirmarse, el paquete se convierte en una compra, que emite las
+> entradas, cada una correspondiente a un sector y opcionalmente cubierta por un seguro. Una compra
+> admite varios intentos de pago. El Cliente tiene un nivel de fidelidad, puede contratar
+> suscripciones y anotarse en la lista de espera de un evento agotado.
+
+**Justificación de relaciones:**
+
+| Relación | Multiplicidad | Requerimiento o regla | Dónde está en el código |
+|---|---|---|---|
+| Cliente, Administrador → Usuario | Generalización | RN-05 (dos perfiles) | `Cliente : Usuario`, `Propietario : Usuario` |
+| Administrador administra Local | 1 / 0..* | RF-12 | `Local.IdPropietario` |
+| Evento se realiza en Local | 0..* / 1 | RF-12, RN-38 | `Evento.IdLocal` |
+| Evento se divide en Sector | 1 / 0..* | RF-12, RN-06 | `Sector.IdEvento` |
+| Evento ofrece Servicio complementario | 0..* / 0..* | RN-14 | tabla `ServiciosEvento` |
+| Cliente tiene Nivel de fidelidad | 0..* / 1 | RF-08, RN-19 | `Cliente.Nivel` |
+| Cliente contrata Suscripción | 1 / 0..* (una activa) | RF-13, RN-25 | `Suscripcion.IdUsuario` |
+| Cliente arma Paquete | 1 / 0..* | RF-04, RF-05 | `GestorPaquetes.Nuevo(idEvento, idUsuario)` |
+| Paquete es para Evento | 0..* / 1 | RF-05 | `Paquete.IdEvento` |
+| Paquete agrega Servicio complementario | 0..* / 0..* | RF-05 | `Paquete.Servicios` |
+| Paquete se confirma como Compra | 1 / 0..1 | RF-07 | `GestorCompras.Iniciar(paquete, cliente)` |
+| Cliente realiza Compra | 1 / 0..* | RF-07 | `Compra.IdUsuario` |
+| Compra emite Entrada | 1 / 1..* | RF-07, RN-18 | `Entrada.IdCompra`; `GestorPaquetes.Validar` exige al menos una entrada |
+| Compra incluye Servicio complementario | 0..* / 0..* | RF-05, RN-16 | tabla `CompraServicios` |
+| Entrada corresponde a Sector | 0..* / 1 | RN-08 | `Entrada.IdSector` |
+| Compra se intenta pagar con Pago | 1 / 0..* | RF-06, RN-31 | `Pago.IdCompra` |
+| Entrada está cubierta por Seguro | 1 / 0..1 | RN-28, RN-29 | `Seguro.IdEntrada` |
+| Cliente se anota en Inscripción; Inscripción es para Evento | 1 / 0..*; 0..* / 1 | RF-10, RN-36 | tabla `ListaEspera` |
+
+**Dos decisiones de modelado:**
+- **Las entradas pedidas viajan en el paquete** (`Paquete.Entradas`), pero el modelo las muestra
+  del lado de la compra, que es la que las emite. Dibujarlas en los dos lugares cruza siete líneas
+  sobre Paquete y el diagrama deja de leerse.
+- **«Compra emite 1..* entradas»** es la regla del negocio: no se confirma una compra sin
+  entradas. En la base, `Entradas.ID_Compra` admite NULL; por eso el entidad-relación dice 0..*.
+
+---
+
+## 8. Modelo de dominio actualizado
+
+| | Vista 1: cuentas y catálogo | Vista 2: compra |
+|---|---|---|
+| Fuente | `docs/diagramas/fuentes/dominio-actualizado-1-cuentas-catalogo.puml` | `docs/diagramas/fuentes/dominio-actualizado-2-compra.puml` |
+| Imagen | `docs/diagramas/dominio-actualizado-1-cuentas-catalogo.png` | `docs/diagramas/dominio-actualizado-2-compra.png` |
+| Insertar a | **16,0 cm** (21,0 de alto) | **16,0 cm** (20,2 de alto) |
+| Letra impresa | 9,5 pt | 9,4 pt |
+
+**Dónde va:** página 88, debajo de «Diagrama de dominio actualizado». Reemplaza la figura de ahí,
+una vista por página.
+
+**Texto para el documento:**
+
+> El modelo de dominio actualizado retoma los conceptos del modelo conceptual y les agrega sus
+> atributos con el tipo de cada uno. No incluye identificadores ni claves foráneas, porque las
+> asociaciones ya representan esos vínculos. Se presenta en dos vistas para que se lea a tamaño de
+> página: la primera reúne usuarios, catálogo, suscripciones, lista de espera y las enumeraciones;
+> la segunda, el paquete, la compra y lo que la compra genera.
+>
+> Respecto del conceptual, el nivel de fidelidad pasa a ser un atributo del cliente con un tipo
+> enumerado (Bronce, Plata, Oro), y la cantidad de compras de los últimos doce meses aparece como
+> atributo derivado, porque se calcula y no se guarda (RN-19). Los estados de la compra, de la
+> entrada y del pago son enumeraciones con los mismos valores que la base de datos. La relación de
+> muchos a muchos entre compra y servicio complementario lleva una clase de asociación, Servicio
+> contratado, con la cantidad y el precio unitario congelado al comprar (RN-16).
+
+**Justificación.** Las asociaciones son las mismas de la ficha 7, con la misma multiplicidad.
+Lo que se agrega:
+
+| Elemento | Qué es | De dónde sale |
+|---|---|---|
+| Atributos de cada clase | Los del código, sin `Id` ni `IdX` | `Entidade/*.cs` |
+| `nivel : NivelFidelidad` | Atributo con tipo enumerado. En el conceptual era una asociación con el concepto «Nivel de fidelidad» | `Cliente.Nivel`, `Entidade/NivelFidelidad.cs` |
+| `/comprasUltimos12Meses` | Atributo derivado (se calcula) | `GestorFidelizacion.ComprasEnVentana`, RN-19 |
+| `EstadoCompra`, `EstadoEntrada`, `EstadoPago` | Enumeraciones | `Entidade/Estado*.cs`; `CHECK` de la base |
+| Servicio contratado | Clase de asociación de Compra–Servicio | tabla `CompraServicios` (`Cantidad`, `PrecioUnit`) |
+
+**Qué no está, a propósito:**
+- `TipoUsuario`: la generalización ya distingue Cliente de Administrador; repetirlo como atributo
+  es redundante (regla 7).
+- `Evento.Hora`: se deriva de la fecha.
+- `Entrada.CantidadVendida`: siempre vale 1, porque cada entrada es una fila.
+
+---
+
+## 9. Robustez «Comprar paquete»
+
+| | |
+|---|---|
+| Fuente | `docs/diagramas/fuentes/robustez-comprar-paquete.puml` |
+| Imagen | `docs/diagramas/robustez-comprar-paquete.png` |
+| Insertar a | **16,0 cm** de ancho (18,1 de alto) |
+| Letra impresa | 9,5 pt |
+| Verificación de conexiones | `py -3 tools/Diagramas/VerificarRobustez.py docs/diagramas/fuentes/robustez-comprar-paquete.puml` → 22 elementos, 26 conexiones, 0 prohibidas |
+
+**Dónde va:** página 88, arriba, debajo de «Diagrama de robustez (ICONIX)». Reemplaza la figura
+de ahí, que era un diagrama de secuencia con los íconos de robustez.
+
+**Texto para el documento:**
+
+> El diagrama de robustez del caso de uso «Comprar paquete» vincula su especificación con el
+> diseño. Incluye el curso alternativo de la lista de espera cuando el evento está agotado. Las
+> fronteras son las tres pantallas que usa el cliente; los controles, las clases de negocio que
+> resuelven cada paso; las entidades, los conceptos del dominio que se leen o se modifican. Se
+> respetan las reglas de conexión del método: el actor solo se comunica con fronteras, las
+> fronteras solo con controles, y las entidades solo con controles. Los controles pueden
+> comunicarse entre sí: el control de la compra verifica la identidad del cliente, cobra con la
+> pasarela simulada, genera los códigos QR y usa los controles de paquetes y fidelización.
+
+**Justificación de conexiones:**
+
+| Conexión | Tipo | Dónde está en el código |
+|---|---|---|
+| Cliente — tres pantallas | Actor–frontera | `FrmCompraCliente`, `frmPago`, `frmConfirmacion` |
+| Pantalla de compra — GestorEventos, GestorPaquetes, GestorFidelizacion, GestorListaEspera, GestorCompras | Frontera–control | llamadas `X.Instance.…` en `FrmCompraCliente.cs` |
+| Pantalla de pago — GestorCompras | Frontera–control | `Confirmar`, `Liberar` en `frmPago.cs` |
+| Pantalla de confirmación — GestorCompras | Frontera–control | `PagosDe` en `frmConfirmacion.cs` |
+| GestorCompras — GestorSesion, PasarelaSimulada, GeneradorQR, GestorPaquetes, GestorFidelizacion | Control–control | `GestorCompras.Iniciar` y `Confirmar` |
+| GestorEventos — Evento, Sector | Control–entidad | `ObtenerPorId`, `Sectores`, `EstaAgotado` |
+| GestorPaquetes — Paquete, Servicio | Control–entidad | `Nuevo`, `AgregarEntradas`, `AgregarServicio` |
+| GestorFidelizacion — Cliente; GestorSesion — Cliente | Control–entidad | `ObtenerCliente`, `CalcularDescuento`; `UsuarioActual` |
+| GestorListaEspera — Inscripción | Control–entidad | `Inscribir`, `EstaInscripto` |
+| GestorCompras — Compra, Entrada, Pago, Seguro | Control–entidad | `Iniciar`, `Confirmar` |
+
+**Lo que no aparece, porque está prohibido:**
+- la navegación entre pantallas (de compra a pago), que sería frontera–frontera;
+- el acceso de una pantalla a una entidad, que sería frontera–entidad.
+
+---
+
+## 10. Actividad del proceso de negocio
+
+| Parte | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra |
+|---|---|---|---|
+| 1. Del evento a la reserva | `actividad-1-armado` | **16,0 cm** (20,9) | 8,7 pt |
+| 2. Pago y entrega | `actividad-2-pago` | **13,6 cm** (17,6) | 12,0 pt |
+| 3. Devolución e ingreso | `actividad-3-ingreso` | **16,0 cm** (16,4) | 9,8 pt |
+
+**Dónde va:** página 88, abajo, debajo de «Diagrama de Actividad (flujo del Cliente)», que conviene
+renombrar «Diagrama de actividad (proceso de venta)». Reemplaza la figura de la página 89. Una
+parte por página. Las partes se encadenan con los conectores A y B.
+
+**Texto para el documento:**
+
+> El diagrama de actividad describe el proceso de negocio de punta a punta, desde que el
+> Administrador carga un evento hasta que el Cliente ingresa con su entrada. Tiene un carril por
+> actor y ninguno para el sistema, que no es un actor del proceso. Se presenta en tres partes,
+> unidas por los conectores A y B. El evento se crea en borrador y queda publicado cuando se le
+> agrega el primer sector con capacidad (RN-06). El Cliente busca un evento; si está agotado, se
+> anota en la lista de espera. Si hay cupo, arma el paquete, elige si agrega el seguro, revisa el
+> resumen con el descuento de su nivel y confirma, con lo que reserva el cupo por un plazo
+> limitado (RN-15). Puede reintentar el pago mientras dure ese plazo; si no lo concreta, pierde la
+> reserva. Con el pago aprobado recibe sus entradas con código QR. Antes del evento puede devolver
+> una entrada asegurada con más de 48 horas de anticipación (RN-29); el día del evento la presenta
+> en el ingreso, y el Administrador la acepta solo si está confirmada, corresponde al evento, está
+> dentro del horario y no ingresó antes (RN-18).
+
+**Justificación de cada decisión del diagrama:**
+
+| Elemento | Regla | Dónde está en el código |
+|---|---|---|
+| Agregar sectores; con el primero queda publicado | RN-06 | `GestorEventos.Crear` (Borrador) y `AgregarSector` |
+| ¿Hay cupo? → lista de espera | RF-10, RN-35, RN-36 | `GestorEventos.EstaAgotado`, `GestorListaEspera.Inscribir` |
+| ¿Quiere seguro? | RN-28 | `Paquete.ConSeguro` |
+| Revisar el resumen con el descuento por nivel | RF-08, RN-19 | `GestorFidelizacion.CalcularDescuento` |
+| Confirmar y reservar el cupo | RN-15 | `GestorCompras.Iniciar` |
+| Reintentar el pago dentro del plazo | RN-15, RN-32 | `GestorCompras.Confirmar`, `Liberar`, `Rereservar` |
+| Recibir las entradas con su QR | RF-07, RN-18 | `GestorCompras.Confirmar`, `GeneradorQR` |
+| Devolver la entrada | RN-29 | `GestorCompras.Reembolsar` |
+| Leer el QR y registrar o rechazar | RN-18 | `GestorIngresos.Registrar` y sus motivos de rechazo |
+
+**Qué cambió respecto del diagrama viejo:**
+- **Desaparecen:**
+  - el descuento por suscripción;
+  - «actualizar puntos»;
+  - el «carrito»;
+  - las recomendaciones de eventos (RF-09, que no está construido);
+  - los pasos del sistema dentro del flujo del cliente.
+- **Aparecen:**
+  - el Administrador;
+  - el plazo de reserva;
+  - la devolución;
+  - el control de ingreso.
+
+---
+
 ## Las 16 reglas del profesor, diagrama por diagrama
 
 | Regla | Cómo quedó |
@@ -443,10 +648,10 @@ página siguiente.
 | 6. N:M sin tabla intermedia | **Cumple:** Eventos–Servicios por ServiciosEvento |
 | 7. Herencia por conveniencia | **Cumple:** Cliente y Propietario son Usuario y no repiten atributos; los reportes son Reporte |
 | 8. include/extend al revés o extend sin condición | **Cumple:** «include» va de la base al incluido; «extend», del que extiende a la base, siempre con condición |
-| 9. Robustez | **No se entregó todavía** |
+| 9. Robustez | **Cumple, verificado por programa:** `VerificarRobustez.py` da 0 conexiones prohibidas en las 26. Comprobado también al revés: sobre una copia con tres conexiones prohibidas, las detecta las tres |
 | 10. Secuencia que accede a la base o no coincide | **Cumple:** la vista habla con gestores, y cada mensaje es una llamada real (tabla de la ficha 4) |
-| 11. Clases de software en el dominio | **No aplica todavía:** el modelo de dominio no se rehízo |
-| 12. Sistema como actor | **Cumple:** la pasarela simulada dejó de ser actor |
+| 11. Clases de software en el dominio | **Cumple:** los dos modelos de dominio tienen solo conceptos del negocio; ningún gestor, repositorio ni pantalla |
+| 12. Sistema como actor o como carril | **Cumple:** la pasarela simulada dejó de ser actor, y la actividad tiene solo los carriles Cliente y Administrador |
 | 13. Estados distintos en diagrama, clase y base | **Cumple:** los cuatro estados coinciden en diagrama, `EstadoEntrada`, `CK_Entradas_Estado` y el SQL |
 | 14. Objetivos | **No aplica** a estos diagramas |
 | 15. Patrón nombrado que no se ve | **Cumple:** los cuatro patrones nombrados están en las vistas 8a a 8c, con estereotipo; no se nombra ningún otro |
@@ -464,10 +669,8 @@ Se rehace en la próxima tanda, a partir de los requerimientos y contrastado con
 |---|---|---|
 | Diagramas chicos de cada especificación, CU-01 a CU-08 | 72 a 85 | Repiten errores del general: descuento por suscripción en CU-01, pasarela como actor en CU-06, listas de espera solo del administrador en CU-07 |
 | Especificaciones de los cuatro casos de uso nuevos | — | No existen |
-| Modelo de dominio conceptual y dominio actualizado | 86 y 88 | Tienen «puntos», carrito, NivelUsuario como clase y Entrada heredando de ProductoServicio, nada de lo cual existe |
-| Robustez | 88 | Es un diagrama de secuencia con íconos de robustez |
-| Actividad | 88-89 | Muestra el descuento por suscripción, «actualizar puntos» y recomendaciones, que no están construidas |
 | Secuencias de los otros casos de uso | — | La Carpeta modelo pide una por caso de uso |
+| Robustez de los otros casos de uso | — | Se entregó la del caso principal; si el docente pide una por caso de uso, faltan |
 
 ## Para regenerar una imagen
 

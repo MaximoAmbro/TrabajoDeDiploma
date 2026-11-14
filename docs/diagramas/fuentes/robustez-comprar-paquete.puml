@@ -1,0 +1,66 @@
+@startuml robustez-comprar-paquete
+!include _estilo.iuml
+left to right direction
+skinparam nodesep 6
+skinparam ranksep 50
+' Diagrama de robustez (ICONIX) de CU «Comprar paquete», con el curso alternativo de la lista
+' de espera. Fronteras: formularios; controles: clases de negocio; entidades: clases de dominio.
+' Conexiones permitidas: actor–frontera, frontera–control, control–control y control–entidad.
+' tools/Diagramas/VerificarRobustez.py comprueba que no haya ninguna otra.
+
+actor Cliente
+
+boundary "Pantalla de\ncompra" as FrmCompra
+boundary "Pantalla de\npago" as FrmPago
+boundary "Pantalla de\nconfirmación" as FrmConfirmacion
+
+control GestorEventos
+control GestorPaquetes
+control GestorFidelizacion
+control GestorListaEspera
+control GestorCompras
+control GestorSesion
+control PasarelaSimulada
+control GeneradorQR
+
+entity Evento
+entity Sector
+entity Servicio
+entity Paquete
+entity Cliente as ClienteEnt
+entity "Inscripción" as Inscripcion
+entity Compra
+entity Entrada
+entity Pago
+entity Seguro
+
+Cliente -- FrmCompra
+Cliente -- FrmPago
+Cliente -- FrmConfirmacion
+
+FrmCompra -- GestorEventos
+FrmCompra -- GestorPaquetes
+FrmCompra -- GestorFidelizacion
+FrmCompra -- GestorListaEspera
+FrmCompra -- GestorCompras
+FrmPago -- GestorCompras
+FrmConfirmacion -- GestorCompras
+
+GestorCompras -- GestorSesion
+GestorCompras -- PasarelaSimulada
+GestorCompras -- GeneradorQR
+GestorCompras -- GestorPaquetes
+GestorCompras -- GestorFidelizacion
+GestorSesion -- ClienteEnt
+
+GestorEventos -- Evento
+GestorEventos -- Sector
+GestorPaquetes -- Paquete
+GestorPaquetes -- Servicio
+GestorFidelizacion -- ClienteEnt
+GestorListaEspera -- Inscripcion
+GestorCompras -- Compra
+GestorCompras -- Entrada
+GestorCompras -- Pago
+GestorCompras -- Seguro
+@enduml

@@ -1,0 +1,27 @@
+@startuml actividad-2-pago
+!include _estilo.iuml
+skinparam ActivityFontSize 12
+skinparam ActivityDiamondFontSize 12
+skinparam ArrowFontSize 12
+skinparam SwimlaneTitleFontSize 13
+skinparam ActivityBorderColor #333333
+skinparam ActivityBackgroundColor #F7F7F7
+skinparam ActivityDiamondBackgroundColor #F7F7F7
+' Diagrama de actividad del proceso de negocio, parte 2 de 3: pago y entrega de las entradas.
+' Sin recomendaciones de eventos al final: RF-09 no está construido.
+
+|Administrador|
+|Cliente|
+(A)
+repeat
+  :Pagar con tarjeta;
+repeat while (¿Rechazado y dentro del plazo?) is (sí) not (no)
+if (¿Pago aprobado?) then (no)
+  :Pierde la reserva y el cupo;
+  stop
+else (sí)
+endif
+:Recibir las entradas con su código QR;
+(B)
+detach
+@enduml

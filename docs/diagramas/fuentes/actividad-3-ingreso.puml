@@ -1,0 +1,34 @@
+@startuml actividad-3-ingreso
+!include _estilo.iuml
+skinparam ActivityFontSize 12
+skinparam ActivityDiamondFontSize 12
+skinparam ArrowFontSize 12
+skinparam SwimlaneTitleFontSize 13
+skinparam ActivityBorderColor #333333
+skinparam ActivityBackgroundColor #F7F7F7
+skinparam ActivityDiamondBackgroundColor #F7F7F7
+' Diagrama de actividad del proceso de negocio, parte 3 de 3: después de la compra, la
+' devolución y el ingreso al evento. Un carril por actor; el sistema no es un carril.
+
+|Cliente|
+(B)
+if (¿Desiste, con seguro y
+faltan más de 48 h?) then (sí)
+  :Devolver la entrada;
+  stop
+else (no)
+endif
+:Presentar el QR
+en el ingreso;
+|Administrador|
+:Leer el código QR;
+if (¿Confirmada, del evento,
+en horario y sin
+ingreso previo?) then (sí)
+  :Registrar el ingreso;
+else (no)
+  :Rechazar el ingreso
+  e informar el motivo;
+endif
+stop
+@enduml

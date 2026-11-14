@@ -1,0 +1,34 @@
+@startuml actividad-1-armado
+!include _estilo.iuml
+skinparam ActivityFontSize 12
+skinparam ActivityDiamondFontSize 12
+skinparam ArrowFontSize 12
+skinparam SwimlaneTitleFontSize 13
+skinparam ActivityBorderColor #333333
+skinparam ActivityBackgroundColor #F7F7F7
+skinparam ActivityDiamondBackgroundColor #F7F7F7
+' Diagrama de actividad del proceso de negocio, parte 1 de 3: de la carga del evento a la
+' reserva del cupo. Un carril por actor; el sistema no es un carril (regla 12).
+
+|Administrador|
+start
+:Registrar el local;
+:Crear el evento;
+:Agregar sectores (con el primero queda publicado);
+|Cliente|
+:Buscar un evento;
+if (¿Hay cupo?) then (no)
+  :Inscribirse en la lista de espera;
+  stop
+else (sí)
+endif
+:Elegir entradas por sector y servicios;
+if (¿Quiere seguro?) then (sí)
+  :Agregar el seguro;
+else (no)
+endif
+:Revisar el resumen con el descuento por nivel;
+:Confirmar y reservar el cupo;
+(A)
+detach
+@enduml

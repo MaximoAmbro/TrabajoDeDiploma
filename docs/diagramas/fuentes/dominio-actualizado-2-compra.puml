@@ -1,0 +1,65 @@
+@startuml dominio-actualizado-2-compra
+!include _estilo.iuml
+skinparam nodesep 10
+skinparam ranksep 45
+hide empty members
+' Modelo de dominio actualizado, vista 2 de 2: la compra. Cliente, Evento, Sector y Servicio
+' complementario tienen sus atributos en la vista 1, junto con las enumeraciones de estado. Sin identificadores ni claves foráneas.
+
+class Cliente <<ver vista 1>>
+class Evento <<ver vista 1>>
+class Sector <<ver vista 1>>
+class "Servicio complementario" as Servicio <<ver vista 1>>
+class Paquete {
+  conSeguro : bool
+}
+class Compra {
+  fechaCompra : DateTime
+  estado : EstadoCompra
+  nivelAplicado : NivelFidelidad
+  descuentoAplicado : decimal
+  baseEntradas : decimal
+  montoDescuento : decimal
+  montoServicios : decimal
+  cargoServicio : decimal
+  montoSeguro : decimal
+  conSeguro : bool
+  totalPagado : decimal
+  montoReembolsado : decimal
+  reservaVence : DateTime?
+}
+class "Servicio contratado" as Linea {
+  cantidad : int
+  precioUnitario : decimal
+}
+class Entrada {
+  precio : decimal
+  fechaVenta : DateTime
+  estado : EstadoEntrada
+  codigoQR : string
+  fechaIngreso : DateTime?
+}
+class Pago {
+  fechaPago : DateTime
+  estado : EstadoPago
+  ultimos4 : string
+  token : string
+  motivo : string
+}
+class Seguro {
+  precio : decimal
+  venceEl : DateTime
+}
+
+Cliente "1" -- "0..*$_" Paquete : arma
+Paquete "0..*" -- "1$_" Evento : es para
+Paquete "0..*" -- "0..*$_" Servicio : agrega
+Paquete "1" -- "0..1$_" Compra : se confirma como
+Cliente "1" -- "0..*$_" Compra : realiza
+Compra "1" -- "1..*$_" Entrada : emite
+Compra "0..*" -- "0..*$_" Servicio : incluye
+(Compra, Servicio) .. Linea
+Entrada "0..*" -- "1$_" Sector : corresponde a
+Compra "1" -- "0..*$_" Pago : se intenta pagar con
+Entrada "1" -- "0..1$_" Seguro : está cubierta por
+@enduml

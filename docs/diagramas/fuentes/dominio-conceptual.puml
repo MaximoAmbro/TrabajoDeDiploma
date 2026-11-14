@@ -1,0 +1,46 @@
+@startuml dominio-conceptual
+!include _estilo.iuml
+skinparam nodesep 30
+skinparam ranksep 60
+hide empty members
+' Modelo de dominio conceptual: conceptos del negocio, sin atributos, sin métodos y sin clases
+' de software. Sale de RF-01 a RF-13 y de las reglas de negocio; se contrastó con el código
+' (ver la tabla de justificación en docs/PARA-MAXIMO-DIAGRAMAS.md).
+
+class Usuario
+class Cliente
+class Administrador
+class "Nivel de fidelidad" as Nivel
+class Suscripción
+class Local
+class Evento
+class Sector
+class "Servicio complementario" as Servicio
+class Paquete
+class Compra
+class Entrada
+class Pago
+class Seguro
+class "Inscripción en\nlista de espera" as Inscripcion
+
+Usuario <|-- Cliente
+Usuario <|-- Administrador
+Administrador "1" -- "0..*$_" Local : administra
+Local "1" -- "0..*$_" Evento : se realiza en
+Evento "1" -- "0..*$_" Sector : se divide en
+Evento "0..*" -- "0..*$_" Servicio : ofrece
+Cliente "0..*" -- "1$_" Nivel : tiene
+Cliente "1" -- "0..*$_" Suscripción : contrata
+Cliente "1" -- "0..*$_" Paquete : arma
+Paquete "0..*" -- "1$_" Evento : es para
+Paquete "$_ 0..*" -- "0..*$_" Servicio : agrega
+Paquete "1$_" -- "0..1$_" Compra : se confirma como
+Cliente "1" -- "0..*$_" Compra : realiza
+Compra "1" -- "1..*$_" Entrada : emite
+Compra "0..*" -- "0..*$_" Servicio : incluye
+Entrada "0..*" -- "1$_" Sector : corresponde a
+Compra "1" -- "0..*$_" Pago : se intenta pagar con
+Entrada "1" -- "0..1$_" Seguro : está cubierta por
+Cliente "1" -- "0..*$_" Inscripcion : se anota en
+Inscripcion "0..*" -- "1$_" Evento : es para
+@enduml

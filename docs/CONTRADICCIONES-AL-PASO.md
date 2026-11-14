@@ -19,6 +19,7 @@ documento**, que es la próxima tanda: es lo que apareció sin buscarlo. Las pá
 | T-9 | 82 (CU-07) | «Gestionar listas de espera», del Administrador | El Administrador solo consulta; quien se inscribe es el cliente | `GestorListaEspera.Inscribir` / `DeEvento` |
 | T-10 | 84 (CU-08) | «reportes simulados» | Los reportes consultan la base; lo de demostración son los datos que carga `03-datos-reporte.sql`. **A confirmar** qué quiso decir el texto | `RepositorioReportes` |
 | T-11 | 87 (estados) | el reembolso lo dispara un «evento cancelado» | Lo pide el cliente, con seguro, hasta 48 h antes | RN-29; `GestorCompras.Reembolsar` |
+| T-13 | 80-81 (CU-06) | «Suscribirse al sistema» incluye «Simular pago suscripción», con la pasarela como actor | La contratación registra plan y precio; el cobro **queda fuera del alcance** y no pasa por la pasarela | RF-13; `GestorSuscripciones.Contratar` |
 | T-12 | 71 (casos de uso) | «Modificar local», «Eliminar local», «Gestionar stock», «Ver carrito» | No existen | `GestorLocales` (solo `Registrar` y consultas) |
 
 ## Hallazgos en el código o la base, para que decida JC
