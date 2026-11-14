@@ -28,37 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnVolver = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.btnVolver = new Visual.Componentes.BotonSecundario();
+            this.label2 = new Visual.Componentes.EtiquetaTitulo();
             this.dgveventos = new System.Windows.Forms.DataGridView();
-            this.btnComprar = new System.Windows.Forms.Button();
+            this.btnComprar = new Visual.Componentes.BotonPrimario();
             this.txtBuscar = new System.Windows.Forms.TextBox();
             this.cmbCategoria = new System.Windows.Forms.ComboBox();
             this.dtpDesde = new System.Windows.Forms.DateTimePicker();
-            this.btnBuscar = new System.Windows.Forms.Button();
-            this.btnLimpiar = new System.Windows.Forms.Button();
+            this.btnBuscar = new Visual.Componentes.BotonPrimario();
+            this.btnLimpiar = new Visual.Componentes.BotonSecundario();
             ((System.ComponentModel.ISupportInitialize)(this.dgveventos)).BeginInit();
             this.SuspendLayout();
             // 
             // btnVolver
             // 
-            this.btnVolver.BackColor = System.Drawing.Color.White;
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.btnVolver.Location = new System.Drawing.Point(11, 450);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(121, 33);
             this.btnVolver.TabIndex = 1;
             this.btnVolver.Text = "Volver";
-            this.btnVolver.UseVisualStyleBackColor = false;
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Nirmala UI", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.label2.Location = new System.Drawing.Point(329, 9);
             this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
@@ -70,7 +65,6 @@
             // 
             this.dgveventos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgveventos.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dgveventos.BackgroundColor = System.Drawing.SystemColors.HighlightText;
             this.dgveventos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgveventos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgveventos.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -82,18 +76,13 @@
             // 
             // btnComprar
             // 
-            this.btnComprar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnComprar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnComprar.FlatAppearance.BorderSize = 0;
-            this.btnComprar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnComprar.ForeColor = System.Drawing.Color.White;
             this.btnComprar.Location = new System.Drawing.Point(342, 405);
             this.btnComprar.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.btnComprar.Name = "btnComprar";
             this.btnComprar.Size = new System.Drawing.Size(215, 42);
             this.btnComprar.TabIndex = 36;
             this.btnComprar.Text = "Comprar";
-            this.btnComprar.UseVisualStyleBackColor = false;
             this.btnComprar.Click += new System.EventHandler(this.btnComprar_Click);
             //
             // txtBuscar
@@ -127,38 +116,29 @@
             //
             // btnBuscar
             //
-            this.btnBuscar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnBuscar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBuscar.FlatAppearance.BorderSize = 0;
-            this.btnBuscar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBuscar.ForeColor = System.Drawing.Color.White;
             this.btnBuscar.Location = new System.Drawing.Point(720, 93);
             this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(95, 32);
+            this.btnBuscar.Size = new System.Drawing.Size(123, 32);
             this.btnBuscar.TabIndex = 5;
             this.btnBuscar.Text = "Buscar";
-            this.btnBuscar.UseVisualStyleBackColor = false;
             this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
             //
             // btnLimpiar
             //
-            this.btnLimpiar.BackColor = System.Drawing.Color.White;
             this.btnLimpiar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLimpiar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
-            this.btnLimpiar.Location = new System.Drawing.Point(821, 93);
+            this.btnLimpiar.Location = new System.Drawing.Point(849, 93);
             this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(95, 32);
+            this.btnLimpiar.Size = new System.Drawing.Size(135, 36);
             this.btnLimpiar.TabIndex = 6;
             this.btnLimpiar.Text = "Limpiar";
-            this.btnLimpiar.UseVisualStyleBackColor = false;
             this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             //
             // frmEventosCliente
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(928, 494);
+            this.ClientSize = new System.Drawing.Size(996, 494);
             this.Controls.Add(this.btnComprar);
             this.Controls.Add(this.dgveventos);
             this.Controls.Add(this.label2);
@@ -168,8 +148,6 @@
             this.Controls.Add(this.dtpDesde);
             this.Controls.Add(this.btnBuscar);
             this.Controls.Add(this.btnLimpiar);
-            this.Font = new System.Drawing.Font("Nirmala UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmEventosCliente";
@@ -184,14 +162,14 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnVolver;
-        private System.Windows.Forms.Label label2;
+        private Visual.Componentes.BotonSecundario btnVolver;
+        private Visual.Componentes.EtiquetaTitulo label2;
         private System.Windows.Forms.DataGridView dgveventos;
-        private System.Windows.Forms.Button btnComprar;
+        private Visual.Componentes.BotonPrimario btnComprar;
         private System.Windows.Forms.TextBox txtBuscar;
         private System.Windows.Forms.ComboBox cmbCategoria;
         private System.Windows.Forms.DateTimePicker dtpDesde;
-        private System.Windows.Forms.Button btnBuscar;
-        private System.Windows.Forms.Button btnLimpiar;
+        private Visual.Componentes.BotonPrimario btnBuscar;
+        private Visual.Componentes.BotonSecundario btnLimpiar;
     }
 }

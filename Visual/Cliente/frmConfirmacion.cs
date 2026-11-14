@@ -21,6 +21,7 @@ namespace Visual
         public frmConfirmacion()
         {
             InitializeComponent();
+            Tema.ComoDocumento(lblDesglose);
         }
 
         // Identificación del pedido que ve el cliente; también va impresa en cada ticket.

@@ -37,7 +37,7 @@ namespace Pruebas
                     Assert.IsTrue(control.Site.DesignMode);
                     Assert.IsNotNull(host.GetDesigner(control));
                     string[] propiedades = control is Button
-                        ? new[] { "Font", "BackColor", "ForeColor", "FlatStyle", "FlatAppearance", "MinimumSize", "Padding", "Cursor", "UseVisualStyleBackColor" }
+                        ? new[] { "Font", "BackColor", "ForeColor", "FlatStyle", "FlatAppearance", "Padding", "Cursor", "UseVisualStyleBackColor" }
                         : new[] { "Font", "BackColor", "ForeColor" };
                     PropertyDescriptorCollection descriptores = TypeDescriptor.GetProperties(control);
                     foreach (string nombre in propiedades)
@@ -52,6 +52,13 @@ namespace Pruebas
                     if (control is Button)
                         Assert.AreEqual(DesignerSerializationVisibility.Hidden, descriptores["FlatAppearance"].SerializationVisibility,
                             "El objeto de apariencia tampoco debe serializar sus colores internos.");
+                    if (control is Button)
+                    {
+                        Assert.AreEqual(Size.Empty, control.MinimumSize, "El componente de estilo no impone medidas.");
+                        control.MinimumSize = new Size(48, 24);
+                        Assert.IsTrue(descriptores["MinimumSize"].ShouldSerializeValue(control),
+                            "El mínimo explícito pertenece al Designer y debe poder serializarse.");
+                    }
                     control.Text = "Texto editable";
                     control.Location = new Point(24, 24);
                     control.Size = new Size(200, 48);

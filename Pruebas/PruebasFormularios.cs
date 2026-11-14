@@ -130,26 +130,54 @@ namespace Pruebas
             return 0.2126 * lineal(color.R) + 0.7152 * lineal(color.G) + 0.0722 * lineal(color.B);
         }
 
-        // CP-63 — RNF-02: el piloto usa el tema y declara diseño a 96 DPI.
-        [TestMethod("CP-63: Piloto sin colores ni fuentes propios y diseñado a 96 DPI")]
-        public void CP63_PilotoUsaTemaY96Dpi()
+        // CP-63 — RNF-02: las 20 pantallas centralizan el estilo; solo el piloto migra a 96 DPI.
+        [DataTestMethod]
+        [DataRow("Cliente/FrmCompraCliente", DisplayName = "CP-63: FrmCompraCliente sin estilo propio")]
+        [DataRow("Cliente/frmConfirmacion", DisplayName = "CP-63: frmConfirmacion sin estilo propio")]
+        [DataRow("Cliente/frmEventosCliente", DisplayName = "CP-63: frmEventosCliente sin estilo propio")]
+        [DataRow("Cliente/frmHistorialCliente", DisplayName = "CP-63: frmHistorialCliente sin estilo propio")]
+        [DataRow("Cliente/frmMenuCliente", DisplayName = "CP-63: frmMenuCliente sin estilo propio")]
+        [DataRow("Cliente/frmPago", DisplayName = "CP-63: frmPago sin estilo propio")]
+        [DataRow("Cliente/frmSuscripcion", DisplayName = "CP-63: frmSuscripcion sin estilo propio")]
+        [DataRow("Propietario/frmAdministrarEvento", DisplayName = "CP-63: frmAdministrarEvento sin estilo propio")]
+        [DataRow("Propietario/frmAgregarEvento", DisplayName = "CP-63: frmAgregarEvento sin estilo propio")]
+        [DataRow("Propietario/frmAgregarSector", DisplayName = "CP-63: frmAgregarSector sin estilo propio")]
+        [DataRow("Propietario/frmControlIngreso", DisplayName = "CP-63: frmControlIngreso sin estilo propio")]
+        [DataRow("Propietario/frmEventosLocal", DisplayName = "CP-63: frmEventosLocal sin estilo propio")]
+        [DataRow("Propietario/frmListasEspera", DisplayName = "CP-63: frmListasEspera sin estilo propio")]
+        [DataRow("Propietario/frmMenuPropietario", DisplayName = "CP-63: frmMenuPropietario sin estilo propio")]
+        [DataRow("Propietario/frmMisLocales", DisplayName = "CP-63: frmMisLocales sin estilo propio")]
+        [DataRow("Propietario/frmRegistrarLocal", DisplayName = "CP-63: frmRegistrarLocal sin estilo propio")]
+        [DataRow("Propietario/frmReportes", DisplayName = "CP-63: frmReportes sin estilo propio")]
+        [DataRow("_Inicio/frmCambiarContraseña", DisplayName = "CP-63: frmCambiarContraseña sin estilo propio")]
+        [DataRow("_Inicio/frmCrearUsuario", DisplayName = "CP-63: frmCrearUsuario sin estilo propio")]
+        [DataRow("_Inicio/frmInicio", DisplayName = "CP-63: frmInicio sin estilo propio")]
+        public void CP63_PantallasSinEstiloPropio(string pantalla)
         {
-            string carpeta = Path.Combine(BaseDePrueba.RaizDelRepositorio(), "Visual", "Cliente");
-            foreach (string archivo in new[] { "FrmCompraCliente.cs", "FrmCompraCliente.Designer.cs" })
+            string carpeta = Path.Combine(BaseDePrueba.RaizDelRepositorio(), "Visual");
+            string ruta = Path.Combine(carpeta, pantalla.Replace('/', Path.DirectorySeparatorChar));
+            foreach (string archivo in new[] { ruta + ".cs", ruta + ".Designer.cs" })
             {
-                string fuente = File.ReadAllText(Path.Combine(carpeta, archivo));
-                Assert.IsFalse(Regex.IsMatch(fuente, @"\bColor\s*\.\s*\w+"), archivo + ": color fuera de Tema.");
+                string fuente = File.ReadAllText(archivo);
+                Assert.IsFalse(Regex.IsMatch(fuente, @"\b(?:Color|SystemColors)\s*\.\s*\w+"),
+                    pantalla + ": color fuera de Tema en " + Path.GetFileName(archivo));
                 Assert.IsFalse(Regex.IsMatch(fuente, @"new\s+(?:System\.Drawing\.)?Font\s*\("),
-                    archivo + ": fuente fuera de Tema.");
+                    pantalla + ": fuente fuera de Tema en " + Path.GetFileName(archivo));
             }
-            Match escala = Escala.Match(File.ReadAllText(Path.Combine(carpeta, "FrmCompraCliente.Designer.cs")));
-            string designer = File.ReadAllText(Path.Combine(carpeta, "FrmCompraCliente.Designer.cs"));
-            Assert.IsFalse(Regex.IsMatch(designer, @"\bTema\s*\."), "El Designer debe contener geometría literal, sin referencias al tema.");
-            Assert.IsFalse(Regex.IsMatch(designer, @"\.(Font|ForeColor|BackColor|FlatStyle|FlatAppearance|LinkColor|ActiveLinkColor|VisitedLinkColor)\b"),
-                "El estilo debe vivir en componentes y código del tema.");
-            Assert.IsTrue(escala.Success);
-            Assert.AreEqual(96f, float.Parse(escala.Groups[1].Value, CultureInfo.InvariantCulture));
-            Assert.AreEqual(96f, float.Parse(escala.Groups[2].Value, CultureInfo.InvariantCulture));
+            string designer = File.ReadAllText(ruta + ".Designer.cs");
+            Assert.IsFalse(Regex.IsMatch(designer, @"\bTema\s*\."),
+                pantalla + ": el Designer debe contener geometría literal, sin referencias al tema.");
+            Assert.IsFalse(Regex.IsMatch(designer,
+                @"\.(Font|ForeColor|BackColor|BackgroundColor|GridColor|FlatStyle|FlatAppearance|LinkColor|ActiveLinkColor|VisitedLinkColor|UseVisualStyleBackColor)\b"),
+                pantalla + ": el estilo debe vivir en componentes y código del tema.");
+            Match escala = Escala.Match(designer);
+            Assert.IsTrue(escala.Success, pantalla + ": falta la escala de diseño.");
+            // T-47 conserva la geometría y los DPI heredados; el rediseño hará la migración.
+            if (pantalla == "Cliente/FrmCompraCliente")
+            {
+                Assert.AreEqual(96f, float.Parse(escala.Groups[1].Value, CultureInfo.InvariantCulture));
+                Assert.AreEqual(96f, float.Parse(escala.Groups[2].Value, CultureInfo.InvariantCulture));
+            }
         }
 
         // CP-64 — RNF-03: el proyecto usa el manifiesto de DPI, sin API manual en Program.

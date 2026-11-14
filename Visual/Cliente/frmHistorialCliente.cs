@@ -19,7 +19,6 @@ namespace Visual
 
         // RN-33: importes en pesos argentinos.
         private static readonly CultureInfo Pesos = new CultureInfo("es-AR");
-        private static readonly Color Violeta = Color.FromArgb(116, 86, 174);
 
         private bool cargando;
 
@@ -150,7 +149,7 @@ namespace Visual
                 if (entrada.Estado != EstadoEntrada.Confirmada || !conSeguro)
                 {
                     row.Cells["Devolver"].ReadOnly = true;
-                    row.DefaultCellStyle.ForeColor = Color.Gray;
+                    Tema.FilaNoReembolsable(row);
                 }
             }
             dgvEntradas.ClearSelection();
@@ -183,8 +182,6 @@ namespace Visual
         {
             int cantidad = EntradasElegidas().Count;
             btnDevolver.Enabled = cantidad > 0;
-            btnDevolver.BackColor = cantidad > 0 ? Violeta : Color.Gainsboro;
-            btnDevolver.ForeColor = cantidad > 0 ? Color.White : Color.DimGray;
             btnDevolver.Text = cantidad > 0 ? $"Devolver {cantidad} entrada(s)" : "Devolver";
         }
 
@@ -242,10 +239,7 @@ namespace Visual
             grilla.RowHeadersVisible = false;
             grilla.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             grilla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            grilla.BackgroundColor = Color.White;
-            grilla.DefaultCellStyle.ForeColor = Color.FromArgb(64, 64, 64);
-            grilla.DefaultCellStyle.SelectionBackColor = Violeta;
-            grilla.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245);
+            Tema.EstiloGrilla(grilla);
         }
 
         private static void AlinearDerecha(DataGridView grilla, params string[] columnas)

@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblNombre = new System.Windows.Forms.Label();
-            this.lblvolver = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnRegistrarLocal = new System.Windows.Forms.Button();
-            this.btnMisLocales = new System.Windows.Forms.Button();
-            this.btnListasEspera = new System.Windows.Forms.Button();
-            this.btnReportes = new System.Windows.Forms.Button();
+            this.lblNombre = new Visual.Componentes.EtiquetaTitulo();
+            this.lblvolver = new Visual.Componentes.EtiquetaRotulo();
+            this.label1 = new Visual.Componentes.EtiquetaTitulo();
+            this.btnRegistrarLocal = new Visual.Componentes.BotonPrimario();
+            this.btnMisLocales = new Visual.Componentes.BotonPrimario();
+            this.btnListasEspera = new Visual.Componentes.BotonPrimario();
+            this.btnReportes = new Visual.Componentes.BotonPrimario();
             this.btnControlIngreso = new Visual.Componentes.BotonPrimario();
             this.btnControlIngreso.Location = new System.Drawing.Point(65, 554);
             this.btnControlIngreso.Size = new System.Drawing.Size(348, 60);
@@ -48,8 +48,6 @@
             // lblNombre
             // 
             this.lblNombre.AutoSize = true;
-            this.lblNombre.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNombre.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.lblNombre.Location = new System.Drawing.Point(108, 145);
             this.lblNombre.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblNombre.Name = "lblNombre";
@@ -62,8 +60,6 @@
             // 
             this.lblvolver.AutoSize = true;
             this.lblvolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblvolver.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblvolver.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.lblvolver.Location = new System.Drawing.Point(156, 662);
             this.lblvolver.Name = "lblvolver";
             this.lblvolver.Size = new System.Drawing.Size(153, 28);
@@ -74,8 +70,6 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.label1.Location = new System.Drawing.Point(108, 71);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
@@ -86,69 +80,52 @@
             // 
             // btnRegistrarLocal
             // 
-            this.btnRegistrarLocal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnRegistrarLocal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRegistrarLocal.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRegistrarLocal.ForeColor = System.Drawing.Color.White;
             this.btnRegistrarLocal.Location = new System.Drawing.Point(65, 320);
             this.btnRegistrarLocal.Margin = new System.Windows.Forms.Padding(2);
             this.btnRegistrarLocal.Name = "btnRegistrarLocal";
             this.btnRegistrarLocal.Size = new System.Drawing.Size(348, 60);
             this.btnRegistrarLocal.TabIndex = 35;
             this.btnRegistrarLocal.Text = "Registrar local";
-            this.btnRegistrarLocal.UseVisualStyleBackColor = false;
             this.btnRegistrarLocal.Click += new System.EventHandler(this.btnRegistrarLocal_Click);
             // 
             // btnMisLocales
             // 
-            this.btnMisLocales.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnMisLocales.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMisLocales.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMisLocales.ForeColor = System.Drawing.Color.White;
             this.btnMisLocales.Location = new System.Drawing.Point(65, 242);
             this.btnMisLocales.Margin = new System.Windows.Forms.Padding(2);
             this.btnMisLocales.Name = "btnMisLocales";
             this.btnMisLocales.Size = new System.Drawing.Size(348, 60);
             this.btnMisLocales.TabIndex = 34;
             this.btnMisLocales.Text = "Mis locales";
-            this.btnMisLocales.UseVisualStyleBackColor = false;
             this.btnMisLocales.Click += new System.EventHandler(this.btnMisLocales_Click);
             //
             // btnListasEspera
             //
-            this.btnListasEspera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnListasEspera.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnListasEspera.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnListasEspera.ForeColor = System.Drawing.Color.White;
             this.btnListasEspera.Location = new System.Drawing.Point(65, 398);
             this.btnListasEspera.Margin = new System.Windows.Forms.Padding(2);
             this.btnListasEspera.Name = "btnListasEspera";
             this.btnListasEspera.Size = new System.Drawing.Size(348, 60);
             this.btnListasEspera.TabIndex = 39;
             this.btnListasEspera.Text = "Listas de espera";
-            this.btnListasEspera.UseVisualStyleBackColor = false;
             this.btnListasEspera.Click += new System.EventHandler(this.btnListasEspera_Click);
             //
             // btnReportes
             //
-            this.btnReportes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnReportes.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnReportes.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReportes.ForeColor = System.Drawing.Color.White;
             this.btnReportes.Location = new System.Drawing.Point(65, 476);
             this.btnReportes.Margin = new System.Windows.Forms.Padding(2);
             this.btnReportes.Name = "btnReportes";
             this.btnReportes.Size = new System.Drawing.Size(348, 60);
             this.btnReportes.TabIndex = 40;
             this.btnReportes.Text = "Reportes";
-            this.btnReportes.UseVisualStyleBackColor = false;
             this.btnReportes.Click += new System.EventHandler(this.btnReportes_Click);
             // 
             // frmMenuVendedor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(473, 714);
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
@@ -169,13 +146,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lblNombre;
-        private System.Windows.Forms.Label lblvolver;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnRegistrarLocal;
-        private System.Windows.Forms.Button btnMisLocales;
-        private System.Windows.Forms.Button btnListasEspera;
-        private System.Windows.Forms.Button btnReportes;
+        private Visual.Componentes.EtiquetaTitulo lblNombre;
+        private Visual.Componentes.EtiquetaRotulo lblvolver;
+        private Visual.Componentes.EtiquetaTitulo label1;
+        private Visual.Componentes.BotonPrimario btnRegistrarLocal;
+        private Visual.Componentes.BotonPrimario btnMisLocales;
+        private Visual.Componentes.BotonPrimario btnListasEspera;
+        private Visual.Componentes.BotonPrimario btnReportes;
         private Visual.Componentes.BotonPrimario btnControlIngreso;
     }
 }

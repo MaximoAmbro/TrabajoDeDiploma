@@ -23,7 +23,6 @@ namespace Visual.Componentes
         protected bool ShouldSerializeForeColor() { return false; }
         protected bool ShouldSerializeFlatStyle() { return false; }
         protected bool ShouldSerializeFlatAppearance() { return false; }
-        protected bool ShouldSerializeMinimumSize() { return false; }
         protected bool ShouldSerializePadding() { return false; }
         protected bool ShouldSerializeCursor() { return false; }
         protected bool ShouldSerializeUseVisualStyleBackColor() { return false; }
@@ -34,8 +33,6 @@ namespace Visual.Componentes
         public override Color BackColor { get { return base.BackColor; } set { base.BackColor = value; } }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override Color ForeColor { get { return base.ForeColor; } set { base.ForeColor = value; } }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public override Size MinimumSize { get { return base.MinimumSize; } set { base.MinimumSize = value; } }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new Padding Padding { get { return base.Padding; } set { base.Padding = value; } }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

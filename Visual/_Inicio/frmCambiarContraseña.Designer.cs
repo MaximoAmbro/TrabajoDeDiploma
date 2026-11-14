@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnVolver = new System.Windows.Forms.Button();
+            this.btnVolver = new Visual.Componentes.BotonSecundario();
             this.checkbxShowPass = new System.Windows.Forms.CheckBox();
             this.TxtConfirmpassword = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.TxtPassword = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnconfirmar = new System.Windows.Forms.Button();
+            this.label1 = new Visual.Componentes.EtiquetaTitulo();
+            this.btnconfirmar = new Visual.Componentes.BotonPrimario();
             this.txtMail = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtActual = new System.Windows.Forms.TextBox();
@@ -53,37 +53,30 @@
             // 
             // btnVolver
             // 
-            this.btnVolver.BackColor = System.Drawing.Color.White;
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVolver.Location = new System.Drawing.Point(11, 661);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(134, 42);
             this.btnVolver.TabIndex = 6;
             this.btnVolver.Text = "Volver ";
-            this.btnVolver.UseVisualStyleBackColor = false;
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
             // 
             // checkbxShowPass
             // 
             this.checkbxShowPass.AutoSize = true;
             this.checkbxShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkbxShowPass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.checkbxShowPass.Location = new System.Drawing.Point(49, 500);
             this.checkbxShowPass.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(143, 24);
             this.checkbxShowPass.TabIndex = 4;
             this.checkbxShowPass.Text = "Mostrar contraseñas";
-            this.checkbxShowPass.UseVisualStyleBackColor = true;
             this.checkbxShowPass.CheckedChanged += new System.EventHandler(this.checkbxShowPass_CheckedChanged);
             // 
             // TxtConfirmpassword
             // 
-            this.TxtConfirmpassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.TxtConfirmpassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.TxtConfirmpassword.Font = new System.Drawing.Font("MS Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TxtConfirmpassword.Location = new System.Drawing.Point(49, 435);
             this.TxtConfirmpassword.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.TxtConfirmpassword.Multiline = true;
@@ -103,9 +96,7 @@
             // 
             // TxtPassword
             // 
-            this.TxtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.TxtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.TxtPassword.Font = new System.Drawing.Font("MS Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TxtPassword.Location = new System.Drawing.Point(49, 350);
             this.TxtPassword.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.TxtPassword.Multiline = true;
@@ -127,8 +118,6 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.label1.Location = new System.Drawing.Point(39, 54);
             this.label1.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.label1.Name = "label1";
@@ -138,26 +127,18 @@
             // 
             // btnconfirmar
             // 
-            this.btnconfirmar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnconfirmar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnconfirmar.FlatAppearance.BorderSize = 0;
-            this.btnconfirmar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnconfirmar.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnconfirmar.ForeColor = System.Drawing.Color.White;
             this.btnconfirmar.Location = new System.Drawing.Point(80, 559);
             this.btnconfirmar.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.btnconfirmar.Name = "btnconfirmar";
             this.btnconfirmar.Size = new System.Drawing.Size(297, 52);
             this.btnconfirmar.TabIndex = 5;
             this.btnconfirmar.Text = "Confirmar";
-            this.btnconfirmar.UseVisualStyleBackColor = false;
             this.btnconfirmar.Click += new System.EventHandler(this.btnconfirmar_Click);
             // 
             // txtMail
             // 
-            this.txtMail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.txtMail.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtMail.Font = new System.Drawing.Font("MS Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtMail.Location = new System.Drawing.Point(49, 190);
             this.txtMail.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.txtMail.Multiline = true;
@@ -179,7 +160,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(473, 714);
             this.Controls.Add(this.txtMail);
             this.Controls.Add(this.label5);
@@ -192,7 +172,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnVolver);
             this.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmCambiarContraseña";
@@ -208,14 +187,14 @@
 
         private System.Windows.Forms.TextBox txtActual;
         private System.Windows.Forms.Label lblActual;
-        private System.Windows.Forms.Button btnVolver;
+        private Visual.Componentes.BotonSecundario btnVolver;
         private System.Windows.Forms.CheckBox checkbxShowPass;
         private System.Windows.Forms.TextBox TxtConfirmpassword;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox TxtPassword;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnconfirmar;
+        private Visual.Componentes.EtiquetaTitulo label1;
+        private Visual.Componentes.BotonPrimario btnconfirmar;
         private System.Windows.Forms.TextBox txtMail;
         private System.Windows.Forms.Label label5;
     }

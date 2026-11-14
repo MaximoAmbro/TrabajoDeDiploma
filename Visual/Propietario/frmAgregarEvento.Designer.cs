@@ -28,24 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnRegistrar = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lblVolver = new System.Windows.Forms.Label();
+            this.label1 = new Visual.Componentes.EtiquetaRotulo();
+            this.btnRegistrar = new Visual.Componentes.BotonPrimario();
+            this.label2 = new Visual.Componentes.EtiquetaRotulo();
+            this.lblVolver = new Visual.Componentes.EtiquetaRotulo();
             this.dtEvento = new System.Windows.Forms.DateTimePicker();
-            this.label3 = new System.Windows.Forms.Label();
+            this.label3 = new Visual.Componentes.EtiquetaTitulo();
             this.txtNombre = new System.Windows.Forms.TextBox();
-            this.lblCategoria = new System.Windows.Forms.Label();
+            this.lblCategoria = new Visual.Componentes.EtiquetaRotulo();
             this.cmbCategoria = new System.Windows.Forms.ComboBox();
-            this.lblPreventa = new System.Windows.Forms.Label();
+            this.lblPreventa = new Visual.Componentes.EtiquetaRotulo();
             this.dtpFinPreventa = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.label1.Location = new System.Drawing.Point(83, 243);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(130, 21);
@@ -54,24 +52,18 @@
             // 
             // btnRegistrar
             // 
-            this.btnRegistrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnRegistrar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRegistrar.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRegistrar.ForeColor = System.Drawing.Color.White;
             this.btnRegistrar.Location = new System.Drawing.Point(87, 565);
             this.btnRegistrar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnRegistrar.Name = "btnRegistrar";
             this.btnRegistrar.Size = new System.Drawing.Size(261, 48);
             this.btnRegistrar.TabIndex = 2;
             this.btnRegistrar.Text = "Registrar";
-            this.btnRegistrar.UseVisualStyleBackColor = false;
             this.btnRegistrar.Click += new System.EventHandler(this.btnRegistrar_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.label2.Location = new System.Drawing.Point(83, 336);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 21);
@@ -82,8 +74,6 @@
             // 
             this.lblVolver.AutoSize = true;
             this.lblVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblVolver.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVolver.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.lblVolver.Location = new System.Drawing.Point(177, 664);
             this.lblVolver.Name = "lblVolver";
             this.lblVolver.Size = new System.Drawing.Size(72, 28);
@@ -103,8 +93,6 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.label3.Location = new System.Drawing.Point(50, 81);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(367, 60);
@@ -113,9 +101,7 @@
             // 
             // txtNombre
             // 
-            this.txtNombre.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.txtNombre.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtNombre.Font = new System.Drawing.Font("MS Gothic", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNombre.Location = new System.Drawing.Point(87, 266);
             this.txtNombre.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtNombre.Name = "txtNombre";
@@ -125,8 +111,6 @@
             // lblCategoria
             //
             this.lblCategoria.AutoSize = true;
-            this.lblCategoria.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCategoria.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.lblCategoria.Location = new System.Drawing.Point(83, 410);
             this.lblCategoria.Name = "lblCategoria";
             this.lblCategoria.Size = new System.Drawing.Size(86, 21);
@@ -147,8 +131,6 @@
             // lblPreventa
             //
             this.lblPreventa.AutoSize = true;
-            this.lblPreventa.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPreventa.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.lblPreventa.Location = new System.Drawing.Point(83, 480);
             this.lblPreventa.Name = "lblPreventa";
             this.lblPreventa.Size = new System.Drawing.Size(250, 21);
@@ -172,7 +154,6 @@
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(473, 784);
             this.Controls.Add(this.txtNombre);
             this.Controls.Add(this.label3);
@@ -194,16 +175,16 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnRegistrar;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblVolver;
+        private Visual.Componentes.EtiquetaRotulo label1;
+        private Visual.Componentes.BotonPrimario btnRegistrar;
+        private Visual.Componentes.EtiquetaRotulo label2;
+        private Visual.Componentes.EtiquetaRotulo lblVolver;
         private System.Windows.Forms.DateTimePicker dtEvento;
-        private System.Windows.Forms.Label label3;
+        private Visual.Componentes.EtiquetaTitulo label3;
         private System.Windows.Forms.TextBox txtNombre;
-        private System.Windows.Forms.Label lblCategoria;
+        private Visual.Componentes.EtiquetaRotulo lblCategoria;
         private System.Windows.Forms.ComboBox cmbCategoria;
-        private System.Windows.Forms.Label lblPreventa;
+        private Visual.Componentes.EtiquetaRotulo lblPreventa;
         private System.Windows.Forms.DateTimePicker dtpFinPreventa;
     }
 }

@@ -29,10 +29,10 @@ namespace Visual
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.lblTitulo = new System.Windows.Forms.Label();
-            this.lblTemporizador = new System.Windows.Forms.Label();
+            this.lblTitulo = new Visual.Componentes.EtiquetaTitulo();
+            this.lblTemporizador = new Visual.Componentes.EtiquetaSeccion();
             this.lblSeguro = new System.Windows.Forms.Label();
-            this.lblTotal = new System.Windows.Forms.Label();
+            this.lblTotal = new Visual.Componentes.EtiquetaSeccion();
             this.lblTitular = new System.Windows.Forms.Label();
             this.txtTitular = new System.Windows.Forms.TextBox();
             this.lblNumero = new System.Windows.Forms.Label();
@@ -42,16 +42,14 @@ namespace Visual
             this.lblCvv = new System.Windows.Forms.Label();
             this.txtCvv = new System.Windows.Forms.TextBox();
             this.lblEstado = new System.Windows.Forms.Label();
-            this.btnPagar = new System.Windows.Forms.Button();
-            this.btnCancelar = new System.Windows.Forms.Button();
+            this.btnPagar = new Visual.Componentes.BotonPrimario();
+            this.btnCancelar = new Visual.Componentes.BotonSecundario();
             this.tmrReserva = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             //
             // lblTitulo
             //
             this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.lblTitulo.Location = new System.Drawing.Point(20, 14);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(98, 50);
@@ -60,8 +58,6 @@ namespace Visual
             //
             // lblTemporizador
             //
-            this.lblTemporizador.Font = new System.Drawing.Font("Consolas", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTemporizador.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.lblTemporizador.Location = new System.Drawing.Point(228, 24);
             this.lblTemporizador.Name = "lblTemporizador";
             this.lblTemporizador.Size = new System.Drawing.Size(200, 30);
@@ -81,8 +77,6 @@ namespace Visual
             // lblTotal
             //
             this.lblTotal.AutoSize = true;
-            this.lblTotal.Font = new System.Drawing.Font("Nirmala UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblTotal.Location = new System.Drawing.Point(22, 96);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(130, 28);
@@ -160,7 +154,6 @@ namespace Visual
             //
             // lblEstado
             //
-            this.lblEstado.ForeColor = System.Drawing.Color.Firebrick;
             this.lblEstado.Location = new System.Drawing.Point(24, 316);
             this.lblEstado.Name = "lblEstado";
             this.lblEstado.Size = new System.Drawing.Size(408, 100);
@@ -168,17 +161,12 @@ namespace Visual
             //
             // btnPagar
             //
-            this.btnPagar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnPagar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPagar.FlatAppearance.BorderSize = 0;
-            this.btnPagar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPagar.ForeColor = System.Drawing.Color.White;
             this.btnPagar.Location = new System.Drawing.Point(248, 424);
             this.btnPagar.Name = "btnPagar";
             this.btnPagar.Size = new System.Drawing.Size(180, 44);
             this.btnPagar.TabIndex = 4;
             this.btnPagar.Text = "Pagar";
-            this.btnPagar.UseVisualStyleBackColor = false;
             this.btnPagar.Click += new System.EventHandler(this.btnPagar_Click);
             //
             // btnCancelar
@@ -189,7 +177,6 @@ namespace Visual
             this.btnCancelar.Size = new System.Drawing.Size(150, 44);
             this.btnCancelar.TabIndex = 5;
             this.btnCancelar.Text = "Cancelar pago";
-            this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             //
             // tmrReserva
@@ -202,7 +189,6 @@ namespace Visual
             this.AcceptButton = this.btnPagar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(456, 488);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnPagar);
@@ -219,8 +205,6 @@ namespace Visual
             this.Controls.Add(this.lblSeguro);
             this.Controls.Add(this.lblTemporizador);
             this.Controls.Add(this.lblTitulo);
-            this.Font = new System.Drawing.Font("Nirmala UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -237,10 +221,10 @@ namespace Visual
 
         #endregion
 
-        private System.Windows.Forms.Label lblTitulo;
-        private System.Windows.Forms.Label lblTemporizador;
+        private Visual.Componentes.EtiquetaTitulo lblTitulo;
+        private Visual.Componentes.EtiquetaSeccion lblTemporizador;
         private System.Windows.Forms.Label lblSeguro;
-        private System.Windows.Forms.Label lblTotal;
+        private Visual.Componentes.EtiquetaSeccion lblTotal;
         private System.Windows.Forms.Label lblTitular;
         private System.Windows.Forms.TextBox txtTitular;
         private System.Windows.Forms.Label lblNumero;
@@ -250,8 +234,8 @@ namespace Visual
         private System.Windows.Forms.Label lblCvv;
         private System.Windows.Forms.TextBox txtCvv;
         private System.Windows.Forms.Label lblEstado;
-        private System.Windows.Forms.Button btnPagar;
-        private System.Windows.Forms.Button btnCancelar;
+        private Visual.Componentes.BotonPrimario btnPagar;
+        private Visual.Componentes.BotonSecundario btnCancelar;
         private System.Windows.Forms.Timer tmrReserva;
     }
 }

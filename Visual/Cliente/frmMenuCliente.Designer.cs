@@ -28,61 +28,50 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnEventos = new System.Windows.Forms.Button();
-            this.btnHistorial = new System.Windows.Forms.Button();
-            this.btnSuscripcion = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblvolver = new System.Windows.Forms.Label();
-            this.lblNombre = new System.Windows.Forms.Label();
+            this.btnEventos = new Visual.Componentes.BotonPrimario();
+            this.btnHistorial = new Visual.Componentes.BotonPrimario();
+            this.btnSuscripcion = new Visual.Componentes.BotonPrimario();
+            this.label1 = new Visual.Componentes.EtiquetaTitulo();
+            this.lblvolver = new Visual.Componentes.EtiquetaRotulo();
+            this.lblNombre = new Visual.Componentes.EtiquetaTitulo();
             this.SuspendLayout();
             // 
             // btnEventos
             // 
-            this.btnEventos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnEventos.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEventos.ForeColor = System.Drawing.Color.White;
             this.btnEventos.Location = new System.Drawing.Point(67, 248);
             this.btnEventos.Margin = new System.Windows.Forms.Padding(2);
             this.btnEventos.Name = "btnEventos";
             this.btnEventos.Size = new System.Drawing.Size(258, 78);
             this.btnEventos.TabIndex = 5;
             this.btnEventos.Text = "Eventos disponibles";
-            this.btnEventos.UseVisualStyleBackColor = false;
             this.btnEventos.Click += new System.EventHandler(this.btnEventos_Click);
             // 
             // btnHistorial
             // 
-            this.btnHistorial.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnHistorial.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnHistorial.ForeColor = System.Drawing.Color.White;
             this.btnHistorial.Location = new System.Drawing.Point(67, 376);
             this.btnHistorial.Margin = new System.Windows.Forms.Padding(2);
             this.btnHistorial.Name = "btnHistorial";
             this.btnHistorial.Size = new System.Drawing.Size(258, 77);
             this.btnHistorial.TabIndex = 6;
             this.btnHistorial.Text = "Mis eventos";
-            this.btnHistorial.UseVisualStyleBackColor = false;
             this.btnHistorial.Click += new System.EventHandler(this.btnHistorial_Click);
             //
             // btnSuscripcion
             //
-            this.btnSuscripcion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnSuscripcion.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSuscripcion.ForeColor = System.Drawing.Color.White;
             this.btnSuscripcion.Location = new System.Drawing.Point(67, 504);
             this.btnSuscripcion.Margin = new System.Windows.Forms.Padding(2);
             this.btnSuscripcion.Name = "btnSuscripcion";
             this.btnSuscripcion.Size = new System.Drawing.Size(258, 77);
             this.btnSuscripcion.TabIndex = 7;
             this.btnSuscripcion.Text = "Mi suscripción";
-            this.btnSuscripcion.UseVisualStyleBackColor = false;
             this.btnSuscripcion.Click += new System.EventHandler(this.btnSuscripcion_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.label1.Location = new System.Drawing.Point(82, 62);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
@@ -95,8 +84,6 @@
             // 
             this.lblvolver.AutoSize = true;
             this.lblvolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblvolver.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblvolver.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.lblvolver.Location = new System.Drawing.Point(127, 636);
             this.lblvolver.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblvolver.Name = "lblvolver";
@@ -108,8 +95,6 @@
             // lblNombre
             // 
             this.lblNombre.AutoSize = true;
-            this.lblNombre.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNombre.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.lblNombre.Location = new System.Drawing.Point(82, 120);
             this.lblNombre.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNombre.Name = "lblNombre";
@@ -122,7 +107,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(394, 723);
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
@@ -130,7 +114,6 @@
             this.Controls.Add(this.btnSuscripcion);
             this.Controls.Add(this.btnHistorial);
             this.Controls.Add(this.btnEventos);
-            this.Font = new System.Drawing.Font("Nirmala UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmMenuCliente";
@@ -143,11 +126,11 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button btnEventos;
-        private System.Windows.Forms.Button btnHistorial;
-        private System.Windows.Forms.Button btnSuscripcion;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lblvolver;
-        private System.Windows.Forms.Label lblNombre;
+        private Visual.Componentes.BotonPrimario btnEventos;
+        private Visual.Componentes.BotonPrimario btnHistorial;
+        private Visual.Componentes.BotonPrimario btnSuscripcion;
+        private Visual.Componentes.EtiquetaTitulo label1;
+        private Visual.Componentes.EtiquetaRotulo lblvolver;
+        private Visual.Componentes.EtiquetaTitulo lblNombre;
     }
 }

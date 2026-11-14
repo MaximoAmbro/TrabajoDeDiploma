@@ -15,7 +15,6 @@ namespace Visual
         public int IDUsuario;
         public string NombreUsuario;
 
-        private static readonly Color Violeta = Color.FromArgb(116, 86, 174);
 
         public frmListasEspera()
         {
@@ -45,10 +44,7 @@ namespace Visual
             dgvLista.MultiSelect = false;
             dgvLista.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvLista.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvLista.BackgroundColor = Color.White;
-            dgvLista.DefaultCellStyle.ForeColor = Color.FromArgb(64, 64, 64);
-            dgvLista.DefaultCellStyle.SelectionBackColor = Violeta;
-            dgvLista.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245);
+            Tema.EstiloGrilla(dgvLista);
             dgvLista.Columns.Add("Posicion", "Posición");
             dgvLista.Columns.Add("Cliente", "Cliente");
             dgvLista.Columns.Add("Mail", "Mail");

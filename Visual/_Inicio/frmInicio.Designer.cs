@@ -34,17 +34,15 @@
             this.checkbxShowPass = new System.Windows.Forms.CheckBox();
             this.lblolividarcontra = new System.Windows.Forms.Label();
             this.lblcrearcuenta = new System.Windows.Forms.Label();
-            this.btninicio = new System.Windows.Forms.Button();
+            this.btninicio = new Visual.Componentes.BotonPrimario();
             this.label5 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.btnModificar = new System.Windows.Forms.Button();
+            this.label2 = new Visual.Componentes.EtiquetaTitulo();
+            this.btnModificar = new Visual.Componentes.BotonSecundario();
             this.SuspendLayout();
             // 
             // txtMailLogin
             // 
-            this.txtMailLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.txtMailLogin.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtMailLogin.Font = new System.Drawing.Font("MS Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtMailLogin.Location = new System.Drawing.Point(108, 249);
             this.txtMailLogin.Name = "txtMailLogin";
             this.txtMailLogin.Size = new System.Drawing.Size(250, 32);
@@ -53,9 +51,7 @@
             // 
             // txtContraseñaLogin
             // 
-            this.txtContraseñaLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.txtContraseñaLogin.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtContraseñaLogin.Font = new System.Drawing.Font("MS Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtContraseñaLogin.Location = new System.Drawing.Point(108, 336);
             this.txtContraseñaLogin.Name = "txtContraseñaLogin";
             this.txtContraseñaLogin.Size = new System.Drawing.Size(250, 32);
@@ -74,13 +70,11 @@
             // 
             this.checkbxShowPass.AutoSize = true;
             this.checkbxShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkbxShowPass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.checkbxShowPass.Location = new System.Drawing.Point(228, 407);
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(178, 32);
             this.checkbxShowPass.TabIndex = 10;
             this.checkbxShowPass.Text = "Mostrar contraseña";
-            this.checkbxShowPass.UseVisualStyleBackColor = true;
             this.checkbxShowPass.CheckedChanged += new System.EventHandler(this.checkbxShowPass_CheckedChanged);
             // 
             // lblolividarcontra
@@ -98,7 +92,6 @@
             // 
             this.lblcrearcuenta.AutoSize = true;
             this.lblcrearcuenta.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblcrearcuenta.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.lblcrearcuenta.Location = new System.Drawing.Point(157, 656);
             this.lblcrearcuenta.Name = "lblcrearcuenta";
             this.lblcrearcuenta.Size = new System.Drawing.Size(134, 28);
@@ -108,17 +101,12 @@
             // 
             // btninicio
             // 
-            this.btninicio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btninicio.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btninicio.FlatAppearance.BorderSize = 0;
-            this.btninicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btninicio.ForeColor = System.Drawing.Color.White;
             this.btninicio.Location = new System.Drawing.Point(108, 508);
             this.btninicio.Name = "btninicio";
             this.btninicio.Size = new System.Drawing.Size(240, 49);
             this.btninicio.TabIndex = 20;
             this.btninicio.Text = "Iniciar sesión";
-            this.btninicio.UseVisualStyleBackColor = false;
             this.btninicio.Click += new System.EventHandler(this.btninicio_Click);
             // 
             // label5
@@ -133,8 +121,6 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.label2.Location = new System.Drawing.Point(108, 93);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
@@ -149,13 +135,11 @@
             this.btnModificar.Size = new System.Drawing.Size(368, 51);
             this.btnModificar.TabIndex = 50;
             this.btnModificar.Text = "Modificar";
-            this.btnModificar.UseVisualStyleBackColor = true;
             // 
             // frmInicio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(473, 714);
             this.Controls.Add(this.btnModificar);
             this.Controls.Add(this.label2);
@@ -167,8 +151,6 @@
             this.Controls.Add(this.txtContraseñaLogin);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtMailLogin);
-            this.Font = new System.Drawing.Font("Nirmala UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "frmInicio";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -186,9 +168,9 @@
         private System.Windows.Forms.CheckBox checkbxShowPass;
         private System.Windows.Forms.Label lblolividarcontra;
         private System.Windows.Forms.Label lblcrearcuenta;
-        private System.Windows.Forms.Button btninicio;
+        private Visual.Componentes.BotonPrimario btninicio;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnModificar;
+        private Visual.Componentes.EtiquetaTitulo label2;
+        private Visual.Componentes.BotonSecundario btnModificar;
     }
 }

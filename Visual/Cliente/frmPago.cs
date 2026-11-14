@@ -54,9 +54,7 @@ namespace Visual
                 return;
             }
             lblTemporizador.Text = $"Reserva: {(int)restante.TotalMinutes:00}:{restante.Seconds:00}";
-            lblTemporizador.ForeColor = restante.TotalMinutes < 1
-                ? System.Drawing.Color.Firebrick
-                : System.Drawing.Color.FromArgb(116, 86, 174);
+            lblTemporizador.ForeColor = Tema.ColorTemporizador(restante);
         }
 
         private void btnPagar_Click(object sender, EventArgs e)

@@ -39,6 +39,7 @@ namespace Visual
         public static readonly Font Boton = new Font("Segoe UI Semibold", 10f);
         public static readonly Font Rotulo = new Font("Segoe UI Semibold", 9f);
         public static readonly Font Ayuda = new Font("Segoe UI", 9f);
+        public static readonly Font Totales = new Font("Segoe UI", 10f, FontStyle.Bold);
         public static readonly Font Comprobante = new Font("Consolas", 10f);
 
         public static class Espacio
@@ -127,6 +128,23 @@ namespace Visual
             }
         }
 
+        // Estados de negocio: se conservan al aplicar el tema de las grillas.
+        public static void FilaNoReembolsable(DataGridViewRow fila)
+        {
+            fila.DefaultCellStyle.ForeColor = TextoSecundario;
+        }
+
+        public static void FilaTotal(DataGridViewRow fila)
+        {
+            fila.DefaultCellStyle.Font = Totales;
+            fila.DefaultCellStyle.BackColor = PrimarioSuave;
+        }
+
+        public static Color ColorTemporizador(TimeSpan restante)
+        {
+            return restante.TotalMinutes < 1 ? Error : Primario;
+        }
+
         public static void ComoSuperficie(Control control) { control.BackColor = Superficie; control.ForeColor = Texto; }
         public static void ComoFondo(Control control) { control.BackColor = Fondo; control.ForeColor = Texto; }
         public static void ComoDocumento(Label etiqueta) { etiqueta.Font = Comprobante; etiqueta.ForeColor = Texto; }
@@ -163,7 +181,6 @@ namespace Visual
         public static void PrepararBoton(Button boton, RolBoton rol)
         {
             boton.Font = Boton;
-            boton.MinimumSize = new Size(AnchoMinimoBoton, rol == RolBoton.Primario ? AltoBotonPrimario : AltoBoton);
             boton.Padding = new Padding(RellenoHorizontalBoton, 0, RellenoHorizontalBoton, 0);
             boton.Cursor = Cursors.Hand;
             EstadoBoton(boton, rol);

@@ -37,7 +37,7 @@ namespace Visual
             dgvLocales.AllowUserToAddRows = false;
             dgvLocales.AllowUserToDeleteRows = false;
             dgvLocales.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvLocales.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245);
+            Tema.EstiloGrilla(dgvLocales);
             dgvLocales.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             dgvLocales.Columns["ID"].Visible = false;

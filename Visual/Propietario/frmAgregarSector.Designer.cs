@@ -28,22 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label5 = new System.Windows.Forms.Label();
+            this.label5 = new Visual.Componentes.EtiquetaRotulo();
             this.txtPrecio = new System.Windows.Forms.TextBox();
-            this.btnregistrarse = new System.Windows.Forms.Button();
+            this.btnregistrarse = new Visual.Componentes.BotonPrimario();
             this.txtCapacidad = new System.Windows.Forms.TextBox();
-            this.lblmail = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblmail = new Visual.Componentes.EtiquetaRotulo();
+            this.label6 = new Visual.Componentes.EtiquetaRotulo();
             this.txtNombre = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblVolver = new System.Windows.Forms.Label();
+            this.label1 = new Visual.Componentes.EtiquetaTitulo();
+            this.lblVolver = new Visual.Componentes.EtiquetaRotulo();
             this.SuspendLayout();
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.label5.Location = new System.Drawing.Point(71, 262);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
@@ -53,9 +51,7 @@
             // 
             // txtPrecio
             // 
-            this.txtPrecio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.txtPrecio.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPrecio.Font = new System.Drawing.Font("MS Gothic", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPrecio.Location = new System.Drawing.Point(74, 282);
             this.txtPrecio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtPrecio.Name = "txtPrecio";
@@ -64,26 +60,18 @@
             // 
             // btnregistrarse
             // 
-            this.btnregistrarse.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnregistrarse.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnregistrarse.FlatAppearance.BorderSize = 0;
-            this.btnregistrarse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnregistrarse.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnregistrarse.ForeColor = System.Drawing.Color.White;
             this.btnregistrarse.Location = new System.Drawing.Point(89, 461);
             this.btnregistrarse.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnregistrarse.Name = "btnregistrarse";
             this.btnregistrarse.Size = new System.Drawing.Size(214, 43);
             this.btnregistrarse.TabIndex = 48;
             this.btnregistrarse.Text = "Agregar sector";
-            this.btnregistrarse.UseVisualStyleBackColor = false;
             this.btnregistrarse.Click += new System.EventHandler(this.btnregistrarse_Click);
             // 
             // txtCapacidad
             // 
-            this.txtCapacidad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.txtCapacidad.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtCapacidad.Font = new System.Drawing.Font("MS Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCapacidad.Location = new System.Drawing.Point(78, 352);
             this.txtCapacidad.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.txtCapacidad.Name = "txtCapacidad";
@@ -93,8 +81,6 @@
             // lblmail
             // 
             this.lblmail.AutoSize = true;
-            this.lblmail.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblmail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.lblmail.Location = new System.Drawing.Point(71, 333);
             this.lblmail.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblmail.Name = "lblmail";
@@ -105,8 +91,6 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Nirmala UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.label6.Location = new System.Drawing.Point(71, 188);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
@@ -116,9 +100,7 @@
             // 
             // txtNombre
             // 
-            this.txtNombre.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
             this.txtNombre.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtNombre.Font = new System.Drawing.Font("MS Gothic", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNombre.Location = new System.Drawing.Point(74, 208);
             this.txtNombre.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtNombre.Name = "txtNombre";
@@ -128,8 +110,6 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.label1.Location = new System.Drawing.Point(48, 80);
             this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
@@ -141,8 +121,6 @@
             // 
             this.lblVolver.AutoSize = true;
             this.lblVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblVolver.Font = new System.Drawing.Font("Nirmala UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVolver.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.lblVolver.Location = new System.Drawing.Point(165, 528);
             this.lblVolver.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblVolver.Name = "lblVolver";
@@ -175,14 +153,14 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label5;
+        private Visual.Componentes.EtiquetaRotulo label5;
         private System.Windows.Forms.TextBox txtPrecio;
-        private System.Windows.Forms.Button btnregistrarse;
+        private Visual.Componentes.BotonPrimario btnregistrarse;
         private System.Windows.Forms.TextBox txtCapacidad;
-        private System.Windows.Forms.Label lblmail;
-        private System.Windows.Forms.Label label6;
+        private Visual.Componentes.EtiquetaRotulo lblmail;
+        private Visual.Componentes.EtiquetaRotulo label6;
         private System.Windows.Forms.TextBox txtNombre;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lblVolver;
+        private Visual.Componentes.EtiquetaTitulo label1;
+        private Visual.Componentes.EtiquetaRotulo lblVolver;
     }
 }

@@ -66,11 +66,8 @@ namespace Visual
             dgvReporte.RowHeadersVisible = false;
             dgvReporte.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvReporte.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvReporte.BackgroundColor = Color.White;
-            dgvReporte.DefaultCellStyle.ForeColor = Color.FromArgb(64, 64, 64);
-            dgvReporte.DefaultCellStyle.SelectionBackColor = Color.FromArgb(116, 86, 174);
+            Tema.EstiloGrilla(dgvReporte);
             dgvReporte.DefaultCellStyle.NullValue = "—";
-            dgvReporte.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(231, 231, 231);
             dgvReporte.EnableHeadersVisualStyles = false;
             dgvReporte.DataBindingComplete += dgvReporte_DataBindingComplete;
         }
@@ -285,8 +282,7 @@ namespace Visual
                 return;
             }
             DataGridViewRow totales = dgvReporte.Rows[dgvReporte.Rows.Count - 1];
-            totales.DefaultCellStyle.Font = new Font(dgvReporte.Font, FontStyle.Bold);
-            totales.DefaultCellStyle.BackColor = Color.FromArgb(236, 231, 246);
+            Tema.FilaTotal(totales);
             dgvReporte.ClearSelection();
         }
 

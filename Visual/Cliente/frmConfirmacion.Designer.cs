@@ -28,21 +28,19 @@ namespace Visual
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblTitulo = new System.Windows.Forms.Label();
-            this.lblPedido = new System.Windows.Forms.Label();
+            this.lblTitulo = new Visual.Componentes.EtiquetaTitulo();
+            this.lblPedido = new Visual.Componentes.EtiquetaSeccion();
             this.lblDesglose = new System.Windows.Forms.Label();
             this.lblTickets = new System.Windows.Forms.Label();
             this.txtCarpeta = new System.Windows.Forms.TextBox();
             this.lstArchivos = new System.Windows.Forms.ListBox();
-            this.btnAbrirCarpeta = new System.Windows.Forms.Button();
-            this.btnAceptar = new System.Windows.Forms.Button();
+            this.btnAbrirCarpeta = new Visual.Componentes.BotonSecundario();
+            this.btnAceptar = new Visual.Componentes.BotonPrimario();
             this.SuspendLayout();
             //
             // lblTitulo
             //
             this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Font = new System.Drawing.Font("Nirmala UI", 22F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.lblTitulo.Location = new System.Drawing.Point(20, 14);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(330, 50);
@@ -52,8 +50,6 @@ namespace Visual
             // lblPedido
             //
             this.lblPedido.AutoSize = true;
-            this.lblPedido.Font = new System.Drawing.Font("Nirmala UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPedido.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblPedido.Location = new System.Drawing.Point(24, 66);
             this.lblPedido.Name = "lblPedido";
             this.lblPedido.Size = new System.Drawing.Size(80, 32);
@@ -63,8 +59,6 @@ namespace Visual
             // lblDesglose
             //
             this.lblDesglose.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblDesglose.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDesglose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblDesglose.Location = new System.Drawing.Point(28, 106);
             this.lblDesglose.Name = "lblDesglose";
             this.lblDesglose.Padding = new System.Windows.Forms.Padding(8);
@@ -104,22 +98,16 @@ namespace Visual
             this.btnAbrirCarpeta.Size = new System.Drawing.Size(150, 44);
             this.btnAbrirCarpeta.TabIndex = 1;
             this.btnAbrirCarpeta.Text = "Abrir carpeta";
-            this.btnAbrirCarpeta.UseVisualStyleBackColor = true;
             this.btnAbrirCarpeta.Click += new System.EventHandler(this.btnAbrirCarpeta_Click);
             //
             // btnAceptar
             //
-            this.btnAceptar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(116)))), ((int)(((byte)(86)))), ((int)(((byte)(174)))));
             this.btnAceptar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAceptar.FlatAppearance.BorderSize = 0;
-            this.btnAceptar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAceptar.ForeColor = System.Drawing.Color.White;
             this.btnAceptar.Location = new System.Drawing.Point(248, 520);
             this.btnAceptar.Name = "btnAceptar";
             this.btnAceptar.Size = new System.Drawing.Size(180, 44);
             this.btnAceptar.TabIndex = 0;
             this.btnAceptar.Text = "Aceptar";
-            this.btnAceptar.UseVisualStyleBackColor = false;
             this.btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
             //
             // frmConfirmacion
@@ -127,7 +115,6 @@ namespace Visual
             this.AcceptButton = this.btnAceptar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(456, 584);
             this.Controls.Add(this.btnAceptar);
             this.Controls.Add(this.btnAbrirCarpeta);
@@ -137,8 +124,6 @@ namespace Visual
             this.Controls.Add(this.lblDesglose);
             this.Controls.Add(this.lblPedido);
             this.Controls.Add(this.lblTitulo);
-            this.Font = new System.Drawing.Font("Nirmala UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -154,13 +139,13 @@ namespace Visual
 
         #endregion
 
-        private System.Windows.Forms.Label lblTitulo;
-        private System.Windows.Forms.Label lblPedido;
+        private Visual.Componentes.EtiquetaTitulo lblTitulo;
+        private Visual.Componentes.EtiquetaSeccion lblPedido;
         private System.Windows.Forms.Label lblDesglose;
         private System.Windows.Forms.Label lblTickets;
         private System.Windows.Forms.TextBox txtCarpeta;
         private System.Windows.Forms.ListBox lstArchivos;
-        private System.Windows.Forms.Button btnAbrirCarpeta;
-        private System.Windows.Forms.Button btnAceptar;
+        private Visual.Componentes.BotonSecundario btnAbrirCarpeta;
+        private Visual.Componentes.BotonPrimario btnAceptar;
     }
 }
