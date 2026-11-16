@@ -117,7 +117,7 @@ arriba queda como historia.
 | 13 | Estados distintos | Sí | Sin cambios en las cuatro listas; los Anexos 1 y 2 están en la lista |
 | 14 | Objetivos que no son medibles | Sí | OE-3, OE-5 y OE-6 reescritos en la p. 11 y en la trazabilidad inversa de la p. 107 |
 | 15 | Patrón nombrado que no se ve | Sí | Sin cambios |
-| 16 | Figuras ilegibles al 100 % | **Sí, con una reserva abierta** | Diagramas: 8,5 pt o más. Guion: 12,2 a 14,9 pt. Instructivo: figuras 1 y 2 en 7,2 y 6,8 pt a 16 cm, el ancho máximo. **Codex las está recortando** (pedido de JC). Si el recorte sube la letra, la reserva se cierra con las figuras nuevas. Si Codex informa que el recorte les quita sentido, quedan como están y la reserva se cierra con esa justificación, escrita acá |
+| 16 | Figuras ilegibles al 100 % | **Sí** | Diagramas: 8,5 pt o más. Guion: 12,2 a 14,9 pt. Instructivo, decisión de JC sobre el recorte de Codex: **la figura 2 se recortó** y, a su tamaño real (10,7 cm), su letra menor queda en 9 pt; el resumen que sale del recorte ya está en la figura 3. **La figura 1 queda entera, a 7,2 pt, por decisión:** un recorte suficiente para mejorarla le quitaría los filtros, las columnas o el botón Comprar, que es lo que la figura tiene que mostrar |
 
 **Lo que esta pasada no pudo hacer:** releer el texto de las pp. 48 y 49 contra las capturas
 nuevas. El PDF no se puede abrir desde aquí sin instalar una herramienta. El texto de esas páginas

@@ -50,18 +50,17 @@
 > | p. 109, oración inicial y tabla de brechas, filas G-02 y G-06 | G-02: «CP-11 a CP-148». G-06: la acción suma lo que corrigió la versión 2.6 y quedan cinco hallazgos, no diez; la oración inicial lo dice igual | La oración inicial y las dos filas |
 > | Sección nueva «Metodología de verificación» (después de la p. 109) | La medición final de mutación (73 de 77); «La batería…» dice ciento cuarenta y ocho casos y doscientas setenta y seis ejecuciones; el párrafo «En la medición final quedaron cuatro…» termina distinto (M-22 corregido) | **La sección entera**, desde su título hasta el párrafo «Qué queda fuera de la medición», inclusive. Es más seguro que buscar párrafo por párrafo |
 > | p. 111, trabajo futuro, punto 1 | Se borró «, y el regreso a un armado vacío de U-09» | La celda «Poner» del punto 1 |
+> | pp. 52 y 53, figura 2 del instructivo | Pasa a una versión recortada, con otro archivo y otro ancho (10,7 cm) | La figura 2, si pegaste la entera. La figura 1 no cambia |
 
 > ## ⏸ NO PEGAR TODAVÍA: la lista completa
 >
-> **Todo lo que no lleva la marca ⏸ se pega hoy, sin preguntar.** Lo que queda marcado son datos
-> que tiene que mandar JC y dos figuras que Codex está recortando: si se pega antes, el documento
-> dice algo falso o queda con una figura que hay que volver a cambiar. Cada
+> **Todo lo que no lleva la marca ⏸ se pega hoy, sin preguntar.** Lo único que queda marcado son
+> datos que tiene que mandar JC: si se pega antes, el documento dice algo falso. Cada
 > uno tiene la marca también en su lugar de la lista, para que te frene aunque llegues sin leer
 > esto.
 >
 > | Dónde | Qué no se pega | De qué depende |
 > |---|---|---|
-> | pp. 52 y 53, instructivo | Las figuras 1 y 2 (las 3 y 4 sí se pegan). **Si ya las pegaste, dejalas como están:** cuando llegue el recorte, esta fila pasa a «Cambió después del 16/11» con los archivos nuevos | El recorte de Codex: a 16 cm la letra queda en 7,2 y 6,8 pt |
 > | p. 1 y pie de todas las páginas | Comisión, turno, legajos, año | Datos de JC |
 > | p. 6, historial | La fecha de las filas nuevas | El día en que se pega (JC) |
 > | p. 9 | El período «entre junio y diciembre de 2025» | El año que decida JC |
@@ -1001,21 +1000,25 @@ llega después y muestra la cuenta regresiva.
 
 ## Páginas 52 y 53 — Figuras 1 a 4 del instructivo
 
-Reemplazar cada «Espacio reservado para captura de pantalla» por la imagen de la tabla. **Las
-figuras 3 y 4 se pegan hoy. ⏸ NO PEGAR TODAVÍA las figuras 1 y 2: esperando recorte.** Codex las
-está recortando porque a 16 cm su letra queda en 7,2 y 6,8 pt. Si ya las pegaste, dejalas: cuando
-lleguen las recortadas, esta entrada dice el archivo y el ancho nuevos, y la fila pasa a «Cambió
-después del 16/11». Están en `Pruebas/Figuras-Instructivo-2026-11-16/100/`, todas de un mismo pedido
+Reemplazar cada «Espacio reservado para captura de pantalla» por la imagen de la tabla. **Se
+pegan hoy las cuatro.** **La figura 2 cambió:** es una versión recortada, en otra carpeta. Si ya
+pegaste la entera, reemplazala. La figura 1 es la misma de antes. Están en `Pruebas/Figuras-Instructivo-2026-11-16/100/`, todas de un mismo pedido
 (Paula, nivel Plata, dos entradas de Campo y una noche de hotel: total $99.625, como el ejemplo
 de la p. 54). **No uses las de `docs/capturas/instructivo/`: son las de antes del rediseño.**
 Proporción bloqueada en todas. Los epígrafes no cambian.
 
 | Epígrafe | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
-| Figura 1 — Listado de eventos disponibles (pasos 1 y 2) | ⏸ esperando recorte (hoy, `figura1-listado-eventos.png`) | **16,0 cm** | 7,2 pt |
-| Figura 2 — Pantalla de armado de paquete (pasos 3 a 5) | ⏸ esperando recorte (hoy, `figura2-armado-paquete.png`) | **16,0 cm** | 6,8 pt |
+| Figura 1 — Listado de eventos disponibles (pasos 1 y 2) | `figura1-listado-eventos.png` | **16,0 cm** | 7,2 pt |
+| Figura 2 — Pantalla de armado de paquete (pasos 3 a 5) | **`Pruebas/Recortes-Instructivo-2026-11-16/figura2-armado-paquete-recorte.png`** (otra carpeta) | **10,7 cm** (su tamaño real) | 9 pt; el texto más chico de la entera, 10 pt |
 | Figura 3 — Resumen del paquete con el descuento aplicado (paso 6) | `figura3-resumen-descuento.png` | **10,5 cm** (su tamaño real) | 10 pt |
 | Figura 4 — Confirmación de compra y comprobante emitido (pasos 7 y 8) | **dos imágenes, una debajo de la otra, con un solo epígrafe:** `figura4b-confirmacion.png` arriba y `ticket.png` abajo | **16,0 cm** y **12,0 cm** | 7,9 pt y unos 8 pt |
+
+*Razón de las figuras 1 y 2* (decisión de JC, con el recorte de Codex). **La figura 2 se
+recortó:** conserva el evento, el nivel, las entradas y el hospedaje, y el resumen que sale del
+recorte ya está en la figura 3, así que el instructivo completo no pierde nada. Va a su tamaño
+real, como la figura 3: a 16 cm la letra subiría a 13,5 pt, pero la imagen tiene 404 px de ancho y
+se imprimiría ampliada al 150 %, borrosa. **La figura 1 queda entera, a 7,2 pt:** un recorte suficiente para mejorarla le quitaría los filtros, las columnas o el botón Comprar, que es lo que la figura tiene que mostrar.
 
 *Razón:* la figura 4 que armó Codex en una sola imagen (`figura4-confirmacion-y-comprobante.png`)
 mide 1519 px: a 16 cm quedaría al 40 %, con la letra en unos 3,6 pt, ilegible (regla 16 del
