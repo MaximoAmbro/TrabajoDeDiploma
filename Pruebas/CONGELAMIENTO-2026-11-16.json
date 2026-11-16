@@ -1,0 +1,319 @@
+{
+  "casosCatalogados": 145,
+  "ultimoCaso": "CP-145",
+  "metodosDePrueba": 142,
+  "ejecuciones": 271,
+  "correctas": 271,
+  "fallidas": 0,
+  "reglasConCaso": 39,
+  "reglasTotal": 41,
+  "reglasSinCaso": [
+    "RN-07",
+    "RN-33"
+  ],
+  "mutantesDirigidosDetectados": 23,
+  "mutantesDirigidosTotal": 23,
+  "alcanceMutacion": "Encargo dirigido y prioridad; corrida global final de Claude pendiente",
+  "barreraVisualCorrectas": 49,
+  "barreraVisualTotal": 49,
+  "pantallas": 20,
+  "primariosRenderizados": 31,
+  "fallosColor": 0,
+  "escalasDPI": [
+    96,
+    144
+  ],
+  "sinPruebasNuevasEnEsteCierre": true,
+  "mutacionDirigida": [
+    {
+      "tarea": "1",
+      "cp": "126",
+      "mutante": "1",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorListaEspera.cs"
+    },
+    {
+      "tarea": "2",
+      "cp": "127",
+      "mutante": "2",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorCompras.cs"
+    },
+    {
+      "tarea": "3",
+      "cp": "128",
+      "mutante": "3",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorCompras.cs"
+    },
+    {
+      "tarea": "4",
+      "cp": "129",
+      "mutante": "4",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorCompras.cs"
+    },
+    {
+      "tarea": "5",
+      "cp": "130",
+      "mutante": "5",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorUsuarios.cs"
+    },
+    {
+      "tarea": "6",
+      "cp": "131",
+      "mutante": "6",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorIngresos.cs"
+    },
+    {
+      "tarea": "7",
+      "cp": "132",
+      "mutante": "7",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Datos/RepositorioEntradas.cs"
+    },
+    {
+      "tarea": "8",
+      "cp": "133",
+      "mutante": "8",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Datos/RepositorioEntradas.cs"
+    },
+    {
+      "tarea": "9",
+      "cp": "134",
+      "mutante": "9",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorIngresos.cs"
+    },
+    {
+      "tarea": "10",
+      "cp": "135",
+      "mutante": "10",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorIngresos.cs"
+    },
+    {
+      "tarea": "11",
+      "cp": "136",
+      "mutante": "11",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorIngresos.cs"
+    },
+    {
+      "tarea": "12",
+      "cp": "94",
+      "mutante": "12a",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorEventos.cs"
+    },
+    {
+      "tarea": "12",
+      "cp": "94",
+      "mutante": "12b",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorListaEspera.cs"
+    },
+    {
+      "tarea": "13",
+      "cp": "137",
+      "mutante": "13",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorListaEspera.cs"
+    },
+    {
+      "tarea": "14",
+      "cp": "138",
+      "mutante": "14",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorFidelizacion.cs"
+    },
+    {
+      "tarea": "15",
+      "cp": "139",
+      "mutante": "15",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorFidelizacion.cs"
+    },
+    {
+      "tarea": "16",
+      "cp": "140",
+      "mutante": "16",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorPaquetes.cs"
+    },
+    {
+      "tarea": "17",
+      "cp": "141",
+      "mutante": "17",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorLocales.cs"
+    },
+    {
+      "tarea": "18",
+      "cp": "142",
+      "mutante": "18",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorIngresos.cs"
+    },
+    {
+      "tarea": "19",
+      "cp": "143",
+      "mutante": "19",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorReportes.cs"
+    },
+    {
+      "tarea": "20",
+      "cp": "144",
+      "mutante": "20",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Repo/GestorReportes.cs"
+    },
+    {
+      "tarea": "21",
+      "cp": "145",
+      "mutante": "21",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "BaseDatos/01-esquema.sql"
+    },
+    {
+      "tarea": "prioridad",
+      "cp": "125",
+      "mutante": "prioridad",
+      "detectado": true,
+      "restauradoVerde": true,
+      "archivo": "Datos/RepositorioSectores.cs"
+    }
+  ],
+  "artefactos": [
+    {
+      "archivo": "Pruebas/Capturas-CIERRE-2026-11-16/antes-100/frmHistorialCliente.png",
+      "sha256": "a2c2ad10f52e4dafd215461fa785b1d553b8031bddfee6aef530e5793ffc994a"
+    },
+    {
+      "archivo": "Pruebas/Capturas-CIERRE-2026-11-16/antes-100/frmReportes.png",
+      "sha256": "8b2882bba619e794db63f81f6524196726feb9f6ffae1bed8e44dfebe0fcff40"
+    },
+    {
+      "archivo": "Pruebas/Capturas-CIERRE-2026-11-16/antes-150/frmHistorialCliente.png",
+      "sha256": "715964f020f6b625d30a0680d932aab1b3a3682b93ae395cc5301020f7f505e3"
+    },
+    {
+      "archivo": "Pruebas/Capturas-CIERRE-2026-11-16/antes-150/frmReportes.png",
+      "sha256": "e2ad9b9e6b099f847d50f1151e00cda77d45f74d909390a7559805db5c84d72d"
+    },
+    {
+      "archivo": "Pruebas/Capturas-CIERRE-2026-11-16/despues-100/frmHistorialCliente.png",
+      "sha256": "414e2fb0a2a1b4f205366d7331ddc3cba469156f28bef50b68377e4363a6e27c"
+    },
+    {
+      "archivo": "Pruebas/Capturas-CIERRE-2026-11-16/despues-100/frmReportes.png",
+      "sha256": "24b110502764b36138f46f0da6635fc9b1483cedc28426213dafd637fad0da9c"
+    },
+    {
+      "archivo": "Pruebas/Capturas-CIERRE-2026-11-16/despues-150/frmHistorialCliente.png",
+      "sha256": "5ce4f8f04323bf230b86d66ec2bfff8e74904f7cb01310ec57c5af67a13d8e20"
+    },
+    {
+      "archivo": "Pruebas/Capturas-CIERRE-2026-11-16/despues-150/frmReportes.png",
+      "sha256": "9f148945514baf867064ad46decc64b02985ca21230a4a1328e11fc6485b1e78"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/100/ejemplo.txt",
+      "sha256": "5d8ed7955f7c9fe1a8405dc0ac585215ea40c3dd8f46c1f4531cf6ed8021d024"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/100/figura1-listado-eventos.png",
+      "sha256": "1f61bb9ecfdce56343f3cc098e4eca32e967f912f9ca7c048578ec6ac21d0b85"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/100/figura2-armado-paquete.png",
+      "sha256": "7b39e4a6541cd8db47b97ed77baaca48af3178903193faa9970ee4729149f2ce"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/100/figura3-resumen-descuento.png",
+      "sha256": "accc0537f573b28b04a2f93bd5c7603965ea4a576948be0fb50a6e1ff66cd8d5"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/100/figura4-confirmacion-y-comprobante.png",
+      "sha256": "d8099af8326eb431f8c81bd173f20436c8450f18803a67b923f0d6c2ec565c14"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/100/figura4b-confirmacion.png",
+      "sha256": "07926f77658495d449420977496bd9387afa3e005f0ae269994ad6ec017d7884"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/100/ticket.png",
+      "sha256": "614826abd09a0da97c2058936a5d79e49ed28a07f6a045bd7ae3f1f01bbe03a8"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/100/Ticket_EA-000012_7.pdf",
+      "sha256": "3609c63edd9df37bf42905025b856575f5007545b7a570d5cbaae068ebe7612c"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/100/Ticket_EA-000012_8.pdf",
+      "sha256": "df08652b08ebb4593e0c3d5eef0e58a908e874e46f4bfe8febe6414cb5ec40b7"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/150/ejemplo.txt",
+      "sha256": "7981d5377df7589e8e54a90281c8cd26f24704b7363f1d9ae39b3f1263f7ffaf"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/150/figura1-listado-eventos.png",
+      "sha256": "bbd9b8fc5878734114faaabf6862eb9f604c3fd5df7e1665f31735ff647b7ec3"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/150/figura2-armado-paquete.png",
+      "sha256": "56ff762bea728a84bab43f239763fbccc059de3fc7b9ee01f0be530543cad5e5"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/150/figura3-resumen-descuento.png",
+      "sha256": "b96bb95234bca7d03705f7bbbb898794b309630aae4def5a3f01f7c56afcd0d2"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/150/figura4-confirmacion-y-comprobante.png",
+      "sha256": "c6111b31721049622f037b5cd04fb20503cf137eaee177908b1252c853449566"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/150/figura4b-confirmacion.png",
+      "sha256": "6b18e75683d29364f36bcb898b2cb98a7d3c5764b4d1120af33e340d697f71a1"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/150/ticket.png",
+      "sha256": "1e7f8d2111a90a04677fadf19d58880b684c15237600925ee8e64d3d4918dfb4"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/150/Ticket_EA-000012_7.pdf",
+      "sha256": "b86b7061dffa115fc07c59205184d0f99cc6e67be476018b57143584f6e0506f"
+    },
+    {
+      "archivo": "Pruebas/Figuras-Instructivo-2026-11-16/150/Ticket_EA-000012_8.pdf",
+      "sha256": "a757d4b2a978583699b6695c35626b2fa2cf52f25579ae3843e0d0ea0209813e"
+    }
+  ]
+}

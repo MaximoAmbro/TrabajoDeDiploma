@@ -1,0 +1,22 @@
+Paula Plata; dos Campo de $25.000; hospedaje $45.000; descuento $2.500; cargo $7.125; total $99.625; sin seguro.
+Pedido EA-000012
+PDF D:\proyectos\TrabajoDeDiploma\Pruebas\Figuras-Instructivo-2026-11-16\150\Ticket_EA-000012_7.pdf
+Desglose:
+RESUMEN DEL PAQUETE
+
+Entradas (2)
+  2 x Campo                $ 50.000,00
+Base entradas              $ 50.000,00
+Desc. Plata 5,0 %          -$ 2.500,00
+Subtotal entradas          $ 47.500,00
+
+Servicios (sin descuento)
+  Hotel Ríos 1 noche       $ 45.000,00
+Subtotal servicios         $ 45.000,00
+
+Cargo por servicio          $ 7.125,00
+Seguro: no
+
+TOTAL                      $ 99.625,00
+El descuento se aplica sobre el valor
+de las entradas.

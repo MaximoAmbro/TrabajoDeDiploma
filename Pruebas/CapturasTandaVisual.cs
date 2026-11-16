@@ -51,7 +51,7 @@ namespace Pruebas {
   }
   // WM_PRINT de algunos Label transparentes tapa hermanos en DrawToBitmap a 150 %.
   // Volvemos a pedir DrawToBitmap a cada bot?n real; no se inventan p?xeles ni se mueve la UI.
-  private static void DibujarCompleta(Form form, Bitmap imagen) {
+  internal static void DibujarCompleta(Form form, Bitmap imagen) {
    form.DrawToBitmap(imagen,new Rectangle(Point.Empty,form.Size));
    using(var g=Graphics.FromImage(imagen)) PintarBotones(form,form,g);
   }
