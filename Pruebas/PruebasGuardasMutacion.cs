@@ -28,13 +28,13 @@ namespace Pruebas {
    e=Fake.EventoPublicado(1000m,1);Fake.CompraConfirmada(a,e,1,false);Fake.ComoCliente(b);GestorListaEspera.Instance.Inscribir(e.Id,b.Id);
    Rechaza(()=>GestorListaEspera.Instance.DeEvento(e.Id),"RN-34",a);Fake.ComoAdministrador();var filas=GestorListaEspera.Instance.DeEvento(e.Id);Assert.AreEqual(1,filas.Count);Assert.AreEqual(b.Id,filas.Single().IdUsuario);
   }
-  // CP-127 — RF-07, RN-41: pagos privados del titular.
+  // CP-127 — RF-06, RN-41: pagos privados del titular.
   [TestMethod("CP-127: PagosDe rechaza ajenos y ausencia de sesión")]
   public void CP127_Pagos(){var c=Compra();Fake.ComoCliente(a);Assert.AreEqual(1,GestorCompras.Instance.PagosDe(c).Count);Rechaza(()=>GestorCompras.Instance.PagosDe(c),"RN-41");Assert.AreEqual(1,RepositorioPagos.Instance.ObtenerPorCompra(c.Id).Count);}
   // CP-128 — RF-07, RN-41: compra privada del titular.
   [TestMethod("CP-128: ObtenerPorId rechaza la compra de otro")]
   public void CP128_Compra(){var c=Compra();Rechaza(()=>GestorCompras.Instance.ObtenerPorId(c.Id),"RN-41");Fake.ComoCliente(a);Assert.AreEqual(c.Id,GestorCompras.Instance.ObtenerPorId(c.Id).Id);Assert.AreEqual(EstadoCompra.Confirmada,RepositorioCompras.Instance.ObtenerPorId(c.Id).Estado);}
-  // CP-129 — RF-08, RN-41: pólizas privadas del titular.
+  // CP-129 — RF-06, RN-41: pólizas privadas del titular.
   [TestMethod("CP-129: SegurosDe rechaza pólizas ajenas")]
   public void CP129_Seguros(){var c=Compra();Fake.ComoCliente(a);Assert.AreEqual(1,GestorCompras.Instance.SegurosDe(c).Count);Rechaza(()=>GestorCompras.Instance.SegurosDe(c),"RN-41");Assert.AreEqual(1,RepositorioCompras.Instance.ObtenerSeguros(c.Id).Count);}
   // CP-130 — RF-02, RN-04: el hash almacenado nunca es credencial.
@@ -46,7 +46,7 @@ namespace Pruebas {
   // CP-132 — RF-07, RN-18: defensa SQL por evento, sin el filtro previo del gestor.
   [TestMethod("CP-132: UPDATE de ingreso rechaza evento distinto")]
   public void CP132_EventoSql(){var entrada=ParaIngreso();var otro=Fake.EventoPublicado(1000m,5);Assert.IsFalse(RepositorioEntradas.Instance.RegistrarIngreso(entrada.CodigoQR,otro.Id,DateTime.Now));Assert.IsNull(RepositorioEntradas.Instance.PorCodigo(entrada.CodigoQR).FechaIngreso);}
-  // CP-133 — RF-07/RF-08, RN-18/29: SQL no registra una entrada devuelta entre lectura y escritura.
+  // CP-133 — RF-07, RN-18/29: SQL no registra una entrada devuelta entre lectura y escritura.
   [TestMethod("CP-133: UPDATE de ingreso exige estado confirmado")]
   public void CP133_ConfirmadaSql(){var c=Compra();var entrada=EntradaDe(c);GestorCompras.Instance.Reembolsar(GestorCompras.Instance.EntradasDe(c));Assert.IsFalse(RepositorioEntradas.Instance.RegistrarIngreso(entrada.CodigoQR,e.Id,DateTime.Now));var guardada=RepositorioEntradas.Instance.PorCodigo(entrada.CodigoQR);Assert.IsNull(guardada.FechaIngreso);Assert.AreEqual(EstadoEntrada.Reembolsada,guardada.Estado);}
   // CP-134 — RF-07, RN-18: distingue rechazo previo del fallback del UPDATE.
@@ -61,13 +61,13 @@ namespace Pruebas {
   // CP-137 — RF-10, RN-41: inscripción privada.
   [TestMethod("CP-137: EstaInscripto exige titular")]
   public void CP137_Inscripto(){Rechaza(()=>GestorListaEspera.Instance.EstaInscripto(e.Id,a.Id),"RN-41");Fake.ComoCliente(a);Assert.IsFalse(GestorListaEspera.Instance.EstaInscripto(e.Id,a.Id));}
-  // CP-138 — RF-09, RN-41: conteo privado de fidelización.
+  // CP-138 — RF-08, RN-41: conteo privado de fidelización.
   [TestMethod("CP-138: ComprasEnVentana exige titular")]
   public void CP138_Compras(){Rechaza(()=>GestorFidelizacion.Instance.ComprasEnVentana(a.Id,DateTime.Now),"RN-41");Fake.ComoCliente(a);Assert.AreEqual(0,GestorFidelizacion.Instance.ComprasEnVentana(a.Id,DateTime.Now));}
-  // CP-139 — RF-09, RN-41: resumen privado.
+  // CP-139 — RF-08, RN-41: resumen privado.
   [TestMethod("CP-139: CalcularDescuento exige titular")]
   public void CP139_Descuento(){Fake.ComoCliente(a);var p=Fake.Paquete(e,1,false);Rechaza(()=>GestorFidelizacion.Instance.CalcularDescuento(a,p),"RN-41");Fake.ComoCliente(a);Assert.IsNotNull(GestorFidelizacion.Instance.CalcularDescuento(a,p));}
-  // CP-140 — RF-04, RN-41: no armar un paquete para otro.
+  // CP-140 — RF-05, RN-41: no armar un paquete para otro.
   [TestMethod("CP-140: Nuevo paquete exige titular")]
   public void CP140_Paquete(){Rechaza(()=>GestorPaquetes.Instance.Nuevo(e.Id,a.Id),"RN-41");Fake.ComoCliente(a);Assert.AreEqual(e.Id,GestorPaquetes.Instance.Nuevo(e.Id,a.Id).IdEvento);}
   // CP-141 — RF-12, RN-34: consulta operativa exclusiva del administrador.
@@ -76,10 +76,10 @@ namespace Pruebas {
   // CP-142 — RF-07, RN-34: listado de ingreso administrativo.
   [TestMethod("CP-142: EventosConIngresoAbierto exige administrador")]
   public void CP142_EventosIngreso(){Rechaza(()=>GestorIngresos.Instance.EventosConIngresoAbierto(),"RN-34");Fake.ComoAdministrador();Assert.IsNotNull(GestorIngresos.Instance.EventosConIngresoAbierto());}
-  // CP-143 — RF-13, RN-34: ejecutar reporte ya creado requiere autenticar de nuevo.
+  // CP-143 — RF-11, RN-34: ejecutar reporte ya creado requiere autenticar de nuevo.
   [TestMethod("CP-143: Ejecutar reporte existente exige administrador")]
   public void CP143_Reporte(){Fake.ComoAdministrador();var r=GestorReportes.Instance.Crear(GestorReportes.Codigos[0],DateTime.Today.AddDays(-30),DateTime.Today);Rechaza(()=>GestorReportes.Instance.Ejecutar(r),"RN-34");Fake.ComoAdministrador();Assert.IsNotNull(GestorReportes.Instance.Ejecutar(r));}
-  // CP-144 — RF-13, RN-34: catálogo de eventos del reporte administrativo.
+  // CP-144 — RF-11, RN-34: catálogo de eventos del reporte administrativo.
   [TestMethod("CP-144: EventosEntre exige administrador")]
   public void CP144_EventosReporte(){Rechaza(()=>GestorReportes.Instance.EventosEntre(DateTime.Today.AddDays(-30),DateTime.Today.AddDays(30)),"RN-34");Fake.ComoAdministrador();Assert.IsNotNull(GestorReportes.Instance.EventosEntre(DateTime.Today.AddDays(-30),DateTime.Today.AddDays(30)));}
   // CP-145 — RF-07, RN-18: índice único real y rollback sin corromper códigos.

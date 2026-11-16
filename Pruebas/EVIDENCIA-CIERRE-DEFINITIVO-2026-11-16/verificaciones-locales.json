@@ -1,0 +1,17 @@
+{
+  "seguros": {
+    "cp": 147,
+    "rojo": true,
+    "verde": true
+  },
+  "u09": {
+    "cp": 148,
+    "rojo": true,
+    "verde": true
+  },
+  "m22": {
+    "cp": 146,
+    "rojo": true,
+    "verde": true
+  }
+}

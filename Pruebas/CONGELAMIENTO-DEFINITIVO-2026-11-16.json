@@ -1,0 +1,143 @@
+{
+  "casos": 148,
+  "metodos": 145,
+  "ejecuciones": 276,
+  "correctas": 276,
+  "fallidas": 0,
+  "reglasConCaso": 39,
+  "reglasTotal": 41,
+  "mutacionGlobalHistorica": {
+    "commit": "65225e7209c02018d9bb07bc7e9e45d2fed5959d",
+    "detectadas": 73,
+    "total": 77,
+    "porcentaje": "94,8 %",
+    "repetidaEnEsteCierre": false
+  },
+  "correccionesLocales": {
+    "seguros": {
+      "cp": 147,
+      "rojo": true,
+      "verde": true
+    },
+    "u09": {
+      "cp": 148,
+      "rojo": true,
+      "verde": true
+    },
+    "m22": {
+      "cp": 146,
+      "rojo": true,
+      "verde": true
+    }
+  },
+  "barreraVisual": "49/49",
+  "primariosRenderizados": 31,
+  "fallosColor": 0,
+  "archivoEntidadeAutorizado": "Entidade/ResultadoIngreso.cs",
+  "adicionesEntidade": [
+    "MotivoIngreso.NoAutorizado",
+    "ResultadoIngreso.Regla"
+  ],
+  "figurasGuionDPI": [
+    96,
+    144
+  ],
+  "artefactos": [
+    {
+      "archivo": "Pruebas/Guion-Interfaz-ULTIMO-2026-11-16/100/p47-inicio.png",
+      "sha256": "f24a798af456309cec1ed031a6af8d9fc0545622e1b1bc4f9d38c02466ea0107"
+    },
+    {
+      "archivo": "Pruebas/Guion-Interfaz-ULTIMO-2026-11-16/100/p48-registro.png",
+      "sha256": "871326030510f2ffe67945b0323e3098ea3f41a2568bc874978cc069191878d2"
+    },
+    {
+      "archivo": "Pruebas/Guion-Interfaz-ULTIMO-2026-11-16/100/p49-menu-cliente.png",
+      "sha256": "579f65d5730f3fce3c84a1a840e32507c4aaabcb2e2ca879df27f01e2195b2e3"
+    },
+    {
+      "archivo": "Pruebas/Guion-Interfaz-ULTIMO-2026-11-16/100/tipografia.tsv",
+      "sha256": "79441372343461f1da773940e2a7e85509e6e29cbd48fd851c5b289877e233c9"
+    },
+    {
+      "archivo": "Pruebas/Guion-Interfaz-ULTIMO-2026-11-16/150/p47-inicio.png",
+      "sha256": "2af06ee93f2749657b449349249bce4ffaf9445ed6e82254a2d3bef8a930ff07"
+    },
+    {
+      "archivo": "Pruebas/Guion-Interfaz-ULTIMO-2026-11-16/150/p48-registro.png",
+      "sha256": "29b23794b71af3c305a2963ce58ec7bedcc1c8226623967e36f07d568174cfe7"
+    },
+    {
+      "archivo": "Pruebas/Guion-Interfaz-ULTIMO-2026-11-16/150/p49-menu-cliente.png",
+      "sha256": "da234b9136b76608b17cf79f77962d32b27102a76a982a321a1c690965af4f95"
+    },
+    {
+      "archivo": "Pruebas/Guion-Interfaz-ULTIMO-2026-11-16/150/tipografia.tsv",
+      "sha256": "0666e19540a6d01c8a14ffc734acdad16831e6b5e8abab50556718b0ce6540a6"
+    },
+    {
+      "archivo": "Pruebas/U09-ULTIMO-2026-11-16/100/u09-confirmacion.png",
+      "sha256": "1ab758b12d4155aea6453b415535a50888895400e497fdc02d9edb8b95e0872d"
+    },
+    {
+      "archivo": "Pruebas/U09-ULTIMO-2026-11-16/100/u09-retorno-listado.png",
+      "sha256": "1169f6c30cf54430e8dd2a3eef0c7e89fb6c53266387af2194015dc8eb7af478"
+    },
+    {
+      "archivo": "Pruebas/U09-ULTIMO-2026-11-16/100/u09.txt",
+      "sha256": "5ddd5d8258459455b656adaee3e5a0d572fef291ffc8c0bf6575c5e5e043baec"
+    },
+    {
+      "archivo": "Pruebas/U09-ULTIMO-2026-11-16/150/u09-confirmacion.png",
+      "sha256": "9ce8952a6e0796d65f474d3361c04007374788cbee753519519b816cf02800e7"
+    },
+    {
+      "archivo": "Pruebas/U09-ULTIMO-2026-11-16/150/u09-retorno-listado.png",
+      "sha256": "5bc154a4f4a18433669c1effef95424f54a4bc2a9d315040fad822c57b9a8489"
+    },
+    {
+      "archivo": "Pruebas/U09-ULTIMO-2026-11-16/150/u09.txt",
+      "sha256": "5ddd5d8258459455b656adaee3e5a0d572fef291ffc8c0bf6575c5e5e043baec"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-M22-2026-11-16/antes-rojo.log",
+      "sha256": "c8e49d2fd7f42bdca41cee08264b9f01f71f22b4cf259159501c5b4b0987fbd9"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-M22-2026-11-16/antes-tipado-rojo.log",
+      "sha256": "1c663498c7511a39b1994d98b0533fb53920fa394f8795b30e486979f89d39a9"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-M22-2026-11-16/despues-verde.log",
+      "sha256": "3803ee73f32f174bd936249f5b22da7ccfc609c437037daa7db9367afc0421de"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-M22-2026-11-16/mutante-rojo.log",
+      "sha256": "d5e86d6dedb4c1f87cd71c017cc9479042272a4a9cb613fcfb7b82e5bef995d3"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-M22-2026-11-16/propuesta.patch",
+      "sha256": "70ecf26d2ad1c3ea84e70dad2a4fa8780088413508a5dab8d679e2fa5a1000f1"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-M22-2026-11-16/PruebasRechazoIngreso.cs.preparado",
+      "sha256": "ef8c44b1c30e4ccb8f6a6da5ee4efba188c2de50bfb930b9578fff79dbf56b33"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-M22-2026-11-16/restaurado-verde.log",
+      "sha256": "a0c1fca47349ab38b6ee1d1851f2c9d114bd6841a6774560c746c3f1a60bba6e"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-CIERRE-DEFINITIVO-2026-11-16/bateria-final.log",
+      "sha256": "e7159e5c03e69abf8ac875914969b0f0534682d25c2ce79457df446fabf822c0"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-CIERRE-DEFINITIVO-2026-11-16/bateria-final.trx",
+      "sha256": "47ae29daa0e6e0febe7cc581afee99c9b46b4f6628859a070c735c2d895f47ed"
+    },
+    {
+      "archivo": "Pruebas/EVIDENCIA-CIERRE-DEFINITIVO-2026-11-16/verificaciones-locales.json",
+      "sha256": "c3465428211aa60a287e3ca56c834017b933fa6ded46070f7d19b5f6a93207fa"
+    }
+  ]
+}
