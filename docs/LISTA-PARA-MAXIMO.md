@@ -19,6 +19,17 @@
 > 4. **⏸ `07-indice-unico-seguros.sql`: todavía no existe, no lo busques.** Codex lo agrega
 >    después de la medición final. Cuando esté, esta línea dice qué pasa si no se corre.
 
+> ## ↻ CAMBIÓ DESPUÉS DEL 16/11: volver a pegar
+>
+> Lo que estaba sin marcar en la versión del 16/11 (commit `654e1d9`) y cambió después. Si todavía
+> no lo pegaste, no hagas nada: pegá lo que dice ahora. Si ya lo pegaste, volvé a pegarlo. Cuando
+> no haya nada, esta tabla queda vacía.
+>
+> | Dónde | Qué cambió | Qué volver a pegar |
+> |---|---|---|
+> | Sección nueva «Metodología de verificación» (después de la p. 109) | Llegó la medición final de mutación (73 de 77). Hay un párrafo nuevo, «Dos mediciones…», antes de «Resultado»; cambiaron «Resultado», los dos párrafos de «Mutaciones equivalentes» que siguen al primero, y hay un párrafo nuevo, «En la medición final quedaron cuatro…», después de «Qué significa que una defensa sobreviva» | **La sección entera**, desde su título hasta el párrafo «Qué queda fuera de la medición», inclusive. Es más seguro que buscar párrafo por párrafo |
+> | p. 7, «Resultados principales», cuarto punto | Antes estaba marcado; ahora lleva la cifra, y dice «sobre el código congelado para la entrega» | El punto entero, si lo pegaste antes del 17/11 |
+
 > ## ⏸ NO PEGAR TODAVÍA: la lista completa
 >
 > **Todo lo que no lleva la marca ⏸ se pega hoy, sin preguntar.** Lo que la lleva describe algo
@@ -32,6 +43,7 @@
 > | p. 88, dominio actualizado | La oración sobre el seguro | El script `07-indice-unico-seguros.sql` (Codex, después de la medición) |
 > | pp. 90 a 97, usabilidad, y p. 111, punto 1 | El texto alternativo de U-09 | Que Codex construya la vuelta al listado al cerrar la confirmación. Mientras tanto se pega el texto actual |
 > | Arriba de todo, scripts de base | El script 07 | El mismo script |
+> | Sección nueva «Metodología de verificación», después del párrafo «En la medición final quedaron cuatro…» | El texto que reemplaza sus dos últimas oraciones (M-22) | Que Codex corrija el rechazo no controlado del registro de ingreso |
 > | p. 1 y pie de todas las páginas | Comisión, turno, legajos, año | Datos de JC |
 > | p. 6, historial | La fecha de las filas nuevas | El día en que se pega (JC) |
 > | p. 9 | El período «entre junio y diciembre de 2025» | El año que decida JC |
@@ -162,8 +174,8 @@ viñeta:
 > verifican treinta y nueve de las cuarenta y una reglas de negocio. Para comprobar que esas
 > pruebas detectarían un defecto real, se quitó a propósito cada una de las defensas de
 > seguridad del sistema, una por vez: la primera medición mostró cuáles no advertía la batería,
-> se escribieron las pruebas que faltaban y la medición final sobre el código entregado
-> detectó setenta y tres de las setenta y siete que una prueba puede detectar.
+> se escribieron las pruebas que faltaban y la medición final, sobre el código congelado para
+> la entrega, detectó setenta y tres de las setenta y siete que una prueba puede detectar.
 
 *Razón:* coherencia. El resumen ejecutivo anuncia los resultados principales y la versión 2.6
 agrega la sección «Metodología de verificación»; sin este punto, el resumen no la menciona.
@@ -2742,7 +2754,7 @@ y la batería volvió a dar el mismo resultado que antes de empezar.
 *Dos mediciones, sobre dos versiones del código.* La mutación se midió dos veces. La primera,
 sobre una versión intermedia, mostró qué defensas no tenían una prueba capaz de notar su falta.
 Con ese resultado se escribieron las pruebas que faltaban, y la segunda medición se hizo sobre el
-código que se entrega. Las ochenta y tres mutaciones son las mismas en las dos. Entre una versión
+código congelado para la entrega. Las ochenta y tres mutaciones son las mismas en las dos. Entre una versión
 y otra, el código cambió en algunos de los lugares que esas mutaciones tocan: setenta y nueve se
 aplicaron sin ningún cambio, y en cuatro se ajustó solo la forma de ubicar la línea por modificar,
 porque había pasado a otro método o aparecía dos veces. En las cuatro se rompe la misma defensa
@@ -2752,7 +2764,7 @@ rotas de la misma manera.
 *Resultado.* En la primera medición, la batería detectó cincuenta y una de las setenta y siete
 mutaciones que se podían detectar: un 66,2 %. El pronóstico hecho por lectura acertó en todas las
 que se esperaba que sobrevivieran: las veintitrés sobrevivieron. En la medición final, sobre el
-código que se entrega (commit `65225e7`), la batería detectó setenta y tres de setenta y siete:
+código congelado (commit `65225e7`), la batería detectó setenta y tres de setenta y siete:
 un 94,8 %. Para descartar que una prueba fallara por un motivo ajeno a la mutación, por ejemplo una
 ventana de otra aplicación que tomara el foco durante una prueba de interfaz, cada detección se
 comparó con la prueba que se esperaba que la detectara: las setenta y tres coinciden.
@@ -2795,6 +2807,17 @@ el código. La cuarta quita el control de perfil al registrar el ingreso de una 
 verificación rechaza igual al cliente que lo intenta, pero sin sesión la operación termina en un
 error no controlado, y ninguna prueba lo verifica. Es la única defensa que queda con una prueba
 por escribir.
+
+**⏸ NO PEGAR TODAVÍA: depende de que Codex corrija M-22.** Cuando esté, las dos últimas oraciones del párrafo
+anterior («…pero sin sesión la operación termina en un error no controlado, y ninguna prueba lo
+verifica. Es la única defensa que queda con una prueba por escribir.») se reemplazan por:
+
+> …pero sin sesión la operación terminaba en un error no controlado, en lugar del rechazo que
+> establece la regla. Ninguna prueba lo veía: lo encontró la prueba de mutación, y se corrigió
+> después de la medición, junto con una prueba que lo verifica. Por eso la cifra de setenta y tres
+> de setenta y siete corresponde al commit medido, `65225e7`, y no a la versión final del código.
+> Es también el mejor argumento a favor del método: la mutación encontró un defecto real que
+> ninguna de las pruebas existentes advertía.
 
 *Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
 entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos

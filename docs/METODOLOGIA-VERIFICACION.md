@@ -4,7 +4,7 @@ Claude Code, 16/11/2026, a pedido de JC. Es texto para el documento entregable: 
 desde `docs/LISTA-PARA-MAXIMO.md`, entre el final de «Matriz de trazabilidad» (p. 109) y
 «Conclusiones» (p. 110).
 
-**Cifras definitivas** (17/11). Todas están medidas sobre el código que se entrega, `65225e7`:
+**Cifras definitivas** (17/11). Todas están medidas sobre el código congelado, `65225e7`. El código que se entregue puede ser posterior (Codex corrige M-22 y otras cuatro tareas): la cifra corresponde al commit medido y no se vuelve a medir (decisión de JC del 17/11).
 
 | Cifra en el texto | Valor | Fuente |
 |---|---|---|
@@ -101,7 +101,7 @@ y la batería volvió a dar el mismo resultado que antes de empezar.
 *Dos mediciones, sobre dos versiones del código.* La mutación se midió dos veces. La primera,
 sobre una versión intermedia, mostró qué defensas no tenían una prueba capaz de notar su falta.
 Con ese resultado se escribieron las pruebas que faltaban, y la segunda medición se hizo sobre el
-código que se entrega. Las ochenta y tres mutaciones son las mismas en las dos. Entre una versión
+código congelado para la entrega. Las ochenta y tres mutaciones son las mismas en las dos. Entre una versión
 y otra, el código cambió en algunos de los lugares que esas mutaciones tocan: setenta y nueve se
 aplicaron sin ningún cambio, y en cuatro se ajustó solo la forma de ubicar la línea por modificar,
 porque había pasado a otro método o aparecía dos veces. En las cuatro se rompe la misma defensa
@@ -111,7 +111,7 @@ rotas de la misma manera.
 *Resultado.* En la primera medición, la batería detectó cincuenta y una de las setenta y siete
 mutaciones que se podían detectar: un 66,2 %. El pronóstico hecho por lectura acertó en todas las
 que se esperaba que sobrevivieran: las veintitrés sobrevivieron. En la medición final, sobre el
-código que se entrega (commit `65225e7`), la batería detectó setenta y tres de setenta y siete:
+código congelado (commit `65225e7`), la batería detectó setenta y tres de setenta y siete:
 un 94,8 %. Para descartar que una prueba fallara por un motivo ajeno a la mutación, por ejemplo una
 ventana de otra aplicación que tomara el foco durante una prueba de interfaz, cada detección se
 comparó con la prueba que se esperaba que la detectara: las setenta y tres coinciden.
@@ -154,6 +154,17 @@ el código. La cuarta quita el control de perfil al registrar el ingreso de una 
 verificación rechaza igual al cliente que lo intenta, pero sin sesión la operación termina en un
 error no controlado, y ninguna prueba lo verifica. Es la única defensa que queda con una prueba
 por escribir.
+
+**⏸ NO PEGAR TODAVÍA: depende de que Codex corrija M-22.** Cuando esté, las dos últimas oraciones del párrafo
+anterior («…pero sin sesión la operación termina en un error no controlado, y ninguna prueba lo
+verifica. Es la única defensa que queda con una prueba por escribir.») se reemplazan por:
+
+> …pero sin sesión la operación terminaba en un error no controlado, en lugar del rechazo que
+> establece la regla. Ninguna prueba lo veía: lo encontró la prueba de mutación, y se corrigió
+> después de la medición, junto con una prueba que lo verifica. Por eso la cifra de setenta y tres
+> de setenta y siete corresponde al commit medido, `65225e7`, y no a la versión final del código.
+> Es también el mejor argumento a favor del método: la mutación encontró un defecto real que
+> ninguna de las pruebas existentes advertía.
 
 *Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
 entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos

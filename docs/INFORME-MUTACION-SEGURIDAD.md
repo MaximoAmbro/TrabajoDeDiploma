@@ -13,7 +13,7 @@ Encargo que sale de acá: `docs/ENCARGO-PRUEBAS-MUTACION.md`.
 ### En una línea
 
 **De 77 defensas rotas a propósito, la batería detectó 73: 94,8 %**, sobre el commit
-`65225e7209c02018d9bb07bc7e9e45d2fed5959d`, el que se entrega. En la primera medición, sobre
+`65225e7209c02018d9bb07bc7e9e45d2fed5959d`, el código congelado. En la primera medición, sobre
 `fe04b1f`, había detectado 51 (66,2 %). La diferencia la hacen las pruebas que se escribieron
 para las defensas que sobrevivieron: CP-126 a CP-145 y la CP-104 reforzada.
 
@@ -103,6 +103,14 @@ foco, no cuente como detección.
 | M-43 | Control de sesión al contratar una suscripción | Equivalente: la operación repite el control enseguida (sección 4) | Adentro a propósito, desde la primera medición |
 | M-53 | El cambio de contraseña no revela si la cuenta existe | Equivalente desde K-8: sin ocultar la cuenta, el fallo sigue siendo RN-04, y el `catch` que agregó K-8 en `CambiarContrasena` lo convierte en el mismo rechazo genérico | Adentro a propósito: se reconoció equivalente después de ver que sobrevivía |
 | M-63 | Comparación de contraseñas en tiempo constante | Una prueba funcional no ve el tiempo | Prevista; se verificó por lectura (tarea 22 del encargo) |
+
+### M-22: un defecto, que se corrige después de la medición
+
+Decisión de JC del 17/11. M-22 no es solo una prueba que falta: sin sesión de administrador,
+registrar un ingreso termina en una excepción no controlada en vez del rechazo de la regla. Codex
+lo corrige, con su prueba, **después** de esta medición. **La cifra se queda en 73 de 77 sobre
+`65225e7`** y no se vuelven a correr las 83: corresponde al commit medido, no a la versión final.
+La metodología lo dice así (párrafo preparado, marcado hasta que Codex lo corrija).
 
 ### Cierre
 
