@@ -182,8 +182,20 @@ rechaza. No lo encontró el instrumento: lo encontró una revisión externa, hec
 distinto de quien había dibujado y verificado los diagramas, y se corrigió. Para que el
 instrumento lo detectara habría hecho falta una comprobación más: comparar cada transición del
 diagrama con la condición que la permite en el código, como se hizo con los métodos del diagrama
-de secuencia. La conclusión es la misma que la de la prueba de mutación: también los instrumentos
-de verificación tienen que verificarse, y saber qué no cubre cada uno es parte del resultado.
+de secuencia.
+
+La misma revisión encontró una segunda cosa que ningún instrumento había visto. Una pregunta
+sobre una columna del diagrama entidad-relación, la cantidad vendida de cada entrada, mostró que
+esa columna entra en el cálculo de los lugares disponibles y que la base la admitía vacía o con
+cualquier valor. Una entrada con la cantidad vacía o en cero no se descontaría de la capacidad del
+sector: sería una sobreventa. No ocurría en uso, porque el sistema siempre la escribe en uno, pero
+la base no lo garantizaba y ninguna prueba verificaba esa condición. Se restringió en la base, con
+su prueba.
+
+La matriz no mira transiciones; las pruebas no miraban esa condición. Las dos cosas aparecieron al
+revisar los diagramas desde afuera. Esa es la conclusión de método de este trabajo: cada
+instrumento de verificación cubre algo y deja algo afuera, saber qué deja afuera es parte del
+resultado, y una mirada externa encuentra lo que ningún instrumento propio estaba hecho para ver.
 
 *Qué queda fuera de la medición.* La mutación se aplicó a la capa de negocio, a la de datos y al
 esquema de la base, que es donde están las defensas; no a la interfaz gráfica, cuyos controles

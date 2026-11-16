@@ -1,6 +1,6 @@
 # LA lista para el Word — de la página 1 a la 112
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44) y la sección nueva «Estimación de costos» (p. 35).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40) y las minutas (p. 44).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -84,7 +84,7 @@
 > | pp. 18, 20 y 21 | Criterios de aceptación y supuestos | Siguen a los requerimientos y a las integraciones simuladas (llega el envío de correo simulado) |
 > | pp. 23 y 24 | Requerimientos funcionales y no funcionales | Funciones nuevas: verificación de correo, recuperación de contraseña, auditoría, imágenes de eventos, mapa de sectores |
 > | pp. 25 a 33 | Reglas de negocio, factibilidad económica, niveles, parámetros y conflictos | Reglas nuevas desde RN-43 y parámetros nuevos |
-> | pp. 35 a 38 | Priorización y orden de implementación (**salvo** la sección nueva «Estimación de costos», que sí se pega) | Requerimientos nuevos |
+> | pp. 35 a 38 | Priorización, orden de implementación y la sección nueva «Estimación de costos» | Requerimientos nuevos: la tabla de costos suma los puntos de cada requerimiento por fase |
 > | pp. 40 a 43 | Descripción funcional, alcance y remisión a los requerimientos | Funciones nuevas |
 > | p. 45 | Prototipos | Son figuras de la interfaz |
 > | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
@@ -589,7 +589,7 @@ pp. 27, 30, 40, 55 y 82 ya es exacto y no se toca.
 
 ## Página 35 — Priorización
 
-**⏸ NO PEGAR TODAVÍA esta página, salvo la sección nueva «Estimación de costos», que sí se pega hoy.** El resto depende de los requerimientos, que van a cambiar.
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está. Incluye la sección nueva «Estimación de costos»: su tabla suma los puntos de cada requerimiento, y llegan requerimientos nuevos.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-04 · p\. 35 :: ^\*\*B-05
 

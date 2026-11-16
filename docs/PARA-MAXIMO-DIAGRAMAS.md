@@ -428,6 +428,17 @@ página siguiente.
 > vale 1 en todas las filas que guarda el sistema, y cada una tiene su propio código QR, que se
 > admite una sola vez en el ingreso (RN-18). La cantidad elegida para cada sector existe solo
 > mientras se arma el paquete, que no se guarda en la base.
+>
+> El criterio para restringir en la base es uno solo: se restringe lo que, al violarse, hace daño,
+> y se documenta lo que no. Dos seguros sobre una misma entrada serían dos cargos al cliente: por
+> eso un índice único lo impide. La cantidad vendida entra en el cálculo de los lugares
+> disponibles de cada sector: un valor distinto de 1 altera el cupo, y uno vacío o en cero haría
+> que la entrada no se descontara de la capacidad, una sobreventa. Por eso la columna es
+> obligatoria y solo admite el valor 1.
+
+**⏸ El último párrafo depende del encargo pendiente** `docs/ENCARGO-CANTIDADVENDIDA-BORRADOR.md`:
+hoy la columna admite NULL y no tiene restricción. Cuando Codex agregue el script, se regenera
+`er-2-compras` (asterisco y `CK` en `CantidadVendida`) y se suma la fila a la tabla de abajo.
 
 **Restricciones que no entran en la figura** (van en el texto o en una tabla debajo):
 

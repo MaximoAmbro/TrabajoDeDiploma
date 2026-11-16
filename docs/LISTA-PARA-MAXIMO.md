@@ -1,6 +1,6 @@
 # LA lista para el Word — de la página 1 a la 112
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44) y la sección nueva «Estimación de costos» (p. 35).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40) y las minutas (p. 44).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -84,7 +84,7 @@
 > | pp. 18, 20 y 21 | Criterios de aceptación y supuestos | Siguen a los requerimientos y a las integraciones simuladas (llega el envío de correo simulado) |
 > | pp. 23 y 24 | Requerimientos funcionales y no funcionales | Funciones nuevas: verificación de correo, recuperación de contraseña, auditoría, imágenes de eventos, mapa de sectores |
 > | pp. 25 a 33 | Reglas de negocio, factibilidad económica, niveles, parámetros y conflictos | Reglas nuevas desde RN-43 y parámetros nuevos |
-> | pp. 35 a 38 | Priorización y orden de implementación (**salvo** la sección nueva «Estimación de costos», que sí se pega) | Requerimientos nuevos |
+> | pp. 35 a 38 | Priorización, orden de implementación y la sección nueva «Estimación de costos» | Requerimientos nuevos: la tabla de costos suma los puntos de cada requerimiento por fase |
 > | pp. 40 a 43 | Descripción funcional, alcance y remisión a los requerimientos | Funciones nuevas |
 > | p. 45 | Prototipos | Son figuras de la interfaz |
 > | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
@@ -698,7 +698,7 @@ documento.
 
 ## Página 35 — Priorización
 
-**⏸ NO PEGAR TODAVÍA esta página, salvo la sección nueva «Estimación de costos», que sí se pega hoy.** El resto depende de los requerimientos, que van a cambiar.
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está. Incluye la sección nueva «Estimación de costos»: su tabla suma los puntos de cada requerimiento, y llegan requerimientos nuevos.
 
 **B-04 · p. 35 · R+N.** Dice: «Los once requerimientos funcionales y los cinco no funcionales».
 Poner: «Los trece requerimientos funcionales y los cinco no funcionales».
@@ -2070,6 +2070,13 @@ Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el t
 > vale 1 en todas las filas que guarda el sistema, y cada una tiene su propio código QR, que se
 > admite una sola vez en el ingreso (RN-18). La cantidad elegida para cada sector existe solo
 > mientras se arma el paquete, que no se guarda en la base.
+>
+> El criterio para restringir en la base es uno solo: se restringe lo que, al violarse, hace daño,
+> y se documenta lo que no. Dos seguros sobre una misma entrada serían dos cargos al cliente: por
+> eso un índice único lo impide. La cantidad vendida entra en el cálculo de los lugares
+> disponibles de cada sector: un valor distinto de 1 altera el cupo, y uno vacío o en cero haría
+> que la entrada no se descontara de la capacidad, una sobreventa. Por eso la columna es
+> obligatoria y solo admite el valor 1.
 
 ## Páginas 90 a 97 — Informe de pruebas de usabilidad
 
@@ -3051,8 +3058,20 @@ rechaza. No lo encontró el instrumento: lo encontró una revisión externa, hec
 distinto de quien había dibujado y verificado los diagramas, y se corrigió. Para que el
 instrumento lo detectara habría hecho falta una comprobación más: comparar cada transición del
 diagrama con la condición que la permite en el código, como se hizo con los métodos del diagrama
-de secuencia. La conclusión es la misma que la de la prueba de mutación: también los instrumentos
-de verificación tienen que verificarse, y saber qué no cubre cada uno es parte del resultado.
+de secuencia.
+
+La misma revisión encontró una segunda cosa que ningún instrumento había visto. Una pregunta
+sobre una columna del diagrama entidad-relación, la cantidad vendida de cada entrada, mostró que
+esa columna entra en el cálculo de los lugares disponibles y que la base la admitía vacía o con
+cualquier valor. Una entrada con la cantidad vacía o en cero no se descontaría de la capacidad del
+sector: sería una sobreventa. No ocurría en uso, porque el sistema siempre la escribe en uno, pero
+la base no lo garantizaba y ninguna prueba verificaba esa condición. Se restringió en la base, con
+su prueba.
+
+La matriz no mira transiciones; las pruebas no miraban esa condición. Las dos cosas aparecieron al
+revisar los diagramas desde afuera. Esa es la conclusión de método de este trabajo: cada
+instrumento de verificación cubre algo y deja algo afuera, saber qué deja afuera es parte del
+resultado, y una mirada externa encuentra lo que ningún instrumento propio estaba hecho para ver.
 
 *Qué queda fuera de la medición.* La mutación se aplicó a la capa de negocio, a la de datos y al
 esquema de la base, que es donde están las defensas; no a la interfaz gráfica, cuyos controles
