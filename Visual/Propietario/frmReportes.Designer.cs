@@ -1,4 +1,4 @@
-namespace Visual
+﻿namespace Visual
 {
     partial class frmReportes
     {
@@ -49,20 +49,20 @@ namespace Visual
             //
             // label1
             //
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 8);
+            this.label1.AutoSize = false;
+            this.label1.Location = new System.Drawing.Point(24, 24);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(170, 50);
+            this.label1.Size = new System.Drawing.Size(852, 32);
             this.label1.TabIndex = 20;
             this.label1.Text = "Reportes";
             //
             // lblReporte
             //
-            this.lblReporte.AutoSize = true;
-            this.lblReporte.Location = new System.Drawing.Point(14, 74);
+            this.lblReporte.AutoSize = false;
+            this.lblReporte.Location = new System.Drawing.Point(24, 72);
             this.lblReporte.Name = "lblReporte";
-            this.lblReporte.Size = new System.Drawing.Size(56, 19);
+            this.lblReporte.Size = new System.Drawing.Size(440, 20);
             this.lblReporte.TabIndex = 21;
             this.lblReporte.Text = "Reporte";
             //
@@ -70,18 +70,18 @@ namespace Visual
             //
             this.cmbReporte.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cmbReporte.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbReporte.Location = new System.Drawing.Point(96, 70);
+            this.cmbReporte.Location = new System.Drawing.Point(24, 96);
             this.cmbReporte.Name = "cmbReporte";
-            this.cmbReporte.Size = new System.Drawing.Size(340, 27);
+            this.cmbReporte.Size = new System.Drawing.Size(440, 28);
             this.cmbReporte.TabIndex = 0;
             this.cmbReporte.SelectedIndexChanged += new System.EventHandler(this.cmbReporte_SelectedIndexChanged);
             //
             // lblDesde
             //
-            this.lblDesde.AutoSize = true;
-            this.lblDesde.Location = new System.Drawing.Point(456, 74);
+            this.lblDesde.AutoSize = false;
+            this.lblDesde.Location = new System.Drawing.Point(488, 72);
             this.lblDesde.Name = "lblDesde";
-            this.lblDesde.Size = new System.Drawing.Size(47, 19);
+            this.lblDesde.Size = new System.Drawing.Size(184, 20);
             this.lblDesde.TabIndex = 22;
             this.lblDesde.Text = "Desde";
             //
@@ -89,18 +89,18 @@ namespace Visual
             //
             this.dtpDesde.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDesde.Location = new System.Drawing.Point(512, 70);
+            this.dtpDesde.Location = new System.Drawing.Point(488, 96);
             this.dtpDesde.Name = "dtpDesde";
-            this.dtpDesde.Size = new System.Drawing.Size(130, 26);
+            this.dtpDesde.Size = new System.Drawing.Size(184, 28);
             this.dtpDesde.TabIndex = 1;
             this.dtpDesde.ValueChanged += new System.EventHandler(this.dtpPeriodo_ValueChanged);
             //
             // lblHasta
             //
-            this.lblHasta.AutoSize = true;
-            this.lblHasta.Location = new System.Drawing.Point(656, 74);
+            this.lblHasta.AutoSize = false;
+            this.lblHasta.Location = new System.Drawing.Point(696, 72);
             this.lblHasta.Name = "lblHasta";
-            this.lblHasta.Size = new System.Drawing.Size(44, 19);
+            this.lblHasta.Size = new System.Drawing.Size(180, 20);
             this.lblHasta.TabIndex = 23;
             this.lblHasta.Text = "Hasta";
             //
@@ -108,18 +108,18 @@ namespace Visual
             //
             this.dtpHasta.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpHasta.Location = new System.Drawing.Point(708, 70);
+            this.dtpHasta.Location = new System.Drawing.Point(696, 96);
             this.dtpHasta.Name = "dtpHasta";
-            this.dtpHasta.Size = new System.Drawing.Size(130, 26);
+            this.dtpHasta.Size = new System.Drawing.Size(180, 28);
             this.dtpHasta.TabIndex = 2;
             this.dtpHasta.ValueChanged += new System.EventHandler(this.dtpPeriodo_ValueChanged);
             //
             // lblFiltro
             //
-            this.lblFiltro.AutoSize = true;
-            this.lblFiltro.Location = new System.Drawing.Point(14, 112);
+            this.lblFiltro.AutoSize = false;
+            this.lblFiltro.Location = new System.Drawing.Point(24, 144);
             this.lblFiltro.Name = "lblFiltro";
-            this.lblFiltro.Size = new System.Drawing.Size(68, 19);
+            this.lblFiltro.Size = new System.Drawing.Size(440, 20);
             this.lblFiltro.TabIndex = 24;
             this.lblFiltro.Text = "Categoría";
             //
@@ -127,28 +127,28 @@ namespace Visual
             //
             this.cmbFiltro.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cmbFiltro.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFiltro.Location = new System.Drawing.Point(96, 108);
+            this.cmbFiltro.Location = new System.Drawing.Point(24, 168);
             this.cmbFiltro.Name = "cmbFiltro";
-            this.cmbFiltro.Size = new System.Drawing.Size(340, 27);
+            this.cmbFiltro.Size = new System.Drawing.Size(440, 28);
             this.cmbFiltro.TabIndex = 3;
             //
             // dtpCorte
             //
             this.dtpCorte.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpCorte.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpCorte.Location = new System.Drawing.Point(96, 108);
+            this.dtpCorte.Location = new System.Drawing.Point(24, 168);
             this.dtpCorte.Name = "dtpCorte";
-            this.dtpCorte.Size = new System.Drawing.Size(130, 26);
+            this.dtpCorte.Size = new System.Drawing.Size(440, 28);
             this.dtpCorte.TabIndex = 4;
             this.dtpCorte.Visible = false;
             //
             // chkSoloAgotados
             //
-            this.chkSoloAgotados.AutoSize = true;
+            this.chkSoloAgotados.AutoSize = false;
             this.chkSoloAgotados.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkSoloAgotados.Location = new System.Drawing.Point(456, 110);
+            this.chkSoloAgotados.Location = new System.Drawing.Point(488, 144);
             this.chkSoloAgotados.Name = "chkSoloAgotados";
-            this.chkSoloAgotados.Size = new System.Drawing.Size(240, 23);
+            this.chkSoloAgotados.Size = new System.Drawing.Size(388, 24);
             this.chkSoloAgotados.TabIndex = 5;
             this.chkSoloAgotados.Text = "Solo eventos agotados (RN-10)";
             this.chkSoloAgotados.Visible = false;
@@ -156,9 +156,9 @@ namespace Visual
             // btnGenerar
             //
             this.btnGenerar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnGenerar.Location = new System.Drawing.Point(852, 66);
+            this.btnGenerar.Location = new System.Drawing.Point(688, 176);
             this.btnGenerar.Name = "btnGenerar";
-            this.btnGenerar.Size = new System.Drawing.Size(127, 34);
+            this.btnGenerar.Size = new System.Drawing.Size(188, 40);
             this.btnGenerar.TabIndex = 6;
             this.btnGenerar.Text = "Generar";
             this.btnGenerar.Click += new System.EventHandler(this.btnGenerar_Click);
@@ -167,9 +167,9 @@ namespace Visual
             //
             this.btnExportar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnExportar.Enabled = false;
-            this.btnExportar.Location = new System.Drawing.Point(852, 104);
+            this.btnExportar.Location = new System.Drawing.Point(680, 448);
             this.btnExportar.Name = "btnExportar";
-            this.btnExportar.Size = new System.Drawing.Size(167, 35);
+            this.btnExportar.Size = new System.Drawing.Size(196, 40);
             this.btnExportar.TabIndex = 7;
             this.btnExportar.Text = "Exportar PDF";
             this.btnExportar.Click += new System.EventHandler(this.btnExportar_Click);
@@ -177,34 +177,34 @@ namespace Visual
             // dgvReporte
             //
             this.dgvReporte.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvReporte.Location = new System.Drawing.Point(12, 150);
+            this.dgvReporte.Location = new System.Drawing.Point(24, 232);
             this.dgvReporte.Name = "dgvReporte";
             this.dgvReporte.RowHeadersWidth = 62;
-            this.dgvReporte.Size = new System.Drawing.Size(956, 290);
+            this.dgvReporte.Size = new System.Drawing.Size(852, 128);
             this.dgvReporte.TabIndex = 8;
             //
             // lblLectura
             //
-            this.lblLectura.Location = new System.Drawing.Point(12, 450);
+            this.lblLectura.Location = new System.Drawing.Point(24, 368);
             this.lblLectura.Name = "lblLectura";
-            this.lblLectura.Size = new System.Drawing.Size(956, 120);
+            this.lblLectura.Size = new System.Drawing.Size(852, 64);
             this.lblLectura.TabIndex = 25;
             //
             // btnVolver
             //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(12, 584);
+            this.btnVolver.Location = new System.Drawing.Point(24, 448);
             this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(113, 36);
+            this.btnVolver.Size = new System.Drawing.Size(144, 40);
             this.btnVolver.TabIndex = 9;
             this.btnVolver.Text = "Volver";
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
             //
             // frmReportes
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1031, 632);
+            this.ClientSize = new System.Drawing.Size(900, 512);
             this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.lblLectura);
             this.Controls.Add(this.dgvReporte);

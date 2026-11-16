@@ -42,10 +42,10 @@
             // btnVolver
             //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(9, 515);
+            this.btnVolver.Location = new System.Drawing.Point(24, 448);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(113, 36);
+            this.btnVolver.Size = new System.Drawing.Size(144, 40);
             this.btnVolver.TabIndex = 3;
             this.btnVolver.Text = "Volver";
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
@@ -54,67 +54,67 @@
             //
             this.dgvCompras.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCompras.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.dgvCompras.Location = new System.Drawing.Point(12, 64);
+            this.dgvCompras.Location = new System.Drawing.Point(24, 80);
             this.dgvCompras.Margin = new System.Windows.Forms.Padding(2);
             this.dgvCompras.Name = "dgvCompras";
             this.dgvCompras.RowHeadersWidth = 62;
-            this.dgvCompras.Size = new System.Drawing.Size(749, 190);
+            this.dgvCompras.Size = new System.Drawing.Size(852, 120);
             this.dgvCompras.TabIndex = 0;
             //
             // label1
             //
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(249, 8);
+            this.label1.AutoSize = false;
+            this.label1.Location = new System.Drawing.Point(24, 24);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(335, 50);
+            this.label1.Size = new System.Drawing.Size(852, 32);
             this.label1.TabIndex = 28;
             this.label1.Text = "Historial Compras";
             //
             // lblDetalle
             //
-            this.lblDetalle.AutoSize = true;
-            this.lblDetalle.Location = new System.Drawing.Point(12, 264);
+            this.lblDetalle.AutoSize = false;
+            this.lblDetalle.Location = new System.Drawing.Point(24, 216);
             this.lblDetalle.Name = "lblDetalle";
-            this.lblDetalle.Size = new System.Drawing.Size(150, 19);
+            this.lblDetalle.Size = new System.Drawing.Size(852, 24);
             this.lblDetalle.TabIndex = 29;
             this.lblDetalle.Text = "Entradas del pedido";
             //
             // dgvEntradas
             //
             this.dgvEntradas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEntradas.Location = new System.Drawing.Point(12, 288);
+            this.dgvEntradas.Location = new System.Drawing.Point(24, 248);
             this.dgvEntradas.Margin = new System.Windows.Forms.Padding(2);
             this.dgvEntradas.Name = "dgvEntradas";
             this.dgvEntradas.RowHeadersWidth = 62;
-            this.dgvEntradas.Size = new System.Drawing.Size(749, 170);
+            this.dgvEntradas.Size = new System.Drawing.Size(852, 128);
             this.dgvEntradas.TabIndex = 1;
             //
             // btnDevolver
             //
             this.btnDevolver.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnDevolver.Enabled = false;
-            this.btnDevolver.Location = new System.Drawing.Point(561, 466);
+            this.btnDevolver.Location = new System.Drawing.Point(680, 448);
             this.btnDevolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnDevolver.Name = "btnDevolver";
-            this.btnDevolver.Size = new System.Drawing.Size(232, 36);
+            this.btnDevolver.Size = new System.Drawing.Size(196, 40);
             this.btnDevolver.TabIndex = 2;
             this.btnDevolver.Text = "Devolver";
             this.btnDevolver.Click += new System.EventHandler(this.btnDevolver_Click);
             //
             // lblAyuda
             //
-            this.lblAyuda.Location = new System.Drawing.Point(12, 464);
+            this.lblAyuda.Location = new System.Drawing.Point(24, 392);
             this.lblAyuda.Name = "lblAyuda";
-            this.lblAyuda.Size = new System.Drawing.Size(540, 40);
+            this.lblAyuda.Size = new System.Drawing.Size(852, 40);
             this.lblAyuda.TabIndex = 30;
             this.lblAyuda.Text = "Con seguro, podés devolver entradas antes del evento.";
             //
             // frmHistorialCliente
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(805, 560);
+            this.ClientSize = new System.Drawing.Size(900, 512);
             this.Controls.Add(this.lblAyuda);
             this.Controls.Add(this.btnDevolver);
             this.Controls.Add(this.dgvEntradas);
