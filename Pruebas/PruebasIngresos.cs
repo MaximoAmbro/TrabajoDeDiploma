@@ -67,7 +67,12 @@ namespace Pruebas
             });
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
             Fake.ComoCliente(cliente);
-            Assert.ThrowsException<ReglaNegocioException>(() => GestorIngresos.Instance.Registrar(entrada.CodigoQR, evento.Id));
+            // M-22: el rechazo de Registrar ahora es un resultado con su regla, no una excepción.
+            ResultadoIngreso sinPermiso = GestorIngresos.Instance.Registrar(entrada.CodigoQR, evento.Id);
+            Assert.IsFalse(sinPermiso.Valido);
+            Assert.AreEqual(MotivoIngreso.NoAutorizado, sinPermiso.Motivo);
+            Assert.AreEqual("RN-34", sinPermiso.Regla);
+            Assert.AreEqual(guardada.FechaIngreso, RepositorioEntradas.Instance.PorCodigo(entrada.CodigoQR).FechaIngreso);
             GestorSesion.Instance.Cerrar();
             Assert.ThrowsException<ReglaNegocioException>(() => GestorIngresos.Instance.Contar(evento.Id));
         }

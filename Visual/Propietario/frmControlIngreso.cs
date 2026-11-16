@@ -36,7 +36,7 @@ namespace Visual
                 ResultadoIngreso resultado = GestorIngresos.Instance.Registrar(txtCodigo.Text, evento.Id);
                 lblResultado.Text = resultado.Mensaje;
                 lblResultado.ForeColor = resultado.Valido ? Tema.Exito : Tema.Error;
-                ActualizarContador();
+                if (resultado.Motivo != MotivoIngreso.NoAutorizado) ActualizarContador();
                 txtCodigo.Clear();
                 txtCodigo.Focus();
             }

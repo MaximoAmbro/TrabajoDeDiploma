@@ -19,7 +19,13 @@ namespace Negocio
 
         internal ResultadoIngreso Registrar(string codigo, int idEvento, DateTime ahora)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            try { GestorSesion.Instance.RequerirAdministrador(); }
+            catch (ReglaNegocioException ex) when (ex.Regla == "RN-34")
+            {
+                var rechazoAutorizacion = Resultado(MotivoIngreso.NoAutorizado, ex.Message);
+                rechazoAutorizacion.Regla = ex.Regla;
+                return rechazoAutorizacion;
+            }
             RequerirEventoPropio(idEvento);
             codigo = (codigo ?? "").Trim();
             Entrada entrada = RepositorioEntradas.Instance.PorCodigo(codigo);
