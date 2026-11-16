@@ -10,6 +10,7 @@ namespace Pruebas {
   [System.Runtime.InteropServices.DllImport("user32.dll")] private static extern bool SetWindowPos(IntPtr h,IntPtr despues,int x,int y,int w,int alto,uint flags);
   public static void Generar(string salida) {
    Directory.CreateDirectory(salida);
+   File.WriteAllText(Path.Combine(salida,"ventanas.txt"),string.Empty);
    foreach(string nombre in typeof(Visual.frmInicio).Assembly.GetTypes().Where(t=>typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t.Name!="FormularioEventAura").Select(t=>t.Name).OrderBy(n=>n))
     InterfazGrupoA.EnSta(()=> {
      var cliente=Fake.Cliente(NivelFidelidad.Bronce);var evento=Fake.EventoPublicado(1000m,5);
@@ -39,17 +40,38 @@ namespace Pruebas {
       if(nombre=="frmHistorialCliente") InterfazGrupoA.ControlDe<DataGridView>(form,"dgvEntradas").Rows[0].Cells["Devolver"].Value=true;
       if(nombre=="frmConfirmacion") {var d=InterfazGrupoA.ControlDe<Label>(form,"lblDesglose");File.WriteAllText(Path.Combine(salida,"desglose.txt"),d.Bounds+" visible="+d.Visible+" texto="+d.Text+" padre="+d.Parent.Bounds);}
       form.BringToFront();form.Activate();SetWindowPos(form.Handle,new IntPtr(-1),0,0,0,0,0x43);System.Threading.Thread.Sleep(250);form.Refresh();Application.DoEvents();
-      using(var imagen=new Bitmap(form.Width,form.Height))using(var grafico=Graphics.FromImage(imagen)) {
-       grafico.CopyFromScreen(form.Location,Point.Empty,form.Size);imagen.Save(Path.Combine(salida,nombre+"-escritorio.png"));
-      }
-      using(var imagen=new Bitmap(form.Width,form.Height)) {form.DrawToBitmap(imagen,new Rectangle(Point.Empty,form.Size));imagen.Save(Path.Combine(salida,nombre+".png"));}
+      using(var imagen=new Bitmap(form.Width,form.Height)) {DibujarCompleta(form,imagen);imagen.Save(Path.Combine(salida,nombre+".png"));}
       if(nombre=="FrmCompraCliente") {
        var panel=InterfazGrupoA.ControlDe<Panel>(form,"pnlResumen");InterfazGrupoA.ControlDe<Panel>(form,"pnlContenidoCompra").ScrollControlIntoView(panel);panel.AutoScrollPosition=new Point(0,100000);Application.DoEvents();
-       using(var extra=new Bitmap(form.Width,form.Height)) {form.DrawToBitmap(extra,new Rectangle(Point.Empty,form.Size));extra.Save(Path.Combine(salida,nombre+"-total.png"));}
+       using(var extra=new Bitmap(form.Width,form.Height)) {DibujarCompleta(form,extra);extra.Save(Path.Combine(salida,nombre+"-total.png"));}
       }
       using(var g=form.CreateGraphics())File.AppendAllText(Path.Combine(salida,"ventanas.txt"),nombre+" DPI="+g.DpiX+" cliente="+form.ClientSize+" ventana="+form.Size+"\r\n");
      }
     });
+  }
+  // WM_PRINT de algunos Label transparentes tapa hermanos en DrawToBitmap a 150 %.
+  // Volvemos a pedir DrawToBitmap a cada bot?n real; no se inventan p?xeles ni se mueve la UI.
+  private static void DibujarCompleta(Form form, Bitmap imagen) {
+   form.DrawToBitmap(imagen,new Rectangle(Point.Empty,form.Size));
+   using(var g=Graphics.FromImage(imagen)) PintarBotones(form,form,g);
+  }
+  private static void PintarBotones(Form form, Control raiz, Graphics g) {
+   foreach(Control control in raiz.Controls) {
+    if(!control.Visible)continue;
+    var boton=control as Button;
+    if(boton!=null && boton.Width>0 && boton.Height>0) {
+     Point origen=boton.PointToScreen(Point.Empty);origen.Offset(-form.Left,-form.Top);
+     Rectangle recorte=new Rectangle(Point.Empty,form.Size);
+     for(Control padre=boton.Parent;padre!=null;padre=padre.Parent) {
+      Point punto=padre.PointToScreen(Point.Empty);punto.Offset(-form.Left,-form.Top);
+      recorte=Rectangle.Intersect(recorte,new Rectangle(punto,padre.ClientSize));
+     }
+     var estado=g.Save();g.SetClip(recorte);
+     using(var b=new Bitmap(boton.Width,boton.Height)){boton.DrawToBitmap(b,new Rectangle(Point.Empty,boton.Size));g.DrawImageUnscaled(b,origen);}
+     g.Restore(estado);
+    }
+    PintarBotones(form,control,g);
+   }
   }
   private static void Asignar(Form form,string nombre,object valor) {
    var flags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.Public|System.Reflection.BindingFlags.IgnoreCase;
