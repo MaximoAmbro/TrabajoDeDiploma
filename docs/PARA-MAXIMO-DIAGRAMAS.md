@@ -95,6 +95,22 @@ El diagrama del administrador va en la página siguiente, con el título «Diagr
 | Administrador → Generar reportes | Asociación | — | `frmReportes` → `GestorReportes.Crear` / `Ejecutar` |
 | Exportar reporte a PDF → Generar reportes | «extend» | pide exportar | `frmReportes` → `GestorReportes.Exportar` |
 
+**Para la defensa (no se pega): «Aplicar descuento por nivel» y «Pagar la compra».** Criterio de
+JC del 17/11: se quedan. La descomposición funcional no está entre los 16 errores frecuentes del
+profesor (la regla 8 controla la dirección de «include» y «extend» y la condición de «extend», y
+las dos cumplen).
+- **Aplicar descuento por nivel** no es un objetivo del cliente: nadie entra al sistema a «aplicar
+  un descuento». Es un caso de uso de nivel de subfunción, que UML admite como destino de un
+  «include». Se dibuja por dos razones: el descuento por nivel es el diferencial del negocio
+  (OE-3, RF-08, RN-19 a RN-24), y así la regla tiene un lugar visible en el diagrama, trazable
+  hasta `GestorFidelizacion.CalcularDescuento`; y la compra lo ejecuta siempre, sin decisión del
+  cliente, que es lo que expresa el «include». Su comportamiento está especificado dentro de CU-01,
+  no en una especificación propia. Si el profesor pide quitarlo, se quita sin perder nada: el
+  descuento ya vive en CU-01.
+- **Pagar la compra** sí es defendible como objetivo del actor: el cliente paga con su tarjeta, en
+  una pantalla propia (`frmPago`), y el pago puede fallar y reintentarse (RN-32). Va como
+  «include» porque no hay compra sin pago.
+
 **Qué cambió respecto del diagrama viejo:**
 - **Desaparecen** «Ver carrito», «Modificar local», «Eliminar local» y «Gestionar stock de
   entradas», que el sistema no tiene. La pasarela de pago deja de ser un actor.
@@ -330,8 +346,8 @@ figura de ahí, una parte por página.
 |---|---|
 | Fuente | `docs/diagramas/fuentes/estados-entrada.puml` |
 | Imagen | `docs/diagramas/estados-entrada.png` |
-| Insertar a | **16,0 cm** de ancho (22,1 de alto, página entera) |
-| Letra impresa | 10,4 pt |
+| Insertar a | **16,0 cm** de ancho (18,2 de alto) |
+| Letra impresa | 9,5 pt |
 
 **Dónde va:** página 87, debajo de «Diagrama de estados – Ciclo de vida de la entrada».
 Reemplaza la figura de ahí. Como ocupa la página entera, el título pasa a la página nueva.
@@ -343,12 +359,13 @@ Reemplaza la figura de ahí. Como ocupa la página entera, el título pasa a la 
 > tabla `Entradas` y en las sentencias de la capa de datos. La entrada nace Pendiente al iniciarse
 > la compra, con el cupo del sector reservado; pasa a Confirmada cuando el pago se aprueba y recibe
 > su código QR; pasa a Vencida si vence el plazo de reserva o se da de baja el evento o el sector;
-> y pasa a Reembolsada si el cliente la devuelve con seguro contratado y con más de 48 horas de
-> anticipación.
+> y pasa a Reembolsada si el cliente la devuelve con seguro contratado, con más de 48 horas de
+> anticipación y antes de usarla para ingresar.
 >
 > El ingreso al evento no es un estado de venta: la entrada sigue Confirmada y solo se registra la
 > fecha y hora de la primera lectura del código QR. Por eso se modela como un subestado de
-> Confirmada, y no como un quinto estado. Una segunda lectura del mismo código se rechaza (RN-18).
+> Confirmada, y no como un quinto estado. Una segunda lectura del mismo código se rechaza (RN-18),
+> y una entrada que ya ingresó no se puede devolver: la devolución sale del subestado sin ingreso.
 
 **Justificación de transiciones:**
 
@@ -358,7 +375,7 @@ Reemplaza la figura de ahí. Como ocupa la página entera, el título pasa a la 
 | Pendiente → Pendiente | pago rechazado: devuelve el cupo | RN-32 | `GestorCompras.Liberar` → `RepositorioCompras.Liberar` |
 | Pendiente → Confirmada | pago aprobado: asigna el QR | RN-17, RN-18 | `RepositorioEntradas.cs:147`: `SET Estado = 'Confirmada' … WHERE Estado = 'Pendiente'` |
 | Pendiente → Vencida | vence el plazo, o baja del evento o del sector | RN-15 | `RepositorioCompras.MarcarVencidas` y `VencerAbiertas` |
-| Confirmada → Reembolsada | el cliente la devuelve | RN-28, RN-29 | `RepositorioCompras.cs:203`; el plazo, en `GestorCompras.Reembolsar` |
+| Sin ingreso → Reembolsada | el cliente la devuelve | RN-28, RN-29 | `RepositorioCompras.cs:203-204`: `WHERE … Estado = 'Confirmada' AND FechaIngreso IS NULL`; el plazo y el rechazo de una entrada ya usada, en `GestorCompras.Reembolsar` (`GestorCompras.cs:301`) |
 | Sin ingreso → Ingresada | primera lectura del QR dentro de la ventana | RN-18 | `RepositorioEntradas.cs:31-33`: `SET FechaIngreso … WHERE Estado = 'Confirmada' AND FechaIngreso IS NULL` |
 | Vencida → fin | baja del evento: se borra la fila | — | `RepositorioEventos.cs:172` |
 
@@ -366,6 +383,9 @@ Reemplaza la figura de ahí. Como ocupa la página entera, el título pasa a la 
 - **Desaparecen** «Disponible», «Reservada», «Vendida» y «Cancelada», que no existen.
 - **Aparece** «Vencida».
 - **El reembolso** ya no lo dispara un evento cancelado, sino el cliente.
+- **La devolución sale de «Sin ingreso»** (revisión externa de JC, 17/11): antes salía del borde de
+  Confirmada, y eso decía que se podía devolver una entrada ya ingresada, cosa que el código
+  rechaza.
 
 ---
 
@@ -397,6 +417,14 @@ página siguiente.
 > usuario). La relación entre Eventos y Servicios es de muchos a muchos y se resuelve con la tabla
 > intermedia ServiciosEvento. La contraseña se guarda como `PBKDF2$iteraciones$sal$hash`, nunca en
 > texto plano.
+>
+> La tabla Entradas proviene del esquema original, anterior a las compras. Por eso guarda el
+> usuario además de la compra, y por eso la compra y el sector son columnas agregadas después que
+> admiten valores nulos. El sistema escribe en cada entrada el mismo usuario de su compra, y nunca
+> crea una entrada sin compra ni sin sector. Cada fila es una sola entrada: la cantidad vendida
+> vale 1 en todas las filas que guarda el sistema, y cada una tiene su propio código QR, que se
+> admite una sola vez en el ingreso (RN-18). La cantidad elegida para cada sector existe solo
+> mientras se arma el paquete, que no se guarda en la base.
 
 **Restricciones que no entran en la figura** (van en el texto o en una tabla debajo):
 
@@ -572,6 +600,11 @@ de ahí, que era un diagrama de secuencia con los íconos de robustez.
 > fronteras solo con controles, y las entidades solo con controles. Los controles pueden
 > comunicarse entre sí: el control de la compra verifica la identidad del cliente, cobra con la
 > pasarela simulada, genera los códigos QR y usa los controles de paquetes y fidelización.
+>
+> El Cliente aparece dos veces, con dos papeles distintos: como actor es la persona que usa las
+> pantallas, y como entidad es la información que el sistema guarda de ella, su identidad para la
+> sesión y su nivel de fidelidad. El método distingue así a quien interactúa con el sistema de los
+> datos que el sistema conserva sobre él.
 
 **Justificación de conexiones:**
 

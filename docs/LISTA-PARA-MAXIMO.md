@@ -50,6 +50,9 @@
 > | p. 109, oración inicial y tabla de brechas, filas G-02 y G-06 | G-02: «CP-11 a CP-148». G-06: la acción suma lo que corrigió la versión 2.6 y quedan cinco hallazgos, no diez; la oración inicial lo dice igual | La oración inicial y las dos filas |
 > | Sección nueva «Metodología de verificación» (después de la p. 109) | La medición final de mutación (73 de 77); «La batería…» dice ciento cuarenta y ocho casos y doscientas setenta y seis ejecuciones; el párrafo «En la medición final quedaron cuatro…» termina distinto (M-22 corregido) | **La sección entera**, desde su título hasta el párrafo «Qué queda fuera de la medición», inclusive. Es más seguro que buscar párrafo por párrafo |
 > | p. 111, trabajo futuro, punto 1 | Se borró «, y el regreso a un armado vacío de U-09» | La celda «Poner» del punto 1 |
+> | p. 87, diagrama de estados | La devolución sale ahora de «Sin ingreso», no del borde de «Confirmada»: una entrada ingresada no se puede devolver. La nota y los dos párrafos del texto lo dicen | La imagen `estados-entrada.png`, al mismo ancho (16,0 cm), y los dos párrafos del texto del diagrama |
+> | p. 88, texto del diagrama de robustez | Párrafo nuevo al final: por qué el Cliente aparece como actor y como entidad | Solo ese párrafo (está en su lugar de la lista) |
+> | p. 89, texto del entidad-relación | Párrafo nuevo al final: por qué Entradas guarda el usuario y qué es la cantidad vendida | Solo ese párrafo (está en su lugar de la lista) |
 > | pp. 52 y 53, figura 2 del instructivo | Pasa a una versión recortada, con otro archivo y otro ancho (10,7 cm) | La figura 2, si pegaste la entera. La figura 1 no cambia |
 
 > ## ⏸ NO PEGAR TODAVÍA: la lista completa
@@ -1830,12 +1833,13 @@ Texto:
 > tabla `Entradas` y en las sentencias de la capa de datos. La entrada nace Pendiente al iniciarse
 > la compra, con el cupo del sector reservado; pasa a Confirmada cuando el pago se aprueba y recibe
 > su código QR; pasa a Vencida si vence el plazo de reserva o se da de baja el evento o el sector;
-> y pasa a Reembolsada si el cliente la devuelve con seguro contratado y con más de 48 horas de
-> anticipación.
+> y pasa a Reembolsada si el cliente la devuelve con seguro contratado, con más de 48 horas de
+> anticipación y antes de usarla para ingresar.
 >
 > El ingreso al evento no es un estado de venta: la entrada sigue Confirmada y solo se registra la
 > fecha y hora de la primera lectura del código QR. Por eso se modela como un subestado de
-> Confirmada, y no como un quinto estado. Una segunda lectura del mismo código se rechaza (RN-18).
+> Confirmada, y no como un quinto estado. Una segunda lectura del mismo código se rechaza (RN-18),
+> y una entrada que ya ingresó no se puede devolver: la devolución sale del subestado sin ingreso.
 
 ## Página 88 — Robustez, dominio actualizado y actividad
 
@@ -1850,6 +1854,11 @@ Texto:
 > fronteras solo con controles, y las entidades solo con controles. Los controles pueden
 > comunicarse entre sí: el control de la compra verifica la identidad del cliente, cobra con la
 > pasarela simulada, genera los códigos QR y usa los controles de paquetes y fidelización.
+>
+> El Cliente aparece dos veces, con dos papeles distintos: como actor es la persona que usa las
+> pantallas, y como entidad es la información que el sistema guarda de ella, su identidad para la
+> sesión y su nivel de fidelidad. El método distingue así a quien interactúa con el sistema de los
+> datos que el sistema conserva sobre él.
 
 **Diagrama de dominio actualizado:** reemplazar la figura por dos, una por página:
 `dominio-actualizado-1-cuentas-catalogo.png` y `dominio-actualizado-2-compra.png`, las dos a
@@ -1921,6 +1930,14 @@ Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el t
 > usuario). La relación entre Eventos y Servicios es de muchos a muchos y se resuelve con la tabla
 > intermedia ServiciosEvento. La contraseña se guarda como `PBKDF2$iteraciones$sal$hash`, nunca en
 > texto plano.
+>
+> La tabla Entradas proviene del esquema original, anterior a las compras. Por eso guarda el
+> usuario además de la compra, y por eso la compra y el sector son columnas agregadas después que
+> admiten valores nulos. El sistema escribe en cada entrada el mismo usuario de su compra, y nunca
+> crea una entrada sin compra ni sin sector. Cada fila es una sola entrada: la cantidad vendida
+> vale 1 en todas las filas que guarda el sistema, y cada una tiene su propio código QR, que se
+> admite una sola vez en el ingreso (RN-18). La cantidad elegida para cada sector existe solo
+> mientras se arma el paquete, que no se guarda en la base.
 
 ## Páginas 90 a 97 — Informe de pruebas de usabilidad
 

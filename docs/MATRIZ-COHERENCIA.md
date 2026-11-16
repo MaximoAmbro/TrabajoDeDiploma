@@ -48,6 +48,24 @@ y el código de `dba674c`.
   usabilidad de la versión 2.6, que deja cinco abiertos. Corregido: cinco, 7 horas estimadas
   (1,75 puntos de la tabla del plan de mejora del informe de usabilidad).
 
+### Revisión externa de JC (17/11), sobre cuatro diagramas
+
+JC revisó por su cuenta el entidad-relación, el de estados, el de robustez y el de casos de uso,
+porque eran lo único del proyecto que había hecho y verificado el mismo agente.
+
+- **Estados, contradicción con el código, corregida.** La devolución salía del borde de
+  Confirmada, así que el diagrama permitía devolver una entrada ya ingresada. El código lo rechaza
+  dos veces (`GestorCompras.cs:301` y el `UPDATE` de `RepositorioCompras.cs:203-204`, con
+  `FechaIngreso IS NULL`). Ahora sale de «Sin ingreso». **Esta matriz no lo vio:** la comprobación 2
+  compara las listas de estados, no las transiciones. Queda como límite del instrumento.
+- **`Entradas.CantidadVendida`:** se usa y vale siempre 1 en lo que se guarda (`GestorCompras.cs:74-82`
+  y las dos semillas); el valor mayor que 1 vive solo en el paquete en memoria. RN-18 no queda
+  ambigua: un QR por fila, una fila por entrada. Aclarado en el texto del entidad-relación.
+- **`Entradas.ID_Usuario`** y **el Cliente como actor y como entidad** en robustez: contestados en
+  el texto de cada diagrama.
+- **«Aplicar descuento por nivel»:** se queda; justificación para la defensa en
+  `docs/PARA-MAXIMO-DIAGRAMAS.md`, sección 1.
+
 ## De dónde salió la matriz
 
 No estaba en el repositorio. Apareció en el disco, fuera de él, buscando por contenido:
