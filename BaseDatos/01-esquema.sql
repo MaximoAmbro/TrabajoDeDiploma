@@ -90,6 +90,7 @@ ALTER TABLE Eventos  ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Publicado';
 ALTER TABLE Eventos  ADD FinPreventa DATETIME NULL;    -- RN-39; NULL = sin preventa
 
 ALTER TABLE Sectores ADD CantidadReservada INT NOT NULL DEFAULT 0;  -- RN-08 + RN-15
+ALTER TABLE Sectores ADD CupoLiberadoEl DATETIME NULL;  -- RN-35: ?ltima liberaci?n efectiva, sin historia inventada
 
 ALTER TABLE Entradas ADD ID_Compra INT NULL;
 ALTER TABLE Entradas ADD ID_Sector INT NULL;           -- RN-08: sin esto no hay cupo por sector

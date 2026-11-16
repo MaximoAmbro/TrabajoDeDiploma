@@ -93,6 +93,10 @@ namespace Negocio
             {
                 RepositorioCompras.Instance.Iniciar(compra, servicios, entradas);
             }
+            catch (CupoPrioritarioException)
+            {
+                throw new ReglaNegocioException("RN-35", "El lugar liberado está reservado temporalmente para suscriptores inscriptos en la lista de espera. Intentá al finalizar la ventana de prioridad.");
+            }
             catch (CupoInsuficienteException ex)
             {
                 throw CupoAgotado(ex.IdSector);
@@ -134,6 +138,10 @@ namespace Negocio
                 try
                 {
                     RepositorioCompras.Instance.Rereservar(actual.Id, vence);
+                }
+                catch (CupoPrioritarioException)
+                {
+                    throw new ReglaNegocioException("RN-35", "El lugar liberado está reservado temporalmente para suscriptores inscriptos en la lista de espera. Intentá al finalizar la ventana de prioridad.");
                 }
                 catch (CupoInsuficienteException ex)
                 {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Entidades;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -79,30 +79,33 @@ namespace Pruebas
             Paquete paquete = Fake.Paquete(evento, 1, false);
             Compra compra = GestorCompras.Instance.Iniciar(paquete, cliente);
             GestorSesion.Instance.Cerrar();
-            Action[] operaciones = {
-                () => GestorEventos.Instance.Crear(new Evento()),
-                () => GestorEventos.Instance.Publicar(evento),
-                () => GestorEventos.Instance.Eliminar(evento.Id),
-                () => GestorEventos.Instance.Suspender(evento.Id),
-                () => GestorEventos.Instance.CambiarPreventa(evento.Id, null),
-                () => GestorEventos.Instance.AgregarSector(evento.Id, new Sector()),
-                () => GestorEventos.Instance.EliminarSector(evento.Sectores.Single().Id),
-                () => GestorLocales.Instance.Registrar(new Local()),
-                () => GestorListaEspera.Instance.Inscribir(evento.Id, cliente.Id),
-                () => GestorCompras.Instance.Iniciar(paquete, cliente),
-                () => GestorCompras.Instance.Confirmar(compra, Fake.Tarjeta()),
-                () => GestorCompras.Instance.Liberar(compra),
-                () => GestorSuscripciones.Instance.Contratar(cliente.Id, GestorSuscripciones.PlanMensual),
-                () => GestorSuscripciones.Instance.Cancelar(cliente.Id),
-                () => GestorFidelizacion.Instance.ReevaluarNivel(cliente, DateTime.Now),
-                () => GestorFidelizacion.Instance.AscenderSiCorresponde(cliente, DateTime.Now)
+            var operaciones = new[] {
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Crear(new Evento()), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Publicar(evento), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Eliminar(evento.Id), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Suspender(evento.Id), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarPreventa(evento.Id, null), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.AgregarSector(evento.Id, new Sector()), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.EliminarSector(evento.Sectores.Single().Id), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorLocales.Instance.Registrar(new Local()), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorListaEspera.Instance.Inscribir(evento.Id, cliente.Id), "RN-41"),
+                Tuple.Create<Action,string>(() => GestorCompras.Instance.Iniciar(paquete, cliente), "RN-41"),
+                Tuple.Create<Action,string>(() => GestorCompras.Instance.Confirmar(compra, Fake.Tarjeta()), "RN-41"),
+                Tuple.Create<Action,string>(() => GestorCompras.Instance.Liberar(compra), "RN-41"),
+                Tuple.Create<Action,string>(() => GestorSuscripciones.Instance.Contratar(cliente.Id, GestorSuscripciones.PlanMensual), "RN-41"),
+                Tuple.Create<Action,string>(() => GestorSuscripciones.Instance.Cancelar(cliente.Id), "RN-41"),
+                Tuple.Create<Action,string>(() => GestorFidelizacion.Instance.ReevaluarNivel(cliente, DateTime.Now), "RN-41"),
+                Tuple.Create<Action,string>(() => GestorFidelizacion.Instance.AscenderSiCorresponde(cliente, DateTime.Now), "RN-41")
             };
-            foreach (Action operacion in operaciones)
-                Assert.ThrowsException<ReglaNegocioException>(operacion);
+            foreach (var par in operaciones) {
+                var error = Assert.ThrowsException<ReglaNegocioException>(par.Item1);
+                Assert.AreEqual(par.Item2, error.Regla, "Operaci?n " + Array.IndexOf(operaciones,par));
+                Assert.IsNull(GestorSesion.Instance.UsuarioActual);
+            }
             string mail = Fake.MailNuevo();
-            Assert.ThrowsException<ReglaNegocioException>(() => GestorUsuarios.Instance.CrearAdministrador(mail, "ClaveSegura123", "Admin", "Prueba"));
+            Assert.AreEqual("RN-34", Assert.ThrowsException<ReglaNegocioException>(() => GestorUsuarios.Instance.CrearAdministrador(mail, "ClaveSegura123", "Admin", "Prueba")).Regla);
             Fake.ComoCliente(cliente);
-            Assert.ThrowsException<ReglaNegocioException>(() => GestorUsuarios.Instance.CrearAdministrador(mail, "ClaveSegura123", "Admin", "Prueba"));
+            Assert.AreEqual("RN-34", Assert.ThrowsException<ReglaNegocioException>(() => GestorUsuarios.Instance.CrearAdministrador(mail, "ClaveSegura123", "Admin", "Prueba")).Regla);
             Assert.IsNull(Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail));
             Fake.ComoAdministrador();
             GestorUsuarios.Instance.CrearAdministrador(mail, "ClaveSegura123", "Admin", "Prueba");

@@ -14,6 +14,11 @@ namespace Negocio
 
         public ResultadoIngreso Registrar(string codigo, int idEvento)
         {
+            return Registrar(codigo, idEvento, DateTime.Now);
+        }
+
+        internal ResultadoIngreso Registrar(string codigo, int idEvento, DateTime ahora)
+        {
             GestorSesion.Instance.RequerirAdministrador();
             RequerirEventoPropio(idEvento);
             codigo = (codigo ?? "").Trim();
@@ -21,7 +26,6 @@ namespace Negocio
             ResultadoIngreso rechazo = RechazoDe(entrada, idEvento);
             if (rechazo != null) return rechazo;
             Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
-            DateTime ahora = DateTime.Now;
             int antes = GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_ANTES");
             int despues = GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_DESPUES");
             if (evento == null || evento.Estado != GestorEventos.EstadoPublicado ||

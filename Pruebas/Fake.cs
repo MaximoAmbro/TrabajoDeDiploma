@@ -339,6 +339,15 @@ namespace Pruebas
             return evento;
         }
 
+        public static void CambiarEstadoDeEntrada(int idEntrada, string estado)
+        {
+            Ejecutar("UPDATE Entradas SET Estado=@Estado WHERE ID=@ID", "@Estado", estado, "@ID", idEntrada);
+        }
+        public static void EnvejecerLiberacion(int idSector)
+        {
+            Ejecutar("UPDATE Sectores SET CupoLiberadoEl=DATEADD(MINUTE,-60,GETDATE()) WHERE ID=@ID", "@ID", idSector);
+        }
+
         private static void Ejecutar(string consulta, params object[] parametros)
         {
             using (SqlConnection conexion = Conexion.Instance.Crear())

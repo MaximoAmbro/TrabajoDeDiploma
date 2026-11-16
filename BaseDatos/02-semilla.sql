@@ -15,6 +15,7 @@ BEGIN TRANSACTION;
 
 -- ═══════════════ Parámetros (docs/02-reglas-negocio.md) ═══════════════
 INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
+('PRIORIDAD_ESPERA_MINUTOS', '15', 'Ventana exclusiva tras liberar cupo para suscriptores inscriptos', 'RN-35'),
 ('INGRESO_HORAS_ANTES',      '6',     'Horas de ingreso antes del evento',                        'RN-18'),
 ('INGRESO_HORAS_DESPUES',    '12',    'Horas de ingreso después del evento',                      'RN-18'),
 ('PWD_LONGITUD_MIN',        '8',     'Longitud mínima de la contraseña',                          'RN-02'),

@@ -49,6 +49,7 @@ namespace Pruebas
             string carpeta = Path.Combine(RaizDelRepositorio(), "BaseDatos");
             EjecutarScript(cadena, Path.Combine(carpeta, "01-esquema.sql"));
             EjecutarScript(cadena, Path.Combine(carpeta, "02-semilla.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "06-prioridad-temporal.sql"));
 
             // GestorParametros cachea: que lea la tabla recién poblada.
             GestorParametros.Instance.Recargar();

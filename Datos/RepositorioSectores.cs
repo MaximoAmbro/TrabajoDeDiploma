@@ -143,8 +143,22 @@ namespace Datos
         // RN-08 + RN-15: suma la cantidad a CantidadReservada solo si el cupo alcanza. La condición
         // va en el mismo UPDATE, así dos reservas simultáneas no pueden pasarse del cupo.
         // Devuelve false si no alcanza. Lo usa RepositorioCompras dentro de su transacción.
-        internal bool Reservar(int idSector, int cantidad, SqlConnection conexion, SqlTransaction transaccion)
+        internal bool Reservar(int idSector, int cantidad, int idCompra, SqlConnection conexion, SqlTransaction transaccion)
         {
+            // Mismo bloqueo y transacción que la reserva: no hay hueco entre prioridad y cupo.
+            const string prioridad =
+                "SELECT COUNT(*) FROM Sectores s WITH (UPDLOCK, HOLDLOCK) WHERE s.ID=@IdSector " +
+                "AND s.CupoLiberadoEl <= GETDATE() AND DATEADD(MINUTE, " +
+                "(SELECT CONVERT(INT,Valor) FROM Parametros WHERE Clave='PRIORIDAD_ESPERA_MINUTOS'), s.CupoLiberadoEl) > GETDATE() " +
+                "AND EXISTS (SELECT 1 FROM ListaEspera l WHERE l.ID_Evento=s.EventoID AND l.ConSuscripcion=1) " +
+                "AND NOT EXISTS (SELECT 1 FROM ListaEspera l JOIN Compras c ON c.ID_Usuario=l.ID_Usuario " +
+                "WHERE c.ID=@IdCompra AND l.ID_Evento=s.EventoID AND l.ConSuscripcion=1)";
+            using (SqlCommand comando = CrearComando(conexion, prioridad, transaccion))
+            {
+                AgregarParametro(comando, "@IdSector", idSector);
+                AgregarParametro(comando, "@IdCompra", idCompra);
+                if (Convert.ToInt32(comando.ExecuteScalar()) != 0) throw new CupoPrioritarioException();
+            }
             const string consulta =
                 "UPDATE s SET s.CantidadReservada = s.CantidadReservada + @Cantidad " +
                 "FROM Sectores s " +
@@ -168,7 +182,7 @@ namespace Datos
         {
             foreach (KeyValuePair<int, int> par in PendientesPorSector(idCompra, conexion, transaccion))
             {
-                if (!Reservar(par.Key, par.Value, conexion, transaccion))
+                if (!Reservar(par.Key, par.Value, idCompra, conexion, transaccion))
                 {
                     return par.Key;
                 }
@@ -178,10 +192,11 @@ namespace Datos
 
         // RN-15 + RN-32: devuelve a CantidadReservada lo que reservaron las entradas Pendiente de la
         // compra. Hay que llamarlo ANTES de cambiarles el estado a esas entradas.
-        internal void LiberarCompra(int idCompra, SqlConnection conexion, SqlTransaction transaccion)
+        internal void LiberarCompra(int idCompra, SqlConnection conexion, SqlTransaction transaccion, bool disponible = true)
         {
             const string consulta =
-                "UPDATE s SET s.CantidadReservada = s.CantidadReservada - r.Cantidad " +
+                "UPDATE s SET s.CantidadReservada = s.CantidadReservada - r.Cantidad, " +
+                "CupoLiberadoEl = CASE WHEN @Disponible=1 THEN GETDATE() ELSE s.CupoLiberadoEl END " +
                 "FROM Sectores s " +
                 "JOIN (SELECT ID_Sector, SUM(CantidadVendida) AS Cantidad FROM Entradas " +
                 "      WHERE ID_Compra = @IdCompra AND Estado = 'Pendiente' GROUP BY ID_Sector) r " +
@@ -190,6 +205,7 @@ namespace Datos
             using (SqlCommand comando = CrearComando(conexion, consulta, transaccion))
             {
                 AgregarParametro(comando, "@IdCompra", idCompra);
+                AgregarParametro(comando, "@Disponible", disponible);
                 comando.ExecuteNonQuery();
             }
         }
@@ -267,6 +283,8 @@ namespace Datos
             }
         }
     }
+
+    public sealed class CupoPrioritarioException : Exception { }
 
     // El cupo del sector no alcanzó para la reserva (RN-08). Negocio la traduce a la regla.
     public class CupoInsuficienteException : Exception

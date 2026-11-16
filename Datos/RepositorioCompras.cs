@@ -230,6 +230,14 @@ namespace Datos
                         }
                     }
 
+                    // Solo los sectores efectivamente reembolsados, en la misma transacción.
+                    foreach (int idEntrada in idsEntradas)
+                    using (SqlCommand comando = CrearComando(conexion,
+                        "UPDATE Sectores SET CupoLiberadoEl=GETDATE() WHERE ID=(SELECT ID_Sector FROM Entradas WHERE ID=@Entrada)", transaccion))
+                    {
+                        AgregarParametro(comando, "@Entrada", idEntrada);
+                        comando.ExecuteNonQuery();
+                    }
                     object estado;
                     using (SqlCommand comando = CrearComando(conexion, actualizarCompra, transaccion))
                     {
@@ -313,7 +321,7 @@ namespace Datos
                     }
 
                     // Antes de cambiar el estado de las entradas: LiberarCompra suma las Pendiente.
-                    RepositorioSectores.Instance.LiberarCompra(idCompra, conexion, transaccion);
+                    RepositorioSectores.Instance.LiberarCompra(idCompra, conexion, transaccion, false);
                     RepositorioEntradas.Instance.Confirmar(entradas, fechaVenta, conexion, transaccion);
 
                     foreach (Seguro seguro in seguros)
@@ -475,7 +483,7 @@ namespace Datos
                 "WHERE Estado = 'Pendiente' " +
                 "  AND (   (ReservaVence IS NOT NULL AND ReservaVence <= @Ahora) " +
                 "       OR (ReservaVence IS NULL AND DATEADD(MINUTE, @Minutos, FechaCompra) <= @Ahora)); " +
-                "UPDATE s SET s.CantidadReservada = s.CantidadReservada - r.Cantidad " +
+                "UPDATE s SET s.CantidadReservada = s.CantidadReservada - r.Cantidad, CupoLiberadoEl=@Ahora " +
                 "FROM Sectores s " +
                 "JOIN (SELECT e.ID_Sector, SUM(e.CantidadVendida) AS Cantidad " +
                 "      FROM Entradas e JOIN @Vencidas v ON v.ID = e.ID_Compra AND v.TeniaReserva = 1 " +
