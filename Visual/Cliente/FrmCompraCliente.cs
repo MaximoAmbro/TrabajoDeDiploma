@@ -319,27 +319,8 @@ namespace Visual
                 confirmacion.ShowDialog(this);
             }
 
-            // RN-22: si la compra subió el nivel, rige desde esta operación siguiente.
-            cliente = GestorFidelizacion.Instance.ObtenerCliente(IDUsuario);
-            CargarNivel();
-            try
-            {
-                paquete = GestorPaquetes.Instance.Nuevo(IDEvento, IDUsuario);
-            }
-            catch (ReglaNegocioException ex)
-            {
-                Avisos.Regla("No se puede armar el paquete", ex);
-                VolverAlListado();
-                return;
-            }
-            CargarSectores();
-            foreach (CheckBox chk in ChecksDeServicio())
-            {
-                chk.Checked = false;
-            }
-            chkSeguro.Checked = false;
-            MostrarSiAgotado();
-            ActualizarResumen();
+            // U-09: el pedido ya terminó; vuelve al listado, sin un armado vacío.
+            VolverAlListado();
         }
 
         // --------------------------------------        FUNCIONES          --------------------------------------
