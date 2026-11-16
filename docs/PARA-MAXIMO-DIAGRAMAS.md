@@ -697,6 +697,65 @@ parte por página. Las partes se encadenan con los conectores A y B.
 
 ---
 
+## Regla de ancho de las figuras (capturas y diagramas)
+
+Decidida el 17/11, a pedido de JC, una vez para todas las figuras: las que ya están y las capturas
+nuevas de las cuatro fases (pantallas más anchas, como el mapa de sectores). Cuando llegue una
+captura, se aplica esto. No se decide pantalla por pantalla.
+
+**Las medidas de la página.** A4 vertical: el área de texto mide **16,0 cm de ancho** y unos
+**23 cm de alto** sin encabezado, pie ni epígrafe (las mismas constantes que usa
+`tools/Diagramas/Renderizar.py`). Ninguna figura pasa de 16 cm en una página vertical: más ancha,
+rompe el margen. Si el documento tiene 2,5 cm de margen a cada lado (21 − 16 = 5), una página
+apaisada da unos **24 cm de ancho** útil y unos **14 cm de alto**. Hay que comprobarlo en el Word
+la primera vez (*Disposición › Márgenes*), porque el fuente no está versionado.
+
+**La letra mínima.** Se mide la letra impresa con la fórmula de siempre: tamaño de la letra en el
+PNG (px) × ancho de inserción (pt) / ancho del PNG (px).
+- **Diagramas: 8,5 pt**, como hasta ahora (`LETRA_MINIMA` del script).
+- **Capturas: 8 pt.**
+- **Por debajo de 8 pt, solo por decisión escrita** de JC, con su razón al lado de la figura, como
+  la figura 1 del instructivo (7,2 pt). **Por debajo de 7 pt, nunca.**
+
+**El orden de decisión.** Se aplica el primer paso que da 8 pt o más:
+
+1. **Vertical, al ancho que entra.** Hasta 16 cm, sin ampliar la imagen por encima de su tamaño
+   real: una captura al 100 % mide `ancho en px / 96 × 2,54` cm. Ampliarla más sube los puntos,
+   pero no la nitidez: la figura 2 del instructivo se imprimiría a 64 ppp a 16 cm, y por eso va a
+   su tamaño real. Si hace falta más tamaño, se usa la versión al 150 % de la misma pantalla, que
+   tiene más píxeles.
+2. **Recortar a lo que la figura tiene que mostrar.** Sirve si lo que se saca no hace falta en
+   ese lugar o ya está en otra figura. Ejemplo: la figura 2 del instructivo, cuyo resumen ya estaba
+   en la figura 3. No sirve si el recorte saca lo que el texto explica. Ejemplo: la figura 1, que
+   perdía los filtros, las columnas o el botón Comprar.
+3. **Partir en dos, una debajo de la otra, con un solo epígrafe.** Sirve si la pantalla tiene dos
+   zonas que se leen por separado. Ejemplo: la figura 4, confirmación arriba y comprobante abajo.
+   Cada mitad se mide sola y cada una tiene que dar 8 pt.
+4. **Página apaisada, hasta 24 cm.** Para una pantalla que no admite recorte ni partición (una
+   grilla o un mapa que se lee entero). A 24 cm la letra sube un 50 % respecto de 16 cm: una
+   captura que da 6 pt a 16 cm, da 9 pt a 24.
+5. **Si nada de eso llega a 8 pt:** decisión escrita de JC, como la figura 1, o la figura no va.
+
+**Qué cuesta una página apaisada en Word,** y por qué es el paso 4 y no el 1:
+- **Dos saltos de sección** (*Disposición › Saltos › Página siguiente*), uno antes y otro después
+  de la figura, y la orientación horizontal solo en la sección del medio.
+- **Encabezado y pie:** en la sección nueva y en la siguiente hay que dejar marcado «Vincular al
+  anterior», o el pie («EventAura — versión 2.6», materia, docente) desaparece o se duplica.
+  Comprobarlo en la página apaisada y en la siguiente.
+- **Numeración:** tiene que continuar. Comprobarlo en el número de la página apaisada y de la
+  siguiente.
+- **Márgenes:** al cambiar la orientación, revisar que izquierdo y derecho den los 24 cm útiles.
+- **El epígrafe** va en la misma página apaisada, debajo de la figura.
+- **En el PDF** la página sale girada: se lee rotando la pantalla, e impresa, girando la hoja.
+
+Son unos minutos por página, pero es el paso que más puede romper el documento sin que se note.
+Por eso conviene **agrupar en una sola sección apaisada todas las figuras anchas que van seguidas**
+(por ejemplo, varias pantallas del administrador) y no abrir una sección por cada una.
+
+**Qué se informa con cada figura nueva,** para que la lista le diga a Máximo todo de una vez:
+archivo, paso aplicado (1 a 5), ancho en cm, orientación y letra más chica impresa. Si es el paso 4,
+también con qué figuras comparte la sección apaisada.
+
 ## Las 16 reglas del profesor, diagrama por diagrama
 
 | Regla | Cómo quedó |
