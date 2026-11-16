@@ -99,18 +99,33 @@ foco, no cuente como detección.
 
 | ID | Defensa | Por qué sobrevive | Qué significa |
 |---|---|---|---|
-| M-22 | Control de administrador al registrar un ingreso | Desde K-7, `RequerirEventoPropio` rechaza igual a un cliente (por RN-42 en lugar de RN-34); sin sesión, la operación termina en un error no controlado (`NullReferenceException`) en vez del rechazo de la regla. CP-99, que el plan daba como detectora, hoy prueba solo el ingreso válido | **No es equivalente: es una prueba que falta.** Nadie verifica el rechazo RN-34 del registro de ingreso ni su comportamiento sin sesión. El plan la daba como «Muere»: es el único error del pronóstico en esta medición |
+| M-22 | Control de administrador al registrar un ingreso | Desde K-7, `RequerirEventoPropio` rechaza igual a un cliente (por RN-42 en lugar de RN-34); con la mutación y sin sesión, la operación termina en un error no controlado (`NullReferenceException`) en vez del rechazo de la regla. CP-99, que el plan daba como detectora, registra como cliente pero aceptaba cualquier rechazo, y el de RN-42 la satisfacía; su llamada sin sesión es a `Contar`, no a `Registrar` (precisión de Codex en su cierre) | **No es equivalente: es una prueba que falta.** Nadie verifica el rechazo RN-34 del registro de ingreso ni su comportamiento sin sesión. El plan la daba como «Muere»: es el único error del pronóstico en esta medición |
 | M-43 | Control de sesión al contratar una suscripción | Equivalente: la operación repite el control enseguida (sección 4) | Adentro a propósito, desde la primera medición |
 | M-53 | El cambio de contraseña no revela si la cuenta existe | Equivalente desde K-8: sin ocultar la cuenta, el fallo sigue siendo RN-04, y el `catch` que agregó K-8 en `CambiarContrasena` lo convierte en el mismo rechazo genérico | Adentro a propósito: se reconoció equivalente después de ver que sobrevivía |
 | M-63 | Comparación de contraseñas en tiempo constante | Una prueba funcional no ve el tiempo | Prevista; se verificó por lectura (tarea 22 del encargo) |
 
-### M-22: un defecto, que se corrige después de la medición
+### M-22: un hueco de la batería, cerrado después de la medición
 
-Decisión de JC del 17/11. M-22 no es solo una prueba que falta: sin sesión de administrador,
-registrar un ingreso termina en una excepción no controlada en vez del rechazo de la regla. Codex
-lo corrige, con su prueba, **después** de esta medición. **La cifra se queda en 73 de 77 sobre
-`65225e7`** y no se vuelven a correr las 83: corresponde al commit medido, no a la versión final.
-La metodología lo dice así (párrafo preparado, marcado hasta que Codex lo corrija).
+Decisión de JC del 17/11: se corrige y no se vuelve a medir. **La cifra se queda en 73 de 77 sobre
+`65225e7`**: corresponde al commit medido, no a la versión que se entrega, `dba674c`
+(`dba674c5d3e870003f3b194de2ee905c6d83da69`).
+
+**Qué era, con precisión.** Esto corrige la versión anterior de esta sección, que decía que sin
+sesión el registro terminaba en una excepción no controlada, como si fuera un defecto del código
+en uso. No lo era. En `65225e7` sin mutar, registrar un ingreso como cliente o sin sesión ya se
+rechazaba por RN-34, con una excepción de dominio que la pantalla muestra como aviso. El error no
+controlado aparecía solo con la mutación aplicada. **El defecto estaba en la batería:** CP-99
+registraba como cliente y aceptaba cualquier `ReglaNegocioException`, así que el rechazo RN-42 que
+quedaba con la mutación la satisfacía, y su llamada sin sesión era a `Contar`, no a `Registrar`.
+Ninguna prueba exigía RN-34 en el registro. Lo precisó Codex, que lo comprobó antes de corregir.
+
+**Qué hizo Codex** (`7be20f8`; detalle en `Pruebas/RESULTADOS-CIERRE-DEFINITIVO-2026-11-16.md`):
+`Registrar` devuelve el rechazo como resultado (`MotivoIngreso.NoAutorizado`, `Regla = "RN-34"` y
+el mensaje «Esta operación es solo para el Administrador»), sin excepción y sin registrar el
+ingreso. CP-146, con un cliente y sin sesión, exige el motivo, la regla y el mensaje exactos. Se
+comprobó en cuatro estados: rojo con el código anterior, verde con el arreglo, rojo al quitar
+`RequerirAdministrador` y verde al restaurarlo. CP-99 pasó a exigir la regla exacta en vez de
+cualquier excepción.
 
 ### Cierre
 

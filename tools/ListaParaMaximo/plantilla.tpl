@@ -4,7 +4,8 @@
 >
 > El ejecutable nuevo necesita cambios en tu base de EventAura. En SQL Server Management Studio,
 > **elegí tu base de EventAura** y ejecutá estos scripts de la carpeta `BaseDatos/`, **en este
-> orden**. Los tres se pueden ejecutar más de una vez sin dañar nada:
+> orden**, antes de abrir el ejecutable nuevo. Los cuatro se pueden ejecutar más de una vez sin
+> dañar nada:
 >
 > 1. **`04-seguridad-ingreso.sql`**, solo si tu base es anterior al 11/11 (si no estás seguro,
 >    ejecutalo). Agrega lo que usa el control de ingreso por QR. **Si no lo corrés**, el control
@@ -16,34 +17,49 @@
 > 3. **`06-prioridad-temporal.sql`**. Agrega la ventana de prioridad de la lista de espera
 >    (RN-35). **Si no lo corrés, no se puede iniciar ninguna compra:** el ejecutable nuevo lee una
 >    columna que tu base todavía no tiene.
-> 4. **⏸ `07-indice-unico-seguros.sql`: todavía no existe, no lo busques.** Codex lo agrega
->    después de la medición final. Cuando esté, esta línea dice qué pasa si no se corre.
+> 4. **`07-indice-unico-seguros.sql`**. Agrega el índice que impide dos seguros sobre una misma
+>    entrada (RN-28). Antes de crearlo busca entradas con más de un seguro: si encuentra alguna,
+>    muestra cuáles y se detiene con el error 50007, sin borrar ni modificar nada. En ese caso,
+>    no sigas y avisale a JC. **Si no lo corrés**, la aplicación funciona, pero la base acepta dos
+>    seguros para la misma entrada, que son dos cargos al cliente.
 
 > ## ↻ CAMBIÓ DESPUÉS DEL 16/11: volver a pegar
 >
-> Lo que estaba sin marcar en la versión del 16/11 (commit `654e1d9`) y cambió después. Si todavía
-> no lo pegaste, no hagas nada: pegá lo que dice ahora. Si ya lo pegaste, volvé a pegarlo. Cuando
-> no haya nada, esta tabla queda vacía.
+> Lo que estaba sin marcar en una versión anterior de esta lista (la del 16/11, commit `654e1d9`, o
+> la del 17/11, commit `0e1fc5a`) y cambió después. Si todavía no lo pegaste, no hagas nada: pegá
+> lo que dice ahora. Si ya lo pegaste, volvé a pegarlo. **Las cifras de la batería cambiaron:**
+> eran 145 casos y 271 ejecuciones, y son 148 y 276. La cobertura de reglas no cambió (39 de 41).
 >
 > | Dónde | Qué cambió | Qué volver a pegar |
 > |---|---|---|
-> | Sección nueva «Metodología de verificación» (después de la p. 109) | Llegó la medición final de mutación (73 de 77). Hay un párrafo nuevo, «Dos mediciones…», antes de «Resultado»; cambiaron «Resultado», los dos párrafos de «Mutaciones equivalentes» que siguen al primero, y hay un párrafo nuevo, «En la medición final quedaron cuatro…», después de «Qué significa que una defensa sobreviva» | **La sección entera**, desde su título hasta el párrafo «Qué queda fuera de la medición», inclusive. Es más seguro que buscar párrafo por párrafo |
-> | p. 7, «Resultados principales», cuarto punto | Antes estaba marcado; ahora lleva la cifra, y dice «sobre el código congelado para la entrega» | El punto entero, si lo pegaste antes del 17/11 |
+> | p. 1, carátula | Línea nueva con el commit del código que se entrega | Solo esa línea (la entrada «Esto no espera a JC: el commit del código») |
+> | p. 6, historial, fila de la versión 2.6 | «CP-62 a CP-145» pasa a «CP-62 a CP-148» | La fila 2.6 entera (la fecha sigue esperando a JC) |
+> | p. 7, «Qué contiene este informe», fila «Verificación» | «ciento cuarenta y cinco» pasa a «ciento cuarenta y ocho» | La celda «Poner» de esa fila |
+> | p. 7, «Resultados principales», cuarto punto | Antes estaba marcado; después llevó la cifra de mutación, y ahora dice «Ciento cuarenta y ocho casos» en lugar de «Ciento cuarenta y cinco casos», y «sobre el código congelado» sin «para la entrega» | El punto entero |
+> | Diagrama de clases, vista 3 («Dominio: entrada y seguro») | El seguro pasa de 0..* a 0..1 por entrada | La imagen `clases-3-dominio-entrada.png`, al mismo ancho |
+> | Diagrama de dominio actualizado (p. 88) | Al final del texto se agrega una oración sobre el seguro | Solo esa oración (está en su lugar de la lista) |
+> | p. 89, entidad-relación de compras | El seguro pasa de 0..* a 0..1 por entrada, con el índice único | La imagen `er-2-compras.png`, al mismo ancho |
+> | pp. 90 a 97, párrafo «El estudio y el rediseño de la interfaz» | El punto de U-09: ahora, al cerrar la pantalla de éxito, vuelve al listado | El punto de U-09 |
+> | p. 106, «Criterio de construcción» y tabla «Nomenclatura de los ejes» | «ciento cuarenta y cinco» y «145» pasan a «ciento cuarenta y ocho» y «148» | El párrafo y la fila «Casos de prueba» |
+> | p. 107, matriz principal | RF-06 suma CP-147 y CP-148; RF-07 suma CP-146 | Las filas RF-06 y RF-07 |
+> | p. 108, tabla «Cobertura de reglas…» | La fila de CP-99 suma RN-34; hay tres filas nuevas al final, CP-146 a CP-148 | La fila de CP-99 y las tres nuevas |
+> | p. 108, el párrafo que sigue a esa tabla | Empieza con «Los ciento cuarenta y ocho casos» | El párrafo |
+> | p. 108, tabla «Casos de prueba incorporados en la versión 2.6» | El título dice «CP-62 a CP-148»; cambió la fila de CP-99; hay tres filas nuevas al final | El título, la fila de CP-99 y las tres nuevas |
+> | p. 108, «Origen de los casos» | Oración nueva al final del tercer párrafo, sobre CP-146 a CP-148 | El tercer párrafo («Los casos CP-91 a CP-115…») |
+> | p. 108, tabla «Análisis de cobertura» | Última fila: 5 de 14 (35,7 %), por U-09 con su prueba | La última fila |
+> | p. 109, oración inicial y tabla de brechas, filas G-02 y G-06 | G-02: «CP-11 a CP-148». G-06: la acción suma lo que corrigió la versión 2.6 y quedan cinco hallazgos, no diez; la oración inicial lo dice igual | La oración inicial y las dos filas |
+> | Sección nueva «Metodología de verificación» (después de la p. 109) | La medición final de mutación (73 de 77); «La batería…» dice ciento cuarenta y ocho casos y doscientas setenta y seis ejecuciones; el párrafo «En la medición final quedaron cuatro…» termina distinto (M-22 corregido) | **La sección entera**, desde su título hasta el párrafo «Qué queda fuera de la medición», inclusive. Es más seguro que buscar párrafo por párrafo |
+> | p. 111, trabajo futuro, punto 1 | Se borró «, y el regreso a un armado vacío de U-09» | La celda «Poner» del punto 1 |
 
 > ## ⏸ NO PEGAR TODAVÍA: la lista completa
 >
-> **Todo lo que no lleva la marca ⏸ se pega hoy, sin preguntar.** Lo que la lleva describe algo
-> que todavía no existe o un dato que falta: si se pega, el documento promete algo falso. Cada
+> **Todo lo que no lleva la marca ⏸ se pega hoy, sin preguntar.** Lo único que queda marcado son
+> datos que tiene que mandar JC: si se pega antes, el documento dice algo falso. Cada
 > uno tiene la marca también en su lugar de la lista, para que te frene aunque llegues sin leer
 > esto.
 >
 > | Dónde | Qué no se pega | De qué depende |
 > |---|---|---|
-> | pp. 47 a 49, guion de interfaz | Las tres capturas | Que Codex regenere `frmInicio`, `frmCrearUsuario` y `frmMenuCliente`. El cambio de texto de la p. 47 sí se pega |
-> | p. 88, dominio actualizado | La oración sobre el seguro | El script `07-indice-unico-seguros.sql` (Codex, después de la medición) |
-> | pp. 90 a 97, usabilidad, y p. 111, punto 1 | El texto alternativo de U-09 | Que Codex construya la vuelta al listado al cerrar la confirmación. Mientras tanto se pega el texto actual |
-> | Arriba de todo, scripts de base | El script 07 | El mismo script |
-> | Sección nueva «Metodología de verificación», después del párrafo «En la medición final quedaron cuatro…» | El texto que reemplaza sus dos últimas oraciones (M-22) | Que Codex corrija el rechazo no controlado del registro de ingreso |
 > | p. 1 y pie de todas las páginas | Comisión, turno, legajos, año | Datos de JC |
 > | p. 6, historial | La fecha de las filas nuevas | El día en que se pega (JC) |
 > | p. 9 | El período «entre junio y diciembre de 2025» | El año que decida JC |
@@ -84,16 +100,17 @@
 - **No hay nada para decidir.** Si algo no encaja con lo que ves en el Word, no lo resuelvas:
   anotalo y avisale a JC.
 
-## Cifras del documento (definitivas, medidas sobre `65225e7`)
+## Cifras del documento (definitivas)
 
 | Dato | Valor hoy | Dónde aparece en esta lista |
 |---|---|---|
 | Reglas vigentes | 41 (cuarenta y una) | pp. 6, 7, 106, 108, 109, 110 |
 | Reglas con caso de prueba | 39 de 41 = 95,1 % | pp. 8, 108, 109, 110, sección nueva después de la 109 |
 | Reglas sin caso | RN-07 y RN-33 | pp. 8, 108, 109, 110, 111 |
-| Casos de prueba | 145 (ciento cuarenta y cinco), CP-01 a CP-145 | pp. 6, 7, 106, 107, 108, 109, sección nueva |
-| Ejecuciones | 271, todas correctas, sobre `65225e7`: la corrió Codex y la repitió Claude Code por separado, con el mismo resultado | sección nueva |
-| Mutación | 73 de 77 (94,8 %) sobre `65225e7`; la primera medición, 51 de 77 (66,2 %) sobre `fe04b1f`, se cita como punto de partida | p. 7, sección nueva |
+| Casos de prueba | 148 (ciento cuarenta y ocho), CP-01 a CP-148 | pp. 6, 7, 106, 107, 108, 109, sección nueva |
+| Ejecuciones | 276, todas correctas, sobre `dba674c`, el código que se entrega: la corrió Codex y la repitió Claude Code por separado, con el mismo resultado | sección nueva |
+| Mutación | 73 de 77 (94,8 %) sobre `65225e7`, el código congelado para medirla; la primera medición, 51 de 77 (66,2 %) sobre `fe04b1f`, se cita como punto de partida | p. 7, sección nueva |
+| Código que se entrega | Commit `dba674c` (completo: `dba674c5d3e870003f3b194de2ee905c6d83da69`) | p. 1, sección nueva |
 | Casos de uso especificados | 13 (trece), CU-01 a CU-13 | pp. 7, 106, 108 |
 
 ---
@@ -110,6 +127,15 @@ encabezados distintos, en cada una) y se comprueba en tres páginas al azar.
 
 *Razón:* el historial de revisión de la p. 6 cierra con la versión 2.6; si el encabezado sigue en
 2.4, el documento se contradice en cada página.
+
+**Esto tampoco espera a JC: el commit del código, en la carátula.** Agregar una línea al pie de la
+carátula, debajo de «Rosario, Argentina» y del año, con la misma letra que el resto de la
+carátula y un punto más chica si no entra:
+
+> Código entregado: commit dba674c5d3e870003f3b194de2ee905c6d83da69
+
+*Razón:* la sección «Metodología de verificación» distingue el código medido (`65225e7`) del que
+se entrega (`dba674c`). La carátula fija cuál es el que se entrega.
 
 ## Páginas 2 a 5 — Índice
 
@@ -129,7 +155,7 @@ cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega. Las seis prim
 | «fecha» | 2.5 | Riggio, Juan Cruz | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-61. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, cuatro de ellos corregidos con prueba de regresión, y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
-| «fecha» | 2.6 | Riggio, Juan Cruz | Respecto de la 2.5: arquitectura e implementación descriptas sobre el prototipo, con los veinticinco diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-13; anexo de estimación de costos. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 41 vigentes, de RN-01 a RN-42; RN-27 sigue dada de baja (versión 2.0) y su número no se reutiliza, y las reglas nuevas se numeraron a continuación: RN-38 y RN-39 en la versión 2.5, y RN-40, RN-41 y RN-42 con la revisión de seguridad. Matriz de trazabilidad con los casos CP-62 a CP-145 y cobertura de 39 de las 41 reglas; brecha G-07 resuelta. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura y prueba de mutación de las defensas de seguridad. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
+| «fecha» | 2.6 | Riggio, Juan Cruz | Respecto de la 2.5: arquitectura e implementación descriptas sobre el prototipo, con los veinticinco diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-13; anexo de estimación de costos. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 41 vigentes, de RN-01 a RN-42; RN-27 sigue dada de baja (versión 2.0) y su número no se reutiliza, y las reglas nuevas se numeraron a continuación: RN-38 y RN-39 en la versión 2.5, y RN-40, RN-41 y RN-42 con la revisión de seguridad. Matriz de trazabilidad con los casos CP-62 a CP-148 y cobertura de 39 de las 41 reglas; brecha G-07 resuelta. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura y prueba de mutación de las defensas de seguridad. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 ## Página 7 — Resumen ejecutivo, «Qué contiene este informe»
 
@@ -138,7 +164,7 @@ cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega. Las seis prim
 | Reglas de negocio | «Treinta y seis reglas vigentes que fijan las condiciones bajo las cuales opera el sistema» | «Cuarenta y una reglas vigentes que fijan las condiciones bajo las cuales opera el sistema» |
 | Diseño | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, especificaciones de ocho casos de uso y modelo de dominio completo.» | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, arquitectura en cuatro capas, especificaciones de trece casos de uso y diagramas de dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación.» |
 | Validación | «Informe de pruebas de usabilidad con cinco participantes y anexo A02 con cinco reportes de gestión.» | «Informe de pruebas de usabilidad (simulado, medido sobre la aplicación) con seis perfiles, y anexo A02 con cinco reportes de gestión.» |
-| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, ciento cuarenta y cinco casos de prueba automatizados y hallazgos.» |
+| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, ciento cuarenta y ocho casos de prueba automatizados y hallazgos.» |
 
 En «Resultados principales», **reemplazar** el punto «Usabilidad por encima del promedio»:
 
@@ -157,12 +183,12 @@ En «Resultados principales», **reemplazar** el punto «Usabilidad por encima d
 **Mismo lugar, agregar un cuarto punto** al final de «Resultados principales», con la misma
 viñeta:
 
-> Pruebas que detectan defectos, medidas. Ciento cuarenta y cinco casos de prueba automatizados
+> Pruebas que detectan defectos, medidas. Ciento cuarenta y ocho casos de prueba automatizados
 > verifican treinta y nueve de las cuarenta y una reglas de negocio. Para comprobar que esas
 > pruebas detectarían un defecto real, se quitó a propósito cada una de las defensas de
 > seguridad del sistema, una por vez: la primera medición mostró cuáles no advertía la batería,
-> se escribieron las pruebas que faltaban y la medición final, sobre el código congelado para
-> la entrega, detectó setenta y tres de las setenta y siete que una prueba puede detectar.
+> se escribieron las pruebas que faltaban y la medición final, sobre el código congelado,
+> detectó setenta y tres de las setenta y siete que una prueba puede detectar.
 
 *Razón:* coherencia. El resumen ejecutivo anuncia los resultados principales y la versión 2.6
 agrega la sección «Metodología de verificación»; sin este punto, el resumen no la menciona.
@@ -622,15 +648,26 @@ Estas correcciones se pegan ya, en la copia de la p. 45:
 
 *Razón:* JC eligió la opción A de Codex para Historial (dos listas apiladas: compras arriba,
 entradas del pedido debajo) y para Reportes (filtros arriba en dos filas, tabla a todo el ancho,
-lectura y acciones al pie). **Cuando Codex las publique, JC confirma que las pantallas quedaron
-así**; hoy son la propuesta, no el código.
+lectura y acciones al pie). Codex las construyó así en `eeaf8a5` (16/11); falta que JC confirme,
+mirando las dos pantallas, que el texto las describe.
 
 ## Páginas 47 a 49 — Guion de interfaz: las tres capturas
 
-**⏸ NO PEGAR TODAVÍA: no toques las tres imágenes.** Muestran la interfaz de antes
-del rediseño (la de la p. 47 dice «Show Password»). Van a reemplazarse por capturas de la interfaz
-congelada: p. 47, inicio de sesión (`frmInicio`); p. 48, crear cuenta (`frmCrearUsuario`); p. 49,
-menú del cliente (`frmMenuCliente`). Cuando estén, esta entrada dice el archivo de cada una.
+**Reemplazar las tres imágenes.** Las de hoy muestran la interfaz de antes del rediseño (la de
+la p. 47 dice «Show Password»). Las nuevas están en
+`Pruebas/Guion-Interfaz-ULTIMO-2026-11-16/100/`. Van a **16 cm de ancho**, con la proporción
+bloqueada (clic derecho › *Tamaño y posición* › «Bloquear relación de aspecto»):
+
+| Página | Pantalla | Archivo | Letra más chica, impresa |
+|---|---|---|---|
+| 47 | Inicio de sesión | `p47-inicio.png` | 13,4 pt |
+| 48 | Crear cuenta | `p48-registro.png` | 12,2 pt |
+| 49 | Menú del cliente | `p49-menu-cliente.png` | 14,9 pt |
+
+No uses las de la carpeta `150/`: son las mismas pantallas a otra escala, para comprobación.
+
+*Razón:* capturas de Codex, de las pantallas completas del código que se entrega, sin ventanas
+encima. A 16 cm ninguna letra queda por debajo de 12 pt.
 
 **P. 47, mismo lugar, ya:** en la lista del Menú Inicial, **dice** «Botones para iniciar sesión,
 cambiar la contraseña y crear una cuenta nueva.» **Poner:** «El botón para iniciar sesión, que
@@ -868,11 +905,14 @@ Texto:
 
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 8\. Modelo de dominio actualizado >> ^\*\*Texto para el documento :: ^\*\*Justificación
 
-**⏸ NO PEGAR TODAVÍA (depende del script `07-indice-unico-seguros.sql`):** cuando Codex lo publique, se agrega al final
-del texto anterior: «Una entrada tiene a lo sumo un seguro. La base de datos lo garantiza con un
-índice único sobre la entrada asegurada, de modo que un mismo cliente no puede recibir dos cargos
-de seguro por la misma entrada (RN-28).» Y se regeneran la vista 3 de clases y el
-entidad-relación de compras con la multiplicidad 0..1 del seguro.
+**Agregar al final del texto anterior:**
+
+> Una entrada tiene a lo sumo un seguro. La base de datos lo garantiza con un índice único sobre
+> la entrada asegurada, de modo que un mismo cliente no puede recibir dos cargos de seguro por la
+> misma entrada (RN-28).
+
+*Razón:* matriz de coherencia, comprobaciones 4 y 6. El script `07-indice-unico-seguros.sql`
+agrega el índice; la vista 3 de clases y el entidad-relación de compras ya muestran 0..1.
 
 **Diagrama de actividad:** el título «Diagrama de Actividad (flujo del Cliente)» pasa a
 «Diagrama de actividad (proceso de venta)». Reemplazar la figura (que sigue en la p. 89) por
@@ -904,26 +944,20 @@ Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el t
 >   desaparecieron «Campo vacíos» e «ingrese usuario»;
 > - U-11: «Show Password» pasó a «Mostrar contraseña»;
 > - U-13: se quitó el botón «Modificar» que había quedado en el inicio de sesión;
-> - U-09, en parte: el recorrido cognitivo registró en el paso 8 que el usuario no entendía en qué
->   punto de la compra estaba (pregunta 4). La compra muestra ahora un indicador de pasos y
->   termina en una pantalla de éxito con el número de pedido y la carpeta de los tickets. Al
->   cerrarla, el usuario sigue volviendo a un armado vacío.
+> - U-09: el recorrido cognitivo registró en el paso 8 que el usuario no entendía en qué punto de
+>   la compra estaba (pregunta 4). La compra muestra ahora un indicador de pasos, termina en una
+>   pantalla de éxito con el número de pedido y la carpeta de los tickets, y al cerrarla vuelve al
+>   listado de eventos.
 >
 > Siguen abiertos U-06, U-07, U-08, U-10 y U-12. La interfaz rediseñada no se volvió a evaluar con
 > las herramientas de este estudio; hacerlo queda como trabajo futuro.
-
-**⏸ NO PEGAR TODAVÍA, solo el texto alternativo de U-09** (encargado a Codex el 17/11): cuando lo cierre, el punto de U-09
-**pasa a**: «U-09: el recorrido cognitivo registró en el paso 8 que el usuario no entendía en qué
-punto de la compra estaba (pregunta 4). La compra muestra ahora un indicador de pasos, termina en
-una pantalla de éxito con el número de pedido y la carpeta de los tickets, y al cerrarla vuelve al
-listado de eventos.» En «Siguen abiertos» no cambia nada, y en el trabajo futuro (p. 111, punto 1)
-se borra «, y el regreso a un armado vacío de U-09». Mientras no lo cierre, va el texto de arriba.
 
 *Razón:* decisión de JC del 16/11: se declara, no se vuelve a medir. Cada corrección la verificó
 Claude Code en el código, leyéndolo: U-02 en `frmInicio` (`AcceptButton` y orden de tabulación,
 `027527f`); U-03 en `Visual/Avisos.cs` (`36a0d80`) y en los títulos de los avisos; U-11 en
 `frmInicio`, `frmCrearUsuario` y `frmCambiarContraseña` (`7fc5558`); U-13 en `frmInicio`; el
-indicador (`96fd6ec`) y la pantalla de éxito (`027527f`). Abiertos, también por lectura: U-06 (el
+indicador (`96fd6ec`) y la pantalla de éxito (`027527f`); la vuelta al listado de U-09, en
+`FrmCompraCliente` (`9f3a2ed`), con su prueba de regresión, CP-148. Abiertos, también por lectura: U-06 (el
 código de seguridad se borra sin aviso), U-07 («Cancelar pago» sin «No» por defecto), U-08 (el
 filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en Contraseña) y U-12
 (ningún control tiene nombre accesible).
@@ -950,7 +984,7 @@ filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en
 **Por:**
 
 > Una grilla que cruce los seis objetivos con los trece requerimientos, las cuarenta y una
-> reglas, los trece casos de uso y los ciento cuarenta y cinco casos de prueba resulta ilegible en
+> reglas, los trece casos de uso y los ciento cuarenta y ocho casos de prueba resulta ilegible en
 > formato A4
 
 **Tabla «Nomenclatura de los ejes».** Reemplazar las filas de reglas y de casos de prueba, y en
@@ -959,7 +993,7 @@ la de casos de uso cambiar la cantidad:
 | Fila | Dice | Poner |
 |---|---|---|
 | Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 41 \| Reglas de negocio (RN-27 dada de baja)» |
-| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 145 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-145: Matriz de trazabilidad, catálogo de casos incorporados» |
+| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 148 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-148: Matriz de trazabilidad, catálogo de casos incorporados» |
 | Casos de uso | la cantidad «8» | «13» |
 
 ## Página 107 — Matriz principal
@@ -973,8 +1007,8 @@ la de casos de uso cambiar la cantidad:
 | RF-03 | OE-2 | Must | RN-09 | CU-01 | CP-16, CP-17, CP-18, CP-30, CP-81, CP-106 | — |
 | RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49, CP-54, CP-94 | H-03 |
 | RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61, CP-79, CP-81, CP-119, CP-122, CP-140 | H-04 |
-| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43, CP-52, CP-80, CP-122, CP-127, CP-129 | H-02 |
-| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123, CP-128, CP-131 a CP-136, CP-142, CP-145 | — |
+| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43, CP-52, CP-80, CP-122, CP-127, CP-129, CP-147, CP-148 | H-02 |
+| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123, CP-128, CP-131 a CP-136, CP-142, CP-145, CP-146 | — |
 | RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08, CP-09, CP-11, CP-42, CP-91, CP-92, CP-115, CP-138, CP-139 | H-01, H-05 |
 | RF-09 | — | Won't | — | — | — | — |
 | RF-10 | OE-6 ind. | Could | RN-10, RN-35, RN-36 | CU-07 | CP-24, CP-37, CP-83, CP-84, CP-117, CP-118, CP-125, CP-126, CP-137 | — |
@@ -1007,7 +1041,7 @@ El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debaj
 
 *Razón:* matriz de coherencia, comprobación 1 («Cada RF core tiene CU, robustez, secuencia y
 código»; se comprueba con una tabla RF → CU → diagramas → archivos). La matriz principal no
-llegaba a diagramas ni a archivos. Los archivos existen en el commit `ea9212a`.
+llegaba a diagramas ni a archivos. Los archivos existen en el commit que se entrega, `dba674c`.
 
 **Tabla «Trazabilidad inversa de los objetivos específicos», fila OE-4. Reemplazar** la
 evidencia «Informe de pruebas de usabilidad: SUS 74,5 y 80 % de satisfacción» **por** «Informe de
@@ -1041,7 +1075,7 @@ la de CP-01 a CP-61:
 
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^### Tabla «Cobertura de reglas de negocio por casos de prueba» :: ^\*\*Reemplazar\*\* el párrafo que sigue a la tabla
 
-**y agregar a continuación** estas filas (CP-62 a CP-145):
+**y agregar a continuación** estas filas (CP-62 a CP-148):
 
 @@ generado/cobertura.md :: ^\| CP-62 — :: ^FIN-COBERTURA
 
@@ -1053,7 +1087,7 @@ la de CP-01 a CP-61:
 
 **Por:**
 
-> Los ciento cuarenta y cinco casos verifican treinta y nueve reglas distintas sobre un total de
+> Los ciento cuarenta y ocho casos verifican treinta y nueve reglas distintas sobre un total de
 > cuarenta y una vigentes, lo que arroja una cobertura del 95,1 %. Son RN-01 a RN-06, RN-08 a
 > RN-26, RN-28 a RN-32 y RN-34 a RN-42. Todas las reglas que rechazan una operación tienen un
 > caso que provoca ese rechazo y comprueba que el sistema queda como estaba. Las dos restantes
@@ -1072,7 +1106,7 @@ filas de CP-11 a CP-61:
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^Va a continuación del párrafo anterior\. CP-01 a CP-10 :: ^### Tabla «Análisis de cobertura»
 
 **y, debajo, una segunda tabla** con el título «Casos de prueba incorporados en la versión 2.6
-(CP-62 a CP-145)»:
+(CP-62 a CP-148)»:
 
 @@ generado/tabla-casos.md :: ^\| Caso \| Condición :: ^FIN-TABLA
 
@@ -1100,7 +1134,10 @@ filas de CP-11 a CP-61:
 > verifica la ventana de prioridad de los suscriptores (RN-35).
 > CP-116, CP-119 y CP-120 verifican el rediseño visual de la interfaz; CP-117 y CP-118, la
 > consulta de la posición y el aviso de la lista de espera, y CP-121 y CP-122 completan las dos
-> reglas que solo se mostraban en pantalla (RN-26 y RN-28).
+> reglas que solo se mostraban en pantalla (RN-26 y RN-28). Los tres últimos cierran lo que
+> quedaba abierto al congelar el código: CP-146, el control de perfil del registro de ingreso que
+> la prueba de mutación encontró sin prueba; CP-147, el índice único que impide dos seguros
+> sobre una entrada, y CP-148, la regresión del hallazgo de usabilidad U-09.
 >
 > Se prefirió convertir las pruebas en casos automáticos porque una prueba repetible deja
 > evidencia en cada ejecución. Una verificación hecha a mano solo vale el día en que se hizo.
@@ -1119,13 +1156,15 @@ filas de CP-11 a CP-61:
 | Hallazgos con la acción implementada en el prototipo | 6 | 6 | — | 100 % |
 | Hallazgos con prueba de regresión asociada | 6 | 6 | — | 100 % |
 | Hallazgos del estudio v2.5 (U-01 a U-14) con acción de mejora | 14 | 14 | — | 100 % |
-| Hallazgos del estudio v2.5 corregidos, con prueba de regresión | 14 | 4 | 10 hallazgos | 28,6 % |
+| Hallazgos del estudio v2.5 corregidos, con prueba de regresión | 14 | 5 | 9 hallazgos | 35,7 % |
 
 **Debajo, agregar:**
 
 > Las filas de hallazgos H-01 a H-06 corresponden al estudio de la versión 2.4, cuyas
 > correcciones están hechas. Las dos últimas corresponden al estudio rehecho en la versión 2.5
-> (ver la brecha G-06).
+> (ver la brecha G-06). Los cinco con prueba de regresión son U-01, U-04, U-05, U-14 y U-09. El
+> rediseño de la versión 2.6 corrigió además U-02, U-03, U-11 y U-13, verificados en el código
+> pero sin una prueba propia, por eso no se cuentan en esa fila.
 
 **«Lectura del cuadro». Reemplazar:**
 
@@ -1157,19 +1196,19 @@ p. 108.*
 
 > El análisis identificó siete brechas. G-01 se resolvió a partir de este mismo análisis.
 > En la versión 2.5 se cerró G-03 y se resolvieron G-04 y G-05; en la 2.6, G-07. G-02 quedó resuelta en el
-> nivel de requerimientos y abierta en el de reglas. G-06 quedó resuelta en sus tres hallazgos
-> de mayor peso y en el que encontró la segunda medición, y abierta en el resto, con su plan.
+> nivel de requerimientos y abierta en el de reglas. G-06 quedó resuelta en nueve de sus catorce
+> hallazgos, entre ellos los tres de mayor peso, y abierta en los cinco restantes, con su plan.
 
 **Reemplazar la tabla completa:**
 
 | Nº | Brecha | Sev. | Estado | Acción |
 |---|---|---|---|---|
 | G-01 | Los casos de uso CU-02 (Gestionar eventos) y CU-06 (Gestionar suscripción) no contaban con un requerimiento funcional que los originara, pese a que las reglas RN-06, RN-07 y RN-11 por un lado, y RN-25, RN-26 y RN-37 por el otro, presuponen su existencia. | Alta | Resuelta | Se incorporaron los requerimientos RF-12 (Gestión de eventos) y RF-13 (Contratación de suscripciones) a la Definición de requerimientos, y se recalculó la priorización MoSCoW. |
-| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a CP-145. Los doce requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 95,1 % (39 de 41), con todas las reglas que rechazan operaciones; quedan dos reglas sin caso (RN-07 y RN-33). |
+| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a CP-148. Los doce requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 95,1 % (39 de 41), con todas las reglas que rechazan operaciones; quedan dos reglas sin caso (RN-07 y RN-33). |
 | G-03 | RF-09 (Recomendaciones personalizadas) no responde a ningún objetivo específico ni posee caso de uso asociado. | Media | Cerrada | Se reclasificó como Won't have en la Fase 8, según la regla de repriorización (W-07). |
 | G-04 | En la versión 2.4, ninguno de los seis hallazgos del informe de usabilidad tenía caso de prueba de regresión. | Media | Resuelta | Las seis acciones del plan de mejora están implementadas en el prototipo y cada hallazgo tiene su regresión automatizada: H-01 en CP-13, H-02 en CP-39, H-03 en CP-40, H-04 en CP-41, H-05 en CP-42 y H-06 en CP-19. |
 | G-05 | El documento no reflejaba tres reglas que el prototipo aplica: el tope de capacidad del local sobre la suma de sus sectores y la preventa exclusiva para suscriptores no estaban enunciadas, y la prioridad de los suscriptores en la lista de espera contradecía RN-35, que exigía orden estricto de inscripción. Era comportamiento implementado sin una regla documentada que lo respalde. | Alta | Resuelta | Se incorporaron RN-38 (RF-12 / CU-11) y RN-39 (RF-13 / CU-01), y se reescribió RN-35 en coherencia con RN-37. Las tres tienen sus casos de prueba: RN-38 en CP-60, RN-39 en CP-61 y RN-35 en CP-83 y CP-84. |
-| G-06 | El estudio de usabilidad de la versión 2.5, medido sobre la aplicación real, identificó trece hallazgos nuevos (U-01 a U-13), y la segunda medición uno más (U-14). Dos eran de severidad mayor: cerrar una pantalla con la X dejaba la aplicación en ejecución y sin ventanas, y nada indicaba dónde se escribe la cantidad de entradas. | Media | Parcialmente resuelta | Se corrigieron U-01, U-04 y U-05, cada uno con su prueba de regresión (CP-47 a CP-50), y se volvió a medir: los seis perfiles completan la tarea sin asistencia y la satisfacción buena pasa del 66,7 % al 100 %. La segunda medición encontró U-14, el encabezado de la cantidad cortado, que también se corrigió (CP-54). Quedan diez hallazgos menores (esfuerzo estimado: 12 horas), que pasan a trabajo futuro. |
+| G-06 | El estudio de usabilidad de la versión 2.5, medido sobre la aplicación real, identificó trece hallazgos nuevos (U-01 a U-13), y la segunda medición uno más (U-14). Dos eran de severidad mayor: cerrar una pantalla con la X dejaba la aplicación en ejecución y sin ventanas, y nada indicaba dónde se escribe la cantidad de entradas. | Media | Parcialmente resuelta | Se corrigieron U-01, U-04 y U-05, cada uno con su prueba de regresión (CP-47 a CP-50), y se volvió a medir: los seis perfiles completan la tarea sin asistencia y la satisfacción buena pasa del 66,7 % al 100 %. La segunda medición encontró U-14, el encabezado de la cantidad cortado, que también se corrigió (CP-54). En la versión 2.6, el rediseño de la interfaz corrigió U-02, U-03, U-11 y U-13, y U-09 con su prueba de regresión (CP-148). Quedan cinco hallazgos menores, U-06, U-07, U-08, U-10 y U-12 (esfuerzo estimado: 7 horas), que pasan a trabajo futuro. |
 | G-07 | La revisión de seguridad de la versión 2.5 encontró que RN-18 prometía un único ingreso por entrada que el prototipo no controlaba, que el cambio de contraseña no exigía la contraseña actual y que las operaciones de negocio no verificaban el perfil ni la identidad de quien las invoca. | Alta | Resuelta | Se implementó el control de ingreso con registro atómico de la primera lectura, restringido a los eventos de los locales del Administrador; el cambio de contraseña pasó a exigir la actual y a responder lo mismo exista o no la cuenta, y el negocio verifica la sesión en cada operación. Se incorporaron RN-40 a RN-42 y se completó RN-18, con los casos CP-91 a CP-115, CP-123 y CP-124. El registro atómico se demostró con diez lectores simultáneos sobre la misma entrada durante cien rondas: en cada una ingresó exactamente uno (CP-104). |
 
 **«Observación sobre G-03». Reemplazar** el párrafo completo **por:**
@@ -1274,7 +1313,7 @@ cifras, así que no cambia cuando se congelen los números.
 
 | Punto | Dice | Poner |
 |---|---|---|
-| 1 | «Ejecutar las sesiones de usabilidad con participantes reales y contrastar los resultados con la línea base establecida en este informe.» | «Evaluar la interfaz rediseñada con las mismas herramientas del estudio de usabilidad, para contrastar los resultados, y aplicar lo que queda abierto de su plan de mejora (U-06, U-07, U-08, U-10 y U-12, y el regreso a un armado vacío de U-09).» |
+| 1 | «Ejecutar las sesiones de usabilidad con participantes reales y contrastar los resultados con la línea base establecida en este informe.» | «Evaluar la interfaz rediseñada con las mismas herramientas del estudio de usabilidad, para contrastar los resultados, y aplicar lo que queda abierto de su plan de mejora (U-06, U-07, U-08, U-10 y U-12).» |
 | 2 | «Extender el conjunto de pruebas al flujo de compra completo, de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» | «Completar los casos de prueba de las dos reglas sin verificación (RN-07 y RN-33), de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» |
 | 4 | «Definir un caso de prueba de regresión por cada hallazgo de usabilidad antes de aplicar las correcciones de la Fase 6.» | «Mantener una prueba de regresión por cada hallazgo de las próximas rondas de usabilidad, como se hizo con H-01 a H-06.» |
 | 5 | «Resolver la duplicación de contenido detectada entre las secciones de requerimientos, minutas y prototipos del cuerpo del informe.» | **Borrar el punto** y renumerar los siguientes: la duplicación se resolvió en esta versión (pp. 39, 40, 42 y 43). |

@@ -4,16 +4,16 @@ Claude Code, 16/11/2026, a pedido de JC. Es texto para el documento entregable: 
 desde `docs/LISTA-PARA-MAXIMO.md`, entre el final de «Matriz de trazabilidad» (p. 109) y
 «Conclusiones» (p. 110).
 
-**Cifras definitivas** (17/11). Todas están medidas sobre el código congelado, `65225e7`. El código que se entregue puede ser posterior (Codex corrige M-22 y otras cuatro tareas): la cifra corresponde al commit medido y no se vuelve a medir (decisión de JC del 17/11).
+**Cifras definitivas.** La mutación se midió sobre el código congelado, `65225e7`. El código que se entrega es posterior, `dba674c` (`dba674c5d3e870003f3b194de2ee905c6d83da69`): Codex corrigió M-22 y otras cuatro tareas. La cifra de mutación corresponde al commit medido y no se vuelve a medir (decisión de JC del 17/11). La batería y la cobertura son las del código que se entrega.
 
 | Cifra en el texto | Valor | Fuente |
 |---|---|---|
-| Casos y ejecuciones | 145 casos, 271 ejecuciones, todas correctas | La corrió Codex y la repitió Claude Code en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-17nov/bateria.log`) |
+| Casos y ejecuciones | 148 casos, 276 ejecuciones, todas correctas, sobre `dba674c` | La corrió Codex y la repitió Claude Code en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-dba674c/bateria.log`). Sobre `65225e7` eran 145 y 271 |
 | Cobertura de reglas | 39 de 41 (95,1 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` |
 | Mutación, primera medición | 51 de 77 (66,2 %), sobre `fe04b1f` | `docs/INFORME-MUTACION-SEGURIDAD.md`, secciones 1 a 9 |
 | Mutación, medición final | **73 de 77 (94,8 %), sobre `65225e7`**; dos equivalentes descubiertas después, adentro (sin ellas, 97,3 %) | `docs/INFORME-MUTACION-SEGURIDAD.md`, sección 0 |
 
-El texto nombra el commit una sola vez, en el párrafo «Resultado».
+El texto nombra los dos commits: `65225e7` en el párrafo «Resultado» y otra vez, con `dba674c`, en el párrafo de las cuatro no detectadas.
 
 ---
 
@@ -35,9 +35,9 @@ corrida, con el mismo esquema y los mismos datos iniciales que se entregan, y nu
 desarrollo. Las pruebas de interfaz abren los formularios reales de la aplicación, los operan y
 leen lo que muestran.
 
-La batería tiene ciento cuarenta y cinco casos de prueba. Algunos se ejecutan varias veces con datos
+La batería tiene ciento cuarenta y ocho casos de prueba. Algunos se ejecutan varias veces con datos
 distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman doscientas
-setenta y una ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
+setenta y seis ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
 base, los resultados no dependen de lo que haya quedado de una corrida anterior.
 
 **Cobertura de las reglas de negocio**
@@ -101,7 +101,7 @@ y la batería volvió a dar el mismo resultado que antes de empezar.
 *Dos mediciones, sobre dos versiones del código.* La mutación se midió dos veces. La primera,
 sobre una versión intermedia, mostró qué defensas no tenían una prueba capaz de notar su falta.
 Con ese resultado se escribieron las pruebas que faltaban, y la segunda medición se hizo sobre el
-código congelado para la entrega. Las ochenta y tres mutaciones son las mismas en las dos. Entre una versión
+código congelado para medirla. Las ochenta y tres mutaciones son las mismas en las dos. Entre una versión
 y otra, el código cambió en algunos de los lugares que esas mutaciones tocan: setenta y nueve se
 aplicaron sin ningún cambio, y en cuatro se ajustó solo la forma de ubicar la línea por modificar,
 porque había pasado a otro método o aparecía dos veces. En las cuatro se rompe la misma defensa
@@ -150,21 +150,16 @@ restaurándola, con lo que debía volver a pasar.
 En la medición final quedaron cuatro mutaciones sin detectar. Dos son las equivalentes descubiertas
 después de ejecutar. La tercera quita la comparación de contraseñas en tiempo constante: una
 prueba funcional no puede observar cuánto tarda una comparación, y esa defensa se verificó leyendo
-el código. La cuarta quita el control de perfil al registrar el ingreso de una entrada: otra
-verificación rechaza igual al cliente que lo intenta, pero sin sesión la operación termina en un
-error no controlado, y ninguna prueba lo verifica. Es la única defensa que queda con una prueba
-por escribir.
-
-**⏸ NO PEGAR TODAVÍA: depende de que Codex corrija M-22.** Cuando esté, las dos últimas oraciones del párrafo
-anterior («…pero sin sesión la operación termina en un error no controlado, y ninguna prueba lo
-verifica. Es la única defensa que queda con una prueba por escribir.») se reemplazan por:
-
-> …pero sin sesión la operación terminaba en un error no controlado, en lugar del rechazo que
-> establece la regla. Ninguna prueba lo veía: lo encontró la prueba de mutación, y se corrigió
-> después de la medición, junto con una prueba que lo verifica. Por eso la cifra de setenta y tres
-> de setenta y siete corresponde al commit medido, `65225e7`, y no a la versión final del código.
-> Es también el mejor argumento a favor del método: la mutación encontró un defecto real que
-> ninguna de las pruebas existentes advertía.
+el código. La cuarta quita el control de perfil al registrar el ingreso de una entrada, y es un caso como el
+que se describió en «El límite de la cobertura». La prueba de ese registro aceptaba cualquier
+rechazo: sin el control, el sistema igual rechazaba al cliente, pero por otra regla, la que impide
+controlar el ingreso a eventos ajenos, y sin sesión la operación terminaba en un error no
+controlado. Con el control en su lugar el rechazo era el correcto, pero ninguna prueba lo exigía.
+Lo encontró la prueba de mutación, y se corrigió después de la medición: el rechazo pasó a ser un
+resultado que nombra su regla, y un caso nuevo lo exige, con un cliente y sin sesión, y falla si el
+control se quita. Por eso la cifra de setenta y tres de setenta y siete corresponde al commit
+medido, `65225e7`, y no a la versión que se entrega, `dba674c`. Es también el mejor argumento a
+favor del método: la mutación encontró un hueco que ninguna de las pruebas existentes advertía.
 
 *Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
 entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos

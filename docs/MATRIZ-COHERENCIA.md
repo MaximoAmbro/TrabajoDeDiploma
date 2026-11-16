@@ -14,6 +14,40 @@ diagramas de `docs/diagramas/fuentes/`, el esquema `BaseDatos/01-esquema.sql` y 
 commit `ea9212a`. Todo por lectura, con scripts que solo leen; no se corrió la batería ni se tocó
 ninguna base.
 
+## Pasada final, sobre `dba674c` (el código que se entrega)
+
+Pedida por JC después del cierre de Codex, para saber si alguna de las piezas nuevas rompió algo
+que ya estaba bien. Se corrió sobre la lista regenerada con todo aplicado: script 07, las tres
+capturas del guion, U-09, M-22 y las cifras de 148 casos y 276 ejecuciones. Se usaron los
+diagramas de `docs/diagramas/fuentes/`, `BaseDatos/01-esquema.sql` y `07-indice-unico-seguros.sql`,
+y el código de `dba674c`.
+
+**Pasan 9 de 10, las nueve sin condiciones. La 10 sigue bloqueada, no fallada.**
+
+| # | Comprobación | Resultado | Cómo se volvió a comprobar |
+|---|---|---|---|
+| 1 | RF core → CU, robustez, secuencia, código | Sí | Los doce archivos de la tabla del core existen en `dba674c`. La tabla ahora nombra ese commit |
+| 2 | Estados idénticos en las 4 listas | Sí | El cierre no tocó `EstadoEntrada.cs`, `05-check-estado-entradas.sql` ni `estados-entrada.puml` |
+| 3 | Clases del dominio en el diagrama de clases | Sí | El párrafo de equivalencias está en la lista generada |
+| 4 | Misma multiplicidad en dominio, clases y DER | **Sí, ahora sin condición** | Entrada — Seguro: 0..1 en el conceptual, en el dominio actualizado, en la vista 3 de clases y en el entidad-relación (los dos últimos, regenerados). Compra y sector: holgura explicada en el texto |
+| 5 | Atributo de FK y línea a la vez | Sí | `Seguro` no tiene atributo de la entrada; la línea lleva el rol `IdEntrada` |
+| 6 | Toda 1:1 con UNIQUE en la base | **Sí, ahora sin condición** | Entradas — Seguros tiene `UX_Seguros_ID_Entrada` (`01-esquema.sql` y script 07). Usuario — Cliente y Usuario — Propietario son únicas por tener la PK como FK |
+| 7 | Composiciones con cascada o baja lógica | Sí (no hay) | Ninguna composición en las fuentes |
+| 8 | Métodos de la secuencia en clases y código | Sí | Las 17 operaciones distintas de las tres secuencias existen en el código y en algún diagrama de clases. El cambio de U-09 no las toca: la secuencia termina al abrir la confirmación |
+| 9 | Nombres consistentes | Sí, salvo glosario | Sin cambios: el documento no tiene glosario |
+| 10 | Devolución del Parcial 1 | **Bloqueada (no fallada)** | No apareció la devolución |
+
+**Lo que se buscó además, porque el cierre cambió comportamiento:**
+- **U-09:** ningún texto de la lista dice que la compra vuelva a un armado vacío. Los diagramas de
+  actividad y de secuencia no dibujan qué pasa después de la confirmación, así que no contradicen
+  la vuelta al listado.
+- **M-22:** la metodología y el informe describían el error no controlado como si fuera del código
+  en uso; era de la mutación. Corregido en los dos (ver `docs/INFORME-MUTACION-SEGURIDAD.md`,
+  «M-22»).
+- **G-06** (p. 109) seguía diciendo «quedan diez hallazgos menores», contra la declaración de
+  usabilidad de la versión 2.6, que deja cinco abiertos. Corregido: cinco, 7 horas estimadas
+  (1,75 puntos de la tabla del plan de mejora del informe de usabilidad).
+
 ## De dónde salió la matriz
 
 No estaba en el repositorio. Apareció en el disco, fuera de él, buscando por contenido:
@@ -43,7 +77,7 @@ No estaba en el repositorio. Apareció en el disco, fuera de él, buscando por c
 > | Los nombres (clases, atributos, tablas) son consistentes en todo el documento | Glosario |
 > | Lo que marcó la devolución del Parcial 1 está corregido y anotado en la hoja de seguimiento | Lista de observaciones vs. correcciones |
 
-## Resultado
+## Resultado de la primera corrida (16 y 17/11, sobre `ea9212a`)
 
 **Pasan 9 de 10** (decisión de JC del 17/11 sobre M-1): siete sin condiciones, la 4 y la 6 cuando
 entre el script 07. **La 10 está bloqueada, no fallada:** falta el material para comprobarla, y
@@ -117,10 +151,9 @@ Coinciden en todas las relaciones salvo tres, las tres de la entrada:
   actualizado lo dice como **una holgura del esquema cuya garantía está en el código**.
 - **Dos seguros para una misma entrada: se arregla.** No es una holgura sino un defecto: un
   cliente podría quedar con dos cargos sobre una entrada, y toca RN-28. Codex agrega el índice
-  único (script `07`) **después de la mutación final**. El texto que se agrega cuando entre ya
-  está en la lista, p. 88, marcado «⏸ ESPERA EL SCRIPT 07»; con él se regeneran la vista 3 de
-  clases y el entidad-relación de compras con 0..1. El script 07 se suma también a los scripts
-  de base del principio de la lista.
+  único (script `07`) **después de la mutación final**. **Hecho en `ce4efdc`:** la oración de la
+  p. 88 quedó sin marca, la vista 3 de clases y el entidad-relación de compras se regeneraron con
+  0..1, y el script 07 está en los scripts de base del principio de la lista.
 
 ### 5. Clave foránea como atributo y como línea
 
@@ -159,8 +192,7 @@ aparezca, se corre.
 
 ## Encontrado de paso, fuera de la matriz
 
-**Las tres capturas del guion de interfaz (pp. 47 a 49) son de antes del rediseño.** La de la
-p. 47 todavía dice «Show Password». Quedaron en la lista como «esperando figura nueva», con la
-pantalla que va en cada una, y se corrigió el texto del Menú Inicial (Enter y los dos enlaces).
-Para Codex: sumarlas a las capturas del congelamiento (`frmInicio`, `frmCrearUsuario`,
-`frmMenuCliente`).
+**Las tres capturas del guion de interfaz (pp. 47 a 49) eran de antes del rediseño.** La de la
+p. 47 todavía decía «Show Password». Se corrigió el texto del Menú Inicial (Enter y los dos
+enlaces), y Codex hizo las capturas nuevas en el cierre: están en la lista, a 16 cm, con la letra
+más chica entre 12,2 y 14,9 pt.

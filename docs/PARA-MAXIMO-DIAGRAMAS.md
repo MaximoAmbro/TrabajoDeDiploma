@@ -181,7 +181,7 @@ conceptual» de la misma página no se toca en esta entrega.**
 | 3 | Entrada → Compra | Asociación | 0..* / 0..1 | → Compra | `Entrada.IdCompra : int?` |
 | 3 | Entrada → Usuario | Asociación | 0..* / 1 | → Usuario | `Entrada.IdUsuario` |
 | 3 | Entrada → Cliente | Asociación | 0..* / 0..1 | → Cliente | `Entrada.Cliente` |
-| 3 | Seguro → Entrada | Asociación | 0..* / 1 | → Entrada | `Seguro.IdEntrada` |
+| 3 | Seguro → Entrada | Asociación | 0..1 / 1 | → Entrada | `Seguro.IdEntrada`; a lo sumo uno por entrada por el índice único `UX_Seguros_ID_Entrada` (script 07) |
 
 Las enumeraciones `NivelFidelidad`, `EstadoCompra`, `EstadoPago` y `EstadoEntrada` son el tipo de
 un atributo. Por eso no llevan línea: llevarla repetiría el atributo, que es la regla 1.
@@ -433,7 +433,7 @@ página siguiente.
 | Sectores — Entradas | 0..1 : 0..* | `FK_Entradas_Sectores` | admite NULL |
 | Compras — CompraServicios | 1 : 0..* | `CompraServicios.ID_Compra` | `NOT NULL` |
 | Servicios — CompraServicios | 1 : 0..* | `CompraServicios.ID_Servicio` | `NOT NULL` |
-| Entradas — Seguros | 1 : 0..* | `Seguros.ID_Entrada` | `NOT NULL` |
+| Entradas — Seguros | 1 : 0..1 | `Seguros.ID_Entrada` | `NOT NULL`, índice único `UX_Seguros_ID_Entrada` (script 07) |
 
 `Parametros` no tiene relaciones: guarda los valores de las reglas por clave.
 

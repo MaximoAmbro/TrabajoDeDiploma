@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 145 casos, que suman **271 ejecuciones**, las 271 correctas sobre el código congelado `65225e7`. **Verificado por dos agentes, por separado:** la corrida de Codex (`TestResults/Cola16/final.log`) y la de Claude Code en el árbol principal, que compiló y corrió la batería completa con `tools/Proyecto.ps1 -Accion Probar` (`TestResults/Claude-17nov/bateria.log`: 271 correctas, 0 fallidas, 145 casos distintos).
-CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-145 se
-agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-145» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 148 casos, que suman **276 ejecuciones**, las 276 correctas sobre el código que se entrega, `dba674c` (`dba674c5d3e870003f3b194de2ee905c6d83da69`). **Verificado por dos agentes, por separado:** la corrida de Codex (`Pruebas/EVIDENCIA-CIERRE-DEFINITIVO-2026-11-16/bateria-final.trx`) y la de Claude Code en el árbol principal, que compiló y corrió la batería completa con `tools/Proyecto.ps1 -Accion Probar` (`TestResults/Claude-dba674c/bateria.log`: 276 correctas, 0 fallidas, 148 casos distintos). Sobre el código congelado de la medición de mutación, `65225e7`, eran 145 casos y 271 ejecuciones, también verificados por los dos.
+CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-148 se
+agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-148» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -138,9 +138,9 @@ documentado, no todas sus variantes: CP-56 prueba eliminar el último sector, no
 sectores; CP-60 prueba agregar un sector, no modificarlo. En la matriz, RN-05 está en la fila
 de RF-02 y RN-39 en la de RF-13: por eso CP-55 y CP-61 llevan dos requerimientos.
 
-## Casos CP-62 a CP-145
+## Casos CP-62 a CP-148
 
-Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11. Salen del comentario `// CP-xx — RF, RN` y del nombre
+Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11; CP-146 a CP-148, en el cierre de Codex (`dba674c`). Salen del comentario `// CP-xx — RF, RN` y del nombre
 visible de cada prueba en `Pruebas/`, leídos uno por uno. **Ninguno se volvió a correr para
 este registro:** el resultado es el de la última batería de Codex
 (`Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-12-T47-T48.md`).
@@ -164,24 +164,24 @@ escritorio abierta.
 | 6 | CP-115, CP-118 y CP-123 |
 | 4 | CP-113 y CP-117 |
 | 3 | CP-72, CP-81, CP-85, CP-114 y CP-124 |
-| 2 | CP-66, CP-68, CP-69, CP-70, CP-71, CP-73, CP-74, CP-75, CP-77, CP-79, CP-80, CP-83, CP-89, CP-105, CP-111, CP-119 y CP-120 |
+| 2 | CP-66, CP-68, CP-69, CP-70, CP-71, CP-73, CP-74, CP-75, CP-77, CP-79, CP-80, CP-83, CP-89, CP-105, CP-111, CP-119, CP-120, CP-146 y CP-147 |
 | 1 | El resto |
 
-CP-62 a CP-145 suman **198 ejecuciones**. Con las 73 de CP-01 a CP-61, la batería da **271**.
+CP-62 a CP-148 suman **203 ejecuciones**. Con las 73 de CP-01 a CP-61, la batería da **276**.
+En el cierre de Codex (`dba674c`) se suman dos de CP-146, dos de CP-147 y una de CP-148 a las 271
+de `65225e7`; la limpieza de las ocho filas de CP-125 no agregó ninguna.
 Contadas en la salida de la segunda corrida de Codex del 16/11 (`TestResults/Cola16/final.log`):
 271 líneas «Correctas». Respecto de la primera corrida del 16/11 (243) se suman las 8 de CP-125 y
 una de cada caso entre CP-126 y CP-145.
 
-**Para Codex:** las ocho filas de CP-125 salen en la corrida como `CP125_Ventana ("reembolso",False,False)`
-y no con su `DisplayName`, y dos de esos nombres tienen la tilde rota en el archivo fuente
-(«despu?s», «inscripci?n»). El caso corre y pasa; falta el ID visible que pide la definición de
-terminado.
+**CP-125, resuelto por Codex en el cierre:** las ocho filas muestran su ID y su descripción en la
+corrida, y las tildes de «después» e «inscripción» están corregidas.
 
 **Ningún caso falla en la segunda corrida del 16/11: 271 de 271.** Antes, en la primera, 243 de 243. Los tres que fallaban el 14/11 (la fila
 de 150 % de CP-69, CP-76 y la fila del propietario de CP-85, todos de aspecto a escala 150 %)
 pasan desde el rediseño de pantallas de Codex (`96fd6ec` y `027527f`). Claude Code repitió la
 batería en el árbol principal sobre `65225e7`, después del congelamiento: **271 de 271**, el mismo
-resultado que Codex.
+resultado que Codex. Sobre `dba674c`, el código que se entrega, los dos dieron **276 de 276**.
 
 CP-81, que fallaba en la batería del 12/11, pasa desde `2af267a` (Codex corrigió la preventa).
 
@@ -232,7 +232,7 @@ sección 0).
 | CP-96 | PruebasSeguridad | Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | Rechazado con el mensaje genérico «Mail o contraseña actual incorrectos.», sin decir que está bloqueada; al vencer el bloqueo, la anterior sigue sirviendo | RF-02 | RN-04 | SEG-1, K-8 |
 | CP-97 | PruebasSeguridad | Cambiar la contraseña con un correo inexistente y con la actual incorrecta | Las dos respuestas son iguales: misma regla y mismo mensaje | RF-02 | RN-40 | SEG-1 |
 | CP-98 | PruebasSeguridad | Con la sesión del Administrador, cambiar la contraseña de un cliente; abrir la pantalla | La anterior deja de servir y la nueva sirve; la sesión sigue siendo del Administrador. Pantalla: tres campos enmascarados y vacíos, todo dentro de la ventana | RF-02 | RN-40 | SEG-1 |
-| CP-99 | PruebasIngresos | Entrada confirmada, del evento elegido y dentro del horario; después, como cliente y sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». El cliente y la falta de sesión se rechazan | RF-07 | RN-18, RN-42 | SEG-2 |
+| CP-99 | PruebasIngresos | Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y una consulta del contador sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». Al cliente se le rechaza el registro por RN-34, sin alterar el ingreso; sin sesión, el contador se rechaza | RF-07 | RN-18, RN-34, RN-42 | SEG-2 |
 | CP-100 | PruebasIngresos | El mismo código escaneado dos veces | El segundo se rechaza como ya usado, con la fecha y hora del primero | RF-07 | RN-18 | SEG-2 |
 | CP-101 | PruebasIngresos | Entrada reembolsada | Se rechaza como reembolsada; el contador queda en 0 | RF-07 | RN-18, RN-29 | SEG-2 |
 | CP-102 | PruebasIngresos | Código con formato válido que no existe | Se rechaza como inexistente; el contador queda en 0 | RF-07 | RN-18 | SEG-2 |
@@ -279,6 +279,9 @@ sección 0).
 | CP-143 | PruebasGuardasMutacion | Ejecutar un reporte ya creado después de cerrar la sesión del administrador o como cliente | Rechazo RN-34 sin devolver el reporte | RF-11 | RN-34 | Mutación |
 | CP-144 | PruebasGuardasMutacion | Pedir el catálogo de eventos de un reporte como cliente, y sin sesión | Rechazo RN-34 sin devolver el catálogo | RF-11 | RN-34 | Mutación |
 | CP-145 | PruebasGuardasMutacion | Insertar dos entradas con el mismo código QR | El índice único de la base rechaza la segunda y la reversión deja intacta la primera | RF-07 | RN-18 | Mutación |
+| CP-146 | PruebasRechazoIngreso | Registrar el ingreso de una entrada como cliente y sin sesión (2 variantes) | El rechazo es un resultado, no una excepción: motivo «no autorizado», regla RN-34 y el mensaje «Esta operación es solo para el Administrador». La entrada sigue confirmada y sin ingreso, el contador da 0 y la sesión no cambia | RF-07 | RN-34 | M-22 |
+| CP-147 | PruebasSeguroUnico | Insertar en la base un segundo seguro para una entrada que ya tiene uno, y uno para otra entrada (2 variantes) | El índice único de la base rechaza el segundo seguro de la misma entrada; la otra entrada admite el suyo. La reversión deja todo como estaba | RF-06 | RN-28 | Índice de seguros |
+| CP-148 | CapturasUltimasUI | Comprar, pagar y cerrar la pantalla de confirmación (interfaz) | Vuelve al listado de eventos, sin mostrar un armado vacío, y la sesión sigue siendo del cliente | RF-06 | — | U-09 |
 
 **Notas de lectura:**
 - **CP-105 y CP-109 son mediciones:** no verifican una defensa. CP-105 sí afirma que un hash más
@@ -294,7 +297,9 @@ sección 0).
   tareas 1 a 21; la 12 refuerza CP-94 y no tiene caso nuevo). Codex informa que cada una falló con
   su defensa quitada y volvió a pasar al restaurarla. Esa comprobación es de Codex, una por una; la
   cifra que va al documento es la de la corrida final de mutación sobre el código congelado.
-- **El RF de CP-126 a CP-145 es el de la matriz del documento** (`docs/01-requerimientos.md`), no siempre el del comentario de la prueba: CP-127 dice RF-07 y es RF-06, CP-129 dice RF-08 y es RF-06, CP-133 dice RF-07/RF-08 y es RF-07, CP-138 dice RF-09 y es RF-08, CP-139 dice RF-09 y es RF-08, CP-140 dice RF-04 y es RF-05, CP-143 dice RF-13 y es RF-11, CP-144 dice RF-13 y es RF-11. Para Codex: corregir esos comentarios.
+- **El RF de CP-126 a CP-145 es el de la matriz del documento** (`docs/01-requerimientos.md`). Los comentarios de CP-127, CP-129, CP-133, CP-138, CP-139, CP-140, CP-143 y CP-144 decían otro; Codex los corrigió en el cierre, sin cambiar sus aserciones.
+- **CP-146 a CP-148 salen del cierre de Codex** (`Pruebas/RESULTADOS-CIERRE-DEFINITIVO-2026-11-16.md`). CP-146 cierra M-22: dio rojo con el código anterior, verde con el arreglo, rojo al quitar el control y verde al restaurarlo. CP-147 verifica el índice único de seguros del script `07-indice-unico-seguros.sql`. CP-148 es la regresión de U-09; no verifica una regla. **La cobertura no cambia: 39 de 41.** RN-34 y RN-28 ya tenían caso.
+- **CP-99 cambió en el cierre:** el cliente que intenta registrar recibía cualquier excepción y la prueba la aceptaba; ahora exige el resultado con RN-34. Por eso suma RN-34. Su llamada sin sesión es a `Contar`, no a `Registrar`.
 - **CP-125 prueba la ventana de prioridad de RN-35**, construida en `1525202`: columna
   `Sectores.CupoLiberadoEl` y parámetro `PRIORIDAD_ESPERA_MINUTOS` (15). RN-35 ya tenía caso
   (CP-117); la cobertura no cambia: 39 de 41.

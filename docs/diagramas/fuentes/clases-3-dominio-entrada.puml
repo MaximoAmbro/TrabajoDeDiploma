@@ -5,7 +5,8 @@ skinparam ranksep 32
 hide empty members
 ' Diagrama de clases, vista 3 de 6: la entrada y su seguro (proyecto Entidades).
 ' Fuente: Entidade/*.cs. EstadoEntrada tiene los mismos cuatro valores que el CHECK de
-' Entradas.Estado y que el diagrama de estados (regla R13).
+' Entradas.Estado y que el diagrama de estados (regla R13). Seguro 0..1 por entrada: índice
+' único UX_Seguros_ID_Entrada (BaseDatos/07-indice-unico-seguros.sql, RN-28).
 
 class Usuario <<ver vista 1>>
 class Cliente <<ver vista 1>>
@@ -38,6 +39,6 @@ Entrada "0..*" --> "0..1$_" Sector : IdSector
 Entrada "0..*" --> "0..1$_" Compra : IdCompra
 Entrada "0..*" --> "1$_" Usuario : IdUsuario
 Entrada "0..*" --> "0..1$_" Cliente : Cliente
-Seguro "0..*" --> "1$_" Entrada : IdEntrada
+Seguro "0..1" --> "1$_" Entrada : IdEntrada
 Seguro -[hidden]right- EstadoEntrada
 @enduml
