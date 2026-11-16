@@ -3,10 +3,115 @@
 Claude Code, 14/11/2026, a pedido de JC. Plan y pronóstico: `docs/PLAN-MUTACION-SEGURIDAD.md`.
 Encargo que sale de acá: `docs/ENCARGO-PRUEBAS-MUTACION.md`.
 
-> **Decisión de JC del 16/11: esta cifra no va al documento.** La mutación se vuelve a correr al
-> final, sobre el commit que se entrega, y esa corrida da la cifra del documento. Así, a la
-> pregunta «¿contra qué versión?» se responde con un commit exacto. Ya no se elige entre 51 y 53
-> (sección 7). El texto que explica el método está en `docs/METODOLOGIA-VERIFICACION.md`.
+> **La cifra del documento es la de la sección 0: 73 de 77 (94,8 %), sobre `65225e7`.** Las
+> secciones 1 a 9 son la primera medición, sobre `fe04b1f` (14/11): mostró qué faltaba y de ella
+> salió el encargo de pruebas. El texto que explica el método está en
+> `docs/METODOLOGIA-VERIFICACION.md`.
+
+## 0. Medición final, sobre el código congelado `65225e7` (16 y 17/11)
+
+### En una línea
+
+**De 77 defensas rotas a propósito, la batería detectó 73: 94,8 %**, sobre el commit
+`65225e7209c02018d9bb07bc7e9e45d2fed5959d`, el que se entrega. En la primera medición, sobre
+`fe04b1f`, había detectado 51 (66,2 %). La diferencia la hacen las pruebas que se escribieron
+para las defensas que sobrevivieron: CP-126 a CP-145 y la CP-104 reforzada.
+
+### Del 83 a la cifra: el denominador, paso a paso
+
+**La regla:** ninguna mutación sale del denominador después de ver que sobrevivió. Las únicas
+excluidas son las seis declaradas equivalentes **antes** de la primera corrida, el 14/11.
+
+| Paso | Mutaciones | Cuántas | Queda |
+|---|---|---|---|
+| Aplicadas | M-01 a M-90 de `docs/PLAN-MUTACION-SEGURIDAD.md` (la numeración tiene huecos) | 83 | 83 |
+| Equivalentes declaradas antes de correr, excluidas | M-25, M-33, M-35, M-41, M-56 y M-61 (una por una en la sección 4). Las seis sobrevivieron también ahora, como se esperaba | −6 | **77** |
+| Equivalente descubierta en la primera medición, **adentro a propósito** | M-43 (control de sesión de `Contratar`, sección 4). Sobrevivió de nuevo | 0 | 77 |
+| Equivalente descubierta en esta medición, **adentro a propósito** | M-53 (ver «Las cuatro no detectadas») | 0 | 77 |
+| Adaptadas al código nuevo | M-22, M-24, M-64 y M-78 (tabla siguiente). Rompen la misma defensa que la versión original | 0 | 77 |
+| Para revisar por interferencia del escritorio | Ninguna (ver «Cada detección, contra la prueba esperada») | 0 | 77 |
+| **Detectadas** | | **73** | **73 de 77 = 94,8 %** |
+
+Sin M-43 ni M-53 en el denominador, la cifra sería 73 de 75 (97,3 %). **No se informa esa:** las
+dos se reconocieron equivalentes después de ver que sobrevivían.
+
+### Las cuatro adaptadas: qué cambió y por qué es la misma mutación
+
+Las 83 se escribieron sobre `fe04b1f` como pares «texto original → texto mutado». Sobre
+`65225e7`, 79 aplicaron tal cual. En cuatro, el texto original ya no aparecía exactamente una
+vez, porque el código cambió entre las dos versiones. Se ajustó **solo el texto que ubica el
+cambio**; el cambio en sí es el mismo y rompe la misma defensa.
+
+| ID | Defensa | Qué cambió en el código | Cómo se ubica ahora |
+|---|---|---|---|
+| M-22 | Control de administrador al registrar un ingreso | `Registrar(codigo, idEvento)` pasó a delegar en un `Registrar` interno con reloj (`c9d3a1c`), que es donde está ahora el control | Se quita la misma línea `RequerirAdministrador()`, en el método interno |
+| M-24 | Control de administrador al listar los eventos de ingreso | `EventosDeHoy` pasó a `EventosConIngresoAbierto`, con un método interno con reloj (K-7) | Se quita la misma línea, en el método interno |
+| M-64 | El login responde lo mismo ante una cuenta bloqueada | El cambio de contraseña agregó un `catch` idéntico (K-8): el texto aparecía dos veces | Se incluye la línea siguiente para tomar el del login, el original |
+| M-78 | Las horas de ingreso se leen de `Parametros` | El listado de eventos de ingreso agregó la misma lectura (K-7): aparecía dos veces | Se incluye la línea anterior para tomar la del registro de ingreso, la original |
+
+Archivos: `D:\mutacion-salida-17nov\mutaciones17.py` (las 83, con las cuatro adaptadas) y
+`mutaciones_fe04b1f.py` (la versión original, sin cambios).
+
+### Cómo se corrió
+
+- **Código:** `65225e7`, en un árbol de trabajo aparte (`D:\mutacion-eventaura`, `git worktree`
+  fuera del repositorio, nunca commiteado). Antes de empezar, la batería en el árbol principal dio
+  271 de 271 (`TestResults/Claude-17nov/bateria.log`).
+- **Base propia:** `BddEventAura_Mutacion_Pruebas`. La cadena efectiva se verificó en los dos
+  archivos compilados, `Pruebas.dll.config` y `Visual.exe.config`: exactamente
+  `Data Source=.\SQLEXPRESS;Initial Catalog=BddEventAura_Mutacion_Pruebas;…`, la única de cada
+  uno. Además, `correr.ps1` la vuelve a verificar antes de cada corrida y aborta si no coincide.
+- **Una mutación por vez:** aplicar, compilar, correr la batería completa, anotar **qué pruebas**
+  fallan que no fallaban en el control, y restaurar el archivo byte por byte. Las tres de
+  concurrencia (M-81, M-84, M-85) se corrieron además 20 veces solo con CP-104.
+- **Tiempo:** 1 h 25 min las 83, más 12 min la repetición.
+
+### Un defecto de preparación, corregido sin elegir
+
+En la primera pasada, el control sin mutar dio 268 de 271. Fallaron CP-105 (dos filas) y CP-109
+con `DirectoryNotFoundException`: escriben su medición en `TestResults\`, y esa carpeta no existía
+en el árbol de trabajo (git no la lleva). Fue un error de preparación de Claude Code, no de la
+mutación ni del código. Como el driver no cuenta las pruebas que ya fallan en el control, ninguna
+mutación podía detectarse por CP-105 ni por CP-109.
+
+**Corrección:** se creó la carpeta y se volvió a correr el control (271 de 271) y **las once
+sobrevivientes, todas, sin elegir**, incluidas las seis equivalentes. Las 72 ya detectadas no
+pueden cambiar de estado, porque las detectaron otras pruebas que siguen fallando igual. Resultado:
+M-59 muere por la prueba que el plan esperaba (CP-105, fila de 600.000 iteraciones); las otras
+diez siguen sobreviviendo.
+
+### Cada detección, contra la prueba esperada
+
+Pedido de JC del 17/11: que un fallo ajeno a la mutación, por ejemplo una ventana que roba el
+foco, no cuente como detección.
+
+- **Las 73 detecciones caen en la prueba que el plan o el encargo esperaban** para esa defensa
+  (plan, columna «Prueba»; encargo, tarea n → el caso que escribió Codex para ella).
+- **Ninguna se apoya solo en una prueba de interfaz.** Las tres que aparecen entre las que fallan
+  (CP-51, CP-67 y CP-68) lo hacen siempre junto con la prueba esperada, y son pantallas del mismo
+  login o del mismo error que se mutó.
+- **Ninguna corrida tuvo un fallo de interfaz que no correspondiera.** No hay huella de
+  interferencia del escritorio.
+- **Concurrencia:** M-81, M-84 y M-85 mueren en la batería completa y en 20 de 20 repeticiones
+  de CP-104; el control sin mutar, 0 de 20.
+
+### Las cuatro no detectadas
+
+| ID | Defensa | Por qué sobrevive | Qué significa |
+|---|---|---|---|
+| M-22 | Control de administrador al registrar un ingreso | Desde K-7, `RequerirEventoPropio` rechaza igual a un cliente (por RN-42 en lugar de RN-34); sin sesión, la operación termina en un error no controlado (`NullReferenceException`) en vez del rechazo de la regla. CP-99, que el plan daba como detectora, hoy prueba solo el ingreso válido | **No es equivalente: es una prueba que falta.** Nadie verifica el rechazo RN-34 del registro de ingreso ni su comportamiento sin sesión. El plan la daba como «Muere»: es el único error del pronóstico en esta medición |
+| M-43 | Control de sesión al contratar una suscripción | Equivalente: la operación repite el control enseguida (sección 4) | Adentro a propósito, desde la primera medición |
+| M-53 | El cambio de contraseña no revela si la cuenta existe | Equivalente desde K-8: sin ocultar la cuenta, el fallo sigue siendo RN-04, y el `catch` que agregó K-8 en `CambiarContrasena` lo convierte en el mismo rechazo genérico | Adentro a propósito: se reconoció equivalente después de ver que sobrevivía |
+| M-63 | Comparación de contraseñas en tiempo constante | Una prueba funcional no ve el tiempo | Prevista; se verificó por lectura (tarea 22 del encargo) |
+
+### Cierre
+
+| Condición | Estado |
+|---|---|
+| Árbol de trabajo | Desregistrado (`git worktree remove --force` y `prune`; `git worktree list` muestra solo el árbol principal). **La carpeta `D:\mutacion-eventaura` quedó en el disco:** el borrado de una carpeta en la raíz de `D:` lo bloquea una protección de Claude Code. No tiene código mutado (solo los dos `App.config` apuntados a la base de mutación). La borra JC |
+| Base de mutación | `BddEventAura_Mutacion_Pruebas` borrada. La instancia tiene lo mismo que antes de empezar: `BddEventAura` y `BddEventAura_Pruebas`, con las mismas fechas de creación (`log/bases-antes.txt` y `log/bases-despues.txt`) |
+| Procesos | Quedaron vivos cinco procesos de compilación (MSBuild y VBCSCompiler) de estas corridas; son servidores ociosos que Windows cierra solos |
+| Salidas | `D:\mutacion-salida-17nov\` (fuera del repositorio): `resultados.json`, `resultados-repeticion.json`, `driver.log`, `repeticion.log`, los `.trx` de cada corrida y los dos listados de bases |
 
 ## 1. Resultado en una línea
 

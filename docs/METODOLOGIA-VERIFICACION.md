@@ -4,26 +4,16 @@ Claude Code, 16/11/2026, a pedido de JC. Es texto para el documento entregable: 
 desde `docs/LISTA-PARA-MAXIMO.md`, entre el final de «Matriz de trazabilidad» (p. 109) y
 «Conclusiones» (p. 110).
 
-**Provisorio en sus cifras.** La estructura y el razonamiento son definitivos. Las cifras se
-reemplazan cuando JC congele el código y se vuelva a correr la mutación sobre ese commit:
+**Cifras definitivas** (17/11). Todas están medidas sobre el código que se entrega, `65225e7`:
 
-| Cifra en el texto | Hoy | Fuente | Cuándo cambia |
-|---|---|---|---|
-| Casos y ejecuciones | 145 casos, 271 ejecuciones, todas correctas | **Definitiva.** Sobre `65225e7`: la corrió Codex y la repitió Claude Code en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-17nov/bateria.log`) | — |
-| Cobertura de reglas | 39 de 41 (95,1 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` | Solo si cambian las reglas o se agrega caso a RN-07 o RN-33 |
-| Mutación | 83 defensas, 6 equivalentes, 51 de 77 detectadas (66,2 %); la séptima equivalente adentro; sin ella, 67,1 % | `docs/INFORME-MUTACION-SEGURIDAD.md`, sobre `fe04b1f` | En la corrida final sobre el commit congelado |
-| Commit medido | «commit» | — | Lo pone JC al congelar |
+| Cifra en el texto | Valor | Fuente |
+|---|---|---|
+| Casos y ejecuciones | 145 casos, 271 ejecuciones, todas correctas | La corrió Codex y la repitió Claude Code en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-17nov/bateria.log`) |
+| Cobertura de reglas | 39 de 41 (95,1 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` |
+| Mutación, primera medición | 51 de 77 (66,2 %), sobre `fe04b1f` | `docs/INFORME-MUTACION-SEGURIDAD.md`, secciones 1 a 9 |
+| Mutación, medición final | **73 de 77 (94,8 %), sobre `65225e7`**; dos equivalentes descubiertas después, adentro (sin ellas, 97,3 %) | `docs/INFORME-MUTACION-SEGURIDAD.md`, sección 0 |
 
-**Al congelar, el párrafo «Resultado» cambia de forma, no solo de cifra.** Hoy informa la primera
-medición (`fe04b1f`), antes de las pruebas que encargó la mutación (CP-126 a CP-145, publicadas en
-`1525202`). La corrida final va a dar otra cifra, más alta. Entonces el párrafo informa las dos: la
-primera, que mostró qué faltaba (y de la que sale el pronóstico de las veintitrés), y la final,
-sobre el commit congelado, que es la que vale. Las equivalentes se tratan igual en las dos.
-
-Lo que no es cifra queda igual aunque cambien los números: qué es una mutación, el criterio de
-detección, el tratamiento de las equivalentes y qué significa que una defensa sobreviva. **Si en la
-corrida final la séptima equivalente deja de existir o aparece otra encontrada después de correr,
-el párrafo correspondiente se ajusta con el mismo criterio:** se deja adentro y se informa aparte.
+El texto nombra el commit una sola vez, en el párrafo «Resultado».
 
 ---
 
@@ -108,11 +98,23 @@ otra. Las tres mutaciones que afectan lecturas simultáneas, cuyo resultado pued
 ejecución y otra, se ejecutaron además veinte veces cada una. Al terminar se restauró el código
 y la batería volvió a dar el mismo resultado que antes de empezar.
 
-**⏸ NO PEGAR TODAVÍA el párrafo que sigue («Resultado»): depende de la medición final de mutación sobre `65225e7`. Saltealo y seguí con «Mutaciones equivalentes».**
+*Dos mediciones, sobre dos versiones del código.* La mutación se midió dos veces. La primera,
+sobre una versión intermedia, mostró qué defensas no tenían una prueba capaz de notar su falta.
+Con ese resultado se escribieron las pruebas que faltaban, y la segunda medición se hizo sobre el
+código que se entrega. Las ochenta y tres mutaciones son las mismas en las dos. Entre una versión
+y otra, el código cambió en algunos de los lugares que esas mutaciones tocan: setenta y nueve se
+aplicaron sin ningún cambio, y en cuatro se ajustó solo la forma de ubicar la línea por modificar,
+porque había pasado a otro método o aparecía dos veces. En las cuatro se rompe la misma defensa
+que en la primera medición. Por eso las dos mediciones son comparables: miden las mismas defensas,
+rotas de la misma manera.
 
-*Resultado.* De las setenta y siete mutaciones que se podían detectar, la batería detectó
-cincuenta y una: un 66,2 %, medido sobre el commit «commit». El pronóstico hecho por lectura acertó
-en todas las que se esperaba que sobrevivieran: las veintitrés sobrevivieron.
+*Resultado.* En la primera medición, la batería detectó cincuenta y una de las setenta y siete
+mutaciones que se podían detectar: un 66,2 %. El pronóstico hecho por lectura acertó en todas las
+que se esperaba que sobrevivieran: las veintitrés sobrevivieron. En la medición final, sobre el
+código que se entrega (commit `65225e7`), la batería detectó setenta y tres de setenta y siete:
+un 94,8 %. Para descartar que una prueba fallara por un motivo ajeno a la mutación, por ejemplo una
+ventana de otra aplicación que tomara el foco durante una prueba de interfaz, cada detección se
+comparó con la prueba que se esperaba que la detectara: las setenta y tres coinciden.
 
 *Mutaciones equivalentes.* Algunas mutaciones no cambian el comportamiento del sistema, porque
 otra defensa del mismo camino ya rechaza la operación. Por ejemplo, si una operación verifica la
@@ -121,17 +123,19 @@ nada que una prueba pueda observar. Esas mutaciones se llaman equivalentes. Ning
 detectarlas, y por eso se excluyen del cálculo.
 
 Antes de ejecutar, por lectura, se identificaron seis equivalentes, y se excluyeron. Al ejecutar
-apareció una séptima: la mutación que quita el control de sesión al contratar una suscripción. El
-pronóstico decía que sería detectada; sobrevivió, y al revisar el código resultó también
-equivalente, porque la operación consulta enseguida la suscripción activa del usuario, y esa
-consulta repite el mismo control.
+aparecieron dos más, una en cada medición. La primera es la mutación que quita el control de
+sesión al contratar una suscripción: la operación consulta enseguida la suscripción activa del
+usuario, y esa consulta repite el mismo control. La segunda es la que deja de ocultar, al cambiar
+la contraseña, si la cuenta existe: la operación transforma cualquier fallo en el mismo mensaje
+genérico, así que la diferencia no llega al usuario. En los dos casos el pronóstico decía que
+serían detectadas; sobrevivieron, y al revisar el código resultaron equivalentes.
 
-**Esa séptima mutación se dejó dentro del cálculo, como no detectada, a propósito.** La razón es
+**Esas dos mutaciones se dejaron dentro del cálculo, como no detectadas, a propósito.** La razón es
 de método. Si una mutación se declara equivalente después de ver que sobrevivió, el criterio deja
 de ser independiente del resultado. Con el mismo argumento se podría excusar cualquier
 sobreviviente incómoda, y el porcentaje dejaría de medir la batería para medir la habilidad de
-justificarla. Las seis equivalentes se definieron antes de conocer los resultados; la séptima, no.
-Excluirla habría dado un 67,1 %; se informa el 66,2 %.
+justificarla. Las seis equivalentes se definieron antes de conocer los resultados; las otras dos, no.
+Excluirlas habría dado un 97,3 %; se informa el 94,8 %.
 
 *Qué significa que una defensa sobreviva.* No significa que el sistema sea vulnerable: la defensa
 está en el código y funciona, como se verificó al leerlo. Significa que ninguna prueba fallaría si
@@ -142,6 +146,14 @@ después el acceso sin contraseña y el control de ingreso, y al final las que s
 operativos. Esas pruebas se escribieron después: veinte casos nuevos y el refuerzo de uno
 existente. Cada uno se comprobó quitando su defensa, con lo que la prueba debía fallar, y
 restaurándola, con lo que debía volver a pasar.
+
+En la medición final quedaron cuatro mutaciones sin detectar. Dos son las equivalentes descubiertas
+después de ejecutar. La tercera quita la comparación de contraseñas en tiempo constante: una
+prueba funcional no puede observar cuánto tarda una comparación, y esa defensa se verificó leyendo
+el código. La cuarta quita el control de perfil al registrar el ingreso de una entrada: otra
+verificación rechaza igual al cliente que lo intenta, pero sin sesión la operación termina en un
+error no controlado, y ninguna prueba lo verifica. Es la única defensa que queda con una prueba
+por escribir.
 
 *Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
 entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos

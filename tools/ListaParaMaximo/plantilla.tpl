@@ -28,8 +28,6 @@
 >
 > | Dónde | Qué no se pega | De qué depende |
 > |---|---|---|
-> | p. 7, «Resultados principales», cuarto punto | El punto entero (lleva «N» de «M») | La medición final de mutación sobre `65225e7` (Claude Code, en curso) |
-> | Sección nueva «Metodología de verificación» (después de la p. 109) | Solo el párrafo que empieza con «*Resultado.*» | La misma medición. El resto de la sección se pega |
 > | pp. 47 a 49, guion de interfaz | Las tres capturas | Que Codex regenere `frmInicio`, `frmCrearUsuario` y `frmMenuCliente`. El cambio de texto de la p. 47 sí se pega |
 > | p. 88, dominio actualizado | La oración sobre el seguro | El script `07-indice-unico-seguros.sql` (Codex, después de la medición) |
 > | pp. 90 a 97, usabilidad, y p. 111, punto 1 | El texto alternativo de U-09 | Que Codex construya la vuelta al listado al cerrar la confirmación. Mientras tanto se pega el texto actual |
@@ -74,7 +72,7 @@
 - **No hay nada para decidir.** Si algo no encaja con lo que ves en el Word, no lo resuelvas:
   anotalo y avisale a JC.
 
-## Cifras del documento (verificadas; falta solo la de mutación)
+## Cifras del documento (definitivas, medidas sobre `65225e7`)
 
 | Dato | Valor hoy | Dónde aparece en esta lista |
 |---|---|---|
@@ -83,7 +81,7 @@
 | Reglas sin caso | RN-07 y RN-33 | pp. 8, 108, 109, 110, 111 |
 | Casos de prueba | 145 (ciento cuarenta y cinco), CP-01 a CP-145 | pp. 6, 7, 106, 107, 108, 109, sección nueva |
 | Ejecuciones | 271, todas correctas, sobre `65225e7`: la corrió Codex y la repitió Claude Code por separado, con el mismo resultado | sección nueva |
-| Mutación | **⏸ NO PEGAR TODAVÍA.** Primera medición: 51 de 77 (66,2 %) sobre `fe04b1f`. La final se está midiendo sobre `65225e7` | p. 7, sección nueva |
+| Mutación | 73 de 77 (94,8 %) sobre `65225e7`; la primera medición, 51 de 77 (66,2 %) sobre `fe04b1f`, se cita como punto de partida | p. 7, sección nueva |
 | Casos de uso especificados | 13 (trece), CU-01 a CU-13 | pp. 7, 106, 108 |
 
 ---
@@ -144,15 +142,15 @@ En «Resultados principales», **reemplazar** el punto «Usabilidad por encima d
 > puntaje SUS de 78,8 frente a la referencia de 68, los seis perfiles completan la tarea sin
 > asistencia y el tiempo medio es de 2 min 35 s, dentro del límite de cinco minutos.
 
-**⏸ NO PEGAR TODAVÍA (depende de la medición final de mutación).** Mismo lugar, un cuarto punto al final de
-«Resultados principales», con la misma viñeta. Cuando esté la cifra, esta entrada pierde la marca:
+**Mismo lugar, agregar un cuarto punto** al final de «Resultados principales», con la misma
+viñeta:
 
 > Pruebas que detectan defectos, medidas. Ciento cuarenta y cinco casos de prueba automatizados
 > verifican treinta y nueve de las cuarenta y una reglas de negocio. Para comprobar que esas
 > pruebas detectarían un defecto real, se quitó a propósito cada una de las defensas de
 > seguridad del sistema, una por vez: la primera medición mostró cuáles no advertía la batería,
 > se escribieron las pruebas que faltaban y la medición final sobre el código entregado
-> detectó «N» de las «M» que una prueba puede detectar.
+> detectó setenta y tres de las setenta y siete que una prueba puede detectar.
 
 *Razón:* coherencia. El resumen ejecutivo anuncia los resultados principales y la versión 2.6
 agrega la sección «Metodología de verificación»; sin este punto, el resumen no la menciona.
@@ -1187,8 +1185,7 @@ p. 108.*
 
 **Sección nueva, a continuación del párrafo final de la p. 109 y antes de «Conclusiones».**
 Título con el mismo estilo que «Matriz de trazabilidad»; los subtítulos en negrita, con el
-estilo de «Criterio de construcción». **Se pega hoy toda la sección salvo un párrafo: ⏸ NO PEGAR TODAVÍA el
-que empieza con «*Resultado.*»**, que depende de la medición final de mutación.
+estilo de «Criterio de construcción». **Se pega entera.**
 
 @@- docs/METODOLOGIA-VERIFICACION.md :: ^## Texto para el documento :: ^<!-- fin del texto
 
