@@ -1,12 +1,29 @@
 # LA lista para el Word — de la página 1 a la 112
 
+> ## ⚠ ANTES DE TODO: los scripts de la base de datos
+>
+> El ejecutable nuevo necesita cambios en tu base de EventAura. En SQL Server Management Studio,
+> **elegí tu base de EventAura** y ejecutá estos scripts de la carpeta `BaseDatos/`, **en este
+> orden**. Los tres se pueden ejecutar más de una vez sin dañar nada:
+>
+> 1. **`04-seguridad-ingreso.sql`**, solo si tu base es anterior al 11/11 (si no estás seguro,
+>    ejecutalo). Agrega lo que usa el control de ingreso por QR. **Si no lo corrés**, el control
+>    de ingreso falla.
+> 2. **`05-check-estado-entradas.sql`**. Agrega la restricción de los cuatro estados posibles de
+>    una entrada. Si encuentra una entrada con otro estado, muestra cuál y se detiene sin
+>    modificar nada: en ese caso, avisale a JC. **Si no lo corrés**, la aplicación funciona, pero
+>    la base acepta estados de entrada que no existen.
+> 3. **`06-prioridad-temporal.sql`**. Agrega la ventana de prioridad de la lista de espera
+>    (RN-35). **Si no lo corrés, no se puede iniciar ninguna compra:** el ejecutable nuevo lee una
+>    columna que tu base todavía no tiene.
+
 > ## ⚠ PROVISORIO hasta que JC pase los números finales
 >
 > Todo lo demás está decidido. Las cifras de casos, ejecuciones y cobertura son las del commit
-> `027527f` (16/11) y **van a cambiar**: Codex está escribiendo las pruebas que encargó la
-> mutación. Están juntas en la tabla «Cifras provisorias», de abajo. Cuando Codex termine, JC
-> congela el código, se vuelve a correr la mutación sobre ese commit, se regenera este archivo
-> y se quita este aviso.
+> `1525202` (16/11) y **todavía pueden cambiar**: Codex está terminando las pantallas de
+> Historial y Reportes y las figuras del instructivo. Están juntas en la tabla «Cifras
+> provisorias», de abajo. Cuando Codex termine, JC congela el código, Claude Code repite la
+> batería y la mutación sobre ese commit, se regenera este archivo y se quita este aviso.
 
 > ## ⚠ Las páginas 63 a 67 (y el código de las 102 a 105): bloques de código que Word estropea sin que se note
 >
@@ -47,9 +64,9 @@
 | Reglas vigentes | 41 (cuarenta y una) | pp. 6, 7, 106, 108, 109, 110 |
 | Reglas con caso de prueba | 39 de 41 = 95,1 % | pp. 8, 108, 109, 110, sección nueva después de la 109 |
 | Reglas sin caso | RN-07 y RN-33 | pp. 8, 108, 109, 110, 111 |
-| Casos de prueba | 124 (ciento veinticuatro), CP-01 a CP-124 | pp. 6, 7, 106, 107, 108, 109, sección nueva |
-| Ejecuciones | 243, todas correctas (corrida de Codex del 16/11) | sección nueva |
-| Mutación | 83 defensas, 6 equivalentes, 51 de 77 detectadas (66,2 %), medida sobre `fe04b1f`. **Se vuelve a medir sobre el commit congelado** | sección nueva |
+| Casos de prueba | 145 (ciento cuarenta y cinco), CP-01 a CP-145 | pp. 6, 7, 106, 107, 108, 109, sección nueva |
+| Ejecuciones | 271, todas correctas (corrida de Codex del 16/11, `1525202`; Claude Code la repite al congelar) | sección nueva |
+| Mutación | Primera medición: 83 defensas, 6 equivalentes, 51 de 77 detectadas (66,2 %), sobre `fe04b1f`. **La cifra final se mide sobre el commit congelado**, ya con CP-126 a CP-145; hasta entonces, la p. 7 lleva «N» de «M» | p. 7, sección nueva |
 | Casos de uso especificados | 13 (trece), CU-01 a CU-13 | pp. 7, 106, 108 |
 
 ---
@@ -74,10 +91,10 @@ Riggio, Juan Cruz (Legajo «completar»)»): completar los dos legajos.
 
 **Esto no espera a JC: la versión, en las 112 páginas.** Cada página muestra «EventAura —
 versión 2.4» junto al nombre de la sección y el número de página. Pasa a «EventAura — versión
-2.5». Se cambia una vez en el encabezado o pie donde está (si el documento tiene secciones con
+2.6». Se cambia una vez en el encabezado o pie donde está (si el documento tiene secciones con
 encabezados distintos, en cada una) y se comprueba en tres páginas al azar.
 
-*Razón:* el historial de revisión de la p. 6 cierra con la versión 2.5; si el encabezado sigue en
+*Razón:* el historial de revisión de la p. 6 cierra con la versión 2.6; si el encabezado sigue en
 2.4, el documento se contradice en cada página.
 
 ## Páginas 2 a 5 — Índice
@@ -86,20 +103,19 @@ No se toca ahora: se regenera al final («Hacé esto último»).
 
 ## Página 6 — Historial de revisión
 
-**Agregar** estas ocho filas al final de la tabla. «fecha» es el día en que se pegan los
-cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega.
+**Agregar** estas siete filas al final de la tabla. «fecha» es el día en que se pegan los
+cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega. Las seis primeras son la versión
+2.5 (las correcciones del 4 al 11 de noviembre); la última, la 2.6, que es la que se entrega.
 
 | Fecha | Versión | Autor | Descripción del cambio |
 |---|---|---|---|
-| «fecha» | 2.5 | Riggio, Juan Cruz | Reglas de negocio alineadas con el prototipo: se incorporan RN-38 (capacidad del local) y RN-39 (preventa para suscriptores), que el sistema ya aplicaba, y se reescribe RN-35 (prioridad de los suscriptores en la lista de espera, coherente con RN-37). Se detallan RN-06, RN-18, RN-23, RN-24, RN-26, RN-29 y RN-31. Reglas vigentes: 41 (brecha G-05). |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Revisión de seguridad: control de ingreso por QR (RN-18), cambio de contraseña con la contraseña actual (RN-40), verificación de identidad y de perfil en la capa de negocio (RN-41 y RN-42), y resistencia de las pruebas de seguridad medida por mutación. Brecha G-07. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Instructivo del requerimiento core: estado de implementación actualizado e incorporación de las figuras 1 a 4. Especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-13. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Arquitectura e implementación descriptas sobre el prototipo; diagramas de casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación regenerados desde el código. Estimación de costos del proyecto. |
+| «fecha» | 2.5 | Riggio, Juan Cruz | Reglas de negocio alineadas con el prototipo: se incorporan RN-38 (capacidad del local) y RN-39 (preventa para suscriptores), que el sistema ya aplicaba, y se reescribe RN-35 (prioridad de los suscriptores en la lista de espera, coherente con RN-37). Se detallan RN-06, RN-18, RN-23, RN-24, RN-26, RN-29 y RN-31 (brecha G-05). |
+| «fecha» | 2.5 | Riggio, Juan Cruz | Revisión de seguridad: control de ingreso por QR (RN-18), cambio de contraseña con la contraseña actual (RN-40) y verificación de identidad y de perfil en la capa de negocio (RN-41 y RN-42). Reglas vigentes: 41. Brecha G-07. |
+| «fecha» | 2.5 | Riggio, Juan Cruz | Instructivo del requerimiento core: estado de implementación actualizado. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-124 y cobertura recalculada sobre 41 reglas. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta; G-02 resuelta en requerimientos y abierta en reglas. |
+| «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-61. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, cuatro de ellos corregidos con prueba de regresión, y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Metodología de verificación: batería de pruebas, criterio de cobertura de reglas y prueba de mutación de las defensas de seguridad. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Carátula y pie: comisión, turno, legajos y año de entrega. |
+| «fecha» | 2.6 | Riggio, Juan Cruz | Respecto de la 2.5: arquitectura e implementación descriptas sobre el prototipo, con los veinticinco diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-13; anexo de estimación de costos. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Matriz de trazabilidad con los casos CP-62 a CP-145 y cobertura de 39 de las 41 reglas; brecha G-07 resuelta. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura y prueba de mutación de las defensas de seguridad. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 ## Página 7 — Resumen ejecutivo, «Qué contiene este informe»
 
@@ -108,7 +124,7 @@ cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega.
 | Reglas de negocio | «Treinta y seis reglas vigentes que fijan las condiciones bajo las cuales opera el sistema» | «Cuarenta y una reglas vigentes que fijan las condiciones bajo las cuales opera el sistema» |
 | Diseño | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, especificaciones de ocho casos de uso y modelo de dominio completo.» | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, arquitectura en cuatro capas, especificaciones de trece casos de uso y diagramas de dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación.» |
 | Validación | «Informe de pruebas de usabilidad con cinco participantes y anexo A02 con cinco reportes de gestión.» | «Informe de pruebas de usabilidad (simulado, medido sobre la aplicación) con seis perfiles, y anexo A02 con cinco reportes de gestión.» |
-| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, ciento veinticuatro casos de prueba automatizados y hallazgos.» |
+| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, ciento cuarenta y cinco casos de prueba automatizados y hallazgos.» |
 
 En «Resultados principales», **reemplazar** el punto «Usabilidad por encima del promedio»:
 
@@ -127,14 +143,14 @@ En «Resultados principales», **reemplazar** el punto «Usabilidad por encima d
 **Mismo lugar, agregar un cuarto punto** al final de «Resultados principales», con la misma
 viñeta. **Cifras provisorias** (tabla del principio):
 
-> Pruebas que detectan defectos, medidas. Ciento veinticuatro casos de prueba automatizados
+> Pruebas que detectan defectos, medidas. Ciento cuarenta y cinco casos de prueba automatizados
 > verifican treinta y nueve de las cuarenta y una reglas de negocio. Para comprobar que esas
 > pruebas detectarían un defecto real, se quitó a propósito cada una de las defensas de
-> seguridad del sistema, una por vez: la batería advirtió la falta de cincuenta y una de las
-> setenta y siete que una prueba puede detectar. Las demás quedaron registradas como pruebas
-> por escribir, ordenadas por su consecuencia.
+> seguridad del sistema, una por vez: la primera medición mostró cuáles no advertía la batería,
+> se escribieron las pruebas que faltaban y la medición final sobre el código entregado
+> detectó «N» de las «M» que una prueba puede detectar.
 
-*Razón:* coherencia. El resumen ejecutivo anuncia los resultados principales y la versión 2.5
+*Razón:* coherencia. El resumen ejecutivo anuncia los resultados principales y la versión 2.6
 agrega la sección «Metodología de verificación»; sin este punto, el resumen no la menciona.
 
 ## Página 8 — Resumen ejecutivo, «Limitaciones declaradas»
@@ -474,25 +490,17 @@ ningún pago intermedio (sección 4). Se aplica.
 | RN-35 | La lista de espera se ordena primero por los clientes que se inscribieron con suscripción activa y después por el resto; dentro de cada grupo, por orden de inscripción. La condición de suscriptor se toma al inscribirse y no cambia aunque la suscripción venza o se cancele después. Es el beneficio de prioridad que enuncia RN-37. | E | RF-10 / CU-07 |
 |---|---|---|---|
 
-**⏸ ESPERA A JC: una oración más para RN-35.** JC dice cuál de las dos va; la otra se descarta.
-**Al 16/11 la ventana no está construida:** Codex informó que hace falta guardar el instante en
-que se libera el cupo, y eso excede lo autorizado. Si no se decide construirla antes de congelar,
-va la segunda.
-- **Si se construye la ventana:** agregar al final del texto de RN-35: «Cuando el evento vuelve a
-  tener entradas, durante las primeras «N» horas solo pueden comprarlas los inscriptos con
-  suscripción; después, cualquier inscripto.» («N» lo da el parámetro que defina Codex.)
-- **Si no se construye:** agregar al final del texto de RN-35: «Este orden determina la posición
-  que el sistema informa a cada inscripto. Cuando el evento vuelve a tener entradas, el aviso
-  llega a todos los inscriptos al iniciar sesión, y la compra se resuelve por orden de llegada,
-  sin reserva de lugar.» Y, en estos cinco lugares, «prioridad en (la) lista de espera» pasa a
-  «prioridad en el orden de la lista de espera»:
-  - p. 27, fila de RN-37: «…preventa anticipada y prioridad en lista de espera—…»;
-  - p. 30, párrafo de RN-27: «…preventa anticipada y prioridad en lista de espera.»;
-  - p. 40, el texto nuevo de la descripción funcional: «…habilita la preventa y da prioridad en
-    la lista de espera.»;
-  - p. 55, fila de RN-37: «…la preventa anticipada y la prioridad en lista de espera.»;
-  - p. 82, CU-06, postcondición 2 (el texto nuevo): «…preventa y prioridad en la lista de
-    espera…».
+**Agregar al final del texto de RN-35** (Codex construyó la ventana en `1525202`):
+
+> Cuando un sector vuelve a tener una entrada disponible, porque se devolvió, venció una reserva o
+> se rechazó un pago, durante los quince minutos siguientes solo pueden comprarla los inscriptos
+> en la lista de espera que se anotaron con suscripción. Si el evento no tiene inscriptos con
+> suscripción, la entrada queda a la venta de inmediato. El plazo es un parámetro configurable.
+
+*Razón:* código. `RepositorioSectores.Reservar` rechaza la reserva con RN-35 dentro de la ventana,
+en la misma transacción que reserva el cupo; el parámetro es `PRIORIDAD_ESPERA_MINUTOS` (15) y lo
+prueba CP-125 (ocho variantes). Con la ventana construida, «prioridad en lista de espera» de las
+pp. 27, 30, 40, 55 y 82 ya es exacto y no se toca.
 
 ## Página 28 — Factibilidad económica
 
@@ -549,12 +557,13 @@ documento.
 | Precio del plan anual | RF-13 | $90.000 |
 | Horas de ingreso antes del evento | RN-18 | 6 |
 | Horas de ingreso después del evento | RN-18 | 12 |
+| Minutos de prioridad de los suscriptores al liberarse un lugar | RN-35 | 15 |
 
 *Razón:* base. Son los valores de `BaseDatos/02-semilla.sql`.
 **A-11 · p. 33 · Conflictos · R**. Dice:
 «tres pares de reglas». Poner: «cuatro pares de reglas». Y agregar la fila:
 
-| RN-35 vs. RN-37 | RN-37 promete prioridad al suscriptor en la lista de espera. | Primero los suscriptores y después el resto, cada grupo por orden de inscripción. La condición de suscriptor se congela al inscribirse. |
+| RN-35 vs. RN-37 | RN-37 promete prioridad al suscriptor en la lista de espera. | Primero los suscriptores y después el resto, cada grupo por orden de inscripción. La condición de suscriptor se congela al inscribirse. Cuando se libera un lugar, durante quince minutos solo pueden comprarlo los suscriptores inscriptos. |
 |---|---|---|
 
 ## Página 35 — Priorización
@@ -664,23 +673,23 @@ control de ingreso (RN-18), con lector USB o con el texto del ticket. El número
 **En «Riesgo de concentración»:** «es decir el 52,6 % del esfuerzo total» pasa a «es decir el
 52,6 % del esfuerzo total estimado».
 
-## Páginas 39 y 40 — Minutas y prototipos (primera copia)
+## Páginas 39 y 40 — Minutas y prototipos (primera copia): se borra
 
-**⏸ ESPERA A JC:** el documento tiene las minutas y los prototipos dos veces (pp. 39-40 y 44-45).
-JC decide cuál copia queda y si la Minuta 2 lleva «Profesor de la cátedra (rol simulado)». Las
-correcciones de los prototipos valen para la copia que quede. **Si queda esta copia,** la nota del final de la
-p. 40, «Nota: Los prototipos fueron desarrollados en Figma (o herramienta equivalente) y se
-entregan como documento complementario en PDF y en versión interactiva.», sigue la misma decisión
-de Figma que la p. 45 (ver «Página 45»): si el archivo no existe, se reemplaza por la frase
-alternativa de esa entrada.
+Queda la copia de las pp. 44 y 45, que está dentro de «Definición de requerimientos», la sección
+que pide el punto 11 de la guía del profesor (minutas, prototipos y especificación de
+requerimientos). Esta se borra:
 
-Las correcciones:
+1. **Borrar** desde el título «Minutas de reunión (simuladas)» del principio de la p. 39 hasta la
+   nota del final del prototipo 6 de la p. 40, inclusive: «Nota: Los prototipos fueron
+   desarrollados en Figma (o herramienta equivalente) y se entregan como documento
+   complementario en PDF y en versión interactiva.»
+2. **No borrar** lo que sigue en la p. 40: el título «Descripción funcional y alcance» y su texto
+   quedan (la entrada siguiente los corrige).
+3. **Antes de borrar, copiá las dos fechas** de esta copia: la Minuta 1 dice «05/06/2025» y la
+   Minuta 2, «17/06/2025». Van en la p. 44 (ver «Página 44»).
 
-| Pág. | Dice | Poner |
-|---|---|---|
-| 39, ítem 3 | «Muestra el resumen completo del paquete, aplica descuentos por nivel de usuario o suscripción, y ofrece opción de continuar al pago.» | «Muestra el resumen completo del paquete, aplica el descuento por nivel de usuario y ofrece opción de continuar al pago.» |
-| 40, ítem 5 | «Presenta un mensaje de éxito con un código de compra ficticio y recomendaciones de eventos relacionados.» | «Presenta un mensaje de éxito con el número de pedido, el desglose del importe y la carpeta donde quedan los tickets en PDF, uno por entrada, con su código QR.» |
-| 40, ítem 6 | «Muestra el nivel alcanzado (Bronce, Plata, Oro), beneficios disponibles, historial de compras y acceso a listas de espera.» | «Da acceso a los eventos disponibles, al historial de compras con la devolución de entradas aseguradas y a la suscripción con sus beneficios. El nivel alcanzado se muestra al armar el paquete.» |
+*Razón:* la guía decide. El historial de la p. 6 ya fecha la versión 0.1 el 05/06/2025; la copia
+que queda dice «Fecha: x».
 
 ## Página 40 — Descripción funcional
 
@@ -798,14 +807,21 @@ existe. Las cuatro últimas son las del párrafo original, que siguen siendo cie
 3. **Los números de página de esa remisión** («pp. 22 a 24», «pp. 35 a 38») se ajustan al final,
    cuando se regenera el índice (ver «Hacé esto último»).
 
-## Página 44 — Minutas (segunda copia)
+## Página 44 — Minutas (la copia que queda)
 
-**⏸ ESPERA A JC** (la misma decisión de las pp. 39 y 40). Si JC decide quitar esta copia (pp. 44
-y 45) y quedarse con la de la p. 39, la última oración de la remisión de la p. 42 («Esta sección
-reúne el material de relevamiento…») se borra, porque esta sección quedaría sin minutas ni
-prototipos.
+| Lugar | Dice | Poner |
+|---|---|---|
+| Minuta Nº 1 | «Fecha: x» | «Fecha: 05/06/2025» |
+| Minuta Nº 2 | «Fecha: x» | «Fecha: 17/06/2025» |
 
-## Página 45 — Prototipos (segunda copia)
+El año de las dos fechas sigue la decisión del año de entrega (ver «Hacé esto último»).
+**⏸ ESPERA A JC** solo para un dato: si en la Minuta Nº 2 «Profesor (evaluador académico)» pasa a
+«Profesor de la cátedra (rol simulado)».
+
+La remisión de la p. 42 queda entera, con su última oración («Esta sección reúne el material de
+relevamiento…»): las minutas y los prototipos siguen en esta sección.
+
+## Página 45 — Prototipos (la copia que queda)
 
 **⏸ ESPERA A JC** para la frase de Figma: «Los siguientes prototipos fueron desarrollados en Figma
 y entregados como archivo complementario en formato PDF y versión interactiva.» Si el archivo no
@@ -818,8 +834,13 @@ Estas correcciones se pegan ya, en la copia de la p. 45:
 |---|---|---|
 | 3 | «Pantalla de carrito de compra. Muestra el resumen completo del paquete elegido, descuentos aplicados y monto total.» | «Resumen del paquete. En la misma pantalla del armado, muestra el detalle del paquete elegido, el descuento por nivel, el cargo por servicio, el seguro y el monto total.» |
 | 5 | «Muestra mensaje de éxito, código de operación ficticio, resumen de compra y eventos recomendados.» | «Muestra mensaje de éxito, número de pedido, resumen de compra y la ubicación de los tickets en PDF con su código QR.» |
-| 6 | «Permite ver el historial de compras, nivel de rankeo alcanzado (Bronce, Plata, Oro) y beneficios aplicables.» | «Permite ver el historial de compras y devolver entradas aseguradas, y contratar o cancelar la suscripción. El nivel alcanzado se muestra al armar el paquete.» |
-| 7 | «Simula reportes gráficos y tablas con ventas por evento, adopción de beneficios, y usuarios por nivel de fidelidad.» | «Presenta en tablas, exportables a PDF, cinco reportes: ventas por evento, ranking de paquetes, usuarios por nivel de fidelidad, adopción de seguros y suscripciones, y demanda insatisfecha.» |
+| 6 | «Permite ver el historial de compras, nivel de rankeo alcanzado (Bronce, Plata, Oro) y beneficios aplicables.» | «Permite ver el historial de compras y, debajo, las entradas de la compra elegida, con la devolución de las aseguradas; y contratar o cancelar la suscripción. El nivel alcanzado se muestra al armar el paquete.» |
+| 7 | «Simula reportes gráficos y tablas con ventas por evento, adopción de beneficios, y usuarios por nivel de fidelidad.» | «Presenta en tablas, exportables a PDF, cinco reportes: ventas por evento, ranking de paquetes, usuarios por nivel de fidelidad, adopción de seguros y suscripciones, y demanda insatisfecha. Los filtros del reporte van arriba de la tabla, y la lectura del resultado, debajo.» |
+
+*Razón:* JC eligió la opción A de Codex para Historial (dos listas apiladas: compras arriba,
+entradas del pedido debajo) y para Reportes (filtros arriba en dos filas, tabla a todo el ancho,
+lectura y acciones al pie). **Cuando Codex las publique, JC confirma que las pantallas quedaron
+así**; hoy son la propuesta, no el código.
 
 ## Página 48
 
@@ -912,12 +933,11 @@ correspondiente de `docs/capturas/instructivo/`. Los epígrafes no cambian.
 Las imágenes están en `docs/capturas/instructivo/`. Insertalas con el ancho del texto (16,0 cm) y
 la proporción bloqueada. Hay una quinta, `figura4a-pago-simulado.png`: no se usa.
 
-**⏸ ESPERA A JC: no pegues las figuras todavía.** Las cuatro muestran pantallas que Codex
-rediseñó después de tomarlas: Eventos del cliente y Compra (figuras 1 a 3) el 14/11, y
-Confirmación (figura 4) el 16/11. Se vuelven a generar con `tools/CapturasInstructivo/Generar.ps1`
-sobre el código congelado; los nombres de archivo y los epígrafes no cambian. Cuando estén,
-JC confirma que el texto de los pasos 1 a 8 (pp. 51 y 52) sigue describiendo lo que muestran, en
-particular el indicador de pasos y la pantalla de éxito nuevos.
+**⏸ ESPERANDO FIGURA NUEVA: no pegues ninguna de las cuatro.** Las que están hoy en
+`docs/capturas/instructivo/` muestran las pantallas de antes del rediseño. Codex las regenera
+sobre el código congelado; los nombres de archivo y los epígrafes no cambian. Cuando estén, esta
+entrada lo dice y JC confirma que el texto de los pasos 1 a 8 (pp. 51 y 52) sigue describiendo
+lo que muestran, en particular el indicador de pasos y la pantalla de éxito.
 
 ## Página 54 — Ejemplo resuelto
 
@@ -1214,6 +1234,7 @@ diagrama general de la p. 71.
 | FA1 | «Si el Cliente intenta confirmar sin entradas seleccionadas, el sistema muestra mensaje de error y vuelve al paso 3.» | «Mientras el paquete no tenga al menos una entrada, el sistema mantiene deshabilitados el botón «Comprar» y la casilla del seguro, y el Cliente sigue en el paso 3.» |
 | Después de FA3, agregar | — | «FA4 – Evento en preventa. Si el evento está en preventa y el Cliente no tiene suscripción activa, el sistema informa que la compra está reservada a suscriptores y no permite armar el paquete (RN-39).» |
 | Después de FA4, agregar | — | «FA5 – Reserva vencida. Si pasan diez minutos sin pago aprobado, el sistema informa que venció la reserva y libera el cupo; el Cliente debe volver a armar la compra (RN-15).» |
+| Después de FA5, agregar | — | «FA6 – Lugar reservado para suscriptores. Si el sector elegido acaba de liberar una entrada y el evento tiene inscriptos con suscripción en su lista de espera, durante quince minutos solo ellos pueden comprarla. A cualquier otro Cliente el sistema le informa: «El lugar liberado está reservado temporalmente para suscriptores inscriptos en la lista de espera. Intentá al finalizar la ventana de prioridad.», y no reserva el cupo (RN-35).» |
 | Postcondición 1 | «Existe un registro de Compra asociado al Cliente y al Paquete.» | «Existe un registro de Compra asociado al Cliente, con sus entradas, servicios y pagos.» |
 | Postcondición 3 | «Se actualizan sus puntos de fidelidad y, si corresponde, su nivel.» | «Se actualiza su contador de compras y, si corresponde, su nivel.» |
 
@@ -1811,15 +1832,33 @@ cognitivo. Las referencias nuevas (Nielsen, 1994; Wharton et al., 1994; Card, Mo
 La «Declaración sobre la naturaleza de los datos» del principio del informe **es la que
 sostiene el rótulo**: separa lo medido de lo derivado. No hay que acortarla.
 
-**⏸ ESPERA A JC: el estudio se midió antes del rediseño visual.** Las dos mediciones son
-anteriores al 14/11, y desde entonces cambiaron dieciocho pantallas, entre ellas todas las de la
-compra. JC elige una de dos:
-- **Volver a medir** con `tools/Usabilidad/Medir.ps1` sobre el código congelado, y actualizar las
-  cifras del estudio (tiempos y SUS de la p. 7, de las pp. 90 a 97, de la fila OE-4 de la p. 107,
-  de la advertencia de la p. 108 y de las conclusiones de la p. 110).
-- **Declararlo.** Agregar al final de la introducción del informe de usabilidad: «Las dos
-  mediciones corresponden a la interfaz anterior al rediseño visual de la versión 2.5, que cambió
-  el aspecto de dieciocho pantallas. No se repitieron sobre la interfaz rediseñada.»
+**Agregar al final de la introducción del informe** (después de la entrada anterior):
+
+> **El estudio y el rediseño de la interfaz.** Las dos mediciones de este estudio corresponden a
+> la interfaz anterior al rediseño visual de la versión 2.6. El rediseño tomó como punto de
+> partida los hallazgos del estudio y corrigió varios de ellos:
+> - U-02: la tecla Enter inicia sesión y el campo Mail es el primero del orden de tabulación;
+> - U-03: los avisos llevan un título en castellano que nombra la operación, como «No se puede
+>   armar el paquete» o «Pago no realizado», y el código de la regla pasa al final del mensaje;
+>   desaparecieron «Campo vacíos» e «ingrese usuario»;
+> - U-11: «Show Password» pasó a «Mostrar contraseña»;
+> - U-13: se quitó el botón «Modificar» que había quedado en el inicio de sesión;
+> - U-09, en parte: el recorrido cognitivo registró en el paso 8 que el usuario no entendía en qué
+>   punto de la compra estaba (pregunta 4). La compra muestra ahora un indicador de pasos y
+>   termina en una pantalla de éxito con el número de pedido y la carpeta de los tickets. Al
+>   cerrarla, el usuario sigue volviendo a un armado vacío.
+>
+> Siguen abiertos U-06, U-07, U-08, U-10 y U-12. La interfaz rediseñada no se volvió a evaluar con
+> las herramientas de este estudio; hacerlo queda como trabajo futuro.
+
+*Razón:* decisión de JC del 16/11: se declara, no se vuelve a medir. Cada corrección la verificó
+Claude Code en el código, leyéndolo: U-02 en `frmInicio` (`AcceptButton` y orden de tabulación,
+`027527f`); U-03 en `Visual/Avisos.cs` (`36a0d80`) y en los títulos de los avisos; U-11 en
+`frmInicio`, `frmCrearUsuario` y `frmCambiarContraseña` (`7fc5558`); U-13 en `frmInicio`; el
+indicador (`96fd6ec`) y la pantalla de éxito (`027527f`). Abiertos, también por lectura: U-06 (el
+código de seguridad se borra sin aviso), U-07 («Cancelar pago» sin «No» por defecto), U-08 (el
+filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en Contraseña) y U-12
+(ningún control tiene nombre accesible).
 
 ## Página 98 — Anexo A02, introducción
 
@@ -2027,7 +2066,7 @@ ORDER BY IngresoBruto DESC;
 **Por:**
 
 > Una grilla que cruce los seis objetivos con los trece requerimientos, las cuarenta y una
-> reglas, los trece casos de uso y los ciento veinticuatro casos de prueba resulta ilegible en
+> reglas, los trece casos de uso y los ciento cuarenta y cinco casos de prueba resulta ilegible en
 > formato A4
 
 **Tabla «Nomenclatura de los ejes».** Reemplazar las filas de reglas y de casos de prueba, y en
@@ -2036,7 +2075,7 @@ la de casos de uso cambiar la cantidad:
 | Fila | Dice | Poner |
 |---|---|---|
 | Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 41 \| Reglas de negocio (RN-27 dada de baja)» |
-| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 124 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-124: Matriz de trazabilidad, catálogo de casos incorporados» |
+| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 145 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-145: Matriz de trazabilidad, catálogo de casos incorporados» |
 | Casos de uso | la cantidad «8» | «13» |
 
 ## Página 107 — Matriz principal
@@ -2046,17 +2085,17 @@ la de casos de uso cambiar la cantidad:
 | RF | OE | MoSCoW | Reglas de negocio | CU | Casos de prueba | Hall. |
 |---|---|---|---|---|---|---|
 | RF-01 | OE-2 | Must | RN-01, RN-02, RN-03 | CU-04 | CP-14, CP-15, CP-26, CP-44, CP-45, CP-55 | — |
-| RF-02 | OE-2 | Must | RN-04, RN-05, RN-40, RN-41 | CU-05, CU-09 | CP-27, CP-28, CP-29, CP-46, CP-55, CP-66 a CP-68, CP-91, CP-92, CP-94 a CP-98, CP-105, CP-107, CP-108, CP-113, CP-114, CP-124 | — |
+| RF-02 | OE-2 | Must | RN-04, RN-05, RN-40, RN-41 | CU-05, CU-09 | CP-27, CP-28, CP-29, CP-46, CP-55, CP-66 a CP-68, CP-91, CP-92, CP-94 a CP-98, CP-105, CP-107, CP-108, CP-113, CP-114, CP-124, CP-130 | — |
 | RF-03 | OE-2 | Must | RN-09 | CU-01 | CP-16, CP-17, CP-18, CP-30, CP-81, CP-106 | — |
 | RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49, CP-54, CP-94 | H-03 |
-| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61, CP-79, CP-81, CP-119, CP-122 | H-04 |
-| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43, CP-52, CP-80, CP-122 | H-02 |
-| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123 | — |
-| RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08, CP-09, CP-11, CP-42, CP-91, CP-92, CP-115 | H-01, H-05 |
+| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61, CP-79, CP-81, CP-119, CP-122, CP-140 | H-04 |
+| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43, CP-52, CP-80, CP-122, CP-127, CP-129 | H-02 |
+| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123, CP-128, CP-131 a CP-136, CP-142, CP-145 | — |
+| RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08, CP-09, CP-11, CP-42, CP-91, CP-92, CP-115, CP-138, CP-139 | H-01, H-05 |
 | RF-09 | — | Won't | — | — | — | — |
-| RF-10 | OE-6 ind. | Could | RN-10, RN-35, RN-36 | CU-07 | CP-24, CP-37, CP-83, CP-84, CP-117, CP-118 | — |
-| RF-11 | OE-6 | Should | RN-34 | CU-08 | CP-35 a CP-38, CP-85 a CP-90, CP-109 | — |
-| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38, RN-42 | CU-02, CU-10, CU-11 | CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94, CP-123 | — |
+| RF-10 | OE-6 ind. | Could | RN-10, RN-35, RN-36 | CU-07 | CP-24, CP-37, CP-83, CP-84, CP-117, CP-118, CP-125, CP-126, CP-137 | — |
+| RF-11 | OE-6 | Should | RN-34 | CU-08 | CP-35 a CP-38, CP-85 a CP-90, CP-109, CP-143, CP-144 | — |
+| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38, RN-42 | CU-02, CU-10, CU-11 | CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94, CP-123, CP-141 | — |
 | RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-61, CP-76, CP-77, CP-78, CP-94, CP-121 | — |
 
 El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debajo:
@@ -2169,7 +2208,7 @@ la de CP-01 a CP-61:
 | CP-60 — Sectores que superan la capacidad del local | RN-38 |
 | CP-61 — Preventa sin suscripción | RN-39 |
 
-**y agregar a continuación** estas filas (CP-62 a CP-124):
+**y agregar a continuación** estas filas (CP-62 a CP-145):
 
 | CP-62 — Los colores y las fuentes de Tema | — (RNF-02) |
 | CP-63 — El código de cada una de las 20 pantallas y de su Designer | — (RNF-02) |
@@ -2234,6 +2273,27 @@ la de CP-01 a CP-61:
 | CP-122 — Compra confirmada sin seguro; volver a confirmarla agregándole seguro | RN-28 |
 | CP-123 — Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los… | RN-18, RN-41, RN-42 |
 | CP-124 — Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente | RN-04, RN-40 |
+| CP-125 — Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor… | RN-35, RN-37 |
+| CP-126 — Pedir la lista de espera de un evento como cliente y sin sesión | RN-34 |
+| CP-127 — Pedir los pagos de una compra ajena y sin sesión | RN-41 |
+| CP-128 — Pedir por su número una compra de otro cliente, y sin sesión | RN-41 |
+| CP-129 — Pedir las pólizas de seguro de otro cliente, y sin sesión | RN-41 |
+| CP-130 — Iniciar sesión usando como contraseña el hash guardado de una cuenta ya migrada a PBKDF2 | RN-04 |
+| CP-131 — Registrar el ingreso de una entrada de un evento suspendido, dentro del horario de ingreso | RN-18 |
+| CP-132 — Registrar en la base el ingreso de una entrada contra un evento distinto del suyo, sin el filtro previo… | RN-18 |
+| CP-133 — La entrada se devuelve entre la lectura y la escritura del ingreso | RN-18, RN-29 |
+| CP-134 — Registrar el ingreso de una entrada pendiente y de una vencida | RN-18 |
+| CP-135 — Registrar ingresos en el segundo exacto de apertura y de cierre de la ventana, y un segundo antes y después | RN-18 |
+| CP-136 — Leer un código de entrada con espacios alrededor | RN-18 |
+| CP-137 — Consultar si otro cliente está inscripto en una lista de espera, y sin sesión | RN-41 |
+| CP-138 — Contar las compras de fidelización de otro cliente, y sin sesión | RN-41 |
+| CP-139 — Calcular el descuento de otro cliente, y sin sesión | RN-41 |
+| CP-140 — Armar un paquete a nombre de otro cliente, y sin sesión | RN-41 |
+| CP-141 — Consultar los locales de un propietario como cliente, y sin sesión | RN-34 |
+| CP-142 — Listar los eventos con ingreso abierto como cliente, y sin sesión | RN-34 |
+| CP-143 — Ejecutar un reporte ya creado después de cerrar la sesión del administrador o como cliente | RN-34 |
+| CP-144 — Pedir el catálogo de eventos de un reporte como cliente, y sin sesión | RN-34 |
+| CP-145 — Insertar dos entradas con el mismo código QR | RN-18 |
 
 **El párrafo que sigue a la tabla. Reemplazar:**
 
@@ -2243,7 +2303,7 @@ la de CP-01 a CP-61:
 
 **Por:**
 
-> Los ciento veinticuatro casos verifican treinta y nueve reglas distintas sobre un total de
+> Los ciento cuarenta y cinco casos verifican treinta y nueve reglas distintas sobre un total de
 > cuarenta y una vigentes, lo que arroja una cobertura del 95,1 %. Son RN-01 a RN-06, RN-08 a
 > RN-26, RN-28 a RN-32 y RN-34 a RN-42. Todas las reglas que rechazan una operación tienen un
 > caso que provoca ese rechazo y comprueba que el sistema queda como estaba. Las dos restantes
@@ -2316,8 +2376,8 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-60 | Un sector que supera la capacidad del local no se agrega | `CP60_RechazaSectorQueSuperaCapacidadDelLocal` | RF-12 | — | 1 |
 | CP-61 | En preventa, un cliente sin suscripción no inicia la compra | `CP61_RechazaPreventaSinSuscripcion` | RF-05, RF-13 | — | 1 |
 
-**y, debajo, una segunda tabla** con el título «Casos de prueba incorporados en la versión 2.5
-(CP-62 a CP-124)»:
+**y, debajo, una segunda tabla** con el título «Casos de prueba incorporados en la versión 2.6
+(CP-62 a CP-145)»:
 
 | Caso | Condición de entrada | Resultado esperado | RF | Reglas |
 |---|---|---|---|---|
@@ -2384,6 +2444,27 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-122 | Compra confirmada sin seguro; volver a confirmarla agregándole seguro | Rechazo con «La compra ya no está pendiente de pago.»; la compra queda sin seguro, sin póliza y sin segundo pago | RF-06 | RN-28 |
 | CP-123 | Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-41, RN-42 |
 | CP-124 | Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente (3 variantes) | El rechazo es el mismo en texto, título y comportamiento: no revela si la cuenta existe ni si está bloqueada. El bloqueo interno sigue funcionando | RF-02 | RN-04, RN-40 |
+| CP-125 | Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor inscripto en la lista de espera; compran un no suscriptor, el suscriptor inscripto, un suscriptor sin inscripción y un reintento de pago anterior, dentro y fuera de la ventana (8 variantes) | Dentro de la ventana solo compra el suscriptor inscripto; los demás reciben el rechazo RN-35 sin consumir el cupo ni dejar compra o pago nuevo. Fuera de la ventana compra cualquiera | RF-10 | RN-35, RN-37 |
+| CP-126 | Pedir la lista de espera de un evento como cliente y sin sesión | Rechazo RN-34 sin devolver nombres ni correos; el administrador la obtiene | RF-10 | RN-34 |
+| CP-127 | Pedir los pagos de una compra ajena y sin sesión | Rechazo RN-41 sin devolver el dato; el titular los obtiene | RF-06 | RN-41 |
+| CP-128 | Pedir por su número una compra de otro cliente, y sin sesión | Rechazo RN-41 sin devolver la compra | RF-07 | RN-41 |
+| CP-129 | Pedir las pólizas de seguro de otro cliente, y sin sesión | Rechazo RN-41 sin devolver las pólizas | RF-06 | RN-41 |
+| CP-130 | Iniciar sesión usando como contraseña el hash guardado de una cuenta ya migrada a PBKDF2 | No autentica ni se toma como contraseña para migrar | RF-02 | RN-04 |
+| CP-131 | Registrar el ingreso de una entrada de un evento suspendido, dentro del horario de ingreso | Rechazo; la entrada no queda ingresada | RF-07 | RN-18 |
+| CP-132 | Registrar en la base el ingreso de una entrada contra un evento distinto del suyo, sin el filtro previo del gestor | La base no registra el ingreso | RF-07 | RN-18 |
+| CP-133 | La entrada se devuelve entre la lectura y la escritura del ingreso | La base no registra el ingreso de una entrada que ya no está confirmada | RF-07 | RN-18, RN-29 |
+| CP-134 | Registrar el ingreso de una entrada pendiente y de una vencida | Cada una recibe su rechazo específico y ninguna queda ingresada | RF-07 | RN-18 |
+| CP-135 | Registrar ingresos en el segundo exacto de apertura y de cierre de la ventana, y un segundo antes y después | Los dos bordes se aceptan; los segundos de afuera se rechazan | RF-07 | RN-18 |
+| CP-136 | Leer un código de entrada con espacios alrededor | El código se normaliza y el ingreso queda registrado | RF-07 | RN-18 |
+| CP-137 | Consultar si otro cliente está inscripto en una lista de espera, y sin sesión | Rechazo RN-41 sin devolver el dato | RF-10 | RN-41 |
+| CP-138 | Contar las compras de fidelización de otro cliente, y sin sesión | Rechazo RN-41 sin devolver el dato | RF-08 | RN-41 |
+| CP-139 | Calcular el descuento de otro cliente, y sin sesión | Rechazo RN-41 sin devolver el dato | RF-08 | RN-41 |
+| CP-140 | Armar un paquete a nombre de otro cliente, y sin sesión | Rechazo RN-41; no se crea el paquete | RF-05 | RN-41 |
+| CP-141 | Consultar los locales de un propietario como cliente, y sin sesión | Rechazo RN-34 sin devolver el dato | RF-12 | RN-34 |
+| CP-142 | Listar los eventos con ingreso abierto como cliente, y sin sesión | Rechazo RN-34 sin devolver el listado | RF-07 | RN-34 |
+| CP-143 | Ejecutar un reporte ya creado después de cerrar la sesión del administrador o como cliente | Rechazo RN-34 sin devolver el reporte | RF-11 | RN-34 |
+| CP-144 | Pedir el catálogo de eventos de un reporte como cliente, y sin sesión | Rechazo RN-34 sin devolver el catálogo | RF-11 | RN-34 |
+| CP-145 | Insertar dos entradas con el mismo código QR | El índice único de la base rechaza la segunda y la reversión deja intacta la primera | RF-07 | RN-18 |
 
 **Después de las dos tablas, agregar:**
 
@@ -2404,7 +2485,9 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 > - una, el aspecto del reporte en tres lectores de PDF, la verificó una persona, junto con
 >   la lectura de su código QR con un celular.
 >
-> Los casos CP-91 a CP-115, CP-123 y CP-124 surgieron de la revisión de seguridad (brecha G-07).
+> Los casos CP-91 a CP-115, CP-123 y CP-124 surgieron de la revisión de seguridad (brecha G-07),
+> y CP-126 a CP-145, de la prueba de mutación (sección «Metodología de verificación»). CP-125
+> verifica la ventana de prioridad de los suscriptores (RN-35).
 > CP-116, CP-119 y CP-120 verifican el rediseño visual de la interfaz; CP-117 y CP-118, la
 > consulta de la posición y el aviso de la lista de espera, y CP-121 y CP-122 completan las dos
 > reglas que solo se mostraban en pantalla (RN-26 y RN-28).
@@ -2463,7 +2546,7 @@ p. 108.*
 **Por:**
 
 > El análisis identificó siete brechas. G-01 se resolvió a partir de este mismo análisis.
-> En la versión 2.5 se cerró G-03 y se resolvieron G-04, G-05 y G-07. G-02 quedó resuelta en el
+> En la versión 2.5 se cerró G-03 y se resolvieron G-04 y G-05; en la 2.6, G-07. G-02 quedó resuelta en el
 > nivel de requerimientos y abierta en el de reglas. G-06 quedó resuelta en sus tres hallazgos
 > de mayor peso y en el que encontró la segunda medición, y abierta en el resto, con su plan.
 
@@ -2472,7 +2555,7 @@ p. 108.*
 | Nº | Brecha | Sev. | Estado | Acción |
 |---|---|---|---|---|
 | G-01 | Los casos de uso CU-02 (Gestionar eventos) y CU-06 (Gestionar suscripción) no contaban con un requerimiento funcional que los originara, pese a que las reglas RN-06, RN-07 y RN-11 por un lado, y RN-25, RN-26 y RN-37 por el otro, presuponen su existencia. | Alta | Resuelta | Se incorporaron los requerimientos RF-12 (Gestión de eventos) y RF-13 (Contratación de suscripciones) a la Definición de requerimientos, y se recalculó la priorización MoSCoW. |
-| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a CP-124. Los doce requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 95,1 % (39 de 41), con todas las reglas que rechazan operaciones; quedan dos reglas sin caso (RN-07 y RN-33). |
+| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a CP-145. Los doce requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 95,1 % (39 de 41), con todas las reglas que rechazan operaciones; quedan dos reglas sin caso (RN-07 y RN-33). |
 | G-03 | RF-09 (Recomendaciones personalizadas) no responde a ningún objetivo específico ni posee caso de uso asociado. | Media | Cerrada | Se reclasificó como Won't have en la Fase 8, según la regla de repriorización (W-07). |
 | G-04 | En la versión 2.4, ninguno de los seis hallazgos del informe de usabilidad tenía caso de prueba de regresión. | Media | Resuelta | Las seis acciones del plan de mejora están implementadas en el prototipo y cada hallazgo tiene su regresión automatizada: H-01 en CP-13, H-02 en CP-39, H-03 en CP-40, H-04 en CP-41, H-05 en CP-42 y H-06 en CP-19. |
 | G-05 | El documento no reflejaba tres reglas que el prototipo aplica: el tope de capacidad del local sobre la suma de sus sectores y la preventa exclusiva para suscriptores no estaban enunciadas, y la prioridad de los suscriptores en la lista de espera contradecía RN-35, que exigía orden estricto de inscripción. Era comportamiento implementado sin una regla documentada que lo respalde. | Alta | Resuelta | Se incorporaron RN-38 (RF-12 / CU-11) y RN-39 (RF-13 / CU-01), y se reescribió RN-35 en coherencia con RN-37. Las tres tienen sus casos de prueba: RN-38 en CP-60, RN-39 en CP-61 y RN-35 en CP-83 y CP-84. |
@@ -2523,9 +2606,9 @@ corrida, con el mismo esquema y los mismos datos iniciales que se entregan, y nu
 desarrollo. Las pruebas de interfaz abren los formularios reales de la aplicación, los operan y
 leen lo que muestran.
 
-La batería tiene ciento veinticuatro casos de prueba. Algunos se ejecutan varias veces con datos
+La batería tiene ciento cuarenta y cinco casos de prueba. Algunos se ejecutan varias veces con datos
 distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman doscientas
-cuarenta y tres ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
+setenta y una ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
 base, los resultados no dependen de lo que haya quedado de una corrida anterior.
 
 **Cobertura de las reglas de negocio**
@@ -2615,7 +2698,9 @@ esa defensa se quitara por error en una versión futura. Cada defensa sobrevivie
 como una prueba por escribir, con lo que debe verificar, y se ordenaron por la consecuencia que
 tendría su falta: primero las que protegen los datos personales y de pago de otros clientes,
 después el acceso sin contraseña y el control de ingreso, y al final las que solo exponen datos
-operativos.
+operativos. Esas pruebas se escribieron después: veinte casos nuevos y el refuerzo de uno
+existente. Cada uno se comprobó quitando su defensa, con lo que la prueba debía fallar, y
+restaurándola, con lo que debía volver a pasar.
 
 *Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
 entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos
@@ -2666,9 +2751,9 @@ esperado.»
 
 > **Sobre la verificación.** Contar cuántas reglas tienen una prueba no alcanzó para saber si
 > las pruebas servían. La prueba de mutación mostró que una parte de las defensas del sistema
-> podía quitarse sin que ninguna prueba fallara; cada una quedó registrada como prueba por
-> escribir, y una de ellas llevó a reforzar la prueba de ingresos simultáneos hasta demostrar
-> una garantía que antes solo se suponía. La decisión de método más importante fue no
+> podía quitarse sin que ninguna prueba fallara. Cada una se registró como prueba por escribir y
+> después se escribió, y una de ellas llevó a reforzar la prueba de ingresos simultáneos hasta
+> demostrar una garantía que antes solo se suponía. La decisión de método más importante fue no
 > reclasificar una mutación después de conocer su resultado: un porcentaje que se ajusta a
 > posteriori deja de medir.
 
@@ -2706,10 +2791,10 @@ cifras, así que no cambia cuando se congelen los números.
 
 | Punto | Dice | Poner |
 |---|---|---|
-| 1 | «Ejecutar las sesiones de usabilidad con participantes reales y contrastar los resultados con la línea base establecida en este informe.» | «Aplicar el resto del plan de mejora del estudio de usabilidad (U-02, U-03 y U-06 a U-13) y repetir la medición con las mismas herramientas para contrastar los resultados.» |
+| 1 | «Ejecutar las sesiones de usabilidad con participantes reales y contrastar los resultados con la línea base establecida en este informe.» | «Evaluar la interfaz rediseñada con las mismas herramientas del estudio de usabilidad, para contrastar los resultados, y aplicar lo que queda abierto de su plan de mejora (U-06, U-07, U-08, U-10 y U-12, y el regreso a un armado vacío de U-09).» |
 | 2 | «Extender el conjunto de pruebas al flujo de compra completo, de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» | «Completar los casos de prueba de las dos reglas sin verificación (RN-07 y RN-33), de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» |
 | 4 | «Definir un caso de prueba de regresión por cada hallazgo de usabilidad antes de aplicar las correcciones de la Fase 6.» | «Mantener una prueba de regresión por cada hallazgo de las próximas rondas de usabilidad, como se hizo con H-01 a H-06.» |
-| 5 | «Resolver la duplicación de contenido detectada entre las secciones de requerimientos, minutas y prototipos del cuerpo del informe.» | «Resolver la duplicación de contenido detectada entre las minutas y los prototipos del cuerpo del informe.» |
+| 5 | «Resolver la duplicación de contenido detectada entre las secciones de requerimientos, minutas y prototipos del cuerpo del informe.» | **Borrar el punto** y renumerar los siguientes: la duplicación se resolvió en esta versión (pp. 39, 40, 42 y 43). |
 
 ---
 
@@ -2721,8 +2806,9 @@ cifras, así que no cambia cuando se congelen los números.
 2. **Comprobá que el índice tenga estas entradas nuevas:** «Estimación de costos»,
    «Arquitectura e implementación» (antes «Implementación»), las cinco especificaciones CU-09 a
    CU-13, «Patrones de diseño», «Metodología de verificación» (entre «Matriz de trazabilidad» y
-   «Conclusiones»), los títulos nuevos de CU-06, CU-07 y CU-08, y que ya no esté
-   «Especificación de requerimientos funcionales» de la p. 42.
+   «Conclusiones»), los títulos nuevos de CU-06, CU-07 y CU-08, y que ya no estén
+   «Especificación de requerimientos funcionales» de la p. 42 ni la primera copia de «Minutas de
+   reunión (simuladas)» y «Prototipos de interfaz gráfica» (p. 39).
 3. **Corregí los números de página que el texto cita a mano** (no se actualizan solos). Buscá
    cada uno y poné la página nueva:
 

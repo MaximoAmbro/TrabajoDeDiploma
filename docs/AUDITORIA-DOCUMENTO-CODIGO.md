@@ -132,13 +132,14 @@ documento.
 | Precio del plan anual | RF-13 | $90.000 |
 | Horas de ingreso antes del evento | RN-18 | 6 |
 | Horas de ingreso después del evento | RN-18 | 12 |
+| Minutos de prioridad de los suscriptores al liberarse un lugar | RN-35 | 15 |
 
 *Razón:* base. Son los valores de `BaseDatos/02-semilla.sql`.
 
 **A-11 · p. 33 · Conflictos · R** (solo si se aplica el ítem 6 de CORRECCIONES, RN-35). Dice:
 «tres pares de reglas». Poner: «cuatro pares de reglas». Y agregar la fila:
 
-| RN-35 vs. RN-37 | RN-37 promete prioridad al suscriptor en la lista de espera. | Primero los suscriptores y después el resto, cada grupo por orden de inscripción. La condición de suscriptor se congela al inscribirse. |
+| RN-35 vs. RN-37 | RN-37 promete prioridad al suscriptor en la lista de espera. | Primero los suscriptores y después el resto, cada grupo por orden de inscripción. La condición de suscriptor se congela al inscribirse. Cuando se libera un lugar, durante quince minutos solo pueden comprarlo los suscriptores inscriptos. |
 |---|---|---|
 
 ## 3. Requerimientos y alcance
@@ -996,6 +997,7 @@ entrada.
 | FA1 | «Si el Cliente intenta confirmar sin entradas seleccionadas, el sistema muestra mensaje de error y vuelve al paso 3.» | «Mientras el paquete no tenga al menos una entrada, el sistema mantiene deshabilitados el botón «Comprar» y la casilla del seguro, y el Cliente sigue en el paso 3.» |
 | Después de FA3, agregar | — | «FA4 – Evento en preventa. Si el evento está en preventa y el Cliente no tiene suscripción activa, el sistema informa que la compra está reservada a suscriptores y no permite armar el paquete (RN-39).» |
 | Después de FA4, agregar | — | «FA5 – Reserva vencida. Si pasan diez minutos sin pago aprobado, el sistema informa que venció la reserva y libera el cupo; el Cliente debe volver a armar la compra (RN-15).» |
+| Después de FA5, agregar | — | «FA6 – Lugar reservado para suscriptores. Si el sector elegido acaba de liberar una entrada y el evento tiene inscriptos con suscripción en su lista de espera, durante quince minutos solo ellos pueden comprarla. A cualquier otro Cliente el sistema le informa: «El lugar liberado está reservado temporalmente para suscriptores inscriptos en la lista de espera. Intentá al finalizar la ventana de prioridad.», y no reserva el cupo (RN-35).» |
 | Postcondición 1 | «Existe un registro de Compra asociado al Cliente y al Paquete.» | «Existe un registro de Compra asociado al Cliente, con sus entradas, servicios y pagos.» |
 | Postcondición 3 | «Se actualizan sus puntos de fidelidad y, si corresponde, su nivel.» | «Se actualiza su contador de compras y, si corresponde, su nivel.» |
 

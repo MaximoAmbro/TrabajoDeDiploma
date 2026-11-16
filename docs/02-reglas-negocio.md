@@ -73,7 +73,7 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 | ID | Regla | T |
 |---|---|---|
 | RN-34 | Los reportes son accesibles únicamente al perfil Administrador. | A |
-| RN-35 | La lista de espera se ordena primero por los clientes que se inscribieron con suscripción activa y después por el resto; dentro de cada grupo, por orden de inscripción. La condición de suscriptor se **congela al inscribirse** (`ListaEspera.ConSuscripcion`): si después la suscripción vence o se cancela, el lugar no cambia. | E |
+| RN-35 | La lista de espera se ordena primero por los clientes que se inscribieron con suscripción activa y después por el resto; dentro de cada grupo, por orden de inscripción. La condición de suscriptor se **congela al inscribirse** (`ListaEspera.ConSuscripcion`): si después la suscripción vence o se cancela, el lugar no cambia. **Ventana de prioridad** (`1525202`): cuando un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y el evento tiene algún inscripto con suscripción, durante `PRIORIDAD_ESPERA_MINUTOS` solo pueden comprar ese sector los inscriptos con suscripción; los demás reciben el rechazo RN-35. Sin inscriptos con suscripción no hay ventana. El instante sale de `Sectores.CupoLiberadoEl`. | E |
 | RN-36 | Un cliente se inscribe una sola vez en la lista de espera de un mismo evento. | E |
 
 ---
@@ -121,6 +121,7 @@ No escribir estos valores en el código. Van en la tabla `Parametros`.
 | `SUSCRIPCION_MENSUAL_PRECIO` | RF-13 | 9000 (anexo A02: 1.476.000 ÷ 164) |
 | `SUSCRIPCION_ANUAL_PRECIO` | RF-13 | 90000 (anexo A02: 4.590.000 ÷ 51) |
 | `SUSCRIPCION_SEGURO_DESCUENTO` | RN-37 | 1.000 (100 %: sin cargo) |
+| `PRIORIDAD_ESPERA_MINUTOS` | RN-35 | 15 (`BaseDatos/06-prioridad-temporal.sql`) |
 
 ## Conflictos resueltos
 

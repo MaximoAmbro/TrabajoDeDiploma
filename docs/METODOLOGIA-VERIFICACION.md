@@ -9,10 +9,16 @@ reemplazan cuando JC congele el código y se vuelva a correr la mutación sobre 
 
 | Cifra en el texto | Hoy | Fuente | Cuándo cambia |
 |---|---|---|---|
-| Casos y ejecuciones | 124 casos, 243 ejecuciones, todas correctas | Corrida de Codex del 16/11 (`027527f`) | Cuando Codex termine las pruebas del encargo de mutación |
+| Casos y ejecuciones | 145 casos, 271 ejecuciones, todas correctas | Segunda corrida de Codex del 16/11 (`1525202`); **Claude Code la repite en el árbol principal cuando Codex avise que publicó** | Si Codex agrega casos al cerrar Historial y Reportes |
 | Cobertura de reglas | 39 de 41 (95,1 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` | Solo si cambian las reglas o se agrega caso a RN-07 o RN-33 |
 | Mutación | 83 defensas, 6 equivalentes, 51 de 77 detectadas (66,2 %); la séptima equivalente adentro; sin ella, 67,1 % | `docs/INFORME-MUTACION-SEGURIDAD.md`, sobre `fe04b1f` | En la corrida final sobre el commit congelado |
 | Commit medido | «commit» | — | Lo pone JC al congelar |
+
+**Al congelar, el párrafo «Resultado» cambia de forma, no solo de cifra.** Hoy informa la primera
+medición (`fe04b1f`), antes de las pruebas que encargó la mutación (CP-126 a CP-145, publicadas en
+`1525202`). La corrida final va a dar otra cifra, más alta. Entonces el párrafo informa las dos: la
+primera, que mostró qué faltaba (y de la que sale el pronóstico de las veintitrés), y la final,
+sobre el commit congelado, que es la que vale. Las equivalentes se tratan igual en las dos.
 
 Lo que no es cifra queda igual aunque cambien los números: qué es una mutación, el criterio de
 detección, el tratamiento de las equivalentes y qué significa que una defensa sobreviva. **Si en la
@@ -39,9 +45,9 @@ corrida, con el mismo esquema y los mismos datos iniciales que se entregan, y nu
 desarrollo. Las pruebas de interfaz abren los formularios reales de la aplicación, los operan y
 leen lo que muestran.
 
-La batería tiene ciento veinticuatro casos de prueba. Algunos se ejecutan varias veces con datos
+La batería tiene ciento cuarenta y cinco casos de prueba. Algunos se ejecutan varias veces con datos
 distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman doscientas
-cuarenta y tres ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
+setenta y una ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
 base, los resultados no dependen de lo que haya quedado de una corrida anterior.
 
 **Cobertura de las reglas de negocio**
@@ -131,7 +137,9 @@ esa defensa se quitara por error en una versión futura. Cada defensa sobrevivie
 como una prueba por escribir, con lo que debe verificar, y se ordenaron por la consecuencia que
 tendría su falta: primero las que protegen los datos personales y de pago de otros clientes,
 después el acceso sin contraseña y el control de ingreso, y al final las que solo exponen datos
-operativos.
+operativos. Esas pruebas se escribieron después: veinte casos nuevos y el refuerzo de uno
+existente. Cada uno se comprobó quitando su defensa, con lo que la prueba debía fallar, y
+restaurándola, con lo que debía volver a pasar.
 
 *Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
 entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos

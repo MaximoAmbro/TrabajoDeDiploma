@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 124 casos, que suman **243 ejecuciones**, las 243 correctas (corrida de Codex del 16/11, `TestResults/Cola/final.log`, publicada en `027527f`).
-CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-124 se
-agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-124» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 145 casos, que suman **271 ejecuciones**, las 271 correctas (corrida de Codex del 16/11, `TestResults/Cola16/final.log`, publicada en `1525202`). **Claude Code todavía no la repitió:** la cifra es la del registro de Codex.
+CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-145 se
+agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-145» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -138,9 +138,9 @@ documentado, no todas sus variantes: CP-56 prueba eliminar el último sector, no
 sectores; CP-60 prueba agregar un sector, no modificarlo. En la matriz, RN-05 está en la fila
 de RF-02 y RN-39 en la de RF-13: por eso CP-55 y CP-61 llevan dos requerimientos.
 
-## Casos CP-62 a CP-124
+## Casos CP-62 a CP-145
 
-Registrados por Claude Code el 13/11/2026; CP-116 a CP-124, el 16/11. Salen del comentario `// CP-xx — RF, RN` y del nombre
+Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11. Salen del comentario `// CP-xx — RF, RN` y del nombre
 visible de cada prueba en `Pruebas/`, leídos uno por uno. **Ninguno se volvió a correr para
 este registro:** el resultado es el de la última batería de Codex
 (`Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-12-T47-T48.md`).
@@ -158,7 +158,7 @@ escritorio abierta.
 | Ejecuciones | Casos |
 |---|---|
 | 20 | CP-63 y CP-116 |
-| 8 | CP-88 |
+| 8 | CP-88 y CP-125 |
 | 7 | CP-112 |
 | 5 | CP-82 y CP-87 |
 | 6 | CP-115, CP-118 y CP-123 |
@@ -167,14 +167,21 @@ escritorio abierta.
 | 2 | CP-66, CP-68, CP-69, CP-70, CP-71, CP-73, CP-74, CP-75, CP-77, CP-79, CP-80, CP-83, CP-89, CP-105, CP-111, CP-119 y CP-120 |
 | 1 | El resto |
 
-CP-62 a CP-124 suman **170 ejecuciones**. Con las 73 de CP-01 a CP-61, la batería da **243**.
-Contadas en la salida de la corrida de Codex del 16/11 (`TestResults/Cola/final.log`), no sumadas a
-mano: CP-01 a CP-115 corren las mismas 198 veces que el 14/11, y CP-116 a CP-124 suman 45.
+CP-62 a CP-145 suman **198 ejecuciones**. Con las 73 de CP-01 a CP-61, la batería da **271**.
+Contadas en la salida de la segunda corrida de Codex del 16/11 (`TestResults/Cola16/final.log`):
+271 líneas «Correctas». Respecto de la primera corrida del 16/11 (243) se suman las 8 de CP-125 y
+una de cada caso entre CP-126 y CP-145.
 
-**Ningún caso falla en la corrida del 16/11: 243 de 243.** Los tres que fallaban el 14/11 (la fila
+**Para Codex:** las ocho filas de CP-125 salen en la corrida como `CP125_Ventana ("reembolso",False,False)`
+y no con su `DisplayName`, y dos de esos nombres tienen la tilde rota en el archivo fuente
+(«despu?s», «inscripci?n»). El caso corre y pasa; falta el ID visible que pide la definición de
+terminado.
+
+**Ningún caso falla en la segunda corrida del 16/11: 271 de 271.** Antes, en la primera, 243 de 243. Los tres que fallaban el 14/11 (la fila
 de 150 % de CP-69, CP-76 y la fila del propietario de CP-85, todos de aspecto a escala 150 %)
 pasan desde el rediseño de pantallas de Codex (`96fd6ec` y `027527f`). **Esta batería no la corrió
-Claude Code:** la cifra es la del registro de Codex.
+Claude Code:** la cifra es la del registro de Codex. Se repite en el árbol principal cuando Codex
+avise que publicó (pedido de JC del 16/11).
 
 CP-81, que fallaba en la batería del 12/11, pasa desde `2af267a` (Codex corrigió la preventa).
 
@@ -251,6 +258,27 @@ sección 0).
 | CP-122 | PruebasReglasD5 | Compra confirmada sin seguro; volver a confirmarla agregándole seguro | Rechazo con «La compra ya no está pendiente de pago.»; la compra queda sin seguro, sin póliza y sin segundo pago | RF-06 | RN-28 | D-5 |
 | CP-123 | PruebasK7K8 | Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-41, RN-42 | K-7 |
 | CP-124 | PruebasK7K8 | Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente (3 variantes) | El rechazo es el mismo en texto, título y comportamiento: no revela si la cuenta existe ni si está bloqueada. El bloqueo interno sigue funcionando | RF-02 | RN-04, RN-40 | K-8 |
+| CP-125 | PruebasPrioridadTemporal | Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor inscripto en la lista de espera; compran un no suscriptor, el suscriptor inscripto, un suscriptor sin inscripción y un reintento de pago anterior, dentro y fuera de la ventana (8 variantes) | Dentro de la ventana solo compra el suscriptor inscripto; los demás reciben el rechazo RN-35 sin consumir el cupo ni dejar compra o pago nuevo. Fuera de la ventana compra cualquiera | RF-10 | RN-35, RN-37 | RN-35 |
+| CP-126 | PruebasGuardasMutacion | Pedir la lista de espera de un evento como cliente y sin sesión | Rechazo RN-34 sin devolver nombres ni correos; el administrador la obtiene | RF-10 | RN-34 | Mutación |
+| CP-127 | PruebasGuardasMutacion | Pedir los pagos de una compra ajena y sin sesión | Rechazo RN-41 sin devolver el dato; el titular los obtiene | RF-06 | RN-41 | Mutación |
+| CP-128 | PruebasGuardasMutacion | Pedir por su número una compra de otro cliente, y sin sesión | Rechazo RN-41 sin devolver la compra | RF-07 | RN-41 | Mutación |
+| CP-129 | PruebasGuardasMutacion | Pedir las pólizas de seguro de otro cliente, y sin sesión | Rechazo RN-41 sin devolver las pólizas | RF-06 | RN-41 | Mutación |
+| CP-130 | PruebasGuardasMutacion | Iniciar sesión usando como contraseña el hash guardado de una cuenta ya migrada a PBKDF2 | No autentica ni se toma como contraseña para migrar | RF-02 | RN-04 | Mutación |
+| CP-131 | PruebasGuardasMutacion | Registrar el ingreso de una entrada de un evento suspendido, dentro del horario de ingreso | Rechazo; la entrada no queda ingresada | RF-07 | RN-18 | Mutación |
+| CP-132 | PruebasGuardasMutacion | Registrar en la base el ingreso de una entrada contra un evento distinto del suyo, sin el filtro previo del gestor | La base no registra el ingreso | RF-07 | RN-18 | Mutación |
+| CP-133 | PruebasGuardasMutacion | La entrada se devuelve entre la lectura y la escritura del ingreso | La base no registra el ingreso de una entrada que ya no está confirmada | RF-07 | RN-18, RN-29 | Mutación |
+| CP-134 | PruebasGuardasMutacion | Registrar el ingreso de una entrada pendiente y de una vencida | Cada una recibe su rechazo específico y ninguna queda ingresada | RF-07 | RN-18 | Mutación |
+| CP-135 | PruebasGuardasMutacion | Registrar ingresos en el segundo exacto de apertura y de cierre de la ventana, y un segundo antes y después | Los dos bordes se aceptan; los segundos de afuera se rechazan | RF-07 | RN-18 | Mutación |
+| CP-136 | PruebasGuardasMutacion | Leer un código de entrada con espacios alrededor | El código se normaliza y el ingreso queda registrado | RF-07 | RN-18 | Mutación |
+| CP-137 | PruebasGuardasMutacion | Consultar si otro cliente está inscripto en una lista de espera, y sin sesión | Rechazo RN-41 sin devolver el dato | RF-10 | RN-41 | Mutación |
+| CP-138 | PruebasGuardasMutacion | Contar las compras de fidelización de otro cliente, y sin sesión | Rechazo RN-41 sin devolver el dato | RF-08 | RN-41 | Mutación |
+| CP-139 | PruebasGuardasMutacion | Calcular el descuento de otro cliente, y sin sesión | Rechazo RN-41 sin devolver el dato | RF-08 | RN-41 | Mutación |
+| CP-140 | PruebasGuardasMutacion | Armar un paquete a nombre de otro cliente, y sin sesión | Rechazo RN-41; no se crea el paquete | RF-05 | RN-41 | Mutación |
+| CP-141 | PruebasGuardasMutacion | Consultar los locales de un propietario como cliente, y sin sesión | Rechazo RN-34 sin devolver el dato | RF-12 | RN-34 | Mutación |
+| CP-142 | PruebasGuardasMutacion | Listar los eventos con ingreso abierto como cliente, y sin sesión | Rechazo RN-34 sin devolver el listado | RF-07 | RN-34 | Mutación |
+| CP-143 | PruebasGuardasMutacion | Ejecutar un reporte ya creado después de cerrar la sesión del administrador o como cliente | Rechazo RN-34 sin devolver el reporte | RF-11 | RN-34 | Mutación |
+| CP-144 | PruebasGuardasMutacion | Pedir el catálogo de eventos de un reporte como cliente, y sin sesión | Rechazo RN-34 sin devolver el catálogo | RF-11 | RN-34 | Mutación |
+| CP-145 | PruebasGuardasMutacion | Insertar dos entradas con el mismo código QR | El índice único de la base rechaza la segunda y la reversión deja intacta la primera | RF-07 | RN-18 | Mutación |
 
 **Notas de lectura:**
 - **CP-105 y CP-109 son mediciones:** no verifican una defensa. CP-105 sí afirma que un hash más
@@ -262,6 +290,14 @@ sección 0).
 - **Criterio D-5, resuelto por JC el 14/11: no se cuentan.** Codex escribió dos pruebas reales,
   CP-121 para RN-26 y CP-122 para RN-28, verdes el 16/11. **La cobertura pasa a 39 de 41 (95,1 %).**
   Codex también quitó RN-26 y RN-28 de los comentarios de CP-77, CP-79 y CP-80.
+- **CP-126 a CP-145 son las pruebas que encargó la mutación** (`docs/ENCARGO-PRUEBAS-MUTACION.md`,
+  tareas 1 a 21; la 12 refuerza CP-94 y no tiene caso nuevo). Codex informa que cada una falló con
+  su defensa quitada y volvió a pasar al restaurarla. Esa comprobación es de Codex, una por una; la
+  cifra que va al documento es la de la corrida final de mutación sobre el código congelado.
+- **El RF de CP-126 a CP-145 es el de la matriz del documento** (`docs/01-requerimientos.md`), no siempre el del comentario de la prueba: CP-127 dice RF-07 y es RF-06, CP-129 dice RF-08 y es RF-06, CP-133 dice RF-07/RF-08 y es RF-07, CP-138 dice RF-09 y es RF-08, CP-139 dice RF-09 y es RF-08, CP-140 dice RF-04 y es RF-05, CP-143 dice RF-13 y es RF-11, CP-144 dice RF-13 y es RF-11. Para Codex: corregir esos comentarios.
+- **CP-125 prueba la ventana de prioridad de RN-35**, construida en `1525202`: columna
+  `Sectores.CupoLiberadoEl` y parámetro `PRIORIDAD_ESPERA_MINUTOS` (15). RN-35 ya tenía caso
+  (CP-117); la cobertura no cambia: 39 de 41.
 - **Las reglas de CP-91 a CP-104** son las que declara el comentario de la prueba. Si cada una
   resiste la mutación de su defensa, lo dice `docs/PLAN-MUTACION-SEGURIDAD.md` cuando se
   ejecute.
