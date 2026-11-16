@@ -1,4 +1,4 @@
-﻿namespace Visual.Vendedor
+namespace Visual.Vendedor
 {
     partial class frmAgregarSector
     {
@@ -42,7 +42,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(24, 208);
+            this.label5.Location = new System.Drawing.Point(24, 268);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(368, 20);
@@ -52,7 +52,7 @@
             // txtPrecio
             // 
             this.txtPrecio.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtPrecio.Location = new System.Drawing.Point(24, 232);
+            this.txtPrecio.Location = new System.Drawing.Point(24, 292);
             this.txtPrecio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtPrecio.Name = "txtPrecio";
             this.txtPrecio.Size = new System.Drawing.Size(368, 28);
@@ -61,7 +61,7 @@
             // btnregistrarse
             // 
             this.btnregistrarse.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnregistrarse.Location = new System.Drawing.Point(224, 296);
+            this.btnregistrarse.Location = new System.Drawing.Point(224, 356);
             this.btnregistrarse.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnregistrarse.Name = "btnregistrarse";
             this.btnregistrarse.Size = new System.Drawing.Size(168, 40);
@@ -72,7 +72,7 @@
             // txtCapacidad
             // 
             this.txtCapacidad.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtCapacidad.Location = new System.Drawing.Point(24, 168);
+            this.txtCapacidad.Location = new System.Drawing.Point(24, 228);
             this.txtCapacidad.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.txtCapacidad.Name = "txtCapacidad";
             this.txtCapacidad.Size = new System.Drawing.Size(368, 28);
@@ -81,7 +81,7 @@
             // lblmail
             // 
             this.lblmail.AutoSize = true;
-            this.lblmail.Location = new System.Drawing.Point(24, 144);
+            this.lblmail.Location = new System.Drawing.Point(24, 204);
             this.lblmail.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblmail.Name = "lblmail";
             this.lblmail.Size = new System.Drawing.Size(368, 20);
@@ -91,7 +91,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(24, 80);
+            this.label6.Location = new System.Drawing.Point(24, 140);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(368, 20);
@@ -101,7 +101,7 @@
             // txtNombre
             // 
             this.txtNombre.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtNombre.Location = new System.Drawing.Point(24, 104);
+            this.txtNombre.Location = new System.Drawing.Point(24, 164);
             this.txtNombre.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(368, 28);
@@ -110,7 +110,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(368, 32);
@@ -121,7 +121,7 @@
             // 
             this.lblVolver.AutoSize = false;
             this.lblVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblVolver.Location = new System.Drawing.Point(24, 296);
+            this.lblVolver.Location = new System.Drawing.Point(24, 356);
             this.lblVolver.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblVolver.Name = "lblVolver";
             this.lblVolver.Size = new System.Drawing.Size(136, 40);
@@ -133,7 +133,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(416, 360);
+            this.ClientSize = new System.Drawing.Size(416, 420);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtPrecio);
             this.Controls.Add(this.btnregistrarse);
@@ -146,6 +146,11 @@
             this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "frmAgregarSector";
             this.Text = "EventAura · Agregar sector";
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(416, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -162,5 +167,6 @@
         private System.Windows.Forms.TextBox txtNombre;
         private Visual.Componentes.EtiquetaTitulo label1;
         private Visual.Componentes.BotonSecundario lblVolver;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

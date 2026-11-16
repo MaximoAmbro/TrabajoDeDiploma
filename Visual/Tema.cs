@@ -33,6 +33,24 @@ namespace Visual
         public static readonly Color AdvertenciaFondo = Color.FromArgb(255, 244, 214);
 
         public static readonly Font Marca = new Font("Segoe UI Semibold", 26f);
+        public static readonly Font FirmaNormal = new Font("Segoe UI", 16f);
+        public static readonly Font FirmaFuerte = new Font("Segoe UI", 16f, FontStyle.Bold);
+        public static readonly Font IconosInterfaz = new Font(FamiliaIconos(), 24f);
+
+        public static void EstiloAviso(Control aviso, bool error)
+        {
+            aviso.BackColor = error ? ErrorFondo : ExitoFondo;
+            aviso.ForeColor = error ? Error : Texto;
+            aviso.Font = Cuerpo;
+        }
+
+        private static string FamiliaIconos()
+        {
+            using (var fuentes = new System.Drawing.Text.InstalledFontCollection())
+                foreach (var familia in fuentes.Families)
+                    if (familia.Name == "Segoe Fluent Icons") return familia.Name;
+            return "Segoe MDL2 Assets";
+        }
         public static readonly Font Titulo = new Font("Segoe UI Semibold", 18f);
         public static readonly Font Seccion = new Font("Segoe UI Semibold", 12f);
         public static readonly Font Cuerpo = new Font("Segoe UI", 10f);

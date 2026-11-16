@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmCrearUsuario
     {
@@ -48,7 +48,7 @@
             // 
             this.checkbxShowPass.AutoSize = true;
             this.checkbxShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkbxShowPass.Location = new System.Drawing.Point(24, 304);
+            this.checkbxShowPass.Location = new System.Drawing.Point(24, 364);
             this.checkbxShowPass.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(240, 24);
@@ -59,7 +59,7 @@
             // TxtConfirmpassword
             // 
             this.TxtConfirmpassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TxtConfirmpassword.Location = new System.Drawing.Point(232, 256);
+            this.TxtConfirmpassword.Location = new System.Drawing.Point(232, 316);
             this.TxtConfirmpassword.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.TxtConfirmpassword.Name = "TxtConfirmpassword";
             this.TxtConfirmpassword.Size = new System.Drawing.Size(184, 28);
@@ -68,7 +68,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(232, 232);
+            this.label4.Location = new System.Drawing.Point(232, 292);
             this.label4.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(184, 20);
@@ -78,7 +78,7 @@
             // TxtPassword
             // 
             this.TxtPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TxtPassword.Location = new System.Drawing.Point(24, 256);
+            this.TxtPassword.Location = new System.Drawing.Point(24, 316);
             this.TxtPassword.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.TxtPassword.Name = "TxtPassword";
             this.TxtPassword.PasswordChar = '*';
@@ -88,7 +88,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 232);
+            this.label3.Location = new System.Drawing.Point(24, 292);
             this.label3.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(184, 20);
@@ -98,7 +98,7 @@
             // txtNombre
             // 
             this.txtNombre.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtNombre.Location = new System.Drawing.Point(24, 112);
+            this.txtNombre.Location = new System.Drawing.Point(24, 172);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(184, 28);
             this.txtNombre.TabIndex = 34;
@@ -106,7 +106,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(392, 32);
@@ -116,7 +116,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(24, 88);
+            this.label6.Location = new System.Drawing.Point(24, 148);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(184, 20);
             this.label6.TabIndex = 27;
@@ -125,7 +125,7 @@
             // lblmail
             // 
             this.lblmail.AutoSize = true;
-            this.lblmail.Location = new System.Drawing.Point(24, 160);
+            this.lblmail.Location = new System.Drawing.Point(24, 220);
             this.lblmail.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblmail.Name = "lblmail";
             this.lblmail.Size = new System.Drawing.Size(392, 20);
@@ -135,7 +135,7 @@
             // txtmail
             // 
             this.txtmail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtmail.Location = new System.Drawing.Point(24, 184);
+            this.txtmail.Location = new System.Drawing.Point(24, 244);
             this.txtmail.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.txtmail.Name = "txtmail";
             this.txtmail.Size = new System.Drawing.Size(392, 28);
@@ -145,7 +145,7 @@
             // 
             this.lblyatengocuen.AutoSize = false;
             this.lblyatengocuen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblyatengocuen.Location = new System.Drawing.Point(24, 368);
+            this.lblyatengocuen.Location = new System.Drawing.Point(24, 428);
             this.lblyatengocuen.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblyatengocuen.Name = "lblyatengocuen";
             this.lblyatengocuen.Size = new System.Drawing.Size(184, 24);
@@ -156,7 +156,7 @@
             // btnregistrarse
             // 
             this.btnregistrarse.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnregistrarse.Location = new System.Drawing.Point(232, 360);
+            this.btnregistrarse.Location = new System.Drawing.Point(232, 420);
             this.btnregistrarse.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.btnregistrarse.Name = "btnregistrarse";
             this.btnregistrarse.Size = new System.Drawing.Size(184, 40);
@@ -167,7 +167,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(232, 88);
+            this.label5.Location = new System.Drawing.Point(232, 148);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(184, 20);
             this.label5.TabIndex = 35;
@@ -176,7 +176,7 @@
             // txtApellido
             // 
             this.txtApellido.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtApellido.Location = new System.Drawing.Point(232, 112);
+            this.txtApellido.Location = new System.Drawing.Point(232, 172);
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(184, 28);
             this.txtApellido.TabIndex = 36;
@@ -186,7 +186,7 @@
             this.AcceptButton = this.btnregistrarse;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(440, 424);
+            this.ClientSize = new System.Drawing.Size(440, 484);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtApellido);
             this.Controls.Add(this.btnregistrarse);
@@ -207,6 +207,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventAura · Crear cuenta";
             this.Load += new System.EventHandler(this.frmCrearUsuario_Load);
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(440, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -227,5 +232,6 @@
         private Visual.Componentes.BotonPrimario btnregistrarse;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtApellido;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

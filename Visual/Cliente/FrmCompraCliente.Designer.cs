@@ -287,7 +287,7 @@ namespace Visual
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(880, 544);
+            this.ClientSize = new System.Drawing.Size(880, 604);
             this.CancelButton = this.btnVolver;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FrmCompraCliente";
@@ -310,6 +310,11 @@ namespace Visual
             this.pnlTarjetaServicios.PerformLayout();
             this.pnlResumen.ResumeLayout(false);
             this.pnlResumen.PerformLayout();
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(880, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
         }
         #endregion
@@ -342,5 +347,6 @@ namespace Visual
         private Visual.Componentes.EtiquetaSeccion lblTituloEntradas;
         private Visual.Componentes.EtiquetaSeccion lblTituloServicios;
         private Visual.Componentes.EtiquetaSeccion lblTituloResumen;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

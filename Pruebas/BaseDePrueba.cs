@@ -29,10 +29,14 @@ namespace Pruebas
             new Regex(@"^[ \t]*GO[ \t]*\r?$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
         private static readonly Regex NombreValido = new Regex(@"^[A-Za-z0-9_]+$");
+        private static bool modoErroresConfigurado;
 
         [AssemblyInitialize]
         public static void Preparar(TestContext contexto)
         {
+            // También para los hilos STA creados por los casos: una excepción hace
+            // fallar el caso, nunca abre el diálogo modal del framework.
+            ConfigurarErroresDePrueba();
             string cadena = CadenaDePrueba();
             string nombre = new SqlConnectionStringBuilder(cadena).InitialCatalog;
 
@@ -54,6 +58,14 @@ namespace Pruebas
 
             // GestorParametros cachea: que lea la tabla recién poblada.
             GestorParametros.Instance.Recargar();
+        }
+
+        public static void ConfigurarErroresDePrueba()
+        {
+            if (modoErroresConfigurado) return;
+            System.Windows.Forms.Application.SetUnhandledExceptionMode(
+                System.Windows.Forms.UnhandledExceptionMode.ThrowException, false);
+            modoErroresConfigurado = true;
         }
 
         [AssemblyCleanup]

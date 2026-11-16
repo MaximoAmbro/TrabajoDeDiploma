@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmHistorialCliente
     {
@@ -42,7 +42,7 @@
             // btnVolver
             //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(24, 448);
+            this.btnVolver.Location = new System.Drawing.Point(24, 508);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(144, 40);
@@ -54,7 +54,7 @@
             //
             this.dgvCompras.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCompras.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.dgvCompras.Location = new System.Drawing.Point(24, 80);
+            this.dgvCompras.Location = new System.Drawing.Point(24, 140);
             this.dgvCompras.Margin = new System.Windows.Forms.Padding(2);
             this.dgvCompras.Name = "dgvCompras";
             this.dgvCompras.RowHeadersWidth = 62;
@@ -64,7 +64,7 @@
             // label1
             //
             this.label1.AutoSize = false;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(852, 32);
@@ -74,7 +74,7 @@
             // lblDetalle
             //
             this.lblDetalle.AutoSize = false;
-            this.lblDetalle.Location = new System.Drawing.Point(24, 216);
+            this.lblDetalle.Location = new System.Drawing.Point(24, 276);
             this.lblDetalle.Name = "lblDetalle";
             this.lblDetalle.Size = new System.Drawing.Size(852, 24);
             this.lblDetalle.TabIndex = 29;
@@ -83,7 +83,7 @@
             // dgvEntradas
             //
             this.dgvEntradas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEntradas.Location = new System.Drawing.Point(24, 248);
+            this.dgvEntradas.Location = new System.Drawing.Point(24, 308);
             this.dgvEntradas.Margin = new System.Windows.Forms.Padding(2);
             this.dgvEntradas.Name = "dgvEntradas";
             this.dgvEntradas.RowHeadersWidth = 62;
@@ -94,7 +94,7 @@
             //
             this.btnDevolver.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnDevolver.Enabled = false;
-            this.btnDevolver.Location = new System.Drawing.Point(680, 448);
+            this.btnDevolver.Location = new System.Drawing.Point(680, 508);
             this.btnDevolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnDevolver.Name = "btnDevolver";
             this.btnDevolver.Size = new System.Drawing.Size(196, 40);
@@ -104,7 +104,7 @@
             //
             // lblAyuda
             //
-            this.lblAyuda.Location = new System.Drawing.Point(24, 392);
+            this.lblAyuda.Location = new System.Drawing.Point(24, 452);
             this.lblAyuda.Name = "lblAyuda";
             this.lblAyuda.Size = new System.Drawing.Size(852, 40);
             this.lblAyuda.TabIndex = 30;
@@ -114,7 +114,7 @@
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(900, 512);
+            this.ClientSize = new System.Drawing.Size(900, 572);
             this.Controls.Add(this.lblAyuda);
             this.Controls.Add(this.btnDevolver);
             this.Controls.Add(this.dgvEntradas);
@@ -129,6 +129,11 @@
             this.Load += new System.EventHandler(this.frmHistorialCliente_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvCompras)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEntradas)).EndInit();
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(900, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,5 +148,6 @@
         private System.Windows.Forms.DataGridView dgvEntradas;
         private Visual.Componentes.BotonPrimario btnDevolver;
         private System.Windows.Forms.Label lblAyuda;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

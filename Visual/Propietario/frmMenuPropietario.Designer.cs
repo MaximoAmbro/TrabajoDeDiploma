@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmMenuPropietario
     {
@@ -36,7 +36,7 @@
             this.btnListasEspera = new Visual.Componentes.BotonPrimario();
             this.btnReportes = new Visual.Componentes.BotonPrimario();
             this.btnControlIngreso = new Visual.Componentes.BotonPrimario();
-            this.btnControlIngreso.Location = new System.Drawing.Point(24, 304);
+            this.btnControlIngreso.Location = new System.Drawing.Point(24, 332);
             this.btnControlIngreso.Size = new System.Drawing.Size(352, 40);
             this.btnControlIngreso.Name = "btnControlIngreso";
             this.btnControlIngreso.Text = "Control de ingreso";
@@ -48,7 +48,7 @@
             // lblNombre
             // 
             this.lblNombre.AutoSize = true;
-            this.lblNombre.Location = new System.Drawing.Point(24, 64);
+            this.lblNombre.Location = new System.Drawing.Point(24, 116);
             this.lblNombre.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblNombre.Name = "lblNombre";
             this.lblNombre.Size = new System.Drawing.Size(352, 32);
@@ -60,7 +60,7 @@
             // 
             this.lblvolver.AutoSize = false;
             this.lblvolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblvolver.Location = new System.Drawing.Point(24, 384);
+            this.lblvolver.Location = new System.Drawing.Point(24, 396);
             this.lblvolver.Name = "lblvolver";
             this.lblvolver.Size = new System.Drawing.Size(192, 40);
             this.lblvolver.TabIndex = 37;
@@ -70,7 +70,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(352, 32);
@@ -81,7 +81,7 @@
             // btnRegistrarLocal
             // 
             this.btnRegistrarLocal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRegistrarLocal.Location = new System.Drawing.Point(24, 160);
+            this.btnRegistrarLocal.Location = new System.Drawing.Point(24, 200);
             this.btnRegistrarLocal.Margin = new System.Windows.Forms.Padding(2);
             this.btnRegistrarLocal.Name = "btnRegistrarLocal";
             this.btnRegistrarLocal.Size = new System.Drawing.Size(352, 40);
@@ -92,7 +92,7 @@
             // btnMisLocales
             // 
             this.btnMisLocales.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMisLocales.Location = new System.Drawing.Point(24, 112);
+            this.btnMisLocales.Location = new System.Drawing.Point(24, 156);
             this.btnMisLocales.Margin = new System.Windows.Forms.Padding(2);
             this.btnMisLocales.Name = "btnMisLocales";
             this.btnMisLocales.Size = new System.Drawing.Size(352, 40);
@@ -103,7 +103,7 @@
             // btnListasEspera
             //
             this.btnListasEspera.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnListasEspera.Location = new System.Drawing.Point(24, 208);
+            this.btnListasEspera.Location = new System.Drawing.Point(24, 244);
             this.btnListasEspera.Margin = new System.Windows.Forms.Padding(2);
             this.btnListasEspera.Name = "btnListasEspera";
             this.btnListasEspera.Size = new System.Drawing.Size(352, 40);
@@ -114,7 +114,7 @@
             // btnReportes
             //
             this.btnReportes.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnReportes.Location = new System.Drawing.Point(24, 256);
+            this.btnReportes.Location = new System.Drawing.Point(24, 288);
             this.btnReportes.Margin = new System.Windows.Forms.Padding(2);
             this.btnReportes.Name = "btnReportes";
             this.btnReportes.Size = new System.Drawing.Size(352, 40);
@@ -126,7 +126,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(400, 448);
+            this.ClientSize = new System.Drawing.Size(400, 508);
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
             this.Controls.Add(this.label1);
@@ -139,6 +139,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventAura · Administración";
             this.Load += new System.EventHandler(this.frmMenuVendedor_Load);
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(400, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -154,5 +159,6 @@
         private Visual.Componentes.BotonPrimario btnListasEspera;
         private Visual.Componentes.BotonPrimario btnReportes;
         private Visual.Componentes.BotonPrimario btnControlIngreso;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

@@ -294,6 +294,10 @@
     <Compile Include="ManejadorErrores.cs" />
     <Compile Include="Tema.cs" />
     <Compile Include="Componentes\MapaSectores.cs" />
+    <Compile Include="Componentes\MarcaAura.cs" />
+    <Compile Include="AvisosEnPantalla.cs" />
+    <Compile Include="Componentes\BarraSuperior.cs"><SubType>UserControl</SubType></Compile>
+    <Compile Include="Componentes\BarraSuperior.Designer.cs"><DependentUpon>BarraSuperior.cs</DependentUpon></Compile>
     <Compile Include="Avisos.cs" />
     <EmbeddedResource Include="Recursos\EventAura.ico">
       <LogicalName>Visual.Recursos.EventAura.ico</LogicalName>

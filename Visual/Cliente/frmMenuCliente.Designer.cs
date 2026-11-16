@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmMenuCliente
     {
@@ -39,7 +39,7 @@
             // btnEventos
             // 
             this.btnEventos.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEventos.Location = new System.Drawing.Point(24, 112);
+            this.btnEventos.Location = new System.Drawing.Point(24, 172);
             this.btnEventos.Margin = new System.Windows.Forms.Padding(2);
             this.btnEventos.Name = "btnEventos";
             this.btnEventos.Size = new System.Drawing.Size(352, 40);
@@ -50,7 +50,7 @@
             // btnHistorial
             // 
             this.btnHistorial.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnHistorial.Location = new System.Drawing.Point(24, 160);
+            this.btnHistorial.Location = new System.Drawing.Point(24, 220);
             this.btnHistorial.Margin = new System.Windows.Forms.Padding(2);
             this.btnHistorial.Name = "btnHistorial";
             this.btnHistorial.Size = new System.Drawing.Size(352, 40);
@@ -61,7 +61,7 @@
             // btnSuscripcion
             //
             this.btnSuscripcion.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSuscripcion.Location = new System.Drawing.Point(24, 208);
+            this.btnSuscripcion.Location = new System.Drawing.Point(24, 268);
             this.btnSuscripcion.Margin = new System.Windows.Forms.Padding(2);
             this.btnSuscripcion.Name = "btnSuscripcion";
             this.btnSuscripcion.Size = new System.Drawing.Size(352, 40);
@@ -72,7 +72,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(352, 32);
@@ -84,7 +84,7 @@
             // 
             this.lblvolver.AutoSize = false;
             this.lblvolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblvolver.Location = new System.Drawing.Point(24, 288);
+            this.lblvolver.Location = new System.Drawing.Point(24, 348);
             this.lblvolver.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblvolver.Name = "lblvolver";
             this.lblvolver.Size = new System.Drawing.Size(192, 40);
@@ -95,7 +95,7 @@
             // lblNombre
             // 
             this.lblNombre.AutoSize = true;
-            this.lblNombre.Location = new System.Drawing.Point(24, 64);
+            this.lblNombre.Location = new System.Drawing.Point(24, 124);
             this.lblNombre.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNombre.Name = "lblNombre";
             this.lblNombre.Size = new System.Drawing.Size(352, 32);
@@ -107,7 +107,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(400, 352);
+            this.ClientSize = new System.Drawing.Size(400, 412);
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
             this.Controls.Add(this.label1);
@@ -120,6 +120,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventAura · Mi cuenta";
             this.Load += new System.EventHandler(this.frmMenuCliente_Load);
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(400, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -132,5 +137,6 @@
         private Visual.Componentes.EtiquetaTitulo label1;
         private Visual.Componentes.BotonSecundario lblvolver;
         private Visual.Componentes.EtiquetaTitulo lblNombre;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

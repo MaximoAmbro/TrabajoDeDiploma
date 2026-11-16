@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmReportes
     {
@@ -50,7 +50,7 @@
             // label1
             //
             this.label1.AutoSize = false;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(852, 32);
@@ -60,7 +60,7 @@
             // lblReporte
             //
             this.lblReporte.AutoSize = false;
-            this.lblReporte.Location = new System.Drawing.Point(24, 72);
+            this.lblReporte.Location = new System.Drawing.Point(24, 132);
             this.lblReporte.Name = "lblReporte";
             this.lblReporte.Size = new System.Drawing.Size(440, 20);
             this.lblReporte.TabIndex = 21;
@@ -70,7 +70,7 @@
             //
             this.cmbReporte.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cmbReporte.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbReporte.Location = new System.Drawing.Point(24, 96);
+            this.cmbReporte.Location = new System.Drawing.Point(24, 156);
             this.cmbReporte.Name = "cmbReporte";
             this.cmbReporte.Size = new System.Drawing.Size(440, 28);
             this.cmbReporte.TabIndex = 0;
@@ -79,7 +79,7 @@
             // lblDesde
             //
             this.lblDesde.AutoSize = false;
-            this.lblDesde.Location = new System.Drawing.Point(488, 72);
+            this.lblDesde.Location = new System.Drawing.Point(488, 132);
             this.lblDesde.Name = "lblDesde";
             this.lblDesde.Size = new System.Drawing.Size(184, 20);
             this.lblDesde.TabIndex = 22;
@@ -89,7 +89,7 @@
             //
             this.dtpDesde.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDesde.Location = new System.Drawing.Point(488, 96);
+            this.dtpDesde.Location = new System.Drawing.Point(488, 156);
             this.dtpDesde.Name = "dtpDesde";
             this.dtpDesde.Size = new System.Drawing.Size(184, 28);
             this.dtpDesde.TabIndex = 1;
@@ -98,7 +98,7 @@
             // lblHasta
             //
             this.lblHasta.AutoSize = false;
-            this.lblHasta.Location = new System.Drawing.Point(696, 72);
+            this.lblHasta.Location = new System.Drawing.Point(696, 132);
             this.lblHasta.Name = "lblHasta";
             this.lblHasta.Size = new System.Drawing.Size(180, 20);
             this.lblHasta.TabIndex = 23;
@@ -108,7 +108,7 @@
             //
             this.dtpHasta.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpHasta.Location = new System.Drawing.Point(696, 96);
+            this.dtpHasta.Location = new System.Drawing.Point(696, 156);
             this.dtpHasta.Name = "dtpHasta";
             this.dtpHasta.Size = new System.Drawing.Size(180, 28);
             this.dtpHasta.TabIndex = 2;
@@ -117,7 +117,7 @@
             // lblFiltro
             //
             this.lblFiltro.AutoSize = false;
-            this.lblFiltro.Location = new System.Drawing.Point(24, 144);
+            this.lblFiltro.Location = new System.Drawing.Point(24, 204);
             this.lblFiltro.Name = "lblFiltro";
             this.lblFiltro.Size = new System.Drawing.Size(440, 20);
             this.lblFiltro.TabIndex = 24;
@@ -127,7 +127,7 @@
             //
             this.cmbFiltro.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cmbFiltro.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFiltro.Location = new System.Drawing.Point(24, 168);
+            this.cmbFiltro.Location = new System.Drawing.Point(24, 228);
             this.cmbFiltro.Name = "cmbFiltro";
             this.cmbFiltro.Size = new System.Drawing.Size(440, 28);
             this.cmbFiltro.TabIndex = 3;
@@ -136,7 +136,7 @@
             //
             this.dtpCorte.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpCorte.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpCorte.Location = new System.Drawing.Point(24, 168);
+            this.dtpCorte.Location = new System.Drawing.Point(24, 228);
             this.dtpCorte.Name = "dtpCorte";
             this.dtpCorte.Size = new System.Drawing.Size(440, 28);
             this.dtpCorte.TabIndex = 4;
@@ -146,7 +146,7 @@
             //
             this.chkSoloAgotados.AutoSize = false;
             this.chkSoloAgotados.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkSoloAgotados.Location = new System.Drawing.Point(488, 144);
+            this.chkSoloAgotados.Location = new System.Drawing.Point(488, 204);
             this.chkSoloAgotados.Name = "chkSoloAgotados";
             this.chkSoloAgotados.Size = new System.Drawing.Size(388, 24);
             this.chkSoloAgotados.TabIndex = 5;
@@ -156,7 +156,7 @@
             // btnGenerar
             //
             this.btnGenerar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnGenerar.Location = new System.Drawing.Point(688, 176);
+            this.btnGenerar.Location = new System.Drawing.Point(688, 236);
             this.btnGenerar.Name = "btnGenerar";
             this.btnGenerar.Size = new System.Drawing.Size(188, 40);
             this.btnGenerar.TabIndex = 6;
@@ -167,7 +167,7 @@
             //
             this.btnExportar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnExportar.Enabled = false;
-            this.btnExportar.Location = new System.Drawing.Point(680, 448);
+            this.btnExportar.Location = new System.Drawing.Point(680, 508);
             this.btnExportar.Name = "btnExportar";
             this.btnExportar.Size = new System.Drawing.Size(196, 40);
             this.btnExportar.TabIndex = 7;
@@ -177,7 +177,7 @@
             // dgvReporte
             //
             this.dgvReporte.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvReporte.Location = new System.Drawing.Point(24, 232);
+            this.dgvReporte.Location = new System.Drawing.Point(24, 292);
             this.dgvReporte.Name = "dgvReporte";
             this.dgvReporte.RowHeadersWidth = 62;
             this.dgvReporte.Size = new System.Drawing.Size(852, 128);
@@ -185,7 +185,7 @@
             //
             // lblLectura
             //
-            this.lblLectura.Location = new System.Drawing.Point(24, 368);
+            this.lblLectura.Location = new System.Drawing.Point(24, 428);
             this.lblLectura.Name = "lblLectura";
             this.lblLectura.Size = new System.Drawing.Size(852, 64);
             this.lblLectura.TabIndex = 25;
@@ -193,7 +193,7 @@
             // btnVolver
             //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(24, 448);
+            this.btnVolver.Location = new System.Drawing.Point(24, 508);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(144, 40);
             this.btnVolver.TabIndex = 9;
@@ -204,7 +204,7 @@
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(900, 512);
+            this.ClientSize = new System.Drawing.Size(900, 572);
             this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.lblLectura);
             this.Controls.Add(this.dgvReporte);
@@ -227,6 +227,11 @@
             this.Text = "EventAura · Reportes";
             this.Load += new System.EventHandler(this.frmReportes_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvReporte)).EndInit();
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(900, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -250,5 +255,6 @@
         private System.Windows.Forms.DataGridView dgvReporte;
         private System.Windows.Forms.Label lblLectura;
         private Visual.Componentes.BotonSecundario btnVolver;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

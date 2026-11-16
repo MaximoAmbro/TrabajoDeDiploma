@@ -1,0 +1,52 @@
+﻿On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   Pruebas/BaseDePrueba.cs
+	modified:   Pruebas/CapturarTanda.ps1
+	modified:   Pruebas/CapturasTandaVisual.cs
+	modified:   Pruebas/RESULTADOS-INTERFAZ-FASES.md
+	modified:   Repo/GestorFidelizacion.cs
+	modified:   Repo/GestorUsuarios.cs
+	modified:   Visual/Cliente/FrmCompraCliente.Designer.cs
+	modified:   Visual/Cliente/frmConfirmacion.Designer.cs
+	modified:   Visual/Cliente/frmEventosCliente.Designer.cs
+	modified:   Visual/Cliente/frmHistorialCliente.Designer.cs
+	modified:   Visual/Cliente/frmMenuCliente.Designer.cs
+	modified:   Visual/Cliente/frmPago.Designer.cs
+	modified:   Visual/Cliente/frmSuscripcion.Designer.cs
+	modified:   Visual/ManejadorErrores.cs
+	modified:   Visual/Propietario/frmAdministrarEvento.Designer.cs
+	modified:   Visual/Propietario/frmAgregarEvento.Designer.cs
+	modified:   Visual/Propietario/frmAgregarSector.Designer.cs
+	modified:   Visual/Propietario/frmControlIngreso.Designer.cs
+	modified:   Visual/Propietario/frmEventosLocal.Designer.cs
+	modified:   Visual/Propietario/frmListasEspera.Designer.cs
+	modified:   Visual/Propietario/frmMenuPropietario.Designer.cs
+	modified:   Visual/Propietario/frmMisLocales.Designer.cs
+	modified:   Visual/Propietario/frmRegistrarLocal.Designer.cs
+	modified:   Visual/Propietario/frmReportes.Designer.cs
+	modified:   Visual/Recursos/EventAura.ico
+	modified:   Visual/Tema.cs
+	modified:   Visual/Visual.csproj
+	modified:   "Visual/_Inicio/frmCambiarContrase\303\261a.Designer.cs"
+	modified:   Visual/_Inicio/frmCrearUsuario.Designer.cs
+	modified:   Visual/_Inicio/frmInicio.Designer.cs
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	Pruebas/BarreraSegura.ps1
+	Pruebas/EjecutarBateriaSegura.ps1
+	Pruebas/Evidencias-Interfaz/Fase2/
+	Pruebas/Evidencias-Interfaz/estado-al-frenar.txt
+	Pruebas/GenerarMarcaAura.ps1
+	Pruebas/PruebasEjecucionSinDialogos.cs
+	Pruebas/PruebasIdentidadAura.cs
+	Visual/AvisosEnPantalla.cs
+	Visual/Componentes/BarraSuperior.Designer.cs
+	Visual/Componentes/BarraSuperior.cs
+	Visual/Componentes/MarcaAura.cs
+
+no changes added to commit (use "git add" and/or "git commit -a")

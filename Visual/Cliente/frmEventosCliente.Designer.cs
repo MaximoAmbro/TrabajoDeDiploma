@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmEventosCliente
     {
@@ -41,7 +41,7 @@
             this.indicadorPasos = new Visual.Componentes.IndicadorPasos();
             this.indicadorPasos.Name = "indicadorPasos";
             this.indicadorPasos.PasoActual = 1;
-            this.indicadorPasos.Location = new System.Drawing.Point(24, 16);
+            this.indicadorPasos.Location = new System.Drawing.Point(24, 76);
             this.indicadorPasos.Size = new System.Drawing.Size(792, 32);
             this.Controls.Add(this.indicadorPasos);
             this.SuspendLayout();
@@ -49,7 +49,7 @@
             // btnVolver
             // 
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(24, 424);
+            this.btnVolver.Location = new System.Drawing.Point(24, 484);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(144, 40);
@@ -60,7 +60,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 64);
+            this.label2.Location = new System.Drawing.Point(24, 124);
             this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(792, 32);
@@ -74,7 +74,7 @@
             this.dgveventos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgveventos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgveventos.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.dgveventos.Location = new System.Drawing.Point(24, 176);
+            this.dgveventos.Location = new System.Drawing.Point(24, 236);
             this.dgveventos.Name = "dgveventos";
             this.dgveventos.RowHeadersWidth = 51;
             this.dgveventos.Size = new System.Drawing.Size(792, 224);
@@ -83,7 +83,7 @@
             // btnComprar
             // 
             this.btnComprar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnComprar.Location = new System.Drawing.Point(648, 424);
+            this.btnComprar.Location = new System.Drawing.Point(648, 484);
             this.btnComprar.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.btnComprar.Name = "btnComprar";
             this.btnComprar.Size = new System.Drawing.Size(168, 40);
@@ -93,7 +93,7 @@
             //
             // txtBuscar
             //
-            this.txtBuscar.Location = new System.Drawing.Point(24, 120);
+            this.txtBuscar.Location = new System.Drawing.Point(24, 180);
             this.txtBuscar.Name = "txtBuscar";
             this.txtBuscar.Size = new System.Drawing.Size(248, 28);
             this.txtBuscar.TabIndex = 2;
@@ -104,7 +104,7 @@
             this.cmbCategoria.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cmbCategoria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategoria.FormattingEnabled = true;
-            this.cmbCategoria.Location = new System.Drawing.Point(280, 120);
+            this.cmbCategoria.Location = new System.Drawing.Point(280, 180);
             this.cmbCategoria.Name = "cmbCategoria";
             this.cmbCategoria.Size = new System.Drawing.Size(128, 28);
             this.cmbCategoria.TabIndex = 3;
@@ -114,7 +114,7 @@
             this.dtpDesde.Checked = false;
             this.dtpDesde.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDesde.Location = new System.Drawing.Point(416, 120);
+            this.dtpDesde.Location = new System.Drawing.Point(416, 180);
             this.dtpDesde.Name = "dtpDesde";
             this.dtpDesde.ShowCheckBox = true;
             this.dtpDesde.Size = new System.Drawing.Size(144, 28);
@@ -123,7 +123,7 @@
             // btnBuscar
             //
             this.btnBuscar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBuscar.Location = new System.Drawing.Point(568, 120);
+            this.btnBuscar.Location = new System.Drawing.Point(568, 180);
             this.btnBuscar.Name = "btnBuscar";
             this.btnBuscar.Size = new System.Drawing.Size(112, 32);
             this.btnBuscar.TabIndex = 5;
@@ -133,7 +133,7 @@
             // btnLimpiar
             //
             this.btnLimpiar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLimpiar.Location = new System.Drawing.Point(688, 120);
+            this.btnLimpiar.Location = new System.Drawing.Point(688, 180);
             this.btnLimpiar.Name = "btnLimpiar";
             this.btnLimpiar.Size = new System.Drawing.Size(120, 32);
             this.btnLimpiar.TabIndex = 6;
@@ -144,7 +144,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(840, 488);
+            this.ClientSize = new System.Drawing.Size(840, 548);
             this.Controls.Add(this.btnComprar);
             this.Controls.Add(this.dgveventos);
             this.Controls.Add(this.label2);
@@ -161,6 +161,11 @@
             this.Text = "EventAura · Eventos disponibles";
             this.Load += new System.EventHandler(this.frmEventosCliente_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgveventos)).EndInit();
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(840, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -178,5 +183,6 @@
         private System.Windows.Forms.DateTimePicker dtpDesde;
         private Visual.Componentes.BotonPrimario btnBuscar;
         private Visual.Componentes.BotonSecundario btnLimpiar;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

@@ -29,6 +29,15 @@ namespace Negocio
 
         private GestorUsuarios() { }
 
+        // Lectura auxiliar de presentación; no inicia ni autoriza una sesión.
+        public bool ExisteUsuarioDeSesion()
+        {
+            var sesion = GestorSesion.Instance.UsuarioActual;
+            if (sesion == null) return false;
+            var usuario = RepositorioUsuarios.Instance.ObtenerPorMail(sesion.Mail);
+            return usuario != null && usuario.Id == sesion.Id;
+        }
+
         // RN-04 conserva el bloqueo, sin revelar si el correo existe, intentos ni plazos.
         public Usuario Autenticar(string mail, string pwd)
         {
