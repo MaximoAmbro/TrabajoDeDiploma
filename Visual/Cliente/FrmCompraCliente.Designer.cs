@@ -20,6 +20,11 @@ namespace Visual
             this.lblNivel = new Visual.Componentes.EtiquetaAyuda();
             this.lnkNiveles = new System.Windows.Forms.LinkLabel();
             this.dgvSectores = new System.Windows.Forms.DataGridView();
+            this.mapaSectores = new Visual.Componentes.MapaSectores();
+            this.mapaSectores.Name = "mapaSectores";
+            this.mapaSectores.Location = new System.Drawing.Point(16, 48);
+            this.mapaSectores.Size = new System.Drawing.Size(368, 240);
+            this.mapaSectores.TabIndex = 0;
             this.chkHospedaje = new System.Windows.Forms.CheckBox();
             this.chkTraslado = new System.Windows.Forms.CheckBox();
             this.chkMerch = new System.Windows.Forms.CheckBox();
@@ -116,7 +121,7 @@ namespace Visual
             // dgvSectores
             //
             this.dgvSectores.Name = "dgvSectores";
-            this.dgvSectores.Location = new System.Drawing.Point(16, 56);
+            this.dgvSectores.Location = new System.Drawing.Point(16, 304);
             this.dgvSectores.Size = new System.Drawing.Size(368, 152);
             this.dgvSectores.TabIndex = 0;
             this.dgvSectores.StandardTab = true;
@@ -235,10 +240,11 @@ namespace Visual
             //
             this.pnlTarjetaEntradas.Name = "pnlTarjetaEntradas";
             this.pnlTarjetaEntradas.Location = new System.Drawing.Point(24, 24);
-            this.pnlTarjetaEntradas.Size = new System.Drawing.Size(400, 224);
+            this.pnlTarjetaEntradas.Size = new System.Drawing.Size(400, 472);
             this.pnlTarjetaEntradas.TabIndex = 0;
             this.pnlTarjetaEntradas.Controls.Add(this.lblTituloEntradas);
             this.pnlTarjetaEntradas.Controls.Add(this.dgvSectores);
+            this.pnlTarjetaEntradas.Controls.Add(this.mapaSectores);
             this.pnlTarjetaEntradas.Controls.Add(this.lblAgotado);
             this.pnlTarjetaEntradas.Controls.Add(this.btnListaEspera);
             this.pnlTarjetaEntradas.Controls.Add(this.lnkPosicionEspera);
@@ -331,6 +337,7 @@ namespace Visual
         private System.Windows.Forms.Panel pnlContenidoCompra;
         private System.Windows.Forms.Panel pnlAccionesCompra;
         private System.Windows.Forms.Panel pnlTarjetaEntradas;
+        private Visual.Componentes.MapaSectores mapaSectores;
         private System.Windows.Forms.Panel pnlTarjetaServicios;
         private Visual.Componentes.EtiquetaSeccion lblTituloEntradas;
         private Visual.Componentes.EtiquetaSeccion lblTituloServicios;

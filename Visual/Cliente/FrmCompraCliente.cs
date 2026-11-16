@@ -51,6 +51,7 @@ namespace Visual
         {
             InitializeComponent();
             ConfigurarAreaDeCompra();
+            mapaSectores.SectorElegido += ElegirSectorEnMapa;
         }
 
         // RNF-02/RNF-03: las acciones quedan visibles aun si el contenido necesita
@@ -119,6 +120,14 @@ namespace Visual
                 int columna = Math.Max(0, (ancho - margen) / 2);
                 pnlTarjetaEntradas.SetBounds(margen + desplazamiento.X, inicio, columna, pnlTarjetaEntradas.Height);
                 dgvSectores.Width = Math.Max(0, columna - relleno * 2);
+                mapaSectores.Width = dgvSectores.Width;
+                mapaSectores.Height = mapaSectores.AltoParaTodosLosSectores;
+                dgvSectores.Top = mapaSectores.Bottom + relleno;
+                lblAgotado.Top = dgvSectores.Top;
+                btnListaEspera.Top = lblAgotado.Bottom + separacion;
+                lnkPosicionEspera.Top = btnListaEspera.Bottom + separacion;
+                pnlTarjetaEntradas.Height = Math.Max(dgvSectores.Bottom,
+                    agotado ? lnkPosicionEspera.Bottom : 0) + relleno;
                 lblAgotado.Width = dgvSectores.Width;
                 btnListaEspera.Left = (columna - btnListaEspera.Width) / 2;
                 lnkPosicionEspera.Left = btnListaEspera.Left;
@@ -335,6 +344,23 @@ namespace Visual
                     GestorPaquetes.Instance.DisponiblesDe(Convert.ToInt32(fila.Cells["IdSector"].Value));
             }
             cargandoGrilla = false;
+            ActualizarMapa();
+        }
+
+        private void ActualizarMapa()
+        {
+            mapaSectores.Cargar(sectores.Values, id =>
+                Convert.ToInt32(dgvSectores.Rows.Cast<DataGridViewRow>().Single(f =>
+                    Convert.ToInt32(f.Cells["IdSector"].Value) == id).Cells["Disponibles"].Value));
+        }
+
+        private void ElegirSectorEnMapa(int id)
+        {
+            var fila = dgvSectores.Rows.Cast<DataGridViewRow>().Single(f => Convert.ToInt32(f.Cells["IdSector"].Value) == id);
+            dgvSectores.CurrentCell = fila.Cells["Cantidad"];
+            if (Convert.ToInt32(fila.Cells["Cantidad"].Value) == 0) fila.Cells["Cantidad"].Value = 1;
+            contenidoCompra.ScrollControlIntoView(dgvSectores);
+            dgvSectores.Focus();
         }
 
         private void CargarNivel()
@@ -426,6 +452,7 @@ namespace Visual
             dgvSectores.CellValueChanged -= dgvSectores_CellValueChanged;
             dgvSectores.CellValueChanged += dgvSectores_CellValueChanged;
             cargandoGrilla = false;
+            ActualizarMapa();
         }
 
         // RN-08 y RN-12 los valida GestorPaquetes; si rechaza, la celda vuelve a lo que había.
