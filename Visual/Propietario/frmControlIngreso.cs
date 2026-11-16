@@ -16,11 +16,11 @@ namespace Visual
             {
                 cmbEventos.DisplayMember = "Nombre";
                 cmbEventos.ValueMember = "Id";
-                cmbEventos.DataSource = GestorIngresos.Instance.EventosDeHoy();
+                cmbEventos.DataSource = GestorIngresos.Instance.EventosConIngresoAbierto();
                 txtCodigo.Enabled = cmbEventos.Items.Count > 0;
                 btnRegistrar.Enabled = txtCodigo.Enabled;
                 lblResultado.Font = Tema.Titulo;
-                lblResultado.Text = txtCodigo.Enabled ? "Escaneá una entrada." : "No hay eventos publicados para hoy.";
+                lblResultado.Text = txtCodigo.Enabled ? "Escaneá una entrada." : "No hay eventos con ingreso abierto en tus locales.";
                 ActualizarContador();
                 txtCodigo.Focus();
             }

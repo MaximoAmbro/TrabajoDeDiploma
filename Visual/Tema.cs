@@ -40,6 +40,8 @@ namespace Visual
         public static readonly Font Rotulo = new Font("Segoe UI Semibold", 9f);
         public static readonly Font Ayuda = new Font("Segoe UI", 9f);
         public static readonly Font Totales = new Font("Segoe UI", 10f, FontStyle.Bold);
+        public static readonly Font IconosGrandes = new Font("Segoe MDL2 Assets", 32f);
+        public static readonly Font IconosDocumentos = new Font("Segoe MDL2 Assets", 16f);
         public static readonly Font Comprobante = new Font("Consolas", 10f);
 
         public static class Espacio

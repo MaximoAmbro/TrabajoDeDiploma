@@ -40,19 +40,19 @@ namespace Visual
             // label1
             //
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(249, 8);
+            this.label1.Location = new System.Drawing.Point(24, 24);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(298, 50);
+            this.label1.Size = new System.Drawing.Size(792, 32);
             this.label1.TabIndex = 28;
             this.label1.Text = "Listas de espera";
             //
             // lblEvento
             //
             this.lblEvento.AutoSize = true;
-            this.lblEvento.Location = new System.Drawing.Point(12, 76);
+            this.lblEvento.Location = new System.Drawing.Point(24, 80);
             this.lblEvento.Name = "lblEvento";
-            this.lblEvento.Size = new System.Drawing.Size(50, 19);
+            this.lblEvento.Size = new System.Drawing.Size(792, 20);
             this.lblEvento.TabIndex = 29;
             this.lblEvento.Text = "Evento";
             //
@@ -60,45 +60,45 @@ namespace Visual
             //
             this.cmbEventos.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cmbEventos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEventos.Location = new System.Drawing.Point(80, 72);
+            this.cmbEventos.Location = new System.Drawing.Point(24, 104);
             this.cmbEventos.Name = "cmbEventos";
-            this.cmbEventos.Size = new System.Drawing.Size(681, 27);
+            this.cmbEventos.Size = new System.Drawing.Size(792, 28);
             this.cmbEventos.TabIndex = 0;
             this.cmbEventos.SelectedIndexChanged += new System.EventHandler(this.cmbEventos_SelectedIndexChanged);
             //
             // dgvLista
             //
             this.dgvLista.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvLista.Location = new System.Drawing.Point(12, 112);
+            this.dgvLista.Location = new System.Drawing.Point(24, 152);
             this.dgvLista.Margin = new System.Windows.Forms.Padding(2);
             this.dgvLista.Name = "dgvLista";
             this.dgvLista.RowHeadersWidth = 62;
-            this.dgvLista.Size = new System.Drawing.Size(749, 270);
+            this.dgvLista.Size = new System.Drawing.Size(792, 208);
             this.dgvLista.TabIndex = 1;
             //
             // lblCantidad
             //
-            this.lblCantidad.Location = new System.Drawing.Point(12, 390);
+            this.lblCantidad.Location = new System.Drawing.Point(24, 368);
             this.lblCantidad.Name = "lblCantidad";
-            this.lblCantidad.Size = new System.Drawing.Size(749, 40);
+            this.lblCantidad.Size = new System.Drawing.Size(616, 48);
             this.lblCantidad.TabIndex = 30;
             //
             // btnVolver
             //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(9, 436);
+            this.btnVolver.Location = new System.Drawing.Point(648, 384);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(113, 36);
+            this.btnVolver.Size = new System.Drawing.Size(168, 40);
             this.btnVolver.TabIndex = 2;
             this.btnVolver.Text = "Volver";
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
             //
             // frmListasEspera
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(773, 482);
+            this.ClientSize = new System.Drawing.Size(840, 448);
             this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.lblCantidad);
             this.Controls.Add(this.dgvLista);

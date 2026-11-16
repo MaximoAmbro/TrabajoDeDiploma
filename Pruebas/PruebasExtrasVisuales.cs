@@ -31,6 +31,13 @@ namespace Pruebas {
      for(Control padre=total.Parent;padre!=null;padre=padre.Parent)
       Assert.IsTrue(padre.ClientRectangle.Contains(padre.RectangleToClient(lectura)),"El TOTAL debe poder leerse completo en "+padre.Name);
     }
+    var pendiente=GestorCompras.Instance.Iniciar(Fake.Paquete(evento,1,false),cliente);
+    using(var pago=new Visual.frmPago{Compra=pendiente}) {Mostrar(pago);Assert.AreEqual(3,ControlDe<IndicadorPasos>(pago,"indicadorPasos").PasoActual);}
+    var confirmada=Fake.CompraConfirmada(cliente,evento,Math.Max(1,cantidad),false);
+    using(var confirmacion=new Visual.frmConfirmacion{Compra=confirmada}) {
+     Mostrar(confirmacion);Assert.AreEqual(4,ControlDe<IndicadorPasos>(confirmacion,"indicadorPasos").PasoActual);
+     Assert.AreEqual("TOTAL "+confirmada.TotalPagado.ToString("C2",new System.Globalization.CultureInfo("es-AR")),ControlDe<EtiquetaTotal>(confirmacion,"lblTotalConfirmado").Text);
+    }
     using(var listado=new Visual.frmEventosCliente{IDUsuario=cliente.Id}) {Mostrar(listado);Assert.AreEqual(1,ControlDe<IndicadorPasos>(listado,"indicadorPasos").PasoActual);}
    });
   }
@@ -45,6 +52,11 @@ namespace Pruebas {
      ((Form)host.RootComponent).Controls.Add(control);Assert.IsNotNull(superficie.View);
      foreach(string propiedad in new[]{"Font","ForeColor","BackColor"}) Assert.IsFalse(TypeDescriptor.GetProperties(control)[propiedad].ShouldSerializeValue(control));
      Assert.AreEqual(Size.Empty,control.MinimumSize);
+     if(tipo==typeof(IndicadorPasos)) {
+      var exito=(Control)host.CreateComponent(typeof(IconoExito),"exito");((Form)host.RootComponent).Controls.Add(exito);
+      foreach(string p in new[]{"Font","ForeColor","BackColor"}) Assert.IsFalse(TypeDescriptor.GetProperties(exito)[p].ShouldSerializeValue(exito));
+      Assert.AreEqual("Segoe MDL2 Assets",Visual.Tema.IconosGrandes.Name);
+     }
     }
    });
   }

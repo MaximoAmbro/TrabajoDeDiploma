@@ -42,30 +42,30 @@
             this.dgvLocales.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvLocales.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLocales.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.dgvLocales.Location = new System.Drawing.Point(24, 112);
+            this.dgvLocales.Location = new System.Drawing.Point(24, 88);
             this.dgvLocales.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvLocales.Name = "dgvLocales";
             this.dgvLocales.RowHeadersWidth = 51;
-            this.dgvLocales.Size = new System.Drawing.Size(986, 254);
+            this.dgvLocales.Size = new System.Drawing.Size(792, 264);
             this.dgvLocales.TabIndex = 39;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(322, 20);
+            this.label2.Location = new System.Drawing.Point(24, 24);
             this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(223, 74);
+            this.label2.Size = new System.Drawing.Size(792, 32);
             this.label2.TabIndex = 38;
             this.label2.Text = "Locales";
             // 
             // btnVolver
             // 
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(11, 452);
+            this.btnVolver.Location = new System.Drawing.Point(24, 384);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(130, 37);
+            this.btnVolver.Size = new System.Drawing.Size(144, 40);
             this.btnVolver.TabIndex = 37;
             this.btnVolver.Text = "Volver";
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
@@ -73,19 +73,19 @@
             // btnEventosLocal
             // 
             this.btnEventosLocal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEventosLocal.Location = new System.Drawing.Point(319, 400);
+            this.btnEventosLocal.Location = new System.Drawing.Point(624, 384);
             this.btnEventosLocal.Margin = new System.Windows.Forms.Padding(6, 2, 6, 2);
             this.btnEventosLocal.Name = "btnEventosLocal";
-            this.btnEventosLocal.Size = new System.Drawing.Size(242, 48);
+            this.btnEventosLocal.Size = new System.Drawing.Size(192, 40);
             this.btnEventosLocal.TabIndex = 41;
             this.btnEventosLocal.Text = "Ver eventos";
             this.btnEventosLocal.Click += new System.EventHandler(this.btnEventosLocal_Click);
             // 
             // frmMisLocales
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(928, 500);
+            this.ClientSize = new System.Drawing.Size(840, 448);
             this.Controls.Add(this.btnEventosLocal);
             this.Controls.Add(this.dgvLocales);
             this.Controls.Add(this.label2);

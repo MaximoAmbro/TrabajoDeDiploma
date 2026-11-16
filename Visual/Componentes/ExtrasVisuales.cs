@@ -36,4 +36,34 @@ namespace Visual.Componentes
     {
         public EtiquetaTotal() { ForeColor = Tema.Primario; }
     }
+    public class IconoExito : EtiquetaAyuda
+    {
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            e.Graphics.Clear(Tema.Superficie);
+            TextRenderer.DrawText(e.Graphics, "\uE73E", Tema.IconosGrandes, ClientRectangle, Tema.Exito,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
+        }
+    }
+
+    public static class IconosDocumentos
+    {
+        public static void Preparar(ListBox lista)
+        {
+            lista.DrawItem += (sender, e) =>
+            {
+                if (e.Index < 0) return;
+                bool elegido = (e.State & DrawItemState.Selected) != 0;
+                using (var fondo = new SolidBrush(elegido ? Tema.PrimarioSuave : Tema.Superficie)) e.Graphics.FillRectangle(fondo, e.Bounds);
+                int icono = e.Bounds.Height;
+                TextRenderer.DrawText(e.Graphics, "\uE8A5", Tema.IconosDocumentos,
+                    new Rectangle(e.Bounds.Left, e.Bounds.Top, icono, icono), Tema.Primario,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
+                TextRenderer.DrawText(e.Graphics, Convert.ToString(lista.Items[e.Index]), Tema.Cuerpo,
+                    new Rectangle(e.Bounds.Left + icono, e.Bounds.Top, Math.Max(0, e.Bounds.Width - icono), e.Bounds.Height),
+                    Tema.Texto, TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
+                e.DrawFocusRectangle();
+            };
+        }
+    }
 }

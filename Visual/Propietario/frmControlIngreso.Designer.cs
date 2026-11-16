@@ -1,4 +1,4 @@
-namespace Visual
+﻿namespace Visual
 {
     partial class frmControlIngreso
     {
@@ -19,44 +19,50 @@ namespace Visual
             this.lblCodigo = new System.Windows.Forms.Label();
             this.btnRegistrar = new Visual.Componentes.BotonPrimario();
             this.btnVolver = new Visual.Componentes.BotonSecundario();
+            this.lblTituloIngreso = new Visual.Componentes.EtiquetaTitulo();
+            this.lblTituloIngreso.Name = "lblTituloIngreso";
+            this.lblTituloIngreso.Text = "Control de ingreso";
+            this.lblTituloIngreso.Location = new System.Drawing.Point(24, 24);
+            this.lblTituloIngreso.Size = new System.Drawing.Size(672, 32);
+            this.Controls.Add(this.lblTituloIngreso);
             this.SuspendLayout();
-            this.lblEvento.Location = new System.Drawing.Point(24, 20);
-            this.lblEvento.Size = new System.Drawing.Size(640, 24);
-            this.lblEvento.Text = "Evento de hoy";
-            this.cmbEventos.Location = new System.Drawing.Point(24, 48);
-            this.cmbEventos.Size = new System.Drawing.Size(640, 28);
+            this.lblEvento.Location = new System.Drawing.Point(24, 80);
+            this.lblEvento.Size = new System.Drawing.Size(672, 20);
+            this.lblEvento.Text = "Evento con ingreso abierto";
+            this.cmbEventos.Location = new System.Drawing.Point(24, 104);
+            this.cmbEventos.Size = new System.Drawing.Size(672, 28);
             this.cmbEventos.Name = "cmbEventos";
             this.cmbEventos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbEventos.TabIndex = 0;
             this.cmbEventos.SelectedIndexChanged += new System.EventHandler(this.EventoCambiado);
-            this.lblCodigo.Location = new System.Drawing.Point(24, 100);
-            this.lblCodigo.Size = new System.Drawing.Size(640, 24);
+            this.lblCodigo.Location = new System.Drawing.Point(24, 152);
+            this.lblCodigo.Size = new System.Drawing.Size(672, 20);
             this.lblCodigo.Text = "Código del ticket (lector USB o texto del PDF)";
-            this.txtCodigo.Location = new System.Drawing.Point(24, 132);
-            this.txtCodigo.Size = new System.Drawing.Size(440, 28);
+            this.txtCodigo.Location = new System.Drawing.Point(24, 176);
+            this.txtCodigo.Size = new System.Drawing.Size(464, 32);
             this.txtCodigo.Name = "txtCodigo";
             this.txtCodigo.TabIndex = 1;
-            this.btnRegistrar.Location = new System.Drawing.Point(480, 124);
-            this.btnRegistrar.Size = new System.Drawing.Size(184, 44);
+            this.btnRegistrar.Location = new System.Drawing.Point(512, 176);
+            this.btnRegistrar.Size = new System.Drawing.Size(184, 40);
             this.btnRegistrar.Name = "btnRegistrar";
             this.btnRegistrar.Text = "Registrar ingreso";
             this.btnRegistrar.TabIndex = 2;
             this.btnRegistrar.Click += new System.EventHandler(this.Registrar);
-            this.lblResultado.Location = new System.Drawing.Point(24, 188);
-            this.lblResultado.Size = new System.Drawing.Size(640, 96);
+            this.lblResultado.Location = new System.Drawing.Point(24, 240);
+            this.lblResultado.Size = new System.Drawing.Size(672, 72);
             this.lblResultado.Name = "lblResultado";
-            this.lblContador.Location = new System.Drawing.Point(24, 296);
-            this.lblContador.Size = new System.Drawing.Size(640, 32);
+            this.lblContador.Location = new System.Drawing.Point(24, 328);
+            this.lblContador.Size = new System.Drawing.Size(672, 24);
             this.lblContador.Name = "lblContador";
-            this.btnVolver.Location = new System.Drawing.Point(24, 352);
-            this.btnVolver.Size = new System.Drawing.Size(144, 44);
+            this.btnVolver.Location = new System.Drawing.Point(24, 384);
+            this.btnVolver.Size = new System.Drawing.Size(144, 40);
             this.btnVolver.Text = "Volver";
             this.btnVolver.TabIndex = 3;
             this.btnVolver.Click += new System.EventHandler(this.Volver);
             this.AcceptButton = this.btnRegistrar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(688, 420);
+            this.ClientSize = new System.Drawing.Size(720, 448);
             this.Controls.Add(this.lblEvento);
             this.Controls.Add(this.cmbEventos);
             this.Controls.Add(this.lblCodigo);
@@ -72,6 +78,7 @@ namespace Visual
             this.PerformLayout();
         }
 
+        private Visual.Componentes.EtiquetaTitulo lblTituloIngreso;
         private System.Windows.Forms.ComboBox cmbEventos;
         private System.Windows.Forms.TextBox txtCodigo;
         private System.Windows.Forms.Label lblResultado;

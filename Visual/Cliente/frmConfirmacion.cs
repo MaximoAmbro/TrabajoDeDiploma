@@ -22,6 +22,7 @@ namespace Visual
         {
             InitializeComponent();
             Tema.ComoDocumento(lblDesglose);
+            Visual.Componentes.IconosDocumentos.Preparar(lstArchivos);
         }
 
         // Identificación del pedido que ve el cliente; también va impresa en cada ticket.
@@ -33,6 +34,7 @@ namespace Visual
         private void frmConfirmacion_Load(object sender, EventArgs e)
         {
             lblPedido.Text = "Pedido " + NumeroPedido(Compra);
+            lblTotalConfirmado.Text = "TOTAL " + Compra.TotalPagado.ToString("C2", Pesos);
 
             // Los importes son los congelados en la fila de Compras: lo que efectivamente se cobró.
             decimal subtotalEntradas = Compra.BaseEntradas - Compra.MontoDescuento;
@@ -70,7 +72,7 @@ namespace Visual
             ActiveControl = btnAceptar;
         }
 
-        private const int AnchoLinea = 40;
+        private const int AnchoLinea = 36;
 
         private static string Linea(string concepto, decimal monto)
         {

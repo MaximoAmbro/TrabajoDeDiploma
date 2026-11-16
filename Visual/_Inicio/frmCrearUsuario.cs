@@ -16,6 +16,7 @@ namespace Visual
         public frmCrearUsuario()
         {
             InitializeComponent();
+            Tema.ComoEnlace(lblyatengocuen);
         }
         private void frmCrearUsuario_Load(object sender, EventArgs e)
         {

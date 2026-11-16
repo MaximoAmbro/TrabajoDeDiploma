@@ -11,6 +11,8 @@ namespace Visual
         public frmInicio()
         {
             InitializeComponent();
+            Tema.ComoEnlace(lblolividarcontra);
+            Tema.ComoEnlace(lblcrearcuenta);
         }
         
         private void frmInicio_Load(object sender, EventArgs e)
