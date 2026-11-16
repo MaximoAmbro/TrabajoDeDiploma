@@ -18,7 +18,7 @@ en la auditoría.
 |---|---|---|
 | **Estructura oficial** | La «Guía de resolución» de las consignas de la Entrega 1 a la 3 (`Documentacion/Entrega 1.pdf` a `Entrega 3.pdf`; las tres son iguales salvo el encabezado). Son 13 puntos, más tres formalidades: portada, resumen ejecutivo e índice | Corrida. **Da 16 ítems, no 15.** Si la estructura de 15 que tenés en mente es otro archivo, pasámelo |
 | **16 errores frecuentes** | Tu mensaje del 12/11 (la auditoría de diagramas) | Corrida |
-| **Matriz de coherencia de 10 comprobaciones** | **No está** en el repositorio, en los PDF de `Documentacion/` ni en ningún mensaje de esta sesión | **Decisión pendiente:** pasámela (archivo o texto) y la corro. Son unas 5 vueltas de herramienta. **No la reconstruí,** para no inventar los criterios del docente |
+| **Matriz de coherencia de 10 comprobaciones** | Sección 6 de `Prompt_Documentacion_Trabajo_de_Diploma.md`, adjunto de WhatsApp del 11/11 (fuera del repositorio) | **Corrida el 16/11:** `docs/MATRIZ-COHERENCIA.md`. Pasan 8 de 10 (dos con explicación en el texto); la 10 espera la devolución del Parcial 1 |
 
 Además se miraron los «Criterios de resolución» de la misma consigna, porque dicen cómo pondera.
 

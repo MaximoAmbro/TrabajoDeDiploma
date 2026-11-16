@@ -7,6 +7,7 @@ hide empty members
 ' Diagrama de clases, vista 7 de 8: capa de Datos (proyecto Datos). Fuente: Datos/*.cs.
 ' Cada repositorio es el único lugar con SQL de sus tablas. «(…)» abrevia la lista de
 ' parámetros; las firmas completas y las dependencias entre repositorios están en la tabla.
+' Se muestran los métodos que llaman los diagramas de secuencia (matriz de coherencia, 8).
 
 abstract class RepositorioBase {
   # AbrirConexion() : SqlConnection
@@ -22,11 +23,22 @@ class Conexion <<Singleton>> {
   + Cadena : string
   + Crear() : SqlConnection
 }
-class RepositorioCompras <<Singleton>>
-class RepositorioEntradas <<Singleton>>
+class RepositorioCompras <<Singleton>> {
+  + Iniciar(…) : int
+  + ObtenerPorId(int) : Compra
+  + Confirmar(…) : bool
+  + Liberar(int) : bool
+  + Rereservar(int, DateTime) : bool
+  + MarcarVencidas(DateTime, int) : int
+}
+class RepositorioEntradas <<Singleton>> {
+  + ObtenerPorCompra(int) : List<Entrada>
+}
 class RepositorioEventos <<Singleton>>
 class RepositorioSectores <<Singleton>>
-class RepositorioPagos <<Singleton>>
+class RepositorioPagos <<Singleton>> {
+  + Insertar(Pago) : int
+}
 class RepositorioServicios <<Singleton>>
 class RepositorioFidelizacion <<Singleton>>
 class RepositorioListaEspera <<Singleton>>

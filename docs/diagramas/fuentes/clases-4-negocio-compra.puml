@@ -34,6 +34,7 @@ class GestorPaquetes <<Singleton>> {
   + AgregarServicio(Paquete, int)
   + QuitarServicio(Paquete, int)
   + Validar(Paquete)
+  ~ VerificarPreventa(int, int)
   + DisponiblesDe(int) : int
   + CantidadEntradas(Paquete) : int
   + SubtotalEntradas(Paquete) : decimal

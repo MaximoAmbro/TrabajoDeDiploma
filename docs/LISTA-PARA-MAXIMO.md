@@ -842,6 +842,21 @@ entradas del pedido debajo) y para Reportes (filtros arriba en dos filas, tabla 
 lectura y acciones al pie). **Cuando Codex las publique, JC confirma que las pantallas quedaron
 así**; hoy son la propuesta, no el código.
 
+## Páginas 47 a 49 — Guion de interfaz: las tres capturas
+
+**⏸ ESPERANDO FIGURA NUEVA: no toques las tres imágenes todavía.** Muestran la interfaz de antes
+del rediseño (la de la p. 47 dice «Show Password»). Van a reemplazarse por capturas de la interfaz
+congelada: p. 47, inicio de sesión (`frmInicio`); p. 48, crear cuenta (`frmCrearUsuario`); p. 49,
+menú del cliente (`frmMenuCliente`). Cuando estén, esta entrada dice el archivo de cada una.
+
+**P. 47, mismo lugar, ya:** en la lista del Menú Inicial, **dice** «Botones para iniciar sesión,
+cambiar la contraseña y crear una cuenta nueva.» **Poner:** «El botón para iniciar sesión, que
+también responde a la tecla Enter, y los enlaces para cambiar la contraseña y crear una cuenta
+nueva.»
+
+*Razón:* pasada de coherencia del 16/11 sobre el rediseño. `frmInicio` tiene `AcceptButton` y los
+dos accesos como enlaces («Cambiar contraseña» y «Crear Cuenta»).
+
 ## Página 48
 
 **E-01 · p. 48 · R (T-5).**
@@ -1666,11 +1681,18 @@ Texto, debajo del título «Diagrama de clases»:
 > la compra y del pago son enumeraciones con los mismos valores que las restricciones `CHECK` de la
 > base de datos.
 >
-> En la capa de negocio, las vistas 4 y 5 muestran las operaciones públicas de cada gestor, y la
-> vista 6, la verificación de identidad que agregó la revisión de seguridad: antes de operar, cada
+> Tres conceptos del modelo de dominio llevan otro nombre en el código, y así aparecen en las
+> vistas: el Administrador es la clase `Propietario`, que es el nombre de su perfil en la base de
+> datos (RN-05); la Inscripción en la lista de espera es la clase `ListaEspera`, y el Servicio
+> contratado es la clase `CompraServicio`. El Paquete existe como clase pero no se guarda en la
+> base: es el armado en curso, y al confirmarlo se convierte en una Compra.
+>
+> En la capa de negocio, las vistas 4 y 5 muestran las operaciones públicas de cada gestor, más
+> las internas que aparecen en el diagrama de secuencia, y la vista 6, la verificación de identidad que agregó la revisión de seguridad: antes de operar, cada
 > gestor consulta a `GestorSesion` si quien llama es el titular de los datos (RN-41) o el
 > Administrador (RN-34, RN-42). La vista 7 muestra la capa de datos: trece repositorios que
-> heredan de `RepositorioBase`, únicos responsables del acceso a SQL Server.
+> heredan de `RepositorioBase`, únicos responsables del acceso a SQL Server; de cada uno se
+> muestran los métodos que aparecen en los diagramas de secuencia.
 
 **Sección nueva «Patrones de diseño»**, a continuación de las vistas de clases. Tres figuras:
 
@@ -1772,6 +1794,14 @@ Texto:
 > entrada y del pago son enumeraciones con los mismos valores que la base de datos. La relación de
 > muchos a muchos entre compra y servicio complementario lleva una clase de asociación, Servicio
 > contratado, con la cantidad y el precio unitario congelado al comprar (RN-16).
+>
+> El dominio expresa la regla del negocio, y en tres asociaciones de la entrada la implementación
+> es menos estricta. Toda entrada nace de una compra y de un sector, pero en la base de datos las
+> columnas de la compra y del sector admiten nulos, porque se agregaron a una tabla de entradas
+> anterior a ellas; por eso el diagrama de clases y el entidad-relación las muestran con
+> multiplicidad 0..1. Y una entrada tiene a lo sumo un seguro: el sistema lo emite una sola vez, al
+> confirmar la compra, y no permite agregarlo después (RN-28), pero la base no lo impide con una
+> restricción de unicidad, así que el entidad-relación muestra 0..*.
 
 **Diagrama de actividad:** el título «Diagrama de Actividad (flujo del Cliente)» pasa a
 «Diagrama de actividad (proceso de venta)». Reemplazar la figura (que sigue en la p. 89) por
@@ -2111,6 +2141,19 @@ El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debaj
 > en RF-12, que reúne las operaciones del Administrador. CP-94 figura en varias filas porque
 > verifica las dos reglas en las operaciones de cada una; CP-123, en RF-07 y RF-12, porque
 > verifica RN-42 en el control de ingreso.
+
+**Agregar a continuación** el subtítulo «Trazabilidad del requerimiento core» y:
+
+> La matriz principal llega hasta los casos de prueba. Para el requerimiento core, la
+> trazabilidad sigue hasta los diagramas y el código:
+
+| Requerimiento | Caso de uso | Diagramas | Código |
+|---|---|---|---|
+| RF-05, Armado de paquetes personalizados | CU-01 Comprar paquete | Robustez «Comprar paquete»; secuencia «Comprar paquete» (reserva, pago y emisión); actividad del armado y del pago; transición de estados de la entrada; clases, vistas 2, 3, 4 y 7 | `Visual/Cliente/FrmCompraCliente.cs`, `frmPago.cs` y `frmConfirmacion.cs`; `Repo/GestorPaquetes.cs`, `GestorCompras.cs` y `GestorFidelizacion.cs`; `Datos/RepositorioCompras.cs`, `RepositorioSectores.cs`, `RepositorioEntradas.cs` y `RepositorioPagos.cs`; `Entidade/Paquete.cs` y `Compra.cs` |
+
+*Razón:* matriz de coherencia, comprobación 1 («Cada RF core tiene CU, robustez, secuencia y
+código»; se comprueba con una tabla RF → CU → diagramas → archivos). La matriz principal no
+llegaba a diagramas ni a archivos. Los archivos existen en el commit `ea9212a`.
 
 **Tabla «Trazabilidad inversa de los objetivos específicos», fila OE-4. Reemplazar** la
 evidencia «Informe de pruebas de usabilidad: SUS 74,5 y 80 % de satisfacción» **por** «Informe de

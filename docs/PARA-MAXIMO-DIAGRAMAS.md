@@ -113,10 +113,10 @@ presenta en siete vistas, más tres de patrones (ficha 3).
 | 1. Dominio: cuentas y catálogo | `clases-1-dominio-catalogo` | **15,9 cm** (23,0 de alto, página entera) | 8,6 pt |
 | 2. Dominio: compra y pago | `clases-2-dominio-compra` | **16,0 cm** (15,9) | 9,8 pt |
 | 3. Dominio: entrada y seguro | `clases-3-dominio-entrada` | **16,0 cm** (13,2) | 11,8 pt |
-| 4. Negocio: gestores de la compra | `clases-4-negocio-compra` | **16,0 cm** (17,6) | 8,5 pt |
+| 4. Negocio: gestores de la compra | `clases-4-negocio-compra` | **16,0 cm** (18,3) | 8,5 pt |
 | 5. Negocio: administración y cuenta | `clases-5-negocio-administracion` | **16,0 cm** (19,6) | 9,2 pt |
 | 6. Negocio: verificación de identidad | `clases-6-autorizacion` | **16,0 cm** (11,9) | 9,9 pt |
-| 7. Datos: repositorios | `clases-7-datos` | **15,1 cm** (23,0, página entera) | 11,1 pt |
+| 7. Datos: repositorios | `clases-7-datos` | **15,0 cm** (23,0, página entera) | 9,3 pt |
 
 El fuente de cada una es `fuentes/<nombre>.puml` y la imagen, `<nombre>.png`.
 
@@ -141,11 +141,18 @@ conceptual» de la misma página no se toca en esta entrega.**
 > la compra y del pago son enumeraciones con los mismos valores que las restricciones `CHECK` de la
 > base de datos.
 >
-> En la capa de negocio, las vistas 4 y 5 muestran las operaciones públicas de cada gestor, y la
-> vista 6, la verificación de identidad que agregó la revisión de seguridad: antes de operar, cada
+> Tres conceptos del modelo de dominio llevan otro nombre en el código, y así aparecen en las
+> vistas: el Administrador es la clase `Propietario`, que es el nombre de su perfil en la base de
+> datos (RN-05); la Inscripción en la lista de espera es la clase `ListaEspera`, y el Servicio
+> contratado es la clase `CompraServicio`. El Paquete existe como clase pero no se guarda en la
+> base: es el armado en curso, y al confirmarlo se convierte en una Compra.
+>
+> En la capa de negocio, las vistas 4 y 5 muestran las operaciones públicas de cada gestor, más
+> las internas que aparecen en el diagrama de secuencia, y la vista 6, la verificación de identidad que agregó la revisión de seguridad: antes de operar, cada
 > gestor consulta a `GestorSesion` si quien llama es el titular de los datos (RN-41) o el
 > Administrador (RN-34, RN-42). La vista 7 muestra la capa de datos: trece repositorios que
-> heredan de `RepositorioBase`, únicos responsables del acceso a SQL Server.
+> heredan de `RepositorioBase`, únicos responsables del acceso a SQL Server; de cada uno se
+> muestran los métodos que aparecen en los diagramas de secuencia.
 
 **Justificación de relaciones, vistas 1 a 3 (entidades):**
 
@@ -515,6 +522,14 @@ una vista por página.
 > entrada y del pago son enumeraciones con los mismos valores que la base de datos. La relación de
 > muchos a muchos entre compra y servicio complementario lleva una clase de asociación, Servicio
 > contratado, con la cantidad y el precio unitario congelado al comprar (RN-16).
+>
+> El dominio expresa la regla del negocio, y en tres asociaciones de la entrada la implementación
+> es menos estricta. Toda entrada nace de una compra y de un sector, pero en la base de datos las
+> columnas de la compra y del sector admiten nulos, porque se agregaron a una tabla de entradas
+> anterior a ellas; por eso el diagrama de clases y el entidad-relación las muestran con
+> multiplicidad 0..1. Y una entrada tiene a lo sumo un seguro: el sistema lo emite una sola vez, al
+> confirmar la compra, y no permite agregarlo después (RN-28), pero la base no lo impide con una
+> restricción de unicidad, así que el entidad-relación muestra 0..*.
 
 **Justificación.** Las asociaciones son las mismas de la ficha 7, con la misma multiplicidad.
 Lo que se agrega:

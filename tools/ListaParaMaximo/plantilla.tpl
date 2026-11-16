@@ -598,6 +598,21 @@ entradas del pedido debajo) y para Reportes (filtros arriba en dos filas, tabla 
 lectura y acciones al pie). **Cuando Codex las publique, JC confirma que las pantallas quedaron
 así**; hoy son la propuesta, no el código.
 
+## Páginas 47 a 49 — Guion de interfaz: las tres capturas
+
+**⏸ ESPERANDO FIGURA NUEVA: no toques las tres imágenes todavía.** Muestran la interfaz de antes
+del rediseño (la de la p. 47 dice «Show Password»). Van a reemplazarse por capturas de la interfaz
+congelada: p. 47, inicio de sesión (`frmInicio`); p. 48, crear cuenta (`frmCrearUsuario`); p. 49,
+menú del cliente (`frmMenuCliente`). Cuando estén, esta entrada dice el archivo de cada una.
+
+**P. 47, mismo lugar, ya:** en la lista del Menú Inicial, **dice** «Botones para iniciar sesión,
+cambiar la contraseña y crear una cuenta nueva.» **Poner:** «El botón para iniciar sesión, que
+también responde a la tecla Enter, y los enlaces para cambiar la contraseña y crear una cuenta
+nueva.»
+
+*Razón:* pasada de coherencia del 16/11 sobre el rediseño. `frmInicio` tiene `AcceptButton` y los
+dos accesos como enlaces («Cambiar contraseña» y «Crear Cuenta»).
+
 ## Página 48
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-01 · p\. 48 :: ^\*\*E-02
@@ -931,6 +946,19 @@ El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debaj
 > en RF-12, que reúne las operaciones del Administrador. CP-94 figura en varias filas porque
 > verifica las dos reglas en las operaciones de cada una; CP-123, en RF-07 y RF-12, porque
 > verifica RN-42 en el control de ingreso.
+
+**Agregar a continuación** el subtítulo «Trazabilidad del requerimiento core» y:
+
+> La matriz principal llega hasta los casos de prueba. Para el requerimiento core, la
+> trazabilidad sigue hasta los diagramas y el código:
+
+| Requerimiento | Caso de uso | Diagramas | Código |
+|---|---|---|---|
+| RF-05, Armado de paquetes personalizados | CU-01 Comprar paquete | Robustez «Comprar paquete»; secuencia «Comprar paquete» (reserva, pago y emisión); actividad del armado y del pago; transición de estados de la entrada; clases, vistas 2, 3, 4 y 7 | `Visual/Cliente/FrmCompraCliente.cs`, `frmPago.cs` y `frmConfirmacion.cs`; `Repo/GestorPaquetes.cs`, `GestorCompras.cs` y `GestorFidelizacion.cs`; `Datos/RepositorioCompras.cs`, `RepositorioSectores.cs`, `RepositorioEntradas.cs` y `RepositorioPagos.cs`; `Entidade/Paquete.cs` y `Compra.cs` |
+
+*Razón:* matriz de coherencia, comprobación 1 («Cada RF core tiene CU, robustez, secuencia y
+código»; se comprueba con una tabla RF → CU → diagramas → archivos). La matriz principal no
+llegaba a diagramas ni a archivos. Los archivos existen en el commit `ea9212a`.
 
 **Tabla «Trazabilidad inversa de los objetivos específicos», fila OE-4. Reemplazar** la
 evidencia «Informe de pruebas de usabilidad: SUS 74,5 y 80 % de satisfacción» **por** «Informe de
