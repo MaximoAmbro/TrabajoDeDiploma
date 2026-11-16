@@ -224,6 +224,8 @@ CREATE TABLE Seguros (                    -- RN-28, RN-29
     FOREIGN KEY (ID_Entrada) REFERENCES Entradas(ID)
 );
 
+CREATE UNIQUE INDEX UX_Seguros_ID_Entrada ON Seguros (ID_Entrada); -- RN-28: una póliza por entrada
+
 CREATE TABLE Suscripciones (              -- RN-25, RN-26, RN-37
     ID          INT IDENTITY(1,1) PRIMARY KEY,
     ID_Usuario  INT           NOT NULL,
