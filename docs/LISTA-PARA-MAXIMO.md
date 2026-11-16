@@ -16,14 +16,31 @@
 > 3. **`06-prioridad-temporal.sql`**. Agrega la ventana de prioridad de la lista de espera
 >    (RN-35). **Si no lo corrés, no se puede iniciar ninguna compra:** el ejecutable nuevo lee una
 >    columna que tu base todavía no tiene.
+> 4. **⏸ `07-indice-unico-seguros.sql`: todavía no existe, no lo busques.** Codex lo agrega
+>    después de la medición final. Cuando esté, esta línea dice qué pasa si no se corre.
 
-> ## ⚠ PROVISORIO hasta que JC pase los números finales
+> ## ⏸ NO PEGAR TODAVÍA: la lista completa
 >
-> Todo lo demás está decidido. Las cifras de casos, ejecuciones y cobertura son las del commit
-> `1525202` (16/11) y **todavía pueden cambiar**: Codex está terminando las pantallas de
-> Historial y Reportes y las figuras del instructivo. Están juntas en la tabla «Cifras
-> provisorias», de abajo. Cuando Codex termine, JC congela el código, Claude Code repite la
-> batería y la mutación sobre ese commit, se regenera este archivo y se quita este aviso.
+> **Todo lo que no lleva la marca ⏸ se pega hoy, sin preguntar.** Lo que la lleva describe algo
+> que todavía no existe o un dato que falta: si se pega, el documento promete algo falso. Cada
+> uno tiene la marca también en su lugar de la lista, para que te frene aunque llegues sin leer
+> esto.
+>
+> | Dónde | Qué no se pega | De qué depende |
+> |---|---|---|
+> | p. 7, «Resultados principales», cuarto punto | El punto entero (lleva «N» de «M») | La medición final de mutación sobre `65225e7` (Claude Code, en curso) |
+> | Sección nueva «Metodología de verificación» (después de la p. 109) | Solo el párrafo que empieza con «*Resultado.*» | La misma medición. El resto de la sección se pega |
+> | pp. 47 a 49, guion de interfaz | Las tres capturas | Que Codex regenere `frmInicio`, `frmCrearUsuario` y `frmMenuCliente`. El cambio de texto de la p. 47 sí se pega |
+> | p. 88, dominio actualizado | La oración sobre el seguro | El script `07-indice-unico-seguros.sql` (Codex, después de la medición) |
+> | pp. 90 a 97, usabilidad, y p. 111, punto 1 | El texto alternativo de U-09 | Que Codex construya la vuelta al listado al cerrar la confirmación. Mientras tanto se pega el texto actual |
+> | Arriba de todo, scripts de base | El script 07 | El mismo script |
+> | p. 1 y pie de todas las páginas | Comisión, turno, legajos, año | Datos de JC |
+> | p. 6, historial | La fecha de las filas nuevas | El día en que se pega (JC) |
+> | p. 9 | El período «entre junio y diciembre de 2025» | El año que decida JC |
+> | pp. 12 a 14, registro de interesados | El rol de Juan Cruz | Dato de JC |
+> | pp. 15 a 17, cronograma de hitos | Las nueve «Fecha estimada: x» | Datos de JC |
+> | p. 44, Minuta Nº 2 | Si el profesor figura «de la cátedra (rol simulado)» | Dato de JC |
+> | p. 45, prototipos | La frase sobre Figma | Si existe el archivo de Figma (JC) |
 
 > ## ⚠ Las páginas 63 a 67 (y el código de las 102 a 105): bloques de código que Word estropea sin que se note
 >
@@ -52,12 +69,12 @@
 - **«Dice» / «Poner»:** buscá en Word el texto de «Dice» (si no aparece entero, buscá sus
   primeras cinco o seis palabras: el PDF parte los renglones) y reemplazalo por «Poner».
 - **Las líneas en cursiva que empiezan con *Razón:*** son para JC: no se pegan.
-- **⏸ ESPERA A JC:** no la apliques; saltéala. Cuando JC pase el dato, se completa acá.
+- **⏸ ESPERA A JC** y **⏸ NO PEGAR TODAVÍA:** no la apliques; saltéala. Están todas en la tabla del principio.
 - **Las páginas se corren** a medida que pegás. Buscá siempre por el texto, no por el número.
 - **No hay nada para decidir.** Si algo no encaja con lo que ves en el Word, no lo resuelvas:
   anotalo y avisale a JC.
 
-## Cifras provisorias (las cambia JC al final)
+## Cifras del documento (verificadas; falta solo la de mutación)
 
 | Dato | Valor hoy | Dónde aparece en esta lista |
 |---|---|---|
@@ -65,8 +82,8 @@
 | Reglas con caso de prueba | 39 de 41 = 95,1 % | pp. 8, 108, 109, 110, sección nueva después de la 109 |
 | Reglas sin caso | RN-07 y RN-33 | pp. 8, 108, 109, 110, 111 |
 | Casos de prueba | 145 (ciento cuarenta y cinco), CP-01 a CP-145 | pp. 6, 7, 106, 107, 108, 109, sección nueva |
-| Ejecuciones | 271, todas correctas (corrida de Codex del 16/11, `1525202`; Claude Code la repite al congelar) | sección nueva |
-| Mutación | Primera medición: 83 defensas, 6 equivalentes, 51 de 77 detectadas (66,2 %), sobre `fe04b1f`. **La cifra final se mide sobre el commit congelado**, ya con CP-126 a CP-145; hasta entonces, la p. 7 lleva «N» de «M» | p. 7, sección nueva |
+| Ejecuciones | 271, todas correctas, sobre `65225e7`: la corrió Codex y la repitió Claude Code por separado, con el mismo resultado | sección nueva |
+| Mutación | **⏸ NO PEGAR TODAVÍA.** Primera medición: 51 de 77 (66,2 %) sobre `fe04b1f`. La final se está midiendo sobre `65225e7` | p. 7, sección nueva |
 | Casos de uso especificados | 13 (trece), CU-01 a CU-13 | pp. 7, 106, 108 |
 
 ---
@@ -115,7 +132,7 @@ cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega. Las seis prim
 | «fecha» | 2.5 | Riggio, Juan Cruz | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-61. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, cuatro de ellos corregidos con prueba de regresión, y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
-| «fecha» | 2.6 | Riggio, Juan Cruz | Respecto de la 2.5: arquitectura e implementación descriptas sobre el prototipo, con los veinticinco diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-13; anexo de estimación de costos. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Matriz de trazabilidad con los casos CP-62 a CP-145 y cobertura de 39 de las 41 reglas; brecha G-07 resuelta. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura y prueba de mutación de las defensas de seguridad. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
+| «fecha» | 2.6 | Riggio, Juan Cruz | Respecto de la 2.5: arquitectura e implementación descriptas sobre el prototipo, con los veinticinco diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-13; anexo de estimación de costos. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 41 vigentes, de RN-01 a RN-42; RN-27 sigue dada de baja (versión 2.0) y su número no se reutiliza, y las reglas nuevas se numeraron a continuación: RN-38 y RN-39 en la versión 2.5, y RN-40, RN-41 y RN-42 con la revisión de seguridad. Matriz de trazabilidad con los casos CP-62 a CP-145 y cobertura de 39 de las 41 reglas; brecha G-07 resuelta. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura y prueba de mutación de las defensas de seguridad. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 ## Página 7 — Resumen ejecutivo, «Qué contiene este informe»
 
@@ -140,8 +157,8 @@ En «Resultados principales», **reemplazar** el punto «Usabilidad por encima d
 > puntaje SUS de 78,8 frente a la referencia de 68, los seis perfiles completan la tarea sin
 > asistencia y el tiempo medio es de 2 min 35 s, dentro del límite de cinco minutos.
 
-**Mismo lugar, agregar un cuarto punto** al final de «Resultados principales», con la misma
-viñeta. **Cifras provisorias** (tabla del principio):
+**⏸ NO PEGAR TODAVÍA (depende de la medición final de mutación).** Mismo lugar, un cuarto punto al final de
+«Resultados principales», con la misma viñeta. Cuando esté la cifra, esta entrada pierde la marca:
 
 > Pruebas que detectan defectos, medidas. Ciento cuarenta y cinco casos de prueba automatizados
 > verifican treinta y nueve de las cuarenta y una reglas de negocio. Para comprobar que esas
@@ -844,7 +861,7 @@ así**; hoy son la propuesta, no el código.
 
 ## Páginas 47 a 49 — Guion de interfaz: las tres capturas
 
-**⏸ ESPERANDO FIGURA NUEVA: no toques las tres imágenes todavía.** Muestran la interfaz de antes
+**⏸ NO PEGAR TODAVÍA: no toques las tres imágenes.** Muestran la interfaz de antes
 del rediseño (la de la p. 47 dice «Show Password»). Van a reemplazarse por capturas de la interfaz
 congelada: p. 47, inicio de sesión (`frmInicio`); p. 48, crear cuenta (`frmCrearUsuario`); p. 49,
 menú del cliente (`frmMenuCliente`). Cuando estén, esta entrada dice el archivo de cada una.
@@ -935,24 +952,25 @@ llega después y muestra la cuenta regresiva.
 
 ## Páginas 52 y 53 — Figuras 1 a 4 del instructivo
 
-Reemplazar cada «Espacio reservado para captura de pantalla» por la imagen
-correspondiente de `docs/capturas/instructivo/`. Los epígrafes no cambian.
+Reemplazar cada «Espacio reservado para captura de pantalla» por la imagen de la tabla. **Se
+pegan hoy.** Están en `Pruebas/Figuras-Instructivo-2026-11-16/100/`, todas de un mismo pedido
+(Paula, nivel Plata, dos entradas de Campo y una noche de hotel: total $99.625, como el ejemplo
+de la p. 54). **No uses las de `docs/capturas/instructivo/`: son las de antes del rediseño.**
+Proporción bloqueada en todas. Los epígrafes no cambian.
 
-| Epígrafe | Archivo |
-|---|---|
-| Figura 1 — Listado de eventos disponibles (pasos 1 y 2) | `figura1-listado-eventos.png` |
-| Figura 2 — Pantalla de armado de paquete (pasos 3 a 5) | `figura2-armado-paquete.png` |
-| Figura 3 — Resumen del paquete con el descuento aplicado (paso 6) | `figura3-resumen-descuento.png` |
-| Figura 4 — Confirmación de compra y comprobante emitido (pasos 7 y 8) | `figura4-confirmacion-y-comprobante.png` |
+| Epígrafe | Archivo | Ancho | Letra impresa |
+|---|---|---|---|
+| Figura 1 — Listado de eventos disponibles (pasos 1 y 2) | `figura1-listado-eventos.png` | **16,0 cm** | 7,2 pt |
+| Figura 2 — Pantalla de armado de paquete (pasos 3 a 5) | `figura2-armado-paquete.png` | **16,0 cm** | 6,8 pt |
+| Figura 3 — Resumen del paquete con el descuento aplicado (paso 6) | `figura3-resumen-descuento.png` | **10,5 cm** (su tamaño real) | 10 pt |
+| Figura 4 — Confirmación de compra y comprobante emitido (pasos 7 y 8) | **dos imágenes, una debajo de la otra, con un solo epígrafe:** `figura4b-confirmacion.png` arriba y `ticket.png` abajo | **16,0 cm** y **12,0 cm** | 7,9 pt y unos 8 pt |
 
-Las imágenes están en `docs/capturas/instructivo/`. Insertalas con el ancho del texto (16,0 cm) y
-la proporción bloqueada. Hay una quinta, `figura4a-pago-simulado.png`: no se usa.
-
-**⏸ ESPERANDO FIGURA NUEVA: no pegues ninguna de las cuatro.** Las que están hoy en
-`docs/capturas/instructivo/` muestran las pantallas de antes del rediseño. Codex las regenera
-sobre el código congelado; los nombres de archivo y los epígrafes no cambian. Cuando estén, esta
-entrada lo dice y JC confirma que el texto de los pasos 1 a 8 (pp. 51 y 52) sigue describiendo
-lo que muestran, en particular el indicador de pasos y la pantalla de éxito.
+*Razón:* la figura 4 que armó Codex en una sola imagen (`figura4-confirmacion-y-comprobante.png`)
+mide 1519 px: a 16 cm quedaría al 40 %, con la letra en unos 3,6 pt, ilegible (regla 16 del
+profesor). Sus dos mitades están en la misma carpeta. La letra impresa sale de la letra de cuerpo
+de la interfaz, Segoe UI de 10 pt (`docs/SISTEMA-DISENO.md`). Antes de pegar, JC confirma que el
+texto de los pasos 1 a 8 (pp. 51 y 52) describe lo que muestran, en particular el indicador de
+pasos y la pantalla de éxito.
 
 ## Página 54 — Ejemplo resuelto
 
@@ -1795,13 +1813,18 @@ Texto:
 > muchos a muchos entre compra y servicio complementario lleva una clase de asociación, Servicio
 > contratado, con la cantidad y el precio unitario congelado al comprar (RN-16).
 >
-> El dominio expresa la regla del negocio, y en tres asociaciones de la entrada la implementación
-> es menos estricta. Toda entrada nace de una compra y de un sector, pero en la base de datos las
-> columnas de la compra y del sector admiten nulos, porque se agregaron a una tabla de entradas
-> anterior a ellas; por eso el diagrama de clases y el entidad-relación las muestran con
-> multiplicidad 0..1. Y una entrada tiene a lo sumo un seguro: el sistema lo emite una sola vez, al
-> confirmar la compra, y no permite agregarlo después (RN-28), pero la base no lo impide con una
-> restricción de unicidad, así que el entidad-relación muestra 0..*.
+> El dominio expresa la regla del negocio: toda entrada pertenece a una compra y a un sector. En la
+> base de datos, las columnas de la compra y del sector de la entrada admiten valores nulos, porque
+> se agregaron a una tabla de entradas anterior a ellas; por eso el diagrama de clases y el
+> entidad-relación muestran esas dos asociaciones con multiplicidad 0..1. Es una holgura del
+> esquema cuya garantía está en el código: el sistema crea las entradas en un único lugar, dentro
+> de la transacción de la compra, y siempre con su compra y su sector.
+
+**⏸ NO PEGAR TODAVÍA (depende del script `07-indice-unico-seguros.sql`):** cuando Codex lo publique, se agrega al final
+del texto anterior: «Una entrada tiene a lo sumo un seguro. La base de datos lo garantiza con un
+índice único sobre la entrada asegurada, de modo que un mismo cliente no puede recibir dos cargos
+de seguro por la misma entrada (RN-28).» Y se regeneran la vista 3 de clases y el
+entidad-relación de compras con la multiplicidad 0..1 del seguro.
 
 **Diagrama de actividad:** el título «Diagrama de Actividad (flujo del Cliente)» pasa a
 «Diagrama de actividad (proceso de venta)». Reemplazar la figura (que sigue en la p. 89) por
@@ -1880,6 +1903,13 @@ sostiene el rótulo**: separa lo medido de lo derivado. No hay que acortarla.
 >
 > Siguen abiertos U-06, U-07, U-08, U-10 y U-12. La interfaz rediseñada no se volvió a evaluar con
 > las herramientas de este estudio; hacerlo queda como trabajo futuro.
+
+**⏸ NO PEGAR TODAVÍA, solo el texto alternativo de U-09** (encargado a Codex el 17/11): cuando lo cierre, el punto de U-09
+**pasa a**: «U-09: el recorrido cognitivo registró en el paso 8 que el usuario no entendía en qué
+punto de la compra estaba (pregunta 4). La compra muestra ahora un indicador de pasos, termina en
+una pantalla de éxito con el número de pedido y la carpeta de los tickets, y al cerrarla vuelve al
+listado de eventos.» En «Siguen abiertos» no cambia nada, y en el trabajo futuro (p. 111, punto 1)
+se borra «, y el regreso a un armado vacío de U-09». Mientras no lo cierre, va el texto de arriba.
 
 *Razón:* decisión de JC del 16/11: se declara, no se vuelve a medir. Cada corrección la verificó
 Claude Code en el código, leyéndolo: U-02 en `frmInicio` (`AcceptButton` y orden de tabulación,
@@ -2630,8 +2660,8 @@ p. 108.*
 
 **Sección nueva, a continuación del párrafo final de la p. 109 y antes de «Conclusiones».**
 Título con el mismo estilo que «Matriz de trazabilidad»; los subtítulos en negrita, con el
-estilo de «Criterio de construcción». **Las cifras son provisorias** (ver la tabla del
-principio): se reemplazan al congelar, y «commit» lo completa JC con el commit medido.
+estilo de «Criterio de construcción». **Se pega hoy toda la sección salvo un párrafo: ⏸ NO PEGAR TODAVÍA el
+que empieza con «*Resultado.*»**, que depende de la medición final de mutación.
 
 **Metodología de verificación**
 
@@ -2711,6 +2741,8 @@ de datos propia; antes de cada ejecución se verificaba que la conexión apuntar
 otra. Las tres mutaciones que afectan lecturas simultáneas, cuyo resultado puede variar entre una
 ejecución y otra, se ejecutaron además veinte veces cada una. Al terminar se restauró el código
 y la batería volvió a dar el mismo resultado que antes de empezar.
+
+**⏸ NO PEGAR TODAVÍA el párrafo que sigue («Resultado»): depende de la medición final de mutación sobre `65225e7`. Saltealo y seguí con «Mutaciones equivalentes».**
 
 *Resultado.* De las setenta y siete mutaciones que se podían detectar, la batería detectó
 cincuenta y una: un 66,2 %, medido sobre el commit «commit». El pronóstico hecho por lectura acertó

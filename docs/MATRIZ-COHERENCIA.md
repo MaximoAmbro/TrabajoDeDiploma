@@ -1,5 +1,11 @@
 # Matriz de coherencia: las diez comprobaciones, corridas sobre el documento
 
+> **Origen y autoría.** Esta matriz no es un documento del profesor. Sale de la sección 6 de
+> `Prompt_Documentacion_Trabajo_de_Diploma.md`, un prompt armado sobre la guía de resolución de
+> Audoglio que llegó por WhatsApp el 11/11/2026 y **no dice quién lo escribió. Su autoría no está
+> confirmada:** Juan Cruz lo confirma con el profesor. Si el profesor usa otras comprobaciones,
+> este archivo deja constancia de dónde salieron estas.
+
 Claude Code, 16/11/2026, a pedido de JC. Es el tercer instrumento: los otros dos (la guía oficial
 y los 16 errores frecuentes) están en `docs/CHEQUEO-INSTRUMENTOS-DOCENTE.md`.
 
@@ -39,18 +45,22 @@ No estaba en el repositorio. Apareció en el disco, fuera de él, buscando por c
 
 ## Resultado
 
+**Pasan 9 de 10** (decisión de JC del 17/11 sobre M-1): siete sin condiciones, la 4 y la 6 cuando
+entre el script 07. **La 10 está bloqueada, no fallada:** falta el material para comprobarla, y
+nada indica que el documento no la cumpla.
+
 | # | Comprobación | Antes | Ahora | Qué se hizo |
 |---|---|---|---|---|
 | 1 | RF core → CU, robustez, secuencia, código | **No** | Sí | La matriz principal llegaba hasta los casos de prueba. Tabla nueva en la lista, p. 107 |
 | 2 | Estados idénticos en las 4 listas | Sí | Sí | — |
 | 3 | Clases del dominio en el diagrama de clases | **Con huecos** | Sí | Párrafo nuevo en el texto del diagrama de clases |
-| 4 | Misma multiplicidad en dominio, clases y DER | **No, en 3 relaciones** | Explicado | Párrafo nuevo en el dominio actualizado. **Decisión de JC** abajo |
+| 4 | Misma multiplicidad en dominio, clases y DER | **No, en 3 relaciones** | Sí: dos explicadas, una con el script 07 | Compra y sector: holgura del esquema explicada en el texto. Seguro: **se resuelve con el script 07** (decisión de JC, M-1) |
 | 5 | Atributo de FK y línea a la vez | Sí | Sí | — |
-| 6 | Toda 1:1 con UNIQUE en la base | **No, en 1 relación** | Explicado | La misma decisión de JC |
+| 6 | Toda 1:1 con UNIQUE en la base | **No, en 1 relación** | **Se resuelve con el script 07** | Índice único en `Seguros.ID_Entrada`, encargado a Codex para después de la mutación final |
 | 7 | Composiciones con cascada o baja lógica | Sí (no hay composiciones) | Sí | — |
 | 8 | Métodos de la secuencia en clases y código | **No, 8 llamadas** | Sí | Métodos agregados a las vistas 4 y 7; diagramas regenerados |
 | 9 | Nombres consistentes (glosario) | **Con huecos** | Sí, salvo glosario | El mismo párrafo de la 3. El documento no tiene glosario |
-| 10 | Devolución del Parcial 1 en la hoja de seguimiento | **Bloqueada** | Bloqueada | No está la devolución. **La tiene que pasar JC** |
+| 10 | Devolución del Parcial 1 en la hoja de seguimiento | **Bloqueada** (no fallada) | **Bloqueada** (no fallada) | Sin la devolución no se puede comprobar. Juan Cruz la busca donde apareció la matriz |
 
 ### 1. Requerimiento core hasta el código
 
@@ -97,21 +107,20 @@ Coinciden en todas las relaciones salvo tres, las tres de la entrada:
 | Entrada — Sector | 1 | 0..1 | 0..1 | Lo mismo con `ID_Sector` |
 | Entrada — Seguro | 0..1 | 0..* | 0..* | `Seguros.ID_Entrada` no tiene UNIQUE. El código emite un seguro por entrada, una sola vez, y CP-122 prueba que no se agrega después |
 
-El dominio dice la regla del negocio; la base es menos estricta. **Se agregó** al texto del
-dominio actualizado un párrafo que lo explica. Con eso el documento no se contradice, pero la
-comprobación 4 pide literalmente la misma multiplicidad, y la 6 pide UNIQUE para la relación
-0..1 del dominio.
+**Decisión de JC del 17/11 (M-1), partida en dos:**
 
-**Decisión de JC (M-1):**
-- **(a) Dejarlo explicado** (lo que está hoy en la lista). No cambia código ni base.
-- **(b) Agregar `UNIQUE (ID_Entrada)` en `Seguros`.** Lo hace Codex en un script `07` (Máximo
-  tendría que correr un script más) y en `01-esquema.sql`, y el DER y las clases pasan a 0..1.
-  Cierra la 6 y una de las tres de la 4. Las otras dos (compra y sector) quedan explicadas
-  igual: volver obligatorias esas columnas exige revisar los datos que ya existen.
-
-**Recomendación: (a).** El código ya garantiza un solo seguro por entrada, y a días de congelar
-no conviene sumarle a Máximo otro script de base. La (b) tiene sentido si el profesor corrige la
-6 al pie de la letra.
+- **Compra y sector vacíos: se explican, no se cambian.** Alterar la obligatoriedad sobre datos
+  existentes puede fallar en la base de Máximo, y el código nunca crea entradas huérfanas
+  (verificado: `RepositorioEntradas.Insertar` es el único `INSERT INTO Entradas`, lo llama
+  `RepositorioCompras.Iniciar` dentro de la transacción de la compra con su `idCompra`, y el
+  sector sale de `GestorPaquetes.AgregarEntradas`, que siempre lo recibe). El texto del dominio
+  actualizado lo dice como **una holgura del esquema cuya garantía está en el código**.
+- **Dos seguros para una misma entrada: se arregla.** No es una holgura sino un defecto: un
+  cliente podría quedar con dos cargos sobre una entrada, y toca RN-28. Codex agrega el índice
+  único (script `07`) **después de la mutación final**. El texto que se agrega cuando entre ya
+  está en la lista, p. 88, marcado «⏸ ESPERA EL SCRIPT 07»; con él se regeneran la vista 3 de
+  clases y el entidad-relación de compras con 0..1. El script 07 se suma también a los scripts
+  de base del principio de la lista.
 
 ### 5. Clave foránea como atributo y como línea
 
@@ -140,11 +149,13 @@ Diagramas regenerados: `clases-4-negocio-compra` (16,0 × 18,3 cm, 8,5 pt) y `cl
 (15,0 × 23,0 cm, 9,3 pt), los dos dentro del ancho de página. Al volver a correr la comprobación,
 no falta ninguna.
 
-### 10. Devolución del Parcial 1
+### 10. Devolución del Parcial 1: bloqueada, no fallada
 
 La «hoja de seguimiento» es el historial de revisión de la p. 6 (punto 13 de la guía). Lo que no
 está es **la devolución del Parcial 1**: no aparece en el repositorio ni en el disco. Sin ella no
-se puede comparar observación por observación. **JC la pasa (archivo, foto o texto) y se corre.**
+se puede comparar observación por observación. **Está bloqueada, no fallada:** nada indica que el
+documento no la cumpla. Juan Cruz la busca en el mismo lugar donde apareció la matriz; cuando
+aparezca, se corre.
 
 ## Encontrado de paso, fuera de la matriz
 

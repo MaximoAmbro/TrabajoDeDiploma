@@ -9,7 +9,7 @@ reemplazan cuando JC congele el código y se vuelva a correr la mutación sobre 
 
 | Cifra en el texto | Hoy | Fuente | Cuándo cambia |
 |---|---|---|---|
-| Casos y ejecuciones | 145 casos, 271 ejecuciones, todas correctas | Segunda corrida de Codex del 16/11 (`1525202`); **Claude Code la repite en el árbol principal cuando Codex avise que publicó** | Si Codex agrega casos al cerrar Historial y Reportes |
+| Casos y ejecuciones | 145 casos, 271 ejecuciones, todas correctas | **Definitiva.** Sobre `65225e7`: la corrió Codex y la repitió Claude Code en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-17nov/bateria.log`) | — |
 | Cobertura de reglas | 39 de 41 (95,1 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` | Solo si cambian las reglas o se agrega caso a RN-07 o RN-33 |
 | Mutación | 83 defensas, 6 equivalentes, 51 de 77 detectadas (66,2 %); la séptima equivalente adentro; sin ella, 67,1 % | `docs/INFORME-MUTACION-SEGURIDAD.md`, sobre `fe04b1f` | En la corrida final sobre el commit congelado |
 | Commit medido | «commit» | — | Lo pone JC al congelar |
@@ -107,6 +107,8 @@ de datos propia; antes de cada ejecución se verificaba que la conexión apuntar
 otra. Las tres mutaciones que afectan lecturas simultáneas, cuyo resultado puede variar entre una
 ejecución y otra, se ejecutaron además veinte veces cada una. Al terminar se restauró el código
 y la batería volvió a dar el mismo resultado que antes de empezar.
+
+**⏸ NO PEGAR TODAVÍA el párrafo que sigue («Resultado»): depende de la medición final de mutación sobre `65225e7`. Saltealo y seguí con «Mutaciones equivalentes».**
 
 *Resultado.* De las setenta y siete mutaciones que se podían detectar, la batería detectó
 cincuenta y una: un 66,2 %, medido sobre el commit «commit». El pronóstico hecho por lectura acertó

@@ -1,6 +1,6 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 145 casos, que suman **271 ejecuciones**, las 271 correctas (corrida de Codex del 16/11, `TestResults/Cola16/final.log`, publicada en `1525202`). **Claude Code todavía no la repitió:** la cifra es la del registro de Codex.
+Proyecto `Pruebas/` con MSTest. Hay 145 casos, que suman **271 ejecuciones**, las 271 correctas sobre el código congelado `65225e7`. **Verificado por dos agentes, por separado:** la corrida de Codex (`TestResults/Cola16/final.log`) y la de Claude Code en el árbol principal, que compiló y corrió la batería completa con `tools/Proyecto.ps1 -Accion Probar` (`TestResults/Claude-17nov/bateria.log`: 271 correctas, 0 fallidas, 145 casos distintos).
 CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-145 se
 agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-145» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
@@ -179,9 +179,9 @@ terminado.
 
 **Ningún caso falla en la segunda corrida del 16/11: 271 de 271.** Antes, en la primera, 243 de 243. Los tres que fallaban el 14/11 (la fila
 de 150 % de CP-69, CP-76 y la fila del propietario de CP-85, todos de aspecto a escala 150 %)
-pasan desde el rediseño de pantallas de Codex (`96fd6ec` y `027527f`). **Esta batería no la corrió
-Claude Code:** la cifra es la del registro de Codex. Se repite en el árbol principal cuando Codex
-avise que publicó (pedido de JC del 16/11).
+pasan desde el rediseño de pantallas de Codex (`96fd6ec` y `027527f`). Claude Code repitió la
+batería en el árbol principal sobre `65225e7`, después del congelamiento: **271 de 271**, el mismo
+resultado que Codex.
 
 CP-81, que fallaba en la batería del 12/11, pasa desde `2af267a` (Codex corrigió la preventa).
 

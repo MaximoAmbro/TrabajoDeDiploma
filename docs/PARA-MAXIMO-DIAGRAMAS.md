@@ -523,13 +523,12 @@ una vista por página.
 > muchos a muchos entre compra y servicio complementario lleva una clase de asociación, Servicio
 > contratado, con la cantidad y el precio unitario congelado al comprar (RN-16).
 >
-> El dominio expresa la regla del negocio, y en tres asociaciones de la entrada la implementación
-> es menos estricta. Toda entrada nace de una compra y de un sector, pero en la base de datos las
-> columnas de la compra y del sector admiten nulos, porque se agregaron a una tabla de entradas
-> anterior a ellas; por eso el diagrama de clases y el entidad-relación las muestran con
-> multiplicidad 0..1. Y una entrada tiene a lo sumo un seguro: el sistema lo emite una sola vez, al
-> confirmar la compra, y no permite agregarlo después (RN-28), pero la base no lo impide con una
-> restricción de unicidad, así que el entidad-relación muestra 0..*.
+> El dominio expresa la regla del negocio: toda entrada pertenece a una compra y a un sector. En la
+> base de datos, las columnas de la compra y del sector de la entrada admiten valores nulos, porque
+> se agregaron a una tabla de entradas anterior a ellas; por eso el diagrama de clases y el
+> entidad-relación muestran esas dos asociaciones con multiplicidad 0..1. Es una holgura del
+> esquema cuya garantía está en el código: el sistema crea las entradas en un único lugar, dentro
+> de la transacción de la compra, y siempre con su compra y su sector.
 
 **Justificación.** Las asociaciones son las mismas de la ficha 7, con la misma multiplicidad.
 Lo que se agrega:
