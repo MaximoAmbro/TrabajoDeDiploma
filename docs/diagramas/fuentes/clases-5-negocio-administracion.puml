@@ -31,7 +31,7 @@ class GestorLocales <<Singleton>> {
 class GestorIngresos <<Singleton>> {
   + Registrar(string, int) : ResultadoIngreso
   + Contar(int) : int
-  + EventosDeHoy() : List<Evento>
+  + EventosConIngresoAbierto() : List<Evento>
 }
 class GestorUsuarios <<Singleton>> {
   + Autenticar(string, string) : Usuario

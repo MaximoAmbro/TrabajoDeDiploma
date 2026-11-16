@@ -58,6 +58,8 @@ class GestorSuscripciones <<Singleton>> {
 class GestorListaEspera <<Singleton>> {
   + Inscribir(int, int)
   + EstaInscripto(int, int) : bool
+  + ConsultarPosicion(int, int) : int?
+  + AvisosAlIngresar(int) : List<string>
   + DeEvento(int) : List<ListaEspera>
 }
 

@@ -3,9 +3,10 @@
 > ## ⚠ PROVISORIO hasta que JC pase los números finales
 >
 > Todo lo demás está decidido. Las cifras de casos, ejecuciones y cobertura son las del commit
-> `fe04b1f` (14/11) y **pueden cambiar** cuando Codex entregue lo que está haciendo. Están
-> juntas en la tabla «Cifras provisorias», de abajo. Cuando JC las confirme, se regenera este
-> archivo y se quita este aviso.
+> `027527f` (16/11) y **van a cambiar**: Codex está escribiendo las pruebas que encargó la
+> mutación. Están juntas en la tabla «Cifras provisorias», de abajo. Cuando Codex termine, JC
+> congela el código, se vuelve a correr la mutación sobre ese commit, se regenera este archivo
+> y se quita este aviso.
 
 > ## ⚠ Las páginas 63 a 67 (y el código de las 102 a 105): bloques de código que Word estropea sin que se note
 >
@@ -44,10 +45,11 @@
 | Dato | Valor hoy | Dónde aparece en esta lista |
 |---|---|---|
 | Reglas vigentes | 41 (cuarenta y una) | pp. 6, 7, 106, 108, 109, 110 |
-| Reglas con caso de prueba | 37 de 41 = 90,2 % | pp. 8, 108, 109, 110 |
-| Reglas sin caso | RN-07, RN-26, RN-28, RN-33 | pp. 108, 109, 111 |
-| Casos de prueba | 115 (ciento quince), CP-01 a CP-115 | pp. 6, 7, 106, 107, 108 |
-| Ejecuciones | 198: 195 correctas y 3 que fallan (CP-69, CP-76 y CP-85, aspecto a 150 %) | p. 110 |
+| Reglas con caso de prueba | 39 de 41 = 95,1 % | pp. 8, 108, 109, 110, sección nueva después de la 109 |
+| Reglas sin caso | RN-07 y RN-33 | pp. 8, 108, 109, 110, 111 |
+| Casos de prueba | 124 (ciento veinticuatro), CP-01 a CP-124 | pp. 6, 7, 106, 107, 108, 109, sección nueva |
+| Ejecuciones | 243, todas correctas (corrida de Codex del 16/11) | sección nueva |
+| Mutación | 83 defensas, 6 equivalentes, 51 de 77 detectadas (66,2 %), medida sobre `fe04b1f`. **Se vuelve a medir sobre el commit congelado** | sección nueva |
 | Casos de uso especificados | 13 (trece), CU-01 a CU-13 | pp. 7, 106, 108 |
 
 ---
@@ -70,13 +72,21 @@ y el año debajo de «Rosario, Argentina»: «2025».
 **Encabezado de las páginas** (hoy dice «Alumnos: Ambrosino, Máximo (Legajo «completar») ·
 Riggio, Juan Cruz (Legajo «completar»)»): completar los dos legajos.
 
+**Esto no espera a JC: la versión, en las 112 páginas.** Cada página muestra «EventAura —
+versión 2.4» junto al nombre de la sección y el número de página. Pasa a «EventAura — versión
+2.5». Se cambia una vez en el encabezado o pie donde está (si el documento tiene secciones con
+encabezados distintos, en cada una) y se comprueba en tres páginas al azar.
+
+*Razón:* el historial de revisión de la p. 6 cierra con la versión 2.5; si el encabezado sigue en
+2.4, el documento se contradice en cada página.
+
 ## Páginas 2 a 5 — Índice
 
 No se toca ahora: se regenera al final («Hacé esto último»).
 
 ## Página 6 — Historial de revisión
 
-**Agregar** estas siete filas al final de la tabla. «fecha» es el día en que se pegan los
+**Agregar** estas ocho filas al final de la tabla. «fecha» es el día en que se pegan los
 cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega.
 
 | Fecha | Versión | Autor | Descripción del cambio |
@@ -86,8 +96,9 @@ cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega.
 | «fecha» | 2.5 | Riggio, Juan Cruz | Instructivo del requerimiento core: estado de implementación actualizado e incorporación de las figuras 1 a 4. Especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-13. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Arquitectura e implementación descriptas sobre el prototipo; diagramas de casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación regenerados desde el código. Estimación de costos del proyecto. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-115 y cobertura recalculada sobre 41 reglas. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta; G-02 resuelta en requerimientos y abierta en reglas. |
+| «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-124 y cobertura recalculada sobre 41 reglas. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta; G-02 resuelta en requerimientos y abierta en reglas. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, cuatro de ellos corregidos con prueba de regresión, y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
+| «fecha» | 2.5 | Riggio, Juan Cruz | Metodología de verificación: batería de pruebas, criterio de cobertura de reglas y prueba de mutación de las defensas de seguridad. |
 | «fecha» | 2.5 | Riggio, Juan Cruz | Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 ## Página 7 — Resumen ejecutivo, «Qué contiene este informe»
@@ -97,7 +108,7 @@ cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega.
 | Reglas de negocio | «Treinta y seis reglas vigentes que fijan las condiciones bajo las cuales opera el sistema» | «Cuarenta y una reglas vigentes que fijan las condiciones bajo las cuales opera el sistema» |
 | Diseño | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, especificaciones de ocho casos de uso y modelo de dominio completo.» | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, arquitectura en cuatro capas, especificaciones de trece casos de uso y diagramas de dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación.» |
 | Validación | «Informe de pruebas de usabilidad con cinco participantes y anexo A02 con cinco reportes de gestión.» | «Informe de pruebas de usabilidad (simulado, medido sobre la aplicación) con seis perfiles, y anexo A02 con cinco reportes de gestión.» |
-| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, ciento quince casos de prueba automatizados y hallazgos.» |
+| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, ciento veinticuatro casos de prueba automatizados y hallazgos.» |
 
 En «Resultados principales», **reemplazar** el punto «Usabilidad por encima del promedio»:
 
@@ -112,6 +123,19 @@ En «Resultados principales», **reemplazar** el punto «Usabilidad por encima d
 > necesitaban asistencia; se corrigieron las causas y se volvió a medir. Resultado final: un
 > puntaje SUS de 78,8 frente a la referencia de 68, los seis perfiles completan la tarea sin
 > asistencia y el tiempo medio es de 2 min 35 s, dentro del límite de cinco minutos.
+
+**Mismo lugar, agregar un cuarto punto** al final de «Resultados principales», con la misma
+viñeta. **Cifras provisorias** (tabla del principio):
+
+> Pruebas que detectan defectos, medidas. Ciento veinticuatro casos de prueba automatizados
+> verifican treinta y nueve de las cuarenta y una reglas de negocio. Para comprobar que esas
+> pruebas detectarían un defecto real, se quitó a propósito cada una de las defensas de
+> seguridad del sistema, una por vez: la batería advirtió la falta de cincuenta y una de las
+> setenta y siete que una prueba puede detectar. Las demás quedaron registradas como pruebas
+> por escribir, ordenadas por su consecuencia.
+
+*Razón:* coherencia. El resumen ejecutivo anuncia los resultados principales y la versión 2.5
+agrega la sección «Metodología de verificación»; sin este punto, el resumen no la menciona.
 
 ## Página 8 — Resumen ejecutivo, «Limitaciones declaradas»
 
@@ -131,8 +155,8 @@ En «Resultados principales», **reemplazar** el punto «Usabilidad por encima d
 
 **Por:**
 
-> Y la cobertura de verificación alcanza al 90,2 % de las reglas de negocio: cuatro de las
-> cuarenta y una no tienen todavía un caso de prueba automatizado, y ninguna de esas cuatro
+> Y la cobertura de verificación alcanza al 95,1 % de las reglas de negocio: dos de las
+> cuarenta y una no tienen todavía un caso de prueba automatizado, y ninguna de esas dos
 > rechaza operaciones.
 
 ## Página 9
@@ -450,8 +474,10 @@ ningún pago intermedio (sección 4). Se aplica.
 | RN-35 | La lista de espera se ordena primero por los clientes que se inscribieron con suscripción activa y después por el resto; dentro de cada grupo, por orden de inscripción. La condición de suscriptor se toma al inscribirse y no cambia aunque la suscripción venza o se cancele después. Es el beneficio de prioridad que enuncia RN-37. | E | RF-10 / CU-07 |
 |---|---|---|---|
 
-**⏸ ESPERA A JC: una oración más para RN-35**, según lo que resuelva Codex sobre la ventana para
-suscriptores. JC dice cuál de las dos va; la otra se descarta.
+**⏸ ESPERA A JC: una oración más para RN-35.** JC dice cuál de las dos va; la otra se descarta.
+**Al 16/11 la ventana no está construida:** Codex informó que hace falta guardar el instante en
+que se libera el cupo, y eso excede lo autorizado. Si no se decide construirla antes de congelar,
+va la segunda.
 - **Si se construye la ventana:** agregar al final del texto de RN-35: «Cuando el evento vuelve a
   tener entradas, durante las primeras «N» horas solo pueden comprarlas los inscriptos con
   suscripción; después, cualquier inscripto.» («N» lo da el parámetro que defina Codex.)
@@ -642,7 +668,13 @@ control de ingreso (RN-18), con lector USB o con el texto del ticket. El número
 
 **⏸ ESPERA A JC:** el documento tiene las minutas y los prototipos dos veces (pp. 39-40 y 44-45).
 JC decide cuál copia queda y si la Minuta 2 lleva «Profesor de la cátedra (rol simulado)». Las
-correcciones de los prototipos valen para la copia que quede:
+correcciones de los prototipos valen para la copia que quede. **Si queda esta copia,** la nota del final de la
+p. 40, «Nota: Los prototipos fueron desarrollados en Figma (o herramienta equivalente) y se
+entregan como documento complementario en PDF y en versión interactiva.», sigue la misma decisión
+de Figma que la p. 45 (ver «Página 45»): si el archivo no existe, se reemplaza por la frase
+alternativa de esa entrada.
+
+Las correcciones:
 
 | Pág. | Dice | Poner |
 |---|---|---|
@@ -879,6 +911,13 @@ correspondiente de `docs/capturas/instructivo/`. Los epígrafes no cambian.
 
 Las imágenes están en `docs/capturas/instructivo/`. Insertalas con el ancho del texto (16,0 cm) y
 la proporción bloqueada. Hay una quinta, `figura4a-pago-simulado.png`: no se usa.
+
+**⏸ ESPERA A JC: no pegues las figuras todavía.** Las cuatro muestran pantallas que Codex
+rediseñó después de tomarlas: Eventos del cliente y Compra (figuras 1 a 3) el 14/11, y
+Confirmación (figura 4) el 16/11. Se vuelven a generar con `tools/CapturasInstructivo/Generar.ps1`
+sobre el código congelado; los nombres de archivo y los epígrafes no cambian. Cuando estén,
+JC confirma que el texto de los pasos 1 a 8 (pp. 51 y 52) sigue describiendo lo que muestran, en
+particular el indicador de pasos y la pantalla de éxito nuevos.
 
 ## Página 54 — Ejemplo resuelto
 
@@ -1243,6 +1282,7 @@ diagrama general de la p. 71.
 
 | Lugar | Dice | Poner |
 |---|---|---|
+| Paso 1 | «El Administrador ingresa a “Gestionar listas de espera”.» | «El Administrador elige «Listas de espera» en su menú.» |
 | Paso 5 | «El Administrador puede exportar o registrar esta información.» | «El Administrador puede elegir otro evento o volver al menú.» |
 | FA1 | «Si el Administrador selecciona un evento sin usuarios en lista, el sistema muestra el mensaje: “Este evento no tiene lista de espera asociada”.» | «Si ningún evento de sus locales está agotado ni tiene lista, el sistema muestra: «No hay eventos agotados ni listas de espera en tus locales.»» |
 | Debajo de las postcondiciones, agregar | — | «La inscripción en la lista la realiza el Cliente desde la compra (CU-01, FA3).» |
@@ -1252,6 +1292,7 @@ diagrama general de la p. 71.
 | Lugar | Dice | Poner |
 |---|---|---|
 | Descripción | «visualice reportes simulados con información agregada» | «visualice reportes con información agregada, calculados sobre los datos registrados (en esta práctica, un juego de datos ficticio),» |
+| Paso 1 | «El Administrador selecciona la opción “Ver reportes de ventas”.» | «El Administrador elige «Reportes» en su menú.» |
 | Paso 2, agregar una viñeta | — | «Demanda insatisfecha (listas de espera).» |
 | Paso 4 | «El sistema genera el reporte con datos simulados y lo muestra en forma de tabla y/o gráficos.» | «El sistema genera el reporte y lo muestra en una tabla, con una lectura del resultado.» |
 | Paso 5 | «(rango de fechas, categoría de evento)» | «(rango de fechas y, según el reporte, categoría, evento o solo eventos agotados)» |
@@ -1259,11 +1300,15 @@ diagrama general de la p. 71.
 | FA1, punto 1 | «el sistema muestra un mensaje (“No se encontraron registros para el período seleccionado”).» | «el sistema lo informa en la lectura del reporte, por ejemplo: «No hay eventos en el período elegido.»» |
 | Debajo de FA1 | Un «2.» suelto, sin texto | Borrarlo |
 
-**⏸ ESPERA A CODEX: CU-05, un paso más al final del flujo principal** (el aviso de la lista de
-espera al iniciar sesión, que Codex está terminando). Texto provisorio: «Si el usuario es un
-Cliente y algún evento de su lista de espera volvió a tener entradas, el sistema se lo informa:
-«Hay entradas disponibles nuevamente en:» y la lista de esos eventos. El aviso no reserva el
-lugar.» Se pega cuando JC confirme.
+**CU-05, agregar un paso al final del flujo principal**, con el número que siga al último:
+
+> Si el usuario es un Cliente y algún evento de su lista de espera volvió a tener entradas, el
+> sistema se lo informa antes de abrir su menú: «Hay entradas disponibles nuevamente en:», la
+> lista de esos eventos y «Podés volver al listado para consultar y comprar. No es una reserva de
+> lugar.».
+
+*Razón:* código, `a2f4b55`. `frmInicio` muestra ese mensaje con `GestorListaEspera.AvisosAlIngresar`
+(CP-118).
 
 **CU-07, paso 4. Reemplazar:**
 
@@ -1318,8 +1363,10 @@ incorrecta, el sistema informa «Mail o contraseña actual incorrectos.», el mi
 dos casos. Una contraseña actual incorrecta cuenta como intento fallido (RN-04).
 
 FA3 – Cuenta bloqueada. Si la cuenta está bloqueada, o si el intento fallido completa cinco
-consecutivos, el sistema rechaza el cambio e informa cuántos minutos faltan para volver a
-intentar (RN-04).
+consecutivos, el sistema rechaza el cambio con el mismo mensaje de FA2, «Mail o contraseña
+actual incorrectos.». No informa que la cuenta está bloqueada ni cuántos intentos quedan: como la
+opción no exige sesión, cualquier otro mensaje revelaría qué cuentas existen. El bloqueo se
+registra igual y rige también para el inicio de sesión (RN-04).
 
 FA4 – Contraseña débil. En el paso 6, si la nueva contraseña no tiene al menos ocho caracteres,
 una letra y un dígito, el sistema informa «La contraseña debe tener al menos 8 caracteres, con al
@@ -1435,8 +1482,8 @@ Administrador vuelve al paso 5.
 
 **Id y nombre:** CU-12 – Controlar ingreso
 
-**Descripción:** Permite al Administrador validar en la puerta las entradas de un evento del
-día, con el código QR del ticket leído por un lector USB o tipeado desde el PDF. Cada entrada
+**Descripción:** Permite al Administrador validar en la puerta las entradas de un evento de
+sus locales, con el código QR del ticket leído por un lector USB o tipeado desde el PDF. Cada entrada
 ingresa una sola vez (RN-18).
 
 **Actor:** Administrador
@@ -1445,11 +1492,13 @@ ingresa una sola vez (RN-18).
 
 **Precondiciones:**
 - El Administrador inició sesión.
-- Hay al menos un evento publicado con fecha de hoy.
+- Al menos un evento publicado de sus locales tiene el ingreso abierto: desde seis horas antes
+  hasta doce horas después de su inicio.
 
 **Flujo principal:**
 1. El Administrador elige «Control de ingreso» en su menú.
-2. El sistema muestra los eventos publicados con fecha de hoy, de todos los locales; el contador
+2. El sistema muestra los eventos publicados de los locales del Administrador que tienen el
+   ingreso abierto en ese momento, aunque hayan empezado el día anterior; el contador
    de ingresos registrados del evento elegido, y el mensaje «Escaneá una entrada.».
 3. El Administrador elige el evento.
 4. El Administrador lee el código del ticket con el lector, que lo confirma con Enter, o lo
@@ -1462,8 +1511,9 @@ ingresa una sola vez (RN-18).
 
 **Flujo alternativo:**
 
-FA1 – Sin eventos hoy. En el paso 2, si no hay eventos publicados con fecha de hoy, el sistema
-muestra «No hay eventos publicados para hoy.» y deshabilita el campo y el botón.
+FA1 – Sin eventos con ingreso abierto. En el paso 2, si ningún evento de sus locales tiene el
+ingreso abierto, el sistema muestra «No hay eventos con ingreso abierto en tus locales.» y
+deshabilita el campo y el botón.
 
 FA2 – Entrada rechazada. En el paso 5, si alguna verificación falla, el sistema no registra el
 ingreso y muestra el motivo en rojo:
@@ -1477,6 +1527,10 @@ ingreso y muestra el motivo en rojo:
 FA3 – Lectura simultánea. Si dos puertas leen la misma entrada al mismo tiempo, solo una
 registra el ingreso. La otra muestra que la entrada ya ingresó o, si la entrada cambió por otro
 motivo, «La entrada cambió. Volvé a escanear.».
+
+FA4 – Evento de otro Administrador. Si el evento no es de uno de sus locales, el sistema no
+registra ni cuenta ingresos e informa «Solo podés controlar el ingreso de eventos de tus
+locales.» (RN-42).
 
 **Postcondiciones:**
 - La entrada queda con su fecha de ingreso: no puede volver a ingresar ni devolverse (RN-29).
@@ -1757,6 +1811,16 @@ cognitivo. Las referencias nuevas (Nielsen, 1994; Wharton et al., 1994; Card, Mo
 La «Declaración sobre la naturaleza de los datos» del principio del informe **es la que
 sostiene el rótulo**: separa lo medido de lo derivado. No hay que acortarla.
 
+**⏸ ESPERA A JC: el estudio se midió antes del rediseño visual.** Las dos mediciones son
+anteriores al 14/11, y desde entonces cambiaron dieciocho pantallas, entre ellas todas las de la
+compra. JC elige una de dos:
+- **Volver a medir** con `tools/Usabilidad/Medir.ps1` sobre el código congelado, y actualizar las
+  cifras del estudio (tiempos y SUS de la p. 7, de las pp. 90 a 97, de la fila OE-4 de la p. 107,
+  de la advertencia de la p. 108 y de las conclusiones de la p. 110).
+- **Declararlo.** Agregar al final de la introducción del informe de usabilidad: «Las dos
+  mediciones corresponden a la interfaz anterior al rediseño visual de la versión 2.5, que cambió
+  el aspecto de dieciocho pantallas. No se repitieron sobre la interfaz rediseñada.»
+
 ## Página 98 — Anexo A02, introducción
 
 | Dice | Poner |
@@ -1963,7 +2027,7 @@ ORDER BY IngresoBruto DESC;
 **Por:**
 
 > Una grilla que cruce los seis objetivos con los trece requerimientos, las cuarenta y una
-> reglas, los trece casos de uso y los ciento quince casos de prueba resulta ilegible en
+> reglas, los trece casos de uso y los ciento veinticuatro casos de prueba resulta ilegible en
 > formato A4
 
 **Tabla «Nomenclatura de los ejes».** Reemplazar las filas de reglas y de casos de prueba, y en
@@ -1972,7 +2036,7 @@ la de casos de uso cambiar la cantidad:
 | Fila | Dice | Poner |
 |---|---|---|
 | Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 41 \| Reglas de negocio (RN-27 dada de baja)» |
-| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 115 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-115: Matriz de trazabilidad, catálogo de casos incorporados» |
+| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 124 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-124: Matriz de trazabilidad, catálogo de casos incorporados» |
 | Casos de uso | la cantidad «8» | «13» |
 
 ## Página 107 — Matriz principal
@@ -1982,30 +2046,32 @@ la de casos de uso cambiar la cantidad:
 | RF | OE | MoSCoW | Reglas de negocio | CU | Casos de prueba | Hall. |
 |---|---|---|---|---|---|---|
 | RF-01 | OE-2 | Must | RN-01, RN-02, RN-03 | CU-04 | CP-14, CP-15, CP-26, CP-44, CP-45, CP-55 | — |
-| RF-02 | OE-2 | Must | RN-04, RN-05, RN-40, RN-41 | CU-05, CU-09 | CP-27, CP-28, CP-29, CP-46, CP-55, CP-66 a CP-68, CP-91, CP-92, CP-94 a CP-98, CP-105, CP-107, CP-108, CP-113, CP-114 | — |
+| RF-02 | OE-2 | Must | RN-04, RN-05, RN-40, RN-41 | CU-05, CU-09 | CP-27, CP-28, CP-29, CP-46, CP-55, CP-66 a CP-68, CP-91, CP-92, CP-94 a CP-98, CP-105, CP-107, CP-108, CP-113, CP-114, CP-124 | — |
 | RF-03 | OE-2 | Must | RN-09 | CU-01 | CP-16, CP-17, CP-18, CP-30, CP-81, CP-106 | — |
 | RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49, CP-54, CP-94 | H-03 |
-| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61, CP-79, CP-81 | H-04 |
-| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43, CP-52, CP-80 | H-02 |
-| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111 | — |
+| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61, CP-79, CP-81, CP-119, CP-122 | H-04 |
+| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43, CP-52, CP-80, CP-122 | H-02 |
+| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123 | — |
 | RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08, CP-09, CP-11, CP-42, CP-91, CP-92, CP-115 | H-01, H-05 |
 | RF-09 | — | Won't | — | — | — | — |
-| RF-10 | OE-6 ind. | Could | RN-10, RN-35, RN-36 | CU-07 | CP-24, CP-37, CP-83, CP-84 | — |
+| RF-10 | OE-6 ind. | Could | RN-10, RN-35, RN-36 | CU-07 | CP-24, CP-37, CP-83, CP-84, CP-117, CP-118 | — |
 | RF-11 | OE-6 | Should | RN-34 | CU-08 | CP-35 a CP-38, CP-85 a CP-90, CP-109 | — |
-| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38, RN-42 | CU-02, CU-10, CU-11 | CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94 | — |
-| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-61, CP-76, CP-77, CP-78, CP-94 | — |
+| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38, RN-42 | CU-02, CU-10, CU-11 | CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94, CP-123 | — |
+| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-61, CP-76, CP-77, CP-78, CP-94, CP-121 | — |
 
 El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debajo:
 
 > La categoría Won't de RF-09 corresponde a la reclasificación de la versión 2.5 (brecha
 > G-03). Los requerimientos no funcionales no figuran en la matriz porque no originan casos
 > de uso; sus casos de prueba son: RNF-01, CP-112; RNF-02, CP-47, CP-51, CP-53, CP-62, CP-63,
-> CP-71, CP-76, CP-85, CP-88 y CP-112; RNF-03, CP-12, CP-25, CP-64, CP-69 y CP-85. Un caso
+> CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119 y CP-120; RNF-03, CP-12, CP-25, CP-64, CP-69,
+> CP-85 y CP-116. Un caso
 > figura en más de una fila cuando prueba una regla de una fila desde la operación de otra.
 > RN-41 y RN-42 son reglas de autorización: valen para todas las operaciones del sistema y no
 > para un requerimiento solo. Se ubican en RF-02, que establece la sesión de la que dependen, y
 > en RF-12, que reúne las operaciones del Administrador. CP-94 figura en varias filas porque
-> verifica las dos reglas en las operaciones de cada una.
+> verifica las dos reglas en las operaciones de cada una; CP-123, en RF-07 y RF-12, porque
+> verifica RN-42 en el control de ingreso.
 
 **Tabla «Trazabilidad inversa de los objetivos específicos», fila OE-4. Reemplazar** la
 evidencia «Informe de pruebas de usabilidad: SUS 74,5 y 80 % de satisfacción» **por** «Informe de
@@ -2103,7 +2169,7 @@ la de CP-01 a CP-61:
 | CP-60 — Sectores que superan la capacidad del local | RN-38 |
 | CP-61 — Preventa sin suscripción | RN-39 |
 
-**y agregar a continuación** estas filas (CP-62 a CP-115):
+**y agregar a continuación** estas filas (CP-62 a CP-124):
 
 | CP-62 — Los colores y las fuentes de Tema | — (RNF-02) |
 | CP-63 — El código de cada una de las 20 pantallas y de su Designer | — (RNF-02) |
@@ -2147,7 +2213,7 @@ la de CP-01 a CP-61:
 | CP-101 — Entrada reembolsada | RN-18, RN-29 |
 | CP-102 — Código con formato válido que no existe | RN-18 |
 | CP-103 — La entrada en otro evento; el evento dentro de 2 días y hace 2 días | RN-18 |
-| CP-104 — Dos hilos escanean el mismo código a la vez | RN-18 |
+| CP-104 — Diez puertas escanean el mismo código a la vez, arrancadas juntas por una barrera; cien rondas con un… | RN-18 |
 | CP-105 — Inicio de sesión real con hashes de 600.000 y 310.000 iteraciones | — |
 | CP-106 — Buscar «[vip]», «50%» y «sector_unico» | — |
 | CP-107 — Hashes con iteraciones enormes, 0, negativas o no numéricas, y con sal y hash vacíos | — |
@@ -2159,6 +2225,15 @@ la de CP-01 a CP-61:
 | CP-113 — Contrato de la sesión: Iniciar fuera de lo público; propiedades de la sesión; perfil e identidad del… | RN-41, RN-42 |
 | CP-114 — Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada | RN-04 |
 | CP-115 — Descuento configurado de Plata y de Oro por debajo, igual y por encima de DESCUENTO_MAX_ADMISIBLE | RN-20 |
+| CP-116 — El texto de cada botón de las 20 pantallas, dibujado por Windows, también con el borde de foco | — (RNF-02, RNF-03) |
+| CP-117 — Consultar la posición en la lista de espera: la propia, con suscriptores adelante, la de otro cliente y… | RN-35, RN-41 |
+| CP-118 — Aviso de disponibilidad: evento agotado, entrada liberada, avisos de otra cuenta, sin sesión, reserva que… | RN-41 |
+| CP-119 — Resumen de compra vacío y con dos entradas | — (RNF-02) |
+| CP-120 — Los componentes nuevos IndicadorPasos y EtiquetaTotal en un host de diseño real | — (RNF-02) |
+| CP-121 — Suscripción contratada y vencida; consultarla y abrir su pantalla varias veces | RN-26 |
+| CP-122 — Compra confirmada sin seguro; volver a confirmarla agregándole seguro | RN-28 |
+| CP-123 — Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los… | RN-18, RN-41, RN-42 |
+| CP-124 — Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente | RN-04, RN-40 |
 
 **El párrafo que sigue a la tabla. Reemplazar:**
 
@@ -2168,13 +2243,12 @@ la de CP-01 a CP-61:
 
 **Por:**
 
-> Los ciento quince casos verifican treinta y siete reglas distintas sobre un total de
-> cuarenta y una vigentes, lo que arroja una cobertura del 90,2 %. Son RN-01 a RN-06, RN-08 a
-> RN-25, RN-29 a RN-32 y RN-34 a RN-42. Todas las reglas que rechazan una operación tienen un
-> caso que provoca ese rechazo y comprueba que el sistema queda como estaba. Las cuatro
-> restantes carecen de verificación automatizada: RN-07, RN-26, RN-28 y RN-33. Ninguna rechaza
-> operaciones: describen un cálculo (RN-07), la ausencia de renovación automática (RN-26), el
-> momento de contratar el seguro (RN-28) y la moneda (RN-33).
+> Los ciento veinticuatro casos verifican treinta y nueve reglas distintas sobre un total de
+> cuarenta y una vigentes, lo que arroja una cobertura del 95,1 %. Son RN-01 a RN-06, RN-08 a
+> RN-26, RN-28 a RN-32 y RN-34 a RN-42. Todas las reglas que rechazan una operación tienen un
+> caso que provoca ese rechazo y comprueba que el sistema queda como estaba. Las dos restantes
+> carecen de verificación automatizada: RN-07 y RN-33. Ninguna rechaza operaciones: describen un
+> cálculo (RN-07) y la moneda (RN-33).
 >
 > Varios casos no suman reglas porque verifican otra cosa: que la interfaz comunique al
 > usuario reglas que ya funcionan, que es el problema que señaló el informe de usabilidad.
@@ -2243,7 +2317,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-61 | En preventa, un cliente sin suscripción no inicia la compra | `CP61_RechazaPreventaSinSuscripcion` | RF-05, RF-13 | — | 1 |
 
 **y, debajo, una segunda tabla** con el título «Casos de prueba incorporados en la versión 2.5
-(CP-62 a CP-115)»:
+(CP-62 a CP-124)»:
 
 | Caso | Condición de entrada | Resultado esperado | RF | Reglas |
 |---|---|---|---|---|
@@ -2254,14 +2328,14 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-66 | Abrir el login; iniciar sesión como Administrador (2 variantes) | El foco arranca en el correo; el Administrador llega al menú de propietario y queda en la sesión | RF-02 | RN-05 |
 | CP-67 | Dos inicios de sesión seguidos del Administrador; un cliente con contraseña heredada en texto plano | Los dos entran; la contraseña heredada se acepta una vez y queda guardada como hash | RF-02 | — |
 | CP-68 | Contraseñas incorrectas desde la pantalla de login, hasta el bloqueo; parámetros de bloqueo de 10 y 5 minutos (2 variantes) | Muestra los intentos restantes y bloquea al quinto fallo; el aviso dice los minutos del parámetro vigente | RF-02 | RN-04 |
-| CP-69 | «Agregar evento» al 100 % y al 150 % (2 variantes) | El selector de categoría y las acciones quedan dentro de la ventana. **Falla la fila de 150 %** | RF-12, RNF-03 | RN-39 |
+| CP-69 | «Agregar evento» al 100 % y al 150 % (2 variantes) | El selector de categoría y las acciones quedan dentro de la ventana | RF-12, RNF-03 | RN-39 |
 | CP-70 | Recorrer «Registrar local» con Tab; dar de alta un local (2 variantes) | El orden de Tab sigue los campos; el local queda en la base y aparece en «Mis locales» | RF-12 | — |
 | CP-71 | «Mis locales» con dos locales; mover la celda actual al segundo (2 variantes) | La grilla aplica las propiedades y los colores del tema; se abren los eventos del segundo local | RF-12, RNF-02 | — |
 | CP-72 | El botón de sectores; precio «12500,50» y «12500.50» (3 variantes) | El botón dice «Agregar sector»; los dos precios se guardan como 12.500,50 | RF-12 | — |
 | CP-73 | Alta de un evento con categoría y sin categoría (2 variantes) | Con categoría, se guarda y se lista como borrador; sin categoría, no se inserta | RF-12 | RN-06 |
 | CP-74 | Agregar a un borrador un sector de capacidad 0 y uno de capacidad 10 (2 variantes) | Con capacidad 0 sigue en borrador; el primer sector con capacidad publica el evento | RF-12 | RN-06 |
 | CP-75 | Desde la pantalla, un sector que supera la capacidad del local; eliminar el último sector (2 variantes) | RN-38 informa la capacidad disponible y no inserta; RN-06 informa el código y conserva el sector | RF-12 | RN-06, RN-38 |
-| CP-76 | «Mi suscripción» sin plan | Muestra precios, beneficios y controles completos, sin recortes. **Falla** (beneficios recortados) | RF-13, RNF-02 | — |
+| CP-76 | «Mi suscripción» sin plan | Muestra precios, beneficios y controles completos, sin recortes | RF-13, RNF-02 | — |
 | CP-77 | Contratar el plan mensual; cancelarlo (2 variantes) | Al contratar, muestra precio y vencimiento y habilita los beneficios. Al cancelar, pide confirmación con No por defecto y quita los beneficios | RF-13 | RN-25 |
 | CP-78 | Dos ventanas de suscripción abiertas; contratar en las dos | La segunda se rechaza con RN-25: no se crean dos planes | RF-13 | RN-25 |
 | CP-79 | Resumen de compra de 2 entradas con suscripción y sin ella (2 variantes) | El suscriptor tiene el seguro sin cargo y no recibe la pregunta del seguro; sin suscripción, el seguro de 2 entradas cuesta $10.000 | RF-05 | RN-37 |
@@ -2270,7 +2344,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-82 | Alta con preventa; preventa posterior al evento; administrar con preventa; quitarla; administrar sin preventa (5 variantes) | La fecha se guarda y se conserva al publicar; la posterior al evento se rechaza sin insertar; la pantalla muestra lo guardado; quitarla guarda NULL | RF-12 | RN-06, RN-39 |
 | CP-83 | Lista de espera de un evento agotado; un propietario sin listas (2 variantes) | Columnas, prioridad y contadores a la vista; sin listas, el desplegable queda deshabilitado | RF-10 | RN-35 |
 | CP-84 | Un suscriptor inscripto en la lista cancela su plan | Conserva la prioridad con que se inscribió | RF-10 | RN-35 |
-| CP-85 | Menú del propietario al 100 % y al 150 %; menú del cliente; código de `Visual` (3 variantes) | Las acciones del propietario siguen visibles; el cliente no ve reportes; `Visual` no tiene conexiones ni comandos SQL. **Falla la fila del propietario** | RF-11, RF-12, RNF-02, RNF-03 | — |
+| CP-85 | Menú del propietario al 100 % y al 150 %; menú del cliente; código de `Visual` (3 variantes) | Las acciones del propietario siguen visibles; el cliente no ve reportes; `Visual` no tiene conexiones ni comandos SQL. | RF-11, RF-12, RNF-02, RNF-03 | — |
 | CP-86 | La semilla sola, sin datos de volumen | Los cinco reportes se generan y se exportan | RF-11 | — |
 | CP-87 | Los filtros de cada reporte, RPT-01 a RPT-05 (5 variantes) | Valores iniciales, visibilidad y limpieza correctos en cada uno | RF-11 | — |
 | CP-88 | Los datos de demostración del anexo A02 (8 variantes) | RPT-01 a RPT-05 reproducen las cifras del anexo y sus filtros; RPT-01 alinea los números, resalta el TOTAL y muestra la lectura | RF-11, RNF-02 | — |
@@ -2281,7 +2355,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-93 | Sesión de un cliente que elimina un evento | Rechazado con RN-34; el evento sigue existiendo | RF-12 | RN-34, RN-42 |
 | CP-94 | Sin sesión: 16 operaciones protegidas y `CrearAdministrador`; después, `CrearAdministrador` como cliente y como Administrador | Las 17 se rechazan sin sesión, y el cliente tampoco puede. El Administrador crea la cuenta con perfil Propietario. El registro genérico no es público. La compra sigue Pendiente y sin suscripción | RF-04, RF-12, RF-13 | RN-41, RN-42 |
 | CP-95 | Cambiar la contraseña con la actual incorrecta | Rechazado; el contador de intentos sube a 1 y la contraseña anterior sigue sirviendo | RF-02 | RN-04, RN-40 |
-| CP-96 | Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | Rechazado con el aviso de bloqueo; al vencer el bloqueo, la anterior sigue sirviendo | RF-02 | RN-04 |
+| CP-96 | Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | Rechazado con el mensaje genérico «Mail o contraseña actual incorrectos.», sin decir que está bloqueada; al vencer el bloqueo, la anterior sigue sirviendo | RF-02 | RN-04 |
 | CP-97 | Cambiar la contraseña con un correo inexistente y con la actual incorrecta | Las dos respuestas son iguales: misma regla y mismo mensaje | RF-02 | RN-40 |
 | CP-98 | Con la sesión del Administrador, cambiar la contraseña de un cliente; abrir la pantalla | La anterior deja de servir y la nueva sirve; la sesión sigue siendo del Administrador. Pantalla: tres campos enmascarados y vacíos, todo dentro de la ventana | RF-02 | RN-40 |
 | CP-99 | Entrada confirmada, del evento elegido y dentro del horario; después, como cliente y sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». El cliente y la falta de sesión se rechazan | RF-07 | RN-18, RN-42 |
@@ -2289,7 +2363,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-101 | Entrada reembolsada | Se rechaza como reembolsada; el contador queda en 0 | RF-07 | RN-18, RN-29 |
 | CP-102 | Código con formato válido que no existe | Se rechaza como inexistente; el contador queda en 0 | RF-07 | RN-18 |
 | CP-103 | La entrada en otro evento; el evento dentro de 2 días y hace 2 días | Rechazada por otro evento y por fuera de horario; `FechaIngreso` sigue vacía | RF-07 | RN-18 |
-| CP-104 | Dos hilos escanean el mismo código a la vez | Exactamente un ingreso válido y un «ya usado»; el contador da 1 | RF-07 | RN-18 |
+| CP-104 | Diez puertas escanean el mismo código a la vez, arrancadas juntas por una barrera; cien rondas con un código nuevo cada una | En cada ronda, exactamente un ingreso válido y nueve «ya usado», comprobado en la base. Pasó sin cambiar el SQL de ingreso | RF-07 | RN-18 |
 | CP-105 | Inicio de sesión real con hashes de 600.000 y 310.000 iteraciones (2 variantes) | Mide el tiempo. El hash de 600.000 no se reescribe con menos iteraciones. **Es una medición, no se cuenta como prueba de seguridad** | RF-02 | — |
 | CP-106 | Buscar «[vip]», «50%» y «sector_unico» | Cada texto se busca literal: encuentra el evento, y «sector%unico» y «sector_unic_» no encuentran nada | RF-03 | — |
 | CP-107 | Hashes con iteraciones enormes, 0, negativas o no numéricas, y con sal y hash vacíos | Ninguno autentica y no se propaga ninguna excepción | RF-02 | — |
@@ -2301,6 +2375,15 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-113 | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41, RN-42 |
 | CP-114 | Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada (3 variantes) | El rechazo es idéntico en texto y título, sin revelar si la cuenta existe ni si está bloqueada; el bloqueo se registra igual | RF-02 | RN-04 |
 | CP-115 | Descuento configurado de Plata y de Oro por debajo, igual y por encima de `DESCUENTO_MAX_ADMISIBLE` (6 variantes) | Por debajo o igual se aplica; por encima se rechaza con RN-20, sin recortarlo en silencio | RF-08 | RN-20 |
+| CP-116 | El texto de cada botón de las 20 pantallas, dibujado por Windows, también con el borde de foco (20 variantes) | Ningún botón recorta su texto | RNF-02, RNF-03 | — |
+| CP-117 | Consultar la posición en la lista de espera: la propia, con suscriptores adelante, la de otro cliente y sin sesión (4 variantes) | El cliente ve su posición, que respeta la prioridad de los suscriptores; la de otro y sin sesión se rechazan | RF-10 | RN-35, RN-41 |
+| CP-118 | Aviso de disponibilidad: evento agotado, entrada liberada, avisos de otra cuenta, sin sesión, reserva que ocupa el último cupo, evento suspendido (6 variantes) | Solo hay aviso al iniciar sesión cuando de verdad se puede comprar; no se leen avisos ajenos ni sin sesión | RF-10 | RN-41 |
+| CP-119 | Resumen de compra vacío y con dos entradas (2 variantes) | El TOTAL destacado coincide con el resumen, y el indicador marca el paso correcto | RF-05, RNF-02 | — |
+| CP-120 | Los componentes nuevos `IndicadorPasos` y `EtiquetaTotal` en un host de diseño real (2 variantes) | Ninguno guarda su estilo en el Designer | RNF-02 | — |
+| CP-121 | Suscripción contratada y vencida; consultarla y abrir su pantalla varias veces | No queda ninguna activa, y consultar o abrir la pantalla no crea ni renueva el registro | RF-13 | RN-26 |
+| CP-122 | Compra confirmada sin seguro; volver a confirmarla agregándole seguro | Rechazo con «La compra ya no está pendiente de pago.»; la compra queda sin seguro, sin póliza y sin segundo pago | RF-06 | RN-28 |
+| CP-123 | Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-41, RN-42 |
+| CP-124 | Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente (3 variantes) | El rechazo es el mismo en texto, título y comportamiento: no revela si la cuenta existe ni si está bloqueada. El bloqueo interno sigue funcionando | RF-02 | RN-04, RN-40 |
 
 **Después de las dos tablas, agregar:**
 
@@ -2321,7 +2404,10 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 > - una, el aspecto del reporte en tres lectores de PDF, la verificó una persona, junto con
 >   la lectura de su código QR con un celular.
 >
-> Los casos CP-91 a CP-115 surgieron de la revisión de seguridad (brecha G-07).
+> Los casos CP-91 a CP-115, CP-123 y CP-124 surgieron de la revisión de seguridad (brecha G-07).
+> CP-116, CP-119 y CP-120 verifican el rediseño visual de la interfaz; CP-117 y CP-118, la
+> consulta de la posición y el aviso de la lista de espera, y CP-121 y CP-122 completan las dos
+> reglas que solo se mostraban en pantalla (RN-26 y RN-28).
 >
 > Se prefirió convertir las pruebas en casos automáticos porque una prueba repetible deja
 > evidencia en cada ejecución. Una verificación hecha a mano solo vale el día en que se hizo.
@@ -2335,7 +2421,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | Casos de uso con requerimiento que los origine | 13 | 13 | — | 100 % |
 | Reglas de negocio con origen declarado | 41 | 41 | — | 100 % |
 | Requerimientos funcionales con caso de prueba | 13 | 12 | RF-09 (Won't) | 92,3 % |
-| Reglas de negocio verificadas por caso de prueba | 41 | 37 | 4 reglas | 90,2 % |
+| Reglas de negocio verificadas por caso de prueba | 41 | 39 | 2 reglas | 95,1 % |
 | Hallazgos de usabilidad con acción de mejora | 6 | 6 | — | 100 % |
 | Hallazgos con la acción implementada en el prototipo | 6 | 6 | — | 100 % |
 | Hallazgos con prueba de regresión asociada | 6 | 6 | — | 100 % |
@@ -2359,38 +2445,13 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 > La trazabilidad hacia adelante, del requerimiento a su verificación, pasó de ser el punto
 > débil del proyecto a estar completa en el nivel de requerimientos: los doce en alcance
 > cuentan con pruebas, contra tres de trece en la versión 2.4. El único sin pruebas es
-> RF-09, excluido. En el nivel de reglas, treinta y siete de cuarenta y una tienen caso
-> automatizado, incluidas todas las que rechazan una operación.
+> RF-09, excluido. En el nivel de reglas, treinta y nueve de cuarenta y una tienen caso
+> automatizado, incluidas todas las que rechazan una operación. Cómo se verificó que esos casos
+> detectan los defectos que dicen detectar se explica en «Metodología de verificación».
 
-**⏸ ESPERA A JC: subsección nueva, a continuación de «Lectura del cuadro».** El número está
-medido (14/11); falta que JC confirme si va con 51 o con 53, según la CP-104 nueva esté
-commiteada o no antes de entregar. **Título,** con el mismo estilo que «Lectura del cuadro»:
-«Resistencia de las pruebas de seguridad». **Texto:**
-
-> Para comprobar que las pruebas de seguridad detectan efectivamente la falta de cada defensa,
-> y no solo que el sistema funciona con las defensas en su lugar, se aplicó una prueba de
-> mutación sobre la versión entregada. Se identificaron ochenta y tres defensas: los controles
-> de sesión y de perfil de los gestores, la verificación y el almacenamiento de contraseñas,
-> el bloqueo por intentos fallidos, el control de ingreso por código QR y las restricciones de
-> la base de datos. Cada una se eliminó o alteró por separado, en una copia aislada del código
-> y con una base de datos propia, y después se corrió la batería completa de 198 ejecuciones.
-> Una mutación se considera detectada cuando falla al menos una prueba que sin la mutación
-> pasaba.
->
-> Seis mutaciones resultaron equivalentes: el comportamiento no cambia porque otra defensa del
-> mismo camino ya rechaza la operación. Se excluyen del cálculo. De las setenta y siete
-> restantes, la batería detectó cincuenta y una (66,2 %). Las veintiséis no detectadas no son
-> vulnerabilidades: la defensa está en el código y funciona. Lo que falta es la prueba que lo
-> demuestre. Quedan registradas como trabajo pendiente, ordenadas por la consecuencia que
-> tendría la falta de cada defensa; las primeras son las que protegen los datos personales y
-> de pago de otros clientes.
->
-> La medición no cubre la interfaz gráfica, los accesos que no pasan por la capa de negocio,
-> como una conexión directa a la base de datos, ni el tiempo de respuesta de la comparación de
-> contraseñas, que una prueba funcional no puede observar y se verificó leyendo el código.
-
-**Si JC dice «con 53»,** en ese texto: «cincuenta y una (66,2 %)» → «cincuenta y tres (68,8 %)», y
-«Las veintiséis» → «Las veinticuatro».
+*La subsección «Resistencia de las pruebas de seguridad» que figuraba acá pasó, ampliada, a la
+sección nueva «Metodología de verificación», después de la p. 109. No se agrega nada en la
+p. 108.*
 
 ## Página 109 — Brechas detectadas
 
@@ -2411,12 +2472,12 @@ commiteada o no antes de entregar. **Título,** con el mismo estilo que «Lectur
 | Nº | Brecha | Sev. | Estado | Acción |
 |---|---|---|---|---|
 | G-01 | Los casos de uso CU-02 (Gestionar eventos) y CU-06 (Gestionar suscripción) no contaban con un requerimiento funcional que los originara, pese a que las reglas RN-06, RN-07 y RN-11 por un lado, y RN-25, RN-26 y RN-37 por el otro, presuponen su existencia. | Alta | Resuelta | Se incorporaron los requerimientos RF-12 (Gestión de eventos) y RF-13 (Contratación de suscripciones) a la Definición de requerimientos, y se recalculó la priorización MoSCoW. |
-| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a CP-115. Los doce requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 90,2 % (37 de 41), con todas las reglas que rechazan operaciones; quedan cuatro reglas sin caso (RN-07, RN-26, RN-28 y RN-33). |
+| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a CP-124. Los doce requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 95,1 % (39 de 41), con todas las reglas que rechazan operaciones; quedan dos reglas sin caso (RN-07 y RN-33). |
 | G-03 | RF-09 (Recomendaciones personalizadas) no responde a ningún objetivo específico ni posee caso de uso asociado. | Media | Cerrada | Se reclasificó como Won't have en la Fase 8, según la regla de repriorización (W-07). |
 | G-04 | En la versión 2.4, ninguno de los seis hallazgos del informe de usabilidad tenía caso de prueba de regresión. | Media | Resuelta | Las seis acciones del plan de mejora están implementadas en el prototipo y cada hallazgo tiene su regresión automatizada: H-01 en CP-13, H-02 en CP-39, H-03 en CP-40, H-04 en CP-41, H-05 en CP-42 y H-06 en CP-19. |
 | G-05 | El documento no reflejaba tres reglas que el prototipo aplica: el tope de capacidad del local sobre la suma de sus sectores y la preventa exclusiva para suscriptores no estaban enunciadas, y la prioridad de los suscriptores en la lista de espera contradecía RN-35, que exigía orden estricto de inscripción. Era comportamiento implementado sin una regla documentada que lo respalde. | Alta | Resuelta | Se incorporaron RN-38 (RF-12 / CU-11) y RN-39 (RF-13 / CU-01), y se reescribió RN-35 en coherencia con RN-37. Las tres tienen sus casos de prueba: RN-38 en CP-60, RN-39 en CP-61 y RN-35 en CP-83 y CP-84. |
 | G-06 | El estudio de usabilidad de la versión 2.5, medido sobre la aplicación real, identificó trece hallazgos nuevos (U-01 a U-13), y la segunda medición uno más (U-14). Dos eran de severidad mayor: cerrar una pantalla con la X dejaba la aplicación en ejecución y sin ventanas, y nada indicaba dónde se escribe la cantidad de entradas. | Media | Parcialmente resuelta | Se corrigieron U-01, U-04 y U-05, cada uno con su prueba de regresión (CP-47 a CP-50), y se volvió a medir: los seis perfiles completan la tarea sin asistencia y la satisfacción buena pasa del 66,7 % al 100 %. La segunda medición encontró U-14, el encabezado de la cantidad cortado, que también se corrigió (CP-54). Quedan diez hallazgos menores (esfuerzo estimado: 12 horas), que pasan a trabajo futuro. |
-| G-07 | La revisión de seguridad de la versión 2.5 encontró que RN-18 prometía un único ingreso por entrada que el prototipo no controlaba, que el cambio de contraseña no exigía la contraseña actual y que las operaciones de negocio no verificaban el perfil ni la identidad de quien las invoca. | Alta | Resuelta | Se implementó el control de ingreso con registro atómico de la primera lectura, el cambio de contraseña pasó a exigir la actual y el negocio verifica la sesión en cada operación. Se incorporaron RN-40 a RN-42 y se completó RN-18, con los casos CP-91 a CP-115. |
+| G-07 | La revisión de seguridad de la versión 2.5 encontró que RN-18 prometía un único ingreso por entrada que el prototipo no controlaba, que el cambio de contraseña no exigía la contraseña actual y que las operaciones de negocio no verificaban el perfil ni la identidad de quien las invoca. | Alta | Resuelta | Se implementó el control de ingreso con registro atómico de la primera lectura, restringido a los eventos de los locales del Administrador; el cambio de contraseña pasó a exigir la actual y a responder lo mismo exista o no la cuenta, y el negocio verifica la sesión en cada operación. Se incorporaron RN-40 a RN-42 y se completó RN-18, con los casos CP-91 a CP-115, CP-123 y CP-124. El registro atómico se demostró con diez lectores simultáneos sobre la misma entrada durante cien rondas: en cada una ingresó exactamente uno (CP-104). |
 
 **«Observación sobre G-03». Reemplazar** el párrafo completo **por:**
 
@@ -2437,7 +2498,140 @@ commiteada o no antes de entregar. **Título,** con el mismo estilo que «Lectur
 > **Observación sobre G-07.** Como G-05, recorre la cadena al revés: RN-18 figuraba en la
 > matriz como cubierta porque su caso verificaba la mitad de la regla. Un caso asociado a una
 > regla no garantiza que la verifique completa; por eso, desde esta versión, cada caso de la
-> tabla de cobertura nombra lo que comprueba.
+> tabla de cobertura nombra lo que comprueba. Y un caso que verifica la regla completa todavía
+> puede no detectar su falta: eso se midió aparte, con la prueba de mutación (ver «Metodología de
+> verificación»).
+
+**Sección nueva, a continuación del párrafo final de la p. 109 y antes de «Conclusiones».**
+Título con el mismo estilo que «Matriz de trazabilidad»; los subtítulos en negrita, con el
+estilo de «Criterio de construcción». **Las cifras son provisorias** (ver la tabla del
+principio): se reemplazan al congelar, y «commit» lo completa JC con el commit medido.
+
+**Metodología de verificación**
+
+Las secciones anteriores informan qué se probó y cuánto cubren las pruebas. Esta sección explica
+cómo se construyeron las pruebas y, sobre todo, cómo se comprobó que sirven: que detectarían un
+defecto si lo hubiera. Una prueba que pasa dice que el sistema se comporta como se espera hoy;
+no dice que la prueba se daría cuenta si mañana dejara de hacerlo.
+
+**La batería de pruebas**
+
+Las pruebas son automatizadas y de integración. Cada caso prepara sus propios datos, ejecuta la
+operación a través de los mismos componentes de negocio que usa la aplicación y verifica el
+resultado contra una base de datos SQL Server real. Esa base se crea de cero al comienzo de cada
+corrida, con el mismo esquema y los mismos datos iniciales que se entregan, y nunca es la base de
+desarrollo. Las pruebas de interfaz abren los formularios reales de la aplicación, los operan y
+leen lo que muestran.
+
+La batería tiene ciento veinticuatro casos de prueba. Algunos se ejecutan varias veces con datos
+distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman doscientas
+cuarenta y tres ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
+base, los resultados no dependen de lo que haya quedado de una corrida anterior.
+
+**Cobertura de las reglas de negocio**
+
+Una regla se considera cubierta cuando al menos un caso provoca la situación que la regla regula
+y verifica el resultado. Si la regla rechaza una operación, el caso intenta la operación prohibida
+y comprueba dos cosas: que el sistema la rechaza por esa regla y no por otra, y que los datos
+quedan exactamente como estaban.
+
+El criterio se aplicó de manera estricta. Un caso que solo muestra en pantalla el texto de una
+regla no la cubre. Por ejemplo, que la pantalla de suscripción diga «No se renueva
+automáticamente» no prueba que la suscripción vencida no se renueve. Dos reglas estuvieron en esa
+situación y no se contaron como cubiertas hasta que tuvieron un caso que verificaba el
+comportamiento: la de no renovación automática (RN-26) y la que impide agregar el seguro después
+de la compra (RN-28).
+
+Con ese criterio, treinta y nueve de las cuarenta y una reglas vigentes tienen caso automatizado,
+un 95,1 %. Las dos restantes no rechazan ninguna operación: RN-07 describe un cálculo y RN-33
+fija la moneda.
+
+**El límite de la cobertura**
+
+La cobertura cuenta qué reglas tienen una prueba, pero no mide si esa prueba detectaría un
+defecto. Un ejemplo de este mismo proyecto lo muestra. Una prueba verificaba que, sin una sesión
+iniciada, el sistema rechaza un conjunto de operaciones protegidas, y aceptaba cualquier rechazo
+como correcto. Si a una de esas operaciones se le quitaba el control de sesión, el sistema igual la
+rechazaba, pero por otra regla: por ejemplo, porque el evento no estaba agotado. La prueba seguía
+pasando y la defensa faltaba. Para encontrar casos así se usó la prueba de mutación.
+
+**La prueba de mutación**
+
+La prueba de mutación consiste en introducir a propósito un defecto en el código y comprobar si
+las pruebas lo notan. Cada defecto introducido se llama mutación. Se aplica una mutación por vez,
+se ejecuta la batería completa, y se observa el resultado:
+
+- si al menos una prueba que antes pasaba ahora falla, la mutación fue **detectada**: la batería
+  habría avisado de ese defecto;
+- si todas las pruebas siguen pasando, la mutación **sobrevivió**: ese defecto podría introducirse
+  sin que ninguna prueba lo advierta.
+
+El porcentaje de mutaciones detectadas no mide cuántas pruebas hay, sino cuántos defectos
+encontrarían. Por eso se aplicó a las defensas de seguridad, donde un defecto no se ve en el uso
+normal: una operación que deja de verificar quién la pide sigue funcionando igual para el usuario
+legítimo.
+
+*Cómo se hizo.* Antes de ejecutar nada, se leyó el código y se listaron las ochenta y tres
+defensas del sistema:
+- los controles de sesión y de perfil de cada operación;
+- la verificación y el almacenamiento de las contraseñas;
+- el bloqueo por intentos fallidos;
+- las verificaciones del control de ingreso por código QR;
+- las restricciones de la base de datos.
+
+Para cada una se escribió cómo romperla y un pronóstico de si la batería lo detectaría, también
+por lectura. Después se ejecutó cada mutación sobre una copia aislada del código y con una base
+de datos propia; antes de cada ejecución se verificaba que la conexión apuntara a esa base y no a
+otra. Las tres mutaciones que afectan lecturas simultáneas, cuyo resultado puede variar entre una
+ejecución y otra, se ejecutaron además veinte veces cada una. Al terminar se restauró el código
+y la batería volvió a dar el mismo resultado que antes de empezar.
+
+*Resultado.* De las setenta y siete mutaciones que se podían detectar, la batería detectó
+cincuenta y una: un 66,2 %, medido sobre el commit «commit». El pronóstico hecho por lectura acertó
+en todas las que se esperaba que sobrevivieran: las veintitrés sobrevivieron.
+
+*Mutaciones equivalentes.* Algunas mutaciones no cambian el comportamiento del sistema, porque
+otra defensa del mismo camino ya rechaza la operación. Por ejemplo, si una operación verifica la
+sesión al principio y vuelve a verificarla enseguida, quitar la primera verificación no cambia
+nada que una prueba pueda observar. Esas mutaciones se llaman equivalentes. Ninguna prueba podría
+detectarlas, y por eso se excluyen del cálculo.
+
+Antes de ejecutar, por lectura, se identificaron seis equivalentes, y se excluyeron. Al ejecutar
+apareció una séptima: la mutación que quita el control de sesión al contratar una suscripción. El
+pronóstico decía que sería detectada; sobrevivió, y al revisar el código resultó también
+equivalente, porque la operación consulta enseguida la suscripción activa del usuario, y esa
+consulta repite el mismo control.
+
+**Esa séptima mutación se dejó dentro del cálculo, como no detectada, a propósito.** La razón es
+de método. Si una mutación se declara equivalente después de ver que sobrevivió, el criterio deja
+de ser independiente del resultado. Con el mismo argumento se podría excusar cualquier
+sobreviviente incómoda, y el porcentaje dejaría de medir la batería para medir la habilidad de
+justificarla. Las seis equivalentes se definieron antes de conocer los resultados; la séptima, no.
+Excluirla habría dado un 67,1 %; se informa el 66,2 %.
+
+*Qué significa que una defensa sobreviva.* No significa que el sistema sea vulnerable: la defensa
+está en el código y funciona, como se verificó al leerlo. Significa que ninguna prueba fallaría si
+esa defensa se quitara por error en una versión futura. Cada defensa sobreviviente se registró
+como una prueba por escribir, con lo que debe verificar, y se ordenaron por la consecuencia que
+tendría su falta: primero las que protegen los datos personales y de pago de otros clientes,
+después el acceso sin contraseña y el control de ingreso, y al final las que solo exponen datos
+operativos.
+
+*Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
+entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos
+lectores simultáneos. Ejecutada sola, detectaba casi siempre las mutaciones que rompían esa
+garantía, diecinueve y dieciocho veces de cada veinte. En la ejecución de la batería completa no
+detectó ninguna de las dos, así que no se contaron como detectadas. La prueba se reforzó: diez
+lectores arrancados juntos sobre la misma entrada, cien veces seguidas, con un ingreso válido y
+nueve rechazos exigidos en cada vuelta. La prueba reforzada detectó las tres mutaciones de
+concurrencia en todas las ejecuciones de control. El código de ingreso no se modificó: el sistema ya era correcto, y lo que faltaba era
+una prueba capaz de demostrarlo.
+
+*Qué queda fuera de la medición.* La mutación se aplicó a la capa de negocio, a la de datos y al
+esquema de la base, que es donde están las defensas; no a la interfaz gráfica, cuyos controles
+ocultos o deshabilitados no son una defensa. Tampoco cubre el acceso directo a la base de datos
+sin pasar por la aplicación, ni el tiempo de respuesta de la comparación de contraseñas, que una
+prueba funcional no puede observar y se verificó leyendo el código.
 
 «Mantenimiento de la matriz» y el párrafo final de la página no cambian.
 
@@ -2467,6 +2661,20 @@ commiteada o no antes de entregar. **Título,** con el mismo estilo que «Lectur
 lo esperado.» pasa a «Explicitar las cuarenta y una reglas resultó más productivo de lo
 esperado.»
 
+**Después del párrafo «Sobre la trazabilidad», agregar** un párrafo con el mismo formato
+(subtítulo en negrita al principio):
+
+> **Sobre la verificación.** Contar cuántas reglas tienen una prueba no alcanzó para saber si
+> las pruebas servían. La prueba de mutación mostró que una parte de las defensas del sistema
+> podía quitarse sin que ninguna prueba fallara; cada una quedó registrada como prueba por
+> escribir, y una de ellas llevó a reforzar la prueba de ingresos simultáneos hasta demostrar
+> una garantía que antes solo se suponía. La decisión de método más importante fue no
+> reclasificar una mutación después de conocer su resultado: un porcentaje que se ajusta a
+> posteriori deja de medir.
+
+*Razón:* coherencia con la sección nueva «Metodología de verificación». El párrafo no lleva
+cifras, así que no cambia cuando se congelen los números.
+
 **Tabla «Limitaciones del trabajo», primera fila. Reemplazar:**
 
 | Las sesiones de usabilidad son simuladas. | El objetivo específico 4 se considera cumplido de manera provisoria hasta su ejecución con participantes reales. |
@@ -2484,14 +2692,13 @@ esperado.»
 
 **Por:**
 
-| La cobertura de pruebas alcanza el 90,2 % de las reglas. | Todos los requerimientos en alcance tienen pruebas; cuatro reglas, ninguna de las que rechazan operaciones, carecen de verificación automatizada. |
+| La cobertura de pruebas alcanza el 95,1 % de las reglas. | Todos los requerimientos en alcance tienen pruebas; dos reglas, ninguna de las que rechazan operaciones, carecen de verificación automatizada. |
 |---|---|
 
-**Misma tabla, agregar al final estas cuatro filas:**
+**Misma tabla, agregar al final estas tres filas:**
 
-| Tres de las 198 ejecuciones de la batería fallan, todas de presentación a escala 150 % (CP-69, CP-76 y CP-85). | Están identificadas y abiertas; no afectan el comportamiento. |
-|---|---|
 | Dos verificaciones dependen de una persona y de un dispositivo: la lectura de los códigos QR impresos con la cámara de un celular y el aspecto del PDF de los reportes en tres lectores. | Se hicieron una vez; no se repiten en cada corrida como los casos automáticos. |
+|---|---|
 | No existe recuperación de contraseña por correo. | Una contraseña olvidada la restablece el Administrador; el usuario solo puede cambiarla conociendo la actual (RN-40). |
 | La aplicación de escritorio accede a la base con la cuenta de Windows del usuario. | Las verificaciones de perfil del negocio (RN-34, RN-41, RN-42) protegen la operación desde la aplicación; en producción tienen que acompañarse de permisos en la base o de un servicio intermedio. |
 
@@ -2500,7 +2707,7 @@ esperado.»
 | Punto | Dice | Poner |
 |---|---|---|
 | 1 | «Ejecutar las sesiones de usabilidad con participantes reales y contrastar los resultados con la línea base establecida en este informe.» | «Aplicar el resto del plan de mejora del estudio de usabilidad (U-02, U-03 y U-06 a U-13) y repetir la medición con las mismas herramientas para contrastar los resultados.» |
-| 2 | «Extender el conjunto de pruebas al flujo de compra completo, de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» | «Completar los casos de prueba de las cuatro reglas sin verificación (RN-07, RN-26, RN-28 y RN-33), de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» |
+| 2 | «Extender el conjunto de pruebas al flujo de compra completo, de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» | «Completar los casos de prueba de las dos reglas sin verificación (RN-07 y RN-33), de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» |
 | 4 | «Definir un caso de prueba de regresión por cada hallazgo de usabilidad antes de aplicar las correcciones de la Fase 6.» | «Mantener una prueba de regresión por cada hallazgo de las próximas rondas de usabilidad, como se hizo con H-01 a H-06.» |
 | 5 | «Resolver la duplicación de contenido detectada entre las secciones de requerimientos, minutas y prototipos del cuerpo del informe.» | «Resolver la duplicación de contenido detectada entre las minutas y los prototipos del cuerpo del informe.» |
 
@@ -2513,7 +2720,8 @@ esperado.»
    mano.
 2. **Comprobá que el índice tenga estas entradas nuevas:** «Estimación de costos»,
    «Arquitectura e implementación» (antes «Implementación»), las cinco especificaciones CU-09 a
-   CU-13, «Patrones de diseño», los títulos nuevos de CU-06, CU-07 y CU-08, y que ya no esté
+   CU-13, «Patrones de diseño», «Metodología de verificación» (entre «Matriz de trazabilidad» y
+   «Conclusiones»), los títulos nuevos de CU-06, CU-07 y CU-08, y que ya no esté
    «Especificación de requerimientos funcionales» de la p. 42.
 3. **Corregí los números de página que el texto cita a mano** (no se actualizan solos). Buscá
    cada uno y poné la página nueva:

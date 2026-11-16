@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 115 casos en 112 métodos, que suman **198 ejecuciones** (contadas en la corrida del 14/11 sobre el commit `fe04b1f`).
-CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-115 se
-agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-115» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 124 casos, que suman **243 ejecuciones**, las 243 correctas (corrida de Codex del 16/11, `TestResults/Cola/final.log`, publicada en `027527f`).
+CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-124 se
+agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-124» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -138,9 +138,9 @@ documentado, no todas sus variantes: CP-56 prueba eliminar el último sector, no
 sectores; CP-60 prueba agregar un sector, no modificarlo. En la matriz, RN-05 está en la fila
 de RF-02 y RN-39 en la de RF-13: por eso CP-55 y CP-61 llevan dos requerimientos.
 
-## Casos CP-62 a CP-115
+## Casos CP-62 a CP-124
 
-Registrados por Claude Code el 13/11/2026. Salen del comentario `// CP-xx — RF, RN` y del nombre
+Registrados por Claude Code el 13/11/2026; CP-116 a CP-124, el 16/11. Salen del comentario `// CP-xx — RF, RN` y del nombre
 visible de cada prueba en `Pruebas/`, leídos uno por uno. **Ninguno se volvió a correr para
 este registro:** el resultado es el de la última batería de Codex
 (`Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-12-T47-T48.md`).
@@ -157,24 +157,24 @@ escritorio abierta.
 
 | Ejecuciones | Casos |
 |---|---|
-| 20 | CP-63 |
+| 20 | CP-63 y CP-116 |
 | 8 | CP-88 |
 | 7 | CP-112 |
 | 5 | CP-82 y CP-87 |
-| 6 | CP-115 |
-| 4 | CP-113 |
-| 3 | CP-72, CP-81, CP-85 y CP-114 |
-| 2 | CP-66, CP-68, CP-69, CP-70, CP-71, CP-73, CP-74, CP-75, CP-77, CP-79, CP-80, CP-83, CP-89, CP-105 y CP-111 |
+| 6 | CP-115, CP-118 y CP-123 |
+| 4 | CP-113 y CP-117 |
+| 3 | CP-72, CP-81, CP-85, CP-114 y CP-124 |
+| 2 | CP-66, CP-68, CP-69, CP-70, CP-71, CP-73, CP-74, CP-75, CP-77, CP-79, CP-80, CP-83, CP-89, CP-105, CP-111, CP-119 y CP-120 |
 | 1 | El resto |
 
-CP-62 a CP-115 suman **125 ejecuciones**. Con las 73 de CP-01 a CP-61, la batería da **198**.
-Contadas en el resultado de la corrida completa del 14/11 (commit `fe04b1f`, copia de trabajo de la
-mutación con su propia base), no sumadas a mano.
+CP-62 a CP-124 suman **170 ejecuciones**. Con las 73 de CP-01 a CP-61, la batería da **243**.
+Contadas en la salida de la corrida de Codex del 16/11 (`TestResults/Cola/final.log`), no sumadas a
+mano: CP-01 a CP-115 corren las mismas 198 veces que el 14/11, y CP-116 a CP-124 suman 45.
 
-**Casos que fallan en la corrida del 14/11: tres ejecuciones, las tres de aspecto a escala 150 %:**
-- la fila «al 150 por ciento» de CP-69;
-- CP-76;
-- la fila «propietario» de CP-85.
+**Ningún caso falla en la corrida del 16/11: 243 de 243.** Los tres que fallaban el 14/11 (la fila
+de 150 % de CP-69, CP-76 y la fila del propietario de CP-85, todos de aspecto a escala 150 %)
+pasan desde el rediseño de pantallas de Codex (`96fd6ec` y `027527f`). **Esta batería no la corrió
+Claude Code:** la cifra es la del registro de Codex.
 
 CP-81, que fallaba en la batería del 12/11, pasa desde `2af267a` (Codex corrigió la preventa).
 
@@ -195,14 +195,14 @@ sección 0).
 | CP-66 | PruebasGrupoALogin | Abrir el login; iniciar sesión como Administrador (2 variantes) | El foco arranca en el correo; el Administrador llega al menú de propietario y queda en la sesión | RF-02 | RN-05 | PA-01 (3.1, C.1) |
 | CP-67 | PruebasGrupoALogin | Dos inicios de sesión seguidos del Administrador; un cliente con contraseña heredada en texto plano | Los dos entran; la contraseña heredada se acepta una vez y queda guardada como hash | RF-02 | — | PA-02 (3.2) |
 | CP-68 | PruebasGrupoALogin | Contraseñas incorrectas desde la pantalla de login, hasta el bloqueo; parámetros de bloqueo de 10 y 5 minutos (2 variantes) | Muestra los intentos restantes y bloquea al quinto fallo; el aviso dice los minutos del parámetro vigente | RF-02 | RN-04 | PA-03 (C.2, C.3) |
-| CP-69 | PruebasGrupoAPropietario | «Agregar evento» al 100 % y al 150 % (2 variantes) | El selector de categoría y las acciones quedan dentro de la ventana. **Falla la fila de 150 %** | RF-12, RNF-03 | RN-39 | PA-04 (C9.1, 9.17) |
+| CP-69 | PruebasGrupoAPropietario | «Agregar evento» al 100 % y al 150 % (2 variantes) | El selector de categoría y las acciones quedan dentro de la ventana | RF-12, RNF-03 | RN-39 | PA-04 (C9.1, 9.17) |
 | CP-70 | PruebasGrupoAPropietario | Recorrer «Registrar local» con Tab; dar de alta un local (2 variantes) | El orden de Tab sigue los campos; el local queda en la base y aparece en «Mis locales» | RF-12 | — | PA-05 (4.6, C.4) |
 | CP-71 | PruebasGrupoAPropietario | «Mis locales» con dos locales; mover la celda actual al segundo (2 variantes) | La grilla aplica las propiedades y los colores del tema; se abren los eventos del segundo local | RF-12, RNF-02 | — | PA-06 (C.12, C.13) |
 | CP-72 | PruebasGrupoAPropietario | El botón de sectores; precio «12500,50» y «12500.50» (3 variantes) | El botón dice «Agregar sector»; los dos precios se guardan como 12.500,50 | RF-12 | — | PA-07 (4.2, C.5) |
 | CP-73 | PruebasGrupoAPropietario | Alta de un evento con categoría y sin categoría (2 variantes) | Con categoría, se guarda y se lista como borrador; sin categoría, no se inserta | RF-12 | RN-06 | PA-08 (C.6, C.7) |
 | CP-74 | PruebasGrupoAPropietario | Agregar a un borrador un sector de capacidad 0 y uno de capacidad 10 (2 variantes) | Con capacidad 0 sigue en borrador; el primer sector con capacidad publica el evento | RF-12 | RN-06 | PA-09 (C.8, C.9) |
 | CP-75 | PruebasGrupoAPropietario | Desde la pantalla, un sector que supera la capacidad del local; eliminar el último sector (2 variantes) | RN-38 informa la capacidad disponible y no inserta; RN-06 informa el código y conserva el sector | RF-12 | RN-06, RN-38 | PA-10 (C.10, C.11) |
-| CP-76 | PruebasGrupoASuscripcion | «Mi suscripción» sin plan | Muestra precios, beneficios y controles completos, sin recortes. **Falla** (beneficios recortados) | RF-13, RNF-02 | — | PA-11 (8.3) |
+| CP-76 | PruebasGrupoASuscripcion | «Mi suscripción» sin plan | Muestra precios, beneficios y controles completos, sin recortes | RF-13, RNF-02 | — | PA-11 (8.3) |
 | CP-77 | PruebasGrupoASuscripcion | Contratar el plan mensual; cancelarlo (2 variantes) | Al contratar, muestra precio y vencimiento y habilita los beneficios. Al cancelar, pide confirmación con No por defecto y quita los beneficios | RF-13 | RN-25 | PA-12 (8.4, 8.6) |
 | CP-78 | PruebasGrupoASuscripcion | Dos ventanas de suscripción abiertas; contratar en las dos | La segunda se rechaza con RN-25: no se crean dos planes | RF-13 | RN-25 | PA-13 (8.5) |
 | CP-79 | PruebasGrupoASuscripcion | Resumen de compra de 2 entradas con suscripción y sin ella (2 variantes) | El suscriptor tiene el seguro sin cargo y no recibe la pregunta del seguro; sin suscripción, el seguro de 2 entradas cuesta $10.000 | RF-05 | RN-37 | PA-14 (8.7, 8.9) |
@@ -211,7 +211,7 @@ sección 0).
 | CP-82 | PruebasGrupoAPreventa | Alta con preventa; preventa posterior al evento; administrar con preventa; quitarla; administrar sin preventa (5 variantes) | La fecha se guarda y se conserva al publicar; la posterior al evento se rechaza sin insertar; la pantalla muestra lo guardado; quitarla guarda NULL | RF-12 | RN-06, RN-39 | PA-17 (C9.2, C9.3, C9.6, C9.7, C9.9) |
 | CP-83 | PruebasGrupoAListasYMenus | Lista de espera de un evento agotado; un propietario sin listas (2 variantes) | Columnas, prioridad y contadores a la vista; sin listas, el desplegable queda deshabilitado | RF-10 | RN-35 | PA-18 (8.23, 8.25) |
 | CP-84 | PruebasGrupoAListasYMenus | Un suscriptor inscripto en la lista cancela su plan | Conserva la prioridad con que se inscribió | RF-10 | RN-35 | PA-19 (8.24) |
-| CP-85 | PruebasGrupoAListasYMenus | Menú del propietario al 100 % y al 150 %; menú del cliente; código de `Visual` (3 variantes) | Las acciones del propietario siguen visibles; el cliente no ve reportes; `Visual` no tiene conexiones ni comandos SQL. **Falla la fila del propietario** | RF-11, RF-12, RNF-02, RNF-03 | — | PA-20 (9.1, 9.16, 8.26) |
+| CP-85 | PruebasGrupoAListasYMenus | Menú del propietario al 100 % y al 150 %; menú del cliente; código de `Visual` (3 variantes) | Las acciones del propietario siguen visibles; el cliente no ve reportes; `Visual` no tiene conexiones ni comandos SQL. | RF-11, RF-12, RNF-02, RNF-03 | — | PA-20 (9.1, 9.16, 8.26) |
 | CP-86 | PruebasGrupoAReportes | La semilla sola, sin datos de volumen | Los cinco reportes se generan y se exportan | RF-11 | — | PA-21 (9.15) |
 | CP-87 | PruebasGrupoAReportes | Los filtros de cada reporte, RPT-01 a RPT-05 (5 variantes) | Valores iniciales, visibilidad y limpieza correctos en cada uno | RF-11 | — | PA-22 (9.2, 9.3) |
 | CP-88 | PruebasGrupoAReportes | Los datos de demostración del anexo A02 (8 variantes) | RPT-01 a RPT-05 reproducen las cifras del anexo y sus filtros; RPT-01 alinea los números, resalta el TOTAL y muestra la lectura | RF-11, RNF-02 | — | PA-23 (9.4 a 9.10) |
@@ -222,7 +222,7 @@ sección 0).
 | CP-93 | PruebasSeguridad | Sesión de un cliente que elimina un evento | Rechazado con RN-34; el evento sigue existiendo | RF-12 | RN-34, RN-42 | SEG-3 |
 | CP-94 | PruebasSeguridad | Sin sesión: 16 operaciones protegidas y `CrearAdministrador`; después, `CrearAdministrador` como cliente y como Administrador | Las 17 se rechazan sin sesión, y el cliente tampoco puede. El Administrador crea la cuenta con perfil Propietario. El registro genérico no es público. La compra sigue Pendiente y sin suscripción | RF-04, RF-12, RF-13 | RN-41, RN-42 | SEG-3, SEG-4 |
 | CP-95 | PruebasSeguridad | Cambiar la contraseña con la actual incorrecta | Rechazado; el contador de intentos sube a 1 y la contraseña anterior sigue sirviendo | RF-02 | RN-04, RN-40 | SEG-1 |
-| CP-96 | PruebasSeguridad | Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | Rechazado con el aviso de bloqueo; al vencer el bloqueo, la anterior sigue sirviendo | RF-02 | RN-04 | SEG-1 |
+| CP-96 | PruebasSeguridad | Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | Rechazado con el mensaje genérico «Mail o contraseña actual incorrectos.», sin decir que está bloqueada; al vencer el bloqueo, la anterior sigue sirviendo | RF-02 | RN-04 | SEG-1, K-8 |
 | CP-97 | PruebasSeguridad | Cambiar la contraseña con un correo inexistente y con la actual incorrecta | Las dos respuestas son iguales: misma regla y mismo mensaje | RF-02 | RN-40 | SEG-1 |
 | CP-98 | PruebasSeguridad | Con la sesión del Administrador, cambiar la contraseña de un cliente; abrir la pantalla | La anterior deja de servir y la nueva sirve; la sesión sigue siendo del Administrador. Pantalla: tres campos enmascarados y vacíos, todo dentro de la ventana | RF-02 | RN-40 | SEG-1 |
 | CP-99 | PruebasIngresos | Entrada confirmada, del evento elegido y dentro del horario; después, como cliente y sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». El cliente y la falta de sesión se rechazan | RF-07 | RN-18, RN-42 | SEG-2 |
@@ -230,7 +230,7 @@ sección 0).
 | CP-101 | PruebasIngresos | Entrada reembolsada | Se rechaza como reembolsada; el contador queda en 0 | RF-07 | RN-18, RN-29 | SEG-2 |
 | CP-102 | PruebasIngresos | Código con formato válido que no existe | Se rechaza como inexistente; el contador queda en 0 | RF-07 | RN-18 | SEG-2 |
 | CP-103 | PruebasIngresos | La entrada en otro evento; el evento dentro de 2 días y hace 2 días | Rechazada por otro evento y por fuera de horario; `FechaIngreso` sigue vacía | RF-07 | RN-18 | SEG-2 |
-| CP-104 | PruebasIngresos | Dos hilos escanean el mismo código a la vez | Exactamente un ingreso válido y un «ya usado»; el contador da 1 | RF-07 | RN-18 | SEG-2 |
+| CP-104 | PruebasIngresos | Diez puertas escanean el mismo código a la vez, arrancadas juntas por una barrera; cien rondas con un código nuevo cada una | En cada ronda, exactamente un ingreso válido y nueve «ya usado», comprobado en la base. Pasó sin cambiar el SQL de ingreso | RF-07 | RN-18 | SEG-2 |
 | CP-105 | MedirLoginSeguridad | Inicio de sesión real con hashes de 600.000 y 310.000 iteraciones (2 variantes) | Mide el tiempo. El hash de 600.000 no se reescribe con menos iteraciones. **Es una medición, no se cuenta como prueba de seguridad** | RF-02 | — | SEG-6 |
 | CP-106 | PruebasSeguridad | Buscar «[vip]», «50%» y «sector_unico» | Cada texto se busca literal: encuentra el evento, y «sector%unico» y «sector_unic_» no encuentran nada | RF-03 | — | SEG-7 |
 | CP-107 | PruebasSeguridad | Hashes con iteraciones enormes, 0, negativas o no numéricas, y con sal y hash vacíos | Ninguno autentica y no se propaga ninguna excepción | RF-02 | — | SEG-8 |
@@ -242,6 +242,15 @@ sección 0).
 | CP-113 | PruebasRevisionSeguridad | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41, RN-42 | K-6 (R-01) |
 | CP-114 | PruebasRevisionSeguridad | Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada (3 variantes) | El rechazo es idéntico en texto y título, sin revelar si la cuenta existe ni si está bloqueada; el bloqueo se registra igual | RF-02 | RN-04 | K-3 |
 | CP-115 | PruebasRevisionSeguridad | Descuento configurado de Plata y de Oro por debajo, igual y por encima de `DESCUENTO_MAX_ADMISIBLE` (6 variantes) | Por debajo o igual se aplica; por encima se rechaza con RN-20, sin recortarlo en silencio | RF-08 | RN-20 | K-4 |
+| CP-116 | PruebasTextoBotones | El texto de cada botón de las 20 pantallas, dibujado por Windows, también con el borde de foco (20 variantes) | Ningún botón recorta su texto | RNF-02, RNF-03 | — | Rediseño |
+| CP-117 | PruebasListaEsperaCliente | Consultar la posición en la lista de espera: la propia, con suscriptores adelante, la de otro cliente y sin sesión (4 variantes) | El cliente ve su posición, que respeta la prioridad de los suscriptores; la de otro y sin sesión se rechazan | RF-10 | RN-35, RN-41 | D-6 |
+| CP-118 | PruebasListaEsperaCliente | Aviso de disponibilidad: evento agotado, entrada liberada, avisos de otra cuenta, sin sesión, reserva que ocupa el último cupo, evento suspendido (6 variantes) | Solo hay aviso al iniciar sesión cuando de verdad se puede comprar; no se leen avisos ajenos ni sin sesión | RF-10 | RN-41 | D-6 |
+| CP-119 | PruebasExtrasVisuales | Resumen de compra vacío y con dos entradas (2 variantes) | El TOTAL destacado coincide con el resumen, y el indicador marca el paso correcto | RF-05, RNF-02 | — | Rediseño |
+| CP-120 | PruebasExtrasVisuales | Los componentes nuevos `IndicadorPasos` y `EtiquetaTotal` en un host de diseño real (2 variantes) | Ninguno guarda su estilo en el Designer | RNF-02 | — | Rediseño |
+| CP-121 | PruebasReglasD5 | Suscripción contratada y vencida; consultarla y abrir su pantalla varias veces | No queda ninguna activa, y consultar o abrir la pantalla no crea ni renueva el registro | RF-13 | RN-26 | D-5 |
+| CP-122 | PruebasReglasD5 | Compra confirmada sin seguro; volver a confirmarla agregándole seguro | Rechazo con «La compra ya no está pendiente de pago.»; la compra queda sin seguro, sin póliza y sin segundo pago | RF-06 | RN-28 | D-5 |
+| CP-123 | PruebasK7K8 | Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-41, RN-42 | K-7 |
+| CP-124 | PruebasK7K8 | Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente (3 variantes) | El rechazo es el mismo en texto, título y comportamiento: no revela si la cuenta existe ni si está bloqueada. El bloqueo interno sigue funcionando | RF-02 | RN-04, RN-40 | K-8 |
 
 **Notas de lectura:**
 - **CP-105 y CP-109 son mediciones:** no verifican una defensa. CP-105 sí afirma que un hash más
@@ -250,8 +259,9 @@ sección 0).
   RN-26 sigue sin caso (criterio D-5 de la auditoría).
 - **CP-79 y CP-80 tocan el seguro,** pero no prueban que no se pueda agregar después de la compra.
   Por eso no llevan RN-28, aunque su comentario la nombre, y RN-28 sigue sin caso.
-- **Criterio D-5, resuelto por JC el 14/11: no se cuentan.** Codex escribe dos pruebas reales
-  para RN-26 y RN-28; cuando estén verdes, se registran y la cobertura pasa a 39 de 41.
+- **Criterio D-5, resuelto por JC el 14/11: no se cuentan.** Codex escribió dos pruebas reales,
+  CP-121 para RN-26 y CP-122 para RN-28, verdes el 16/11. **La cobertura pasa a 39 de 41 (95,1 %).**
+  Codex también quitó RN-26 y RN-28 de los comentarios de CP-77, CP-79 y CP-80.
 - **Las reglas de CP-91 a CP-104** son las que declara el comentario de la prueba. Si cada una
   resiste la mutación de su defensa, lo dice `docs/PLAN-MUTACION-SEGURIDAD.md` cuando se
   ejecute.

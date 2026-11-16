@@ -3,6 +3,11 @@
 Claude Code, 14/11/2026, a pedido de JC. Plan y pronóstico: `docs/PLAN-MUTACION-SEGURIDAD.md`.
 Encargo que sale de acá: `docs/ENCARGO-PRUEBAS-MUTACION.md`.
 
+> **Decisión de JC del 16/11: esta cifra no va al documento.** La mutación se vuelve a correr al
+> final, sobre el commit que se entrega, y esa corrida da la cifra del documento. Así, a la
+> pregunta «¿contra qué versión?» se responde con un commit exacto. Ya no se elige entre 51 y 53
+> (sección 7). El texto que explica el método está en `docs/METODOLOGIA-VERIFICACION.md`.
+
 ## 1. Resultado en una línea
 
 **De 77 defensas rotas a propósito, la batería completa detectó 51: 66,2 %.** Las 83 mutaciones
@@ -127,8 +132,9 @@ operativos. La prueba que hay que escribir para cada una está en el encargo.
 
 ## 7. Texto para el documento
 
-**Va como subsección nueva «Resistencia de las pruebas de seguridad», después de «Lectura del
-cuadro» (p. 108).** Es provisorio hasta que JC confirme los números finales.
+**Reemplazado el 16/11** por la sección «Metodología de verificación»
+(`docs/METODOLOGIA-VERIFICACION.md`), que lo amplía y es la que pega Máximo. Este texto queda
+como registro.
 
 > Para comprobar que las pruebas de seguridad detectan efectivamente la falta de cada defensa,
 > y no solo que el sistema funciona con las defensas en su lugar, se aplicó una prueba de

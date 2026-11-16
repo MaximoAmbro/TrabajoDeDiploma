@@ -1069,6 +1069,7 @@ entrada.
 
 | Lugar | Dice | Poner |
 |---|---|---|
+| Paso 1 | «El Administrador ingresa a “Gestionar listas de espera”.» | «El Administrador elige «Listas de espera» en su menú.» |
 | Paso 5 | «El Administrador puede exportar o registrar esta información.» | «El Administrador puede elegir otro evento o volver al menú.» |
 | FA1 | «Si el Administrador selecciona un evento sin usuarios en lista, el sistema muestra el mensaje: “Este evento no tiene lista de espera asociada”.» | «Si ningún evento de sus locales está agotado ni tiene lista, el sistema muestra: «No hay eventos agotados ni listas de espera en tus locales.»» |
 | Debajo de las postcondiciones, agregar | — | «La inscripción en la lista la realiza el Cliente desde la compra (CU-01, FA3).» |
@@ -1078,6 +1079,7 @@ entrada.
 | Lugar | Dice | Poner |
 |---|---|---|
 | Descripción | «visualice reportes simulados con información agregada» | «visualice reportes con información agregada, calculados sobre los datos registrados (en esta práctica, un juego de datos ficticio),» |
+| Paso 1 | «El Administrador selecciona la opción “Ver reportes de ventas”.» | «El Administrador elige «Reportes» en su menú.» |
 | Paso 2, agregar una viñeta | — | «Demanda insatisfecha (listas de espera).» |
 | Paso 4 | «El sistema genera el reporte con datos simulados y lo muestra en forma de tabla y/o gráficos.» | «El sistema genera el reporte y lo muestra en una tabla, con una lectura del resultado.» |
 | Paso 5 | «(rango de fechas, categoría de evento)» | «(rango de fechas y, según el reporte, categoría, evento o solo eventos agotados)» |
@@ -1151,12 +1153,12 @@ cifras del juego de datos simulado (pp. 29 y 30).
 
 | # | Qué | Dónde |
 |---|---|---|
-| K-1 | La interfaz promete notificar cuando se libera un lugar, y no existe notificación (W-03) | `FrmCompraCliente.cs:243` y `lblAgotado`; `GestorListaEspera.YaInscripto` |
-| K-2 | CP-81 falla: la preventa rechazada deja visible la compra. **`2af267a` dice corregir la preventa:** a confirmar con la próxima batería | Reporte T-47/T-48 |
-| K-8 | **Nuevo, 14/11.** El cambio de contraseña todavía revela una cuenta bloqueada: con el correo de una cuenta bloqueada responde «La cuenta está bloqueada…», y con un correo inexistente, «Mail o contraseña actual incorrectos.». El inicio de sesión ya no lo revela (K-3), así que el cambio de contraseña queda como la única forma de saber si un correo existe. CU-09 FA3 describe el comportamiento de hoy. Ojo: CP-96 exige hoy la palabra «bloqueada», así que corregirlo cambia también esa prueba. **Decide JC** | `GestorUsuarios.CambiarContrasena` (pasa `ocultarCuenta`, pero `CuentaBloqueada` se lanza antes) |
+| K-1 | **Corregido por Codex en `a2f4b55` (14/11), según D-6 (c):** el cliente consulta su posición y, si vuelve a haber entradas, ve el aviso al iniciar sesión (CP-117 y CP-118). Antes: la interfaz prometía notificar cuando se libera un lugar, y no existía notificación (W-03). **Sigue abierto:** la prioridad ordena la lista que se consulta, pero no reserva el turno de compra; para fecharlo hace falta guardar el instante en que se libera el cupo (decide JC) | `FrmCompraCliente.cs:243` y `lblAgotado`; `GestorListaEspera.YaInscripto` |
+| K-2 | **Corregido:** CP-81 pasa desde `2af267a` y en las baterías del 14/11 y del 16/11. Antes: la preventa rechazada dejaba visible la compra | Reporte T-47/T-48 |
+| K-8 | **Corregido por Codex en `c9d3a1c` (16/11):** el cambio de contraseña, que se usa sin sesión, responde «Mail o contraseña actual incorrectos.» con cuenta inexistente, contraseña incorrecta, quinto fallo y cuenta bloqueada; el bloqueo se registra igual. CP-124 lo prueba, y CP-96 pasó a exigir el mensaje genérico. CU-09 FA3 ya está escrito así. Antes: revelaba una cuenta bloqueada | `GestorUsuarios.CambiarContrasena` |
 | K-3 | **Corregido por Codex en `2af267a` (14/11):** mensaje único, CP-114. Antes: el inicio de sesión revela si un correo existe. Con un correo inexistente dice «Mail o contraseña incorrecta»; con uno existente informa los intentos que quedan. El cambio de contraseña ya es uniforme (CP-97) | `frmInicio.cs` y `GestorUsuarios.AutenticarCuenta` |
 | K-4 | `DESCUENTO_MAX_ADMISIBLE` se guarda, pero ninguna operación lo controla. **Corregido por Codex en `2af267a` (14/11)** con `DescuentoAdmisible`; falta registrar su caso de prueba | `GestorFidelizacion.PorcentajePara` |
-| K-7 | El control de ingreso lista los eventos publicados de hoy **de todos los locales**, no solo los del Administrador que lo abre. Además, un evento que empieza cerca de la medianoche no aparece el día anterior, aunque su horario de ingreso ya haya empezado. No contradice ninguna regla escrita (RN-42 habla del perfil, no del dueño), pero CU-07 sí filtra «en tus locales». **Decide JC** si es un defecto | `GestorIngresos.EventosDeHoy` y `RepositorioEventos.DelDia` |
+| K-7 | **Corregido por Codex en `c9d3a1c` (16/11):** el control de ingreso lista solo los eventos de los locales del Administrador, por la ventana de ingreso y no por día calendario; registrar y contar también rechazan eventos ajenos (RN-42). CP-123 prueba el evento ajeno, la falta de sesión y los cuatro bordes de la ventana. CU-12 ya está escrito así. Antes: listaba los eventos del día de todos los locales | `GestorIngresos.EventosConIngresoAbierto` y `RepositorioEventos.ConIngresoAbierto` |
 | K-5 | Texto visible «Registar local», y un botón «Registrarse» en el alta de local | `frmRegistrarLocal.Designer.cs` |
 | K-6 | R-01: `GestorSesion.Iniciar` era público. **Corregido por Codex en `2af267a` (14/11):** `internal`, con sesión inmutable y CP-113 | `docs/ENCARGO-REVISION-SEGURIDAD.md` |
 
@@ -1379,8 +1381,8 @@ mensajes van entre comillas tal como aparecen en pantalla.
 que CU-01 a CU-08. No llevan diagrama chico propio: los cinco están en el diagrama general de
 casos de uso. Si Máximo quiere agregarles uno, tiene que respetar los errores 8 y 16.
 
-**Provisorio:** CU-09 cambia si Codex corrige K-8 (FA3 pasaría a mostrar el mismo mensaje que
-FA2), y CU-13 cambia si D-6 queda en (c). Si cambia algún mensaje, se ajusta la frase entre
+**Actualizado el 16/11:** CU-09 FA3 y CU-12 ya describen el código después de K-8 y K-7
+(`c9d3a1c`), y CU-13 aplica D-6 (c) en la lista para Máximo. Si cambia algún mensaje, se ajusta la frase entre
 comillas, no el flujo. Los rechazos por regla se muestran con el código al final, por ejemplo
 «Mail o contraseña actual incorrectos. (RN-04)»; las especificaciones citan el texto sin el
 código, igual que CU-01 a CU-08.
@@ -1425,8 +1427,10 @@ incorrecta, el sistema informa «Mail o contraseña actual incorrectos.», el mi
 dos casos. Una contraseña actual incorrecta cuenta como intento fallido (RN-04).
 
 FA3 – Cuenta bloqueada. Si la cuenta está bloqueada, o si el intento fallido completa cinco
-consecutivos, el sistema rechaza el cambio e informa cuántos minutos faltan para volver a
-intentar (RN-04).
+consecutivos, el sistema rechaza el cambio con el mismo mensaje de FA2, «Mail o contraseña
+actual incorrectos.». No informa que la cuenta está bloqueada ni cuántos intentos quedan: como la
+opción no exige sesión, cualquier otro mensaje revelaría qué cuentas existen. El bloqueo se
+registra igual y rige también para el inicio de sesión (RN-04).
 
 FA4 – Contraseña débil. En el paso 6, si la nueva contraseña no tiene al menos ocho caracteres,
 una letra y un dígito, el sistema informa «La contraseña debe tener al menos 8 caracteres, con al
@@ -1542,8 +1546,8 @@ Administrador vuelve al paso 5.
 
 **Id y nombre:** CU-12 – Controlar ingreso
 
-**Descripción:** Permite al Administrador validar en la puerta las entradas de un evento del
-día, con el código QR del ticket leído por un lector USB o tipeado desde el PDF. Cada entrada
+**Descripción:** Permite al Administrador validar en la puerta las entradas de un evento de
+sus locales, con el código QR del ticket leído por un lector USB o tipeado desde el PDF. Cada entrada
 ingresa una sola vez (RN-18).
 
 **Actor:** Administrador
@@ -1552,11 +1556,13 @@ ingresa una sola vez (RN-18).
 
 **Precondiciones:**
 - El Administrador inició sesión.
-- Hay al menos un evento publicado con fecha de hoy.
+- Al menos un evento publicado de sus locales tiene el ingreso abierto: desde seis horas antes
+  hasta doce horas después de su inicio.
 
 **Flujo principal:**
 1. El Administrador elige «Control de ingreso» en su menú.
-2. El sistema muestra los eventos publicados con fecha de hoy, de todos los locales; el contador
+2. El sistema muestra los eventos publicados de los locales del Administrador que tienen el
+   ingreso abierto en ese momento, aunque hayan empezado el día anterior; el contador
    de ingresos registrados del evento elegido, y el mensaje «Escaneá una entrada.».
 3. El Administrador elige el evento.
 4. El Administrador lee el código del ticket con el lector, que lo confirma con Enter, o lo
@@ -1569,8 +1575,9 @@ ingresa una sola vez (RN-18).
 
 **Flujo alternativo:**
 
-FA1 – Sin eventos hoy. En el paso 2, si no hay eventos publicados con fecha de hoy, el sistema
-muestra «No hay eventos publicados para hoy.» y deshabilita el campo y el botón.
+FA1 – Sin eventos con ingreso abierto. En el paso 2, si ningún evento de sus locales tiene el
+ingreso abierto, el sistema muestra «No hay eventos con ingreso abierto en tus locales.» y
+deshabilita el campo y el botón.
 
 FA2 – Entrada rechazada. En el paso 5, si alguna verificación falla, el sistema no registra el
 ingreso y muestra el motivo en rojo:
@@ -1584,6 +1591,10 @@ ingreso y muestra el motivo en rojo:
 FA3 – Lectura simultánea. Si dos puertas leen la misma entrada al mismo tiempo, solo una
 registra el ingreso. La otra muestra que la entrada ya ingresó o, si la entrada cambió por otro
 motivo, «La entrada cambió. Volvé a escanear.».
+
+FA4 – Evento de otro Administrador. Si el evento no es de uno de sus locales, el sistema no
+registra ni cuenta ingresos e informa «Solo podés controlar el ingreso de eventos de tus
+locales.» (RN-42).
 
 **Postcondiciones:**
 - La entrada queda con su fecha de ingreso: no puede volver a ingresar ni devolverse (RN-29).
