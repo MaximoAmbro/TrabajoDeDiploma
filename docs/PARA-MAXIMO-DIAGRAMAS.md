@@ -58,8 +58,11 @@ El diagrama del administrador va en la página siguiente, con el título «Diagr
 **Texto para el documento:**
 
 > Los casos de uso se presentan en dos diagramas, uno por actor, para que cada uno se lea a
-> tamaño de página. Cada caso de uso corresponde a una pantalla del sistema y a una operación de
-> la capa de negocio. El pago se resuelve con una pasarela simulada que forma parte del sistema,
+> tamaño de página. La mayoría de los casos de uso corresponde a una pantalla del sistema y a una
+> operación de la capa de negocio. Otros ocurren dentro de la compra, sin pantalla propia: el
+> descuento por nivel, que la compra aplica siempre, y el seguro, que el cliente elige mientras
+> arma el paquete. Se dibujan para que esas reglas del negocio queden visibles y trazables en el
+> diagrama. El pago se resuelve con una pasarela simulada que forma parte del sistema,
 > por lo que no se modela como actor. Las relaciones «include» indican pasos que la compra
 > realiza siempre (el descuento por nivel y el pago); las «extend» indican comportamiento
 > opcional, con su condición entre corchetes: contratar el seguro, inscribirse en la lista de

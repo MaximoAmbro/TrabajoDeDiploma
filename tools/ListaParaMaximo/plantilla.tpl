@@ -1,5 +1,13 @@
 # LA lista para el Word — de la página 1 a la 112
 
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44) y la sección nueva «Estimación de costos» (p. 35).
+>
+> **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
+> requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
+> las figuras. Dentro de esas páginas que sí se pegan siguen esperando los datos marcados
+> «⏸ ESPERA A JC». **Si ya pegaste algo de la zona en pausa, dejalo como está:** cuando se libere,
+> «Cambió después del 16/11» va a decir qué volver a pegar.
+
 > ## ⚠ ANTES DE TODO: los scripts de la base de datos
 >
 > El ejecutable nuevo necesita cambios en tu base de EventAura. En SQL Server Management Studio,
@@ -24,6 +32,10 @@
 >    seguros para la misma entrada, que son dos cargos al cliente.
 
 > ## ↻ CAMBIÓ DESPUÉS DEL 16/11: volver a pegar
+>
+> **⏸ En pausa (17/11): no vuelvas a pegar nada de esta tabla por ahora.** Todas sus filas son de
+> la zona que se mueve con el código. Cuando se libere, esta tabla se actualiza y dice qué volver a
+> pegar.
 >
 > Lo que estaba sin marcar en una versión anterior de esta lista (la del 16/11, commit `654e1d9`, o
 > la del 17/11, commit `0e1fc5a`) y cambió después. Si todavía no lo pegaste, no hagas nada: pegá
@@ -55,12 +67,37 @@
 > | p. 89, texto del entidad-relación | Párrafo nuevo al final: por qué Entradas guarda el usuario y qué es la cantidad vendida | Solo ese párrafo (está en su lugar de la lista) |
 > | pp. 52 y 53, figura 2 del instructivo | Pasa a una versión recortada, con otro archivo y otro ancho (10,7 cm) | La figura 2, si pegaste la entera. La figura 1 no cambia |
 
-> ## ⏸ NO PEGAR TODAVÍA: la lista completa
+> ## ⏸ NO PEGAR TODAVÍA: la lista completa (17/11)
 >
-> **Todo lo que no lleva la marca ⏸ se pega hoy, sin preguntar.** Lo único que queda marcado son
-> datos que tiene que mandar JC: si se pega antes, el documento dice algo falso. Cada
-> uno tiene la marca también en su lugar de la lista, para que te frene aunque llegues sin leer
-> esto.
+> Dos motivos. **La zona en pausa** depende del código, que Codex está ampliando en cuatro fases
+> (mapa de sectores; identidad visual; tarjetas de evento y tres pantallas nuevas; seguridad e
+> imágenes de eventos): lo que se pegue ahí hoy queda viejo. **Los datos de JC** faltan: si se
+> pegan antes, el documento dice algo falso. Cada página en pausa tiene la marca también en su
+> lugar, para que te frene aunque llegues sin leer esto.
+>
+> **Zona en pausa (depende del código):**
+>
+> | Páginas | Qué contiene | Por qué se mueve |
+> |---|---|---|
+> | p. 1 | La línea del commit en la carátula | El código que se entrega va a ser otro |
+> | pp. 6 a 8 | Historial de revisión, resumen ejecutivo y limitaciones declaradas | Resumen las cifras y las funciones del sistema |
+> | pp. 18, 20 y 21 | Criterios de aceptación y supuestos | Siguen a los requerimientos y a las integraciones simuladas (llega el envío de correo simulado) |
+> | pp. 23 y 24 | Requerimientos funcionales y no funcionales | Funciones nuevas: verificación de correo, recuperación de contraseña, auditoría, imágenes de eventos, mapa de sectores |
+> | pp. 25 a 33 | Reglas de negocio, factibilidad económica, niveles, parámetros y conflictos | Reglas nuevas desde RN-43 y parámetros nuevos |
+> | pp. 35 a 38 | Priorización y orden de implementación (**salvo** la sección nueva «Estimación de costos», que sí se pega) | Requerimientos nuevos |
+> | pp. 40 a 43 | Descripción funcional, alcance y remisión a los requerimientos | Funciones nuevas |
+> | p. 45 | Prototipos | Son figuras de la interfaz |
+> | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
+> | pp. 57 a 70 | Arquitectura, entidades, código y pruebas | Clases, tablas, patrones (Strategy del envío de correo) y pruebas nuevas |
+> | pp. 71 a 89 | Casos de uso, especificaciones y todos los diagramas | Casos de uso nuevos; los diagramas se regeneran |
+> | pp. 90 a 97 | Usabilidad: el párrafo sobre el rediseño | La interfaz vuelve a cambiar |
+> | pp. 98 a 105 | Anexo A02 | Depende de las pantallas y de las consultas |
+> | pp. 106 a 109 | Matriz de trazabilidad, cobertura y brechas | Requerimientos, reglas y casos nuevos |
+> | Sección nueva «Metodología de verificación» | Batería y cifras | Casos y ejecuciones nuevos |
+> | pp. 110 y 111 | Conclusiones, limitaciones y trabajo futuro | Por ejemplo, «no existe recuperación de contraseña» deja de ser cierto |
+> | Arriba de todo | Los scripts de la base | Llegan al menos dos scripts nuevos |
+>
+> **Datos de JC:**
 >
 > | Dónde | Qué no se pega | De qué depende |
 > |---|---|---|
@@ -104,7 +141,11 @@
 - **No hay nada para decidir.** Si algo no encaja con lo que ves en el Word, no lo resuelvas:
   anotalo y avisale a JC.
 
-## Cifras del documento (definitivas)
+## Cifras del documento (⏸ van a cambiar)
+
+Son las del código `dba674c`. Con las fases nuevas cambian casos, ejecuciones, reglas y quizás la
+cobertura. No las uses para corregir nada hasta que esta tabla vuelva a decir «definitivas».
+
 
 | Dato | Valor hoy | Dónde aparece en esta lista |
 |---|---|---|
@@ -120,6 +161,8 @@
 ---
 
 ## Página 1 — Carátula, y pie y encabezado de todas las páginas
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **⏸ ESPERA A JC** (comisión, turno, legajos, año y si es «Maximo» o «Máximo»). Cuando lleguen:
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^## 1\. Carátula :: ^Los datos que faltan están
@@ -147,6 +190,8 @@ No se toca ahora: se regenera al final («Hacé esto último»).
 
 ## Página 6 — Historial de revisión
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 **Agregar** estas siete filas al final de la tabla. «fecha» es el día en que se pegan los
 cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega. Las seis primeras son la versión
 2.5 (las correcciones del 4 al 11 de noviembre); la última, la 2.6, que es la que se entrega.
@@ -162,6 +207,8 @@ cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega. Las seis prim
 | «fecha» | 2.6 | Riggio, Juan Cruz | Respecto de la 2.5: arquitectura e implementación descriptas sobre el prototipo, con los veinticinco diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-13; anexo de estimación de costos. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 41 vigentes, de RN-01 a RN-42; RN-27 sigue dada de baja (versión 2.0) y su número no se reutiliza, y las reglas nuevas se numeraron a continuación: RN-38 y RN-39 en la versión 2.5, y RN-40, RN-41 y RN-42 con la revisión de seguridad. Matriz de trazabilidad con los casos CP-62 a CP-148 y cobertura de 39 de las 41 reglas; brecha G-07 resuelta. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura y prueba de mutación de las defensas de seguridad. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 ## Página 7 — Resumen ejecutivo, «Qué contiene este informe»
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 | Fila | Dice | Poner |
 |---|---|---|
@@ -198,6 +245,8 @@ viñeta:
 agrega la sección «Metodología de verificación»; sin este punto, el resumen no la menciona.
 
 ## Página 8 — Resumen ejecutivo, «Limitaciones declaradas»
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Reemplazar:**
 
@@ -334,10 +383,14 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 
 ## Página 18
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-08 · p\. 18 :: ^\*\*B-09
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-18 · p\. 18 :: ^## 4\. Decisiones
 
 ## Página 20 — Criterios de aceptación
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-07 · p\. 20 :: ^\*\*B-08
 
@@ -348,6 +401,8 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 > entradas.
 
 ## Página 21 — Supuestos del proyecto
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-14 · p\. 21 :: ^\*\*B-15
 
@@ -366,6 +421,8 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 
 ## Página 23 — Requerimientos funcionales
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 **RF-10, criterio de aceptación. Reemplazar:**
 
 > Criterio de aceptación: El sistema debe registrar al usuario en la lista e informarle que será
@@ -382,6 +439,8 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-03 · p\. 23 :: ^\*\*B-04
 
 ## Página 24 — Requerimientos no funcionales, punto 3 (RNF-03)
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Reemplazar** el punto 3 completo:
 
@@ -407,6 +466,8 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 
 ## Página 25 — Reglas de negocio
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-01 · p\. 25 :: ^\*\*A-02
 
 **Misma oración, a continuación:** «las especificaciones de casos de uso (CU-01 a CU-08)» pasa a
@@ -421,6 +482,8 @@ Agregar** después de RN-05:
 | RN-42 | La gestión de eventos, sectores y locales, la consulta de las listas de espera y el control de ingreso son exclusivos del perfil Administrador. Los reportes se rigen por RN-34. | A | RF-12 / CU-02 |
 
 ## Página 26 — Reglas de negocio
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-02 · p\. 26 :: ^> \*\*Resuelta el 14/11
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-03 · p\. 26 :: ^\*\*A-04
@@ -443,6 +506,8 @@ Agregar** después de RN-05:
 |---|---|---|---|
 
 ## Página 27 — Reglas de negocio
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-06 · p\. 27 :: ^\*\*A-07
 
@@ -487,6 +552,8 @@ pp. 27, 30, 40, 55 y 82 ya es exacto y no se toca.
 
 ## Página 28 — Factibilidad económica
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 | Dice | Poner |
 |---|---|
 | «$19.356» | «$19.355» |
@@ -494,6 +561,8 @@ pp. 27, 30, 40, 55 y 82 ya es exacto y no se toca.
 *Razón:* recalculado; todas las contribuciones, el 8,62 % y el 9,5 % quedan iguales.
 
 ## Página 29 — Costo del programa
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Reemplazar:**
 
@@ -507,14 +576,20 @@ pp. 27, 30, 40, 55 y 82 ya es exacto y no se toca.
 
 ## Página 32 — Niveles de fidelidad
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-09 · p\. 32 :: ^\*\*A-10
 
 ## Página 33 — Parámetros y conflictos
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-10 · p\. 33 :: ^\*\*A-11
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-11 · p\. 33 :: ^## 3\. Requerimientos y alcance
 
 ## Página 35 — Priorización
+
+**⏸ NO PEGAR TODAVÍA esta página, salvo la sección nueva «Estimación de costos», que sí se pega hoy.** El resto depende de los requerimientos, que van a cambiar.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-04 · p\. 35 :: ^\*\*B-05
 
@@ -524,6 +599,8 @@ estimación absoluta.»). Pegar completo:
 @@- docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*Texto para pegar:\*\*$ :: ^\*\*Cuentas verificadas:\*\*
 
 ## Página 36 — Priorización de requerimientos funcionales
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Fila RF-09. Reemplazar:**
 
@@ -548,6 +625,8 @@ estimado», y la columna «Puntos», a «Puntos estimados». La tabla no se reca
 
 ## Página 37
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 **Tabla «Priorización de requerimientos no funcionales», fila RNF-03. Reemplazar** la
 justificación:
 
@@ -567,6 +646,8 @@ justificación:
 |---|---|---|
 
 ## Página 38 — Orden de implementación derivado
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Fila de la Fase 8:**
 - en la columna Requerimientos, «RF-09 y RF-10, según margen disponible» pasa a «RF-10 (RF-09
@@ -596,15 +677,21 @@ que queda dice «Fecha: x».
 
 ## Página 40 — Descripción funcional
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-09 · p\. 40 :: ^> Si se elige la opción \(b\) de D-6
 
 ## Página 41 — Alcance y restricciones
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-10 · p\. 41 :: ^> Si se aplica la opción \(b\) de D-6
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-12 · p\. 41 :: ^\*\*B-13
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-13 · p\. 41 :: ^\*\*B-14
 
 ## Páginas 42 y 43 — Segunda copia de los requerimientos (se reemplaza por una remisión)
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 1. **Borrar** desde el subtítulo «Especificación de requerimientos funcionales» (p. 42) hasta el
    final del ítem «11. Visualización de reportes simulados» y su criterio (p. 43).
@@ -636,6 +723,8 @@ relevamiento…»): las minutas y los prototipos siguen en esta sección.
 
 ## Página 45 — Prototipos (la copia que queda)
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 **⏸ ESPERA A JC** para la frase de Figma: «Los siguientes prototipos fueron desarrollados en Figma
 y entregados como archivo complementario en formato PDF y versión interactiva.» Si el archivo no
 existe, va: «Los siguientes prototipos se elaboraron como bocetos de las pantallas principales y
@@ -656,6 +745,8 @@ lectura y acciones al pie). Codex las construyó así en `eeaf8a5` (16/11); falt
 mirando las dos pantallas, que el texto las describe.
 
 ## Páginas 47 a 49 — Guion de interfaz: las tres capturas
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Reemplazar las tres imágenes.** Las de hoy muestran la interfaz de antes del rediseño (la de
 la p. 47 dice «Show Password»). Las nuevas están en
@@ -683,26 +774,38 @@ dos accesos como enlaces («Cambiar contraseña» y «Crear Cuenta»).
 
 ## Página 48
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-01 · p\. 48 :: ^\*\*E-02
 
 ## Página 49
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-02 · p\. 49 :: ^\*\*E-03
 
 ## Página 50 — Instructivo: estado de implementación
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^## 8\. Página 50 :: ^## 9\. Páginas 52
 
 ## Página 51
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-03 · p\. 51 :: ^\*\*E-04
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-04 · p\. 51 :: ^\*\*E-05
 
 ## Página 52
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-05 · p\. 52 :: ^\*\*E-06
 
 ## Páginas 52 y 53 — Figuras 1 a 4 del instructivo
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 Reemplazar cada «Espacio reservado para captura de pantalla» por la imagen de la tabla. **Se
 pegan hoy las cuatro.** **La figura 2 cambió:** es una versión recortada, en otra carpeta. Si ya
@@ -733,9 +836,13 @@ pasos y la pantalla de éxito.
 
 ## Página 54 — Ejemplo resuelto
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 Sin cambios.
 
 ## Página 55 — Situaciones particulares y mensajes de validación
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Fila «Bajé de nivel…». Dice:** «El nivel se reevalúa el primer día de cada mes. Una compra que
 sale de la ventana de doce meses recién impacta en esa fecha.» **Poner:** «El nivel se reevalúa
@@ -767,17 +874,25 @@ contando. En los dos casos el nivel se conserva hasta la reevaluación mensual.�
 
 ## Páginas 57 a 61 — «Implementación» pasa a «Arquitectura e implementación»
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@- docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^## Anexo 1 — Texto para D-1 :: ^\*Razón:\* código\. Las 4 capas
 
 ## Página 62 — Entidades
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-08 · p\. 62 :: ^\*Razón:\* base\. `BaseDatos/01-esquema\.sql` y `GestorCompras\.Iniciar`
 
 ## Páginas 63 a 67 — Código real (⚠ releé el aviso de arriba antes de empezar)
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@- docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^## Anexo 2 — Textos para D-2 :: ^\*\*pp\. 68 a 70, código de las pruebas
 
 ## Páginas 68 a 70 — Pruebas de la lógica de descuento
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **p. 68, primer párrafo. Reemplazar:**
 
@@ -798,6 +913,8 @@ El listado de código **queda como está**. Debajo del título «Implementación
 
 ## Página 71 — Diagramas de casos de uso (dos figuras)
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 **Reemplazar** la figura que está bajo «Diagramas de caso de uso» por:
 - `docs/diagramas/casos-uso-cliente.png`, a **16,0 cm** de ancho;
 - en la página siguiente, con el título «Diagramas de caso de uso (Administrador)»,
@@ -811,6 +928,8 @@ aspecto*). **Si la achicás, deja de leerse.**
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 1\. Casos de uso >> ^\*\*Texto para el documento :: ^\*\*Justificación de relaciones:\*\*
 
 ## Páginas 72 a 85 — Especificaciones CU-01 a CU-08
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **En las ocho especificaciones, borrar el diagrama chico** que está debajo del título de cada una
 (son ocho figuras, una por caso de uso). Las relaciones de cada caso de uso ya están en el
@@ -848,12 +967,16 @@ diagrama general de la p. 71.
 
 ## Después de la página 85 — Especificaciones nuevas CU-09 a CU-13
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 **Insertar** a continuación de CU-08, con el mismo formato que CU-01 a CU-08 (los mismos estilos
 de título y de campos). No llevan diagrama chico.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*CU-09 – Cambiar contraseña\*\*$ :: ^\*\*Lo que no se especifica y por qué\.\*\*
 
 ## Página 86 — Modelo de dominio conceptual y diagrama de clases
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Modelo de dominio conceptual:** reemplazar la figura por `docs/diagramas/dominio-conceptual.png`,
 a **16,0 cm**. Texto debajo del título:
@@ -891,6 +1014,8 @@ Texto, debajo del título:
 
 ## Página 87 — Secuencia y estados
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 **Diagrama de secuencia – Comprar paquete:** reemplazar la figura por tres, una por página:
 `secuencia-compra-1-reserva.png`, `secuencia-compra-2-pago.png` y
 `secuencia-compra-3-emision.png`, las tres a **16,0 cm**. Texto debajo del título:
@@ -904,6 +1029,8 @@ Texto:
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 5\. Transición >> ^\*\*Texto para el documento :: ^(\*\*|## 6\.)
 
 ## Página 88 — Robustez, dominio actualizado y actividad
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Diagrama de robustez (ICONIX):** reemplazar la figura por `robustez-comprar-paquete.png`, a
 **16,0 cm**. Texto:
@@ -934,6 +1061,8 @@ tres, una por página: `actividad-1-armado.png` a **16,0 cm**, `actividad-2-pago
 
 ## Página 89 — Entidad-relación
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el título), insertar
 `er-1-usuarios-catalogo.png` a **15,4 cm** y, en la página siguiente, `er-2-compras.png` a
 **14,6 cm**. Las dos ocupan la página entera. Texto:
@@ -941,6 +1070,8 @@ Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el t
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 6\. Entidad-relación >> ^\*\*Texto para el documento :: ^(\*\*|## )
 
 ## Páginas 90 a 97 — Informe de pruebas de usabilidad
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^## 11b\. Páginas 90 a 97 :: ^## 12\. Página 99
 
@@ -975,6 +1106,8 @@ filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en
 
 ## Página 98 — Anexo A02, introducción
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 | Dice | Poner |
 |---|---|
 | «CU-08 – Ver reportes de ventas define el flujo de interacción» | «CU-08 – Generar reportes define el flujo de interacción» |
@@ -983,9 +1116,13 @@ filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en
 
 ## Páginas 99 a 105 — Anexo A02
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^## 12\. Página 99 :: ^## 17\. Página 106
 
 ## Página 106 — Matriz: criterio y nomenclatura
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Criterio de construcción. Reemplazar:**
 
@@ -1008,6 +1145,8 @@ la de casos de uso cambiar la cantidad:
 | Casos de uso | la cantidad «8» | «13» |
 
 ## Página 107 — Matriz principal
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Reemplazar la tabla completa por:**
 
@@ -1070,6 +1209,8 @@ programa de fidelización económicamente sostenible para los clientes frecuente
 quedan.
 
 ## Página 108 — Cobertura
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **Advertencia sobre OE-4, al principio de la página. Reemplazar** el párrafo completo por:
 
@@ -1198,6 +1339,8 @@ p. 108.*
 
 ## Página 109 — Brechas detectadas
 
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+
 **Oración inicial. Reemplazar:**
 
 > El análisis identificó cuatro brechas. La primera fue resuelta a partir de este mismo
@@ -1254,6 +1397,8 @@ estilo de «Criterio de construcción». **Se pega entera.**
 «Mantenimiento de la matriz» y el párrafo final de la página no cambian.
 
 ## Página 110 — Conclusiones
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 **«Sobre la validación con usuarios». Reemplazar** el párrafo completo:
 
@@ -1321,6 +1466,8 @@ cifras, así que no cambia cuando se congelen los números.
 | La aplicación de escritorio accede a la base con la cuenta de Windows del usuario. | Las verificaciones de perfil del negocio (RN-34, RN-41, RN-42) protegen la operación desde la aplicación; en producción tienen que acompañarse de permisos en la base o de un servicio intermedio. |
 
 ## Página 111 — Trabajo futuro
+
+**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
 | Punto | Dice | Poner |
 |---|---|---|

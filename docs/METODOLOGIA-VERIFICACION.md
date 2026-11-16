@@ -171,6 +171,20 @@ nueve rechazos exigidos en cada vuelta. La prueba reforzada detectó las tres mu
 concurrencia en todas las ejecuciones de control. El código de ingreso no se modificó: el sistema ya era correcto, y lo que faltaba era
 una prueba capaz de demostrarlo.
 
+*Lo que la revisión de coherencia no alcanzó.* Además de las pruebas, el documento se revisó con
+una matriz de diez comprobaciones de coherencia entre los diagramas, la base de datos y el código.
+Una de ellas compara los estados de la entrada en cuatro lugares: el diagrama de estados, la
+clase, la restricción de la base y el código. Las cuatro listas coincidían. Pero la comprobación
+compara listas de estados, no transiciones, y no puede ver de qué estado sale cada flecha. Así
+quedó sin detectar que el diagrama hacía salir la devolución de la entrada confirmada en general,
+lo que permitía devolver una entrada que ya se había usado para ingresar, cosa que el código
+rechaza. No lo encontró el instrumento: lo encontró una revisión externa, hecha por alguien
+distinto de quien había dibujado y verificado los diagramas, y se corrigió. Para que el
+instrumento lo detectara habría hecho falta una comprobación más: comparar cada transición del
+diagrama con la condición que la permite en el código, como se hizo con los métodos del diagrama
+de secuencia. La conclusión es la misma que la de la prueba de mutación: también los instrumentos
+de verificación tienen que verificarse, y saber qué no cubre cada uno es parte del resultado.
+
 *Qué queda fuera de la medición.* La mutación se aplicó a la capa de negocio, a la de datos y al
 esquema de la base, que es donde están las defensas; no a la interfaz gráfica, cuyos controles
 ocultos o deshabilitados no son una defensa. Tampoco cubre el acceso directo a la base de datos
