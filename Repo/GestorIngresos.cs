@@ -15,6 +15,7 @@ namespace Negocio
         public ResultadoIngreso Registrar(string codigo, int idEvento)
         {
             GestorSesion.Instance.RequerirAdministrador();
+            RequerirEventoPropio(idEvento);
             codigo = (codigo ?? "").Trim();
             Entrada entrada = RepositorioEntradas.Instance.PorCodigo(codigo);
             ResultadoIngreso rechazo = RechazoDe(entrada, idEvento);
@@ -36,13 +37,30 @@ namespace Negocio
         public int Contar(int idEvento)
         {
             GestorSesion.Instance.RequerirAdministrador();
+            RequerirEventoPropio(idEvento);
             return RepositorioEntradas.Instance.ContarIngresos(idEvento);
         }
 
-        public List<Evento> EventosDeHoy()
+        public List<Evento> EventosConIngresoAbierto()
+        {
+            return EventosConIngresoAbierto(DateTime.Now);
+        }
+
+        internal List<Evento> EventosConIngresoAbierto(DateTime ahora)
         {
             GestorSesion.Instance.RequerirAdministrador();
-            return RepositorioEventos.Instance.DelDia(DateTime.Today);
+            int antes = GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_ANTES");
+            int despues = GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_DESPUES");
+            return RepositorioEventos.Instance.ConIngresoAbierto(GestorSesion.Instance.UsuarioActual.Id,
+                ahora.AddHours(-despues), ahora.AddHours(antes));
+        }
+
+        private static void RequerirEventoPropio(int idEvento)
+        {
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            Local local = evento == null ? null : RepositorioLocales.Instance.ObtenerPorId(evento.IdLocal);
+            if (local == null || local.IdPropietario != GestorSesion.Instance.UsuarioActual.Id)
+                throw new ReglaNegocioException("RN-42", "Solo podés controlar el ingreso de eventos de tus locales.");
         }
 
         private static ResultadoIngreso RechazoDe(Entrada entrada, int evento)

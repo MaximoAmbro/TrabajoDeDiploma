@@ -51,7 +51,7 @@ namespace Pruebas
             });
         }
 
-        // CP-77 — RF-13, RN-25/RN-26; PA-12, 8.4/8.6: alta y baja con confirmaciones.
+        // CP-77 — RF-13, RN-25; PA-12, 8.4/8.6: alta y baja con confirmaciones.
         [DataTestMethod]
         [DataRow(false, DisplayName = "CP-77: Contratar Mensual muestra precio, vencimiento y habilitados")]
         [DataRow(true, DisplayName = "CP-77: Cancelar suscripción pide No por defecto y elimina beneficios")]
@@ -114,7 +114,7 @@ namespace Pruebas
             });
         }
 
-        // CP-79 — RF-05, RN-28/RN-37; PA-14, 8.7/8.9: seguro gratis o cobrado en el resumen.
+        // CP-79 — RF-05, RN-37; PA-14, 8.7/8.9: seguro gratis o cobrado en el resumen.
         [DataTestMethod]
         [DataRow(true, DisplayName = "CP-79: Suscriptor tiene seguro sin cargo y no recibe pregunta al comprar")]
         [DataRow(false, DisplayName = "CP-79: Sin suscripción el seguro de dos entradas cuesta diez mil")]
@@ -157,7 +157,7 @@ namespace Pruebas
             });
         }
 
-        // CP-80 — RF-06/RF-07, RN-28/RN-37; PA-15, 8.8/C9.10/C9.11: pólizas y confirmación.
+        // CP-80 — RF-06/RF-07, RN-37; PA-15, 8.8/C9.10/C9.11: pólizas y confirmación.
         [DataTestMethod]
         [DataRow(true, DisplayName = "CP-80: Pago de suscriptor con seguro guarda una póliza gratuita por entrada")]
         [DataRow(false, DisplayName = "CP-80: Pago sin seguro no crea pólizas")]

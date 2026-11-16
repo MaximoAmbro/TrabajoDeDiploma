@@ -284,6 +284,12 @@ namespace Pruebas
             Ejecutar("UPDATE Sectores SET Precio = @Precio WHERE ID = @ID", "@Precio", nuevoPrecio, "@ID", idSector);
         }
 
+        public static void VencerSuscripcion(int idUsuario)
+        {
+            Ejecutar("UPDATE Suscripciones SET FechaInicio=@Inicio, FechaFin=@Fin WHERE ID_Usuario=@Usuario AND Activa=1",
+                "@Inicio", DateTime.Today.AddMonths(-2), "@Fin", DateTime.Today, "@Usuario", idUsuario);
+        }
+
         public static Suscripcion SuscripcionActiva(Entidades.Cliente c, string plan)
         {
             DateTime hoy = DateTime.Today;

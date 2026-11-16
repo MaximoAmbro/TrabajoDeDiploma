@@ -116,23 +116,45 @@ namespace Pruebas
             Assert.IsNull(RepositorioEntradas.Instance.PorCodigo(entrada.CodigoQR).FechaIngreso);
         }
 
-        // CP-104 — RF-07, RN-18: dos puertas compiten contra la misma fila en SQL Server.
-        [TestMethod("CP-104: Dos ingresos simultáneos admiten exactamente uno")]
+        // CP-104 — RF-07, RN-18: cien tickets frescos, diez puertas y barrera de arranque por ronda.
+        [TestMethod("CP-104: Diez ingresos simultáneos admiten exactamente uno durante cien rondas")]
         public void Concurrentes()
         {
-            using (var inicio = new Barrier(2))
+            const int rondas = 100, puertas = 10;
+            var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            var eventoLote = Fake.EventoPublicado(1000m, rondas);
+            Fake.CambiarFechaDeEvento(eventoLote.Id, DateTime.Now.AddMinutes(10));
+            string carpeta = System.IO.Path.Combine(BaseDePrueba.RaizDelRepositorio(), "TestResults", "Seguridad");
+            System.IO.Directory.CreateDirectory(carpeta);
+            string archivo = System.IO.Path.Combine(carpeta, "atomicidad-100x10.csv");
+            System.IO.File.WriteAllText(archivo, "Ronda;Validos;YaUsados;IngresosPersistidos\r\n");
+            for (int ronda = 0; ronda < rondas; ronda++)
             {
-                Func<ResultadoIngreso> escanear = () => {
-                    Assert.IsTrue(inicio.SignalAndWait(TimeSpan.FromSeconds(10)));
-                    return GestorIngresos.Instance.Registrar(entrada.CodigoQR, evento.Id);
-                };
-                Task<ResultadoIngreso> uno = Task.Run(escanear), dos = Task.Run(escanear);
-                Assert.IsTrue(Task.WaitAll(new Task[] { uno, dos }, TimeSpan.FromSeconds(20)));
-                var resultados = new[] { uno.Result, dos.Result };
-                Assert.AreEqual(1, resultados.Count(r => r.Valido));
-                Assert.AreEqual(1, resultados.Count(r => r.Motivo == MotivoIngreso.YaUsado));
-                Assert.AreEqual(1, GestorIngresos.Instance.Contar(evento.Id));
+                var compraLote = Fake.CompraConfirmada(cliente, eventoLote, 1, false);
+                var ticket = GestorCompras.Instance.EntradasDe(compraLote).Single();
+                Fake.ComoAdministrador();
+                GestorIngresos.Instance.Contar(eventoLote.Id); // inicialización antes de soltar las puertas.
+                using (var inicio = new Barrier(puertas))
+                {
+                    var tareas = Enumerable.Range(0, puertas).Select(i => Task.Factory.StartNew(() =>
+                    {
+                        Assert.IsTrue(inicio.SignalAndWait(TimeSpan.FromSeconds(10)), "La barrera no reunió diez puertas.");
+                        return GestorIngresos.Instance.Registrar(ticket.CodigoQR, eventoLote.Id);
+                    }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default)).ToArray();
+                    Assert.IsTrue(Task.WaitAll(tareas, TimeSpan.FromSeconds(20)), "Las puertas no terminaron en la ronda " + ronda);
+                    var resultados = tareas.Select(t => t.Result).ToArray();
+                    int validos = resultados.Count(r => r.Valido), usados = resultados.Count(r => r.Motivo == MotivoIngreso.YaUsado);
+                    int persistidos = GestorIngresos.Instance.Contar(eventoLote.Id);
+                    System.IO.File.AppendAllText(archivo, (ronda + 1) + ";" + validos + ";" + usados + ";" + persistidos + "\r\n");
+                    Assert.AreEqual(1, validos, "Ronda " + ronda + ": más de una puerta admitió el ticket.");
+                    Assert.AreEqual(puertas - 1, usados, "Ronda " + ronda + ": los otros nueve rechazos deben ser YaUsado.");
+                    Assert.AreEqual(ronda + 1, persistidos, "El conteo persistido no corresponde a un ingreso por ticket.");
+                    DateTime fecha = RepositorioEntradas.Instance.PorCodigo(ticket.CodigoQR).FechaIngreso.Value;
+                    Assert.IsTrue(resultados.Where(r => !r.Valido).All(r => r.FechaIngreso == fecha),
+                        "El rechazo debe informar el mismo ingreso persistido.");
+                }
             }
         }
+
     }
 }

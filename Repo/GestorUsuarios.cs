@@ -141,7 +141,9 @@ namespace Negocio
         // RN-40 propuesta: mismo control de credenciales e intentos que el inicio de sesión.
         public void CambiarContrasena(string mail, string actual, string nueva)
         {
-            Usuario usuario = AutenticarCuenta(mail, actual, false, true);
+            Usuario usuario;
+            try { usuario = AutenticarCuenta(mail, actual, false, true); }
+            catch (ReglaNegocioException ex) when (ex.Regla == "RN-04") { throw CredencialIncorrecta(); }
             if (usuario == null) throw CredencialIncorrecta();
             ValidarContrasena(nueva);
             if (!RepositorioUsuarios.Instance.ActualizarContrasena(usuario.Mail, Seguridad.Hash(nueva)))

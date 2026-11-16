@@ -80,6 +80,13 @@ namespace Datos
             return Consultar(Columnas + "WHERE LocalID = @Valor ORDER BY Fecha", idLocal);
         }
 
+        public List<Evento> ConIngresoAbierto(int idPropietario, DateTime desde, DateTime hasta)
+        {
+            return Consultar(Columnas + "WHERE Estado='Publicado' AND Fecha>=@Valor AND Fecha<=@Hasta " +
+                "AND LocalID IN(SELECT ID FROM Locales WHERE PropietarioID=@Propietario) ORDER BY Fecha,ID", desde,
+                comando => { AgregarParametro(comando, "@Hasta", hasta); AgregarParametro(comando, "@Propietario", idPropietario); });
+        }
+
         public List<Evento> DelDia(DateTime dia)
         {
             return Consultar(Columnas + "WHERE Fecha >= @Valor AND Fecha < @Hasta AND Estado = 'Publicado' ORDER BY Fecha",

@@ -132,7 +132,7 @@ namespace Pruebas
             Datos.RepositorioUsuarios.Instance.ActualizarIntentos(cliente.Id, 5, DateTime.Now.AddMinutes(15));
             var error = Assert.ThrowsException<ReglaNegocioException>(() =>
                 GestorUsuarios.Instance.CambiarContrasena(cliente.Mail, "Cliente123", "NuevaClave123"));
-            StringAssert.Contains(error.Message, "bloqueada");
+            Assert.AreEqual("Mail o contraseña actual incorrectos.", error.Message);
             Fake.VencerBloqueo(cliente.Mail);
             Assert.IsNotNull(GestorUsuarios.Instance.Autenticar(cliente.Mail, "Cliente123"));
         }
