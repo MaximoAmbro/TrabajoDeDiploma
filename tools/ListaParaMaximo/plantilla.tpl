@@ -53,13 +53,15 @@
 
 > ## ⏸ NO PEGAR TODAVÍA: la lista completa
 >
-> **Todo lo que no lleva la marca ⏸ se pega hoy, sin preguntar.** Lo único que queda marcado son
-> datos que tiene que mandar JC: si se pega antes, el documento dice algo falso. Cada
+> **Todo lo que no lleva la marca ⏸ se pega hoy, sin preguntar.** Lo que queda marcado son datos
+> que tiene que mandar JC y dos figuras que Codex está recortando: si se pega antes, el documento
+> dice algo falso o queda con una figura que hay que volver a cambiar. Cada
 > uno tiene la marca también en su lugar de la lista, para que te frene aunque llegues sin leer
 > esto.
 >
 > | Dónde | Qué no se pega | De qué depende |
 > |---|---|---|
+> | pp. 52 y 53, instructivo | Las figuras 1 y 2 (las 3 y 4 sí se pegan). **Si ya las pegaste, dejalas como están:** cuando llegue el recorte, esta fila pasa a «Cambió después del 16/11» con los archivos nuevos | El recorte de Codex: a 16 cm la letra queda en 7,2 y 6,8 pt |
 > | p. 1 y pie de todas las páginas | Comisión, turno, legajos, año | Datos de JC |
 > | p. 6, historial | La fecha de las filas nuevas | El día en que se pega (JC) |
 > | p. 9 | El período «entre junio y diciembre de 2025» | El año que decida JC |
@@ -700,16 +702,19 @@ dos accesos como enlaces («Cambiar contraseña» y «Crear Cuenta»).
 
 ## Páginas 52 y 53 — Figuras 1 a 4 del instructivo
 
-Reemplazar cada «Espacio reservado para captura de pantalla» por la imagen de la tabla. **Se
-pegan hoy.** Están en `Pruebas/Figuras-Instructivo-2026-11-16/100/`, todas de un mismo pedido
+Reemplazar cada «Espacio reservado para captura de pantalla» por la imagen de la tabla. **Las
+figuras 3 y 4 se pegan hoy. ⏸ NO PEGAR TODAVÍA las figuras 1 y 2: esperando recorte.** Codex las
+está recortando porque a 16 cm su letra queda en 7,2 y 6,8 pt. Si ya las pegaste, dejalas: cuando
+lleguen las recortadas, esta entrada dice el archivo y el ancho nuevos, y la fila pasa a «Cambió
+después del 16/11». Están en `Pruebas/Figuras-Instructivo-2026-11-16/100/`, todas de un mismo pedido
 (Paula, nivel Plata, dos entradas de Campo y una noche de hotel: total $99.625, como el ejemplo
 de la p. 54). **No uses las de `docs/capturas/instructivo/`: son las de antes del rediseño.**
 Proporción bloqueada en todas. Los epígrafes no cambian.
 
 | Epígrafe | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
-| Figura 1 — Listado de eventos disponibles (pasos 1 y 2) | `figura1-listado-eventos.png` | **16,0 cm** | 7,2 pt |
-| Figura 2 — Pantalla de armado de paquete (pasos 3 a 5) | `figura2-armado-paquete.png` | **16,0 cm** | 6,8 pt |
+| Figura 1 — Listado de eventos disponibles (pasos 1 y 2) | ⏸ esperando recorte (hoy, `figura1-listado-eventos.png`) | **16,0 cm** | 7,2 pt |
+| Figura 2 — Pantalla de armado de paquete (pasos 3 a 5) | ⏸ esperando recorte (hoy, `figura2-armado-paquete.png`) | **16,0 cm** | 6,8 pt |
 | Figura 3 — Resumen del paquete con el descuento aplicado (paso 6) | `figura3-resumen-descuento.png` | **10,5 cm** (su tamaño real) | 10 pt |
 | Figura 4 — Confirmación de compra y comprobante emitido (pasos 7 y 8) | **dos imágenes, una debajo de la otra, con un solo epígrafe:** `figura4b-confirmacion.png` arriba y `ticket.png` abajo | **16,0 cm** y **12,0 cm** | 7,9 pt y unos 8 pt |
 
