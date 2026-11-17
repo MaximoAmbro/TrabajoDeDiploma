@@ -84,6 +84,7 @@ ALTER TABLE Usuario  ADD Nivel VARCHAR(8) NOT NULL DEFAULT 'Bronce';
 ALTER TABLE Usuario  ADD FechaUltimaEvaluacion DATE NULL;
 ALTER TABLE Usuario  ADD IntentosFallidos INT NOT NULL DEFAULT 0;
 ALTER TABLE Usuario  ADD BloqueadoHasta DATETIME NULL;
+ALTER TABLE Usuario  ADD CorreoVerificado BIT NOT NULL CONSTRAINT DF_Usuario_CorreoVerificado DEFAULT (1);
 
 ALTER TABLE Eventos  ADD Categoria VARCHAR(20) NULL;   -- Concierto|Deportivo|Teatro|Cultural
 ALTER TABLE Eventos  ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Publicado';
@@ -258,4 +259,33 @@ CREATE TABLE Parametros (
     Descripcion VARCHAR(160) NULL,
     Regla       VARCHAR(10)  NULL
 );
+GO
+
+-- ═══════════════ Verificación de correo y auditoría ═══════════════
+CREATE TABLE CodigosCorreo (
+    ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    UsuarioID INT NOT NULL,
+    Proposito VARCHAR(16) NOT NULL,
+    Sal VARBINARY(16) NOT NULL,
+    CodigoHash VARBINARY(32) NOT NULL,
+    CreadoEl DATETIME2(0) NOT NULL CONSTRAINT DF_CodigosCorreo_Creado DEFAULT SYSUTCDATETIME(),
+    VenceEl DATETIME2(0) NOT NULL,
+    Usado BIT NOT NULL CONSTRAINT DF_CodigosCorreo_Usado DEFAULT (0),
+    Intentos INT NOT NULL CONSTRAINT DF_CodigosCorreo_Intentos DEFAULT (0),
+    CONSTRAINT CK_CodigosCorreo_Proposito CHECK (Proposito IN ('Verificacion','Recuperacion')),
+    CONSTRAINT FK_CodigosCorreo_Usuario FOREIGN KEY (UsuarioID) REFERENCES Usuario(ID) ON DELETE CASCADE
+);
+CREATE INDEX IX_CodigosCorreo_Usuario_Proposito ON CodigosCorreo(UsuarioID, Proposito, VenceEl DESC);
+
+CREATE TABLE Auditoria (
+    ID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    UsuarioID INT NULL,
+    UsuarioMail VARCHAR(150) NULL,
+    Accion VARCHAR(80) NOT NULL,
+    Entidad VARCHAR(80) NULL,
+    EntidadID INT NULL,
+    Fecha DATETIME2(0) NOT NULL CONSTRAINT DF_Auditoria_Fecha DEFAULT SYSUTCDATETIME(),
+    Resultado VARCHAR(200) NOT NULL
+);
+CREATE INDEX IX_Auditoria_Fecha_Accion ON Auditoria(Fecha DESC, Accion);
 GO

@@ -56,7 +56,7 @@ namespace Visual
             // btnVolver
             // 
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(24, 444);
+            this.btnVolver.Location = new System.Drawing.Point(24, 484);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(136, 40);
@@ -68,7 +68,7 @@ namespace Visual
             // 
             this.checkbxShowPass.AutoSize = true;
             this.checkbxShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkbxShowPass.Location = new System.Drawing.Point(24, 388);
+            this.checkbxShowPass.Location = new System.Drawing.Point(24, 432);
             this.checkbxShowPass.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(260, 24);
@@ -79,7 +79,7 @@ namespace Visual
             // TxtConfirmpassword
             // 
             this.TxtConfirmpassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TxtConfirmpassword.Location = new System.Drawing.Point(24, 348);
+            this.TxtConfirmpassword.Location = new System.Drawing.Point(24, 392);
             this.TxtConfirmpassword.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.TxtConfirmpassword.Multiline = true;
             this.TxtConfirmpassword.Name = "TxtConfirmpassword";
@@ -89,7 +89,7 @@ namespace Visual
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(24, 324);
+            this.label4.Location = new System.Drawing.Point(24, 368);
             this.label4.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(392, 20);
@@ -130,7 +130,7 @@ namespace Visual
             // btnconfirmar
             // 
             this.btnconfirmar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnconfirmar.Location = new System.Drawing.Point(232, 444);
+            this.btnconfirmar.Location = new System.Drawing.Point(232, 484);
             this.btnconfirmar.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.btnconfirmar.Name = "btnconfirmar";
             this.btnconfirmar.Size = new System.Drawing.Size(184, 40);
@@ -164,7 +164,7 @@ namespace Visual
             this.CancelButton = this.btnVolver;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(440, 508);
+            this.ClientSize = new System.Drawing.Size(440, 540);
             this.Controls.Add(this.txtMail);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.btnconfirmar);

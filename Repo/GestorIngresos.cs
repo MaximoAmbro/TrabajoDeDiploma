@@ -22,6 +22,7 @@ namespace Negocio
             try { GestorSesion.Instance.RequerirAdministrador(); }
             catch (ReglaNegocioException ex) when (ex.Regla == "RN-34")
             {
+                GestorAuditoria.Instance.Registrar("Control de ingreso", "Evento", idEvento, "Rechazado");
                 var rechazoAutorizacion = Resultado(MotivoIngreso.NoAutorizado, ex.Message);
                 rechazoAutorizacion.Regla = ex.Regla;
                 return rechazoAutorizacion;
@@ -38,7 +39,10 @@ namespace Negocio
                 ahora < evento.Fecha.AddHours(-antes) || ahora > evento.Fecha.AddHours(despues))
                 return Resultado(MotivoIngreso.FueraDeHorario, "Fuera del horario de ingreso o evento no disponible.");
             if (RepositorioEntradas.Instance.RegistrarIngreso(codigo, idEvento, ahora))
+            {
+                GestorAuditoria.Instance.Registrar("Control de ingreso", "Evento", idEvento, "Correcto");
                 return Resultado(MotivoIngreso.Valido, "Ingreso válido. Bienvenido.", ahora);
+            }
             // Otra puerta pudo registrar o reembolsar la entrada entre la lectura y el UPDATE.
             return RechazoDe(RepositorioEntradas.Instance.PorCodigo(codigo), idEvento)
                 ?? Resultado(MotivoIngreso.NoConfirmado, "La entrada cambió. Volvé a escanear.");

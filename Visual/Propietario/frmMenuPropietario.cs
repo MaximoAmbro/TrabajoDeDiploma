@@ -21,6 +21,7 @@ namespace Visual
         {
             InitializeComponent();
             panelAdministrador.CrearAdministradorSolicitado += CrearAdministrador;
+            panelAdministrador.AuditoriaSolicitada += (s, e) => { using (var form = new frmAuditoria()) form.ShowDialog(this); };
             SizeChanged+=(s,e)=>DistribuirPanel();
         }
 

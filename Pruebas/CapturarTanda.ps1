@@ -15,7 +15,8 @@ class CapturarTanda {
  }
 }
 "@
-$ruta=Join-Path $salidaReal 'CapturarTanda.cs';[IO.File]::WriteAllText($ruta,$codigo)
+$compilacion=Join-Path $raiz 'TestResults/CapturarTandaHost';[void][IO.Directory]::CreateDirectory($compilacion)
+$ruta=Join-Path $compilacion 'CapturarTanda.cs';[IO.File]::WriteAllText($ruta,$codigo)
 $exe=Join-Path $bin 'CapturarTanda.exe'
 $csc=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 & $csc /nologo /r:System.Windows.Forms.dll "/win32manifest:$(Join-Path $raiz 'Visual/app.manifest')" "/out:$exe" $ruta

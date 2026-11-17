@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Negocio;
 
 namespace Visual
 {
@@ -15,6 +16,8 @@ namespace Visual
         static void Main()
         {
             ManejadorErrores.Instalar();
+            ControlSesionInactiva.Instalar();
+            SeleccionEnviadorCodigos.Actual = new EnviadorSimulado();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new frmInicio());

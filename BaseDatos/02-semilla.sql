@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════════════
    EventAura — 02-semilla.sql
    Datos semilla mínimos (docs/03-esquema-datos.md). Ejecutar DESPUÉS de
    01-esquema.sql, sobre una base sin datos.
@@ -34,7 +34,12 @@ INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
 ('SEGURO_PRECIO',           '5000',  'Precio del seguro de entrada, en pesos',                    'RN-28'),
 ('SUSCRIPCION_MENSUAL_PRECIO',   '9000',  'Precio del plan mensual de suscripción, en pesos',     'RF-13'),
 ('SUSCRIPCION_ANUAL_PRECIO',     '90000', 'Precio del plan anual de suscripción, en pesos',       'RF-13'),
-('SUSCRIPCION_SEGURO_DESCUENTO', '1.000', 'Bonificación del seguro para suscriptores (1 = sin cargo)', 'RN-37');
+('SUSCRIPCION_SEGURO_DESCUENTO', '1.000', 'Bonificación del seguro para suscriptores (1 = sin cargo)', 'RN-37'),
+('CORREO_CODIGO_MIN', '10', 'Vigencia del código enviado por correo, en minutos', 'RN-43'),
+('CORREO_CODIGO_INTENTOS_MAX', '5', 'Intentos máximos para usar un código de correo', 'RN-43'),
+('SESION_INACTIVIDAD_MIN', '15', 'Minutos de inactividad antes de cerrar sesión', 'RN-46'),
+('SESION_AVISO_SEG', '60', 'Segundos de aviso antes del cierre por inactividad', 'RN-46'),
+('PWD_FORTALEZA_MIN', '4', 'Puntaje mínimo de fortaleza de contraseña', 'RN-47');
 
 -- ═══════════════ Usuarios: un Administrador y tres Clientes ═══════════════
 -- El perfil Administrador se guarda como 'Propietario', que es el valor que usa el login actual.

@@ -84,7 +84,7 @@ namespace Visual
             this.lblolividarcontra.Name = "lblolividarcontra";
             this.lblolividarcontra.Size = new System.Drawing.Size(352, 24);
             this.lblolividarcontra.TabIndex = 18;
-            this.lblolividarcontra.Text = "Cambiar contraseña";
+            this.lblolividarcontra.Text = "Recuperar contraseña";
             this.lblolividarcontra.Click += new System.EventHandler(this.lblolividarcontra_Click);
             // 
             // lblcrearcuenta

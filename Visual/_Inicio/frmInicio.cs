@@ -63,7 +63,7 @@ namespace Visual
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void lblolividarcontra_Click(object sender, EventArgs e)
         {
-            frmCambiarContraseña frm = new frmCambiarContraseña();
+            frmCambiarContraseña frm = new frmCambiarContraseña(true);
             frm.Show();
             this.Hide();
         } // Llama frmCambiarContraseña

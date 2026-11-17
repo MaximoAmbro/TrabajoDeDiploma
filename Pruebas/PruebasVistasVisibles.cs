@@ -22,6 +22,7 @@ namespace Pruebas
         [DataRow(typeof(FichaEvento),DisplayName="CP-163: Botones de ficha completos y primario renderizado")]
         [DataRow(typeof(InicioCliente),DisplayName="CP-163: Botones de inicio completos y primario renderizado")]
         [DataRow(typeof(EstadoVacio),DisplayName="CP-163: Acción de estado vacío con texto completo")]
+        [DataRow(typeof(Visual.frmAuditoria),DisplayName="CP-163: Pantalla de auditoria con accion visible")]
         public void CP163_Botones(Type tipo)
         {
             PruebasSeguridad.EnStaSinCambiarDatos(()=>{
@@ -73,6 +74,7 @@ namespace Pruebas
         [DataRow(typeof(PanelAdministrador),DisplayName="CP-159: PanelAdministrador no serializa estilo")]
         [DataRow(typeof(DatoPanel),DisplayName="CP-159: DatoPanel no serializa estilo")]
         [DataRow(typeof(EstadoVacio),DisplayName="CP-159: EstadoVacio no serializa estilo")]
+        [DataRow(typeof(IndicadorFortaleza),DisplayName="CP-159: IndicadorFortaleza no serializa estilo")]
         public void CP159_Host(Type tipo)
         {
             PruebasSeguridad.EnStaSinCambiarDatos(()=>{
@@ -81,6 +83,27 @@ namespace Pruebas
                     ((Form)host.RootComponent).Controls.Add(control);Assert.IsNotNull(superficie.View);
                     foreach(string propiedad in new[]{"Font","ForeColor","BackColor"})Assert.IsFalse(TypeDescriptor.GetProperties(control)[propiedad].ShouldSerializeValue(control));
                     Assert.AreEqual(Size.Empty,control.MinimumSize);
+                }
+            });
+        }
+        [TestMethod("CP-176: La recuperación conserva espacios entre campos al escalar")]
+        public void CP176_RecuperacionSinSolapamientos()
+        {
+            EnSta(() =>
+            {
+                using (var form = new Visual.frmCambiarContraseña(true))
+                {
+                    Mostrar(form);
+                    var medidor = ControlDe<IndicadorFortaleza>(form, "fortalezaContrasena");
+                    var nueva = ControlDe<TextBox>(form, "TxtPassword");
+                    var confirmacion = ControlDe<TextBox>(form, "TxtConfirmpassword");
+                    var check = ControlDe<CheckBox>(form, "checkbxShowPass");
+                    var confirmar = ControlDe<Button>(form, "btnconfirmar");
+                    Assert.IsFalse(medidor.Bounds.IntersectsWith(nueva.Bounds), "El medidor se superpone con la contraseña nueva: " + medidor.Bounds + " / " + nueva.Bounds);
+                    Assert.IsFalse(medidor.Bounds.IntersectsWith(confirmacion.Bounds), "El medidor se superpone con la confirmación: " + medidor.Bounds + " / " + confirmacion.Bounds);
+                    Assert.IsFalse(confirmacion.Bounds.IntersectsWith(check.Bounds), "La confirmación se superpone con el check.");
+                    Assert.IsFalse(check.Bounds.IntersectsWith(confirmar.Bounds), "El check se superpone con el botón.");
+                    Assert.IsTrue(confirmar.Bottom <= form.ClientSize.Height);
                 }
             });
         }

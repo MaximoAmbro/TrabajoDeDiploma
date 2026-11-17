@@ -15,7 +15,7 @@ namespace Pruebas {
    foreach(string nombre in typeof(Visual.frmInicio).Assembly.GetTypes().Where(t=>typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t.Name!="FormularioEventAura").Select(t=>t.Name).OrderBy(n=>n))
     InterfazGrupoA.EnSta(()=> {
      var cliente=Fake.Cliente(NivelFidelidad.Bronce);var evento=Fake.EventoPublicado(1000m,5);
-     var administrativos=new[]{"frmAgregarEvento","frmAgregarSector","frmRegistrarLocal","frmAdministrarEvento","frmEventosLocal","frmMisLocales","frmMenuPropietario","frmListasEspera","frmReportes","frmControlIngreso"};
+     var administrativos=new[]{"frmAgregarEvento","frmAgregarSector","frmRegistrarLocal","frmAdministrarEvento","frmEventosLocal","frmMisLocales","frmMenuPropietario","frmListasEspera","frmReportes","frmControlIngreso","frmAuditoria"};
      bool administrador=administrativos.Contains(nombre);
      Compra compra=null;
      if(nombre=="frmConfirmacion" || nombre=="frmHistorialCliente") compra=Fake.CompraConfirmada(cliente,evento,2,true);
@@ -43,6 +43,13 @@ namespace Pruebas {
       form.BringToFront();form.Activate();SetWindowPos(form.Handle,new IntPtr(-1),0,0,0,0,0x43);System.Threading.Thread.Sleep(250);form.Refresh();Application.DoEvents();
       using(var imagen=new Bitmap(form.Width,form.Height)) {DibujarCompleta(form,imagen);imagen.Save(Path.Combine(salida,nombre+".png"));}
       RegistrarTipografia(form,salida,nombre+".png");
+      if(nombre=="frmCambiarContraseña") {
+       using(var recuperacion=new Visual.frmCambiarContraseña(true)) {
+        InterfazGrupoA.Mostrar(recuperacion);recuperacion.BringToFront();recuperacion.Activate();SetWindowPos(recuperacion.Handle,new IntPtr(-1),0,0,0,0,0x43);System.Threading.Thread.Sleep(150);recuperacion.Refresh();Application.DoEvents();
+        using(var extra=new Bitmap(recuperacion.Width,recuperacion.Height)){DibujarCompleta(recuperacion,extra);extra.Save(Path.Combine(salida,"frmRecuperarContraseña.png"));}
+        RegistrarTipografia(recuperacion,salida,"frmRecuperarContraseña.png");
+       }
+      }
       if(nombre=="frmEventosCliente") {
        var tarjeta=InterfazGrupoA.ControlDe<FlowLayoutPanel>(form,"tarjetasEventos").Controls.OfType<Visual.Componentes.TarjetaEvento>().Single(t=>t.AccessibleName==evento.Nombre);
        InterfazGrupoA.ControlDe<Button>(tarjeta,"verEntradas").PerformClick();Application.DoEvents();form.Refresh();

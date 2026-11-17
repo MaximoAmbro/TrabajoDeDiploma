@@ -22,7 +22,12 @@ FROM (VALUES
     (4, CASE WHEN NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id=OBJECT_ID('dbo.Entradas') AND name='CK_Entradas_Estado' AND is_disabled=0 AND is_not_trusted=0) THEN N'la restricción Entradas.CK_Entradas_Estado' END, '05-check-estado-entradas.sql'),
     (5, CASE WHEN COL_LENGTH('dbo.Sectores','CupoLiberadoEl') IS NULL THEN N'la columna Sectores.CupoLiberadoEl' END, '06-prioridad-temporal.sql'),
     (6, CASE WHEN NOT EXISTS (SELECT 1 FROM dbo.Parametros WHERE Clave='PRIORIDAD_ESPERA_MINUTOS') THEN N'el parámetro PRIORIDAD_ESPERA_MINUTOS' END, '06-prioridad-temporal.sql'),
-    (7, CASE WHEN NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.Seguros') AND name='UX_Seguros_ID_Entrada' AND is_unique=1 AND is_disabled=0) THEN N'el índice único Seguros.UX_Seguros_ID_Entrada' END, '07-indice-unico-seguros.sql')
+    (7, CASE WHEN NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.Seguros') AND name='UX_Seguros_ID_Entrada' AND is_unique=1 AND is_disabled=0) THEN N'el índice único Seguros.UX_Seguros_ID_Entrada' END, '07-indice-unico-seguros.sql'),
+    (8, CASE WHEN COL_LENGTH('dbo.Usuario','CorreoVerificado') IS NULL THEN N'la columna Usuario.CorreoVerificado'
+             WHEN OBJECT_ID('dbo.CodigosCorreo','U') IS NULL THEN N'la tabla CodigosCorreo'
+             WHEN OBJECT_ID('dbo.Auditoria','U') IS NULL THEN N'la tabla Auditoria'
+             WHEN NOT EXISTS (SELECT 1 FROM dbo.Parametros WHERE Clave='PWD_FORTALEZA_MIN') THEN N'el parámetro PWD_FORTALEZA_MIN'
+             ELSE NULL END, '08-seguridad-cuenta-auditoria.sql')
 ) AS requisitos(Orden, Descripcion, Script)
 WHERE Descripcion IS NOT NULL
 ORDER BY Orden;";

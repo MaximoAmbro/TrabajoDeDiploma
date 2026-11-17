@@ -1,0 +1,1 @@
+﻿Las capturas antes son capturas completas previas a fase 4, preservadas de Fase2/despues; las posteriores son DrawToBitmap.

@@ -122,7 +122,7 @@ public static class MedicionBotonesT47
         File.WriteAllLines(Path.Combine(salida,"medidas.csv"),medidas,System.Text.Encoding.UTF8);
         File.WriteAllLines(Path.Combine(salida,"colores.csv"),colores,System.Text.Encoding.UTF8);
         Console.WriteLine("Medidos: "+medidos+"; no caben: "+cortes+"; pantallas: "+pantallas+"; primarios renderizados: "+primarios+"; fallos color: "+fallos.Count);
-        if (medidos!=14 || pantallas!=20) throw new Exception("Inventario incompleto.");
+        if (medidos!=14 || pantallas!=21) throw new Exception("Inventario incompleto.");
         if (fallos.Count>0) throw new Exception("Color renderizado incorrecto: "+string.Join(", ",fallos));
     }
     private static int ContarTexto(Button boton, string ruta)

@@ -86,9 +86,9 @@ namespace Datos
         public int Insertar(Usuario usuario, NivelFidelidad nivel)
         {
             const string insertarUsuario =
-                "INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel) " +
+                "INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, CorreoVerificado) " +
                 "OUTPUT INSERTED.ID " +
-                "VALUES (@Nombre, @Apellido, @Mail, @Contraseña, @TipoUsuario, @Nivel)";
+                "VALUES (@Nombre, @Apellido, @Mail, @Contraseña, @TipoUsuario, @Nivel, @CorreoVerificado)";
             const string insertarCliente = "INSERT INTO Cliente (ID) VALUES (@ID)";
             const string insertarPropietario = "INSERT INTO Propietario (ID) VALUES (@ID)";
 
@@ -106,6 +106,7 @@ namespace Datos
                         AgregarParametro(comando, "@Contraseña", usuario.Contraseña);
                         AgregarParametro(comando, "@TipoUsuario", usuario.TipoUsuario);
                         AgregarParametro(comando, "@Nivel", nivel.ToString());
+                        AgregarParametro(comando, "@CorreoVerificado", usuario.TipoUsuario != "Cliente");
                         id = Convert.ToInt32(comando.ExecuteScalar());
                     }
 
@@ -136,6 +137,18 @@ namespace Datos
                     transaccion.Rollback();
                     throw;
                 }
+            }
+        }
+
+        public bool CorreoVerificado(int idUsuario)
+        {
+            const string consulta = "SELECT CorreoVerificado FROM dbo.Usuario WHERE ID=@ID";
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@ID", idUsuario);
+                object resultado = comando.ExecuteScalar();
+                return resultado != null && resultado != DBNull.Value && Convert.ToBoolean(resultado);
             }
         }
 

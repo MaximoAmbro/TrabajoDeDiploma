@@ -55,6 +55,7 @@ namespace Pruebas
             EjecutarScript(cadena, Path.Combine(carpeta, "02-semilla.sql"));
             EjecutarScript(cadena, Path.Combine(carpeta, "06-prioridad-temporal.sql"));
             EjecutarScript(cadena, Path.Combine(carpeta, "07-indice-unico-seguros.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "08-seguridad-cuenta-auditoria.sql"));
 
             // GestorParametros cachea: que lea la tabla recién poblada.
             GestorParametros.Instance.Recargar();

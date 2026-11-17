@@ -56,7 +56,9 @@ namespace Negocio
             ValidarEvento(e);
             e.Sectores = new List<Sector>();
             e.Estado = EstadoBorrador;
-            return RepositorioEventos.Instance.Insertar(e);
+            int id = RepositorioEventos.Instance.Insertar(e);
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: crear", "Evento", id);
+            return id;
         }
 
         // RN-06: el evento se publica junto con sus sectores, y al menos uno debe tener capacidad.
@@ -81,7 +83,9 @@ namespace Negocio
             VerificarCapacidadLocal(e.IdLocal, 0, e.Sectores.Sum(s => s.Capacidad));
 
             e.Estado = EstadoPublicado;
-            return RepositorioEventos.Instance.Insertar(e);
+            int id = RepositorioEventos.Instance.Insertar(e);
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: publicar", "Evento", id);
+            return id;
         }
 
         // RN-11: un evento con entradas vendidas no se borra. Lanza la excepción sin tocar nada;
@@ -98,6 +102,7 @@ namespace Negocio
             {
                 throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
             }
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: eliminar", "Evento", idEvento);
         }
 
         // RN-11: alternativa a Eliminar. Vale tenga o no entradas vendidas.
@@ -108,6 +113,7 @@ namespace Negocio
             {
                 throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
             }
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: suspender", "Evento", idEvento);
         }
 
         // RN-10: todos los sectores vendieron su capacidad. Ahí se habilita la lista de espera.
@@ -128,6 +134,7 @@ namespace Negocio
             evento.FinPreventa = finPreventa;
             ValidarPreventa(evento);
             RepositorioEventos.Instance.ActualizarPreventa(idEvento, finPreventa);
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: preventa", "Evento", idEvento);
         }
 
         // RN-07
@@ -194,6 +201,7 @@ namespace Negocio
             {
                 s.Id = RepositorioSectores.Instance.Insertar(s);
             }
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: sector", "Evento", idEvento);
         }
 
         public void EliminarSector(int idSector)

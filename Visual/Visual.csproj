@@ -297,6 +297,7 @@
     <Compile Include="Componentes\MarcaAura.cs" />
     <Compile Include="AvisosEnPantalla.cs" />
     <Compile Include="Componentes\SuperficieTematica.cs" />
+    <Compile Include="Componentes\IndicadorFortaleza.cs" />
     <Compile Include="Componentes\EstadoVacio.cs"><SubType>UserControl</SubType></Compile>
     <Compile Include="Componentes\EstadoVacio.Designer.cs"><DependentUpon>EstadoVacio.cs</DependentUpon></Compile>
     <Compile Include="Componentes\PortadaEvento.cs" />
@@ -378,6 +379,12 @@
       <DependentUpon>frmInicio.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="EnviadorSmtp.cs" />
+    <Compile Include="ControlSesionInactiva.cs" />
+    <Compile Include="Propietario\frmAuditoria.cs" />
+    <Compile Include="Propietario\frmAuditoria.Designer.cs">
+      <DependentUpon>frmAuditoria.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Cliente\FrmCompraCliente.resx">
       <DependentUpon>FrmCompraCliente.cs</DependentUpon>

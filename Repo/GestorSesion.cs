@@ -23,6 +23,7 @@ namespace Negocio
 
         public SesionAutenticada UsuarioActual { get; private set; }
         public System.DateTime? IniciadaEl { get; private set; }
+        public System.DateTime? UltimaActividadEl { get; private set; }
 
         public bool HaySesion
         {
@@ -34,6 +35,27 @@ namespace Negocio
             if (usuario == null) throw new System.ArgumentNullException(nameof(usuario));
             UsuarioActual = new SesionAutenticada(usuario);
             IniciadaEl = System.DateTime.Now;
+            UltimaActividadEl = IniciadaEl;
+        }
+
+        public void RegistrarActividad(System.DateTime? momento = null)
+        {
+            if (UsuarioActual != null) UltimaActividadEl = momento ?? System.DateTime.Now;
+        }
+
+        public bool DebeAvisarInactividad(System.DateTime ahora)
+        {
+            if (UsuarioActual == null || !UltimaActividadEl.HasValue) return false;
+            int minutos = GestorParametros.Instance.ObtenerEntero("SESION_INACTIVIDAD_MIN");
+            int aviso = GestorParametros.Instance.ObtenerEntero("SESION_AVISO_SEG");
+            var vence = UltimaActividadEl.Value.AddMinutes(minutos);
+            return ahora >= vence.AddSeconds(-aviso) && ahora < vence;
+        }
+
+        public bool DebeCerrarPorInactividad(System.DateTime ahora)
+        {
+            if (UsuarioActual == null || !UltimaActividadEl.HasValue) return false;
+            return ahora >= UltimaActividadEl.Value.AddMinutes(GestorParametros.Instance.ObtenerEntero("SESION_INACTIVIDAD_MIN"));
         }
 
         // RN-34 generalizada: toda gestión administrativa exige este perfil.
@@ -53,6 +75,7 @@ namespace Negocio
         {
             UsuarioActual = null;
             IniciadaEl = null;
+            UltimaActividadEl = null;
         }
     }
 }

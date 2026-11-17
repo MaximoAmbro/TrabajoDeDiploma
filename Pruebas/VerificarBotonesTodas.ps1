@@ -22,7 +22,9 @@ class BarridoTodas {
    total++;try {t.GetMethod("CP116_TextoCompleto").Invoke(Activator.CreateInstance(t),new object[]{f.Name});Console.WriteLine("OK "+f.Name);}
    catch(Exception e){fallos++;Console.WriteLine("FALLA "+f.Name+": "+(e.InnerException??e).Message);}
   }
-  Console.WriteLine("Pantallas="+total+"; fallos="+fallos+"; DPI="+dpi);return total==20 && fallos==0?0:1;
+  try { var v=a.GetType("Pruebas.PruebasVistasVisibles");v.GetMethod("CP176_RecuperacionSinSolapamientos").Invoke(Activator.CreateInstance(v),null);Console.WriteLine("OK frmCambiarContraseña modo recuperación"); }
+  catch(Exception e){fallos++;Console.WriteLine("FALLA frmCambiarContraseña modo recuperación: "+(e.InnerException??e).Message);}
+  Console.WriteLine("Pantallas="+total+"; fallos="+fallos+"; DPI="+dpi);return total==21 && fallos==0?0:1;
  }
 }
 "@

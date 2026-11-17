@@ -38,6 +38,7 @@ namespace Negocio
         public Paquete Nuevo(int idEvento, int idUsuario)
         {
             GestorSesion.Instance.RequerirUsuario(idUsuario);
+            GestorUsuarios.Instance.ExigirCorreoVerificado(idUsuario);
             Evento evento = VerificarEventoVigente(idEvento);
             VerificarPreventa(evento, idUsuario);
             return new Paquete { IdEvento = idEvento };

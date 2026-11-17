@@ -1,6 +1,6 @@
 # EventAura: guion ejecutable de demostración
 
-Actualizado el 17/11/2026 para la fase 3, el diagnóstico de esquema y el alta de administradores. La batería completa se ejecutó en la estación de desarrollo: **302/302**. La notebook de Máximo debe quedar en `main` actualizado antes de empezar; no se modifican archivos `App.config` del repositorio.
+Actualizado el 17/11/2026 para fase 4 (seguridad de cuenta y auditoría). Batería completa: **314/314**. Ejecutá primero las ocho migraciones numeradas que correspondan a la base.
 
 **Corrección importante:** la configuración real bloquea al **quinto** intento incorrecto, durante **15 minutos**. Tres intentos no bloquean. No anuncies tres delante del profesor.
 
@@ -9,7 +9,7 @@ Los importes de este guion requieren empezar con la semilla limpia y seguir el o
 ## 0. Compilar, preparar y abrir
 ### 0.0 Actualizar el código y revisar los scripts de base
 
-En la notebook de Máximo abrí PowerShell en la carpeta del repositorio. La rama de presentación debe ser `main`, que incluye los siete scripts numerados. Primero revisá si hay trabajo local:
+En la notebook de Máximo abrí PowerShell en la carpeta del repositorio. La rama de presentación debe ser `main`, que incluye los ocho scripts numerados. Primero revisá si hay trabajo local:
 
 ```powershell
 git status --short --branch
@@ -21,7 +21,7 @@ git log --oneline -1
 
 Si `git status` muestra cambios locales o `git switch` se niega, no los borres ni los guardes encima: detenete y pedí que se preserven. El commit de publicación de esta actualización es `91aa64e` (o uno posterior de `main`). **Ves:** el nombre de rama `main` y un commit actualizado. **Importa:** `ambro` está atrasada y no contiene todo el código de la demo.
 
-Antes de abrir el programa, revisá `BaseDatos/01-esquema.sql` a `BaseDatos/07-indice-unico-seguros.sql`. Abrí SQL Server Management Studio y conectate a la instancia de la notebook. En el selector de base de datos elegí la base destino, abrí una consulta con **Nueva consulta**, ejecutá `SELECT DB_NAME();` con **Ejecutar (F5)** y confirmá visualmente el nombre antes de seguir. Para una base nueva, creá y seleccioná una base vacía; abrí `BaseDatos/01-esquema.sql` con **Archivo > Abrir > Archivo**, ejecutalo con **F5**, y repetí con `02-semilla.sql`. Para una base ya existente, no ejecutes `01` ni `02`: abrí y ejecutá, en orden, `04-seguridad-ingreso.sql`, `05-check-estado-entradas.sql`, `06-prioridad-temporal.sql` y `07-indice-unico-seguros.sql`, siempre con la base destino seleccionada. Los scripts `04` a `07` son idempotentes. `01` y `02` se ejecutan solo para crear y poblar una base vacía. `03-datos-reporte.sql` es una carga voluminosa de medición; no la uses para la demostración normal.
+Antes de abrir el programa, revisá `BaseDatos/01-esquema.sql` a `BaseDatos/08-seguridad-cuenta-auditoria.sql`. Abrí SQL Server Management Studio y conectate a la instancia de la notebook. En el selector de base de datos elegí la base destino, abrí una consulta con **Nueva consulta**, ejecutá `SELECT DB_NAME();` con **Ejecutar (F5)** y confirmá visualmente el nombre antes de seguir. Para una base nueva, creá y seleccioná una base vacía; abrí `BaseDatos/01-esquema.sql` con **Archivo > Abrir > Archivo**, ejecutalo con **F5**, y repetí con `02-semilla.sql`. Para una base ya existente, no ejecutes `01` ni `02`: abrí y ejecutá, en orden, `04-seguridad-ingreso.sql`, `05-check-estado-entradas.sql`, `06-prioridad-temporal.sql` y `07-indice-unico-seguros.sql` y `08-seguridad-cuenta-auditoria.sql`, siempre con la base destino seleccionada. Los scripts `04` a `08` son idempotentes. `01` y `02` se ejecutan solo para crear y poblar una base vacía. `03-datos-reporte.sql` es una carga voluminosa de medición; no la uses para la demostración normal.
 
 El arranque ahora muestra dentro del login el primer requisito faltante y el script exacto, por ejemplo `Sectores.CupoLiberadoEl` y `BaseDatos/06-prioridad-temporal.sql`. No sigas hasta ejecutar ese script en la base de la copia y volver a abrir. **Importa:** se ve qué migración falta sin recibir una excepción técnica.
 
@@ -227,6 +227,13 @@ Start-Process -FilePath (Join-Path $demo 'Visual.exe') -WorkingDirectory $demo -
 
 7. Oscar repite la misma compra. **Ves:** ahora llega a pago, `Total a pagar: $ 20.956,25`, y puede confirmar. **Importa:** la exclusividad termina: fuera de la ventana vuelve a poder comprar cualquiera. No digas que esperaste si adelantaste el instante en SQL; no se cambia la duración de la regla.
 
+### 3.3 Verificación de correo, recuperación y auditoría
+
+Para mostrar las reglas RN-43 a RN-47, registrá una cuenta nueva con un correo de demostración y una contraseña fuerte. **Ves:** la bandeja simulada dentro del formulario, el código de seis cifras y su vencimiento; al confirmarlo aparece «Correo verificado. Ya podés iniciar sesión y comprar». Una cuenta sin verificar recibe RN-43 al intentar comprar.
+
+Desde el acceso, pulsá **Recuperar contraseña**, ingresá el correo y pedí el código. **Ves:** el código de recuperación en la bandeja simulada; al ingresar un código vencido se rechaza, y con uno vigente se actualiza la contraseña. **Importa:** no se revela si el correo existe, y SMTP no se usa ni requiere credenciales.
+
+En el panel del administrador, pulsá **Registro de auditoría**, elegí el período y la acción. **Ves:** usuario, operación, entidad, fecha y resultado en la grilla. El panel lee el registro de la base; el acceso exige administrador. La fortaleza mínima es cuatro de cinco indicadores. El cierre por inactividad se configura a 15 minutos con aviso previo de 60 segundos; no esperes ese plazo durante una exposición de quince minutos.
 ## 4. Que está probado de verdad
 
 ### 4.1 Batería completa
@@ -245,7 +252,7 @@ Pruebas totales: 302
      Correcto: 302
 ```
 
-**Importa:** son ejecuciones reales, incluidas las filas parametrizadas. Medición observada en esta estación: **1,0468 minutos de pruebas**, además de compilar. El conteo puede aumentar en commits posteriores; anotá la salida real y no presentes otro número: detené esta parte y guardá la salida.
+**Importa:** son ejecuciones reales, incluidas las filas parametrizadas. Medición observada en esta estación: **1,1235 minutos de pruebas**, además de compilar. El conteo puede aumentar en commits posteriores; anotá la salida real y no presentes otro número: detené esta parte y guardá la salida.
 
 ### 4.2 Una defensa rota delante del profesor
 
@@ -324,7 +331,7 @@ Los tiempos humanos siguientes son **estimaciones para alguien que ya ensayó**,
 | 1. Compra y PDF | 4–5 min | Recorrido real de compra verificado |
 | 2. Ingreso, devolución y acceso ajeno | 5–7 min con preparación lista | Rechazos y auxiliar ejecutados |
 | 3. Bloqueo y prioridad | 7–10 min con salto de tiempo declarado | Cinco intentos, rechazo uniforme y ambos lados de prioridad ejecutados |
-| 4. Batería y mutación/restauración | 3–4 min | Batería ~61 s; rojo 1,2013 s; verde 1,1518 s; compilaciones aparte |
+| 4. Batería y mutación/restauración | 3–4 min | Batería ~67 s; rojo 1,2013 s; verde 1,1518 s; compilaciones aparte |
 
 Todo junto requiere aproximadamente **19–26 minutos**, preparación aparte; esperar la prioridad de verdad agrega unos 15 minutos. No prometas mostrarlo todo en quince.
 
@@ -341,6 +348,6 @@ Todo junto requiere aproximadamente **19–26 minutos**, preparación aparte; es
 - No presentes la tarjeta o `HTTPS simulado` como integración bancaria real. El PDF es un ticket por entrada, no una factura fiscal.
 - No hay un botón para espiar otra cuenta: la petición forzada se muestra en consola y justamente debe ser rechazada.
 - No ejecutes batería o mutación mientras alguien usa la base de pruebas, ni dejes la línea de autorización comentada al terminar.
-- **302/302 no significa ausencia de todo defecto.** La medición global de mutación publicada sigue siendo **73/77 (94,8 %) sobre `65225e7`**. Esta demostración dirigida verifica una defensa; no reemplaza esa medición ni cambia su cifra.
+- **314/314 no significa ausencia de todo defecto.** La medición global de mutación publicada sigue siendo **73/77 (94,8 %) sobre `65225e7`**. Esta demostración dirigida verifica una defensa; no reemplaza esa medición ni cambia su cifra.
 
-No se modificaron código permanente, `docs/` ni los `App.config` fuente para preparar este guion. Las copias, auxiliares y registros del ensayo quedan en `TestResults/`, ignorado por Git.
+Esta actualización del guion refleja las funciones de seguridad publicadas; no modifica `docs/` ni los `App.config` fuente. Las copias, auxiliares y registros del ensayo quedan en `TestResults/`, ignorado por Git.

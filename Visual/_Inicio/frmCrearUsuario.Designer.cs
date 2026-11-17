@@ -48,7 +48,7 @@ namespace Visual
             // 
             this.checkbxShowPass.AutoSize = true;
             this.checkbxShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkbxShowPass.Location = new System.Drawing.Point(24, 364);
+            this.checkbxShowPass.Location = new System.Drawing.Point(24, 380);
             this.checkbxShowPass.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(240, 24);
@@ -145,7 +145,7 @@ namespace Visual
             // 
             this.lblyatengocuen.AutoSize = false;
             this.lblyatengocuen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblyatengocuen.Location = new System.Drawing.Point(24, 428);
+            this.lblyatengocuen.Location = new System.Drawing.Point(24, 444);
             this.lblyatengocuen.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblyatengocuen.Name = "lblyatengocuen";
             this.lblyatengocuen.Size = new System.Drawing.Size(184, 24);
@@ -156,7 +156,7 @@ namespace Visual
             // btnregistrarse
             // 
             this.btnregistrarse.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnregistrarse.Location = new System.Drawing.Point(232, 420);
+            this.btnregistrarse.Location = new System.Drawing.Point(232, 436);
             this.btnregistrarse.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.btnregistrarse.Name = "btnregistrarse";
             this.btnregistrarse.Size = new System.Drawing.Size(184, 40);
@@ -186,7 +186,7 @@ namespace Visual
             this.AcceptButton = this.btnregistrarse;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(440, 484);
+            this.ClientSize = new System.Drawing.Size(440, 508);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtApellido);
             this.Controls.Add(this.btnregistrarse);

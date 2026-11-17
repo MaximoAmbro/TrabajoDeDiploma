@@ -77,8 +77,8 @@ namespace Pruebas
                 }
             }
 
-            // SEG-2 incorpora frmControlIngreso; conserva la verificación de todos los Designer.
-            Assert.AreEqual(20, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
+            // SEG-2 incorpora control de ingreso y la fase de seguridad incorpora auditoría.
+            Assert.AreEqual(21, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
 

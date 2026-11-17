@@ -38,6 +38,13 @@ namespace Negocio
             return usuario != null && usuario.Id == sesion.Id;
         }
 
+        public void ExigirCorreoVerificado(int idUsuario)
+        {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
+            if (!RepositorioUsuarios.Instance.CorreoVerificado(idUsuario))
+                throw new ReglaNegocioException("RN-43", "Verificá tu correo antes de iniciar una compra.");
+        }
+
         // RN-04 conserva el bloqueo, sin revelar si el correo existe, intentos ni plazos.
         public Usuario Autenticar(string mail, string pwd)
         {
@@ -46,10 +53,12 @@ namespace Negocio
             {
                 Usuario usuario = AutenticarCuenta(mail, pwd, true, false);
                 if (usuario == null) throw new ReglaNegocioException("RN-04", MensajeAccesoRechazado);
+                GestorAuditoria.Instance.Registrar("Inicio de sesión", "Usuario", usuario.Id, "Correcto");
                 return usuario;
             }
             catch (ReglaNegocioException ex) when (ex.Regla == "RN-04")
             {
+                GestorAuditoria.Instance.Registrar("Inicio de sesión", "Usuario", null, "Rechazado", null, mail.Trim());
                 throw new ReglaNegocioException("RN-04", MensajeAccesoRechazado);
             }
         }
@@ -98,7 +107,8 @@ namespace Negocio
         // Alta pública: solo clientes. El perfil Propietario no se autoasigna (RN-05, RN-34).
         public void RegistrarCliente(string mail, string pwd, string nombre, string apellido)
         {
-            Registrar(mail, pwd, nombre, apellido, TipoCliente);
+            int id = Registrar(mail, pwd, nombre, apellido, TipoCliente);
+            GestorCodigosCorreo.Instance.EnviarVerificacion(id, mail.Trim());
         }
 
         public void CrearAdministrador(string mail, string pwd, string nombre, string apellido)
@@ -107,7 +117,7 @@ namespace Negocio
             Registrar(mail, pwd, nombre, apellido, TipoPropietario);
         }
 
-        internal void Registrar(string mail, string pwd, string nombre, string apellido, string tipoUsuario)
+        internal int Registrar(string mail, string pwd, string nombre, string apellido, string tipoUsuario)
         {
             if (string.IsNullOrWhiteSpace(mail))
             {
@@ -138,7 +148,7 @@ namespace Negocio
             try
             {
                 // RN-03: nace en Bronce y sin suscripción (no se inserta nada en Suscripciones).
-                RepositorioUsuarios.Instance.Insertar(usuario, NivelFidelidad.Bronce);
+                return RepositorioUsuarios.Instance.Insertar(usuario, NivelFidelidad.Bronce);
             }
             catch (RegistroDuplicadoException)
             {
@@ -157,6 +167,7 @@ namespace Negocio
             ValidarContrasena(nueva);
             if (!RepositorioUsuarios.Instance.ActualizarContrasena(usuario.Mail, Seguridad.Hash(nueva)))
                 throw CredencialIncorrecta();
+            GestorAuditoria.Instance.Registrar("Cambio de contraseña", "Usuario", usuario.Id);
         }
 
         private static ReglaNegocioException CredencialIncorrecta()
@@ -175,6 +186,23 @@ namespace Negocio
                     $"La contraseña debe tener al menos {longitudMinima} caracteres, " +
                     "con al menos una letra y un dígito.");
             }
+
+            int puntaje = PuntajeFortaleza(pwd);
+            int minimoFortaleza = GestorParametros.Instance.ObtenerEntero("PWD_FORTALEZA_MIN");
+            if (puntaje < minimoFortaleza)
+                throw new ReglaNegocioException("RN-47", "La contraseña no alcanza la fortaleza mínima. Sumá variedad de mayúsculas, minúsculas, números o símbolos.");
+        }
+
+        public int PuntajeFortaleza(string pwd)
+        {
+            if (string.IsNullOrEmpty(pwd)) return 0;
+            int longitudMinima = GestorParametros.Instance.ObtenerEntero("PWD_LONGITUD_MIN");
+            int puntaje = pwd.Length >= longitudMinima ? 1 : 0;
+            if (pwd.Any(char.IsLower)) puntaje++;
+            if (pwd.Any(char.IsUpper)) puntaje++;
+            if (pwd.Any(char.IsDigit)) puntaje++;
+            if (pwd.Any(c => !char.IsLetterOrDigit(c))) puntaje++;
+            return puntaje;
         }
 
         // ------------------------------------- privados -------------------------------------

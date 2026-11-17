@@ -564,8 +564,8 @@ namespace Pruebas
                     Control<TextBox>(form, "TxtPassword").Text = "Cliente123";
                     Control<TextBox>(form, "TxtConfirmpassword").Text = "Cliente123";
 
-                    DialogosPrueba.Comprobar(() => Control<Button>(form, "btnregistrarse").PerformClick(),
-                        new DialogoEsperado { Titulo = "Crear cuenta", Texto = "Usuario creado" });
+                    Control<Button>(form, "btnregistrarse").PerformClick();
+                    Assert.IsNotNull(form.Controls.Find("bandejaCorreoSimulada", true).Single(), "El alta ahora muestra la bandeja donde se confirma el correo.");
 
                     Usuario usuario = Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail);
                     Assert.IsNotNull(usuario);

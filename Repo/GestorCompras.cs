@@ -37,6 +37,7 @@ namespace Negocio
         public Compra Iniciar(Paquete p, Cliente c)
         {
             GestorSesion.Instance.RequerirUsuario(c == null ? 0 : c.Id);
+            if (c != null) GestorUsuarios.Instance.ExigirCorreoVerificado(c.Id);
             if (p == null)
             {
                 throw new ArgumentNullException(nameof(p));
@@ -101,6 +102,7 @@ namespace Negocio
             {
                 throw CupoAgotado(ex.IdSector);
             }
+            GestorAuditoria.Instance.Registrar("Compra iniciada", "Compra", compra.Id);
             return compra;
         }
 
@@ -183,6 +185,7 @@ namespace Negocio
                     "El pago se aprobó pero la reserva ya no estaba vigente. Consultá con soporte.");
             }
             c.Estado = EstadoCompra.Confirmada;
+            GestorAuditoria.Instance.Registrar("Compra confirmada", "Compra", actual.Id);
 
             // RN-22 + RN-23: el nivel nuevo rige desde la operación siguiente; esta ya se cobró
             // con el nivel congelado al iniciarla.
@@ -329,6 +332,7 @@ namespace Negocio
                 throw new InvalidOperationException(
                     "La compra cambió mientras se procesaba la devolución. Volvé a abrir el historial.");
             }
+            GestorAuditoria.Instance.Registrar("Devolución", "Compra", compra.Id, "Correcto");
             return monto;
         }
 
