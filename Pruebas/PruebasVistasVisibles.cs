@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Entidades;
+using Datos;
 using Negocio;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Visual.Componentes;
@@ -118,6 +119,47 @@ namespace Pruebas
                 panel.Cargar();Assert.AreEqual(5,ControlDe<FlowLayoutPanel>(panel,"indicadoresPanel").Controls.Count);
                 Fake.ComoCliente(cliente);Assert.AreEqual("RN-34",Assert.ThrowsException<ReglaNegocioException>(()=>panel.Cargar()).Regla);
             }});
+        }
+
+        // CP-165 — RN-34: el alta de administradores aparece en administración y conserva su guarda.
+        [TestMethod("CP-165: Un cliente no alcanza el alta de administradores ni su operación")]
+        public void CP165_AltaAdministradorSoloAdmin()
+        {
+            EnSta(()=>{
+                var cliente=Fake.Cliente(NivelFidelidad.Bronce);
+                using(var panel=new PanelAdministrador()) {
+                    Assert.IsNotNull(ControlDe<Button>(panel,"btnCrearAdministrador"));
+                    Fake.ComoCliente(cliente);
+                    Assert.AreEqual("RN-34",Assert.ThrowsException<ReglaNegocioException>(()=>panel.Cargar()).Regla);
+                    Assert.AreEqual("RN-34",Assert.ThrowsException<ReglaNegocioException>(()=>ControlDe<Button>(panel,"btnCrearAdministrador").PerformClick()).Regla);
+                    Assert.AreEqual("RN-34",Assert.ThrowsException<ReglaNegocioException>(()=>GestorUsuarios.Instance.CrearAdministrador(Fake.MailNuevo(),"ClaveSegura123","Admin","Prueba")).Regla);
+                }
+            });
+        }
+
+        [TestMethod("CP-166: El panel administrador abre el alta protegida y crea otro administrador")]
+        public void CP166_AltaAdministradorDesdePanel()
+        {
+            EnSta(()=>{
+                Fake.ComoAdministrador();
+                string mail=Fake.MailNuevo();
+                using(var menu=new Visual.frmMenuPropietario()) {
+                    Mostrar(menu);
+                    ControlDe<Button>(menu,"btnCrearAdministrador").PerformClick();
+                    var alta=System.Windows.Forms.Application.OpenForms.OfType<Visual.frmCrearUsuario>().Single(f=>f.Visible);
+                    Assert.AreEqual("EventAura · Crear administrador",alta.Text);
+                    ControlDe<TextBox>(alta,"txtNombre").Text="Admin";
+                    ControlDe<TextBox>(alta,"txtApellido").Text="Nuevo";
+                    ControlDe<TextBox>(alta,"txtmail").Text=mail;
+                    ControlDe<TextBox>(alta,"TxtPassword").Text="ClaveSegura123";
+                    ControlDe<TextBox>(alta,"TxtConfirmpassword").Text="ClaveSegura123";
+                    DialogosPrueba.Comprobar(()=>ControlDe<Button>(alta,"btnregistrarse").PerformClick(),
+                        new DialogoEsperado{Titulo="Crear administrador",Texto="Usuario creado con éxito."});
+                    Assert.AreEqual("Propietario",RepositorioUsuarios.Instance.ObtenerPorMail(mail).TipoUsuario);
+                    Assert.IsTrue(menu.Visible);
+                    alta.Dispose();
+                }
+            });
         }
     }
 }

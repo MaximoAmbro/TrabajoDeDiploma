@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +20,7 @@ namespace Visual
         public frmMenuPropietario()
         {
             InitializeComponent();
+            panelAdministrador.CrearAdministradorSolicitado += CrearAdministrador;
             SizeChanged+=(s,e)=>DistribuirPanel();
         }
 
@@ -64,6 +65,12 @@ namespace Visual
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;
             frm.Show(); this.Hide();
+        }
+        private void CrearAdministrador(object sender, EventArgs e)
+        {
+            var alta = new frmCrearUsuario(true);
+            alta.Show();
+            Hide();
         }
         private void btnControlIngreso_Click(object sender, EventArgs e)
         {

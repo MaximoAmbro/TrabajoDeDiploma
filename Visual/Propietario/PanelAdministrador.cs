@@ -6,7 +6,23 @@ namespace Visual.Componentes
 {
     public partial class PanelAdministrador : SuperficieTematica
     {
-        public PanelAdministrador(){InitializeComponent();datos.SizeChanged+=(s,e)=>Distribuir();}
+        private readonly BotonPrimario btnCrearAdministrador;
+        public event EventHandler CrearAdministradorSolicitado;
+
+        public PanelAdministrador()
+        {
+            InitializeComponent();
+            btnCrearAdministrador = new BotonPrimario { Name = "btnCrearAdministrador", Text = "Crear administrador", Size = new System.Drawing.Size(180, 40), Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right };
+            btnCrearAdministrador.Click += (s, e) =>
+            {
+                GestorSesion.Instance.RequerirAdministrador();
+                CrearAdministradorSolicitado?.Invoke(this, EventArgs.Empty);
+            };
+            Controls.Add(btnCrearAdministrador);
+            btnCrearAdministrador.BringToFront();
+            datos.SizeChanged += (s,e)=>Distribuir();
+            SizeChanged += (s,e)=>Distribuir();
+        }
         public void Cargar()
         {
             GestorSesion.Instance.RequerirAdministrador();
@@ -32,6 +48,12 @@ namespace Visual.Componentes
             }
             Distribuir();
         }
-        private void Distribuir(){foreach(System.Windows.Forms.Control dato in datos.Controls)dato.Width=Math.Max(1,(datos.ClientSize.Width-System.Windows.Forms.SystemInformation.VerticalScrollBarWidth)/2-dato.Margin.Horizontal);}
+        private void Distribuir()
+        {
+            periodo.SetBounds(0, 0, Math.Max(1, ClientSize.Width - btnCrearAdministrador.Width - 12), 52);
+            btnCrearAdministrador.Location = new System.Drawing.Point(Math.Max(0, ClientSize.Width - btnCrearAdministrador.Width), 6);
+            foreach(System.Windows.Forms.Control dato in datos.Controls)
+                dato.Width=Math.Max(1,(datos.ClientSize.Width-System.Windows.Forms.SystemInformation.VerticalScrollBarWidth)/2-dato.Margin.Horizontal);
+        }
     }
 }

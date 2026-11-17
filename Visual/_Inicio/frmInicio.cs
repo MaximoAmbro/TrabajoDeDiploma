@@ -1,5 +1,6 @@
-﻿using Entidades;
+using Entidades;
 using Negocio;
+using Datos;
 using System;
 using System.Windows.Forms;
 
@@ -17,6 +18,12 @@ namespace Visual
         
         private void frmInicio_Load(object sender, EventArgs e)
         {
+            var faltante = VerificadorEsquema.PrimerFaltante();
+            if (faltante != null)
+            {
+                MostrarEsquemaDesactualizado(faltante);
+                return;
+            }
             
             txtMailLogin.Text = "";
             txtContraseñaLogin.Text = "";
@@ -24,6 +31,23 @@ namespace Visual
             txtMailLogin.Select();   // no depende del orden de TabIndex
         }
 
+        private void MostrarEsquemaDesactualizado(RequisitoEsquemaFaltante faltante)
+        {
+            txtMailLogin.Visible = label5.Visible = txtContraseñaLogin.Visible = label3.Visible = false;
+            checkbxShowPass.Visible = lblolividarcontra.Visible = lblcrearcuenta.Visible = btninicio.Visible = false;
+            btninicio.Enabled = false;
+            var aviso = new Visual.Componentes.EtiquetaAyuda
+            {
+                Name = "avisoEsquemaDesactualizado",
+                Text = "Tu base de datos está desactualizada: falta " + faltante.Descripcion + ".\r\n\r\n" +
+                       "Corré BaseDatos/" + faltante.Script + " y volvé a abrir EventAura.",
+                Location = new System.Drawing.Point(24, 148),
+                Size = new System.Drawing.Size(352, 128),
+                AccessibleRole = System.Windows.Forms.AccessibleRole.Alert
+            };
+            Controls.Add(aviso);
+            aviso.BringToFront();
+        }
         private void checkbxShowPass_CheckedChanged(object sender, EventArgs e)
         {
             if (checkbxShowPass.Checked == true)

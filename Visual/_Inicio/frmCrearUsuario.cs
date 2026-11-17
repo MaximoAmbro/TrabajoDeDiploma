@@ -1,4 +1,4 @@
-﻿using Negocio;
+using Negocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,9 +13,19 @@ namespace Visual
 {
     public partial class frmCrearUsuario : FormularioEventAura
     {
-        public frmCrearUsuario()
+        private readonly bool _altaAdministrador;
+        public frmCrearUsuario() : this(false) { }
+        public frmCrearUsuario(bool altaAdministrador)
         {
+            _altaAdministrador = altaAdministrador;
             InitializeComponent();
+            if (_altaAdministrador)
+            {
+                Text = "EventAura · Crear administrador";
+                label1.Text = "Crear administrador";
+                btnregistrarse.Text = "Crear administrador";
+                lblyatengocuen.Text = "Volver a administración";
+            }
             Tema.ComoEnlace(lblyatengocuen);
         }
         private void frmCrearUsuario_Load(object sender, EventArgs e)
@@ -49,14 +59,15 @@ namespace Visual
             {
                 try
                 {
-                    GestorUsuarios.Instance.RegistrarCliente(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text);
+                    if (_altaAdministrador) GestorUsuarios.Instance.CrearAdministrador(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text);
+                    else GestorUsuarios.Instance.RegistrarCliente(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text);
                 }
                 catch (ReglaNegocioException ex)
                 {
                     Avisos.Regla("Crear cuenta", ex);
                     return;
                 }
-                MessageBox.Show("Usuario creado con éxito.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Information); Cerrar();
+                MessageBox.Show("Usuario creado con éxito.", _altaAdministrador ? "Crear administrador" : "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Information); Cerrar();
             }
             else { return; }
         }
@@ -106,6 +117,13 @@ namespace Visual
         } // Revisa si los textbox estan vacios
         private void Cerrar()
         {
+            if (_altaAdministrador)
+            {
+                var menu = Application.OpenForms.OfType<frmMenuPropietario>().FirstOrDefault();
+                if (menu != null) menu.Show();
+                Hide();
+                return;
+            }
             frmInicio frm = new frmInicio();
             frm.Show();
             this.Hide();
