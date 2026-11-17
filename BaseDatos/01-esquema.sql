@@ -71,7 +71,7 @@ CREATE TABLE Entradas (
     ID_Evento       INT      NULL,
     ID_Usuario      INT      NULL,
     Precio          INT      NULL,
-    CantidadVendida INT      NULL,
+    CantidadVendida INT      NOT NULL,
     FechaVenta      DATETIME NULL,
     FOREIGN KEY (ID_Evento) REFERENCES Eventos(ID)
 );
@@ -129,6 +129,14 @@ GO
 -- en el mismo lote una columna agregada por ALTER TABLE.
 ALTER TABLE Entradas WITH CHECK ADD CONSTRAINT CK_Entradas_Estado
     CHECK (Estado IN ('Pendiente','Confirmada','Reembolsada','Vencida'));
+
+UPDATE Entradas SET CantidadVendida = 1
+WHERE CantidadVendida IS NULL OR CantidadVendida <> 1;
+DECLARE @EntradasCorregidas INT = @@ROWCOUNT;
+PRINT CONCAT('CantidadVendida corregidas antes de restringir: ', @EntradasCorregidas);
+ALTER TABLE Entradas ALTER COLUMN CantidadVendida INT NOT NULL;
+ALTER TABLE Entradas WITH CHECK ADD CONSTRAINT CK_Entradas_CantidadVendida
+    CHECK (CantidadVendida = 1);
 
 ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Sectores
       FOREIGN KEY (ID_Sector) REFERENCES Sectores(ID);
