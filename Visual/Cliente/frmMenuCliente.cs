@@ -19,11 +19,21 @@ namespace Visual
         public frmMenuCliente()
         {
             InitializeComponent();
+            inicioCliente.VerEventos+=()=>btnEventos.PerformClick();
+            SizeChanged+=(s,e)=>DistribuirInicio();
         }
         private void frmMenuCliente_Load(object sender, EventArgs e)
         {
             lblNombre.Text = NombreUsuario;
-
+            int id=IDUsuario>0?IDUsuario:(GestorSesion.Instance.UsuarioActual?.Id??0);
+            inicioCliente.Cargar(id);barraSuperior.ActualizarSesion();DistribuirInicio();
+        }
+        protected override void OnShown(EventArgs e){base.OnShown(e);Disposicion.AjustarAreaVisible(this);DistribuirInicio();}
+        private void DistribuirInicio()
+        {
+            int margen=(int)(24*Disposicion.Escala(this));
+            inicioCliente.SetBounds(btnEventos.Right+margen,label1.Top,
+                System.Math.Max(1,ClientSize.Width-btnEventos.Right-margen*2),System.Math.Max(1,ClientSize.Height-label1.Top-margen));
         }
 
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------

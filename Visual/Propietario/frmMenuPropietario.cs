@@ -20,11 +20,20 @@ namespace Visual
         public frmMenuPropietario()
         {
             InitializeComponent();
+            SizeChanged+=(s,e)=>DistribuirPanel();
         }
 
         private void frmMenuVendedor_Load(object sender, EventArgs e)
         {
             lblNombre.Text = NombreUsuario;
+            panelAdministrador.Cargar();DistribuirPanel();
+        }
+        protected override void OnShown(EventArgs e){base.OnShown(e);Disposicion.AjustarAreaVisible(this);DistribuirPanel();}
+        private void DistribuirPanel()
+        {
+            int margen=(int)(24*Disposicion.Escala(this));
+            panelAdministrador.SetBounds(btnMisLocales.Right+margen,label1.Top,
+                Math.Max(1,ClientSize.Width-btnMisLocales.Right-margen*2),Math.Max(1,ClientSize.Height-label1.Top-margen));
         }
 
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------

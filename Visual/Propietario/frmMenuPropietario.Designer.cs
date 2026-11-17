@@ -37,7 +37,7 @@ namespace Visual
             this.btnReportes = new Visual.Componentes.BotonPrimario();
             this.btnControlIngreso = new Visual.Componentes.BotonPrimario();
             this.btnControlIngreso.Location = new System.Drawing.Point(24, 332);
-            this.btnControlIngreso.Size = new System.Drawing.Size(352, 40);
+            this.btnControlIngreso.Size = new System.Drawing.Size(272, 40);
             this.btnControlIngreso.Name = "btnControlIngreso";
             this.btnControlIngreso.Text = "Control de ingreso";
             this.btnControlIngreso.TabIndex = 41;
@@ -51,7 +51,7 @@ namespace Visual
             this.lblNombre.Location = new System.Drawing.Point(24, 116);
             this.lblNombre.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(352, 32);
+            this.lblNombre.Size = new System.Drawing.Size(272, 32);
             this.lblNombre.TabIndex = 38;
             this.lblNombre.Text = "[USUARIO]";
             this.lblNombre.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -73,7 +73,7 @@ namespace Visual
             this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(352, 32);
+            this.label1.Size = new System.Drawing.Size(272, 32);
             this.label1.TabIndex = 36;
             this.label1.Text = "Administración";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -84,7 +84,7 @@ namespace Visual
             this.btnRegistrarLocal.Location = new System.Drawing.Point(24, 200);
             this.btnRegistrarLocal.Margin = new System.Windows.Forms.Padding(2);
             this.btnRegistrarLocal.Name = "btnRegistrarLocal";
-            this.btnRegistrarLocal.Size = new System.Drawing.Size(352, 40);
+            this.btnRegistrarLocal.Size = new System.Drawing.Size(272, 40);
             this.btnRegistrarLocal.TabIndex = 35;
             this.btnRegistrarLocal.Text = "Registrar local";
             this.btnRegistrarLocal.Click += new System.EventHandler(this.btnRegistrarLocal_Click);
@@ -95,7 +95,7 @@ namespace Visual
             this.btnMisLocales.Location = new System.Drawing.Point(24, 156);
             this.btnMisLocales.Margin = new System.Windows.Forms.Padding(2);
             this.btnMisLocales.Name = "btnMisLocales";
-            this.btnMisLocales.Size = new System.Drawing.Size(352, 40);
+            this.btnMisLocales.Size = new System.Drawing.Size(272, 40);
             this.btnMisLocales.TabIndex = 34;
             this.btnMisLocales.Text = "Mis locales";
             this.btnMisLocales.Click += new System.EventHandler(this.btnMisLocales_Click);
@@ -106,7 +106,7 @@ namespace Visual
             this.btnListasEspera.Location = new System.Drawing.Point(24, 244);
             this.btnListasEspera.Margin = new System.Windows.Forms.Padding(2);
             this.btnListasEspera.Name = "btnListasEspera";
-            this.btnListasEspera.Size = new System.Drawing.Size(352, 40);
+            this.btnListasEspera.Size = new System.Drawing.Size(272, 40);
             this.btnListasEspera.TabIndex = 39;
             this.btnListasEspera.Text = "Listas de espera";
             this.btnListasEspera.Click += new System.EventHandler(this.btnListasEspera_Click);
@@ -117,7 +117,7 @@ namespace Visual
             this.btnReportes.Location = new System.Drawing.Point(24, 288);
             this.btnReportes.Margin = new System.Windows.Forms.Padding(2);
             this.btnReportes.Name = "btnReportes";
-            this.btnReportes.Size = new System.Drawing.Size(352, 40);
+            this.btnReportes.Size = new System.Drawing.Size(272, 40);
             this.btnReportes.TabIndex = 40;
             this.btnReportes.Text = "Reportes";
             this.btnReportes.Click += new System.EventHandler(this.btnReportes_Click);
@@ -126,7 +126,7 @@ namespace Visual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(400, 508);
+            this.ClientSize = new System.Drawing.Size(1000, 560);
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
             this.Controls.Add(this.label1);
@@ -144,6 +144,11 @@ namespace Visual
             this.barraSuperior.Size = new System.Drawing.Size(400, 60);
             this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
             this.Controls.Add(this.barraSuperior);
+            this.panelAdministrador = new Visual.Componentes.PanelAdministrador();
+            this.panelAdministrador.Name = "panelAdministrador";
+            this.panelAdministrador.Location = new System.Drawing.Point(320, 84);
+            this.panelAdministrador.Size = new System.Drawing.Size(656, 452);
+            this.Controls.Add(this.panelAdministrador);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -160,5 +165,6 @@ namespace Visual
         private Visual.Componentes.BotonPrimario btnReportes;
         private Visual.Componentes.BotonPrimario btnControlIngreso;
         private Visual.Componentes.BarraSuperior barraSuperior;
+        private Visual.Componentes.PanelAdministrador panelAdministrador;
     }
 }

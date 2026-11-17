@@ -43,6 +43,12 @@ namespace Pruebas {
       form.BringToFront();form.Activate();SetWindowPos(form.Handle,new IntPtr(-1),0,0,0,0,0x43);System.Threading.Thread.Sleep(250);form.Refresh();Application.DoEvents();
       using(var imagen=new Bitmap(form.Width,form.Height)) {DibujarCompleta(form,imagen);imagen.Save(Path.Combine(salida,nombre+".png"));}
       RegistrarTipografia(form,salida,nombre+".png");
+      if(nombre=="frmEventosCliente") {
+       var tarjeta=InterfazGrupoA.ControlDe<FlowLayoutPanel>(form,"tarjetasEventos").Controls.OfType<Visual.Componentes.TarjetaEvento>().Single(t=>t.AccessibleName==evento.Nombre);
+       InterfazGrupoA.ControlDe<Button>(tarjeta,"verEntradas").PerformClick();Application.DoEvents();form.Refresh();
+       using(var extra=new Bitmap(form.Width,form.Height)){DibujarCompleta(form,extra);extra.Save(Path.Combine(salida,"ficha-evento.png"));}
+       RegistrarTipografia(form,salida,"ficha-evento.png");
+      }
       if(nombre=="FrmCompraCliente") {
        var panel=InterfazGrupoA.ControlDe<Panel>(form,"pnlResumen");InterfazGrupoA.ControlDe<Panel>(form,"pnlContenidoCompra").ScrollControlIntoView(panel);panel.AutoScrollPosition=new Point(0,100000);Application.DoEvents();
        using(var extra=new Bitmap(form.Width,form.Height)) {DibujarCompleta(form,extra);extra.Save(Path.Combine(salida,nombre+"-total.png"));}

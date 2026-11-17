@@ -107,7 +107,7 @@ namespace Visual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(400, 412);
+            this.ClientSize = new System.Drawing.Size(920, 560);
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
             this.Controls.Add(this.label1);
@@ -125,6 +125,11 @@ namespace Visual
             this.barraSuperior.Size = new System.Drawing.Size(400, 60);
             this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
             this.Controls.Add(this.barraSuperior);
+            this.inicioCliente = new Visual.Componentes.InicioCliente();
+            this.inicioCliente.Name = "inicioCliente";
+            this.inicioCliente.Location = new System.Drawing.Point(400, 84);
+            this.inicioCliente.Size = new System.Drawing.Size(496, 452);
+            this.Controls.Add(this.inicioCliente);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -138,5 +143,6 @@ namespace Visual
         private Visual.Componentes.BotonSecundario lblvolver;
         private Visual.Componentes.EtiquetaTitulo lblNombre;
         private Visual.Componentes.BarraSuperior barraSuperior;
+        private Visual.Componentes.InicioCliente inicioCliente;
     }
 }

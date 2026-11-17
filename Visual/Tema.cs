@@ -34,6 +34,13 @@ namespace Visual
 
         public static readonly Font Marca = new Font("Segoe UI Semibold", 26f);
         public static readonly Font FirmaNormal = new Font("Segoe UI", 16f);
+        // 16/12/19 píxeles lógicos a 96 DPI, expresados en puntos para escalar con Windows.
+        public static readonly Font TituloTarjeta = new Font("Segoe UI Semibold",12f);
+        public static readonly Font DatoTarjeta = new Font("Segoe UI",9f);
+        public static readonly Font PrecioTarjeta = new Font("Segoe UI Semibold",14.25f);
+        public static readonly Color[] PaletaPortadas = { Primario,Color.FromArgb(67,64,135),Color.FromArgb(160,86,141),Color.FromArgb(72,117,145),Color.FromArgb(105,69,143),Color.FromArgb(83,132,126) };
+        public static readonly Color MarcaAguaPortada=Color.FromArgb(71,255,255,255);
+        public static Font FuenteInicialPortada(int alto){return new Font("Segoe UI",Math.Max(24,alto*0.75f),FontStyle.Bold,GraphicsUnit.Pixel);}
         public static readonly Font FirmaFuerte = new Font("Segoe UI", 16f, FontStyle.Bold);
         public static readonly Font IconosInterfaz = new Font(FamiliaIconos(), 24f);
 

@@ -53,7 +53,7 @@ namespace Visual
 
         public static void PintarTarjeta(object sender, PaintEventArgs e)
         {
-            var panel = (Panel)sender;
+            var panel = (Control)sender;
             using (var lapiz = new Pen(Tema.Borde, Tema.BordeNormal))
                 e.Graphics.DrawRectangle(lapiz, 0, 0, panel.ClientSize.Width - Tema.BordeNormal,
                     panel.ClientSize.Height - Tema.BordeNormal);

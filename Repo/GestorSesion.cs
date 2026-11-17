@@ -22,6 +22,7 @@ namespace Negocio
         private GestorSesion() { }
 
         public SesionAutenticada UsuarioActual { get; private set; }
+        public System.DateTime? IniciadaEl { get; private set; }
 
         public bool HaySesion
         {
@@ -32,6 +33,7 @@ namespace Negocio
         {
             if (usuario == null) throw new System.ArgumentNullException(nameof(usuario));
             UsuarioActual = new SesionAutenticada(usuario);
+            IniciadaEl = System.DateTime.Now;
         }
 
         // RN-34 generalizada: toda gestión administrativa exige este perfil.
@@ -50,6 +52,7 @@ namespace Negocio
         public void Cerrar()
         {
             UsuarioActual = null;
+            IniciadaEl = null;
         }
     }
 }

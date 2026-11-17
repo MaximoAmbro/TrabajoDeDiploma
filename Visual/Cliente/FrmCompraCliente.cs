@@ -34,6 +34,7 @@ namespace Visual
         public int IDUsuario;
         public int IDEvento;
         public string NombreUsuario;
+        public int? SectorInicial;
 
         // RF-05: lo que el cliente va armando. Vive en memoria hasta confirmar la compra.
         private Paquete paquete;
@@ -205,6 +206,7 @@ namespace Visual
             lblResumen.UseMnemonic = false;   // «Meet & Greet»: el & no es tecla de acceso
             MostrarSiAgotado();
             ActualizarResumen();
+            if(SectorInicial.HasValue && sectores.ContainsKey(SectorInicial.Value)) ElegirSectorEnMapa(SectorInicial.Value);
         }
 
         // RN-10: con el evento agotado, en lugar de la grilla de sectores se ofrece la lista de espera.
