@@ -31,6 +31,10 @@ namespace Visual
             _fortaleza = new Componentes.IndicadorFortaleza { Name = "fortalezaContrasena", Location = new Point(24, 316), Size = new Size(392, 24) };
             Controls.Add(_fortaleza);
             TxtPassword.TextChanged += (s, e) => ActualizarFortaleza();
+            txtMail.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtMail);
+            txtActual.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtActual);
+            TxtPassword.TextChanged += (s, e) => ValidacionCampo.Limpiar(TxtPassword);
+            TxtConfirmpassword.TextChanged += (s, e) => ValidacionCampo.Limpiar(TxtConfirmpassword);
             Shown += AjustarVistaDpi;
             if (!_recuperacion) return;
 
@@ -44,6 +48,11 @@ namespace Visual
             _estadoCorreo = new Componentes.EtiquetaAyuda { Name = "estadoRecuperacion", Location = new Point(24, 260), Size = new Size(392, 36) };
             _enviarCodigo.Click += (s, e) =>
             {
+                if (string.IsNullOrWhiteSpace(txtMail.Text))
+                {
+                    ValidacionCampo.Mostrar(txtMail, "Escribí tu correo electrónico."); txtMail.Focus();
+                    return;
+                }
                 GestorCodigosCorreo.Instance.SolicitarRecuperacion(txtMail.Text);
                 var mensaje = EnviadorSimulado.Ultimo(txtMail.Text.Trim(), "Recuperacion");
                 _estadoCorreo.Text = "Si la cuenta existe, enviamos un código. Revisá la bandeja simulada." +
@@ -115,13 +124,15 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                Avisos.Regla("Cambiar contraseña", ex);
+                if (ex.Regla == "RN-02" || ex.Regla == "RN-47")
+                    ValidacionCampo.Mostrar(TxtPassword, ex.Message);
+                else Avisos.Regla(this, "Cambiar contraseña", ex);
                 return;
             }
             txtActual.Clear();
             TxtPassword.Clear();
             TxtConfirmpassword.Clear();
-            MessageBox.Show("La contraseña se cambió correctamente.", "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Avisos.Informativo(this, "La contraseña se cambió correctamente.");
         }
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void btnVolver_Click(object sender, EventArgs e)
@@ -134,19 +145,18 @@ namespace Visual
         // -------------------------------FUNCIONES DE CONTROL----------------------------------------------------
         public bool ControlarTxt()
         {
-            if (string.IsNullOrWhiteSpace(txtMail.Text)) return ErrorCampo("Ingresá tu correo electrónico.");
-            if (string.IsNullOrWhiteSpace(txtActual.Text)) return ErrorCampo(_recuperacion ? "Ingresá el código de recuperación." : "Ingresá la contraseña actual.");
-            if (string.IsNullOrEmpty(TxtPassword.Text)) return ErrorCampo("Ingresá la contraseña nueva.");
-            if (string.IsNullOrEmpty(TxtConfirmpassword.Text)) return ErrorCampo("Ingresá la confirmación de la nueva contraseña.");
-            if (TxtPassword.Text != TxtConfirmpassword.Text) return ErrorCampo("Las contraseñas no coinciden.");
-            if (_recuperacion && string.IsNullOrWhiteSpace(TxtPassword.Text)) return ErrorCampo("Solicitá un código antes de restablecer la contraseña.");
+            if (string.IsNullOrWhiteSpace(txtMail.Text)) return ErrorCampo(txtMail, "Escribí tu correo electrónico.");
+            if (string.IsNullOrWhiteSpace(txtActual.Text)) return ErrorCampo(txtActual, _recuperacion ? "Ingresá el código de recuperación." : "Ingresá la contraseña actual.");
+            if (string.IsNullOrEmpty(TxtPassword.Text)) return ErrorCampo(TxtPassword, "Escribí tu contraseña nueva.");
+            if (string.IsNullOrEmpty(TxtConfirmpassword.Text)) return ErrorCampo(TxtConfirmpassword, "Repetí tu contraseña nueva.");
+            if (TxtPassword.Text != TxtConfirmpassword.Text) return ErrorCampo(TxtConfirmpassword, "Las contraseñas no coinciden. Revisá lo que escribiste.");
             return true;
         }
 
-        private bool ErrorCampo(string mensaje)
+        private bool ErrorCampo(Control campo, string mensaje)
         {
-            if (_recuperacion && _estadoCorreo != null) _estadoCorreo.Text = mensaje;
-            else MessageBox.Show(mensaje, "Cambiar contraseña", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            ValidacionCampo.Mostrar(campo, mensaje);
+            campo.Focus();
             return false;
         }
  // Controla que se llenen todos los campos

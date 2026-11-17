@@ -77,18 +77,15 @@ namespace Visual
             tarjetas.Controls.Clear();
             if (eventos.Count == 0)
             {
-                var estado=new Componentes.EstadoVacio();
+                var estado=new Componentes.EstadoVacio { Name = "estadoSinResultados" };
                 estado.Cargar("No encontramos eventos para esa búsqueda. Probá con otro nombre o quitá los filtros.","Ver todos");
                 estado.Accion+=()=>btnLimpiar.PerformClick();tarjetas.Controls.Add(estado);
-                DataTable vacia = new DataTable();
-                vacia.Columns.Add("Mensaje", typeof(string));
-                vacia.Rows.Add(texto == null && categoria == null && desde == null
-                    ? "No hay eventos disponibles por el momento."
-                    : "No hay eventos que coincidan con la búsqueda. Probá con otros filtros o «Limpiar».");
-                dgveventos.DataSource = vacia;
+                dgveventos.DataSource = null;
+                dgveventos.Visible = false;
                 return;
             }
 
+            dgveventos.Visible = true;
             var locales = new Dictionary<int, Local>();
             dgveventos.DataSource = eventos
                 .Select(ev =>
@@ -160,7 +157,7 @@ namespace Visual
             }
             else
             {
-                MessageBox.Show("Tenés que seleccionar un evento para comprar", "Seleccionar evento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Avisos.Informativo(this, "Elegí un evento de la lista para ver sus entradas.");
             }
         }
 

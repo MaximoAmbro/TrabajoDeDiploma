@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -24,6 +23,7 @@ namespace Visual
         private Reporte reporte;
         private bool cargando;
         private string carpetaExportacion;
+        private Componentes.EstadoVacio estadoSinReporte;
 
         // El valor por omisión conserva la ruta del usuario; las pruebas pueden aislar la salida.
         internal string CarpetaExportacion
@@ -35,6 +35,15 @@ namespace Visual
         public frmReportes()
         {
             InitializeComponent();
+            estadoSinReporte = new Componentes.EstadoVacio { Name = "estadoSinReporte", Visible = false };
+            estadoSinReporte.AjustarA(dgvReporte);
+            estadoSinReporte.Cargar("Elegí un reporte y un período para empezar a revisar tus datos.", "Generar reporte");
+            estadoSinReporte.Accion += () =>
+            {
+                if (reporte != null) dtpDesde.Value = dtpDesde.Value.AddYears(-1);
+                btnGenerar.PerformClick();
+            };
+            Controls.Add(estadoSinReporte);
         }
 
         // Lo que muestran los combos de reporte y de evento.
@@ -70,6 +79,7 @@ namespace Visual
             dgvReporte.DefaultCellStyle.NullValue = "—";
             dgvReporte.EnableHeadersVisualStyles = false;
             dgvReporte.DataBindingComplete += dgvReporte_DataBindingComplete;
+            MostrarEstadoSinReporte(true);
         }
 
         private string Codigo
@@ -144,6 +154,14 @@ namespace Visual
             dgvReporte.DataSource = null;
             lblLectura.Text = "";
             btnExportar.Enabled = false;
+            MostrarEstadoSinReporte(true);
+        }
+
+        private void MostrarEstadoSinReporte(bool visible)
+        {
+            if (estadoSinReporte == null) return;
+            estadoSinReporte.Visible = visible;
+            dgvReporte.Visible = !visible;
         }
 
         // Crea el reporte con los filtros de la pantalla. null si GestorReportes lo rechaza.
@@ -161,7 +179,7 @@ namespace Visual
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show(ex.Message, "Reportes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, ex.Message);
                 return null;
             }
 
@@ -215,6 +233,14 @@ namespace Visual
             }
             reporte = r;
             dgvReporte.DataSource = datos;
+            if (datos.Rows.Count == 0)
+            {
+                estadoSinReporte.Cargar("No encontramos datos para este período y estos filtros. Probá ampliar el período.", "Ampliar período");
+                MostrarEstadoSinReporte(true);
+                btnExportar.Enabled = false;
+                return;
+            }
+            MostrarEstadoSinReporte(false);
             FormatearColumnas(datos);
             lblLectura.Text = "Lectura. " + r.Lectura(datos);
             btnExportar.Enabled = true;
@@ -240,16 +266,10 @@ namespace Visual
             }
             catch (IOException ex)
             {
-                MessageBox.Show("No se pudo escribir el archivo. ¿Está abierto en otro programa?\n\n" + ex.Message,
-                    "Exportar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, "No pudimos guardar el PDF. Cerrá el archivo si está abierto y volvé a exportarlo.");
                 return;
             }
-            DialogResult abrir = MessageBox.Show($"Reporte exportado:\n{ruta}\n\n¿Abrirlo ahora?",
-                "Exportar", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (abrir == DialogResult.Yes)
-            {
-                Process.Start(new ProcessStartInfo(ruta) { UseShellExecute = true });
-            }
+            Avisos.Informativo(this, "Reporte exportado en " + ruta + ". Abrilo desde el Explorador de archivos.");
         }
 
         // Los formatos los declara el reporte en la tabla: la pantalla no conoce ninguno.

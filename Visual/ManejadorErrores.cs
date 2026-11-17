@@ -34,8 +34,10 @@ namespace Visual
         public static string MensajeParaUsuario(Exception ex)
         {
             if (ex is System.Data.Common.DbException) return MensajeBaseDeDatos;
-            // Los mensajes que escribe Negocio ya están en castellano y dicen qué pasó.
-            if (ex != null && ex.Source == "Repositorio" && !string.IsNullOrWhiteSpace(ex.Message)) return ex.Message;
+            if (ex is InvalidOperationException && ex.Message != null &&
+                (ex.Message == "No se encontró ningún evento con ese ID." ||
+                 ex.Message == "No se encontró ningún usuario con ese ID." ||
+                 ex.Message == "No se encontró ningún sector con ese ID.")) return ex.Message;
             return MensajeGeneral;
         }
 

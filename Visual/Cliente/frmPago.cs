@@ -47,9 +47,6 @@ namespace Visual
                 lblTemporizador.Text = "Reserva: 00:00";
                 GestorCompras.Instance.LiberarVencidas();
                 cerrada = true;
-                MessageBox.Show("Venció el plazo de la reserva y se liberaron las entradas. " +
-                                "Volvé a armar la compra desde el listado.",
-                                "Reserva vencida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.Abort;
                 return;
             }
@@ -92,8 +89,6 @@ namespace Visual
                 // se eliminó mientras se pagaba). El cupo ya se liberó: se vuelve al listado.
                 tmrReserva.Stop();
                 cerrada = true;
-                MessageBox.Show(ex.Message + "\n\nVolvé a armar la compra desde el listado.",
-                    "Pago no realizado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.Abort;
                 return;
             }
@@ -121,13 +116,7 @@ namespace Visual
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            DialogResult respuesta = MessageBox.Show(
-                "Si cancelás el pago se liberan las entradas reservadas. ¿Querés cancelar?",
-                "Cancelar pago", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (respuesta == DialogResult.Yes)
-            {
-                DialogResult = DialogResult.Cancel;
-            }
+            DialogResult = DialogResult.Cancel;
         }
 
         // Cerrar sin pagar (Cancelar o la X) libera el cupo en el acto (RN-32).

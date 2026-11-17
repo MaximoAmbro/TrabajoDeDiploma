@@ -14,6 +14,8 @@ namespace Visual
             InitializeComponent();
             Tema.ComoEnlace(lblolividarcontra);
             Tema.ComoEnlace(lblcrearcuenta);
+            txtMailLogin.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtMailLogin);
+            txtContraseñaLogin.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtContraseñaLogin);
         }
         
         private void frmInicio_Load(object sender, EventArgs e)
@@ -77,18 +79,14 @@ namespace Visual
         {
             if (string.IsNullOrEmpty(txtMailLogin.Text))
             {
-                MessageBox.Show("Por favor, ingresá usuario",
-                              "Inicio de sesión",
-                              MessageBoxButtons.OK,
-                              MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtMailLogin, "Escribí tu correo electrónico para continuar.");
+                txtMailLogin.Focus();
                 return;
             }
             if (string.IsNullOrEmpty(txtContraseñaLogin.Text))
             {
-                MessageBox.Show("Por favor, ingresá contraseña",
-                              "Inicio de sesión",
-                              MessageBoxButtons.OK,
-                              MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtContraseñaLogin, "Escribí tu contraseña para continuar.");
+                txtContraseñaLogin.Focus();
                 return;
             }
             else
@@ -117,14 +115,13 @@ namespace Visual
                 if (usuario.TipoUsuario == "Cliente")
                 {
                     var avisos = GestorListaEspera.Instance.AvisosAlIngresar(usuario.Id);
-                    if (avisos.Count > 0)
-                        MessageBox.Show("Hay entradas disponibles nuevamente en:\n" + string.Join("\n", avisos) +
-                            "\nPodés volver al listado para consultar y comprar. No es una reserva de lugar.",
-                            "Lista de espera", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     frmMenuCliente frm = new frmMenuCliente();
                     frm.IDUsuario = usuario.Id;
                     frm.NombreUsuario = usuario.Nombre;
                     frm.Show();
+                    if (avisos.Count > 0)
+                        Avisos.Informativo(frm, "Hay lugares disponibles en " + string.Join(", ", avisos) +
+                            ". Podés consultarlos en eventos; el aviso no reserva un lugar.");
                     this.Hide();
                 } // Se abre el menu de cliente
                 if (usuario.TipoUsuario == "Propietario")

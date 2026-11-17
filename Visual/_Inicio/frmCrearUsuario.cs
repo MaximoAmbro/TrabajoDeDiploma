@@ -23,10 +23,15 @@ namespace Visual
             _fortaleza = new Componentes.IndicadorFortaleza { Name = "fortalezaContrasena", Location = new Point(24, 348), Size = new Size(392, 24) };
             Controls.Add(_fortaleza);
             TxtPassword.TextChanged += (s, e) => ActualizarFortaleza();
+            txtNombre.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtNombre);
+            txtApellido.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtApellido);
+            txtmail.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtmail);
+            TxtPassword.TextChanged += (s, e) => ValidacionCampo.Limpiar(TxtPassword);
+            TxtConfirmpassword.TextChanged += (s, e) => ValidacionCampo.Limpiar(TxtConfirmpassword);
             Shown += (s, e) =>
             {
                 float escala; using (var g = CreateGraphics()) escala = g.DpiX / Tema.DpiDiseno * Font.SizeInPoints / Tema.Cuerpo.SizeInPoints;
-                _fortaleza.SetBounds((int)Math.Round(24 * escala), (int)Math.Round(348 * escala), (int)Math.Round(392 * escala), (int)Math.Round(24 * escala));
+                _fortaleza.SetBounds((int)Math.Round(24 * escala), (int)Math.Round(364 * escala), (int)Math.Round(192 * escala), (int)Math.Round(24 * escala));
             };
             if (_altaAdministrador)
             {
@@ -81,7 +86,15 @@ namespace Visual
                 }
                 catch (ReglaNegocioException ex)
                 {
-                    Avisos.Regla("Crear cuenta", ex);
+                    if (ex.Regla == "RN-02" || ex.Regla == "RN-47")
+                    {
+                        ValidacionCampo.Mostrar(TxtPassword, ex.Message); TxtPassword.Focus();
+                    }
+                    else if (ex.Regla == "RN-01")
+                    {
+                        ValidacionCampo.Mostrar(txtmail, ex.Message); txtmail.Focus();
+                    }
+                    else Avisos.Regla(this, "Crear cuenta", ex);
                     return;
                 }
                 if (!_altaAdministrador)
@@ -89,8 +102,8 @@ namespace Visual
                     MostrarBandejaSimulada(txtmail.Text.Trim());
                     return;
                 }
-                MessageBox.Show("Usuario creado con éxito.", "Crear administrador", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Cerrar();
+                var menu = Cerrar();
+                Avisos.Informativo(menu, "Usuario creado con éxito.");
             }
             else { return; }
         }
@@ -137,33 +150,33 @@ namespace Visual
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
-                MessageBox.Show("Ingresá tu nombre.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtNombre, "Escribí tu nombre."); txtNombre.Focus();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtApellido.Text))
             {
-                MessageBox.Show("Ingresá tu apellido.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtApellido, "Escribí tu apellido."); txtApellido.Focus();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(txtmail.Text))
             {
-                MessageBox.Show("Ingresá tu correo electrónico.", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtmail, "Escribí tu correo electrónico."); txtmail.Focus();
                 return false;
             }
             if (string.IsNullOrEmpty(TxtPassword.Text))
             {
-                MessageBox.Show("Ingresá contraseña: ", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(TxtPassword, "Elegí una contraseña."); TxtPassword.Focus();
                 return false;
 
             }
             if (string.IsNullOrEmpty(TxtConfirmpassword.Text))
             {
-                MessageBox.Show("Ingresá segunda contraseña: ", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(TxtConfirmpassword, "Repetí tu contraseña."); TxtConfirmpassword.Focus();
                 return false;
             }
             if (TxtPassword.Text != TxtConfirmpassword.Text)
             {
-                MessageBox.Show("Las contraseñas no coinciden", "Crear cuenta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(TxtConfirmpassword, "Las contraseñas no coinciden. Revisá lo que escribiste."); TxtConfirmpassword.Focus();
                 return false;
             }
             else
@@ -171,18 +184,19 @@ namespace Visual
                 return true;
             }
         } // Revisa si los textbox estan vacios
-        private void Cerrar()
+        private frmMenuPropietario Cerrar()
         {
             if (_altaAdministrador)
             {
                 var menu = Application.OpenForms.OfType<frmMenuPropietario>().FirstOrDefault();
                 if (menu != null) menu.Show();
                 Hide();
-                return;
+                return menu;
             }
             frmInicio frm = new frmInicio();
             frm.Show();
             this.Hide();
+            return null;
         } // cierra el form
 
     }

@@ -188,8 +188,7 @@ namespace Visual
             catch (ReglaNegocioException ex)
             {
                 accesoRechazado = true;
-                Avisos.Regla("No se puede armar el paquete", ex);
-                VolverAlListado();
+                VolverAlListado(ex.Message);
                 return;
             }
             evento = GestorEventos.Instance.ObtenerPorId(IDEvento);
@@ -248,8 +247,8 @@ namespace Visual
         private void lnkPosicionEspera_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             int? posicion = GestorListaEspera.Instance.ConsultarPosicion(IDEvento, IDUsuario);
-            MessageBox.Show(posicion.HasValue ? "Tu posición actual en la lista es " + posicion.Value + "." :
-                "No estás en la lista de espera de este evento.", "Mi posición", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Avisos.Informativo(this, posicion.HasValue ? "Tu posición actual en la lista es " + posicion.Value + "." :
+                "No estás en la lista de espera de este evento.");
         }
 
         private void btnListaEspera_Click(object sender, EventArgs e)
@@ -273,9 +272,8 @@ namespace Visual
                 return;
             }
             MarcarInscripto(true);
-            MessageBox.Show("Te anotaste en la lista de espera de «" + evento.Nombre + "». " +
-                            "Podés consultar tu posición. Si vuelve a haber entradas, te lo mostramos al iniciar sesión.",
-                            "Lista de espera", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Avisos.Informativo(this, "Te anotaste en la lista de espera de «" + evento.Nombre + "». " +
+                            "Podés consultar tu posición. Si vuelve a haber entradas, te lo mostramos al iniciar sesión.");
         }
         // RF-06: reserva el cupo y pasa a la pantalla de pago.
         private void btnComprar_Click(object sender, EventArgs e)
@@ -315,12 +313,14 @@ namespace Visual
             if (resultado == DialogResult.Abort)
             {
                 // H-02: venció el plazo; el cupo ya se liberó.
-                VolverAlListado();
+                VolverAlListado("La reserva venció o cambió. Volvé a armar la compra desde eventos.");
                 return;
             }
             if (resultado != DialogResult.OK)
             {
                 RecargarDisponibles();
+                if (resultado == DialogResult.Cancel)
+                    Avisos.Informativo(this, "Cancelaste el pago. La reserva se liberó; podés volver a intentarlo.");
                 return;
             }
 
@@ -393,8 +393,7 @@ namespace Visual
             texto.AppendLine();
             texto.AppendLine("El nivel se reevalúa una vez por mes. Una compra cuenta para tu nivel " +
                              "a partir de la operación siguiente, no en la misma.");
-            MessageBox.Show(texto.ToString(), "¿Cómo funcionan los niveles?",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Avisos.Informativo(this, texto.ToString(), 15000);
         }
 
         // H-03: la grilla muestra el cupo restante de cada sector. Solo Cantidad es editable.
@@ -472,10 +471,11 @@ namespace Visual
             string texto = Convert.ToString(fila.Cells["Cantidad"].Value);
             if (!int.TryParse(string.IsNullOrWhiteSpace(texto) ? "0" : texto.Trim(), out cantidad) || cantidad < 0)
             {
-                MessageBox.Show("La cantidad debe ser un número entero de 0 en adelante.", "Revisá los datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                fila.Cells["Cantidad"].ErrorText = "Usá un número entero desde cero.";
                 RestaurarCantidad(fila, anterior);
                 return;
             }
+            fila.Cells["Cantidad"].ErrorText = string.Empty;
             try
             {
                 GestorPaquetes.Instance.AgregarEntradas(paquete, idSector, cantidad);
@@ -488,7 +488,7 @@ namespace Visual
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show(ex.Message, "No se puede modificar la cantidad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, ex.Message);
                 RestaurarCantidad(fila, anterior);
                 return;
             }
@@ -790,12 +790,13 @@ namespace Visual
             base.OnFormClosing(e);
         }
 
-        private void VolverAlListado()
+        private void VolverAlListado(string aviso = null)
         {
             frmEventosCliente frm = new frmEventosCliente();
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;
             frm.Show();
+            if (!string.IsNullOrWhiteSpace(aviso)) Avisos.Informativo(frm, aviso);
             this.Hide();
         }
 

@@ -69,7 +69,7 @@ namespace Visual
             // 
             this.checkbxShowPass.AutoSize = true;
             this.checkbxShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkbxShowPass.Location = new System.Drawing.Point(24, 284);
+            this.checkbxShowPass.Location = new System.Drawing.Point(24, 292);
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(240, 24);
             this.checkbxShowPass.TabIndex = 10;
@@ -101,7 +101,7 @@ namespace Visual
             // btninicio
             // 
             this.btninicio.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btninicio.Location = new System.Drawing.Point(24, 332);
+            this.btninicio.Location = new System.Drawing.Point(24, 340);
             this.btninicio.Name = "btninicio";
             this.btninicio.Size = new System.Drawing.Size(352, 40);
             this.btninicio.TabIndex = 20;

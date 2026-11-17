@@ -281,7 +281,7 @@ namespace Pruebas
                         {
                             using (var archivo = new FileStream(ruta, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
                                 DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnExportar").PerformClick(),
-                                    new DialogoEsperado { Titulo = "Exportar", Texto = "No se pudo escribir el archivo." });
+                                    new DialogoEsperado { Texto = "Cerrá el archivo si está abierto" });
                             Assert.IsTrue(form.Visible); Assert.IsTrue(ControlDe<Button>(form, "btnExportar").Enabled);
                         }
                         else

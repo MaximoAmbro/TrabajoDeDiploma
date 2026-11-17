@@ -1,0 +1,13 @@
+{X=8,Y=8,Width=320,Height=304} visible=True texto=Base entradas             $ 2.000,00
+Desc. Bronce 0,0 %            $ 0,00
+Subtotal entradas         $ 2.000,00
+Servicios                     $ 0,00
+Cargo por servicio          $ 300,00
+Seguro                   $ 10.000,00
+
+TOTAL PAGADO             $ 12.300,00
+
+Tarjeta •••• 1111
+Token de pago:
+tok_sim_2b0307200b6f4a358953af9d811e779a
+ padre={X=24,Y=212,Width=352,Height=256}

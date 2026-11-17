@@ -15,6 +15,7 @@ namespace Visual.Vendedor
 {
     public partial class frmAdministrarEvento : FormularioEventAura
     {
+        private Visual.Componentes.EstadoVacio estadoSinSectores;
         public int IDUsuario; public int IDlocal; public int IDEvento;
         public string NombreUsuario;
         public string NombreLocal;
@@ -23,6 +24,11 @@ namespace Visual.Vendedor
         public frmAdministrarEvento()
         {
             InitializeComponent();
+            estadoSinSectores = new Visual.Componentes.EstadoVacio { Name = "estadoSinSectores", Visible = false };
+            estadoSinSectores.AjustarA(dgvSectores);
+            estadoSinSectores.Cargar("Este evento todavía no tiene sectores. Agregá uno para ofrecer entradas.", "Agregar sector");
+            estadoSinSectores.Accion += () => btnAgregarSector.PerformClick();
+            Controls.Add(estadoSinSectores);
         }
         private void btnVolver_Click(object sender, EventArgs e)
         {
@@ -59,8 +65,8 @@ namespace Visual.Vendedor
                     GestorEventos.Instance.CambiarImagenPortada(IDEvento, imagen);
                     CargarPortada();
                 }
-                catch (ArgumentException ex) { MessageBox.Show(ex.Message, "Portada del evento", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
-                catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Portada del evento", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                catch (ArgumentException ex) { Avisos.Informativo(this, ex.Message); }
+                catch (InvalidOperationException ex) { Avisos.Informativo(this, ex.Message); }
             }
         }
 
@@ -88,28 +94,26 @@ namespace Visual.Vendedor
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                MessageBox.Show(ex.Message, "Administrar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, ex.Message);
                 CargarPreventa();
                 return;
             }
-            MessageBox.Show(fin.HasValue
+            Avisos.Informativo(this, fin.HasValue
                 ? $"Preventa para suscriptores hasta el {fin.Value:dd/MM/yyyy HH:mm}."
-                : "El evento quedó sin preventa: pueden comprar todos los clientes.",
-                "Preventa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                : "El evento quedó sin preventa: pueden comprar todos los clientes.");
         }
         public void CargarDGV()
         {
             List<Sector> sectores = GestorEventos.Instance.Sectores(IDEvento);
             if (sectores.Count == 0)
             {
-                DataTable tabla = new DataTable();
-                tabla.Columns.Add("Mensaje", typeof(string));
-                tabla.Rows.Add("Sin sectores");
-                dgvSectores.DataSource = tabla;
-                dgvSectores.Columns["Mensaje"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dgvSectores.Visible = false;
+                estadoSinSectores.Visible = true;
                 return;
             }
 
+            estadoSinSectores.Visible = false;
+            dgvSectores.Visible = true;
             dgvSectores.DataSource = sectores
                 .Select(s => new { ID = s.Id, s.Nombre, s.Capacidad, s.Precio })
                 .ToList();
@@ -142,13 +146,13 @@ namespace Visual.Vendedor
                 }
                 catch (InvalidOperationException ex)
                 {
-                    MessageBox.Show(ex.Message, "Administrar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Avisos.Informativo(this, ex.Message);
                 }
                 CargarDGV();
             }
             else
             {
-                MessageBox.Show("Por favor, seleccioná un sector para eliminar.", "Administrar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, "Elegí un sector antes de eliminarlo.");
             }
         }
         private void btnVolver_Click1(object sender, EventArgs e)

@@ -48,7 +48,7 @@ namespace Visual
             // 
             this.checkbxShowPass.AutoSize = true;
             this.checkbxShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkbxShowPass.Location = new System.Drawing.Point(24, 380);
+            this.checkbxShowPass.Location = new System.Drawing.Point(24, 392);
             this.checkbxShowPass.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(240, 24);

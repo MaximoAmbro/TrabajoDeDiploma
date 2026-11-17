@@ -25,6 +25,8 @@ namespace Visual.Propietario
             cmbCategoria.Items.AddRange(GestorEventos.Categorias.ToArray<object>());
             txtNombre.TextChanged += (s, e) => portadaEvento.Cargar(string.IsNullOrWhiteSpace(txtNombre.Text) ? "Tu evento" : txtNombre.Text, CategoriaActual(), _imagenPortada);
             cmbCategoria.SelectedIndexChanged += (s, e) => portadaEvento.Cargar(string.IsNullOrWhiteSpace(txtNombre.Text) ? "Tu evento" : txtNombre.Text, CategoriaActual(), _imagenPortada);
+            txtNombre.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtNombre);
+            cmbCategoria.SelectedIndexChanged += (s, e) => ValidacionCampo.Limpiar(cmbCategoria);
         }
 
         private string CategoriaActual() => cmbCategoria.SelectedItem == null ? "Portada generada" : cmbCategoria.SelectedItem.ToString();
@@ -39,7 +41,7 @@ namespace Visual.Propietario
                     using (var archivo = System.IO.File.OpenRead(selector.FileName)) _imagenPortada = ImagenEventoCodec.Preparar(archivo);
                     portadaEvento.Cargar(string.IsNullOrWhiteSpace(txtNombre.Text) ? "Tu evento" : txtNombre.Text, CategoriaActual(), _imagenPortada);
                 }
-                catch (ArgumentException ex) { MessageBox.Show(ex.Message, "Portada del evento", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                catch (ArgumentException ex) { Avisos.Informativo(this, ex.Message); }
             }
         }
 
@@ -49,12 +51,12 @@ namespace Visual.Propietario
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
-                MessageBox.Show("Ingresá el nombre del evento.", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtNombre, "Escribí el nombre del evento."); txtNombre.Focus();
                 return;
             }
             if (cmbCategoria.SelectedItem == null)
             {
-                MessageBox.Show("Seleccioná la categoría del evento.", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(cmbCategoria, "Seleccioná la categoría del evento."); cmbCategoria.Focus();
                 return;
             }
 
@@ -75,11 +77,11 @@ namespace Visual.Propietario
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show(ex.Message, "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, ex.Message);
                 return;
             }
-            MessageBox.Show("Evento guardado como borrador. Para publicarlo, agregale un sector desde «Administrar Evento».", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            VolverAlListado();
+            var listado = VolverAlListado();
+            Avisos.Informativo(listado, "Evento guardado como borrador. Agregale un sector para publicarlo.");
         }
 
         private void lblVolver_Click(object sender, EventArgs e)
@@ -87,7 +89,7 @@ namespace Visual.Propietario
             VolverAlListado();
         }
 
-        private void VolverAlListado()
+        private frmEventosLocal VolverAlListado()
         {
             frmEventosLocal frm = new frmEventosLocal();
             frm.NombreUsuario = NombreUsuario;
@@ -95,6 +97,7 @@ namespace Visual.Propietario
             frm.IDUsuario = IDUsuario;
             frm.NombreLocal = NombreLocal;
             frm.Show(); this.Hide();
+            return frm;
         }
 
         // ------------------------------------- metodo -------------------------------------

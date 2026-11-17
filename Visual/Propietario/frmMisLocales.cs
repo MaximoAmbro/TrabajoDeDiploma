@@ -17,18 +17,34 @@ namespace Visual
     {
         public int IDUsuario;
         public string NombreUsuario;
+        private Componentes.EstadoVacio estadoSinLocales;
         public frmMisLocales()
         {
             InitializeComponent();
+            estadoSinLocales = new Componentes.EstadoVacio { Name = "estadoSinLocales", Visible = false };
+            estadoSinLocales.AjustarA(dgvLocales);
+            estadoSinLocales.Cargar("Todavía no registraste un local. Cuando lo hagas, vas a poder publicar eventos desde acá.", "Registrar local");
+            estadoSinLocales.Accion += AbrirRegistroLocal;
+            Controls.Add(estadoSinLocales);
         }
 
         private void frmMisLocales_Load(object sender, EventArgs e)
         {
-            dgvLocales.DataSource = GestorLocales.Instance.PorPropietario(IDUsuario)
+            var locales = GestorLocales.Instance.PorPropietario(IDUsuario);
+            dgvLocales.DataSource = locales
                 .Select(l => new { ID = l.Id, l.Nombre, l.Direccion, l.Capacidad })
                 .ToList();
 
             FormatearGrilla();
+            dgvLocales.Visible = locales.Count > 0;
+            estadoSinLocales.Visible = locales.Count == 0;
+            btnEventosLocal.Enabled = locales.Count > 0;
+        }
+
+        private void AbrirRegistroLocal()
+        {
+            var form = new frmRegistrarLocal { IDUsuario = IDUsuario, NombreUsuario = NombreUsuario };
+            form.Show(); Hide();
         }
 
         private void FormatearGrilla()
@@ -65,7 +81,7 @@ namespace Visual
             }
             else
             {
-                MessageBox.Show("Tenés que seleccionar un local", "Mis locales", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, "Elegí un local para ver sus eventos.");
             }
         }
         private void btnVolver_Click(object sender, EventArgs e)

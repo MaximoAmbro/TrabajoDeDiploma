@@ -38,7 +38,7 @@ namespace Pruebas
                         grilla.CurrentCell = fila.Cells["Nombre"];
                         bool rechazado = preventa && !suscripto;
                         DialogosPrueba.Comprobar(() => ControlDe<Button>(listado, "btnComprar").PerformClick(),
-                            rechazado ? new[] { new DialogoEsperado { Titulo = "No se puede armar el paquete",
+                            rechazado ? new[] { new DialogoEsperado {
                                 Texto = "hasta el " + fin.ToString("dd/MM/yyyy") + " a las 20:00" } } : new DialogoEsperado[0]);
                         if (rechazado)
                         {

@@ -80,7 +80,7 @@ namespace Pruebas
                     ControlDe<TextBox>(form, "txtAltura").Text = "123";
                     ControlDe<TextBox>(form, "txtCapacidad").Text = "500";
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnregistrarse").PerformClick(),
-                        new DialogoEsperado { Titulo = "Registrar local", Texto = "Local registrado correctamente" });
+                        new DialogoEsperado { Texto = "Local registrado correctamente" });
                     Local local = GestorLocales.Instance.PorPropietario(propietario.Id).Single(l => l.Nombre == nombreLocal);
                     Assert.AreEqual(500, local.Capacidad);
                     Assert.AreEqual("Mitre 123", local.Direccion);
@@ -183,7 +183,7 @@ namespace Pruebas
                     ControlDe<DateTimePicker>(form, "dtEvento").Value = DateTime.Today.AddDays(30);
                     if (categoria) ControlDe<ComboBox>(form, "cmbCategoria").SelectedIndex = 0;
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnRegistrar").PerformClick(),
-                        new DialogoEsperado { Titulo = "Agregar evento", Texto = categoria ? "Evento guardado como borrador." : "Seleccioná la categoría del evento." });
+                        new DialogoEsperado { Texto = categoria ? "Evento guardado como borrador." : "Seleccioná la categoría del evento." });
                     if (!categoria)
                     {
                         Assert.AreEqual(antes, GestorEventos.Instance.PorLocal(local.Id).Count);
@@ -269,7 +269,7 @@ namespace Pruebas
                     try
                     {
                         DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnEliminarSector").PerformClick(),
-                            new DialogoEsperado { Titulo = "Administrar evento", Texto = "(RN-06)" });
+                            new DialogoEsperado { Texto = "último con capacidad mayor que cero" });
                     }
                     finally
                     {

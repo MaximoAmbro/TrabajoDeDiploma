@@ -14,11 +14,16 @@ namespace Visual
     {
         public int IDUsuario;
         public string NombreUsuario;
+        private Componentes.EstadoVacio estadoVacio;
 
 
         public frmListasEspera()
         {
             InitializeComponent();
+            estadoVacio = new Componentes.EstadoVacio { Name = "estadoListaVacia", Visible = false };
+            estadoVacio.AjustarA(dgvLista);
+            estadoVacio.Accion += () => btnVolver.PerformClick();
+            Controls.Add(estadoVacio);
         }
 
         // Lo que muestra el combo de eventos.
@@ -83,6 +88,9 @@ namespace Visual
             {
                 cmbEventos.Enabled = false;
                 lblCantidad.Text = "No hay eventos agotados ni listas de espera en tus locales.";
+                estadoVacio.Cargar("Cuando un evento se agote y haya personas anotadas, vas a encontrar el orden de espera acá.", "Volver al panel");
+                dgvLista.Visible = false;
+                estadoVacio.Visible = true;
                 return;
             }
             cmbEventos.SelectedIndex = 0;
@@ -113,6 +121,9 @@ namespace Visual
                     inscripcion.FechaAlta.ToString("dd/MM/yyyy HH:mm"));
             }
             dgvLista.ClearSelection();
+            dgvLista.Visible = lista.Count > 0;
+            estadoVacio.Cargar("Todavía nadie se anotó en la lista de este evento. Cuando alguien se sume, vas a ver su posición acá.", "Volver al panel");
+            estadoVacio.Visible = lista.Count == 0;
             int suscriptores = lista.Count(x => x.ConSuscripcion);
             lblCantidad.Text = lista.Count == 0
                 ? "Nadie se anotó todavía en la lista de este evento."

@@ -19,6 +19,10 @@ namespace Visual
         public frmRegistrarLocal()
         {
             InitializeComponent();
+            txtNombre.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtNombre);
+            txtDireccion.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtDireccion);
+            txtAltura.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtAltura);
+            txtCapacidad.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtCapacidad);
         }
 
         private void lblyatengocuen_Click(object sender, EventArgs e)
@@ -30,7 +34,7 @@ namespace Visual
             int capacidad;
             if (!int.TryParse(txtCapacidad.Text.Trim(), out capacidad))
             {
-                MessageBox.Show("La capacidad debe ser un número entero.", "Registrar local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtCapacidad, "Escribí la capacidad con números enteros."); txtCapacidad.Focus();
                 return;
             }
 
@@ -47,18 +51,23 @@ namespace Visual
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show(ex.Message, "Registrar local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (ex.Message.IndexOf("nombre", StringComparison.OrdinalIgnoreCase) >= 0)
+                    ValidacionCampo.Mostrar(txtNombre, "Escribí el nombre del local.");
+                else if (ex.Message.IndexOf("capacidad", StringComparison.OrdinalIgnoreCase) >= 0)
+                    ValidacionCampo.Mostrar(txtCapacidad, "La capacidad no puede ser negativa.");
+                else Avisos.Informativo(this, ex.Message);
                 return;
             }
-            MessageBox.Show("Local registrado correctamente", "Registrar local", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Cerrar();
+            var menu = Cerrar();
+            Avisos.Informativo(menu, "Local registrado correctamente.");
         }
-        private void Cerrar()
+        private Visual.frmMenuPropietario Cerrar()
         {
             frmMenuPropietario frm = new frmMenuPropietario();
             frm.NombreUsuario = NombreUsuario;
             frm.IDUsuario = IDUsuario;
             frm.Show(); this.Hide();
+            return frm;
         }
 
         private void frmRegistrarLocal_Load(object sender, EventArgs e)

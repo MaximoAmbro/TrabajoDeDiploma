@@ -20,6 +20,9 @@ namespace Visual.Vendedor
         public frmAgregarSector()
         {
             InitializeComponent();
+            txtNombre.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtNombre);
+            txtCapacidad.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtCapacidad);
+            txtPrecio.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtPrecio);
         }
 
         private void btnregistrarse_Click(object sender, EventArgs e)
@@ -35,7 +38,7 @@ namespace Visual.Vendedor
                 {
                     // Si el evento está en Borrador y el sector tiene capacidad, queda publicado.
                     GestorEventos.Instance.AgregarSector(IDEvento, sector);
-                    MessageBox.Show("Sector agregado correctamente.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Avisos.Informativo(this, "Sector agregado correctamente. Ya podés asignarle entradas.");
                     txtCapacidad.Clear(); txtNombre.Clear(); txtPrecio.Clear();
                 }
                 catch (ReglaNegocioException ex)
@@ -44,7 +47,7 @@ namespace Visual.Vendedor
                 }
                 catch (Exception ex) when (ex is InvalidOperationException || ex is ArgumentException)
                 {
-                    MessageBox.Show(ex.Message, "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Avisos.Informativo(this, ex.Message);
                 }
             }
         }
@@ -64,11 +67,9 @@ namespace Visual.Vendedor
         // ------------------------------------- metodos -------------------------------------
         public bool Comprobarcampos()
         {
-            if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtCapacidad.Text) || string.IsNullOrWhiteSpace(txtPrecio.Text))
-            {
-                MessageBox.Show("Por favor, completá todos los campos.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
+            if (string.IsNullOrWhiteSpace(txtNombre.Text)) { ValidacionCampo.Mostrar(txtNombre, "Escribí el nombre del sector."); txtNombre.Focus(); return false; }
+            if (string.IsNullOrWhiteSpace(txtCapacidad.Text)) { ValidacionCampo.Mostrar(txtCapacidad, "Ingresá la capacidad del sector."); txtCapacidad.Focus(); return false; }
+            if (string.IsNullOrWhiteSpace(txtPrecio.Text)) { ValidacionCampo.Mostrar(txtPrecio, "Ingresá el precio del sector."); txtPrecio.Focus(); return false; }
             return true;
         }
 
@@ -79,14 +80,14 @@ namespace Visual.Vendedor
             int capacidad;
             if (!int.TryParse(txtCapacidad.Text.Trim(), out capacidad))
             {
-                MessageBox.Show("La capacidad debe ser un número entero.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtCapacidad, "Usá un número entero para la capacidad."); txtCapacidad.Focus();
                 return false;
             }
             decimal precio;
             string textoPrecio = txtPrecio.Text.Trim().Replace(',', '.');
             if (!decimal.TryParse(textoPrecio, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out precio))
             {
-                MessageBox.Show("El precio debe ser un número, por ejemplo 12500.50.", "Agregar sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtPrecio, "Escribí un precio, por ejemplo 12500,50."); txtPrecio.Focus();
                 return false;
             }
             sector = new Sector

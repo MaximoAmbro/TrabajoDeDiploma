@@ -21,10 +21,16 @@ namespace Visual
         private static readonly CultureInfo Pesos = new CultureInfo("es-AR");
 
         private bool cargando;
+        private Componentes.EstadoVacio estadoSinCompras;
 
         public frmHistorialCliente()
         {
             InitializeComponent();
+            estadoSinCompras = new Componentes.EstadoVacio { Name = "estadoSinCompras", Visible = false };
+            estadoSinCompras.AjustarA(new Rectangle(24, 148, 852, 284));
+            estadoSinCompras.Cargar("Todavía no compraste entradas. Cuando lo hagas, van a aparecer acá.", "Ver eventos");
+            estadoSinCompras.Accion += AbrirEventos;
+            Controls.Add(estadoSinCompras);
         }
 
         private void frmHistorialCliente_Load(object sender, EventArgs e)
@@ -97,14 +103,24 @@ namespace Visual
             {
                 lblDetalle.Text = "Todavía no tenés compras.";
                 dgvEntradas.Rows.Clear();
+                dgvCompras.Visible = dgvEntradas.Visible = lblDetalle.Visible = lblAyuda.Visible = btnDevolver.Visible = false;
+                estadoSinCompras.Visible = true;
                 ActualizarBotonDevolver();
                 return;
             }
+            estadoSinCompras.Visible = false;
+            dgvCompras.Visible = dgvEntradas.Visible = lblDetalle.Visible = lblAyuda.Visible = btnDevolver.Visible = true;
             DataGridViewRow elegida = dgvCompras.Rows.Cast<DataGridViewRow>()
                 .FirstOrDefault(f => ((Compra)f.Tag).Id == idCompraElegida) ?? dgvCompras.Rows[0];
             elegida.Selected = true;
             dgvCompras.CurrentCell = elegida.Cells["Pedido"];
             CargarEntradas((Compra)elegida.Tag);
+        }
+
+        private void AbrirEventos()
+        {
+            var eventos = new frmEventosCliente { IDUsuario = IDUsuario, NombreUsuario = NombreUsuario };
+            eventos.Show(); Hide();
         }
 
         private void dgvCompras_SelectionChanged(object sender, EventArgs e)
@@ -218,13 +234,12 @@ namespace Visual
             }
             catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
             {
-                MessageBox.Show(ex.Message, "Devolución", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, ex.Message);
                 CargarCompras(idCompra);
                 return;
             }
 
-            MessageBox.Show($"Devolución registrada. Se reintegran {monto.ToString("C2", Pesos)}.",
-                "Devolución", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Avisos.Informativo(this, $"Devolución registrada. Se reintegran {monto.ToString("C2", Pesos)}.");
             CargarCompras(idCompra);
         }
 

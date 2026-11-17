@@ -109,10 +109,11 @@ namespace Pruebas
                     Assert.AreEqual(DataGridViewAutoSizeColumnsMode.Fill, grilla.AutoSizeColumnsMode);
                     form.GetType().GetMethod("CargarEventos", BindingFlags.Instance | BindingFlags.NonPublic)
                         .Invoke(form, new object[] { "evento-inexistente-prueba", null, null });
-                    Assert.AreEqual(1, grilla.Rows.Count);
+                    Assert.AreEqual(0, grilla.Rows.Count);
                     Assert.IsFalse(grilla.AllowUserToAddRows);
                     Assert.IsTrue(grilla.ReadOnly);
-                    Assert.IsTrue(grilla.Rows[0].Cells[0].Value.ToString().Contains("No hay eventos"));
+                    var estado = Control<Visual.Componentes.EstadoVacio>(form, "estadoSinResultados");
+                    Assert.IsTrue(estado.Controls.Find("explicacionVacio", true).Single().Text.Contains("No encontramos eventos"));
                 }
             });
         }
@@ -147,7 +148,7 @@ namespace Pruebas
                     Control<TextBox>(form, "txtBuscar").Text = "evento-inexistente-prueba";
                     Control<Button>(form, "btnBuscar").PerformClick();
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnComprar").PerformClick(),
-                        new DialogoEsperado { Titulo = "Seleccionar evento", Texto = "Tenés que seleccionar un evento para comprar" });
+                        new DialogoEsperado { Texto = "Elegí un evento de la lista para ver sus entradas." });
                     Assert.IsTrue(form.Visible);
                     Assert.IsFalse(Application.OpenForms.Cast<Form>().Any(f => f is Visual.FrmCompraCliente));
                 }
@@ -197,8 +198,9 @@ namespace Pruebas
                     var celda = Control<DataGridView>(form, "dgvSectores").Rows[0].Cells["Cantidad"];
                     celda.Value = 2;
                     string resumen = Control<Label>(form, "lblResumen").Text;
-                    DialogosPrueba.Comprobar(() => celda.Value = cantidad,
-                        new DialogoEsperado { Titulo = "Revisá los datos", Texto = "La cantidad debe ser un número entero de 0 en adelante." });
+                    celda.Value = cantidad;
+                    Assert.AreEqual("Usá un número entero desde cero.", celda.ErrorText,
+                        "La validación debe quedar asociada a la celda que necesita corrección.");
                     Assert.AreEqual(2, celda.Value);
                     Assert.AreEqual(resumen, Control<Label>(form, "lblResumen").Text);
                 }
@@ -207,9 +209,9 @@ namespace Pruebas
 
         // CP-15 — RF-01, RN-02: registro rechaza datos inválidos.
         [DataTestMethod]
-        [DataRow("txtNombre", " ", "Crear cuenta", "Ingresá tu nombre.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 1)")]
-        [DataRow("txtApellido", " ", "Crear cuenta", "Ingresá tu apellido.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 2)")]
-        [DataRow("txtmail", " ", "Crear cuenta", "Ingresá tu correo electrónico.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 3)")]
+        [DataRow("txtNombre", " ", "Crear cuenta", "Escribí tu nombre.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 1)")]
+        [DataRow("txtApellido", " ", "Crear cuenta", "Escribí tu apellido.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 2)")]
+        [DataRow("txtmail", " ", "Crear cuenta", "Escribí tu correo electrónico.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 3)")]
         [DataRow("TxtPassword", "abc", "Crear cuenta", "La contraseña debe tener al menos", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 4)")]
         public void Registro_RechazaDatosInvalidosSinCrearUsuario(string campo, string valor, string titulo, string mensaje)
         {
@@ -536,12 +538,8 @@ namespace Pruebas
                     Assert.AreEqual("¿Cómo funcionan los niveles?", enlace.Text);
                     MethodInfo manejador = form.GetType().GetMethod("lnkNiveles_LinkClicked", BindingFlags.Instance | BindingFlags.NonPublic);
                     Assert.IsNotNull(manejador);
-                    DialogosPrueba.Comprobar(() => manejador.Invoke(form, new object[] { enlace, null }),
-                        new DialogoEsperado
-                        {
-                            Titulo = "¿Cómo funcionan los niveles?",
-                            Texto = $"Plata: de {plata} a {oro - 1} compras"
-                        });
+                    manejador.Invoke(form, new object[] { enlace, null });
+                    Assert.IsTrue(Control<Label>(form, "avisoSistema").Text.Contains($"Plata: de {plata} a {oro - 1} compras"));
                 }
             });
         }
@@ -769,8 +767,7 @@ namespace Pruebas
                     Control<TextBox>(pago, "txtVencimiento").Text = tarjeta.Vencimiento;
                     Control<TextBox>(pago, "txtCvv").Text = tarjeta.Cvv;
 
-                    DialogosPrueba.Comprobar(() => Control<Button>(pago, "btnPagar").PerformClick(),
-                        new DialogoEsperado { Titulo = "Pago no realizado", Texto = "ya no está pendiente" });
+                    DialogosPrueba.Comprobar(() => Control<Button>(pago, "btnPagar").PerformClick());
 
                     Assert.AreEqual(DialogResult.Abort, pago.DialogResult);
                     Assert.AreEqual(0, GestorCompras.Instance.PagosDe(compra).Count);

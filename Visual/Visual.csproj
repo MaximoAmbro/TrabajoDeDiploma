@@ -291,6 +291,7 @@
     </Compile>
     <Compile Include="ExportadorPDF.cs" />
     <Compile Include="ImagenEventoCodec.cs" />
+    <Compile Include="ValidacionCampo.cs" />
     <Compile Include="FormularioEventAura.cs" />
     <Compile Include="ManejadorErrores.cs" />
     <Compile Include="Tema.cs" />
