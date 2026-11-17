@@ -136,6 +136,7 @@ namespace Visual
         private void AbrirCompra(int idEvento,int? sector=null)
         {
             var compra=new FrmCompraCliente {IDUsuario=IDUsuario,IDEvento=idEvento,NombreUsuario=NombreUsuario,SectorInicial=sector};
+            if (NavegacionCliente.Navegar(compra)) return;
             compra.Show();Hide();
         }
 
@@ -164,6 +165,7 @@ namespace Visual
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void btnVolver_Click(object sender, EventArgs e)
         {
+            if (NavegacionCliente.Inicio()) return;
             frmMenuCliente frm = new frmMenuCliente();
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;

@@ -325,7 +325,14 @@ namespace Visual
             }
 
             List<string> rutas = GenerarTicket(compra);
-            using (var confirmacion = new frmConfirmacion { Compra = compra, Rutas = rutas, Carpeta = CarpetaTickets() })
+            var confirmacion = new frmConfirmacion { Compra = compra, Rutas = rutas, Carpeta = CarpetaTickets() };
+            if (NavegacionCliente.Activa)
+            {
+                NavegacionCliente.Navegar(confirmacion);
+                return;
+            }
+
+            using (confirmacion)
             {
                 confirmacion.ShowDialog(this);
             }
@@ -795,6 +802,12 @@ namespace Visual
             frmEventosCliente frm = new frmEventosCliente();
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;
+            if (NavegacionCliente.AbrirDesdeMenu(frm))
+            {
+                if (!string.IsNullOrWhiteSpace(aviso)) Avisos.Informativo(frm, aviso);
+                Hide();
+                return;
+            }
             frm.Show();
             if (!string.IsNullOrWhiteSpace(aviso)) Avisos.Informativo(frm, aviso);
             this.Hide();

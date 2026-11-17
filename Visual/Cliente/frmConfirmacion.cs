@@ -95,6 +95,12 @@ namespace Visual
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
+            var usuario = Negocio.GestorSesion.Instance.UsuarioActual;
+            if (NavegacionCliente.AbrirDesdeMenu(new frmEventosCliente
+            {
+                IDUsuario = usuario?.Id ?? 0,
+                NombreUsuario = usuario?.Nombre
+            })) return;
             DialogResult = DialogResult.OK;
         }
     }

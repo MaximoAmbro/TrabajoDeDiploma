@@ -120,6 +120,7 @@ namespace Visual
         private void AbrirEventos()
         {
             var eventos = new frmEventosCliente { IDUsuario = IDUsuario, NombreUsuario = NombreUsuario };
+            if (NavegacionCliente.AbrirDesdeMenu(eventos)) return;
             eventos.Show(); Hide();
         }
 
@@ -277,6 +278,7 @@ namespace Visual
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void btnVolver_Click(object sender, EventArgs e)
         {
+            if (NavegacionCliente.Volver()) return;
             frmMenuCliente frm = new frmMenuCliente();
             frm.NombreUsuario = NombreUsuario;
             frm.IDUsuario = IDUsuario;

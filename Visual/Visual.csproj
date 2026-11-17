@@ -259,6 +259,8 @@
     <Compile Include="Cliente\frmSuscripcion.Designer.cs">
       <DependentUpon>frmSuscripcion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Cliente\NavegacionCliente.cs" />
+    <Compile Include="Cliente\HostFormularioCliente.cs" />
     <Compile Include="Cliente\frmMenuCliente.cs">
       <SubType>Form</SubType>
     </Compile>
