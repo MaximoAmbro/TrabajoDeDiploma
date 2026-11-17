@@ -27,7 +27,8 @@ FROM (VALUES
              WHEN OBJECT_ID('dbo.CodigosCorreo','U') IS NULL THEN N'la tabla CodigosCorreo'
              WHEN OBJECT_ID('dbo.Auditoria','U') IS NULL THEN N'la tabla Auditoria'
              WHEN NOT EXISTS (SELECT 1 FROM dbo.Parametros WHERE Clave='PWD_FORTALEZA_MIN') THEN N'el parámetro PWD_FORTALEZA_MIN'
-             ELSE NULL END, '08-seguridad-cuenta-auditoria.sql')
+             ELSE NULL END, '08-seguridad-cuenta-auditoria.sql'),
+    (9, CASE WHEN COL_LENGTH('dbo.Eventos','ImagenPortada') IS NULL THEN N'la columna Eventos.ImagenPortada' END, '09-imagenes-eventos.sql')
 ) AS requisitos(Orden, Descripcion, Script)
 WHERE Descripcion IS NOT NULL
 ORDER BY Orden;";

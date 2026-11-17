@@ -18,7 +18,7 @@ namespace Visual.Componentes
         }
         public void Cargar(Evento dato)
         {
-            evento=dato;elegido=null;portada.Cargar(dato.Nombre,dato.Categoria);
+            evento=dato;elegido=null;portada.Cargar(dato.Nombre,dato.Categoria,dato.ImagenPortada);
             var local=GestorLocales.Instance.PorId(dato.IdLocal);
             titulo.Text=dato.Nombre;
             detalle.Text=dato.Fecha.ToString("dddd d 'de' MMMM · HH:mm",System.Globalization.CultureInfo.GetCultureInfo("es-AR"))+Environment.NewLine+

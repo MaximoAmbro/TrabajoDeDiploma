@@ -85,6 +85,7 @@ namespace Pruebas
                 Tuple.Create<Action,string>(() => GestorEventos.Instance.Eliminar(evento.Id), "RN-34"),
                 Tuple.Create<Action,string>(() => GestorEventos.Instance.Suspender(evento.Id), "RN-34"),
                 Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarPreventa(evento.Id, null), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarImagenPortada(evento.Id, new byte[] { 1 }), "RN-34"),
                 Tuple.Create<Action,string>(() => GestorEventos.Instance.AgregarSector(evento.Id, new Sector()), "RN-34"),
                 Tuple.Create<Action,string>(() => GestorEventos.Instance.EliminarSector(evento.Sectores.Single().Id), "RN-34"),
                 Tuple.Create<Action,string>(() => GestorLocales.Instance.Registrar(new Local()), "RN-34"),

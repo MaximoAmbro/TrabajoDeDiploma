@@ -137,6 +137,16 @@ namespace Negocio
             GestorAuditoria.Instance.Registrar("Gestión de eventos: preventa", "Evento", idEvento);
         }
 
+        public void CambiarImagenPortada(int idEvento, byte[] imagen)
+        {
+            GestorSesion.Instance.RequerirAdministrador();
+            if (imagen != null && imagen.Length > 512 * 1024)
+                throw new ArgumentException("La portada preparada supera el límite de 512 KB.");
+            if (!RepositorioEventos.Instance.ActualizarImagenPortada(idEvento, imagen))
+                throw new InvalidOperationException("No se encontró el evento para guardar su portada.");
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: portada", "Evento", idEvento);
+        }
+
         // RN-07
         public int CapacidadTotal(int idEvento)
         {

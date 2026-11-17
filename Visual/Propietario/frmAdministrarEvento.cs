@@ -37,7 +37,31 @@ namespace Visual.Vendedor
         {
             lblEvento.Text = NombreEvento;
             CargarPreventa();
+            CargarPortada();
             CargarDGV();
+        }
+
+        private void CargarPortada()
+        {
+            Evento evento = GestorEventos.Instance.ObtenerPorId(IDEvento);
+            if (evento != null) portadaEvento.Cargar(evento.Nombre, evento.Categoria, evento.ImagenPortada);
+        }
+
+        private void btnElegirPortada_Click(object sender, EventArgs e)
+        {
+            using (var selector = new OpenFileDialog { Title = "Elegí una portada", Filter = "Imágenes|*.png;*.jpg;*.jpeg;*.bmp;*.gif|Todos los archivos|*.*" })
+            {
+                if (selector.ShowDialog(this) != DialogResult.OK) return;
+                try
+                {
+                    byte[] imagen;
+                    using (var archivo = System.IO.File.OpenRead(selector.FileName)) imagen = ImagenEventoCodec.Preparar(archivo);
+                    GestorEventos.Instance.CambiarImagenPortada(IDEvento, imagen);
+                    CargarPortada();
+                }
+                catch (ArgumentException ex) { MessageBox.Show(ex.Message, "Portada del evento", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                catch (InvalidOperationException ex) { MessageBox.Show(ex.Message, "Portada del evento", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            }
         }
 
         // RN-39: destildado = sin preventa.

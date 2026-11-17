@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using Entidades;
 using Microsoft.Data.SqlClient;
 
@@ -8,7 +9,7 @@ namespace Datos
     public sealed class RepositorioEventos : RepositorioBase
     {
         private const string Columnas =
-            "SELECT ID, Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa FROM Eventos ";
+            "SELECT ID, Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa, ImagenPortada FROM Eventos ";
 
         private static RepositorioEventos _instance;
 
@@ -31,9 +32,9 @@ namespace Datos
         public int Insertar(Evento evento)
         {
             const string consulta =
-                "INSERT INTO Eventos (Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa) " +
+                "INSERT INTO Eventos (Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa, ImagenPortada) " +
                 "OUTPUT INSERTED.ID " +
-                "VALUES (@Nombre, @Fecha, @LocalID, @Categoria, @Estado, @FinPreventa)";
+                "VALUES (@Nombre, @Fecha, @LocalID, @Categoria, @Estado, @FinPreventa, @ImagenPortada)";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlTransaction transaccion = conexion.BeginTransaction())
@@ -48,6 +49,7 @@ namespace Datos
                         AgregarParametro(comando, "@Categoria", evento.Categoria);
                         AgregarParametro(comando, "@Estado", evento.Estado);
                         AgregarParametro(comando, "@FinPreventa", evento.FinPreventa);
+                        comando.Parameters.Add("@ImagenPortada", SqlDbType.VarBinary, -1).Value = (object)evento.ImagenPortada ?? DBNull.Value;
                         evento.Id = Convert.ToInt32(comando.ExecuteScalar());
                     }
 
@@ -105,7 +107,7 @@ namespace Datos
         public List<Evento> Buscar(string estado, DateTime ahora, string texto, string categoria, DateTime? desde)
         {
             const string consulta =
-                "SELECT e.ID, e.Nombre, e.Fecha, e.LocalID, e.Categoria, e.Estado, e.FinPreventa " +
+                "SELECT e.ID, e.Nombre, e.Fecha, e.LocalID, e.Categoria, e.Estado, e.FinPreventa, e.ImagenPortada " +
                 "FROM Eventos e JOIN Locales l ON l.ID = e.LocalID " +
                 "WHERE e.Estado = @Estado AND e.Fecha > @Valor " +
                 "  AND (@Texto IS NULL OR e.Nombre LIKE '%' + @Texto + '%' " +
@@ -222,6 +224,18 @@ namespace Datos
             }
         }
 
+        public bool ActualizarImagenPortada(int idEvento, byte[] imagen)
+        {
+            const string consulta = "UPDATE dbo.Eventos SET ImagenPortada=@Imagen WHERE ID=@ID";
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, consulta))
+            {
+                comando.Parameters.Add("@Imagen", SqlDbType.VarBinary, -1).Value = (object)imagen ?? DBNull.Value;
+                AgregarParametro(comando, "@ID", idEvento);
+                return comando.ExecuteNonQuery() == 1;
+            }
+        }
+
         // Devuelve false si no existe el evento.
         public bool ActualizarEstado(int idEvento, string estado)
         {
@@ -259,7 +273,8 @@ namespace Datos
                             IdLocal = Convert.ToInt32(lector["LocalID"]),
                             Categoria = LeerString(lector, "Categoria"),
                             Estado = LeerString(lector, "Estado"),
-                            FinPreventa = LeerFechaNula(lector, "FinPreventa")
+                            FinPreventa = LeerFechaNula(lector, "FinPreventa"),
+                            ImagenPortada = lector.IsDBNull(7) ? null : (byte[])lector["ImagenPortada"]
                         });
                     }
                 }

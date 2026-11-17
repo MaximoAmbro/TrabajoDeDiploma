@@ -18,7 +18,7 @@ namespace Visual.Componentes
         }
         public void Cargar(Evento dato,Local local,System.Collections.Generic.IEnumerable<Sector> sectores)
         {
-            evento=dato;portada.Cargar(dato.Nombre,dato.Categoria);
+            evento=dato;portada.Cargar(dato.Nombre,dato.Categoria,dato.ImagenPortada);
             titulo.Text=dato.Nombre;fecha.Text=dato.Fecha.ToString("ddd d MMM · HH:mm",CultureInfo.GetCultureInfo("es-AR"));
             lugar.Text=local==null?"Consultá los datos del evento":local.Nombre+" · "+local.Direccion;
             var precios=sectores.Select(s=>s.Precio).ToArray();

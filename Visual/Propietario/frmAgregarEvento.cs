@@ -15,6 +15,7 @@ namespace Visual.Propietario
 {
     public partial class frmAgregarEvento : FormularioEventAura
     {
+        private byte[] _imagenPortada;
         public int IDUsuario; public int IDlocal; public string NombreUsuario; public string NombreLocal;
         public frmAgregarEvento()
         {
@@ -22,6 +23,24 @@ namespace Visual.Propietario
             // Items y no DataSource: con DataSource, WinForms preselecciona el primer valor al
             // mostrarse y la categoría dejaría de ser una elección explícita.
             cmbCategoria.Items.AddRange(GestorEventos.Categorias.ToArray<object>());
+            txtNombre.TextChanged += (s, e) => portadaEvento.Cargar(string.IsNullOrWhiteSpace(txtNombre.Text) ? "Tu evento" : txtNombre.Text, CategoriaActual(), _imagenPortada);
+            cmbCategoria.SelectedIndexChanged += (s, e) => portadaEvento.Cargar(string.IsNullOrWhiteSpace(txtNombre.Text) ? "Tu evento" : txtNombre.Text, CategoriaActual(), _imagenPortada);
+        }
+
+        private string CategoriaActual() => cmbCategoria.SelectedItem == null ? "Portada generada" : cmbCategoria.SelectedItem.ToString();
+
+        private void btnElegirPortada_Click(object sender, EventArgs e)
+        {
+            using (var selector = new OpenFileDialog { Title = "Elegí una portada", Filter = "Imágenes|*.png;*.jpg;*.jpeg;*.bmp;*.gif|Todos los archivos|*.*" })
+            {
+                if (selector.ShowDialog(this) != DialogResult.OK) return;
+                try
+                {
+                    using (var archivo = System.IO.File.OpenRead(selector.FileName)) _imagenPortada = ImagenEventoCodec.Preparar(archivo);
+                    portadaEvento.Cargar(string.IsNullOrWhiteSpace(txtNombre.Text) ? "Tu evento" : txtNombre.Text, CategoriaActual(), _imagenPortada);
+                }
+                catch (ArgumentException ex) { MessageBox.Show(ex.Message, "Portada del evento", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            }
         }
 
         // El evento se guarda en Borrador y se vuelve al listado. Se publica solo al agregarle,
@@ -46,7 +65,8 @@ namespace Visual.Propietario
                 IdLocal = IDlocal,
                 Categoria = cmbCategoria.SelectedItem.ToString(),
                 // RN-39: destildado = sin preventa.
-                FinPreventa = dtpFinPreventa.Checked ? dtpFinPreventa.Value : (DateTime?)null
+                FinPreventa = dtpFinPreventa.Checked ? dtpFinPreventa.Value : (DateTime?)null,
+                ImagenPortada = _imagenPortada
             };
 
             try

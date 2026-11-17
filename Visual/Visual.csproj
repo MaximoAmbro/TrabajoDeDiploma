@@ -290,6 +290,7 @@
       <DependentUpon>frmEventosLocal.cs</DependentUpon>
     </Compile>
     <Compile Include="ExportadorPDF.cs" />
+    <Compile Include="ImagenEventoCodec.cs" />
     <Compile Include="FormularioEventAura.cs" />
     <Compile Include="ManejadorErrores.cs" />
     <Compile Include="Tema.cs" />

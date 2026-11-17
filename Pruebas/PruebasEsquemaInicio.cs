@@ -40,6 +40,9 @@ namespace Pruebas
                 Ejecutar("ALTER TABLE dbo.Sectores ADD CupoLiberadoEl DATETIME NULL;");
                 AssertDiagnostico("el índice único Seguros.UX_Seguros_ID_Entrada", "07-indice-unico-seguros.sql");
                 Ejecutar("CREATE UNIQUE INDEX UX_Seguros_ID_Entrada ON dbo.Seguros(ID_Entrada);");
+                Ejecutar("ALTER TABLE dbo.Eventos DROP COLUMN ImagenPortada;");
+                AssertDiagnostico("la columna Eventos.ImagenPortada", "09-imagenes-eventos.sql");
+                Ejecutar("ALTER TABLE dbo.Eventos ADD ImagenPortada VARBINARY(MAX) NULL;");
                 Assert.IsNull(VerificadorEsquema.PrimerFaltante());
             }
             finally
@@ -50,6 +53,7 @@ namespace Pruebas
                          "IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id=OBJECT_ID('dbo.Entradas') AND name='CK_Entradas_Estado') " +
                          "ALTER TABLE dbo.Entradas WITH CHECK ADD CONSTRAINT CK_Entradas_Estado CHECK (Estado IN ('Pendiente','Confirmada','Reembolsada','Vencida')); " +
                          "IF COL_LENGTH('dbo.Entradas','FechaIngreso') IS NULL ALTER TABLE dbo.Entradas ADD FechaIngreso DATETIME NULL;");
+                Ejecutar("IF COL_LENGTH('dbo.Eventos','ImagenPortada') IS NULL ALTER TABLE dbo.Eventos ADD ImagenPortada VARBINARY(MAX) NULL;");
             }
         }
 

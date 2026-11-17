@@ -1,6 +1,6 @@
 # EventAura: guion ejecutable de demostración
 
-Actualizado el 17/11/2026 para fase 4 (seguridad de cuenta y auditoría). Batería completa: **314/314**. Ejecutá primero las ocho migraciones numeradas que correspondan a la base.
+Actualizado el 17/11/2026 para fase 5 (portadas de eventos). Batería completa: **318/318**. Ejecutá primero las nueve migraciones numeradas que correspondan a la base.
 
 **Corrección importante:** la configuración real bloquea al **quinto** intento incorrecto, durante **15 minutos**. Tres intentos no bloquean. No anuncies tres delante del profesor.
 
@@ -9,7 +9,7 @@ Los importes de este guion requieren empezar con la semilla limpia y seguir el o
 ## 0. Compilar, preparar y abrir
 ### 0.0 Actualizar el código y revisar los scripts de base
 
-En la notebook de Máximo abrí PowerShell en la carpeta del repositorio. La rama de presentación debe ser `main`, que incluye los ocho scripts numerados. Primero revisá si hay trabajo local:
+En la notebook de Máximo abrí PowerShell en la carpeta del repositorio. La rama de presentación debe ser `main`, que incluye los nueve scripts numerados. Primero revisá si hay trabajo local:
 
 ```powershell
 git status --short --branch
@@ -19,9 +19,9 @@ git pull origin main
 git log --oneline -1
 ```
 
-Si `git status` muestra cambios locales o `git switch` se niega, no los borres ni los guardes encima: detenete y pedí que se preserven. El commit de publicación de esta actualización es `91aa64e` (o uno posterior de `main`). **Ves:** el nombre de rama `main` y un commit actualizado. **Importa:** `ambro` está atrasada y no contiene todo el código de la demo.
+Si `git status` muestra cambios locales o `git switch` se niega, no los borres ni los guardes encima: detenete y pedí que se preserven. El commit publicado es el que devuelve `git log --oneline -1` después del `git pull`; no uses el SHA de una versión anterior del guion. **Ves:** el nombre de rama `main` y un commit actualizado. **Importa:** `ambro` está atrasada y no contiene todo el código de la demo.
 
-Antes de abrir el programa, revisá `BaseDatos/01-esquema.sql` a `BaseDatos/08-seguridad-cuenta-auditoria.sql`. Abrí SQL Server Management Studio y conectate a la instancia de la notebook. En el selector de base de datos elegí la base destino, abrí una consulta con **Nueva consulta**, ejecutá `SELECT DB_NAME();` con **Ejecutar (F5)** y confirmá visualmente el nombre antes de seguir. Para una base nueva, creá y seleccioná una base vacía; abrí `BaseDatos/01-esquema.sql` con **Archivo > Abrir > Archivo**, ejecutalo con **F5**, y repetí con `02-semilla.sql`. Para una base ya existente, no ejecutes `01` ni `02`: abrí y ejecutá, en orden, `04-seguridad-ingreso.sql`, `05-check-estado-entradas.sql`, `06-prioridad-temporal.sql` y `07-indice-unico-seguros.sql` y `08-seguridad-cuenta-auditoria.sql`, siempre con la base destino seleccionada. Los scripts `04` a `08` son idempotentes. `01` y `02` se ejecutan solo para crear y poblar una base vacía. `03-datos-reporte.sql` es una carga voluminosa de medición; no la uses para la demostración normal.
+Antes de abrir el programa, revisá `BaseDatos/01-esquema.sql` a `BaseDatos/09-imagenes-eventos.sql`. Abrí SQL Server Management Studio y conectate a la instancia de la notebook. En el selector de base de datos elegí la base destino, abrí una consulta con **Nueva consulta**, ejecutá `SELECT DB_NAME();` con **Ejecutar (F5)** y confirmá visualmente el nombre antes de seguir. Para una base nueva, creá y seleccioná una base vacía; abrí `BaseDatos/01-esquema.sql` con **Archivo > Abrir > Archivo**, ejecutalo con **F5**, y repetí con `02-semilla.sql`. Para una base ya existente, no ejecutes `01` ni `02`: abrí y ejecutá, en orden, `04-seguridad-ingreso.sql`, `05-check-estado-entradas.sql`, `06-prioridad-temporal.sql`, `07-indice-unico-seguros.sql`, `08-seguridad-cuenta-auditoria.sql` y `09-imagenes-eventos.sql`, siempre con la base destino seleccionada. Los scripts `04` a `09` son idempotentes. `01` y `02` se ejecutan solo para crear y poblar una base vacía. `03-datos-reporte.sql` es una carga voluminosa de medición; no la uses para la demostración normal.
 
 El arranque ahora muestra dentro del login el primer requisito faltante y el script exacto, por ejemplo `Sectores.CupoLiberadoEl` y `BaseDatos/06-prioridad-temporal.sql`. No sigas hasta ejecutar ese script en la base de la copia y volver a abrir. **Importa:** se ve qué migración falta sin recibir una excepción técnica.
 
@@ -348,6 +348,6 @@ Todo junto requiere aproximadamente **19–26 minutos**, preparación aparte; es
 - No presentes la tarjeta o `HTTPS simulado` como integración bancaria real. El PDF es un ticket por entrada, no una factura fiscal.
 - No hay un botón para espiar otra cuenta: la petición forzada se muestra en consola y justamente debe ser rechazada.
 - No ejecutes batería o mutación mientras alguien usa la base de pruebas, ni dejes la línea de autorización comentada al terminar.
-- **314/314 no significa ausencia de todo defecto.** La medición global de mutación publicada sigue siendo **73/77 (94,8 %) sobre `65225e7`**. Esta demostración dirigida verifica una defensa; no reemplaza esa medición ni cambia su cifra.
+- **318/318 no significa ausencia de todo defecto.** La medición global de mutación publicada sigue siendo **73/77 (94,8 %) sobre `65225e7`**. Esta demostración dirigida verifica una defensa; no reemplaza esa medición ni cambia su cifra.
 
 Esta actualización del guion refleja las funciones de seguridad publicadas; no modifica `docs/` ni los `App.config` fuente. Las copias, auxiliares y registros del ensayo quedan en `TestResults/`, ignorado por Git.
