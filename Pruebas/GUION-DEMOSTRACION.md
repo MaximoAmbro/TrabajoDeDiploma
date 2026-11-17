@@ -1,12 +1,29 @@
 # EventAura: guion ejecutable de demostración
 
-Ensayado el 16/11/2026 en la PC de Juan Cruz, con Visual Studio Community, SQL Server y Windows PowerShell. Se ejecutaron los formularios y sus acciones reales, las consultas de preparación y la mutación indicada abajo. Batería observada: **276/276**. No hace falta modificar ningún `App.config` del repositorio.
+Actualizado el 17/11/2026 para la fase 3, el diagnóstico de esquema y el alta de administradores. La batería completa se ejecutó en la estación de desarrollo: **302/302**. La notebook de Máximo debe quedar en `main` actualizado antes de empezar; no se modifican archivos `App.config` del repositorio.
 
 **Corrección importante:** la configuración real bloquea al **quinto** intento incorrecto, durante **15 minutos**. Tres intentos no bloquean. No anuncies tres delante del profesor.
 
 Los importes de este guion requieren empezar con la semilla limpia y seguir el orden. Las fechas, los números de pedido y los QR se generan al ejecutar: donde aparece una fecha o un pedido variable, no esperes el número del ensayo.
 
 ## 0. Compilar, preparar y abrir
+### 0.0 Actualizar el código y revisar los scripts de base
+
+En la notebook de Máximo abrí PowerShell en la carpeta del repositorio. La rama de presentación debe ser `main`, que incluye los siete scripts numerados. Primero revisá si hay trabajo local:
+
+```powershell
+git status --short --branch
+git fetch origin
+git switch main
+git pull origin main
+git log --oneline -1
+```
+
+Si `git status` muestra cambios locales o `git switch` se niega, no los borres ni los guardes encima: detenete y pedí que se preserven. El commit de publicación de esta actualización es `91aa64e` (o uno posterior de `main`). **Ves:** el nombre de rama `main` y un commit actualizado. **Importa:** `ambro` está atrasada y no contiene todo el código de la demo.
+
+Antes de abrir el programa, revisá `BaseDatos/01-esquema.sql` a `BaseDatos/07-indice-unico-seguros.sql`. Abrí SQL Server Management Studio y conectate a la instancia de la notebook. En el selector de base de datos elegí la base destino, abrí una consulta con **Nueva consulta**, ejecutá `SELECT DB_NAME();` con **Ejecutar (F5)** y confirmá visualmente el nombre antes de seguir. Para una base nueva, creá y seleccioná una base vacía; abrí `BaseDatos/01-esquema.sql` con **Archivo > Abrir > Archivo**, ejecutalo con **F5**, y repetí con `02-semilla.sql`. Para una base ya existente, no ejecutes `01` ni `02`: abrí y ejecutá, en orden, `04-seguridad-ingreso.sql`, `05-check-estado-entradas.sql`, `06-prioridad-temporal.sql` y `07-indice-unico-seguros.sql`, siempre con la base destino seleccionada. Los scripts `04` a `07` son idempotentes. `01` y `02` se ejecutan solo para crear y poblar una base vacía. `03-datos-reporte.sql` es una carga voluminosa de medición; no la uses para la demostración normal.
+
+El arranque ahora muestra dentro del login el primer requisito faltante y el script exacto, por ejemplo `Sectores.CupoLiberadoEl` y `BaseDatos/06-prioridad-temporal.sql`. No sigas hasta ejecutar ese script en la base de la copia y volver a abrir. **Importa:** se ve qué migración falta sin recibir una excepción técnica.
 
 Reservá la base de pruebas y el escritorio: nadie debe correr pruebas en paralelo. Cerrá las ventanas de EventAura antes de cada comando que ejecute pruebas. Estas recrean la base terminada en `_Pruebas`; no conservan las compras de la demostración.
 
@@ -61,11 +78,11 @@ $netstandard = Join-Path ${env:ProgramFiles(x86)} 'Reference Assemblies/Microsof
 Prepará la semilla pequeña mediante un caso existente:
 
 ```powershell
-& $vstest .\Pruebas\bin\Debug\net48\Pruebas.dll '/TestCaseFilter:FullyQualifiedName~CP128_Compra'
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Pruebas\EjecutarBateriaSegura.ps1 -Filtro 'FullyQualifiedName~CP128_Compra'
 if ($LASTEXITCODE -ne 0) { throw 'No continuar: falló la preparación' }
 ```
 
-**Ves:** una prueba, una correcta. **Importa:** la inicialización crea el esquema y la semilla, y el caso limpia sus datos temporales. La batería completa deja además el juego voluminoso de reportes: por eso no reemplaza esta preparación para repetir los importes del instructivo.
+**Ves:** una prueba, una correcta. **Importa:** la inicialización crea el esquema y la semilla, y el caso limpia sus datos temporales. La preparación CP-128 se ejecuta en una base recreada de `_Pruebas`; la batería completa deja además el juego voluminoso de reportes. Para repetir los importes del instructivo usá esta preparación pequeña.
 
 Abrí **esta copia**, no el ejecutable habitual del proyecto:
 
@@ -86,12 +103,17 @@ Start-Process -FilePath (Join-Path $demo 'Visual.exe') -WorkingDirectory $demo -
 
 En el acceso, completá correo y contraseña y pulsá **Iniciar sesión**. El administrador se almacena con el rol de propietario; no hay que inventar una quinta cuenta. Estas son credenciales de la **semilla de demostración**, no recomendaciones para producción.
 
+
+### 0.4 Mostrar el panel y crear una cuenta administradora
+
+Para mostrar la administración, cerrá la sesión actual y abrí EventAura otra vez. Entrá como Ana con `admin@eventaura.com` / `Admin1234`. En **Administración** vas a ver los cinco indicadores de reportes y el botón **Crear administrador**. Pulsalo: aparece el formulario **Crear administrador**. Completá nombre, apellido, un correo que no esté usado y la misma contraseña válida en los dos campos; pulsá **Crear administrador**. **Ves:** `Usuario creado con éxito.` y volvés al panel. **Importa:** el alta administrativa está disponible dentro del panel; desde el alta pública solo se crean clientes. Este recorrido se ejecutó con el formulario y el gestor reales (CP-166).
+
 ## 1. Que funciona: de elegir a tener la entrada
 
 | Paso: acción exacta | Qué tenés que ver | Por qué importa |
 |---|---|---|
-| Entrá como Paula. Pulsá **Eventos disponibles**. | `Mi cuenta`, Paula; después `Eventos` y el paso `1 Elegí`. | La compra parte de una persona identificada. |
-| Seleccioná **Duki en Rosario** y pulsá **Comprar**. | Paso `2 Armá`; `Tu nivel: Plata · 5,0 % de descuento`. | El descuento sale del historial, no de una selección manual. |
+| Entrá como Paula. En `Mi cuenta` comprobá su nivel, y pulsá **Eventos disponibles**. En la tarjeta `Duki en Rosario`, pulsá **Ver entradas**. | La barra muestra Paula y Plata; aparece la tarjeta con portada generada y después la ficha del evento con fecha, lugar y mapa de sectores. | La identidad, la portada y la disponibilidad se construyen con los datos existentes. |
+| En la ficha, pulsá **Armar paquete** y elegí **Campo** en el mapa si no quedó elegido. | Se abre el armado con el paso `2 Armá` y el nivel Plata con `5,0 % de descuento`. | La ficha y el mapa llevan al mismo armado de compra; el descuento sale del historial. |
 | En la fila **Campo**, editá **Cantidad**: Ctrl+A, `2`, Tab. Marcá únicamente **Hospedaje**. Dejá el seguro sin marcar. | `TOTAL $ 99.625,00`, destacado en violeta. Desplazá el contenido y el resumen si quedan fuera de la vista. | Son los mismos componentes e importe del instructivo. |
 | Pulsá **Comprar**. En **Seguro de entrada**, pulsá **Sí** para continuar sin seguro. | `No agregaste el seguro de entrada. Solo se puede contratar ahora: después de pagar no se puede incorporar.` Luego `¿Continuar sin seguro?` | El sistema avisa que el seguro se decide antes de confirmar. |
 | En pago completá titular `Paula Plata`, tarjeta `4111111111111111`, vencimiento `12/28`, código `123`, y pulsá **Pagar**. | Paso `3 Pagá`, `Total a pagar: $ 99.625,00`; después `4 Listo`, `¡Compra confirmada!`, `Pedido EA-…` y `TOTAL $ 99.625,00`. | La confirmación cierra la operación y muestra su identificador. |
@@ -212,18 +234,18 @@ Start-Process -FilePath (Join-Path $demo 'Visual.exe') -WorkingDirectory $demo -
 Cerrá EventAura. No ejecutes esto con otro agente usando la base o el escritorio:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\Proyecto.ps1 -Accion Probar
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Pruebas\EjecutarBateriaSegura.ps1
 ```
 
 **Ves al final:**
 
 ```text
 La serie de pruebas se ejecutó correctamente.
-Pruebas totales: 276
-     Correcto: 276
+Pruebas totales: 302
+     Correcto: 302
 ```
 
-**Importa:** son ejecuciones reales, incluidas las filas parametrizadas. Ensayo: **1,0228 minutos de ejecución de pruebas**, además de compilar. Si el total o el resultado cambia, no lo presentes como 276/276: detené esta parte y guardá la salida.
+**Importa:** son ejecuciones reales, incluidas las filas parametrizadas. Medición observada en esta estación: **1,0468 minutos de pruebas**, además de compilar. El conteo puede aumentar en commits posteriores; anotá la salida real y no presentes otro número: detené esta parte y guardá la salida.
 
 ### 4.2 Una defensa rota delante del profesor
 
@@ -319,6 +341,6 @@ Todo junto requiere aproximadamente **19–26 minutos**, preparación aparte; es
 - No presentes la tarjeta o `HTTPS simulado` como integración bancaria real. El PDF es un ticket por entrada, no una factura fiscal.
 - No hay un botón para espiar otra cuenta: la petición forzada se muestra en consola y justamente debe ser rechazada.
 - No ejecutes batería o mutación mientras alguien usa la base de pruebas, ni dejes la línea de autorización comentada al terminar.
-- **276/276 no significa ausencia de todo defecto.** La medición global de mutación publicada sigue siendo **73/77 (94,8 %) sobre `65225e7`**. Esta demostración dirigida verifica una defensa; no reemplaza esa medición ni cambia su cifra.
+- **302/302 no significa ausencia de todo defecto.** La medición global de mutación publicada sigue siendo **73/77 (94,8 %) sobre `65225e7`**. Esta demostración dirigida verifica una defensa; no reemplaza esa medición ni cambia su cifra.
 
 No se modificaron código permanente, `docs/` ni los `App.config` fuente para preparar este guion. Las copias, auxiliares y registros del ensayo quedan en `TestResults/`, ignorado por Git.
