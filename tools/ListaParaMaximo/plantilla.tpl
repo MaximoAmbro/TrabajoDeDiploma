@@ -67,7 +67,7 @@
 >    dice cuál. Los demás no los detecta: para eso son las consultas del paso 1.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40) y las minutas (p. 44).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33) y «Arquitectura e implementación» (pp. 57 a 61).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -127,12 +127,12 @@
 > | pp. 6 a 8 | Historial de revisión, resumen ejecutivo y limitaciones declaradas | Resumen las cifras y las funciones del sistema |
 > | pp. 18, 20 y 21 | Criterios de aceptación y supuestos | Siguen a los requerimientos y a las integraciones simuladas (llega el envío de correo simulado) |
 > | pp. 23 y 24 | Requerimientos funcionales y no funcionales | Funciones nuevas: verificación de correo, recuperación de contraseña, auditoría, imágenes de eventos, mapa de sectores |
-> | pp. 25 a 33 | Reglas de negocio, factibilidad económica, niveles, parámetros y conflictos | Reglas nuevas desde RN-43 y parámetros nuevos |
+> | pp. 25 a 32 | Reglas de negocio, factibilidad económica y niveles | Reglas nuevas desde RN-43 |
 > | pp. 35 a 38 | Priorización, orden de implementación y la sección nueva «Estimación de costos» | Requerimientos nuevos: la tabla de costos suma los puntos de cada requerimiento por fase |
 > | pp. 40 a 43 | Descripción funcional, alcance y remisión a los requerimientos | Funciones nuevas |
 > | p. 45 | Prototipos | Son figuras de la interfaz |
 > | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
-> | pp. 57 a 70 | Arquitectura, entidades, código y pruebas | Clases, tablas, patrones (Strategy del envío de correo) y pruebas nuevas |
+> | pp. 62 a 70 | Entidades, código y pruebas | Clases, tablas y pruebas nuevas |
 > | pp. 71 a 89 | Casos de uso, especificaciones y todos los diagramas | Casos de uso nuevos; los diagramas se regeneran |
 > | pp. 90 a 97 | Usabilidad: el párrafo sobre el rediseño | La interfaz vuelve a cambiar |
 > | pp. 98 a 105 | Anexo A02 | Depende de las pantallas y de las consultas |
@@ -625,9 +625,10 @@ pp. 27, 30, 40, 55 y 82 ya es exacto y no se toca.
 
 ## Página 33 — Parámetros y conflictos
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-10 · p\. 33 :: ^\*\*A-11
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-11 · p\. 33 :: ^## 3\. Requerimientos y alcance
 
 ## Página 35 — Priorización
@@ -917,7 +918,7 @@ contando. En los dos casos el nivel se conserva hasta la reevaluación mensual.�
 
 ## Páginas 57 a 61 — «Implementación» pasa a «Arquitectura e implementación»
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad.
 
 @@- docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^## Anexo 1 — Texto para D-1 :: ^\*Razón:\* código\. Las 4 capas
 
@@ -985,6 +986,14 @@ diagrama general de la p. 71.
 | «CU-06 – Suscribirse al sistema» | «CU-06 – Gestionar suscripción» |
 | «CU-07 – Gestionar listas de espera» | «CU-07 – Consultar listas de espera» |
 | «CU-08 – Ver reportes de ventas» | «CU-08 – Generar reportes» |
+
+**Campo «Actor»** (tres perfiles desde el 18/11):
+
+| Caso de uso | Dice | Poner |
+|---|---|---|
+| CU-02 – Gestionar eventos | «Administrador» | «Organizador» |
+| CU-07 – Consultar listas de espera | «Administrador» | «Organizador» |
+| CU-08 – Generar reportes | «Administrador» | «Organizador (reportes de sus eventos) o Administrador (reportes de todos los eventos)» |
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-09 · CU-01 :: ^### Diagramas \(pp\. 71
 
