@@ -20,11 +20,14 @@ namespace Visual
         private readonly Label archivo = new Label { AutoSize = true, Text = "No seleccionaste documentación." };
         private byte[] imagen;
         private string nombreArchivo;
-        private readonly Componentes.EtiquetaAyuda bandejaTelefono = new Componentes.EtiquetaAyuda { Name="bandejaTelefonoSimulada", Location=new Point(24,254), Size=new Size(820,36) };
+        private readonly Componentes.EtiquetaAyuda bandejaTelefono = new Componentes.EtiquetaAyuda { Name="estadoEnvioTelefono", Location=new Point(24,254), Size=new Size(820,36) };
+        private readonly Componentes.BotonSecundario abrirBandejaTelefono = new Componentes.BotonSecundario { Name="btnAbrirBandejaTelefono", Text="Abrir bandeja simulada", Location=new Point(24,210), Size=new Size(200,38), Enabled=false };
+        private string destinatarioBandejaTelefono;
 
         public frmSolicitudOrganizador()
         {
             GestorSesion.Instance.RequerirUsuario(GestorSesion.Instance.UsuarioActual?.Id ?? 0);
+            telefono.Name = "telefono";
             if (GestorSesion.Instance.UsuarioActual.TipoUsuario != "Cliente")
                 throw new ReglaNegocioException("RN-50", "La solicitud de Organizador está disponible para cuentas Cliente.");
             Text = "Solicitar perfil de Organizador"; StartPosition = FormStartPosition.CenterParent;
@@ -35,11 +38,16 @@ namespace Visual
             Agregar("CUIT (11 dígitos)", cuit, 455, 78);
             Agregar("Teléfono argentino", telefono, 24, 148);
             Agregar("Código de verificación", codigo, 455, 148);
-            var enviar = new Componentes.BotonSecundario { Text = "Enviar código", Location = new Point(455, 210), Size = new Size(150, 38) };
+            var enviar = new Componentes.BotonSecundario { Name = "btnEnviarCodigoTelefono", Text = "Enviar código", Location = new Point(455, 210), Size = new Size(150, 38) };
             var confirmar = new Componentes.BotonSecundario { Text = "Confirmar teléfono", Location = new Point(615, 210), Size = new Size(190, 38) };
             enviar.Click += (s,e)=>EnviarCodigo();
             confirmar.Click += (s,e)=>Ejecutar(()=>GestorSolicitudesOrganizador.Instance.ConfirmarCodigoTelefono(telefono.Text,codigo.Text), "Teléfono verificado.");
-            Controls.AddRange(new Control[] { enviar, confirmar, bandejaTelefono });
+            Controls.AddRange(new Control[] { abrirBandejaTelefono, enviar, confirmar, bandejaTelefono });
+            abrirBandejaTelefono.Click += (s,e) =>
+            {
+                if (string.IsNullOrWhiteSpace(destinatarioBandejaTelefono)) return;
+                using (var bandeja = new frmBandejaSimulada(destinatarioBandejaTelefono, GestorCodigosCorreo.PropositoTelefonoOrganizador)) bandeja.ShowDialog(this);
+            };
             Agregar("Nombre del local", local, 24, 298);
             Agregar("Dirección", direccion, 455, 298);
             Agregar("Capacidad", capacidad, 24, 368);
@@ -60,10 +68,9 @@ namespace Visual
             try
             {
                 GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(telefono.Text);
-                string destino = GestorSolicitudesOrganizador.NormalizarTelefonoArgentino(telefono.Text);
-                var mensaje = EnviadorSimulado.Ultimo(destino, GestorCodigosCorreo.PropositoTelefonoOrganizador);
-                bandejaTelefono.Text = mensaje == null ? "El enviador no dej\u00f3 un mensaje en la bandeja simulada." :
-                    "Bandeja simulada \u00b7 Para: " + destino + " \u00b7 C\u00f3digo: " + mensaje.Codigo + " \u00b7 Vence: " + mensaje.VenceEl.ToLocalTime().ToString("HH:mm");
+                destinatarioBandejaTelefono = GestorSolicitudesOrganizador.NormalizarTelefonoArgentino(telefono.Text);
+                bandejaTelefono.Text = "Si el teléfono es válido, enviamos un código a la bandeja simulada.";
+                abrirBandejaTelefono.Enabled = true;
             }
             catch (Exception ex) { bandejaTelefono.Text = ex.Message; }
         }

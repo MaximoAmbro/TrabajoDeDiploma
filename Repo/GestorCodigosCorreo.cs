@@ -1,13 +1,16 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using Datos;
 
 namespace Negocio
 {
     public sealed class GestorCodigosCorreo
     {
+        private const int EsperaMinimaRecuperacionMs = 1000;
         private static readonly GestorCodigosCorreo Instancia = new GestorCodigosCorreo();
         public static GestorCodigosCorreo Instance { get { return Instancia; } }
         private GestorCodigosCorreo() { }
@@ -19,9 +22,26 @@ namespace Negocio
 
         public void SolicitarRecuperacion(string correo)
         {
-            if (string.IsNullOrWhiteSpace(correo)) return;
-            var usuario = RepositorioUsuarios.Instance.ObtenerPorMail(correo.Trim());
-            if (usuario != null) Emitir(usuario.Id, usuario.Mail, "Recuperacion");
+            var reloj = Stopwatch.StartNew();
+            try
+            {
+                string destino = (correo ?? string.Empty).Trim();
+                var usuario = string.IsNullOrWhiteSpace(destino) ? null : RepositorioUsuarios.Instance.ObtenerPorMail(destino);
+                if (usuario != null)
+                    Emitir(usuario.Id, usuario.Mail, "Recuperacion");
+                else if (SeleccionEnviadorCodigos.Actual is EnviadorSimulado)
+                {
+                    // Este señuelo deja la misma bandeja visible, pero no tiene código persistido
+                    // y por eso nunca puede restablecer una cuenta.
+                    int minutos = GestorParametros.Instance.ObtenerEntero("CORREO_CODIGO_MIN");
+                    SeleccionEnviadorCodigos.Actual.Enviar(destino, "Recuperacion", NuevoCodigo(), DateTime.UtcNow.AddMinutes(minutos));
+                }
+            }
+            finally
+            {
+                int restante = EsperaMinimaRecuperacionMs - (int)reloj.ElapsedMilliseconds;
+                if (restante > 0) Thread.Sleep(restante);
+            }
         }
 
         public void ConfirmarVerificacion(string correo, string codigo)
@@ -56,14 +76,7 @@ namespace Negocio
 
         private static void Emitir(int idUsuario, string correo, string proposito)
         {
-            string codigo;
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                var bytes = new byte[4];
-                rng.GetBytes(bytes);
-                uint numero = BitConverter.ToUInt32(bytes, 0) % 900000U + 100000U;
-                codigo = numero.ToString("D6", System.Globalization.CultureInfo.InvariantCulture);
-            }
+            string codigo = NuevoCodigo();
             var sal = new byte[16];
             using (var rng = RandomNumberGenerator.Create()) rng.GetBytes(sal);
             int minutos = GestorParametros.Instance.ObtenerEntero("CORREO_CODIGO_MIN");
@@ -71,6 +84,17 @@ namespace Negocio
             int idCodigo = RepositorioCodigosCorreo.Instance.Emitir(idUsuario, proposito, sal, hash, minutos, correo);
             var pendiente = RepositorioCodigosCorreo.Instance.PorId(idCodigo);
             SeleccionEnviadorCodigos.Actual.Enviar(correo, proposito, codigo, pendiente.VenceEl);
+        }
+
+        private static string NuevoCodigo()
+        {
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                var bytes = new byte[4];
+                rng.GetBytes(bytes);
+                uint numero = BitConverter.ToUInt32(bytes, 0) % 900000U + 100000U;
+                return numero.ToString("D6", System.Globalization.CultureInfo.InvariantCulture);
+            }
         }
 
         private static void Confirmar(string correo, string codigo, string proposito, string nuevaContrasenaHash)
@@ -92,7 +116,7 @@ namespace Negocio
             if (!Iguales(ultimo.Hash, propuesto))
             {
                 RepositorioCodigosCorreo.Instance.RegistrarIntento(ultimo.Id, maximo);
-                throw new ReglaNegocioException("RN-44", "El código no es correcto. Revisá el correo y volvé a intentar.");
+                throw CodigoVencido();
             }
 
             if (!RepositorioCodigosCorreo.Instance.Consumir(ultimo.Id, usuarioId, proposito, maximo, nuevaContrasenaHash))
@@ -118,7 +142,7 @@ namespace Negocio
 
         private static ReglaNegocioException CodigoVencido()
         {
-            return new ReglaNegocioException("RN-44", "El código venció o ya se usó. Solicitá uno nuevo.");
+            return new ReglaNegocioException("RN-44", "El código no es válido o venció. Solicitá uno nuevo.");
         }
     }
 }

@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Datos;
 using Entidades;
 
@@ -7,6 +9,7 @@ namespace Negocio
 {
     public sealed class GestorUsuarios
     {
+        private const int EsperaMinimaAltaClienteMs = 1000;
         private static GestorUsuarios _instance;
 
         public static GestorUsuarios Instance
@@ -108,8 +111,26 @@ namespace Negocio
         // Alta pública: solo clientes. Los perfiles privilegiados no se autoasignan (RN-05).
         public void RegistrarCliente(string mail, string pwd, string nombre, string apellido)
         {
-            int id = Registrar(mail, pwd, nombre, apellido, TipoCliente);
-            GestorCodigosCorreo.Instance.EnviarVerificacion(id, mail.Trim());
+            var reloj = Stopwatch.StartNew();
+            try
+            {
+                try
+                {
+                    int id = Registrar(mail, pwd, nombre, apellido, TipoCliente);
+                    GestorCodigosCorreo.Instance.EnviarVerificacion(id, mail.Trim());
+                }
+                catch (ReglaNegocioException ex) when (ex.Regla == "RN-01" && !string.IsNullOrWhiteSpace(mail))
+                {
+                    var existente = RepositorioUsuarios.Instance.ObtenerPorMail(mail.Trim());
+                    if (existente == null) throw;
+                    GestorCodigosCorreo.Instance.EnviarVerificacion(existente.Id, existente.Mail);
+                }
+            }
+            finally
+            {
+                int restante = EsperaMinimaAltaClienteMs - (int)reloj.ElapsedMilliseconds;
+                if (restante > 0) Thread.Sleep(restante);
+            }
         }
 
         public void CrearAdministrador(string mail, string pwd, string nombre, string apellido)
