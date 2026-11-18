@@ -3076,9 +3076,15 @@ controlar el ingreso a eventos ajenos, y sin sesión la operación terminaba en 
 controlado. Con el control en su lugar el rechazo era el correcto, pero ninguna prueba lo exigía.
 Lo encontró la prueba de mutación, y se corrigió después de la medición: el rechazo pasó a ser un
 resultado que nombra su regla, y un caso nuevo lo exige, con un cliente y sin sesión, y falla si el
-control se quita. Por eso la cifra de setenta y tres de setenta y siete corresponde al commit
-medido, `65225e7`, y no a la versión que se entrega, `dba674c`. Es también el mejor argumento a
-favor del método: la mutación encontró un hueco que ninguna de las pruebas existentes advertía.
+control se quita. Es también el mejor argumento a favor del método: la mutación encontró un
+hueco que ninguna de las pruebas existentes advertía.
+
+La cifra de setenta y tres de setenta y siete se midió sobre esa versión, el commit `65225e7`, y
+no describe el código que se entrega. Después de la medición se reescribió la autorización: el
+sistema pasó de dos perfiles a tres, Cliente, Organizador y Administrador, y los controles de
+perfil cambiaron de regla. La mutación del control de perfil al registrar un ingreso, por ejemplo,
+se midió cuando ese control era RN-34; hoy es RN-48. La campaña no se volvió a ejecutar sobre el
+código nuevo, y por eso la cifra se informa con la versión en la que se midió.
 
 *Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
 entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos

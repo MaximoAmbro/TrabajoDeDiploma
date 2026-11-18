@@ -13,7 +13,7 @@ desde `docs/LISTA-PARA-MAXIMO.md`, entre el final de «Matriz de trazabilidad» 
 | Mutación, primera medición | 51 de 77 (66,2 %), sobre `fe04b1f` | `docs/INFORME-MUTACION-SEGURIDAD.md`, secciones 1 a 9 |
 | Mutación, medición final | **73 de 77 (94,8 %), sobre `65225e7`**; dos equivalentes descubiertas después, adentro (sin ellas, 97,3 %) | `docs/INFORME-MUTACION-SEGURIDAD.md`, sección 0 |
 
-El texto nombra los dos commits: `65225e7` en el párrafo «Resultado» y otra vez, con `dba674c`, en el párrafo de las cuatro no detectadas.
+El texto nombra solo el commit medido, `65225e7`: en el párrafo «Resultado» y otra vez después del de las cuatro no detectadas, donde dice que después se reescribió la autorización (RN-34 pasó a RN-48) y que no se volvió a medir (JC, 18/11). No nombra la versión que se entrega, para que no quede vieja cuando cambie. **⏸ Las cifras de esta tabla (casos, ejecuciones, cobertura) y `dba674c` de arriba esperan los números de JC.**
 
 ---
 
@@ -157,9 +157,15 @@ controlar el ingreso a eventos ajenos, y sin sesión la operación terminaba en 
 controlado. Con el control en su lugar el rechazo era el correcto, pero ninguna prueba lo exigía.
 Lo encontró la prueba de mutación, y se corrigió después de la medición: el rechazo pasó a ser un
 resultado que nombra su regla, y un caso nuevo lo exige, con un cliente y sin sesión, y falla si el
-control se quita. Por eso la cifra de setenta y tres de setenta y siete corresponde al commit
-medido, `65225e7`, y no a la versión que se entrega, `dba674c`. Es también el mejor argumento a
-favor del método: la mutación encontró un hueco que ninguna de las pruebas existentes advertía.
+control se quita. Es también el mejor argumento a favor del método: la mutación encontró un
+hueco que ninguna de las pruebas existentes advertía.
+
+La cifra de setenta y tres de setenta y siete se midió sobre esa versión, el commit `65225e7`, y
+no describe el código que se entrega. Después de la medición se reescribió la autorización: el
+sistema pasó de dos perfiles a tres, Cliente, Organizador y Administrador, y los controles de
+perfil cambiaron de regla. La mutación del control de perfil al registrar un ingreso, por ejemplo,
+se midió cuando ese control era RN-34; hoy es RN-48. La campaña no se volvió a ejecutar sobre el
+código nuevo, y por eso la cifra se informa con la versión en la que se midió.
 
 *Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
 entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos

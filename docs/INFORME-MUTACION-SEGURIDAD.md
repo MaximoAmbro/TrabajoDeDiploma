@@ -107,8 +107,10 @@ foco, no cuente como detección.
 ### M-22: un hueco de la batería, cerrado después de la medición
 
 Decisión de JC del 17/11: se corrige y no se vuelve a medir. **La cifra se queda en 73 de 77 sobre
-`65225e7`**: corresponde al commit medido, no a la versión que se entrega, `dba674c`
-(`dba674c5d3e870003f3b194de2ee905c6d83da69`).
+`65225e7`**: corresponde al commit medido, no a la versión que se entrega. Después de la medición
+se reescribió la autorización (fase 8a: tres perfiles, Cliente, Organizador y Administrador), y el
+control de perfil que quita M-22 pasó de RN-34 a RN-48. La campaña no se volvió a ejecutar (JC,
+18/11).
 
 **Qué era, con precisión.** Esto corrige la versión anterior de esta sección, que decía que sin
 sesión el registro terminaba en una excepción no controlada, como si fuera un defecto del código
