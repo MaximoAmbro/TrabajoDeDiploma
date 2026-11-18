@@ -392,6 +392,7 @@
     <Compile Include="Propietario\frmAuditoria.cs" />
     <Compile Include="Propietario\frmSolicitudOrganizador.cs" />
     <Compile Include="Propietario\frmRevisarSolicitudesOrganizador.cs" />
+    <Compile Include="Propietario\frmRevisarEventos.cs" />
     <Compile Include="Propietario\frmAuditoria.Designer.cs">
       <DependentUpon>frmAuditoria.cs</DependentUpon>
     </Compile>

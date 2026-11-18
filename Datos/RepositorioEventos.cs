@@ -82,6 +82,50 @@ namespace Datos
             return Consultar(Columnas + "WHERE LocalID = @Valor ORDER BY Fecha", idLocal);
         }
 
+        public List<Evento> ObtenerPorEstado(string estado)
+        {
+            return Consultar(Columnas + "WHERE Estado = @Valor ORDER BY Fecha,ID", estado);
+        }
+
+        public bool OrganizadorYaTuvoEventoAprobado(int idOrganizador)
+        {
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion,
+                "SELECT CASE WHEN EXISTS(SELECT 1 FROM Propietario WHERE ID=@ID AND PrimerEventoAprobado=1) THEN 1 ELSE 0 END"))
+            {
+                AgregarParametro(comando, "@ID", idOrganizador);
+                return Convert.ToInt32(comando.ExecuteScalar()) == 1;
+            }
+        }
+
+        public bool AprobarPrimerEvento(int idEvento)
+        {
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlTransaction transaccion = conexion.BeginTransaction())
+            {
+                try
+                {
+                    int cambiado;
+                    using (SqlCommand comando = CrearComando(conexion,
+                        "UPDATE dbo.Eventos SET Estado='Publicado' WHERE ID=@ID AND Estado='EnRevision'", transaccion))
+                    {
+                        AgregarParametro(comando, "@ID", idEvento);
+                        cambiado = comando.ExecuteNonQuery();
+                    }
+                    if (cambiado != 1) { transaccion.Rollback(); return false; }
+                    using (SqlCommand comando = CrearComando(conexion,
+                        "UPDATE dbo.Propietario SET PrimerEventoAprobado=1 WHERE ID=(SELECT l.PropietarioID FROM dbo.Eventos e JOIN dbo.Locales l ON l.ID=e.LocalID WHERE e.ID=@ID)", transaccion))
+                    {
+                        AgregarParametro(comando, "@ID", idEvento);
+                        if (comando.ExecuteNonQuery() != 1) throw new InvalidOperationException("El evento no tiene un organizador válido.");
+                    }
+                    transaccion.Commit();
+                    return true;
+                }
+                catch { transaccion.Rollback(); throw; }
+            }
+        }
+
         public List<Evento> ConIngresoAbierto(int idPropietario, DateTime desde, DateTime hasta)
         {
             return Consultar(Columnas + "WHERE Estado='Publicado' AND Fecha>=@Valor AND Fecha<=@Hasta " +
@@ -247,6 +291,19 @@ namespace Datos
                 AgregarParametro(comando, "@Estado", estado);
                 AgregarParametro(comando, "@ID", idEvento);
                 return comando.ExecuteNonQuery() > 0;
+            }
+        }
+
+        public bool ActualizarEstadoSiEs(int idEvento, string estadoActual, string estadoNuevo)
+        {
+            const string sql = "UPDATE Eventos SET Estado=@Nuevo WHERE ID=@ID AND Estado=@Actual";
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, sql))
+            {
+                AgregarParametro(comando, "@Nuevo", estadoNuevo);
+                AgregarParametro(comando, "@ID", idEvento);
+                AgregarParametro(comando, "@Actual", estadoActual);
+                return comando.ExecuteNonQuery() == 1;
             }
         }
 

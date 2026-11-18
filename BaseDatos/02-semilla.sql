@@ -56,7 +56,8 @@ VALUES ('Organizador', 'Demostración', 'organizador@eventaura.com',
         'PBKDF2$310000$KV/dZk+9huEPBtAM2mpBSQ==$bNLNWj5C/VqgxqOgyF5aANRLOjFWXZvwWOJR8JFbEZs=',
         'Organizador', 'Bronce', @InicioMes);
 SET @Organizador = SCOPE_IDENTITY();
-INSERT INTO Propietario (ID) VALUES (@Organizador);
+-- El organizador ficticio de la semilla ya tiene eventos publicados; no requiere revisión inicial.
+INSERT INTO Propietario (ID, PrimerEventoAprobado) VALUES (@Organizador, 1);
 
 INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, FechaUltimaEvaluacion)
 VALUES ('Bruno', 'Bronce', 'bronce@eventaura.com', 'PBKDF2$310000$KV/dZk+9huEPBtAM2mpBSQ==$bNLNWj5C/VqgxqOgyF5aANRLOjFWXZvwWOJR8JFbEZs=', 'Cliente', 'Bronce', @InicioMes);

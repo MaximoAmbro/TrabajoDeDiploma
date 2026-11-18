@@ -13,6 +13,7 @@ namespace Visual
         private Componentes.BotonPrimario btnReportesGlobales;
         private Componentes.BotonSecundario btnCerrarSesion;
         private Componentes.BotonSecundario btnSolicitudes;
+        private Componentes.BotonSecundario btnEventosEnRevision;
         private Componentes.PanelAdministrador panel;
 
         public int IDUsuario;
@@ -24,6 +25,7 @@ namespace Visual
             btnReportesGlobales.Click += AbrirReportes;
             btnCerrarSesion.Click += CerrarSesion;
             btnSolicitudes.Click += (s, e) => { GestorSesion.Instance.RequerirAdministrador(); using (var form = new frmRevisarSolicitudesOrganizador()) form.ShowDialog(this); panel.Cargar(); };
+            btnEventosEnRevision.Click += (s, e) => { GestorSesion.Instance.RequerirAdministrador(); using (var form = new frmRevisarEventos()) form.ShowDialog(this); };
             panel.CrearAdministradorSolicitado += CrearAdministrador;
             panel.AuditoriaSolicitada += (s, e) => { using (var form = new frmAuditoria()) form.ShowDialog(this); };
             Load += (s, e) =>

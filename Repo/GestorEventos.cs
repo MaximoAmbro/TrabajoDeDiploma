@@ -13,6 +13,7 @@ namespace Negocio
     {
         // Estados de un evento (docs/03-esquema-datos.md, CK_Eventos_Estado).
         public const string EstadoBorrador = "Borrador";
+        public const string EstadoEnRevision = "EnRevision";
         public const string EstadoPublicado = "Publicado";
         public const string EstadoSuspendido = "Suspendido";
 
@@ -71,23 +72,45 @@ namespace Negocio
             {
                 throw new ArgumentNullException(nameof(e));
             }
-            if (e.Sectores == null || !e.Sectores.Any(s => s != null && s.Capacidad > 0))
-            {
-                throw new ReglaNegocioException("RN-06",
-                    "No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.");
-            }
-            ValidarEvento(e);
-            RequerirLocalPropio(e.IdLocal);
-            foreach (Sector sector in e.Sectores)
-            {
-                ValidarSector(sector);
-            }
-            VerificarCapacidadLocal(e.IdLocal, 0, e.Sectores.Sum(s => s.Capacidad));
+            if (e.Id > 0) { Publicar(e.Id); return e.Id; }
+            throw new ReglaNegocioException("RN-06", "Guardá el evento como borrador, agregale sectores y después elegí Publicar.");
+        }
 
-            e.Estado = EstadoPublicado;
-            int id = RepositorioEventos.Instance.Insertar(e);
-            GestorAuditoria.Instance.Registrar("Gestión de eventos: publicar", "Evento", id);
-            return id;
+        // RN-06/RN-54: publicar es una acción explícita. La primera publicación de un
+        // organizador nuevo queda en revisión; luego de una aprobación, las siguientes son directas.
+        public void Publicar(int idEvento)
+        {
+            GestorSesion.Instance.RequerirOrganizador();
+            RequerirEventoPropio(idEvento);
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            if (evento == null || evento.Estado != EstadoBorrador)
+                throw new ReglaNegocioException("RN-06", "Solo podés publicar un evento que esté en borrador.");
+            List<Sector> sectores = RepositorioSectores.Instance.ObtenerPorEvento(idEvento);
+            if (!sectores.Any(s => s != null && s.Capacidad > 0))
+                throw new ReglaNegocioException("RN-06", "No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.");
+            VerificarCapacidadLocal(evento.IdLocal, 0, sectores.Sum(s => s.Capacidad));
+            string nuevoEstado = RepositorioEventos.Instance.OrganizadorYaTuvoEventoAprobado(GestorSesion.Instance.UsuarioActual.Id)
+                ? EstadoPublicado : EstadoEnRevision;
+            if (!RepositorioEventos.Instance.ActualizarEstadoSiEs(idEvento, EstadoBorrador, nuevoEstado))
+                throw new ReglaNegocioException("RN-06", "El evento cambió mientras intentabas publicarlo. Actualizá la pantalla y volvé a intentarlo.");
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: " + (nuevoEstado == EstadoEnRevision ? "enviar a revisión" : "publicar"), "Evento", idEvento);
+        }
+
+        public List<Evento> PendientesDeRevision()
+        {
+            GestorSesion.Instance.RequerirAdministrador();
+            return RepositorioEventos.Instance.ObtenerPorEstado(EstadoEnRevision);
+        }
+
+        public void AprobarPrimerEvento(int idEvento)
+        {
+            GestorSesion.Instance.RequerirAdministrador();
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            if (evento == null || evento.Estado != EstadoEnRevision)
+                throw new ReglaNegocioException("RN-54", "El evento ya no está pendiente de revisión.");
+            if (!RepositorioEventos.Instance.AprobarPrimerEvento(idEvento))
+                throw new ReglaNegocioException("RN-54", "El evento cambió mientras se revisaba. Actualizá la lista.");
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: aprobar primer evento", "Evento", idEvento);
         }
 
         // RN-11: un evento con entradas vendidas no se borra. Lanza la excepción sin tocar nada;
@@ -234,15 +257,8 @@ namespace Negocio
             VerificarCapacidadLocal(evento.IdLocal, actuales.Sum(x => x.Capacidad), s.Capacidad);
 
             s.IdEvento = idEvento;
-            if (evento.Estado == EstadoBorrador && s.Capacidad > 0)
-            {
-                // Primer sector con capacidad: el borrador ya cumple RN-06 y se publica.
-                s.Id = RepositorioSectores.Instance.InsertarYCambiarEstado(s, EstadoPublicado);
-            }
-            else
-            {
-                s.Id = RepositorioSectores.Instance.Insertar(s);
-            }
+            // Cargar un sector nunca publica: la transición es explícita por RN-06.
+            s.Id = RepositorioSectores.Instance.Insertar(s);
             GestorAuditoria.Instance.Registrar("Gestión de eventos: sector", "Evento", idEvento);
         }
 

@@ -16,7 +16,7 @@ namespace Pruebas {
     InterfazGrupoA.EnSta(()=> {
      var cliente=Fake.Cliente(NivelFidelidad.Bronce);var evento=Fake.EventoPublicado(1000m,5);
      var organizadores=new[]{"frmAgregarEvento","frmAgregarSector","frmRegistrarLocal","frmAdministrarEvento","frmEventosLocal","frmMisLocales","frmMenuPropietario","frmListasEspera","frmControlIngreso"};
-     var administradores=new[]{"frmMenuAdministrador","frmReportes","frmAuditoria","frmRevisarSolicitudesOrganizador"};
+     var administradores=new[]{"frmMenuAdministrador","frmReportes","frmAuditoria","frmRevisarSolicitudesOrganizador","frmRevisarEventos"};
      bool administrador=administradores.Contains(nombre);
      Compra compra=null;
      if(nombre=="frmConfirmacion" || nombre=="frmHistorialCliente") compra=Fake.CompraConfirmada(cliente,evento,2,true);

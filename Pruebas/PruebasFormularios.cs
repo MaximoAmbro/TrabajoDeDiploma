@@ -49,6 +49,7 @@ namespace Pruebas
                 {
                     // Las vistas creadas por codigo se validan por su tamano real.
                     if (tipo.Name == "frmRevisarSolicitudesOrganizador") Fake.ComoAdministrador();
+                    else if (tipo.Name == "frmRevisarEventos") Fake.ComoAdministrador();
                     else if (tipo.Name == "frmSolicitudOrganizador") Fake.ComoCliente(Fake.Cliente(Entidades.NivelFidelidad.Bronce));
                     try
                     {
@@ -89,8 +90,8 @@ namespace Pruebas
             }
 
             // SEG-2 incorpora control de ingreso y la fase de seguridad incorpora auditoría.
-            // Las dos vistas de solicitudes elevan el inventario de 22 a 24 formularios.
-            Assert.AreEqual(24, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
+            // Las vistas de solicitudes y revisión del primer evento elevan el inventario a 25.
+            Assert.AreEqual(25, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
 

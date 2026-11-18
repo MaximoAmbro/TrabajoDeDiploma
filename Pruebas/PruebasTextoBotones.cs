@@ -33,12 +33,14 @@ namespace Pruebas
         [DataRow("frmPago", DisplayName = "CP-116: Botones completos de frmPago")]
         [DataRow("frmRegistrarLocal", DisplayName = "CP-116: Botones completos de frmRegistrarLocal")]
         [DataRow("frmReportes", DisplayName = "CP-116: Botones completos de frmReportes")]
+        [DataRow("frmRevisarEventos", DisplayName = "CP-116: Botones completos de frmRevisarEventos")]
         [DataRow("frmSuscripcion", DisplayName = "CP-116: Botones completos de frmSuscripcion")]
         public void CP116_TextoCompleto(string pantalla)
         {
             PruebasSeguridad.EnStaSinCambiarDatos(() =>
             {
                 var tipo = typeof(Visual.frmInicio).Assembly.GetTypes().Single(t => t.Name == pantalla);
+                if (pantalla == "frmRevisarEventos") Fake.ComoAdministrador();
                 using (var form = (Form)Activator.CreateInstance(tipo))
                 {
                     Visual.Tema.Normalizar(form);

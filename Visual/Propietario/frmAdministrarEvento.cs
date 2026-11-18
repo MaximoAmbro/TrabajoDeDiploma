@@ -16,6 +16,7 @@ namespace Visual.Vendedor
     public partial class frmAdministrarEvento : FormularioEventAura
     {
         private Visual.Componentes.EstadoVacio estadoSinSectores;
+        private readonly Button btnPublicar = new Componentes.BotonPrimario { Name = "btnPublicarEvento", Text = "Publicar", Location = new Point(184, 444), Size = new Size(240, 40) };
         public int IDUsuario; public int IDlocal; public int IDEvento;
         public string NombreUsuario;
         public string NombreLocal;
@@ -24,11 +25,14 @@ namespace Visual.Vendedor
         public frmAdministrarEvento()
         {
             InitializeComponent();
+            Controls.Add(btnPublicar);
+            btnPublicar.Click += (s, e) => PublicarEvento();
             estadoSinSectores = new Visual.Componentes.EstadoVacio { Name = "estadoSinSectores", Visible = false };
             estadoSinSectores.AjustarA(dgvSectores);
             estadoSinSectores.Cargar("Este evento todavía no tiene sectores. Agregá uno para ofrecer entradas.", "Agregar sector");
             estadoSinSectores.Accion += () => btnAgregarSector.PerformClick();
             Controls.Add(estadoSinSectores);
+            Load += (s, e) => ActualizarPublicacion();
         }
         private void btnVolver_Click(object sender, EventArgs e)
         {
@@ -45,6 +49,28 @@ namespace Visual.Vendedor
             CargarPreventa();
             CargarPortada();
             CargarDGV();
+            ActualizarPublicacion();
+        }
+
+        private void PublicarEvento()
+        {
+            try
+            {
+                GestorEventos.Instance.Publicar(IDEvento);
+                Evento actualizado = GestorEventos.Instance.ObtenerPorId(IDEvento);
+                Avisos.Informativo(this, actualizado.Estado == GestorEventos.EstadoEnRevision
+                    ? "El primer evento se envió a revisión del Administrador."
+                    : "El evento ya está publicado y aparece en el catálogo.");
+                ActualizarPublicacion();
+            }
+            catch (ReglaNegocioException ex) { Avisos.Regla("Publicar evento", ex); }
+            catch (Exception ex) when (ex is InvalidOperationException || ex is ArgumentException) { Avisos.Informativo(this, ex.Message); }
+        }
+
+        private void ActualizarPublicacion()
+        {
+            Evento evento = GestorEventos.Instance.ObtenerPorId(IDEvento);
+            btnPublicar.Visible = evento != null && evento.Estado == GestorEventos.EstadoBorrador;
         }
 
         private void CargarPortada()
@@ -104,6 +130,7 @@ namespace Visual.Vendedor
         }
         public void CargarDGV()
         {
+            ActualizarPublicacion();
             List<Sector> sectores = GestorEventos.Instance.Sectores(IDEvento);
             if (sectores.Count == 0)
             {

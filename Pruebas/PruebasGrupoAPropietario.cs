@@ -200,10 +200,10 @@ namespace Pruebas
             });
         }
 
-        // CP-74 — RF-12, RN-06; PA-09, C.8/C.9: capacidad cero conserva borrador; positiva publica.
+        // CP-74 — RF-12, RN-06: ningún sector publica el evento como efecto secundario.
         [DataTestMethod]
         [DataRow(0, DisplayName = "CP-74: Sector de capacidad cero conserva Borrador")]
-        [DataRow(10, DisplayName = "CP-74: Primer sector con capacidad publica el evento")]
+        [DataRow(10, DisplayName = "CP-74: Primer sector con capacidad conserva Borrador")]
         public void CP74_PublicacionAlAgregarSector(int capacidad)
         {
             EnSta(() =>
@@ -221,8 +221,20 @@ namespace Pruebas
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(sector, "btnregistrarse").PerformClick(),
                         new DialogoEsperado { Titulo = "Agregar sector", Texto = "Sector agregado correctamente." });
                     Assert.AreEqual(capacidad, GestorEventos.Instance.Sectores(evento.Id).Single().Capacidad);
-                    string estado = capacidad == 0 ? GestorEventos.EstadoBorrador : GestorEventos.EstadoPublicado;
+                    string estado = GestorEventos.EstadoBorrador;
                     Assert.AreEqual(estado, GestorEventos.Instance.ObtenerPorId(evento.Id).Estado);
+                    if (capacidad > 0)
+                    {
+                        using (var publicar = new Visual.Vendedor.frmAdministrarEvento
+                            { IDEvento = evento.Id, IDlocal = local.Id, IDUsuario = local.IdPropietario, NombreEvento = evento.Nombre })
+                        {
+                            Mostrar(publicar);
+                            Assert.IsTrue(ControlDe<Button>(publicar, "btnPublicarEvento").Visible);
+                            ControlDe<Button>(publicar, "btnPublicarEvento").PerformClick();
+                        }
+                        estado = GestorEventos.EstadoPublicado; // cuenta de semilla: ya tiene un evento aprobado.
+                        Assert.AreEqual(estado, GestorEventos.Instance.ObtenerPorId(evento.Id).Estado);
+                    }
                     using (var listado = new Visual.Vendedor.frmEventosLocal { IDlocal = local.Id, IDUsuario = local.IdPropietario })
                     {
                         Mostrar(listado);

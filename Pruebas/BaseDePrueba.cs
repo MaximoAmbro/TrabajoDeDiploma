@@ -59,6 +59,8 @@ namespace Pruebas
             EjecutarScript(cadena, Path.Combine(carpeta, "09-imagenes-eventos.sql"));
             EjecutarScript(cadena, Path.Combine(carpeta, "11-perfiles-administrador-organizador.sql"));
             EjecutarScript(cadena, Path.Combine(carpeta, "12-solicitudes-organizador.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "13-revision-primer-evento.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "14-primer-evento-aprobado.sql"));
 
             // GestorParametros cachea: que lea la tabla recién poblada.
             GestorParametros.Instance.Recargar();

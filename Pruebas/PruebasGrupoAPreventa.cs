@@ -112,6 +112,10 @@ namespace Pruebas
                             new DialogoEsperado { Titulo = "Agregar sector", Texto = "Sector agregado correctamente." });
                     }
                     Evento publicado = GestorEventos.Instance.ObtenerPorId(creado.Id);
+                    Assert.AreEqual(GestorEventos.EstadoBorrador, publicado.Estado,
+                        "Agregar el sector deja el evento en borrador; la publicación es una acción explícita.");
+                    GestorEventos.Instance.Publicar(creado.Id);
+                    publicado = GestorEventos.Instance.ObtenerPorId(creado.Id);
                     Assert.AreEqual(GestorEventos.EstadoPublicado, publicado.Estado);
                     Assert.AreEqual(fin, publicado.FinPreventa);
                     return;

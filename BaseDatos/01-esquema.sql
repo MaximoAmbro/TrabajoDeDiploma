@@ -34,6 +34,7 @@ CREATE TABLE Cliente (
 IF OBJECT_ID('dbo.Propietario', 'U') IS NULL
 CREATE TABLE Propietario (
     ID INT PRIMARY KEY,
+    PrimerEventoAprobado BIT NOT NULL CONSTRAINT DF_Propietario_PrimerEventoAprobado DEFAULT (0),
     FOREIGN KEY (ID) REFERENCES Usuario(ID)
 );
 
@@ -155,7 +156,7 @@ ALTER TABLE Usuario ADD CONSTRAINT UQ_Usuario_Mail UNIQUE (Mail);
 
 -- Estados de un evento (docs/03-esquema-datos.md).
 ALTER TABLE Eventos ADD CONSTRAINT CK_Eventos_Estado
-      CHECK (Estado IN ('Borrador','Publicado','Suspendido'));
+      CHECK (Estado IN ('Borrador','EnRevision','Publicado','Suspendido'));
 GO
 
 -- ═══════════════ Operación de compra ═══════════════

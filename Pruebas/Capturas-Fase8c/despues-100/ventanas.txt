@@ -1,0 +1,3 @@
+frmMenuAdministrador DPI=96 px=1016x689
+frmAdministrarEvento DPI=96 px=856x547
+frmRevisarEventos DPI=96 px=1076x609

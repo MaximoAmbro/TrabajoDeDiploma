@@ -23,9 +23,11 @@ namespace Pruebas
         [DataRow(typeof(InicioCliente),DisplayName="CP-163: Botones de inicio completos y primario renderizado")]
         [DataRow(typeof(EstadoVacio),DisplayName="CP-163: Acción de estado vacío con texto completo")]
         [DataRow(typeof(Visual.frmAuditoria),DisplayName="CP-163: Pantalla de auditoria con accion visible")]
+        [DataRow(typeof(Visual.frmRevisarEventos),DisplayName="CP-163: Pantalla de revision con boton primario renderizado")]
         public void CP163_Botones(Type tipo)
         {
             PruebasSeguridad.EnStaSinCambiarDatos(()=>{
+                if(tipo==typeof(Visual.frmRevisarEventos)) Fake.ComoAdministrador();
                 using(var vista=(Control)Activator.CreateInstance(tipo)) {
                     if(vista is EstadoVacio)((EstadoVacio)vista).Cargar("Sin datos","Ver todos");
                     foreach(Button boton in Descendientes(vista).OfType<Button>()) {
