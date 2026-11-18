@@ -1,5 +1,72 @@
 # LA lista para el Word — de la página 1 a la 112
 
+> ## ⚠ ANTES DE TODO: siete scripts nuevos en tu base (18/11)
+>
+> **El ejecutable de hoy no anda sin ellos.** En SQL Server Management Studio, elegí tu base de
+> EventAura y ejecutá los archivos de la carpeta `BaseDatos/` **en este orden, de a uno**. Todos
+> se pueden ejecutar más de una vez sin dañar nada.
+>
+> 0. **Si todavía no corriste del `04` al `07`** (los del 16/11), corrélos primero, en orden:
+>    `04-seguridad-ingreso`, `05-check-estado-entradas`, `06-prioridad-temporal`,
+>    `07-indice-unico-seguros`. Si ya los corriste, seguí desde el 1.
+> 1. **`08-seguridad-cuenta-auditoria.sql`**: verificación de correo, códigos de recuperación de
+>    contraseña, tabla de auditoría y los parámetros de cierre por inactividad y fortaleza de la
+>    contraseña. Las cuentas que ya tenés quedan con el correo verificado.
+> 2. **`09-imagenes-eventos.sql`**: agrega la imagen de portada de los eventos.
+> 3. **`10-restringir-cantidad-vendida.sql`**: cada entrada vale una unidad del cupo. Muestra
+>    cuántas filas corrigió; lo normal es **0**.
+> 4. **Antes del `11`, comprobá esto.** Ejecutá:
+>
+>    ```sql
+>    SELECT ID, TipoUsuario FROM Usuario WHERE Mail = 'admin@eventaura.com';
+>    ```
+>
+>    - **Devuelve una fila:** seguí con el paso 5.
+>    - **No devuelve nada:** **pará acá.** No corras del `11` al `14`: el `11` se detendría con el
+>      error 51101. Ejecutá esto y mandale el resultado a JC:
+>
+>      ```sql
+>      SELECT ID, Mail, TipoUsuario FROM Usuario WHERE TipoUsuario <> 'Cliente';
+>      ```
+>
+> 5. **`11-perfiles-administrador-organizador.sql`**: separa los perfiles en Cliente, Organizador
+>    y Administrador. Crea la cuenta `organizador@eventaura.com` (contraseña `Cliente123`) y le
+>    pasa **todos los locales** que eran de `admin@eventaura.com`. Si se detiene con el error
+>    51102, hay una cuenta con un perfil desconocido: pará y avisale a JC.
+> 6. **`12-solicitudes-organizador.sql`**: agrega la solicitud para que un cliente pase a ser
+>    organizador, con una solicitud ficticia de ejemplo a nombre de `bronce@eventaura.com`.
+> 7. **`13-revision-primer-evento.sql`**: agrega el estado «en revisión» de los eventos.
+> 8. **`14-primer-evento-aprobado.sql`**: marca como ya aprobados a los organizadores que tienen
+>    eventos publicados, así que `organizador@eventaura.com` publica directo, sin revisión.
+>
+> **⚠ Lo que cambia y no es un error:** desde el `11`, **`admin@eventaura.com` ya no tiene
+> locales.** Entra a un menú de administrador de la plataforma (solicitudes, eventos en
+> revisión, reportes, auditoría). Los locales y eventos están ahora en
+> **`organizador@eventaura.com` / `Cliente123`**.
+>
+> **Cómo comprobar que quedó bien:**
+>
+> 1. Ejecutá:
+>
+>    ```sql
+>    SELECT u.Mail, u.TipoUsuario, COUNT(l.ID) AS Locales
+>    FROM Usuario u LEFT JOIN Locales l ON l.PropietarioID = u.ID
+>    WHERE u.Mail IN ('admin@eventaura.com', 'organizador@eventaura.com')
+>    GROUP BY u.Mail, u.TipoUsuario;
+>    ```
+>
+>    Tiene que dar dos filas: `admin@…` con `Administrador` y **0** locales, y `organizador@…`
+>    con `Organizador` y **1 o más** locales. Después ejecutá:
+>
+>    ```sql
+>    SELECT COL_LENGTH('Propietario', 'PrimerEventoAprobado') AS Script14;
+>    ```
+>
+>    Tiene que dar un número, no `NULL`.
+> 2. Abrí el ejecutable. Si falta alguno de los scripts del `04` al `09` o el `12`, al iniciar te
+>    dice cuál. Los demás no los detecta: para eso son las consultas del paso 1.
+> 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
+
 > ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40) y las minutas (p. 44).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
@@ -7,29 +74,6 @@
 > las figuras. Dentro de esas páginas que sí se pegan siguen esperando los datos marcados
 > «⏸ ESPERA A JC». **Si ya pegaste algo de la zona en pausa, dejalo como está:** cuando se libere,
 > «Cambió después del 16/11» va a decir qué volver a pegar.
-
-> ## ⚠ ANTES DE TODO: los scripts de la base de datos
->
-> El ejecutable nuevo necesita cambios en tu base de EventAura. En SQL Server Management Studio,
-> **elegí tu base de EventAura** y ejecutá estos scripts de la carpeta `BaseDatos/`, **en este
-> orden**, antes de abrir el ejecutable nuevo. Los cuatro se pueden ejecutar más de una vez sin
-> dañar nada:
->
-> 1. **`04-seguridad-ingreso.sql`**, solo si tu base es anterior al 11/11 (si no estás seguro,
->    ejecutalo). Agrega lo que usa el control de ingreso por QR. **Si no lo corrés**, el control
->    de ingreso falla.
-> 2. **`05-check-estado-entradas.sql`**. Agrega la restricción de los cuatro estados posibles de
->    una entrada. Si encuentra una entrada con otro estado, muestra cuál y se detiene sin
->    modificar nada: en ese caso, avisale a JC. **Si no lo corrés**, la aplicación funciona, pero
->    la base acepta estados de entrada que no existen.
-> 3. **`06-prioridad-temporal.sql`**. Agrega la ventana de prioridad de la lista de espera
->    (RN-35). **Si no lo corrés, no se puede iniciar ninguna compra:** el ejecutable nuevo lee una
->    columna que tu base todavía no tiene.
-> 4. **`07-indice-unico-seguros.sql`**. Agrega el índice que impide dos seguros sobre una misma
->    entrada (RN-28). Antes de crearlo busca entradas con más de un seguro: si encuentra alguna,
->    muestra cuáles y se detiene con el error 50007, sin borrar ni modificar nada. En ese caso,
->    no sigas y avisale a JC. **Si no lo corrés**, la aplicación funciona, pero la base acepta dos
->    seguros para la misma entrada, que son dos cargos al cliente.
 
 > ## ↻ CAMBIÓ DESPUÉS DEL 16/11: volver a pegar
 >
@@ -95,7 +139,6 @@
 > | pp. 106 a 109 | Matriz de trazabilidad, cobertura y brechas | Requerimientos, reglas y casos nuevos |
 > | Sección nueva «Metodología de verificación» | Batería y cifras | Casos y ejecuciones nuevos |
 > | pp. 110 y 111 | Conclusiones, limitaciones y trabajo futuro | Por ejemplo, «no existe recuperación de contraseña» deja de ser cierto |
-> | Arriba de todo | Los scripts de la base | Llegan al menos dos scripts nuevos |
 >
 > **Datos de JC:**
 >
