@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using Datos;
 using Entidades;
@@ -41,6 +43,8 @@ namespace Pruebas
                     var mensaje = EnviadorSimulado.Ultimo(correo, "Verificacion");
                     Assert.IsNotNull(mensaje);
                     Assert.IsNotNull(form.Controls.Find("bandejaCorreoSimulada", true)[0]);
+                    Assert.IsTrue(ControlDe<Label>(form, "mensajeBandeja").Text.Contains(mensaje.Codigo));
+                    Assert.IsFalse(ControlDe<Label>(form, "estadoVerificacion").Text.Contains(mensaje.Codigo));
                     Assert.IsFalse(RepositorioUsuarios.Instance.CorreoVerificado(RepositorioUsuarios.Instance.ObtenerPorMail(correo).Id));
                     ControlDe<TextBox>(form, "txtCodigoCorreo").Text = mensaje.Codigo;
                     ControlDe<Button>(form, "btnConfirmarCorreo").PerformClick();
@@ -127,7 +131,11 @@ namespace Pruebas
                     ControlDe<Button>(form, "btnEnviarCodigo").PerformClick();
                     var mensaje = EnviadorSimulado.Ultimo(cliente.Mail, "Recuperacion");
                     Assert.IsNotNull(mensaje);
-                    Assert.IsTrue(ControlDe<Label>(form, "estadoRecuperacion").Text.Contains(mensaje.Codigo));
+                    Assert.AreEqual("Si la cuenta existe, enviamos un código.", ControlDe<Label>(form, "estadoRecuperacion").Text);
+                    Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(mensaje.Codigo)), "El formulario solicitante no muestra el código.");
+                    using (var bandeja = new Visual.frmBandejaSimulada(cliente.Mail, "Recuperacion"))
+                        Assert.IsTrue(ControlDe<Label>(bandeja, "mensajeBandejaSimulada").Text.Contains(mensaje.Codigo), "El código aparece solamente al abrir la bandeja simulada.");
+                    Assert.IsTrue(AbrirBandejaYVerCodigo(form, "btnAbrirBandejaSimulada", mensaje.Codigo));
                     ControlDe<TextBox>(form, "txtActual").Text = mensaje.Codigo;
                     ControlDe<TextBox>(form, "TxtPassword").Text = "NuevaClave123";
                     ControlDe<TextBox>(form, "TxtConfirmpassword").Text = "NuevaClave123";
@@ -137,6 +145,152 @@ namespace Pruebas
                     Assert.IsFalse(Seguridad.Verificar("Cliente123", hash));
                 }
             });
+        }
+
+        [TestMethod("CP-200: Recuperación no enumera correos y la respuesta tarda lo mismo")]
+        public void CP200_RecuperacionNoEnumeraYRespondeUniforme()
+        {
+            EnSta(() =>
+            {
+                const string existente = "admin@eventaura.com";
+                const string inexistente = "test-no-existe@pruebas.eventaura.com";
+                using (var form = new Visual.frmCambiarContraseña(true))
+                {
+                    Mostrar(form);
+                    ControlDe<TextBox>(form, "txtMail").Text = existente;
+                    var relojExistente = Stopwatch.StartNew();
+                    ControlDe<Button>(form, "btnEnviarCodigo").PerformClick();
+                    relojExistente.Stop();
+                    string respuestaExistente = ControlDe<Label>(form, "estadoRecuperacion").Text;
+                    var codigoExistente = EnviadorSimulado.Ultimo(existente, "Recuperacion");
+                    Assert.IsNotNull(codigoExistente);
+                    Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(codigoExistente.Codigo)));
+
+                    ControlDe<TextBox>(form, "txtMail").Text = inexistente;
+                    var relojInexistente = Stopwatch.StartNew();
+                    ControlDe<Button>(form, "btnEnviarCodigo").PerformClick();
+                    relojInexistente.Stop();
+                    string respuestaInexistente = ControlDe<Label>(form, "estadoRecuperacion").Text;
+                    var señuelo = EnviadorSimulado.Ultimo(inexistente, "Recuperacion");
+
+                    Assert.AreEqual("Si la cuenta existe, enviamos un código.", respuestaExistente);
+                    Assert.AreEqual(respuestaExistente, respuestaInexistente);
+                    Assert.IsNotNull(señuelo, "La bandeja simulada muestra el mismo formato para la dirección desconocida.");
+                    Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(señuelo.Codigo)));
+                    Assert.IsTrue(relojExistente.ElapsedMilliseconds >= 950 && relojInexistente.ElapsedMilliseconds >= 950,
+                        "Ambas solicitudes respetan el tiempo mínimo de respuesta uniforme.");
+                    Assert.IsTrue(Math.Abs(relojExistente.ElapsedMilliseconds - relojInexistente.ElapsedMilliseconds) < 400,
+                        "La diferencia observada entre los dos tiempos debe ser menor a 400 ms.");
+
+                    var error = Assert.ThrowsException<ReglaNegocioException>(() =>
+                        GestorCodigosCorreo.Instance.RecuperarContrasena(inexistente, señuelo.Codigo, "NuevaClave123"));
+                    Assert.AreEqual("RN-44", error.Regla);
+                    Assert.AreEqual("El código no es válido o venció. Solicitá uno nuevo.", error.Message);
+                }
+            });
+        }
+
+        [TestMethod("CP-201: Un nuevo código invalida el anterior y solo se usa una vez")]
+        public void CP201_CodigoAnteriorInvalidoYUnSoloUso()
+        {
+            var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            GestorCodigosCorreo.Instance.SolicitarRecuperacion(cliente.Mail);
+            var anterior = EnviadorSimulado.Ultimo(cliente.Mail, "Recuperacion");
+            GestorCodigosCorreo.Instance.SolicitarRecuperacion(cliente.Mail);
+            var actual = EnviadorSimulado.Ultimo(cliente.Mail, "Recuperacion");
+            Assert.IsNotNull(anterior);
+            Assert.IsNotNull(actual);
+            Assert.AreNotEqual(anterior.Codigo, actual.Codigo);
+            var errorAnterior = Assert.ThrowsException<ReglaNegocioException>(() =>
+                GestorCodigosCorreo.Instance.RecuperarContrasena(cliente.Mail, anterior.Codigo, "NuevaClave123"));
+            Assert.AreEqual("El código no es válido o venció. Solicitá uno nuevo.", errorAnterior.Message);
+
+            GestorCodigosCorreo.Instance.RecuperarContrasena(cliente.Mail, actual.Codigo, "NuevaClave123");
+            var errorReutilizado = Assert.ThrowsException<ReglaNegocioException>(() =>
+                GestorCodigosCorreo.Instance.RecuperarContrasena(cliente.Mail, actual.Codigo, "OtraClave123"));
+            Assert.AreEqual("El código no es válido o venció. Solicitá uno nuevo.", errorReutilizado.Message);
+        }
+
+        [TestMethod("CP-203: El alta existente y nueva entrega la misma respuesta de verificación")]
+        public void CP203_RegistroNoEnumeraCorreoExistente()
+        {
+            EnSta(() =>
+            {
+                string correo = Fake.MailNuevo();
+                long tiempoNuevo;
+                using (var nuevo = new Visual.frmCrearUsuario())
+                {
+                    Mostrar(nuevo);
+                    CompletarAlta(nuevo, correo, "PrimeraClave123", "Primero");
+                    var reloj = Stopwatch.StartNew();
+                    ControlDe<Button>(nuevo, "btnregistrarse").PerformClick();
+                    reloj.Stop();
+                    tiempoNuevo = reloj.ElapsedMilliseconds;
+                    Assert.IsNotNull(nuevo.Controls.Find("bandejaCorreoSimulada", true).Single());
+                }
+
+                string hashAnterior = RepositorioUsuarios.Instance.ObtenerPorMail(correo).Contraseña;
+                long tiempoExistente;
+                using (var existente = new Visual.frmCrearUsuario())
+                {
+                    Mostrar(existente);
+                    CompletarAlta(existente, correo, "OtraClave456", "Segundo");
+                    var reloj = Stopwatch.StartNew();
+                    ControlDe<Button>(existente, "btnregistrarse").PerformClick();
+                    reloj.Stop();
+                    tiempoExistente = reloj.ElapsedMilliseconds;
+                    Assert.IsNotNull(existente.Controls.Find("bandejaCorreoSimulada", true).Single());
+                    var mensaje = EnviadorSimulado.Ultimo(correo, "Verificacion");
+                    Assert.IsNotNull(mensaje);
+                    Assert.IsTrue(ControlDe<Label>(existente, "mensajeBandeja").Text.Contains(mensaje.Codigo));
+                }
+
+                Assert.AreEqual(hashAnterior, RepositorioUsuarios.Instance.ObtenerPorMail(correo).Contraseña,
+                    "El intento de alta repetido no cambia la contraseña de la cuenta existente.");
+                Assert.IsTrue(tiempoNuevo >= 950 && tiempoExistente >= 950);
+                Assert.IsTrue(Math.Abs(tiempoNuevo - tiempoExistente) < 400,
+                    "El alta nueva y el correo ya registrado tardan lo mismo hasta mostrar la bandeja.");
+            });
+        }
+
+        private static void CompletarAlta(Visual.frmCrearUsuario form, string correo, string clave, string nombre)
+        {
+            ControlDe<TextBox>(form, "txtNombre").Text = nombre;
+            ControlDe<TextBox>(form, "txtApellido").Text = "Prueba";
+            ControlDe<TextBox>(form, "txtmail").Text = correo;
+            ControlDe<TextBox>(form, "TxtPassword").Text = clave;
+            ControlDe<TextBox>(form, "TxtConfirmpassword").Text = clave;
+        }
+
+        private static System.Collections.Generic.IEnumerable<string> TextosVisibles(Control padre)
+        {
+            foreach (Control control in padre.Controls)
+            {
+                if (!string.IsNullOrEmpty(control.Text)) yield return control.Text;
+                foreach (string texto in TextosVisibles(control)) yield return texto;
+            }
+        }
+
+        private static bool AbrirBandejaYVerCodigo(Control origen, string nombreBoton, string codigo)
+        {
+            bool abierta = false;
+            bool codigoVisible = false;
+            using (var temporizador = new Timer { Interval = 25 })
+            {
+                temporizador.Tick += (s, e) =>
+                {
+                    var bandeja = Application.OpenForms.OfType<Visual.frmBandejaSimulada>().FirstOrDefault(f => f.Visible);
+                    if (bandeja == null) return;
+                    abierta = true;
+                    codigoVisible = ControlDe<Label>(bandeja, "mensajeBandejaSimulada").Text.Contains(codigo);
+                    bandeja.Close();
+                    temporizador.Stop();
+                };
+                temporizador.Start();
+                ControlDe<Button>(origen, nombreBoton).PerformClick();
+                temporizador.Stop();
+            }
+            return abierta && codigoVisible;
         }
 
         [TestMethod("CP-174: La sesión avisa y vence por inactividad, y la auditoría queda consultable solo por administración")]

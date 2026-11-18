@@ -16,8 +16,9 @@ namespace Pruebas {
   public static void Generar(string salida){
    Directory.CreateDirectory(salida);BaseDePrueba.Preparar(null);
    PruebasSeguridad.EnStaSinCambiarDatos(()=>{
-    GestorUsuarios.Instance.Autenticar("plata@eventaura.com","Cliente123");
-    var cliente=GestorFidelizacion.Instance.ObtenerCliente(3);var evento=RepositorioEventos.Instance.ObtenerPorId(1);
+    var usuario=GestorUsuarios.Instance.Autenticar("plata@eventaura.com","Cliente123");
+    if(usuario==null)throw new InvalidOperationException("No se pudo autenticar a Paula para la captura.");
+    var cliente=GestorFidelizacion.Instance.ObtenerCliente(usuario.Id);var evento=RepositorioEventos.Instance.ObtenerPorId(1);
     using(var listado=new Visual.frmEventosCliente{IDUsuario=cliente.Id,NombreUsuario=cliente.Nombre})
     using(var form=new Visual.FrmCompraCliente{IDUsuario=cliente.Id,IDEvento=evento.Id,NombreUsuario=cliente.Nombre}) {
      listado.Show();Application.DoEvents();var grilla=C<DataGridView>(listado,"dgveventos");

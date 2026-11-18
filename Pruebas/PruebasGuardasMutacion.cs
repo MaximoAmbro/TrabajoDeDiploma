@@ -70,11 +70,11 @@ namespace Pruebas {
   // CP-140 — RF-05, RN-41: no armar un paquete para otro.
   [TestMethod("CP-140: Nuevo paquete exige titular")]
   public void CP140_Paquete(){Rechaza(()=>GestorPaquetes.Instance.Nuevo(e.Id,a.Id),"RN-41");Fake.ComoCliente(a);Assert.AreEqual(e.Id,GestorPaquetes.Instance.Nuevo(e.Id,a.Id).IdEvento);}
-  // CP-141 — RF-12, RN-34: consulta operativa exclusiva del administrador.
-  [TestMethod("CP-141: PorPropietario exige administrador")]
+  // CP-141 — RF-12, RN-48: consultar los locales requiere perfil de Organizador.
+  [TestMethod("CP-141: PorPropietario requiere sesión de Organizador")]
   public void CP141_Locales(){var organizador=Fake.Organizador();int id=organizador.Id;Rechaza(()=>GestorLocales.Instance.PorPropietario(id),"RN-48");Fake.ComoOrganizador();Assert.IsTrue(GestorLocales.Instance.PorPropietario(id).Count>0);}
-  // CP-142 — RF-07, RN-34: listado de ingreso administrativo.
-  [TestMethod("CP-142: EventosConIngresoAbierto exige administrador")]
+  // CP-142 — RF-07, RN-48: el listado de ingreso requiere perfil de Organizador.
+  [TestMethod("CP-142: EventosConIngresoAbierto requiere sesión de Organizador")]
   public void CP142_EventosIngreso(){var organizador=Fake.Organizador();Rechaza(()=>GestorIngresos.Instance.EventosConIngresoAbierto(),"RN-48");Fake.ComoOrganizador(organizador);Assert.IsNotNull(GestorIngresos.Instance.EventosConIngresoAbierto());}
   // CP-143 — RF-11, RN-34: ejecutar reporte ya creado requiere autenticar de nuevo.
   [TestMethod("CP-143: Ejecutar reporte existente exige administrador")]

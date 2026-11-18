@@ -190,6 +190,60 @@ namespace Pruebas
             Assert.IsTrue(auditoria.Any(x=>x.UsuarioId==admin.Id && x.EntidadId==id && x.Resultado=="Datos de demostración revisados."));
         }
 
+        [TestMethod("CP-202: El código telefónico solo aparece al abrir la bandeja simulada")]
+        public void CP202_CodigoTelefonoNoApareceEnLaSolicitud()
+        {
+            InterfazGrupoA.EnSta(() =>
+            {
+                var solicitante = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(solicitante);
+                using (var form = new Visual.frmSolicitudOrganizador())
+                {
+                    InterfazGrupoA.Mostrar(form);
+                    InterfazGrupoA.ControlDe<TextBox>(form, "telefono").Text = Telefono;
+                    InterfazGrupoA.ControlDe<Button>(form, "btnEnviarCodigoTelefono").PerformClick();
+                    var mensaje = EnviadorSimulado.Ultimo(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
+                    Assert.IsNotNull(mensaje, InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
+                    Assert.AreEqual("Si el teléfono es válido, enviamos un código a la bandeja simulada.",
+                        InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
+                    Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(mensaje.Codigo)),
+                        "El código no debe aparecer en el formulario que lo solicita.");
+                    Assert.IsTrue(AbrirBandejaYVerCodigo(form, mensaje.Codigo));
+                }
+            });
+        }
+
+        private static System.Collections.Generic.IEnumerable<string> TextosVisibles(Control padre)
+        {
+            foreach (Control control in padre.Controls)
+            {
+                if (!string.IsNullOrEmpty(control.Text)) yield return control.Text;
+                foreach (string texto in TextosVisibles(control)) yield return texto;
+            }
+        }
+
+        private static bool AbrirBandejaYVerCodigo(Control origen, string codigo)
+        {
+            bool abierta = false;
+            bool codigoVisible = false;
+            using (var temporizador = new Timer { Interval = 25 })
+            {
+                temporizador.Tick += (s, e) =>
+                {
+                    var bandeja = Application.OpenForms.OfType<Visual.frmBandejaSimulada>().FirstOrDefault(f => f.Visible);
+                    if (bandeja == null) return;
+                    abierta = true;
+                    codigoVisible = InterfazGrupoA.ControlDe<Label>(bandeja, "mensajeBandejaSimulada").Text.Contains(codigo);
+                    bandeja.Close();
+                    temporizador.Stop();
+                };
+                temporizador.Start();
+                InterfazGrupoA.ControlDe<Button>(origen, "btnAbrirBandejaTelefono").PerformClick();
+                temporizador.Stop();
+            }
+            return abierta && codigoVisible;
+        }
+
         private SolicitudOrganizador SolicitudValida() => new SolicitudOrganizador { Responsable="Responsable de prueba", Cuit="20-12345678-6", Telefono=Telefono,
             NombreLocal="test local de prueba", Direccion="Dirección de prueba 123", Capacidad=100, CbuAlias=new string('0',22), Documentacion=Png, NombreArchivo="constancia.png" };
 

@@ -37,6 +37,8 @@ namespace Pruebas
             // También para los hilos STA creados por los casos: una excepción hace
             // fallar el caso, nunca abre el diálogo modal del framework.
             ConfigurarErroresDePrueba();
+            EnviadorSimulado.DirectorioBandeja = Path.Combine(RaizDelRepositorio(), "TestResults", "BandejaSimulada");
+            EnviadorSimulado.LimpiarBandeja();
             string cadena = CadenaDePrueba();
             string nombre = new SqlConnectionStringBuilder(cadena).InitialCatalog;
 
