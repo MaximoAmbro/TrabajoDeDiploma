@@ -1,0 +1,56 @@
+# Figuras de las fases 7 y 8
+
+## Figuras de ventana completa
+
+Usá una sola vista completa por pantalla para mostrar la distribución. Epígrafe obligatorio: **«Vista completa de [pantalla]. Esta figura muestra la disposición; el detalle se presenta en las figuras siguientes.»** No uses otra vista completa de esa pantalla como detalle.
+
+| Pantalla | Figura completa | Fuente |
+|---|---|---|
+| compra | `completas/Fase7/compra.png` | Fase7/despues-100 |
+| eventos | `completas/Fase7/eventos.png` | Fase7/despues-100 |
+| ficha | `completas/Fase7/ficha.png` | Fase7/despues-100 |
+| inicio | `completas/Fase7/inicio.png` | Fase7/despues-100 |
+| mis-entradas | `completas/Fase7/mis-entradas.png` | Fase7/despues-100 |
+| suscripcion | `completas/Fase7/suscripcion.png` | Fase7/despues-100 |
+| ficha-evento | `completas/Fase8/ficha-evento.png` | Fase8b/despues-100 |
+| frmAdministrarEvento | `completas/Fase8/frmAdministrarEvento.png` | Fase8c/despues-100 |
+| frmAgregarEvento | `completas/Fase8/frmAgregarEvento.png` | Fase8b/despues-100 |
+| frmAgregarSector | `completas/Fase8/frmAgregarSector.png` | Fase8b/despues-100 |
+| frmAuditoria | `completas/Fase8/frmAuditoria.png` | Fase8b/despues-100 |
+| frmCambiarContraseña | `completas/Fase8/frmCambiarContraseña.png` | Fase8b/despues-100 |
+| FrmCompraCliente-total | `completas/Fase8/FrmCompraCliente-total.png` | Fase8b/despues-100 |
+| FrmCompraCliente | `completas/Fase8/FrmCompraCliente.png` | Fase8b/despues-100 |
+| frmConfirmacion | `completas/Fase8/frmConfirmacion.png` | Fase8b/despues-100 |
+| frmControlIngreso | `completas/Fase8/frmControlIngreso.png` | Fase8b/despues-100 |
+| frmCrearUsuario | `completas/Fase8/frmCrearUsuario.png` | Fase8b/despues-100 |
+| frmEventosCliente | `completas/Fase8/frmEventosCliente.png` | Fase8b/despues-100 |
+| frmEventosLocal | `completas/Fase8/frmEventosLocal.png` | Fase8b/despues-100 |
+| frmHistorialCliente | `completas/Fase8/frmHistorialCliente.png` | Fase8b/despues-100 |
+| frmInicio | `completas/Fase8/frmInicio.png` | Fase8b/despues-100 |
+| frmListasEspera | `completas/Fase8/frmListasEspera.png` | Fase8b/despues-100 |
+| frmMenuAdministrador | `completas/Fase8/frmMenuAdministrador.png` | Fase8c/despues-100 |
+| frmMenuCliente | `completas/Fase8/frmMenuCliente.png` | Fase8b/despues-100 |
+| frmMenuPropietario | `completas/Fase8/frmMenuPropietario.png` | Fase8b/despues-100 |
+| frmMisLocales | `completas/Fase8/frmMisLocales.png` | Fase8b/despues-100 |
+| frmPago | `completas/Fase8/frmPago.png` | Fase8b/despues-100 |
+| frmRecuperarContraseña | `completas/Fase8/frmRecuperarContraseña.png` | Fase8b/despues-100 |
+| frmRegistrarLocal | `completas/Fase8/frmRegistrarLocal.png` | Fase8b/despues-100 |
+| frmReportes | `completas/Fase8/frmReportes.png` | Fase8b/despues-100 |
+| frmRevisarEventos | `completas/Fase8/frmRevisarEventos.png` | Fase8c/despues-100 |
+| frmRevisarSolicitudesOrganizador | `completas/Fase8/frmRevisarSolicitudesOrganizador.png` | Fase8b/despues-100 |
+| frmSolicitudOrganizador | `completas/Fase8/frmSolicitudOrganizador.png` | Fase8b/despues-100 |
+| frmSuscripcion | `completas/Fase8/frmSuscripcion.png` | Fase8b/despues-100 |
+
+## Figuras de detalle
+
+Todas las imágenes de `paneles/` son recortes de contenido: no incluyen el menú lateral ni la barra superior. Los nombres y áreas de cada recorte, incluido el desglose de tablas y formularios anchos, y su ancho de inserción están en `ancho-minimo-8_1pt.tsv`. Epígrafe: **«Detalle de [contenido], en el panel central de [pantalla].»**
+
+Se generaron 88 recortes: 85 quedan por debajo de 16 cm. 3 mapas de sectores superan ese ancho porque el mapa completo ocupa más de 16 cm; no se redujeron cortando el mapa.
+
+| Fase/pantalla | Recorte | Ancho mínimo para 8,1 pt |
+|---|---|---:|
+| Fase7/ficha | `paneles/Fase7/ficha/mapa.png` | 20,5 cm |
+| Fase8a/ficha-evento | `paneles/Fase8a/ficha-evento/mapa.png` | 19,3 cm |
+| Fase8b/ficha-evento | `paneles/Fase8b/ficha-evento/mapa.png` | 19,3 cm |
+
+Las vistas completas son solo para explicar disposición; no insertarlas como evidencia legible a 16 cm. Usá los recortes de panel para el detalle. El juego al 150 % no se incluye en el documento; se conserva como evidencia de prueba en las carpetas originales de fase.
