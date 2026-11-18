@@ -15,6 +15,8 @@ Estado: implementado y verificado. Base previa: 319/319. Cierre de esta fase: 32
 
 La comparación es contra el código inmediatamente anterior a 8a (`a48eb43^`). «Abierto» significa que una cuenta Propietario podía usar el rol compartido y pasar un ID de otro dueño, o que el método no tenía guarda. No cuento las posibilidades formuladas solo como “si se quitara la guarda”. El barrido encontró **24 métodos con exposición efectiva de datos/operaciones entre dueños y 1 método de auditoría falsificable**.
 
+La hipótesis de Claude Code es correcta: los 24 métodos son **cinco familias**, no 24 defectos independientes. El desglose es locales (3), eventos y sectores (13), servicios y disponibilidad de paquetes (2), listas de espera (1), e informes más consulta global de auditoría (5). La escritura de auditoría falsificable se informa por separado: no es una sexta fuga de pertenencia.
+
 ### Métodos efectivamente abiertos antes de 8a
 
 | Método | Qué dato se filtraba o qué se podía tocar | Estado antes de 8a | Prueba que lo cierra |
@@ -55,6 +57,8 @@ La comparación es contra el código inmediatamente anterior a 8a (`a48eb43^`). 
 | Gestores de compras, pagos, seguros, fidelización, suscripciones y datos de espera por cliente | Datos privados de una cuenta distinta. | Ya comprobaban titularidad; no se identificó apertura pre-8a en el diff. | CP-127–CP-140 y CP-161 cubren varias de estas guardas. |
 
 Por lo tanto, el informe anterior mezclaba defectos efectivos con riesgo hipotético y además atribuyó a CP-182 pruebas de escritura que no tiene. La cifra defendible es **24 métodos de acceso/operación entre dueños y 1 método de auditoría falsificable**, con los huecos de prueba indicados explícitamente; no “ocho fugas” inferidas de escenarios condicionales.
+
+Los huecos de cobertura de la tabla son hallazgos, no métodos cerrados: faltan negativas directas para `GestorLocales.PorPropietario` y `Registrar`; ocho escrituras de eventos/locales ajenos (`Crear`, `Publicar(Evento)`, `Eliminar`, `Suspender`, `CambiarPreventa`, `CambiarImagenPortada`, `AgregarSector` y `EliminarSector`); `Exportar` entre dueños; los tipos de reporte distintos de RPT-01 en `Crear`/`Ejecutar`; y `GestorAuditoria.Consultar` como Organizador. `GestorAuditoria.Registrar` tampoco tiene una prueba que intente falsificar el autor, aunque su API quedó internalizada. El informe no atribuye esas pruebas a CP-182.
 ## Pruebas cambiadas por el nuevo contrato
 
 | Prueba | Antes | Ahora |
