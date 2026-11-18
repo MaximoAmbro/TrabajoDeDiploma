@@ -15,10 +15,15 @@ namespace Visual
         private Panel contenido;
         private Control paginaActual;
         private Button navegacionActiva;
+        private Componentes.BotonSecundario btnSolicitudOrganizador;
 
         public frmMenuCliente()
         {
             InitializeComponent();
+            btnSolicitudOrganizador = new Componentes.BotonSecundario { Name = "btnSolicitudOrganizador", Text = "Solicitar ser Organizador", Location = new Point(24, 448), Size = new Size(240, 40) };
+            btnSolicitudOrganizador.Click += (s, e) => { using (var solicitud = new frmSolicitudOrganizador()) solicitud.ShowDialog(this); };
+            Controls.Add(btnSolicitudOrganizador);
+            btnSolicitudOrganizador.BringToFront();
             contenido = new Panel { Name = "contenidoNavegacion", Bounds = inicioCliente.Bounds, Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right };
             Controls.Remove(inicioCliente);
             Controls.Add(contenido);

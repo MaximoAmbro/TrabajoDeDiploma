@@ -283,11 +283,12 @@ CREATE TABLE CodigosCorreo (
     Proposito VARCHAR(16) NOT NULL,
     Sal VARBINARY(16) NOT NULL,
     CodigoHash VARBINARY(32) NOT NULL,
+    Destinatario VARCHAR(180) NULL,
     CreadoEl DATETIME2(0) NOT NULL CONSTRAINT DF_CodigosCorreo_Creado DEFAULT SYSUTCDATETIME(),
     VenceEl DATETIME2(0) NOT NULL,
     Usado BIT NOT NULL CONSTRAINT DF_CodigosCorreo_Usado DEFAULT (0),
     Intentos INT NOT NULL CONSTRAINT DF_CodigosCorreo_Intentos DEFAULT (0),
-    CONSTRAINT CK_CodigosCorreo_Proposito CHECK (Proposito IN ('Verificacion','Recuperacion')),
+    CONSTRAINT CK_CodigosCorreo_Proposito CHECK (Proposito IN ('Verificacion','Recuperacion','TelefonoOrg')),
     CONSTRAINT FK_CodigosCorreo_Usuario FOREIGN KEY (UsuarioID) REFERENCES Usuario(ID) ON DELETE CASCADE
 );
 CREATE INDEX IX_CodigosCorreo_Usuario_Proposito ON CodigosCorreo(UsuarioID, Proposito, VenceEl DESC);
@@ -303,4 +304,32 @@ CREATE TABLE Auditoria (
     Resultado VARCHAR(200) NOT NULL
 );
 CREATE INDEX IX_Auditoria_Fecha_Accion ON Auditoria(Fecha DESC, Accion);
+
+IF OBJECT_ID('dbo.SolicitudesOrganizador','U') IS NULL
+CREATE TABLE dbo.SolicitudesOrganizador (
+    ID INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_SolicitudesOrganizador PRIMARY KEY,
+    UsuarioID INT NOT NULL,
+    Responsable NVARCHAR(160) NOT NULL,
+    CUIT CHAR(11) NOT NULL,
+    Telefono VARCHAR(20) NOT NULL,
+    TelefonoVerificado BIT NOT NULL,
+    NombreLocal NVARCHAR(100) NOT NULL,
+    Direccion NVARCHAR(160) NOT NULL,
+    Capacidad INT NOT NULL,
+    Documentacion VARBINARY(MAX) NOT NULL,
+    NombreArchivo NVARCHAR(180) NOT NULL,
+    CBUAlias VARCHAR(30) NOT NULL,
+    Estado VARCHAR(12) NOT NULL CONSTRAINT DF_SolicitudesOrganizador_Estado DEFAULT('Pendiente'),
+    MotivoRevision NVARCHAR(500) NULL,
+    RevisadaPor INT NULL,
+    RevisadaEl DATETIME2 NULL,
+    CreadaEl DATETIME2 NOT NULL CONSTRAINT DF_SolicitudesOrganizador_CreadaEl DEFAULT(SYSUTCDATETIME()),
+    CONSTRAINT FK_SolicitudesOrganizador_Usuario FOREIGN KEY (UsuarioID) REFERENCES dbo.Usuario(ID),
+    CONSTRAINT FK_SolicitudesOrganizador_Revisor FOREIGN KEY (RevisadaPor) REFERENCES dbo.Usuario(ID),
+    CONSTRAINT CK_SolicitudesOrganizador_Capacidad CHECK (Capacidad > 0),
+    CONSTRAINT CK_SolicitudesOrganizador_Estado CHECK (Estado IN ('Pendiente','Aprobada','Rechazada')),
+    CONSTRAINT CK_SolicitudesOrganizador_TelefonoVerificado CHECK (TelefonoVerificado=1)
+);
+CREATE UNIQUE INDEX UX_SolicitudesOrganizador_Pendiente
+    ON dbo.SolicitudesOrganizador(UsuarioID) WHERE Estado='Pendiente';
 GO

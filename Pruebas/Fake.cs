@@ -133,6 +133,7 @@ namespace Pruebas
                 "DELETE FROM Pagos WHERE ID_Compra IN (SELECT ID FROM @C); " +
                 "DELETE FROM Compras WHERE ID IN (SELECT ID FROM @C); " +
                 "DELETE FROM ListaEspera WHERE ID_Usuario IN (SELECT ID FROM @U) OR ID_Evento IN (SELECT ID FROM @E); " +
+                "DELETE FROM SolicitudesOrganizador WHERE UsuarioID IN (SELECT ID FROM @U); " +
                 "DELETE FROM Suscripciones WHERE ID_Usuario IN (SELECT ID FROM @U); " +
                 "DELETE FROM ServiciosEvento WHERE ID_Evento IN (SELECT ID FROM @E) OR ID_Servicio IN (SELECT ID FROM @S); " +
                 "DELETE FROM Servicios WHERE ID IN (SELECT ID FROM @S); " +

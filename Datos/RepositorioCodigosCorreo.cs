@@ -13,6 +13,7 @@ namespace Datos
         public DateTime VenceEl { get; set; }
         public int Intentos { get; set; }
         public bool Usado { get; set; }
+        public string Destinatario { get; set; }
     }
 
     public sealed class RepositorioCodigosCorreo : RepositorioBase
@@ -21,12 +22,12 @@ namespace Datos
         public static RepositorioCodigosCorreo Instance { get { return Instancia; } }
         private RepositorioCodigosCorreo() { }
 
-        public int Emitir(int usuarioId, string proposito, byte[] sal, byte[] hash, int minutos)
+        public int Emitir(int usuarioId, string proposito, byte[] sal, byte[] hash, int minutos, string destinatario = null)
         {
             const string sql = @"
 UPDATE dbo.CodigosCorreo SET Usado=1 WHERE UsuarioID=@UsuarioID AND Proposito=@Proposito AND Usado=0;
-INSERT dbo.CodigosCorreo(UsuarioID,Proposito,Sal,CodigoHash,VenceEl)
-VALUES(@UsuarioID,@Proposito,@Sal,@Hash,DATEADD(MINUTE,@Minutos,SYSUTCDATETIME()));
+INSERT dbo.CodigosCorreo(UsuarioID,Proposito,Sal,CodigoHash,VenceEl,Destinatario)
+VALUES(@UsuarioID,@Proposito,@Sal,@Hash,DATEADD(MINUTE,@Minutos,SYSUTCDATETIME()),@Destinatario);
 SELECT CONVERT(INT,SCOPE_IDENTITY());";
             using (var conexion = AbrirConexion())
             using (var comando = CrearComando(conexion, sql))
@@ -36,13 +37,14 @@ SELECT CONVERT(INT,SCOPE_IDENTITY());";
                 AgregarParametro(comando, "@Sal", sal);
                 AgregarParametro(comando, "@Hash", hash);
                 AgregarParametro(comando, "@Minutos", minutos);
+                AgregarParametro(comando, "@Destinatario", destinatario);
                 return Convert.ToInt32(comando.ExecuteScalar());
             }
         }
 
         public CodigoCorreo PorId(int id)
         {
-            const string sql = "SELECT ID,UsuarioID,Proposito,Sal,CodigoHash,VenceEl,Intentos,Usado FROM dbo.CodigosCorreo WHERE ID=@ID";
+            const string sql = "SELECT ID,UsuarioID,Proposito,Sal,CodigoHash,VenceEl,Intentos,Usado,Destinatario FROM dbo.CodigosCorreo WHERE ID=@ID";
             using (var conexion = AbrirConexion())
             using (var comando = CrearComando(conexion, sql))
             {
@@ -53,7 +55,7 @@ SELECT CONVERT(INT,SCOPE_IDENTITY());";
 
         public CodigoCorreo Ultimo(int usuarioId, string proposito)
         {
-            const string sql = "SELECT TOP (1) ID,UsuarioID,Proposito,Sal,CodigoHash,VenceEl,Intentos,Usado FROM dbo.CodigosCorreo WHERE UsuarioID=@UsuarioID AND Proposito=@Proposito ORDER BY ID DESC";
+            const string sql = "SELECT TOP (1) ID,UsuarioID,Proposito,Sal,CodigoHash,VenceEl,Intentos,Usado,Destinatario FROM dbo.CodigosCorreo WHERE UsuarioID=@UsuarioID AND Proposito=@Proposito ORDER BY ID DESC";
             using (var conexion = AbrirConexion())
             using (var comando = CrearComando(conexion, sql))
             {
@@ -94,7 +96,9 @@ SELECT CONVERT(INT,SCOPE_IDENTITY());";
 
                     string actualizar = proposito == "Verificacion"
                         ? "UPDATE dbo.Usuario SET CorreoVerificado=1 WHERE ID=@UsuarioID"
-                        : "UPDATE dbo.Usuario SET Contraseña=@Hash,IntentosFallidos=0,BloqueadoHasta=NULL WHERE ID=@UsuarioID";
+                        : proposito == "Recuperacion"
+                            ? "UPDATE dbo.Usuario SET Contraseña=@Hash,IntentosFallidos=0,BloqueadoHasta=NULL WHERE ID=@UsuarioID"
+                            : "UPDATE dbo.Usuario SET CorreoVerificado=CorreoVerificado WHERE ID=@UsuarioID";
                     using (var comando = CrearComando(conexion, actualizar, transaccion))
                     {
                         AgregarParametro(comando, "@UsuarioID", usuarioId);
@@ -116,6 +120,7 @@ SELECT CONVERT(INT,SCOPE_IDENTITY());";
                 Proposito = Convert.ToString(lector["Proposito"]), Sal = (byte[])lector["Sal"],
                 Hash = (byte[])lector["CodigoHash"], VenceEl = DateTime.SpecifyKind(Convert.ToDateTime(lector["VenceEl"]), DateTimeKind.Utc),
                 Intentos = Convert.ToInt32(lector["Intentos"]), Usado = Convert.ToBoolean(lector["Usado"])
+                , Destinatario = lector["Destinatario"] == DBNull.Value ? null : Convert.ToString(lector["Destinatario"])
             };
         }
     }

@@ -12,6 +12,7 @@ namespace Visual
         private Componentes.EtiquetaTitulo titulo;
         private Componentes.BotonPrimario btnReportesGlobales;
         private Componentes.BotonSecundario btnCerrarSesion;
+        private Componentes.BotonSecundario btnSolicitudes;
         private Componentes.PanelAdministrador panel;
 
         public int IDUsuario;
@@ -22,6 +23,7 @@ namespace Visual
             InitializeComponent();
             btnReportesGlobales.Click += AbrirReportes;
             btnCerrarSesion.Click += CerrarSesion;
+            btnSolicitudes.Click += (s, e) => { GestorSesion.Instance.RequerirAdministrador(); using (var form = new frmRevisarSolicitudesOrganizador()) form.ShowDialog(this); panel.Cargar(); };
             panel.CrearAdministradorSolicitado += CrearAdministrador;
             panel.AuditoriaSolicitada += (s, e) => { using (var form = new frmAuditoria()) form.ShowDialog(this); };
             Load += (s, e) =>

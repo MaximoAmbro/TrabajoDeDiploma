@@ -25,8 +25,13 @@ namespace Visual
             this.btnCerrarSesion.Text = "Cerrar sesión";
             this.btnCerrarSesion.Location = new Point(260, 132);
             this.btnCerrarSesion.Size = new System.Drawing.Size(180, 40);
+            this.btnSolicitudes = new Componentes.BotonSecundario();
+            this.btnSolicitudes.Name = "btnSolicitudesOrganizador";
+            this.btnSolicitudes.Text = "Solicitudes de organizador";
+            this.btnSolicitudes.Location = new Point(458, 132);
+            this.btnSolicitudes.Size = new System.Drawing.Size(230, 40);
             panel = new Componentes.PanelAdministrador { Name = "panelAdministrador", Location = new Point(24, 184), Size = new Size(952, 442), Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right };
-            Controls.AddRange(new Control[] { barra, titulo, btnReportesGlobales, btnCerrarSesion, panel });
+            Controls.AddRange(new Control[] { barra, titulo, btnReportesGlobales, btnCerrarSesion, btnSolicitudes, panel });
             ResumeLayout(false);
         }
     }

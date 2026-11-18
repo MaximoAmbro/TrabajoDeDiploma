@@ -1,0 +1,204 @@
+using System;
+using System.Linq;
+using System.Windows.Forms;
+using Entidades;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Negocio;
+
+namespace Pruebas
+{
+    [TestClass]
+    public class PruebasSolicitudesOrganizador
+    {
+        private Entidades.Cliente cliente;
+        private const string Telefono = "+5493412345678";
+        private static readonly byte[] Png = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADUlEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC");
+
+        [TestInitialize]
+        public void Preparar() { GestorSesion.Instance.Cerrar(); Fake.Limpiar(); cliente = Fake.Cliente(NivelFidelidad.Bronce); Fake.ComoCliente(cliente); }
+        [TestCleanup]
+        public void Limpiar() { GestorSesion.Instance.Cerrar(); Fake.Limpiar(); SeleccionVerificadorIdentidad.Actual = new VerificadorIdentidadSimulado(); }
+
+        // CP-184 — RN-50, RN-51: la solicitud queda pendiente y nunca habilita operaciones de Organizador.
+        [TestMethod]
+        public void CP184_SolicitudPendienteNoConcedePermisos()
+        {
+            Assert.IsTrue(GestorSolicitudesOrganizador.CuitValido("20-12345678-6"));
+            Assert.IsTrue(GestorSolicitudesOrganizador.CbuValido(new string('0',22)));
+            var enviada = new EnviadorSimulado(); SeleccionEnviadorCodigos.Actual = enviada;
+            GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(Telefono);
+            var codigo = EnviadorSimulado.Ultimo(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
+            Assert.IsNotNull(codigo, "El código de teléfono debe salir por el mismo enviador simulado.");
+            GestorSolicitudesOrganizador.Instance.ConfirmarCodigoTelefono(Telefono, codigo.Codigo);
+            int id = GestorSolicitudesOrganizador.Instance.Solicitar(SolicitudValida());
+            Assert.IsTrue(id > 0);
+            var persistido = Datos.RepositorioUsuarios.Instance.ObtenerPorMail(cliente.Mail);
+            Assert.AreEqual("Cliente", persistido.TipoUsuario, "La solicitud pendiente no cambia el perfil persistido.");
+            GestorSesion.Instance.Cerrar();
+            GestorUsuarios.Instance.Autenticar(cliente.Mail, "Cliente123");
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorLocales.Instance.PorPropietario(cliente.Id));
+            Assert.AreEqual("RN-48", error.Regla);
+            Assert.AreEqual("Esta operación es solo para el Organizador.", error.Message);
+            var noAdmin = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Pendientes());
+            Assert.AreEqual("RN-34", noAdmin.Regla);
+        }
+
+        // CP-185 — RN-52: CUIT con dígito verificador incorrecto se rechaza antes de guardar.
+        [TestMethod]
+        public void CP185_CuitConVerificadorIncorrectoSeRechaza()
+        {
+            var solicitud = SolicitudValida(); solicitud.Cuit = "20-12345678-5";
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Solicitar(solicitud));
+            Assert.AreEqual("RN-52", error.Regla);
+            Assert.AreEqual("El CUIT no es válido. Revisá sus 11 dígitos y el dígito verificador.", error.Message);
+        }
+
+        // CP-186 — RN-52: CBU con dígito verificador incorrecto se rechaza antes de guardar.
+        [TestMethod]
+        public void CP186_CbuConVerificadorIncorrectoSeRechaza()
+        {
+            var solicitud = SolicitudValida(); solicitud.CbuAlias = "0000000000000000000001";
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Solicitar(solicitud));
+            Assert.AreEqual("RN-52", error.Regla);
+            Assert.AreEqual("Ingresá un CBU válido de 22 dígitos o un alias bancario de 6 a 20 caracteres.", error.Message);
+        }
+
+        // CP-187 — RN-53: Cliente y Organizador no pueden revisar solicitudes de la plataforma.
+        [TestMethod]
+        public void CP187_ClienteNoPuedeAprobarSolicitud()
+        {
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Aprobar(1, "Revisada"));
+            Assert.AreEqual("RN-34", error.Regla);
+            Assert.AreEqual("Esta operación es solo para el Administrador", error.Message);
+        }
+
+        // CP-188 — RN-53: no se registra rechazo ni aprobación sin una justificación escrita.
+        [TestMethod]
+        public void CP188_RechazoSinMotivoSeRechaza()
+        {
+            Fake.ComoAdministrador();
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Rechazar(1, "  "));
+            Assert.AreEqual("RN-53", error.Regla);
+            Assert.AreEqual("Escribí el motivo del rechazo.", error.Message);
+        }
+
+        // CP-190 — RN-53: el rol Organizador no puede aprobar solicitudes de plataforma.
+        [TestMethod]
+        public void CP190_OrganizadorNoPuedeRechazarSolicitudDePlataforma()
+        {
+            Fake.ComoOrganizador();
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Rechazar(1, "Motivo de prueba."));
+            Assert.AreEqual("RN-34", error.Regla);
+            Assert.AreEqual("Esta operación es solo para el Administrador", error.Message);
+        }
+
+        // CP-191 — RN-51: no se crea una solicitud si el código telefónico no se confirmó.
+        [TestMethod]
+        public void CP191_TelefonoSinConfirmarImpideLaSolicitud()
+        {
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Solicitar(SolicitudValida()));
+            Assert.AreEqual("RN-51", error.Regla);
+            Assert.AreEqual("Verificá este teléfono con el código enviado antes de presentar la solicitud.", error.Message);
+        }
+
+        // CP-192 — RN-52: un archivo que no tiene firma de imagen se rechaza.
+        [TestMethod]
+        public void CP192_DocumentacionQueNoEsImagenSeRechaza()
+        {
+            VerificarTelefono();
+            var solicitud = SolicitudValida(); solicitud.Documentacion = new byte[] { 1,2,3,4 };
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Solicitar(solicitud));
+            Assert.AreEqual("RN-52", error.Regla);
+            Assert.AreEqual("Adjuntá una imagen PNG o JPEG válida, comprimida y de hasta 512 KB.", error.Message);
+        }
+
+        // CP-193 — RN-50, RN-53: el Cliente ve la entrada de solicitud, pero no puede abrir la revisión de plataforma.
+        [TestMethod]
+        public void CP193_AccesoDeSolicitudVisibleYRevisionProtegida()
+        {
+            using (var menuCliente = new Visual.frmMenuCliente())
+            {
+                var boton = menuCliente.Controls.Find("btnSolicitudOrganizador", true).SingleOrDefault();
+                Assert.IsNotNull(boton, "El Cliente necesita una entrada visible para solicitar el perfil.");
+                Assert.IsTrue(boton.Enabled);
+                Assert.AreEqual("Solicitar ser Organizador", boton.Text);
+            }
+            Fake.ComoAdministrador();
+            using (var menuAdmin = new Visual.frmMenuAdministrador())
+            {
+                var boton = menuAdmin.Controls.Find("btnSolicitudesOrganizador", true).SingleOrDefault();
+                Assert.IsNotNull(boton, "El Administrador necesita una entrada visible para revisar solicitudes.");
+                Assert.IsTrue(boton.Enabled);
+            }
+            GestorSesion.Instance.Cerrar(); Fake.ComoCliente(cliente);
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => new Visual.frmRevisarSolicitudesOrganizador());
+            Assert.AreEqual("RN-34", error.Regla);
+        }
+
+        // CP-194 — RN-52: un alias bancario con formato admitido puede usarse sin tratarlo como CBU.
+        [TestMethod]
+        public void CP194_AliasBancarioEsAceptado()
+        {
+            var enviador = new EnviadorSimulado(); SeleccionEnviadorCodigos.Actual = enviador;
+            VerificarTelefono();
+            var solicitud = SolicitudValida(); solicitud.CbuAlias = "eventaura.demo";
+            Assert.IsTrue(GestorSolicitudesOrganizador.CbuAliasValido(solicitud.CbuAlias));
+            Assert.IsTrue(GestorSolicitudesOrganizador.Instance.Solicitar(solicitud) > 0);
+        }
+
+        // CP-196 — RN-53: un rechazo con fundamento persiste el estado y la identidad del revisor.
+        [TestMethod]
+        public void CP196_RechazoConMotivoQuedaAuditado()
+        {
+            VerificarTelefono();
+            int id = GestorSolicitudesOrganizador.Instance.Solicitar(SolicitudValida());
+            var admin = Fake.Administrador(); Fake.ComoAdministrador();
+            GestorSolicitudesOrganizador.Instance.Rechazar(id, "La documentación de ejemplo requiere una revisión adicional.");
+            var solicitud = GestorSolicitudesOrganizador.Instance.Obtener(id);
+            Assert.AreEqual("Rechazada", solicitud.Estado);
+            Assert.AreEqual("La documentación de ejemplo requiere una revisión adicional.", solicitud.MotivoRevision);
+            Assert.AreEqual(admin.Id, solicitud.RevisadaPor);
+            Assert.IsNotNull(solicitud.RevisadaEl);
+            var auditoria = Datos.RepositorioAuditoria.Instance.Consultar(DateTime.UtcNow.AddMinutes(-5), DateTime.UtcNow.AddMinutes(5), "Solicitud de Organizador: rechazar");
+            Assert.IsTrue(auditoria.Any(x=>x.UsuarioId==admin.Id && x.EntidadId==id && x.Resultado==solicitud.MotivoRevision));
+        }
+
+        // CP-195 — RN-51: se rechaza un teléfono sin característica argentina válida.
+        [TestMethod]
+        public void CP195_TelefonoNoArgentinoSeRechaza()
+        {
+            var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono("0000000000"));
+            Assert.AreEqual("RN-51", error.Regla);
+            Assert.AreEqual("Ingresá un teléfono argentino válido, con característica y número.", error.Message);
+        }
+
+        // CP-189 — RN-53: Administrador aprueba, cambia el perfil, crea el local y audita al revisor.
+        [TestMethod]
+        public void CP189_AprobacionPromueveYRegistraAuditoria()
+        {
+            var enviador = new EnviadorSimulado(); SeleccionEnviadorCodigos.Actual=enviador;
+            GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(Telefono);
+            GestorSolicitudesOrganizador.Instance.ConfirmarCodigoTelefono(Telefono, EnviadorSimulado.Ultimo(Telefono,GestorCodigosCorreo.PropositoTelefonoOrganizador).Codigo);
+            int id = GestorSolicitudesOrganizador.Instance.Solicitar(SolicitudValida());
+            var admin = Fake.Administrador(); Fake.ComoAdministrador();
+            GestorSolicitudesOrganizador.Instance.Aprobar(id, "Datos de demostración revisados.");
+            var usuario = Datos.RepositorioUsuarios.Instance.ObtenerPorMail(cliente.Mail);
+            Assert.AreEqual("Organizador", usuario.TipoUsuario);
+            GestorSesion.Instance.Cerrar(); Fake.ComoOrganizador(usuario);
+            Assert.IsTrue(GestorLocales.Instance.PorPropietario(usuario.Id).Any(x=>x.Nombre=="test local de prueba"));
+            var auditoria = Datos.RepositorioAuditoria.Instance.Consultar(DateTime.UtcNow.AddMinutes(-5), DateTime.UtcNow.AddMinutes(5), "Solicitud de Organizador: aprobar");
+            Assert.IsTrue(auditoria.Any(x=>x.UsuarioId==admin.Id && x.EntidadId==id && x.Resultado=="Datos de demostración revisados."));
+        }
+
+        private SolicitudOrganizador SolicitudValida() => new SolicitudOrganizador { Responsable="Responsable de prueba", Cuit="20-12345678-6", Telefono=Telefono,
+            NombreLocal="test local de prueba", Direccion="Dirección de prueba 123", Capacidad=100, CbuAlias=new string('0',22), Documentacion=Png, NombreArchivo="constancia.png" };
+
+        private void VerificarTelefono()
+        {
+            var enviador = new EnviadorSimulado(); SeleccionEnviadorCodigos.Actual = enviador;
+            GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(Telefono);
+            var mensaje = EnviadorSimulado.Ultimo(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
+            GestorSolicitudesOrganizador.Instance.ConfirmarCodigoTelefono(Telefono, mensaje.Codigo);
+        }
+    }
+}

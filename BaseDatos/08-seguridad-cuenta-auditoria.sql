@@ -19,7 +19,7 @@ BEGIN
         VenceEl DATETIME2(0) NOT NULL,
         Usado BIT NOT NULL CONSTRAINT DF_CodigosCorreo_Usado DEFAULT (0),
         Intentos INT NOT NULL CONSTRAINT DF_CodigosCorreo_Intentos DEFAULT (0),
-        CONSTRAINT CK_CodigosCorreo_Proposito CHECK (Proposito IN ('Verificacion','Recuperacion')),
+        CONSTRAINT CK_CodigosCorreo_Proposito CHECK (Proposito IN ('Verificacion','Recuperacion','TelefonoOrg')),
         CONSTRAINT FK_CodigosCorreo_Usuario FOREIGN KEY (UsuarioID) REFERENCES dbo.Usuario(ID) ON DELETE CASCADE
     );
     CREATE INDEX IX_CodigosCorreo_Usuario_Proposito ON dbo.CodigosCorreo(UsuarioID, Proposito, VenceEl DESC);

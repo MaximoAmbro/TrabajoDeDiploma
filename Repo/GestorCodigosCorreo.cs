@@ -29,6 +29,25 @@ namespace Negocio
             Confirmar(correo, codigo, "Verificacion", null);
         }
 
+        // RN-51: el teléfono verificado reutiliza el mismo emisor, hash, vencimiento y contador.
+        public const string PropositoTelefonoOrganizador = "TelefonoOrg";
+
+        public void EnviarCodigoTelefono(int idUsuario, string telefono)
+        {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
+            if (string.IsNullOrWhiteSpace(telefono)) throw new ReglaNegocioException("RN-51", "Ingresá un teléfono válido.");
+            Emitir(idUsuario, telefono.Trim(), PropositoTelefonoOrganizador);
+        }
+
+        public void ConfirmarCodigoTelefono(int idUsuario, string telefono, string codigo)
+        {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
+            var ultimo = RepositorioCodigosCorreo.Instance.Ultimo(idUsuario, PropositoTelefonoOrganizador);
+            if (ultimo == null || !string.Equals(ultimo.Destinatario, telefono == null ? null : telefono.Trim(), StringComparison.Ordinal))
+                throw CodigoVencido();
+            ConfirmarCodigo(ultimo, idUsuario, PropositoTelefonoOrganizador, codigo, null);
+        }
+
         public void RecuperarContrasena(string correo, string codigo, string nueva)
         {
             GestorUsuarios.Instance.ValidarContrasena(nueva);
@@ -49,7 +68,7 @@ namespace Negocio
             using (var rng = RandomNumberGenerator.Create()) rng.GetBytes(sal);
             int minutos = GestorParametros.Instance.ObtenerEntero("CORREO_CODIGO_MIN");
             byte[] hash = CalcularHash(sal, proposito, codigo);
-            int idCodigo = RepositorioCodigosCorreo.Instance.Emitir(idUsuario, proposito, sal, hash, minutos);
+            int idCodigo = RepositorioCodigosCorreo.Instance.Emitir(idUsuario, proposito, sal, hash, minutos, correo);
             var pendiente = RepositorioCodigosCorreo.Instance.PorId(idCodigo);
             SeleccionEnviadorCodigos.Actual.Enviar(correo, proposito, codigo, pendiente.VenceEl);
         }
@@ -57,7 +76,13 @@ namespace Negocio
         private static void Confirmar(string correo, string codigo, string proposito, string nuevaContrasenaHash)
         {
             var usuario = string.IsNullOrWhiteSpace(correo) ? null : RepositorioUsuarios.Instance.ObtenerPorMail(correo.Trim());
-            var ultimo = usuario == null ? null : RepositorioCodigosCorreo.Instance.Ultimo(usuario.Id, proposito);
+            if (usuario == null) throw CodigoVencido();
+            var ultimo = RepositorioCodigosCorreo.Instance.Ultimo(usuario.Id, proposito);
+            ConfirmarCodigo(ultimo, usuario.Id, proposito, codigo, nuevaContrasenaHash);
+        }
+
+        private static void ConfirmarCodigo(CodigoCorreo ultimo, int usuarioId, string proposito, string codigo, string nuevaContrasenaHash)
+        {
             if (ultimo == null || ultimo.Usado || ultimo.VenceEl <= DateTime.UtcNow)
                 throw CodigoVencido();
 
@@ -70,7 +95,7 @@ namespace Negocio
                 throw new ReglaNegocioException("RN-44", "El código no es correcto. Revisá el correo y volvé a intentar.");
             }
 
-            if (!RepositorioCodigosCorreo.Instance.Consumir(ultimo.Id, usuario.Id, proposito, maximo, nuevaContrasenaHash))
+            if (!RepositorioCodigosCorreo.Instance.Consumir(ultimo.Id, usuarioId, proposito, maximo, nuevaContrasenaHash))
                 throw CodigoVencido();
         }
 

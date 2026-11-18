@@ -47,7 +47,18 @@ namespace Pruebas
                 string fuente;
                 if (!designers.TryGetValue(tipo.Name, out fuente))
                 {
-                    problemas.Add($"{tipo.Name}: no se encontró su .Designer.cs");
+                    // Las vistas creadas por codigo se validan por su tamano real.
+                    if (tipo.Name == "frmRevisarSolicitudesOrganizador") Fake.ComoAdministrador();
+                    else if (tipo.Name == "frmSolicitudOrganizador") Fake.ComoCliente(Fake.Cliente(Entidades.NivelFidelidad.Bronce));
+                    try
+                    {
+                        using (var formulario = (Form)Activator.CreateInstance(tipo))
+                        {
+                            if (formulario.ClientSize.Height > AltoMaximo)
+                                problemas.Add($"{tipo.Name}: declara {formulario.ClientSize.Height} px de alto (maximo {AltoMaximo})");
+                        }
+                    }
+                    finally { Negocio.GestorSesion.Instance.Cerrar(); }
                     continue;
                 }
                 Match tamano = Tamano.Match(fuente);
@@ -78,7 +89,8 @@ namespace Pruebas
             }
 
             // SEG-2 incorpora control de ingreso y la fase de seguridad incorpora auditoría.
-            Assert.AreEqual(22, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
+            // Las dos vistas de solicitudes elevan el inventario de 22 a 24 formularios.
+            Assert.AreEqual(24, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
 
