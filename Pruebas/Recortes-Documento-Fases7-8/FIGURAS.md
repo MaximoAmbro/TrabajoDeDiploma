@@ -36,7 +36,7 @@ Usá una sola vista completa por pantalla para mostrar la distribución. Epígra
 | frmRecuperarContraseña | `completas/Fase8/frmRecuperarContraseña.png` | Fase8b/despues-100 |
 | frmRegistrarLocal | `completas/Fase8/frmRegistrarLocal.png` | Fase8b/despues-100 |
 | frmReportes | `completas/Fase8/frmReportes.png` | Fase8b/despues-100 |
-| frmRevisarEventos | `completas/Fase8/frmRevisarEventos.png` | Fase8c/despues-100 |
+| frmRevisarEventos | `completas/Fase8d/frmRevisarEventos.png` | Capturas-RechazoEvento/despues-100 |
 | frmRevisarSolicitudesOrganizador | `completas/Fase8/frmRevisarSolicitudesOrganizador.png` | Fase8b/despues-100 |
 | frmSolicitudOrganizador | `completas/Fase8/frmSolicitudOrganizador.png` | Fase8b/despues-100 |
 | frmSuscripcion | `completas/Fase8/frmSuscripcion.png` | Fase8b/despues-100 |
@@ -45,12 +45,21 @@ Usá una sola vista completa por pantalla para mostrar la distribución. Epígra
 
 Todas las imágenes de `paneles/` son recortes de contenido: no incluyen el menú lateral ni la barra superior. Los nombres y áreas de cada recorte, incluido el desglose de tablas y formularios anchos, y su ancho de inserción están en `ancho-minimo-8_1pt.tsv`. Epígrafe: **«Detalle de [contenido], en el panel central de [pantalla].»**
 
-Se generaron 88 recortes: 85 quedan por debajo de 16 cm. 3 mapas de sectores superan ese ancho porque el mapa completo ocupa más de 16 cm; no se redujeron cortando el mapa.
+Se generaron 90 recortes: 87 quedan por debajo de 16 cm. 3 mapas de sectores superan ese ancho porque el mapa completo ocupa más de 16 cm; no se redujeron cortando el mapa.
+
+La pantalla de revisión de eventos se actualizó en Fase8d: ahora incluye el motivo obligatorio y la acción de rechazo. La captura completa anterior se conserva en `Capturas-RechazoEvento/antes-100.png`; la vista actual está en `completas/Fase8d/frmRevisarEventos.png`.
 
 | Fase/pantalla | Recorte | Ancho mínimo para 8,1 pt |
 |---|---|---:|
 | Fase7/ficha | `paneles/Fase7/ficha/mapa.png` | 20,5 cm |
 | Fase8a/ficha-evento | `paneles/Fase8a/ficha-evento/mapa.png` | 19,3 cm |
 | Fase8b/ficha-evento | `paneles/Fase8b/ficha-evento/mapa.png` | 19,3 cm |
+
+Los tres mapas se insertan en página A4 apaisada: con márgenes de 2,5 cm quedan 24,7 cm útiles. Los tres anchos mínimos entran sin recortar el contenido.
+
+| Fase/pantalla | Recorte | Ancho mínimo para 8,1 pt |
+|---|---|---:|
+| Fase8d/frmRevisarEventos | `paneles/Fase8d/frmRevisarEventos/lista.png` | 13,1 cm |
+| Fase8d/frmRevisarEventos | `paneles/Fase8d/frmRevisarEventos/revision.png` | 8,9 cm |
 
 Las vistas completas son solo para explicar disposición; no insertarlas como evidencia legible a 16 cm. Usá los recortes de panel para el detalle. El juego al 150 % no se incluye en el documento; se conserva como evidencia de prueba en las carpetas originales de fase.

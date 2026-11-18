@@ -11,40 +11,50 @@ Estado: implementado y verificado. Base previa: 319/319. Cierre de esta fase: 32
 - Semilla: `admin@eventaura.com` es Administrador sin locales; `organizador@eventaura.com` es Organizador y dueño del local demostrativo.
 - Migración idempotente: `BaseDatos/11-perfiles-administrador-organizador.sql`.
 
-## Barrido de métodos de negocio
+## Revisión retrospectiva del barrido de pertenencia
 
-| Método | ¿Comprueba pertenencia? | Exposición si no |
-|---|---|---|
-| `GestorLocales.PorId` | Sí para Organizador; Cliente/visita solo ve locales con eventos publicados; Administrador conserva lectura global. | Antes, un ID de local permitía leer locales sin evento público. Corregido: ya no devuelve ese registro a Cliente/visita. |
-| `GestorLocales.PorPropietario` | Sí: Organizador titular del ID; no entrega la lista de otro. | Sin la guarda, revela nombres, direcciones y capacidades de locales ajenos. |
-| `GestorLocales.Registrar` | Sí: requiere Organizador y fuerza `PropietarioID` desde la sesión. | Sin la guarda, un actor podría crear locales atribuidos a otra cuenta. |
-| `GestorEventos.Crear`, `Publicar` | Sí: exige Organizador y local propio. | Un local ajeno podría recibir eventos creados por la cuenta atacante. |
-| `GestorEventos.Eliminar`, `Suspender`, `CambiarPreventa`, `CambiarImagenPortada`, `AgregarSector`, `EliminarSector` | Sí: exige Organizador y verifica dueño del evento/sector antes de modificar. | Se podrían suspender, alterar, borrar o cambiar sectores de eventos ajenos. |
-| `GestorEventos.PorLocal` | Sí: verifica dueño del local. | Devuelve el inventario de eventos de otro local. |
-| `GestorEventos.ObtenerPorId`, `Sectores`, `CapacidadTotal`, `EstaAgotado` | Sí para Organizador; Cliente/visita solo lee eventos publicados; Administrador puede revisar globalmente. | IDs ajenos daban acceso a evento, sectores, capacidad y disponibilidad; drafts/suspendidos también quedaban consultables por algunos caminos. Corregido. |
-| `GestorEventos.Vigentes`, `Buscar` | No filtra dueño deliberadamente: son el catálogo público de eventos publicados y futuros. | No expone datos privados del organizador: solo información publicada de venta. Decisión de producto revisada. |
-| `GestorPaquetes.ServiciosDe`, `DisponiblesDe`, `Nuevo`, `Validar` | Organizador solo consulta/valida eventos propios; Cliente compra sobre eventos publicados; disponibilidad/servicios no revelan drafts. `Nuevo` además exige que el ID de cliente sea el de sesión. | Antes, un organizador podía consultar servicios/cupo ajeno por ID o validar un paquete apuntado a otro evento. Corregido. |
-| `GestorPaquetes.AgregarEntradas`, `AgregarServicio`, `QuitarServicio` | Verifica que el sector/servicio pertenezca al evento del paquete; la validación de compra vuelve a comprobar propietario, estado y cupo. | Sin la comprobación, se podía introducir al paquete un sector o servicio de otro evento; la compra final lo rechazaba, pero la lectura previa no era consistente. |
-| `GestorPaquetes.CantidadEntradas`, `SubtotalEntradas`, `SubtotalServicios` | No consultan ni modifican la base; calculan sobre el paquete en memoria que aporta la llamada. | No entregan filas ajenas. No se usan como autorización ni sustituyen la validación final. |
-| `GestorIngresos.Registrar`, `Contar`, `EventosConIngresoAbierto` | Sí: Organizador y propietario del evento; el listado usa las ventanas temporales abiertas. | Un rol correcto pero dueño distinto podía consultar o registrar ingresos de eventos ajenos. Corregido y cubierto por CP-182/CP-123. |
-| `GestorListaEspera.Inscribir`, `EstaInscripto`, `ConsultarPosicion`, `AvisosAlIngresar` | Sí: operaciones privadas exigen que el usuario coincida con la sesión. | Podían filtrarse posición, inscripción o avisos de otro cliente. |
-| `GestorListaEspera.DeEvento` | Sí: Administrador ve la lista global; Organizador solo la de sus eventos; Cliente no accede. | Podía revelar nombres, correos y prioridad de espera de otros eventos. Cobertura negativa en CP-182 y CP-126. |
-| `GestorCompras.Iniciar`, `Confirmar`, `Liberar`, `ObtenerPorId`, `EntradasDe`, `PagosDe`, `SegurosDe`, `Reembolsar` | Sí: la compra se resuelve y verifica contra el dueño autenticado. `Iniciar` exige identidad del cliente actual. | Sin la guarda, se podría consultar pago, QR, póliza, importe o devolver una compra ajena. |
-| `GestorCompras.HistorialDe` | Sí: exige titular de la cuenta. | Revelaría historial y datos de las compras de otro cliente. |
-| `GestorCompras.LiberarVencidas` | Global deliberadamente: mantenimiento de reservas vencidas, sin mostrar datos a un usuario. | Afecta únicamente reservas vencidas según el reloj y los parámetros; no es una operación sobre una compra elegida por el actor. |
-| `GestorCompras.VencimientoDe`, `ValidarTarjeta` | No aplican pertenencia: cálculo/validación sin lectura de información privada. | No acceden a datos ajenos. |
-| `GestorFidelizacion.ObtenerCliente`, `ComprasEnVentana`, `DeterminarNivel`, `CalcularDescuento`, `ReevaluarNivel`, `AscenderSiCorresponde` | Sí: las operaciones que reciben ID/cliente exigen que corresponda a la sesión. | Expondrían compras, nivel o habilitarían cambios de nivel de otro cliente. |
-| `GestorFidelizacion.PorcentajePara` | Global deliberadamente: lee parámetros del sistema y aplica una tabla por nivel, sin recuperar usuarios. | No contiene datos de clientes. |
-| `GestorSuscripciones.Contratar`, `Cancelar`, `ActivaDe`, `TieneActiva` | Sí: `ActivaDe` valida titularidad; las mutaciones y consultas derivadas pasan por esa guarda. | Expondrían estado/plan o permitirían cancelar una suscripción ajena. |
-| `GestorSuscripciones.PrecioDe` | Global deliberadamente: tarifa de catálogo. | No contiene datos de suscriptores. |
-| `GestorReportes.Crear`, `Ejecutar`, `Exportar`, `EventosEntre` | Sí por perfil y alcance en cada ejecución: Administrador global; Organizador filtrado por dueño en los cinco reportes y el selector de eventos. | Sin el filtro, ventas, importes, clientela, adopción, paquetes y demanda de otro dueño entrarían en reportes/exportaciones. Negativa principal CP-182. |
-| `GestorAuditoria.Consultar` | Sí: solo Administrador de plataforma; lectura global porque la auditoría registra acciones del sistema completo. | Organizador podría leer operaciones de otros usuarios/organizadores. |
-| `GestorAuditoria.Registrar` | Escritura global legítima desde los gestores; ahora es `internal`, no API disponible a Visual. Se atribuye al usuario de sesión o al correo del intento de login. | Como era público y aceptaba autor explícito, una llamada desde otra capa podía falsificar la atribución. Cerrado al internalizarlo. |
-| `GestorUsuarios.CrearAdministrador` | Sí: exige Administrador; el registro público solo crea Clientes. | Un Cliente/Organizador podría elevarse a Administrador. |
-| `GestorUsuarios.Autenticar`, `RegistrarCliente`, `CambiarContrasena`, `GestorCodigosCorreo.*` | Autenticación/registro operan sobre la cuenta identificada por correo y códigos ligados a esa cuenta; cambio exige prueba de la credencial. | No devuelven ni alteran datos de otro usuario autenticado. |
+La comparación es contra el código inmediatamente anterior a 8a (`a48eb43^`). «Abierto» significa que una cuenta Propietario podía usar el rol compartido y pasar un ID de otro dueño, o que el método no tenía guarda. No cuento las posibilidades formuladas solo como “si se quitara la guarda”. El barrido encontró **24 métodos con exposición efectiva de datos/operaciones entre dueños y 1 método de auditoría falsificable**.
 
-Los repositorios `Datos` son capa de persistencia, no una API de sesión para la interfaz. Las consultas por ID usadas por gestores de negocio se vuelven a autorizar en `Repo` antes de devolver o modificar información.
+### Métodos efectivamente abiertos antes de 8a
 
+| Método | Qué dato se filtraba o qué se podía tocar | Estado antes de 8a | Prueba que lo cierra |
+|---|---|---|---|
+| `GestorLocales.PorId` | Dirección, capacidad e identidad del propietario de un local ajeno, incluso sin evento publicado. | Abierto por ID. | CP-182 rechaza la lectura de un local ajeno como Organizador. |
+| `GestorLocales.PorPropietario` | Nombres, direcciones y capacidades de todos los locales del ID recibido. | Abierto para el rol compartido; aceptaba ID arbitrario. | **Sin caso negativo de otro Organizador.** CP-141 prueba rol Cliente/sin sesión y acceso propio, no propiedad ajena. |
+| `GestorLocales.Registrar` | Creación de un local atribuido a un `PropietarioID` elegido por quien llama. | Abierto; no fijaba el titular desde la sesión. | **Sin caso negativo de atribución ajena.** |
+| `GestorEventos.Crear` | Alta de evento en un local de otro Organizador. | Abierto por perfil, sin validar dueño del local. | **Sin caso negativo de creación en local ajeno.** |
+| `GestorEventos.Publicar(Evento)` | Publicación de evento y sectores asociados a un local ajeno. | Abierto por perfil, sin validar dueño del local. | **Sin caso negativo de publicación ajena.** |
+| `GestorEventos.Eliminar` | Eliminación de un evento ajeno sin ventas. | Abierto por perfil, sin validar dueño. | **Sin caso negativo de eliminación ajena.** CP-93 solo rechaza al Cliente por perfil. |
+| `GestorEventos.Suspender` | Suspensión de un evento ajeno. | Abierto por perfil, sin validar dueño. | **Sin caso negativo de suspensión ajena.** |
+| `GestorEventos.CambiarPreventa` | Alteración de la fecha de preventa de otro dueño. | Abierto por perfil, sin validar dueño. | **Sin caso negativo de modificación ajena.** |
+| `GestorEventos.CambiarImagenPortada` | Sustitución de la portada de otro dueño. | Abierto por perfil, sin validar dueño. | **Sin caso negativo de modificación ajena.** |
+| `GestorEventos.PorLocal` | Nombres, fechas y estados de los eventos de un local ajeno. | Abierto por ID. | CP-182 rechaza el acceso al local ajeno. |
+| `GestorEventos.ObtenerPorId` | Datos de eventos ajenos, incluidos borradores o suspendidos. | Abierto por ID. | CP-182 rechaza un evento ajeno. |
+| `GestorEventos.Sectores` | Nombres, precios y capacidades de sectores de otro dueño. | Abierto por ID. | CP-182 rechaza los sectores de un evento ajeno. |
+| `GestorEventos.AgregarSector` | Incorporación de un sector a un evento ajeno. | Abierto por perfil, sin validar dueño del evento. | **Sin caso negativo de alta en evento ajeno.** |
+| `GestorEventos.EliminarSector` | Eliminación de un sector ajeno sin entradas vendidas. | Abierto por perfil, sin validar dueño del evento. | **Sin caso negativo de eliminación ajena.** |
+| `GestorEventos.CapacidadTotal` | Capacidad agregada de un evento ajeno. | Abierto por ID. | CP-182 rechaza la lectura de capacidad ajena. |
+| `GestorEventos.EstaAgotado` | Disponibilidad de un evento ajeno. | Abierto por ID, incluso para eventos no publicados. | CP-182 rechaza la consulta de agotamiento ajena. |
+| `GestorPaquetes.ServiciosDe` | Servicios, nombres y precios configurados para un ID de evento ajeno. | Abierto por ID, incluso antes de publicarse. | CP-182 rechaza la consulta de servicios de un evento ajeno. |
+| `GestorPaquetes.DisponiblesDe` | Cupo disponible de un sector ajeno. | Abierto por ID. | CP-182 rechaza la consulta de disponibilidad ajena. |
+| `GestorListaEspera.DeEvento` | Identidad, correo, prioridad y fecha de inscripción de clientes en la lista de otro evento. | Abierto por el rol compartido; no filtraba por dueño. | CP-182 cubre otro Organizador; CP-126 cubre Cliente y sesión ausente. |
+| `GestorReportes.Crear` | Reporte global con ventas, importes, clientela, beneficios y demanda de otros locales. | Abierto por perfil; el perfil de dueño también satisfacía “Administrador”. | CP-182 prueba la creación del RPT-01 con alcance propio; **no cubre los cinco tipos de reporte**. |
+| `GestorReportes.Ejecutar` | Filas y agregados globales del reporte. | Abierto por perfil; sin filtro por dueño. | CP-182 demuestra el filtro del RPT-01; **no cubre los otros cuatro tipos**. |
+| `GestorReportes.Exportar` | El mismo conjunto global, escrito a un archivo exportado. | Abierto por perfil; heredaba la consulta global. | **Sin negativa de exportación entre dueños.** |
+| `GestorReportes.EventosEntre` | Catálogo global de eventos y fechas usado para filtrar reportes. | Abierto por perfil, sin filtro de dueño. | CP-182 comprueba que el selector del Organizador contiene solo su evento. |
+| `GestorAuditoria.Consultar` | Acciones, usuarios y resultados de toda la plataforma. | Abierto a todo Propietario por el perfil compartido. | **Sin negativa específica para Organizador.** CP-174 prueba Cliente frente a Administrador. |
+| `GestorAuditoria.Registrar` | Falsificación de autor: la capa llamadora podía indicar `usuarioId` y correo de otra persona. | Abierto: era público y aceptaba el autor como argumento. | **Sin caso negativo directo** que intente suplantar autor; quedó `internal`, pero la cobertura actual no prueba esa visibilidad desde Visual. |
+
+### Endurecimiento preventivo; no eran fugas abiertas antes de 8a
+
+| Método | Qué habría expuesto si se quitaba la guarda | Estado antes de 8a | Prueba relacionada |
+|---|---|---|---|
+| `GestorIngresos.Registrar`, `Contar`, `EventosConIngresoAbierto` | Ingresos y eventos de otros locales. | **No estaban abiertos:** ya comparaban el dueño del evento con la sesión y el listado filtraba por propietario. No cuentan entre las fugas de 8a. | CP-123 es regresión de pertenencia y ventana temporal; no demuestra que el fallo existiera antes de 8a. |
+| `GestorPaquetes.AgregarEntradas`, `AgregarServicio`, `QuitarServicio`, `Validar` | Permitirían armar o validar un objeto de paquete en memoria con IDs de otro evento; no persistían datos ni compras por sí mismos y el inicio de compra revalidaba. | Endurecimiento de coherencia del objeto, no fuga persistida entre dueños. | CP-57 verifica el rechazo de un servicio de otro evento; no es una prueba de aislamiento de propiedad. |
+| `GestorEventos.Vigentes`, `Buscar` | No filtran por dueño. | Global deliberado: solo catálogo público de eventos publicados y futuros; no se contó como fuga. | Casos del catálogo CP-30 y CP-81 prueban publicación/preventa, no aislamiento de dueño. |
+| Gestores de compras, pagos, seguros, fidelización, suscripciones y datos de espera por cliente | Datos privados de una cuenta distinta. | Ya comprobaban titularidad; no se identificó apertura pre-8a en el diff. | CP-127–CP-140 y CP-161 cubren varias de estas guardas. |
+
+Por lo tanto, el informe anterior mezclaba defectos efectivos con riesgo hipotético y además atribuyó a CP-182 pruebas de escritura que no tiene. La cifra defendible es **24 métodos de acceso/operación entre dueños y 1 método de auditoría falsificable**, con los huecos de prueba indicados explícitamente; no “ocho fugas” inferidas de escenarios condicionales.
 ## Pruebas cambiadas por el nuevo contrato
 
 | Prueba | Antes | Ahora |
@@ -62,6 +72,8 @@ Los repositorios `Datos` son capa de persistencia, no una API de sesión para la
 | CP-37 | El Administrador actuaba también como comprador para preparar un reembolso del reporte. | La compra/devolución se hace con Cliente titular; el reporte se ejecuta luego como Administrador. |
 | CP-182 (nuevo) | — | Organizador A no recibe filas/cifras, eventos, sectores, locales, servicios, disponibilidad, lista o conteo de ingreso del Organizador B; Administrador conserva reportes globales. |
 | CP-183 (nuevo) | — | Confirma que la cuenta Administrador no posee locales, que Organizador es otra cuenta y que la cuenta semilla entra al menú de Organizador. |
+| CP-74 | Antes esperaba que al pulsar Publicar el evento quedara `Publicado`. | Agregar un sector deja `Borrador`; la publicación explícita del primer evento queda `EnRevision` para la revisión de RN-54. |
+| CP-82 | Antes esperaba que al pulsar Publicar quedara `Publicado`. | Comprueba que la preventa se conserva cuando la primera publicación queda `EnRevision`; las otras cuatro variantes no cambian. |
 
 No se eliminaron aserciones de negocio para obtener verde. Los cambios de CP-131/134/135/136 fueron de identidad del fixture; la propiedad funcional comprobada permanece igual.
 

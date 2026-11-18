@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Pruebas.InterfazGrupoA;
 namespace Pruebas {
  [TestClass] public class PruebasK7K8 {
-  // CP-123 — RN-18/RN-41/RN-42: propietario y ventana temporal inclusiva, no día calendario.
+  // CP-123 — RN-18/RN-41/RN-49: pertenencia del organizador y ventana temporal inclusiva.
   [DataTestMethod]
   [DataRow("ajeno",0,false,DisplayName="CP-123: Administrador no lista, registra ni cuenta eventos ajenos")]
   [DataRow("sin-sesion",0,false,DisplayName="CP-123: Sin sesión no se listan eventos para ingreso")]
@@ -23,7 +23,7 @@ namespace Pruebas {
      Assert.IsTrue(GestorIngresos.Instance.EventosConIngresoAbierto().Any(e=>e.Id==evento.Id));
      var otro=Fake.PropietarioSinLocales();GestorSesion.Instance.Iniciar(otro);
      Assert.IsFalse(GestorIngresos.Instance.EventosConIngresoAbierto().Any(e=>e.Id==evento.Id));
-     Assert.AreEqual("RN-42",Assert.ThrowsException<ReglaNegocioException>(()=>GestorIngresos.Instance.Registrar("inexistente",evento.Id)).Regla);
+     Assert.AreEqual("RN-49",Assert.ThrowsException<ReglaNegocioException>(()=>GestorIngresos.Instance.Registrar("inexistente",evento.Id)).Regla);
      Assert.ThrowsException<ReglaNegocioException>(()=>GestorIngresos.Instance.Contar(evento.Id));return;
     }
     if(caso=="sin-sesion") {GestorSesion.Instance.Cerrar();Assert.ThrowsException<ReglaNegocioException>(()=>GestorIngresos.Instance.EventosConIngresoAbierto());return;}

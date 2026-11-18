@@ -87,3 +87,5 @@
 "Fase8c"	"frmMenuAdministrador"	"frmMenuAdministrador.png"	"paneles/Fase8c/frmMenuAdministrador/indicadores-derecha.png"	"Indicadores globales, columna derecha"	"450"	"330"	"96"	"9"	"10,8"
 "Fase8c"	"frmRevisarEventos"	"frmRevisarEventos.png"	"paneles/Fase8c/frmRevisarEventos/lista.png"	"Título y lista de eventos pendientes"	"620"	"458"	"96"	"9"	"14,8"
 "Fase8c"	"frmRevisarEventos"	"frmRevisarEventos.png"	"paneles/Fase8c/frmRevisarEventos/revision.png"	"Datos y aprobación"	"255"	"245"	"96"	"9"	"6,1"
+"Fase8d"	"frmRevisarEventos"	"frmRevisarEventos.png"	"paneles/Fase8d/frmRevisarEventos/lista.png"	"Título y lista de eventos pendientes"	"610"	"472"	"96"	"10"	"13,1"
+"Fase8d"	"frmRevisarEventos"	"frmRevisarEventos.png"	"paneles/Fase8d/frmRevisarEventos/revision.png"	"Datos, motivo y acciones"	"370"	"340"	"96"	"9"	"8,9"

@@ -10,7 +10,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasRevisionSeguridad
     {
-        // CP-113 — RN-41/RN-42, R-01: contrato público y snapshot de autenticación.
+        // CP-113 — RN-41, R-01: contrato público y snapshot de autenticación.
         [DataTestMethod]
         [DataRow("inicio", DisplayName = "CP-113: Iniciar no pertenece al contrato público de sesión")]
         [DataRow("salida", DisplayName = "CP-113: La sesión expone solo propiedades de lectura")]

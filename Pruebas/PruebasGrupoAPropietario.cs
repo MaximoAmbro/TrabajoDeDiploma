@@ -203,7 +203,7 @@ namespace Pruebas
         // CP-74 — RF-12, RN-06: ningún sector publica el evento como efecto secundario.
         [DataTestMethod]
         [DataRow(0, DisplayName = "CP-74: Sector de capacidad cero conserva Borrador")]
-        [DataRow(10, DisplayName = "CP-74: Primer sector con capacidad conserva Borrador")]
+        [DataRow(10, DisplayName = "CP-74: Agregar sector conserva Borrador antes de publicar")]
         public void CP74_PublicacionAlAgregarSector(int capacidad)
         {
             EnSta(() =>
@@ -232,7 +232,7 @@ namespace Pruebas
                             Assert.IsTrue(ControlDe<Button>(publicar, "btnPublicarEvento").Visible);
                             ControlDe<Button>(publicar, "btnPublicarEvento").PerformClick();
                         }
-                        estado = GestorEventos.EstadoPublicado; // cuenta de semilla: ya tiene un evento aprobado.
+                        estado = GestorEventos.EstadoEnRevision; // el primer evento del organizador espera revisión.
                         Assert.AreEqual(estado, GestorEventos.Instance.ObtenerPorId(evento.Id).Estado);
                     }
                     using (var listado = new Visual.Vendedor.frmEventosLocal { IDlocal = local.Id, IDUsuario = local.IdPropietario })

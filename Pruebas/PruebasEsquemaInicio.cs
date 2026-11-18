@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -43,6 +44,30 @@ namespace Pruebas
                 Ejecutar("ALTER TABLE dbo.Eventos DROP COLUMN ImagenPortada;");
                 AssertDiagnostico("la columna Eventos.ImagenPortada", "09-imagenes-eventos.sql");
                 Ejecutar("ALTER TABLE dbo.Eventos ADD ImagenPortada VARBINARY(MAX) NULL;");
+
+                Ejecutar("ALTER TABLE dbo.Entradas DROP CONSTRAINT CK_Entradas_CantidadVendida;");
+                AssertDiagnostico("la restricción Entradas.CK_Entradas_CantidadVendida", "10-restringir-cantidad-vendida.sql");
+                Ejecutar("ALTER TABLE dbo.Entradas WITH CHECK ADD CONSTRAINT CK_Entradas_CantidadVendida CHECK (CantidadVendida=1);");
+
+                Ejecutar("ALTER TABLE dbo.Usuario DROP CONSTRAINT CK_Usuario_TipoUsuario;");
+                AssertDiagnostico("la restricción Usuario.CK_Usuario_TipoUsuario", "11-perfiles-administrador-organizador.sql");
+                Ejecutar("ALTER TABLE dbo.Usuario WITH CHECK ADD CONSTRAINT CK_Usuario_TipoUsuario CHECK (TipoUsuario IN ('Cliente','Organizador','Administrador'));");
+
+                Ejecutar("ALTER TABLE dbo.CodigosCorreo DROP COLUMN Destinatario;");
+                AssertDiagnostico("la columna CodigosCorreo.Destinatario", "12-solicitudes-organizador.sql");
+                Ejecutar("ALTER TABLE dbo.CodigosCorreo ADD Destinatario VARCHAR(180) NULL;");
+
+                Ejecutar("ALTER TABLE dbo.Eventos DROP CONSTRAINT CK_Eventos_Estado;");
+                AssertDiagnostico("el estado Eventos.EnRevision", "13-revision-primer-evento.sql");
+                Ejecutar("ALTER TABLE dbo.Eventos WITH CHECK ADD CONSTRAINT CK_Eventos_Estado CHECK (Estado IN ('Borrador','EnRevision','Publicado','Suspendido'));");
+
+                Ejecutar("ALTER TABLE dbo.Propietario DROP CONSTRAINT DF_Propietario_PrimerEventoAprobado; ALTER TABLE dbo.Propietario DROP COLUMN PrimerEventoAprobado;");
+                AssertDiagnostico("la columna Propietario.PrimerEventoAprobado", "14-primer-evento-aprobado.sql");
+                Ejecutar("ALTER TABLE dbo.Propietario ADD PrimerEventoAprobado BIT NOT NULL CONSTRAINT DF_Propietario_PrimerEventoAprobado DEFAULT(0) WITH VALUES;");
+
+                Ejecutar("ALTER TABLE dbo.Eventos DROP COLUMN MotivoRechazo;");
+                AssertDiagnostico("la columna Eventos.MotivoRechazo", "15-motivo-rechazo-evento.sql");
+                Ejecutar("ALTER TABLE dbo.Eventos ADD MotivoRechazo NVARCHAR(500) NULL;");
                 Assert.IsNull(VerificadorEsquema.PrimerFaltante());
             }
             finally
@@ -54,7 +79,25 @@ namespace Pruebas
                          "ALTER TABLE dbo.Entradas WITH CHECK ADD CONSTRAINT CK_Entradas_Estado CHECK (Estado IN ('Pendiente','Confirmada','Reembolsada','Vencida')); " +
                          "IF COL_LENGTH('dbo.Entradas','FechaIngreso') IS NULL ALTER TABLE dbo.Entradas ADD FechaIngreso DATETIME NULL;");
                 Ejecutar("IF COL_LENGTH('dbo.Eventos','ImagenPortada') IS NULL ALTER TABLE dbo.Eventos ADD ImagenPortada VARBINARY(MAX) NULL;");
+                Ejecutar("IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id=OBJECT_ID('dbo.Entradas') AND name='CK_Entradas_CantidadVendida') ALTER TABLE dbo.Entradas WITH CHECK ADD CONSTRAINT CK_Entradas_CantidadVendida CHECK (CantidadVendida=1);");
+                Ejecutar("IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id=OBJECT_ID('dbo.Usuario') AND name='CK_Usuario_TipoUsuario') ALTER TABLE dbo.Usuario WITH CHECK ADD CONSTRAINT CK_Usuario_TipoUsuario CHECK (TipoUsuario IN ('Cliente','Organizador','Administrador'));");
+                Ejecutar("IF COL_LENGTH('dbo.CodigosCorreo','Destinatario') IS NULL ALTER TABLE dbo.CodigosCorreo ADD Destinatario VARCHAR(180) NULL;");
+                Ejecutar("IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id=OBJECT_ID('dbo.Eventos') AND name='CK_Eventos_Estado') ALTER TABLE dbo.Eventos WITH CHECK ADD CONSTRAINT CK_Eventos_Estado CHECK (Estado IN ('Borrador','EnRevision','Publicado','Suspendido'));");
+                Ejecutar("IF COL_LENGTH('dbo.Propietario','PrimerEventoAprobado') IS NULL ALTER TABLE dbo.Propietario ADD PrimerEventoAprobado BIT NOT NULL CONSTRAINT DF_Propietario_PrimerEventoAprobado DEFAULT(0) WITH VALUES; ELSE IF NOT EXISTS (SELECT 1 FROM sys.default_constraints WHERE parent_object_id=OBJECT_ID('dbo.Propietario') AND name='DF_Propietario_PrimerEventoAprobado') ALTER TABLE dbo.Propietario ADD CONSTRAINT DF_Propietario_PrimerEventoAprobado DEFAULT(0) FOR PrimerEventoAprobado;");
+                Ejecutar("IF COL_LENGTH('dbo.Eventos','MotivoRechazo') IS NULL ALTER TABLE dbo.Eventos ADD MotivoRechazo NVARCHAR(500) NULL;");
             }
+        }
+
+        [TestMethod("CP-197: El registro de diagnóstico incluye cada migración numerada")]
+        public void CP197_RegistroCoincideConMigraciones()
+        {
+            var scripts = Directory.GetFiles(Path.Combine(BaseDePrueba.RaizDelRepositorio(), "BaseDatos"), "??-*.sql")
+                .Select(Path.GetFileName)
+                .Where(nombre => { int numero; return int.TryParse(nombre.Substring(0, 2), out numero) && numero >= 4; })
+                .OrderBy(nombre => nombre, StringComparer.Ordinal)
+                .ToArray();
+            CollectionAssert.AreEqual(scripts, VerificadorEsquema.ScriptsRegistrados.ToArray(),
+                "Todo script de migración numerado debe tener una comprobación registrada en VerificadorEsquema.");
         }
 
         private static void AssertDiagnostico(string descripcion, string script)

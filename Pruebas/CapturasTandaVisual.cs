@@ -8,6 +8,43 @@ using Negocio;
 namespace Pruebas {
  public static class CapturasTandaVisual {
   [System.Runtime.InteropServices.DllImport("user32.dll")] private static extern bool SetWindowPos(IntPtr h,IntPtr despues,int x,int y,int w,int alto,uint flags);
+  public static void CapturarRevisionEventos(string salida) {
+   Directory.CreateDirectory(salida);
+   File.WriteAllText(Path.Combine(salida,"anchos.tsv"),"captura\tancho_px\talto_px\tdpi\tfuente_min_pt\tancho_minimo_8_1pt_cm\r\n");
+   InterfazGrupoA.EnSta(()=> {
+    Fake.Limpiar();
+    var organizador=Fake.PropietarioSinLocales();Fake.ComoOrganizador(organizador);
+    var local=new Local{Nombre="test Local para revisión",Direccion="Calle de prueba 123",Capacidad=100};local.Id=GestorLocales.Instance.Registrar(local);
+    var evento=new Evento{Nombre="test Evento para revisión",Fecha=DateTime.Today.AddDays(30).AddHours(20),IdLocal=local.Id,Categoria="Concierto"};
+    evento.Id=GestorEventos.Instance.Crear(evento);
+    GestorEventos.Instance.AgregarSector(evento.Id,new Sector{Nombre="Campo",Precio=15000m,Capacidad=100});
+    GestorEventos.Instance.Publicar(evento.Id);
+    Fake.ComoAdministrador();
+    using(var form=new Visual.frmRevisarEventos()) {
+     form.TopMost=true;form.StartPosition=FormStartPosition.Manual;form.Location=new Point(40,40);InterfazGrupoA.Mostrar(form);
+     form.BringToFront();form.Activate();SetWindowPos(form.Handle,new IntPtr(-1),0,0,0,0,0x43);System.Threading.Thread.Sleep(250);form.Refresh();Application.DoEvents();
+     using(var imagen=new Bitmap(form.Width,form.Height)){DibujarCompleta(form,imagen);imagen.Save(Path.Combine(salida,"frmRevisarEventos.png"));}
+     using(var g=form.CreateGraphics()) {
+      Point cliente=form.PointToScreen(Point.Empty);cliente.Offset(-form.Left,-form.Top);
+      GuardarRecorte(form,cliente,new Rectangle(24,16,610,472),Path.Combine(salida,"lista.png"),g.DpiX);
+      GuardarRecorte(form,cliente,new Rectangle(658,78,370,340),Path.Combine(salida,"revision.png"),g.DpiX);
+     }
+     RegistrarTipografia(form,salida,"frmRevisarEventos.png");
+     using(var g=form.CreateGraphics())File.WriteAllText(Path.Combine(salida,"ventana.txt"),"DPI="+g.DpiX+" cliente="+form.ClientSize+" ventana="+form.Size+"\r\n");
+    }
+    GestorSesion.Instance.Cerrar();Fake.Limpiar();
+   });
+  }
+  private static void GuardarRecorte(Form form,Point origen,Rectangle zona,string ruta,float dpi) {
+   zona.Offset(origen);
+   using(var imagen=new Bitmap(form.Width,form.Height)){DibujarCompleta(form,imagen);using(var recorte=imagen.Clone(zona,System.Drawing.Imaging.PixelFormat.Format32bppArgb))recorte.Save(ruta);}
+   float minima=Descendientes(form).Where(c=>c.Visible && Rectangle.Intersect(zona,BoundsEnImagen(c,form)).Width>0 && Rectangle.Intersect(zona,BoundsEnImagen(c,form)).Height>0).Select(c=>c.Font.SizeInPoints).DefaultIfEmpty(Visual.Tema.Ayuda.SizeInPoints).Min();
+   double ancho=Math.Ceiling(8.1*zona.Width*2.54/(minima*dpi)*10)/10;
+   File.AppendAllText(Path.Combine(Path.GetDirectoryName(ruta),"anchos.tsv"),Path.GetFileName(ruta)+"\t"+zona.Width+"\t"+zona.Height+"\t"+dpi+"\t"+minima+"\t"+ancho.ToString("F1",System.Globalization.CultureInfo.InvariantCulture)+"\r\n");
+  }
+  private static Rectangle BoundsEnImagen(Control control,Form form) {
+   Point punto=control.PointToScreen(Point.Empty);punto.Offset(-form.Left,-form.Top);return new Rectangle(punto,control.Size);
+  }
   public static void Generar(string salida) {
    Directory.CreateDirectory(salida);
    File.WriteAllText(Path.Combine(salida,"ventanas.txt"),string.Empty);

@@ -69,7 +69,7 @@ namespace Pruebas
             Assert.IsNotNull(GestorEventos.Instance.ObtenerPorId(evento.Id));
         }
 
-        // CP-94 — RF-04/RF-12/RF-13, RN-41/42 propuestas: sin sesión se rechaza antes de escribir.
+        // CP-94 — RF-04/RF-12/RF-13, RN-41/RN-48: sin sesión se rechaza antes de escribir.
         [TestMethod("CP-94: Las operaciones protegidas rechazan la ausencia de sesión")]
         public void SinSesion()
         {

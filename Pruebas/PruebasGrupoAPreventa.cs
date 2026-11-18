@@ -116,7 +116,8 @@ namespace Pruebas
                         "Agregar el sector deja el evento en borrador; la publicación es una acción explícita.");
                     GestorEventos.Instance.Publicar(creado.Id);
                     publicado = GestorEventos.Instance.ObtenerPorId(creado.Id);
-                    Assert.AreEqual(GestorEventos.EstadoPublicado, publicado.Estado);
+                    Assert.AreEqual(GestorEventos.EstadoEnRevision, publicado.Estado,
+                        "La primera publicación del organizador queda en revisión y conserva la preventa.");
                     Assert.AreEqual(fin, publicado.FinPreventa);
                     return;
                 }
