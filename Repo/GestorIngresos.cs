@@ -74,7 +74,7 @@ namespace Negocio
             Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
             Local local = evento == null ? null : RepositorioLocales.Instance.ObtenerPorId(evento.IdLocal);
             if (local == null || local.IdPropietario != GestorSesion.Instance.UsuarioActual.Id)
-                throw new ReglaNegocioException("RN-42", "Solo podés controlar el ingreso de eventos de tus locales.");
+                throw new ReglaNegocioException("RN-49", "Solo podés controlar el ingreso de eventos de tus locales.");
         }
 
         private static ResultadoIngreso RechazoDe(Entrada entrada, int evento)

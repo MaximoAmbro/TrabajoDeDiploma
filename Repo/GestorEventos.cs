@@ -113,6 +113,22 @@ namespace Negocio
             GestorAuditoria.Instance.Registrar("Gestión de eventos: aprobar primer evento", "Evento", idEvento);
         }
 
+        public void RechazarPrimerEvento(int idEvento, string motivo)
+        {
+            GestorSesion.Instance.RequerirAdministrador();
+            if (string.IsNullOrWhiteSpace(motivo))
+                throw new ReglaNegocioException("RN-54", "Escribí el motivo del rechazo.");
+            motivo = motivo.Trim();
+            if (motivo.Length > 500)
+                throw new ReglaNegocioException("RN-54", "El motivo no puede superar los 500 caracteres.");
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            if (evento == null || evento.Estado != EstadoEnRevision)
+                throw new ReglaNegocioException("RN-54", "El evento ya no está pendiente de revisión.");
+            if (!RepositorioEventos.Instance.RechazarPrimerEvento(idEvento, motivo))
+                throw new ReglaNegocioException("RN-54", "El evento cambió mientras se revisaba. Actualizá la lista.");
+            GestorAuditoria.Instance.Registrar("Gestión de eventos: rechazar primer evento", "Evento", idEvento, motivo);
+        }
+
         // RN-11: un evento con entradas vendidas no se borra. Lanza la excepción sin tocar nada;
         // el formulario ofrece Suspender en su lugar.
         public void Eliminar(int idEvento)

@@ -113,11 +113,12 @@ namespace Visual.Vendedor
             lblNombre.Text = NombreLocal;
             var eventos = GestorEventos.Instance.PorLocal(IDlocal);
             dgvEventos.DataSource = eventos
-                .Select(ev => new { ID = ev.Id, ev.Nombre, ev.Fecha, ev.Estado })
+                .Select(ev => new { ID = ev.Id, ev.Nombre, ev.Fecha, ev.Estado, MotivoDelRechazo = ev.MotivoRechazo })
                 .ToList();
             dgvEventos.Visible = eventos.Count > 0;
             estadoSinEventos.Visible = eventos.Count == 0;
             if (dgvEventos.Columns.Contains("ID")) dgvEventos.Columns["ID"].Visible = false;
+            if (dgvEventos.Columns.Contains("MotivoDelRechazo")) dgvEventos.Columns["MotivoDelRechazo"].HeaderText = "Motivo del rechazo";
         }
     }
 }

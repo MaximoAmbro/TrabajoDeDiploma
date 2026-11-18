@@ -9,7 +9,7 @@ namespace Datos
     public sealed class RepositorioEventos : RepositorioBase
     {
         private const string Columnas =
-            "SELECT ID, Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa, ImagenPortada FROM Eventos ";
+            "SELECT ID, Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa, ImagenPortada, MotivoRechazo FROM Eventos ";
 
         private static RepositorioEventos _instance;
 
@@ -126,6 +126,18 @@ namespace Datos
             }
         }
 
+        public bool RechazarPrimerEvento(int idEvento, string motivo)
+        {
+            const string sql = "UPDATE dbo.Eventos SET Estado='Borrador', MotivoRechazo=@Motivo WHERE ID=@ID AND Estado='EnRevision'";
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, sql))
+            {
+                AgregarParametro(comando, "@Motivo", motivo);
+                AgregarParametro(comando, "@ID", idEvento);
+                return comando.ExecuteNonQuery() == 1;
+            }
+        }
+
         public List<Evento> ConIngresoAbierto(int idPropietario, DateTime desde, DateTime hasta)
         {
             return Consultar(Columnas + "WHERE Estado='Publicado' AND Fecha>=@Valor AND Fecha<=@Hasta " +
@@ -151,7 +163,7 @@ namespace Datos
         public List<Evento> Buscar(string estado, DateTime ahora, string texto, string categoria, DateTime? desde)
         {
             const string consulta =
-                "SELECT e.ID, e.Nombre, e.Fecha, e.LocalID, e.Categoria, e.Estado, e.FinPreventa, e.ImagenPortada " +
+                "SELECT e.ID, e.Nombre, e.Fecha, e.LocalID, e.Categoria, e.Estado, e.FinPreventa, e.ImagenPortada, e.MotivoRechazo " +
                 "FROM Eventos e JOIN Locales l ON l.ID = e.LocalID " +
                 "WHERE e.Estado = @Estado AND e.Fecha > @Valor " +
                 "  AND (@Texto IS NULL OR e.Nombre LIKE '%' + @Texto + '%' " +
@@ -331,7 +343,8 @@ namespace Datos
                             Categoria = LeerString(lector, "Categoria"),
                             Estado = LeerString(lector, "Estado"),
                             FinPreventa = LeerFechaNula(lector, "FinPreventa"),
-                            ImagenPortada = lector.IsDBNull(7) ? null : (byte[])lector["ImagenPortada"]
+                            ImagenPortada = lector.IsDBNull(7) ? null : (byte[])lector["ImagenPortada"],
+                            MotivoRechazo = LeerString(lector, "MotivoRechazo")
                         });
                     }
                 }

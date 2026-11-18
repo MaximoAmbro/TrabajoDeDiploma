@@ -97,6 +97,7 @@ ALTER TABLE Eventos  ADD Categoria VARCHAR(20) NULL;   -- Concierto|Deportivo|Te
 ALTER TABLE Eventos  ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Publicado';
 ALTER TABLE Eventos  ADD FinPreventa DATETIME NULL;    -- RN-39; NULL = sin preventa
 ALTER TABLE Eventos  ADD ImagenPortada VARBINARY(MAX) NULL;
+ALTER TABLE Eventos  ADD MotivoRechazo NVARCHAR(500) NULL; -- RN-54: fundamento de rechazo del primer evento
 
 ALTER TABLE Sectores ADD CantidadReservada INT NOT NULL DEFAULT 0;  -- RN-08 + RN-15
 ALTER TABLE Sectores ADD CupoLiberadoEl DATETIME NULL;  -- RN-35: ?ltima liberaci?n efectiva, sin historia inventada
