@@ -27,7 +27,8 @@ namespace Visual.Componentes
             else
             {
                 persona = usuario.Nombre + " " + usuario.Apellido;
-                if (usuario.TipoUsuario == "Propietario") beneficio = "Administrador";
+                if (usuario.TipoUsuario == "Administrador") beneficio = "Administrador de plataforma";
+                else if (usuario.TipoUsuario == "Organizador") beneficio = "Organizador";
                 else
                 {
                     var cliente = GestorFidelizacion.Instance.ClienteActualParaEncabezado();

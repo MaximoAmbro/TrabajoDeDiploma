@@ -21,12 +21,12 @@ namespace Pruebas {
   }
   private Compra Compra(bool seguro=true){return Fake.CompraConfirmada(a,e,1,seguro);}
   private Entrada EntradaDe(Compra c){return RepositorioEntradas.Instance.ObtenerPorCompra(c.Id).Single();}
-  private Entrada ParaIngreso(){var entrada=EntradaDe(Compra());Fake.CambiarFechaDeEvento(e.Id,DateTime.Now.AddMinutes(10));Fake.ComoAdministrador();return entrada;}
+  private Entrada ParaIngreso(){var entrada=EntradaDe(Compra());Fake.CambiarFechaDeEvento(e.Id,DateTime.Now.AddMinutes(10));Fake.ComoOrganizador();return entrada;}
   // CP-126 — RF-10, RN-34: nombres y correos de la espera no se exponen a clientes ni anónimos.
   [TestMethod("CP-126: DeEvento exige administrador antes de devolver datos personales")]
   public void CP126_DeEvento(){
    e=Fake.EventoPublicado(1000m,1);Fake.CompraConfirmada(a,e,1,false);Fake.ComoCliente(b);GestorListaEspera.Instance.Inscribir(e.Id,b.Id);
-   Rechaza(()=>GestorListaEspera.Instance.DeEvento(e.Id),"RN-34",a);Fake.ComoAdministrador();var filas=GestorListaEspera.Instance.DeEvento(e.Id);Assert.AreEqual(1,filas.Count);Assert.AreEqual(b.Id,filas.Single().IdUsuario);
+   Rechaza(()=>GestorListaEspera.Instance.DeEvento(e.Id),"RN-48",a);Fake.ComoAdministrador();var filas=GestorListaEspera.Instance.DeEvento(e.Id);Assert.AreEqual(1,filas.Count);Assert.AreEqual(b.Id,filas.Single().IdUsuario);
   }
   // CP-127 — RF-06, RN-41: pagos privados del titular.
   [TestMethod("CP-127: PagosDe rechaza ajenos y ausencia de sesión")]
@@ -54,7 +54,7 @@ namespace Pruebas {
   public void CP134_Estado(){var entrada=ParaIngreso();foreach(string estado in new[]{"Pendiente","Vencida"}){Fake.CambiarEstadoDeEntrada(entrada.Id,estado);var r=GestorIngresos.Instance.Registrar(entrada.CodigoQR,e.Id);Assert.AreEqual(MotivoIngreso.NoConfirmado,r.Motivo);Assert.AreEqual("La entrada está pendiente o vencida.",r.Mensaje);Assert.IsNull(RepositorioEntradas.Instance.PorCodigo(entrada.CodigoQR).FechaIngreso);}}
   // CP-135 — RF-07, RN-18: reloj inyectado, datetime releído y ambos bordes inclusivos.
   [TestMethod("CP-135: Los dos bordes de ingreso están incluidos y los segundos externos no")]
-  public void CP135_Bordes(){var c=Fake.CompraConfirmada(a,e,2,false);var entradas=RepositorioEntradas.Instance.ObtenerPorCompra(c.Id);var fecha=RepositorioEventos.Instance.ObtenerPorId(e.Id).Fecha;int antes=GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_ANTES"),despues=GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_DESPUES");Fake.ComoAdministrador();Assert.AreEqual(MotivoIngreso.FueraDeHorario,GestorIngresos.Instance.Registrar(entradas[0].CodigoQR,e.Id,fecha.AddHours(-antes).AddSeconds(-1)).Motivo);Assert.AreEqual(MotivoIngreso.FueraDeHorario,GestorIngresos.Instance.Registrar(entradas[1].CodigoQR,e.Id,fecha.AddHours(despues).AddSeconds(1)).Motivo);Assert.IsTrue(entradas.All(x=>!RepositorioEntradas.Instance.PorCodigo(x.CodigoQR).FechaIngreso.HasValue));Assert.IsTrue(GestorIngresos.Instance.Registrar(entradas[0].CodigoQR,e.Id,fecha.AddHours(-antes)).Valido);Assert.IsTrue(GestorIngresos.Instance.Registrar(entradas[1].CodigoQR,e.Id,fecha.AddHours(despues)).Valido);}
+  public void CP135_Bordes(){var c=Fake.CompraConfirmada(a,e,2,false);var entradas=RepositorioEntradas.Instance.ObtenerPorCompra(c.Id);var fecha=RepositorioEventos.Instance.ObtenerPorId(e.Id).Fecha;int antes=GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_ANTES"),despues=GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_DESPUES");Fake.ComoOrganizador();Assert.AreEqual(MotivoIngreso.FueraDeHorario,GestorIngresos.Instance.Registrar(entradas[0].CodigoQR,e.Id,fecha.AddHours(-antes).AddSeconds(-1)).Motivo);Assert.AreEqual(MotivoIngreso.FueraDeHorario,GestorIngresos.Instance.Registrar(entradas[1].CodigoQR,e.Id,fecha.AddHours(despues).AddSeconds(1)).Motivo);Assert.IsTrue(entradas.All(x=>!RepositorioEntradas.Instance.PorCodigo(x.CodigoQR).FechaIngreso.HasValue));Assert.IsTrue(GestorIngresos.Instance.Registrar(entradas[0].CodigoQR,e.Id,fecha.AddHours(-antes)).Valido);Assert.IsTrue(GestorIngresos.Instance.Registrar(entradas[1].CodigoQR,e.Id,fecha.AddHours(despues)).Valido);}
   // CP-136 — RF-07, RN-18: los espacios del lector no alteran el código.
   [TestMethod("CP-136: Código con espacios se normaliza y persiste ingreso")]
   public void CP136_Espacios(){var entrada=ParaIngreso();Assert.IsTrue(GestorIngresos.Instance.Registrar("  "+entrada.CodigoQR+"  ",e.Id).Valido);Assert.IsNotNull(RepositorioEntradas.Instance.PorCodigo(entrada.CodigoQR).FechaIngreso);}
@@ -72,10 +72,10 @@ namespace Pruebas {
   public void CP140_Paquete(){Rechaza(()=>GestorPaquetes.Instance.Nuevo(e.Id,a.Id),"RN-41");Fake.ComoCliente(a);Assert.AreEqual(e.Id,GestorPaquetes.Instance.Nuevo(e.Id,a.Id).IdEvento);}
   // CP-141 — RF-12, RN-34: consulta operativa exclusiva del administrador.
   [TestMethod("CP-141: PorPropietario exige administrador")]
-  public void CP141_Locales(){int id=Fake.Administrador().Id;Rechaza(()=>GestorLocales.Instance.PorPropietario(id),"RN-34");Fake.ComoAdministrador();Assert.IsTrue(GestorLocales.Instance.PorPropietario(id).Count>0);}
+  public void CP141_Locales(){var organizador=Fake.Organizador();int id=organizador.Id;Rechaza(()=>GestorLocales.Instance.PorPropietario(id),"RN-48");Fake.ComoOrganizador();Assert.IsTrue(GestorLocales.Instance.PorPropietario(id).Count>0);}
   // CP-142 — RF-07, RN-34: listado de ingreso administrativo.
   [TestMethod("CP-142: EventosConIngresoAbierto exige administrador")]
-  public void CP142_EventosIngreso(){Rechaza(()=>GestorIngresos.Instance.EventosConIngresoAbierto(),"RN-34");Fake.ComoAdministrador();Assert.IsNotNull(GestorIngresos.Instance.EventosConIngresoAbierto());}
+  public void CP142_EventosIngreso(){var organizador=Fake.Organizador();Rechaza(()=>GestorIngresos.Instance.EventosConIngresoAbierto(),"RN-48");Fake.ComoOrganizador(organizador);Assert.IsNotNull(GestorIngresos.Instance.EventosConIngresoAbierto());}
   // CP-143 — RF-11, RN-34: ejecutar reporte ya creado requiere autenticar de nuevo.
   [TestMethod("CP-143: Ejecutar reporte existente exige administrador")]
   public void CP143_Reporte(){Fake.ComoAdministrador();var r=GestorReportes.Instance.Crear(GestorReportes.Codigos[0],DateTime.Today.AddDays(-30),DateTime.Today);Rechaza(()=>GestorReportes.Instance.Ejecutar(r),"RN-34");Fake.ComoAdministrador();Assert.IsNotNull(GestorReportes.Instance.Ejecutar(r));}

@@ -7,13 +7,12 @@ using Entidades;
 
 namespace Negocio
 {
-    // RF-11 + CU-08 + anexo A02. RN-34: solo el Administrador. Se verifica acá contra la sesión,
-    // no solo escondiendo el botón: cualquier llamador que llegue a estos métodos pasa por el
-    // control. Los reportes solo leen.
+    // RF-11 + CU-08 + anexo A02. El Administrador ve el universo global; el Organizador
+    // recibe agregados limitados a eventos de sus locales. La consulta fuerza el alcance vigente.
     public sealed class GestorReportes
     {
-        // RN-05: el perfil Administrador se guarda como TipoUsuario «Propietario».
-        private const string PerfilAdministrador = "Propietario";
+        private const string PerfilAdministrador = "Administrador";
+        private const string PerfilOrganizador = "Organizador";
 
         public static readonly IReadOnlyList<string> Codigos = new[]
         {
@@ -40,23 +39,25 @@ namespace Negocio
 
         public Reporte Crear(string codigo, DateTime desde, DateTime hasta)
         {
-            var usuario = VerificarAdministrador();
+            var usuario = VerificarAccesoReportes();
             if (desde.Date > hasta.Date)
             {
                 throw new ArgumentException("La fecha «desde» no puede ser posterior a la fecha «hasta».");
             }
             Reporte reporte = Nuevo(codigo, desde, hasta);
             reporte.Solicitante = $"{usuario.Nombre} {usuario.Apellido} ({usuario.Mail})".Replace("  ", " ");
+            reporte.IdOrganizador = usuario.TipoUsuario == PerfilOrganizador ? (int?)usuario.Id : null;
             return reporte;
         }
 
         public DataTable Ejecutar(Reporte r)
         {
-            VerificarAdministrador();
+            var usuario = VerificarAccesoReportes();
             if (r == null)
             {
                 throw new ArgumentNullException(nameof(r));
             }
+            r.IdOrganizador = usuario.TipoUsuario == PerfilOrganizador ? (int?)usuario.Id : null;
             return r.Obtener(RepositorioReportes.Instance);
         }
 
@@ -79,8 +80,9 @@ namespace Negocio
         // Eventos con fecha en el período, para los filtros por evento (RPT-02 y RPT-05).
         public List<Evento> EventosEntre(DateTime desde, DateTime hasta)
         {
-            VerificarAdministrador();
-            return RepositorioReportes.Instance.EventosEntre(desde.Date, hasta.Date.AddDays(1).AddSeconds(-1))
+            var usuario = VerificarAccesoReportes();
+            int? idOrganizador = usuario.TipoUsuario == PerfilOrganizador ? (int?)usuario.Id : null;
+            return RepositorioReportes.Instance.EventosEntre(desde.Date, hasta.Date.AddDays(1).AddSeconds(-1), idOrganizador)
                 .Rows.Cast<DataRow>()
                 .Select(f => new Evento
                 {
@@ -107,13 +109,12 @@ namespace Negocio
             }
         }
 
-        // RN-34
-        private static SesionAutenticada VerificarAdministrador()
+        private static SesionAutenticada VerificarAccesoReportes()
         {
             var usuario = GestorSesion.Instance.UsuarioActual;
-            if (usuario == null || usuario.TipoUsuario != PerfilAdministrador)
+            if (usuario == null || (usuario.TipoUsuario != PerfilAdministrador && usuario.TipoUsuario != PerfilOrganizador))
             {
-                throw new ReglaNegocioException("RN-34", "Los reportes son accesibles únicamente al perfil Administrador.");
+                throw new ReglaNegocioException("RN-34", "Los reportes están disponibles para Administradores y Organizadores.");
             }
             return usuario;
         }

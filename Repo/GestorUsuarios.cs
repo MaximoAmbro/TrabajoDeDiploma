@@ -25,7 +25,8 @@ namespace Negocio
         private static readonly string HashCuentaInexistente = Seguridad.Hash(Guid.NewGuid().ToString("N"));
 
         private const string TipoCliente = "Cliente";
-        private const string TipoPropietario = "Propietario";
+        private const string TipoOrganizador = "Organizador";
+        private const string TipoAdministrador = "Administrador";
 
         private GestorUsuarios() { }
 
@@ -104,7 +105,7 @@ namespace Negocio
             return usuario;
         }
 
-        // Alta pública: solo clientes. El perfil Propietario no se autoasigna (RN-05, RN-34).
+        // Alta pública: solo clientes. Los perfiles privilegiados no se autoasignan (RN-05).
         public void RegistrarCliente(string mail, string pwd, string nombre, string apellido)
         {
             int id = Registrar(mail, pwd, nombre, apellido, TipoCliente);
@@ -114,7 +115,7 @@ namespace Negocio
         public void CrearAdministrador(string mail, string pwd, string nombre, string apellido)
         {
             GestorSesion.Instance.RequerirAdministrador();
-            Registrar(mail, pwd, nombre, apellido, TipoPropietario);
+            Registrar(mail, pwd, nombre, apellido, TipoAdministrador);
         }
 
         internal int Registrar(string mail, string pwd, string nombre, string apellido, string tipoUsuario)
@@ -123,10 +124,10 @@ namespace Negocio
             {
                 throw new ReglaNegocioException("RN-01", "Ingresá un mail.");
             }
-            if (tipoUsuario != TipoCliente && tipoUsuario != TipoPropietario)
+            if (tipoUsuario != TipoCliente && tipoUsuario != TipoOrganizador && tipoUsuario != TipoAdministrador)
             {
                 throw new ReglaNegocioException("RN-05",
-                    $"El tipo de usuario debe ser {TipoCliente} o {TipoPropietario}.");
+                    $"El tipo de usuario debe ser {TipoCliente}, {TipoOrganizador} o {TipoAdministrador}.");
             }
             ValidarContrasena(pwd);
 

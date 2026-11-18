@@ -10,7 +10,7 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 | RN-02 | La contraseña tiene 8 caracteres como mínimo, con al menos una letra y un dígito. | E |
 | RN-03 | Toda cuenta nueva se crea con nivel Bronce y sin suscripción activa. | A |
 | RN-04 | Tras 5 intentos fallidos consecutivos la cuenta se bloquea por 15 minutos. | A |
-| RN-05 | Un usuario tiene un único perfil, Cliente o Administrador, excluyentes. | E |
+| RN-05 | Un usuario tiene un único perfil excluyente: Cliente, Organizador o Administrador de plataforma. El administrador de plataforma no es dueño de locales; el organizador administra solo los locales, eventos e ingresos de su cuenta. | E |
 
 ## Eventos, sectores y disponibilidad
 
@@ -72,9 +72,11 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 
 | ID | Regla | T |
 |---|---|---|
-| RN-34 | Los reportes son accesibles únicamente al perfil Administrador. | A |
+| RN-34 | El administrador de plataforma accede a la administración global y a los reportes globales; los organizadores acceden a reportes limitados a eventos de sus propios locales. | A |
 | RN-35 | La lista de espera se ordena primero por los clientes que se inscribieron con suscripción activa y después por el resto; dentro de cada grupo, por orden de inscripción. La condición de suscriptor se **congela al inscribirse** (`ListaEspera.ConSuscripcion`): si después la suscripción vence o se cancela, el lugar no cambia. **Ventana de prioridad** (`1525202`): cuando un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y el evento tiene algún inscripto con suscripción, durante `PRIORIDAD_ESPERA_MINUTOS` solo pueden comprar ese sector los inscriptos con suscripción; los demás reciben el rechazo RN-35. Sin inscriptos con suscripción no hay ventana. El instante sale de `Sectores.CupoLiberadoEl`. | E |
 | RN-36 | Un cliente se inscribe una sola vez en la lista de espera de un mismo evento. | E |
+| RN-48 | La gestión de locales, eventos y control de ingreso requiere perfil Organizador. | A |
+| RN-49 | Un Organizador solo puede consultar o modificar locales, eventos, sectores, ingresos y listas de espera pertenecientes a sus locales. | A |
 
 ---
 

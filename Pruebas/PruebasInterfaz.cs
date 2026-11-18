@@ -245,7 +245,7 @@ namespace Pruebas
                 var cliente = Fake.Cliente(NivelFidelidad.Bronce);
                 Fake.ComoCliente(cliente);
                 var evento = Fake.EventoPublicado(1000m, 5);
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 using (var form = new Visual.Vendedor.frmEventosLocal { IDlocal = evento.IdLocal, IDUsuario = 1 })
                 {
                     Cargar(form);
@@ -261,7 +261,7 @@ namespace Pruebas
                 }
                 evento = Fake.EventoPublicado(1000m, 5);
                 Fake.CompraConfirmada(cliente, evento, 1, false);
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 using (var form = new Visual.Vendedor.frmEventosLocal { IDlocal = evento.IdLocal, IDUsuario = 1 })
                 {
                     Cargar(form);
@@ -572,7 +572,7 @@ namespace Pruebas
             });
         }
 
-        // CP-46 — RF-02: volver al inicio cierra la sesión de cliente o administrador y muestra el login.
+        // CP-46 — RF-02: volver al inicio cierra la sesión de cliente o administrador de plataforma.
         [DataTestMethod]
         [DataRow("cliente", DisplayName = "CP-46: Volver al inicio cierra sesión de cliente")]
         [DataRow("administrador", DisplayName = "CP-46: Volver al inicio cierra sesión de administrador")]
@@ -584,12 +584,16 @@ namespace Pruebas
                 GestorSesion.Instance.Iniciar(usuario);
                 using (Form menu = perfil == "cliente"
                     ? (Form)new Visual.frmMenuCliente { IDUsuario = usuario.Id, NombreUsuario = usuario.Nombre }
-                    : new Visual.frmMenuPropietario { IDUsuario = usuario.Id, NombreUsuario = usuario.Nombre })
+                    : new Visual.frmMenuAdministrador { IDUsuario = usuario.Id, NombreUsuario = usuario.Nombre })
                 {
                     Cargar(menu);
-                    MethodInfo volver = menu.GetType().GetMethod("lblvolver_Click", BindingFlags.Instance | BindingFlags.NonPublic);
-                    Assert.IsNotNull(volver);
-                    volver.Invoke(menu, new object[] { menu, EventArgs.Empty });
+                    if (perfil == "cliente")
+                    {
+                        MethodInfo volver = menu.GetType().GetMethod("lblvolver_Click", BindingFlags.Instance | BindingFlags.NonPublic);
+                        Assert.IsNotNull(volver);
+                        volver.Invoke(menu, new object[] { menu, EventArgs.Empty });
+                    }
+                    else Control<Button>(menu, "btnCerrarSesion").PerformClick();
 
                     Assert.IsFalse(GestorSesion.Instance.HaySesion);
                     Assert.IsTrue(Application.OpenForms.Cast<Form>().Any(f => f is Visual.frmInicio && f.Visible));
@@ -723,8 +727,9 @@ namespace Pruebas
                 }
                 else if (caso == "negocio")
                 {
-                    Fake.ComoAdministrador();
-                    error = Assert.ThrowsException<InvalidOperationException>(() => GestorPaquetes.Instance.Nuevo(999999, 3));
+                    var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                    Fake.ComoCliente(cliente);
+                    error = Assert.ThrowsException<InvalidOperationException>(() => GestorPaquetes.Instance.Nuevo(999999, cliente.Id));
                     esperado = "No se encontró ningún evento con ese ID.";
                     Assert.AreEqual(esperado, error.Message);
                 }
@@ -758,7 +763,7 @@ namespace Pruebas
                 using (var pago = new Visual.frmPago { Compra = compra })
                 {
                     Cargar(pago);
-                    Fake.ComoAdministrador();
+                    Fake.ComoOrganizador();
                     GestorEventos.Instance.Eliminar(evento.Id);
                     Fake.ComoCliente(cliente);
                     DatosTarjeta tarjeta = Fake.Tarjeta();

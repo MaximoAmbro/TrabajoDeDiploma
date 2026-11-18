@@ -58,16 +58,30 @@ namespace Negocio
             return ahora >= UltimaActividadEl.Value.AddMinutes(GestorParametros.Instance.ObtenerEntero("SESION_INACTIVIDAD_MIN"));
         }
 
-        // RN-34 generalizada: toda gestión administrativa exige este perfil.
+        // RN-34: acciones de administración de la plataforma, no de un local.
         public void RequerirAdministrador()
         {
-            if (UsuarioActual == null || UsuarioActual.TipoUsuario != "Propietario")
+            if (UsuarioActual == null || UsuarioActual.TipoUsuario != "Administrador")
                 throw new ReglaNegocioException("RN-34", "Esta operación es solo para el Administrador");
+        }
+
+        // RN-48: la gestión de locales, eventos e ingresos corresponde al Organizador.
+        public void RequerirOrganizador()
+        {
+            if (UsuarioActual == null || UsuarioActual.TipoUsuario != "Organizador")
+                throw new ReglaNegocioException("RN-48", "Esta operación es solo para el Organizador.");
+        }
+
+        public void RequerirOrganizadorDeLocal(int idOrganizador)
+        {
+            RequerirOrganizador();
+            if (UsuarioActual.Id != idOrganizador)
+                throw new ReglaNegocioException("RN-49", "Solo podés operar sobre los locales de tu cuenta.");
         }
 
         public void RequerirUsuario(int idUsuario)
         {
-            if (UsuarioActual == null || (UsuarioActual.TipoUsuario != "Propietario" && UsuarioActual.Id != idUsuario))
+            if (UsuarioActual == null || UsuarioActual.Id != idUsuario)
                 throw new ReglaNegocioException("RN-41", "Solo puede operar sobre los datos de tu propia cuenta.");
         }
 

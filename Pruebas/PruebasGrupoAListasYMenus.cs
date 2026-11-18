@@ -21,7 +21,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Usuario propietario = vacia ? Fake.PropietarioSinLocales() : Fake.Administrador();
+                Usuario propietario = vacia ? Fake.PropietarioSinLocales() : Fake.Organizador();
                 Evento evento = null;
                 Cliente primero = null;
                 if (!vacia)
@@ -36,7 +36,7 @@ namespace Pruebas
                     Fake.ComoCliente(primero);
                     GestorListaEspera.Instance.Inscribir(evento.Id, primero.Id);
                 }
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador(propietario);
                 using (var form = new Visual.frmListasEspera { IDUsuario = propietario.Id })
                 {
                     Mostrar(form);
@@ -82,7 +82,7 @@ namespace Pruebas
                 GestorListaEspera.Instance.Inscribir(evento.Id, oro.Id);
                 GestorSuscripciones.Instance.Cancelar(oro.Id);
                 Assert.IsFalse(GestorSuscripciones.Instance.TieneActiva(oro.Id));
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 var lista = GestorListaEspera.Instance.DeEvento(evento.Id);
                 CollectionAssert.AreEqual(new[] { oro.Id, bronce.Id }, lista.Select(x => x.IdUsuario).ToArray());
                 Assert.IsTrue(lista[0].ConSuscripcion);
@@ -121,9 +121,9 @@ namespace Pruebas
                     }
                     return;
                 }
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 foreach (float escala in new[] { 1f, 1.5f })
-                using (var menu = new Visual.frmMenuPropietario { IDUsuario = Fake.Administrador().Id })
+                using (var menu = new Visual.frmMenuPropietario { IDUsuario = Fake.Organizador().Id })
                 {
                     Mostrar(menu);
                     Control[] controles = menu.Controls.Cast<Control>().Prepend(menu).ToArray();

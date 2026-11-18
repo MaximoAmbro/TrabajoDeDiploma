@@ -23,7 +23,7 @@ namespace Pruebas
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 DateTime fin = DateTime.Today.AddDays(1).AddHours(20);
                 bool preventa = escenario != "sin-preventa";
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 if (preventa) GestorEventos.Instance.CambiarPreventa(evento.Id, fin);
                 foreach (bool suscripto in escenario == "sin-preventa" ? new[] { false, true } : new[] { escenario == "con-plan" })
                 {
@@ -71,7 +71,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 Evento referencia = Fake.EventoBorradorSinSectores();
                 Local local = GestorLocales.Instance.PorId(referencia.IdLocal);
                 DateTime fin = DateTime.Today.AddDays(1).AddHours(20);

@@ -44,7 +44,7 @@ namespace Negocio
             int plata = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_PLATA");
             int oro = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_ORO");
             DateTime corte = FechaCorte.Date.AddDays(1).AddSeconds(-1);
-            DataTable crudo = repo.UsuariosPorNivel(corte.AddMonths(-Meses), corte, plata, oro);
+            DataTable crudo = repo.UsuariosPorNivel(corte.AddMonths(-Meses), corte, plata, oro, IdOrganizador);
 
             DataTable tabla = NuevaTabla(typeof(string), typeof(string), typeof(int), typeof(decimal), typeof(decimal), typeof(decimal));
             Formatear(tabla, 2, FormatoEntero);

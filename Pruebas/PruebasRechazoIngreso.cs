@@ -19,7 +19,7 @@ namespace Pruebas {
    ResultadoIngreso resultado=null;
    try{resultado=GestorIngresos.Instance.Registrar(entrada.CodigoQR,evento.Id);}catch(Exception error){Assert.Fail("El rechazo debe ser un resultado, no una excepción: "+error.GetType().Name);}
    Assert.IsNotNull(resultado);Assert.IsFalse(resultado.Valido);Assert.AreEqual(MotivoIngreso.NoAutorizado,resultado.Motivo);
-   Assert.AreEqual("RN-34",resultado.Regla);Assert.AreEqual("Esta operación es solo para el Administrador",resultado.Mensaje);Assert.IsNull(resultado.FechaIngreso);
+   Assert.AreEqual("RN-48",resultado.Regla);Assert.AreEqual("Esta operación es solo para el Organizador.",resultado.Mensaje);Assert.IsNull(resultado.FechaIngreso);
    var persistida=RepositorioEntradas.Instance.PorCodigo(entrada.CodigoQR);Assert.IsNull(persistida.FechaIngreso);Assert.AreEqual(EstadoEntrada.Confirmada,persistida.Estado);Assert.AreEqual(0,RepositorioEntradas.Instance.ContarIngresos(evento.Id));
    if(sinSesion)Assert.IsNull(GestorSesion.Instance.UsuarioActual);else Assert.AreEqual(cliente.Id,GestorSesion.Instance.UsuarioActual.Id);
   }

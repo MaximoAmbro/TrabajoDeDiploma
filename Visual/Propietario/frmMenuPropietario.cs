@@ -14,28 +14,39 @@ namespace Visual
 {
     public partial class frmMenuPropietario : FormularioEventAura
     {
+        private readonly Panel zonaOrganizador;
+        private readonly Componentes.EtiquetaTitulo tituloOrganizador;
+        private readonly Componentes.EtiquetaAyuda ayudaOrganizador;
         public int IDUsuario;
         public string NombreUsuario;
 
         public frmMenuPropietario()
         {
             InitializeComponent();
-            panelAdministrador.CrearAdministradorSolicitado += CrearAdministrador;
-            panelAdministrador.AuditoriaSolicitada += (s, e) => { using (var form = new frmAuditoria()) form.ShowDialog(this); };
+            zonaOrganizador = new Panel { Name = "zonaOrganizador", BackColor = Tema.Superficie, Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right };
+            tituloOrganizador = new Componentes.EtiquetaTitulo { Name = "tituloOrganizador", Text = "Tu espacio de organización" };
+            ayudaOrganizador = new Componentes.EtiquetaAyuda { Name = "ayudaOrganizador", Text = "Administrá tus locales y eventos, controlá el ingreso y consultá reportes de tus propias ventas." };
+            zonaOrganizador.Controls.Add(tituloOrganizador);
+            zonaOrganizador.Controls.Add(ayudaOrganizador);
+            Controls.Add(zonaOrganizador);
+            zonaOrganizador.BringToFront();
             SizeChanged+=(s,e)=>DistribuirPanel();
         }
 
         private void frmMenuVendedor_Load(object sender, EventArgs e)
         {
             lblNombre.Text = NombreUsuario;
-            panelAdministrador.Cargar();DistribuirPanel();
+            GestorSesion.Instance.RequerirOrganizador();
+            DistribuirPanel();
         }
         protected override void OnShown(EventArgs e){base.OnShown(e);Disposicion.AjustarAreaVisible(this);DistribuirPanel();}
         private void DistribuirPanel()
         {
             int margen=(int)(24*Disposicion.Escala(this));
-            panelAdministrador.SetBounds(btnMisLocales.Right+margen,label1.Top,
+            zonaOrganizador.SetBounds(btnMisLocales.Right+margen,label1.Top,
                 Math.Max(1,ClientSize.Width-btnMisLocales.Right-margen*2),Math.Max(1,ClientSize.Height-label1.Top-margen));
+            tituloOrganizador.SetBounds(24,24,Math.Max(1,zonaOrganizador.ClientSize.Width-48),40);
+            ayudaOrganizador.SetBounds(24,72,Math.Max(1,zonaOrganizador.ClientSize.Width-48),96);
         }
 
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
@@ -66,12 +77,6 @@ namespace Visual
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;
             frm.Show(); this.Hide();
-        }
-        private void CrearAdministrador(object sender, EventArgs e)
-        {
-            var alta = new frmCrearUsuario(true);
-            alta.Show();
-            Hide();
         }
         private void btnControlIngreso_Click(object sender, EventArgs e)
         {

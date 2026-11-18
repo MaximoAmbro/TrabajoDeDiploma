@@ -166,7 +166,7 @@ namespace Pruebas
             EnSta(()=>{
                 Fake.ComoAdministrador();
                 string mail=Fake.MailNuevo();
-                using(var menu=new Visual.frmMenuPropietario()) {
+                using(var menu=new Visual.frmMenuAdministrador()) {
                     Mostrar(menu);
                     ControlDe<Button>(menu,"btnCrearAdministrador").PerformClick();
                     var alta=System.Windows.Forms.Application.OpenForms.OfType<Visual.frmCrearUsuario>().Single(f=>f.Visible);
@@ -178,7 +178,7 @@ namespace Pruebas
                     ControlDe<TextBox>(alta,"TxtConfirmpassword").Text="ClaveSegura123";
                     DialogosPrueba.Comprobar(()=>ControlDe<Button>(alta,"btnregistrarse").PerformClick(),
                         new DialogoEsperado{Titulo="Crear administrador",Texto="Usuario creado con éxito."});
-                    Assert.AreEqual("Propietario",RepositorioUsuarios.Instance.ObtenerPorMail(mail).TipoUsuario);
+                    Assert.AreEqual("Administrador",RepositorioUsuarios.Instance.ObtenerPorMail(mail).TipoUsuario);
                     Assert.IsTrue(menu.Visible);
                     alta.Dispose();
                 }

@@ -309,9 +309,11 @@ namespace Visual
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void btnVolver_Click(object sender, EventArgs e)
         {
-            frmMenuPropietario frm = new frmMenuPropietario();
-            frm.IDUsuario = IDUsuario;
-            frm.NombreUsuario = NombreUsuario;
+            Form frm;
+            if (GestorSesion.Instance.UsuarioActual != null && GestorSesion.Instance.UsuarioActual.TipoUsuario == "Administrador")
+                frm = new frmMenuAdministrador { IDUsuario = IDUsuario, NombreUsuario = NombreUsuario };
+            else
+                frm = new frmMenuPropietario { IDUsuario = IDUsuario, NombreUsuario = NombreUsuario };
             frm.Show(); this.Hide();
         }
     }

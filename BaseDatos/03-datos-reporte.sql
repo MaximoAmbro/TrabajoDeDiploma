@@ -84,7 +84,7 @@ DECLARE @HorasSeguro  INT           = (SELECT CAST(Valor AS INT)           FROM 
 DECLARE @PrecioMensual DECIMAL(12,2) = (SELECT CAST(Valor AS DECIMAL(12,2)) FROM Parametros WHERE Clave = 'SUSCRIPCION_MENSUAL_PRECIO');
 DECLARE @PrecioAnual   DECIMAL(12,2) = (SELECT CAST(Valor AS DECIMAL(12,2)) FROM Parametros WHERE Clave = 'SUSCRIPCION_ANUAL_PRECIO');
 
-DECLARE @Admin INT = (SELECT TOP 1 ID FROM Usuario WHERE TipoUsuario = 'Propietario' ORDER BY ID);
+DECLARE @Organizador INT = (SELECT TOP 1 ID FROM Usuario WHERE TipoUsuario = 'Organizador' ORDER BY ID);
 
 -- Números 1..N para generar filas sin bucles fila por fila.
 DECLARE @Numeros TABLE (n INT PRIMARY KEY);
@@ -94,7 +94,7 @@ FROM sys.all_objects a CROSS JOIN sys.all_objects b;
 
 -- ═══════════════ 3. Local, eventos y sectores ═══════════════
 INSERT INTO Locales (Nombre, Direccion, Capacidad, PropietarioID)
-VALUES (N'Predio Rosario (datos de reporte)', N'Bv. Oroño 2000, Rosario', 2000, @Admin);
+VALUES (N'Predio Rosario (datos de reporte)', N'Bv. Oroño 2000, Rosario', 2000, @Organizador);
 SET @Local = SCOPE_IDENTITY();
 
 DECLARE @Def TABLE (Clave CHAR(1) PRIMARY KEY, Nombre NVARCHAR(100), Categoria VARCHAR(20),

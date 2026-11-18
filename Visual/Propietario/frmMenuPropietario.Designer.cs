@@ -75,7 +75,7 @@ namespace Visual
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(272, 32);
             this.label1.TabIndex = 36;
-            this.label1.Text = "Administración";
+            this.label1.Text = "Organización";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnRegistrarLocal
@@ -137,18 +137,13 @@ namespace Visual
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmMenuVendedor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "EventAura · Administración";
+            this.Text = "EventAura · Organizador";
             this.Load += new System.EventHandler(this.frmMenuVendedor_Load);
             this.barraSuperior = new Visual.Componentes.BarraSuperior();
             this.barraSuperior.Name = "barraSuperior";
             this.barraSuperior.Size = new System.Drawing.Size(400, 60);
             this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
             this.Controls.Add(this.barraSuperior);
-            this.panelAdministrador = new Visual.Componentes.PanelAdministrador();
-            this.panelAdministrador.Name = "panelAdministrador";
-            this.panelAdministrador.Location = new System.Drawing.Point(320, 84);
-            this.panelAdministrador.Size = new System.Drawing.Size(656, 452);
-            this.Controls.Add(this.panelAdministrador);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,6 +160,5 @@ namespace Visual
         private Visual.Componentes.BotonPrimario btnReportes;
         private Visual.Componentes.BotonPrimario btnControlIngreso;
         private Visual.Componentes.BarraSuperior barraSuperior;
-        private Visual.Componentes.PanelAdministrador panelAdministrador;
     }
 }

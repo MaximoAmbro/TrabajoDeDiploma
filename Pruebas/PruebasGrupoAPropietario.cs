@@ -20,7 +20,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 using (var form = new Visual.Propietario.frmAgregarEvento())
                 {
                     Mostrar(form);
@@ -58,9 +58,9 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Fake.ComoAdministrador();
-                Usuario propietario = Fake.Administrador();
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
+                Usuario propietario = Fake.Organizador();
+                Fake.ComoOrganizador();
                 using (var form = new Visual.frmRegistrarLocal { IDUsuario = propietario.Id })
                 {
                     Mostrar(form);
@@ -104,11 +104,11 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 Fake.EventoPublicado(1000m, 5);
                 Fake.EventoPublicado(1000m, 5);
-                Usuario propietario = Fake.Administrador();
-                Fake.ComoAdministrador();
+                Usuario propietario = Fake.Organizador();
+                Fake.ComoOrganizador();
                 using (var form = new Visual.frmMisLocales { IDUsuario = propietario.Id })
                 {
                     Mostrar(form);
@@ -148,7 +148,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 Evento evento = Fake.EventoBorradorSinSectores();
                 using (var form = SectorPara(evento))
                 {
@@ -171,7 +171,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 Evento referencia = Fake.EventoBorradorSinSectores();
                 Local local = GestorLocales.Instance.PorId(referencia.IdLocal);
                 int antes = GestorEventos.Instance.PorLocal(local.Id).Count;
@@ -208,7 +208,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 Evento evento = Fake.EventoBorradorSinSectores();
                 Local local = GestorLocales.Instance.PorId(evento.IdLocal);
                 using (var administrar = new Visual.Vendedor.frmAdministrarEvento
@@ -242,7 +242,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 Evento evento = eliminar ? Fake.EventoPublicado(1000m, 5) : Fake.EventoBorradorSinSectores();
                 Local local = GestorLocales.Instance.PorId(evento.IdLocal);
                 if (!eliminar)
@@ -259,7 +259,7 @@ namespace Pruebas
                     return;
                 }
                 int idSector = GestorEventos.Instance.Sectores(evento.Id).Single().Id;
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 using (var form = new Visual.Vendedor.frmAdministrarEvento
                     { IDEvento = evento.Id, IDlocal = local.Id, IDUsuario = local.IdPropietario })
                 {

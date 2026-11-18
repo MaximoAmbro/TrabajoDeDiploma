@@ -94,6 +94,9 @@ namespace Pruebas
                 GestorListaEspera.Instance.Inscribir(evento.Id, enEspera.Id));
             Assert.AreEqual("RN-36", duplicada.Regla);
             GestorSesion.Instance.Iniciar(Fake.Administrador());
+              Fake.ComoCliente(comprador);
+              var entradasCompra = GestorCompras.Instance.EntradasDe(compra);
+              Fake.ComoAdministrador();
             var reporte = (ReporteDemandaInsatisfecha)GestorReportes.Instance.Crear(ReporteDemandaInsatisfecha.CodigoReporte, Desde, Hasta);
             reporte.IdEvento = evento.Id;
             reporte.NombreEvento = evento.Nombre;
@@ -103,7 +106,9 @@ namespace Pruebas
             Assert.AreEqual(ReporteDemandaInsatisfecha.EstadoAgotado, Convert.ToString(agotado["Estado"]));
             Assert.AreEqual(1, Convert.ToInt32(agotado["En lista de espera"]));
 
-            GestorCompras.Instance.Reembolsar(GestorCompras.Instance.EntradasDe(compra));
+              Fake.ComoCliente(comprador);
+              GestorCompras.Instance.Reembolsar(entradasCompra);
+              Fake.ComoAdministrador();
             DataRow conCupo = GestorReportes.Instance.Ejecutar(reporte).Rows.Cast<DataRow>()
                 .Single(f => Convert.ToString(f["Evento"]) == evento.Nombre);
             Assert.AreEqual(ReporteDemandaInsatisfecha.EstadoConCupo, Convert.ToString(conCupo["Estado"]));

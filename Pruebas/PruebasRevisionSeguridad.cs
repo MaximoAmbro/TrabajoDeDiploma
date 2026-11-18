@@ -40,7 +40,7 @@ namespace Pruebas
                 }
                 else if (caso == "perfil")
                 {
-                    original.TipoUsuario = "Propietario";
+                    original.TipoUsuario = "Administrador";
                     Assert.ThrowsException<ReglaNegocioException>(() => sesion.RequerirAdministrador());
                 }
                 else

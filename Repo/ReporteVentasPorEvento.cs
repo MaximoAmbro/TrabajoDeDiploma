@@ -31,7 +31,7 @@ namespace Negocio
 
         public override DataTable Obtener(RepositorioReportes repo)
         {
-            DataTable crudo = repo.VentasPorEvento(InicioRango, FinRango, Categoria);
+            DataTable crudo = repo.VentasPorEvento(InicioRango, FinRango, Categoria, IdOrganizador);
             DataTable tabla = NuevaTabla(typeof(string), typeof(string), typeof(int), typeof(decimal), typeof(decimal), typeof(decimal));
             Formatear(tabla, 2, FormatoEntero);
             Formatear(tabla, 3, FormatoPesos);

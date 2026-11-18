@@ -22,7 +22,7 @@ CREATE TABLE Usuario (
     Apellido    VARCHAR(100) NULL,
     Mail        VARCHAR(150) NULL,
     Contraseña  VARCHAR(100) NULL,
-    TipoUsuario VARCHAR(20)  NULL      -- Cliente|Propietario (RN-05)
+    TipoUsuario VARCHAR(20)  NULL      -- Cliente|Organizador|Administrador (RN-05)
 );
 
 IF OBJECT_ID('dbo.Cliente', 'U') IS NULL
@@ -33,6 +33,12 @@ CREATE TABLE Cliente (
 
 IF OBJECT_ID('dbo.Propietario', 'U') IS NULL
 CREATE TABLE Propietario (
+    ID INT PRIMARY KEY,
+    FOREIGN KEY (ID) REFERENCES Usuario(ID)
+);
+
+IF OBJECT_ID('dbo.Administrador', 'U') IS NULL
+CREATE TABLE Administrador (
     ID INT PRIMARY KEY,
     FOREIGN KEY (ID) REFERENCES Usuario(ID)
 );

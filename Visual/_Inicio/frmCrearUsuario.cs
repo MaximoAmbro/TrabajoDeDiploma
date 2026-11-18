@@ -184,11 +184,11 @@ namespace Visual
                 return true;
             }
         } // Revisa si los textbox estan vacios
-        private frmMenuPropietario Cerrar()
+        private Form Cerrar()
         {
             if (_altaAdministrador)
             {
-                var menu = Application.OpenForms.OfType<frmMenuPropietario>().FirstOrDefault();
+                var menu = Application.OpenForms.OfType<frmMenuAdministrador>().FirstOrDefault();
                 if (menu != null) menu.Show();
                 Hide();
                 return menu;

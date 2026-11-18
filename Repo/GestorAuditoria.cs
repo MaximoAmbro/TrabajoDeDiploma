@@ -10,7 +10,7 @@ namespace Negocio
         public static GestorAuditoria Instance { get { return Instancia; } }
         private GestorAuditoria() { }
 
-        public void Registrar(string accion, string entidad = null, int? entidadId = null, string resultado = "Correcto", int? usuarioId = null, string usuarioMail = null)
+        internal void Registrar(string accion, string entidad = null, int? entidadId = null, string resultado = "Correcto", int? usuarioId = null, string usuarioMail = null)
         {
             var sesion = GestorSesion.Instance.UsuarioActual;
             Datos.RepositorioAuditoria.Instance.Registrar(usuarioId ?? sesion?.Id, Limitar(usuarioMail ?? sesion?.Mail, 150), Limitar(accion, 80), Limitar(entidad, 80), entidadId, Limitar(resultado, 200));

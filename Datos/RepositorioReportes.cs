@@ -32,7 +32,7 @@ namespace Datos
         // Filtra por FECHA DEL EVENTO: el reporte es «ventas por evento», no por período de
         // compra. El LEFT JOIN deja los eventos sin ventas, con 0 entradas y 0 % de ocupación.
         // Capacidad no se muestra: la usa el reporte para la ocupación de la fila de totales.
-        public DataTable VentasPorEvento(DateTime desde, DateTime hasta, string categoria)
+        public DataTable VentasPorEvento(DateTime desde, DateTime hasta, string categoria, int? idOrganizador = null)
         {
             const string consulta =
                 "SELECT e.Nombre AS Evento, " +
@@ -49,6 +49,7 @@ namespace Datos
                 "LEFT JOIN Entradas en ON en.ID_Evento = e.ID AND en.Estado = 'Confirmada' " +
                 "WHERE  e.Fecha BETWEEN @Desde AND @Hasta " +
                 "  AND  (@Categoria IS NULL OR e.Categoria = @Categoria) " +
+                "  AND  (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Locales l WHERE l.ID=e.LocalID AND l.PropietarioID=@OrganizadorID)) " +
                 "GROUP BY e.ID, e.Nombre, e.Categoria " +
                 "ORDER BY IngresoBruto DESC";
 
@@ -57,6 +58,7 @@ namespace Datos
                 AgregarParametro(comando, "@Desde", desde);
                 AgregarParametro(comando, "@Hasta", hasta);
                 AgregarParametro(comando, "@Categoria", categoria);
+                AgregarParametro(comando, "@OrganizadorID", idOrganizador);
             });
         }
 
@@ -65,7 +67,7 @@ namespace Datos
         // Confirmada; el ingreso es BaseEntradas + MontoServicios, sin cargo por servicio ni
         // seguro. Mismo criterio de período que RPT-01 (fecha del evento), así la diferencia
         // entre los dos reportes son exactamente los servicios.
-        public DataTable RankingPaquetes(DateTime desde, DateTime hasta, int? idEvento)
+        public DataTable RankingPaquetes(DateTime desde, DateTime hasta, int? idEvento, int? idOrganizador = null)
         {
             const string consulta =
                 "WITH CompraEvento AS ( " +
@@ -80,7 +82,8 @@ namespace Datos
                 "    WHERE c.Estado = 'Confirmada' " +
                 "      AND EXISTS (SELECT 1 FROM Entradas en JOIN Eventos e ON e.ID = en.ID_Evento " +
                 "                  WHERE en.ID_Compra = c.ID AND e.Fecha BETWEEN @Desde AND @Hasta " +
-                "                    AND (@IdEvento IS NULL OR e.ID = @IdEvento)) " +
+                "                    AND (@IdEvento IS NULL OR e.ID = @IdEvento) " +
+                "                    AND (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Locales l WHERE l.ID=e.LocalID AND l.PropietarioID=@OrganizadorID))) " +
                 "), Nombres AS ( " +
                 "    SELECT DISTINCT ce.Tipos, sv.Nombre FROM CompraEvento ce " +
                 "    JOIN CompraServicios cs ON cs.ID_Compra = ce.ID " +
@@ -100,13 +103,14 @@ namespace Datos
                 AgregarParametro(comando, "@Desde", desde);
                 AgregarParametro(comando, "@Hasta", hasta);
                 AgregarParametro(comando, "@IdEvento", idEvento);
+                AgregarParametro(comando, "@OrganizadorID", idOrganizador);
             });
         }
 
         // RPT-03. Compras confirmadas de cada cliente en la ventana (desdeVentana, corte], como
         // el conteo de RN-19, y su nivel según los umbrales. Solo clientes activos: los que
         // tienen al menos una compra en la ventana.
-        public DataTable UsuariosPorNivel(DateTime desdeVentana, DateTime corte, int umbralPlata, int umbralOro)
+        public DataTable UsuariosPorNivel(DateTime desdeVentana, DateTime corte, int umbralPlata, int umbralOro, int? idOrganizador = null)
         {
             const string consulta =
                 "WITH Conteo AS ( " +
@@ -114,6 +118,8 @@ namespace Datos
                 "    FROM Compras c JOIN Usuario u ON u.ID = c.ID_Usuario " +
                 "    WHERE u.TipoUsuario = 'Cliente' AND c.Estado = 'Confirmada' " +
                 "      AND c.FechaCompra > @Desde AND c.FechaCompra <= @Corte " +
+                "      AND (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Entradas en JOIN Eventos e ON e.ID=en.ID_Evento " +
+                "          JOIN Locales l ON l.ID=e.LocalID WHERE en.ID_Compra=c.ID AND l.PropietarioID=@OrganizadorID)) " +
                 "    GROUP BY c.ID_Usuario " +
                 ") " +
                 "SELECT CASE WHEN Compras >= @Oro THEN 'Oro' WHEN Compras >= @Plata THEN 'Plata' " +
@@ -128,33 +134,42 @@ namespace Datos
                 AgregarParametro(comando, "@Corte", corte);
                 AgregarParametro(comando, "@Plata", umbralPlata);
                 AgregarParametro(comando, "@Oro", umbralOro);
+                AgregarParametro(comando, "@OrganizadorID", idOrganizador);
             });
         }
 
         // RPT-04. Una sola fila. Seguro: compras confirmadas del período con ConSeguro = 1, sobre
         // el total de compras confirmadas. Suscripciones: contratadas en el período (FechaInicio)
         // por plan, sobre los clientes activos (con alguna compra confirmada en el período).
-        public DataTable AdopcionBeneficios(DateTime desde, DateTime hasta, string planMensual, string planAnual)
+        public DataTable AdopcionBeneficios(DateTime desde, DateTime hasta, string planMensual, string planAnual, int? idOrganizador = null)
         {
             const string consulta =
                 "SELECT " +
                 " (SELECT COUNT(*) FROM Compras WHERE Estado = 'Confirmada' " +
-                "    AND FechaCompra BETWEEN @Desde AND @Hasta) AS Compras, " +
+                "    AND FechaCompra BETWEEN @Desde AND @Hasta " +
+                "    AND (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Entradas en JOIN Eventos e ON e.ID=en.ID_Evento JOIN Locales l ON l.ID=e.LocalID WHERE en.ID_Compra=Compras.ID AND l.PropietarioID=@OrganizadorID))) AS Compras, " +
                 " (SELECT COUNT(*) FROM Compras WHERE Estado = 'Confirmada' AND ConSeguro = 1 " +
-                "    AND FechaCompra BETWEEN @Desde AND @Hasta) AS ComprasConSeguro, " +
+                "    AND FechaCompra BETWEEN @Desde AND @Hasta " +
+                "    AND (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Entradas en JOIN Eventos e ON e.ID=en.ID_Evento JOIN Locales l ON l.ID=e.LocalID WHERE en.ID_Compra=Compras.ID AND l.PropietarioID=@OrganizadorID))) AS ComprasConSeguro, " +
                 " (SELECT ISNULL(SUM(MontoSeguro), 0) FROM Compras WHERE Estado = 'Confirmada' AND ConSeguro = 1 " +
-                "    AND FechaCompra BETWEEN @Desde AND @Hasta) AS IngresoSeguro, " +
+                "    AND FechaCompra BETWEEN @Desde AND @Hasta " +
+                "    AND (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Entradas en JOIN Eventos e ON e.ID=en.ID_Evento JOIN Locales l ON l.ID=e.LocalID WHERE en.ID_Compra=Compras.ID AND l.PropietarioID=@OrganizadorID))) AS IngresoSeguro, " +
                 " (SELECT COUNT(DISTINCT c.ID_Usuario) FROM Compras c JOIN Usuario u ON u.ID = c.ID_Usuario " +
                 "    WHERE u.TipoUsuario = 'Cliente' AND c.Estado = 'Confirmada' " +
-                "      AND c.FechaCompra BETWEEN @Desde AND @Hasta) AS Usuarios, " +
+                "      AND c.FechaCompra BETWEEN @Desde AND @Hasta " +
+                "      AND (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Entradas en JOIN Eventos e ON e.ID=en.ID_Evento JOIN Locales l ON l.ID=e.LocalID WHERE en.ID_Compra=c.ID AND l.PropietarioID=@OrganizadorID))) AS Usuarios, " +
                 " (SELECT COUNT(*) FROM Suscripciones WHERE [Plan] = @Mensual " +
-                "    AND FechaInicio BETWEEN @Desde AND @Hasta) AS Mensuales, " +
+                "    AND FechaInicio BETWEEN @Desde AND @Hasta " +
+                "    AND (@OrganizadorID IS NULL OR ID_Usuario IN (SELECT DISTINCT c.ID_Usuario FROM Compras c JOIN Entradas en ON en.ID_Compra=c.ID JOIN Eventos e ON e.ID=en.ID_Evento JOIN Locales l ON l.ID=e.LocalID WHERE c.Estado='Confirmada' AND c.FechaCompra BETWEEN @Desde AND @Hasta AND l.PropietarioID=@OrganizadorID))) AS Mensuales, " +
                 " (SELECT ISNULL(SUM(Precio), 0) FROM Suscripciones WHERE [Plan] = @Mensual " +
-                "    AND FechaInicio BETWEEN @Desde AND @Hasta) AS IngresoMensual, " +
+                "    AND FechaInicio BETWEEN @Desde AND @Hasta " +
+                "    AND (@OrganizadorID IS NULL OR ID_Usuario IN (SELECT DISTINCT c.ID_Usuario FROM Compras c JOIN Entradas en ON en.ID_Compra=c.ID JOIN Eventos e ON e.ID=en.ID_Evento JOIN Locales l ON l.ID=e.LocalID WHERE c.Estado='Confirmada' AND c.FechaCompra BETWEEN @Desde AND @Hasta AND l.PropietarioID=@OrganizadorID))) AS IngresoMensual, " +
                 " (SELECT COUNT(*) FROM Suscripciones WHERE [Plan] = @Anual " +
-                "    AND FechaInicio BETWEEN @Desde AND @Hasta) AS Anuales, " +
+                "    AND FechaInicio BETWEEN @Desde AND @Hasta " +
+                "    AND (@OrganizadorID IS NULL OR ID_Usuario IN (SELECT DISTINCT c.ID_Usuario FROM Compras c JOIN Entradas en ON en.ID_Compra=c.ID JOIN Eventos e ON e.ID=en.ID_Evento JOIN Locales l ON l.ID=e.LocalID WHERE c.Estado='Confirmada' AND c.FechaCompra BETWEEN @Desde AND @Hasta AND l.PropietarioID=@OrganizadorID))) AS Anuales, " +
                 " (SELECT ISNULL(SUM(Precio), 0) FROM Suscripciones WHERE [Plan] = @Anual " +
-                "    AND FechaInicio BETWEEN @Desde AND @Hasta) AS IngresoAnual";
+                "    AND FechaInicio BETWEEN @Desde AND @Hasta " +
+                "    AND (@OrganizadorID IS NULL OR ID_Usuario IN (SELECT DISTINCT c.ID_Usuario FROM Compras c JOIN Entradas en ON en.ID_Compra=c.ID JOIN Eventos e ON e.ID=en.ID_Evento JOIN Locales l ON l.ID=e.LocalID WHERE c.Estado='Confirmada' AND c.FechaCompra BETWEEN @Desde AND @Hasta AND l.PropietarioID=@OrganizadorID))) AS IngresoAnual";
 
             return Consultar(consulta, comando =>
             {
@@ -162,12 +177,13 @@ namespace Datos
                 AgregarParametro(comando, "@Hasta", hasta);
                 AgregarParametro(comando, "@Mensual", planMensual);
                 AgregarParametro(comando, "@Anual", planAnual);
+                AgregarParametro(comando, "@OrganizadorID", idOrganizador);
             });
         }
 
         // RPT-05. Eventos del período con inscriptos en lista de espera. Agotado es derivado
         // (RN-10): se calcula con el mismo criterio que RepositorioEventos.EstaAgotado.
-        public DataTable DemandaInsatisfecha(DateTime desde, DateTime hasta, int? idEvento, bool soloAgotados)
+        public DataTable DemandaInsatisfecha(DateTime desde, DateTime hasta, int? idEvento, bool soloAgotados, int? idOrganizador = null)
         {
             string consulta =
                 "SELECT Evento, Agotado, Inscriptos, Capacidad FROM ( " +
@@ -178,6 +194,7 @@ namespace Datos
                 "    FROM Eventos e " +
                 "    WHERE e.Fecha BETWEEN @Desde AND @Hasta " +
                 "      AND (@IdEvento IS NULL OR e.ID = @IdEvento) " +
+                "      AND (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Locales l WHERE l.ID=e.LocalID AND l.PropietarioID=@OrganizadorID)) " +
                 "      AND EXISTS (SELECT 1 FROM ListaEspera le WHERE le.ID_Evento = e.ID) " +
                 ") x " +
                 "WHERE @SoloAgotados = 0 OR Agotado = 1 " +
@@ -189,38 +206,43 @@ namespace Datos
                 AgregarParametro(comando, "@Hasta", hasta);
                 AgregarParametro(comando, "@IdEvento", idEvento);
                 AgregarParametro(comando, "@SoloAgotados", soloAgotados);
+                AgregarParametro(comando, "@OrganizadorID", idOrganizador);
             });
         }
 
         // Ticket promedio de las entradas Confirmada de los eventos del período (RPT-05 lo usa
         // para valorizar la demanda insatisfecha). null si no hay ventas.
-        public decimal? TicketPromedio(DateTime desde, DateTime hasta)
+        public decimal? TicketPromedio(DateTime desde, DateTime hasta, int? idOrganizador = null)
         {
             const string consulta =
                 "SELECT SUM(en.CantidadVendida * en.Precio) / NULLIF(SUM(en.CantidadVendida), 0) " +
                 "FROM Entradas en JOIN Eventos e ON e.ID = en.ID_Evento " +
-                "WHERE en.Estado = 'Confirmada' AND e.Fecha BETWEEN @Desde AND @Hasta";
+                "WHERE en.Estado = 'Confirmada' AND e.Fecha BETWEEN @Desde AND @Hasta " +
+                "AND (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Locales l WHERE l.ID=e.LocalID AND l.PropietarioID=@OrganizadorID))";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlCommand comando = CrearComando(conexion, consulta))
             {
                 AgregarParametro(comando, "@Desde", desde);
                 AgregarParametro(comando, "@Hasta", hasta);
+                AgregarParametro(comando, "@OrganizadorID", idOrganizador);
                 object valor = comando.ExecuteScalar();
                 return valor == null || valor == DBNull.Value ? (decimal?)null : Convert.ToDecimal(valor);
             }
         }
 
         // Eventos del período, para el filtro por evento de RPT-02 y RPT-05.
-        public DataTable EventosEntre(DateTime desde, DateTime hasta)
+        public DataTable EventosEntre(DateTime desde, DateTime hasta, int? idOrganizador = null)
         {
             const string consulta =
-                "SELECT ID, Nombre, Fecha FROM Eventos WHERE Fecha BETWEEN @Desde AND @Hasta ORDER BY Fecha, Nombre";
+                "SELECT e.ID, e.Nombre, e.Fecha FROM Eventos e WHERE e.Fecha BETWEEN @Desde AND @Hasta " +
+                "AND (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Locales l WHERE l.ID=e.LocalID AND l.PropietarioID=@OrganizadorID)) ORDER BY e.Fecha, e.Nombre";
 
             return Consultar(consulta, comando =>
             {
                 AgregarParametro(comando, "@Desde", desde);
                 AgregarParametro(comando, "@Hasta", hasta);
+                AgregarParametro(comando, "@OrganizadorID", idOrganizador);
             });
         }
 

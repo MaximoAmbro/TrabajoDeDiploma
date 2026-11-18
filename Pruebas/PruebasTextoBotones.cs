@@ -27,6 +27,7 @@ namespace Pruebas
         [DataRow("frmInicio", DisplayName = "CP-116: Botones completos de frmInicio")]
         [DataRow("frmListasEspera", DisplayName = "CP-116: Botones completos de frmListasEspera")]
         [DataRow("frmMenuCliente", DisplayName = "CP-116: Botones completos de frmMenuCliente")]
+        [DataRow("frmMenuAdministrador", DisplayName = "CP-116: Botones completos de frmMenuAdministrador")]
         [DataRow("frmMenuPropietario", DisplayName = "CP-116: Botones completos de frmMenuPropietario")]
         [DataRow("frmMisLocales", DisplayName = "CP-116: Botones completos de frmMisLocales")]
         [DataRow("frmPago", DisplayName = "CP-116: Botones completos de frmPago")]

@@ -30,6 +30,8 @@ namespace Negocio
         // RN-14: solo los servicios habilitados para el evento.
         public List<Servicio> ServiciosDe(int idEvento)
         {
+            if (GestorEventos.Instance.ObtenerPorId(idEvento) == null)
+                return new List<Servicio>();
             return RepositorioServicios.Instance.ObtenerPorEvento(idEvento);
         }
 
@@ -161,6 +163,9 @@ namespace Negocio
         // RN-08 + RN-15
         public int DisponiblesDe(int idSector)
         {
+            Sector sector = RepositorioSectores.Instance.ObtenerPorId(idSector);
+            if (sector == null || GestorEventos.Instance.ObtenerPorId(sector.IdEvento) == null)
+                return 0;
             return Math.Max(0, RepositorioSectores.Instance.ObtenerDisponibles(idSector));
         }
 
@@ -184,6 +189,9 @@ namespace Negocio
 
         private static Evento VerificarEventoVigente(int idEvento)
         {
+            if (GestorSesion.Instance.HaySesion &&
+                GestorSesion.Instance.UsuarioActual.TipoUsuario == "Organizador")
+                GestorEventos.Instance.ObtenerPorId(idEvento);
             Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
             if (evento == null)
             {

@@ -31,6 +31,16 @@ namespace Pruebas
             GestorSesion.Instance.Iniciar(Administrador());
         }
 
+        public static void ComoOrganizador()
+        {
+            GestorSesion.Instance.Iniciar(Organizador());
+        }
+
+        public static void ComoOrganizador(Usuario organizador)
+        {
+            GestorSesion.Instance.Iniciar(organizador);
+        }
+
         public static string MailNuevo()
         {
             return $"test{++contador:0000}{DominioMail}";
@@ -91,7 +101,14 @@ namespace Pruebas
         public static Usuario Administrador()
         {
             string mail = Escalar<string>("SELECT TOP 1 Mail FROM Usuario WHERE TipoUsuario = @Tipo ORDER BY ID",
-                "@Tipo", "Propietario");
+                "@Tipo", "Administrador");
+            return RepositorioUsuarios.Instance.ObtenerPorMail(mail);
+        }
+
+        public static Usuario Organizador()
+        {
+            string mail = Escalar<string>("SELECT TOP 1 Mail FROM Usuario WHERE TipoUsuario = @Tipo ORDER BY ID",
+                "@Tipo", "Organizador");
             return RepositorioUsuarios.Instance.ObtenerPorMail(mail);
         }
 
@@ -122,6 +139,7 @@ namespace Pruebas
                 "DELETE FROM Sectores WHERE EventoID IN (SELECT ID FROM @E); " +
                 "DELETE FROM Eventos WHERE ID IN (SELECT ID FROM @E); " +
                 "DELETE FROM Locales WHERE ID IN (SELECT ID FROM @L); " +
+                "DELETE FROM Administrador WHERE ID IN (SELECT ID FROM @U); " +
                 "DELETE FROM Cliente WHERE ID IN (SELECT ID FROM @U); " +
                 "DELETE FROM Propietario WHERE ID IN (SELECT ID FROM @U); " +
                 "DELETE FROM Usuario WHERE ID IN (SELECT ID FROM @U);";
@@ -172,8 +190,13 @@ namespace Pruebas
         // Evento Publicado dentro de 30 días, en un local propio, con un sector «Campo».
         public static Evento EventoPublicado(decimal precio, int capacidad)
         {
+            return EventoPublicadoPara(Organizador(), precio, capacidad);
+        }
+
+        public static Evento EventoPublicadoPara(Usuario organizador, decimal precio, int capacidad)
+        {
             int n = ++contador;
-            int propietario = Escalar<int>("SELECT TOP 1 ID FROM Usuario WHERE TipoUsuario = 'Propietario' ORDER BY ID");
+            int propietario = organizador.Id;
             int local = Escalar<int>(
                 "INSERT INTO Locales (Nombre, Direccion, Capacidad, PropietarioID) OUTPUT INSERTED.ID " +
                 "VALUES (@Nombre, 'Calle de prueba 123', 100000, @Propietario)",
@@ -206,7 +229,7 @@ namespace Pruebas
             string mail = MailNuevo();
             byte[] marca = Guid.NewGuid().ToByteArray();
             string clave = ((char)('A' + marca[0] % 26)).ToString() + Guid.NewGuid().ToString("N") + marca[1].ToString();
-            GestorUsuarios.Instance.Registrar(mail, clave, "Propietario", "Prueba", "Propietario");
+            GestorUsuarios.Instance.Registrar(mail, clave, "Organizador", "Prueba", "Organizador");
             return RepositorioUsuarios.Instance.ObtenerPorMail(mail);
         }
 

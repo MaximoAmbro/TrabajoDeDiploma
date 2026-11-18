@@ -19,8 +19,8 @@ namespace Negocio
 
         internal ResultadoIngreso Registrar(string codigo, int idEvento, DateTime ahora)
         {
-            try { GestorSesion.Instance.RequerirAdministrador(); }
-            catch (ReglaNegocioException ex) when (ex.Regla == "RN-34")
+            try { GestorSesion.Instance.RequerirOrganizador(); }
+            catch (ReglaNegocioException ex) when (ex.Regla == "RN-48")
             {
                 GestorAuditoria.Instance.Registrar("Control de ingreso", "Evento", idEvento, "Rechazado");
                 var rechazoAutorizacion = Resultado(MotivoIngreso.NoAutorizado, ex.Message);
@@ -50,7 +50,7 @@ namespace Negocio
 
         public int Contar(int idEvento)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
             RequerirEventoPropio(idEvento);
             return RepositorioEntradas.Instance.ContarIngresos(idEvento);
         }
@@ -62,7 +62,7 @@ namespace Negocio
 
         internal List<Evento> EventosConIngresoAbierto(DateTime ahora)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
             int antes = GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_ANTES");
             int despues = GestorParametros.Instance.ObtenerEntero("INGRESO_HORAS_DESPUES");
             return RepositorioEventos.Instance.ConIngresoAbierto(GestorSesion.Instance.UsuarioActual.Id,

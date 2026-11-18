@@ -81,7 +81,7 @@ namespace Datos
             }
         }
 
-        // RN-05: inserta en Usuario y en Cliente o Propietario dentro de una misma transacción.
+        // RN-05: inserta en Usuario y en la tabla correspondiente al perfil dentro de una transacción.
         // Lanza RegistroDuplicadoException si el mail ya existe (UQ_Usuario_Mail, RN-01).
         public int Insertar(Usuario usuario, NivelFidelidad nivel)
         {
@@ -90,7 +90,8 @@ namespace Datos
                 "OUTPUT INSERTED.ID " +
                 "VALUES (@Nombre, @Apellido, @Mail, @Contraseña, @TipoUsuario, @Nivel, @CorreoVerificado)";
             const string insertarCliente = "INSERT INTO Cliente (ID) VALUES (@ID)";
-            const string insertarPropietario = "INSERT INTO Propietario (ID) VALUES (@ID)";
+            const string insertarOrganizador = "INSERT INTO Propietario (ID) VALUES (@ID)";
+            const string insertarAdministrador = "INSERT INTO Administrador (ID) VALUES (@ID)";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlTransaction transaccion = conexion.BeginTransaction())
@@ -110,10 +111,10 @@ namespace Datos
                         id = Convert.ToInt32(comando.ExecuteScalar());
                     }
 
-                    // Negocio ya validó que TipoUsuario sea Cliente o Propietario.
-                    string insertarPerfil = usuario.TipoUsuario == "Propietario"
-                        ? insertarPropietario
-                        : insertarCliente;
+                    // Negocio ya validó RN-05 antes de insertar.
+                    string insertarPerfil = usuario.TipoUsuario == "Organizador"
+                        ? insertarOrganizador
+                        : usuario.TipoUsuario == "Administrador" ? insertarAdministrador : insertarCliente;
                     using (SqlCommand comando = CrearComando(conexion, insertarPerfil, transaccion))
                     {
                         AgregarParametro(comando, "@ID", id);

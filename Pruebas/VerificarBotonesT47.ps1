@@ -30,6 +30,7 @@ public static class MedicionBotonesT47
             {"frmEventosLocal", new[]{"btnEliminarEvento","btnVolver","btnAdministrarEvento","btnAgregarEvento"}},
             {"frmListasEspera", new[]{"btnVolver"}},
             {"frmMisLocales", new[]{"btnVolver"}},
+            {"frmMenuAdministrador", new[]{"btnReportesGlobales","btnCerrarSesion"}},
             {"frmReportes", new[]{"btnGenerar","btnExportar","btnVolver"}}
         };
         int cortes = 0, medidos = 0, pantallas = 0, primarios = 0;
@@ -122,7 +123,7 @@ public static class MedicionBotonesT47
         File.WriteAllLines(Path.Combine(salida,"medidas.csv"),medidas,System.Text.Encoding.UTF8);
         File.WriteAllLines(Path.Combine(salida,"colores.csv"),colores,System.Text.Encoding.UTF8);
         Console.WriteLine("Medidos: "+medidos+"; no caben: "+cortes+"; pantallas: "+pantallas+"; primarios renderizados: "+primarios+"; fallos color: "+fallos.Count);
-        if (medidos!=14 || pantallas!=21) throw new Exception("Inventario incompleto.");
+        if (medidos!=16 || pantallas!=22) throw new Exception("Inventario incompleto.");
         if (fallos.Count>0) throw new Exception("Color renderizado incorrecto: "+string.Join(", ",fallos));
     }
     private static int ContarTexto(Button boton, string ruta)

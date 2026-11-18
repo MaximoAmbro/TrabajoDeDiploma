@@ -65,7 +65,7 @@ namespace Pruebas
             Evento evento = Fake.EventoPublicado(1000m, 5);
             Fake.ComoCliente(Fake.Cliente(NivelFidelidad.Bronce));
             var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorEventos.Instance.Eliminar(evento.Id));
-            Assert.AreEqual("RN-34", error.Regla);
+            Assert.AreEqual("RN-48", error.Regla);
             Assert.IsNotNull(GestorEventos.Instance.ObtenerPorId(evento.Id));
         }
 
@@ -80,15 +80,15 @@ namespace Pruebas
             Compra compra = GestorCompras.Instance.Iniciar(paquete, cliente);
             GestorSesion.Instance.Cerrar();
             var operaciones = new[] {
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.Crear(new Evento()), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.Publicar(evento), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.Eliminar(evento.Id), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.Suspender(evento.Id), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarPreventa(evento.Id, null), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarImagenPortada(evento.Id, new byte[] { 1 }), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.AgregarSector(evento.Id, new Sector()), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.EliminarSector(evento.Sectores.Single().Id), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorLocales.Instance.Registrar(new Local()), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Crear(new Evento()), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Publicar(evento), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Eliminar(evento.Id), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Suspender(evento.Id), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarPreventa(evento.Id, null), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarImagenPortada(evento.Id, new byte[] { 1 }), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.AgregarSector(evento.Id, new Sector()), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.EliminarSector(evento.Sectores.Single().Id), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorLocales.Instance.Registrar(new Local()), "RN-48"),
                 Tuple.Create<Action,string>(() => GestorListaEspera.Instance.Inscribir(evento.Id, cliente.Id), "RN-41"),
                 Tuple.Create<Action,string>(() => GestorCompras.Instance.Iniciar(paquete, cliente), "RN-41"),
                 Tuple.Create<Action,string>(() => GestorCompras.Instance.Confirmar(compra, Fake.Tarjeta()), "RN-41"),
@@ -110,7 +110,7 @@ namespace Pruebas
             Assert.IsNull(Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail));
             Fake.ComoAdministrador();
             GestorUsuarios.Instance.CrearAdministrador(mail, "ClaveSegura123", "Admin", "Prueba");
-            Assert.AreEqual("Propietario", Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail).TipoUsuario);
+            Assert.AreEqual("Administrador", Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail).TipoUsuario);
             Assert.IsNull(typeof(GestorUsuarios).GetMethod("Registrar"), "El registro genérico no debe ser público.");
             Fake.ComoCliente(cliente);
             Assert.AreEqual(EstadoCompra.Pendiente, GestorCompras.Instance.ObtenerPorId(compra.Id).Estado);
@@ -159,10 +159,10 @@ namespace Pruebas
         public void CambioCorrecto()
         {
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
-            Fake.ComoAdministrador();
-            int administrador = GestorSesion.Instance.UsuarioActual.Id;
+            Fake.ComoCliente(cliente);
+            int titular = GestorSesion.Instance.UsuarioActual.Id;
             GestorUsuarios.Instance.CambiarContrasena(cliente.Mail, "Cliente123", "NuevaClave123");
-            Assert.AreEqual(administrador, GestorSesion.Instance.UsuarioActual.Id);
+            Assert.AreEqual(titular, GestorSesion.Instance.UsuarioActual.Id);
             Assert.ThrowsException<ReglaNegocioException>(() => GestorUsuarios.Instance.Autenticar(cliente.Mail, "Cliente123"));
             Assert.IsNotNull(GestorUsuarios.Instance.Autenticar(cliente.Mail, "NuevaClave123"));
             EnStaSinCambiarDatos(() => {

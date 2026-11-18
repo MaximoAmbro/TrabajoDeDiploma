@@ -59,7 +59,7 @@ namespace Pruebas
         [TestMethod("CP-179: Portada autorizada se guarda y se recupera desde la base")]
         public void CP179_PersistenciaDePortada()
         {
-            Fake.ComoAdministrador();
+            Fake.ComoOrganizador();
             Evento evento = Fake.EventoBorradorSinSectores();
             byte[] portada;
             using (var imagen = new Bitmap(64, 40))

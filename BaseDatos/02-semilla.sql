@@ -41,15 +41,22 @@ INSERT INTO Parametros (Clave, Valor, Descripcion, Regla) VALUES
 ('SESION_AVISO_SEG', '60', 'Segundos de aviso antes del cierre por inactividad', 'RN-46'),
 ('PWD_FORTALEZA_MIN', '4', 'Puntaje mínimo de fortaleza de contraseña', 'RN-47');
 
--- ═══════════════ Usuarios: un Administrador y tres Clientes ═══════════════
--- El perfil Administrador se guarda como 'Propietario', que es el valor que usa el login actual.
-DECLARE @Admin INT, @Bronce INT, @Plata INT, @Oro INT;
+-- ═══════════════ Usuarios: Administrador, Organizador y tres Clientes ═══════════════
+DECLARE @Admin INT, @Organizador INT, @Bronce INT, @Plata INT, @Oro INT;
 DECLARE @InicioMes DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);   -- RN-23
 
 INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, FechaUltimaEvaluacion)
-VALUES ('Ana', 'Administradora', 'admin@eventaura.com', 'PBKDF2$310000$Veuut8CZvZKsAl8hEXYc7g==$osxmqGy++c0EC4m0cjPaM2igpHaTPemd8UffcH9QOUE=', 'Propietario', 'Bronce', @InicioMes);
+VALUES ('Ana', 'Administradora', 'admin@eventaura.com', 'PBKDF2$310000$Veuut8CZvZKsAl8hEXYc7g==$osxmqGy++c0EC4m0cjPaM2igpHaTPemd8UffcH9QOUE=', 'Administrador', 'Bronce', @InicioMes);
 SET @Admin = SCOPE_IDENTITY();
-INSERT INTO Propietario (ID) VALUES (@Admin);
+INSERT INTO Administrador (ID) VALUES (@Admin);
+
+-- Perfil y datos demostrativos deliberadamente ficticios; la contraseña es Cliente123.
+INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, FechaUltimaEvaluacion)
+VALUES ('Organizador', 'Demostración', 'organizador@eventaura.com',
+        'PBKDF2$310000$KV/dZk+9huEPBtAM2mpBSQ==$bNLNWj5C/VqgxqOgyF5aANRLOjFWXZvwWOJR8JFbEZs=',
+        'Organizador', 'Bronce', @InicioMes);
+SET @Organizador = SCOPE_IDENTITY();
+INSERT INTO Propietario (ID) VALUES (@Organizador);
 
 INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, FechaUltimaEvaluacion)
 VALUES ('Bruno', 'Bronce', 'bronce@eventaura.com', 'PBKDF2$310000$KV/dZk+9huEPBtAM2mpBSQ==$bNLNWj5C/VqgxqOgyF5aANRLOjFWXZvwWOJR8JFbEZs=', 'Cliente', 'Bronce', @InicioMes);
@@ -69,7 +76,7 @@ INSERT INTO Cliente (ID) VALUES (@Bronce), (@Plata), (@Oro);
 DECLARE @Local INT, @Vigente INT, @Agotado INT, @Pasado INT;
 
 INSERT INTO Locales (Nombre, Direccion, Capacidad, PropietarioID)
-VALUES ('Estadio Rosario Arena', 'Av. Pellegrini 1500, Rosario', 5000, @Admin);
+VALUES ('Sala Demostrativa EventAura', 'Dirección ficticia 123, Rosario', 5000, @Organizador);
 SET @Local = SCOPE_IDENTITY();
 
 INSERT INTO Eventos (Nombre, Fecha, LocalID, Categoria, Estado)

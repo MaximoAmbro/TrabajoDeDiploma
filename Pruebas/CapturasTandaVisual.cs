@@ -15,8 +15,9 @@ namespace Pruebas {
    foreach(string nombre in typeof(Visual.frmInicio).Assembly.GetTypes().Where(t=>typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t.Name!="FormularioEventAura").Select(t=>t.Name).OrderBy(n=>n))
     InterfazGrupoA.EnSta(()=> {
      var cliente=Fake.Cliente(NivelFidelidad.Bronce);var evento=Fake.EventoPublicado(1000m,5);
-     var administrativos=new[]{"frmAgregarEvento","frmAgregarSector","frmRegistrarLocal","frmAdministrarEvento","frmEventosLocal","frmMisLocales","frmMenuPropietario","frmListasEspera","frmReportes","frmControlIngreso","frmAuditoria"};
-     bool administrador=administrativos.Contains(nombre);
+     var organizadores=new[]{"frmAgregarEvento","frmAgregarSector","frmRegistrarLocal","frmAdministrarEvento","frmEventosLocal","frmMisLocales","frmMenuPropietario","frmListasEspera","frmControlIngreso"};
+     var administradores=new[]{"frmMenuAdministrador","frmReportes","frmAuditoria"};
+     bool administrador=administradores.Contains(nombre);
      Compra compra=null;
      if(nombre=="frmConfirmacion" || nombre=="frmHistorialCliente") compra=Fake.CompraConfirmada(cliente,evento,2,true);
      if(nombre=="frmPago") {Fake.ComoCliente(cliente);compra=GestorCompras.Instance.Iniciar(Fake.Paquete(evento,1,false),cliente);}
@@ -24,9 +25,9 @@ namespace Pruebas {
      if(nombre=="frmListasEspera") {
       Fake.CompraConfirmada(cliente,evento,5,false);var otro=Fake.Cliente(NivelFidelidad.Bronce);Fake.ComoCliente(otro);GestorListaEspera.Instance.Inscribir(evento.Id,otro.Id);
      }
-     if(administrador)Fake.ComoAdministrador();else Fake.ComoCliente(cliente);
+     if(administrador)Fake.ComoAdministrador();else if(organizadores.Contains(nombre))Fake.ComoOrganizador();else Fake.ComoCliente(cliente);
      Form form=(Form)Activator.CreateInstance(typeof(Visual.frmInicio).Assembly.GetTypes().Single(t=>t.Name==nombre));
-     Asignar(form,"IDUsuario",administrador?Fake.Administrador().Id:cliente.Id);
+     Asignar(form,"IDUsuario",administrador?Fake.Administrador().Id:organizadores.Contains(nombre)?Fake.Organizador().Id:cliente.Id);
      Asignar(form,"IDlocal",evento.IdLocal);Asignar(form,"IDEvento",evento.Id);
      Asignar(form,"NombreUsuario","Juan Cruz");Asignar(form,"NombreLocal","Sala central");Asignar(form,"NombreEvento",evento.Nombre);
      if(compra!=null)Asignar(form,"Compra",compra);

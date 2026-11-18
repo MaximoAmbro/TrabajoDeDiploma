@@ -78,7 +78,7 @@ namespace Pruebas
             }
 
             // SEG-2 incorpora control de ingreso y la fase de seguridad incorpora auditoría.
-            Assert.AreEqual(21, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
+            Assert.AreEqual(22, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
 
@@ -146,6 +146,7 @@ namespace Pruebas
         [DataRow("Propietario/frmEventosLocal", DisplayName = "CP-63: frmEventosLocal sin estilo propio")]
         [DataRow("Propietario/frmListasEspera", DisplayName = "CP-63: frmListasEspera sin estilo propio")]
         [DataRow("Propietario/frmMenuPropietario", DisplayName = "CP-63: frmMenuPropietario sin estilo propio")]
+        [DataRow("Propietario/frmMenuAdministrador", DisplayName = "CP-63: frmMenuAdministrador sin estilo serializado")]
         [DataRow("Propietario/frmMisLocales", DisplayName = "CP-63: frmMisLocales sin estilo propio")]
         [DataRow("Propietario/frmRegistrarLocal", DisplayName = "CP-63: frmRegistrarLocal sin estilo propio")]
         [DataRow("Propietario/frmReportes", DisplayName = "CP-63: frmReportes sin estilo propio")]

@@ -52,8 +52,9 @@ namespace Negocio
         // con su primer sector con capacidad (AgregarSector). Devuelve el Id generado.
         public int Crear(Evento e)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
             ValidarEvento(e);
+            RequerirLocalPropio(e.IdLocal);
             e.Sectores = new List<Sector>();
             e.Estado = EstadoBorrador;
             int id = RepositorioEventos.Instance.Insertar(e);
@@ -65,7 +66,7 @@ namespace Negocio
         // Devuelve el Id generado.
         public int Publicar(Evento e)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
             if (e == null)
             {
                 throw new ArgumentNullException(nameof(e));
@@ -76,6 +77,7 @@ namespace Negocio
                     "No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.");
             }
             ValidarEvento(e);
+            RequerirLocalPropio(e.IdLocal);
             foreach (Sector sector in e.Sectores)
             {
                 ValidarSector(sector);
@@ -92,7 +94,8 @@ namespace Negocio
         // el formulario ofrece Suspender en su lugar.
         public void Eliminar(int idEvento)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
+            RequerirEventoPropio(idEvento);
             if (RepositorioEventos.Instance.ContarEntradas(idEvento) > 0)
             {
                 throw new ReglaNegocioException("RN-11",
@@ -108,7 +111,8 @@ namespace Negocio
         // RN-11: alternativa a Eliminar. Vale tenga o no entradas vendidas.
         public void Suspender(int idEvento)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
+            RequerirEventoPropio(idEvento);
             if (!RepositorioEventos.Instance.ActualizarEstado(idEvento, EstadoSuspendido))
             {
                 throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
@@ -119,13 +123,22 @@ namespace Negocio
         // RN-10: todos los sectores vendieron su capacidad. Ahí se habilita la lista de espera.
         public bool EstaAgotado(int idEvento)
         {
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            if (evento == null) return false;
+            if (GestorSesion.Instance.HaySesion &&
+                GestorSesion.Instance.UsuarioActual.TipoUsuario == "Organizador")
+                RequerirEventoPropio(idEvento);
+            else if ((!GestorSesion.Instance.HaySesion ||
+                GestorSesion.Instance.UsuarioActual.TipoUsuario == "Cliente") &&
+                evento.Estado != EstadoPublicado) return false;
             return RepositorioEventos.Instance.EstaAgotado(idEvento);
         }
 
         // RN-39: fija o saca (null) la preventa de un evento ya creado.
         public void CambiarPreventa(int idEvento, DateTime? finPreventa)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
+            RequerirEventoPropio(idEvento);
             Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
             if (evento == null)
             {
@@ -139,7 +152,8 @@ namespace Negocio
 
         public void CambiarImagenPortada(int idEvento, byte[] imagen)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
+            RequerirEventoPropio(idEvento);
             if (imagen != null && imagen.Length > 512 * 1024)
                 throw new ArgumentException("La portada preparada supera el límite de 512 KB.");
             if (!RepositorioEventos.Instance.ActualizarImagenPortada(idEvento, imagen))
@@ -172,22 +186,39 @@ namespace Negocio
         // Devuelve null si no existe.
         public Evento ObtenerPorId(int idEvento)
         {
-            return RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            if (evento == null) return null;
+            if (GestorSesion.Instance.HaySesion && GestorSesion.Instance.UsuarioActual.TipoUsuario == "Organizador")
+                RequerirEventoPropio(idEvento);
+            else if ((!GestorSesion.Instance.HaySesion ||
+                GestorSesion.Instance.UsuarioActual.TipoUsuario == "Cliente") &&
+                evento.Estado != EstadoPublicado) return null;
+            return evento;
         }
 
         public List<Evento> PorLocal(int idLocal)
         {
+            Local local = RepositorioLocales.Instance.ObtenerPorId(idLocal);
+            if (local == null) return new List<Evento>();
+            GestorSesion.Instance.RequerirOrganizadorDeLocal(local.IdPropietario);
             return RepositorioEventos.Instance.ObtenerPorLocal(idLocal);
         }
 
         public List<Sector> Sectores(int idEvento)
         {
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            if (evento == null) return new List<Sector>();
+            if (GestorSesion.Instance.HaySesion && GestorSesion.Instance.UsuarioActual.TipoUsuario == "Organizador")
+                RequerirEventoPropio(idEvento);
+            else if ((!GestorSesion.Instance.HaySesion ||
+                GestorSesion.Instance.UsuarioActual.TipoUsuario == "Cliente") &&
+                evento.Estado != EstadoPublicado) return new List<Sector>();
             return RepositorioSectores.Instance.ObtenerPorEvento(idEvento);
         }
 
         public void AgregarSector(int idEvento, Sector s)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
             if (s == null)
             {
                 throw new ArgumentNullException(nameof(s));
@@ -198,6 +229,7 @@ namespace Negocio
             {
                 throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
             }
+            RequerirEventoPropio(idEvento);
             List<Sector> actuales = Sectores(idEvento);
             VerificarCapacidadLocal(evento.IdLocal, actuales.Sum(x => x.Capacidad), s.Capacidad);
 
@@ -216,12 +248,13 @@ namespace Negocio
 
         public void EliminarSector(int idSector)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
             Sector sector = RepositorioSectores.Instance.ObtenerPorId(idSector);
             if (sector == null)
             {
                 throw new InvalidOperationException("No se encontró ningún sector con ese ID.");
             }
+            RequerirEventoPropio(sector.IdEvento);
             if (RepositorioSectores.Instance.ContarEntradas(idSector) > 0)
             {
                 throw new InvalidOperationException(
@@ -261,6 +294,22 @@ namespace Negocio
                     $"La capacidad de los sectores superaría la del local ({local.Capacidad}). " +
                     $"Capacidad disponible para este evento: {disponible}.");
             }
+        }
+
+        private static void RequerirLocalPropio(int idLocal)
+        {
+            Local local = RepositorioLocales.Instance.ObtenerPorId(idLocal);
+            if (local == null)
+                throw new InvalidOperationException("No se encontró el local del evento.");
+            GestorSesion.Instance.RequerirOrganizadorDeLocal(local.IdPropietario);
+        }
+
+        private static void RequerirEventoPropio(int idEvento)
+        {
+            Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+            if (evento == null)
+                throw new InvalidOperationException("No se encontró ningún evento con ese ID.");
+            RequerirLocalPropio(evento.IdLocal);
         }
 
         private static void ValidarEvento(Evento e)

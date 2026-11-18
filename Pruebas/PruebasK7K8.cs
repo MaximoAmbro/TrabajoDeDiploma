@@ -18,7 +18,7 @@ namespace Pruebas {
   [DataRow("borde",64801,false,DisplayName="CP-123: Evento desaparece después del cierre de su ventana")]
   public void CP123_VentanaPrivada(string caso,int segundos,bool aparece) {
    EnSta(()=> {
-    var evento=Fake.EventoPublicado(1000m,5);Fake.CambiarFechaDeEvento(evento.Id,DateTime.Now.AddMinutes(10));Fake.ComoAdministrador();
+    var evento=Fake.EventoPublicado(1000m,5);Fake.CambiarFechaDeEvento(evento.Id,DateTime.Now.AddMinutes(10));Fake.ComoOrganizador();
     if(caso=="ajeno") {
      Assert.IsTrue(GestorIngresos.Instance.EventosConIngresoAbierto().Any(e=>e.Id==evento.Id));
      var otro=Fake.PropietarioSinLocales();GestorSesion.Instance.Iniciar(otro);

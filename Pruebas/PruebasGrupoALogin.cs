@@ -31,11 +31,11 @@ namespace Pruebas
                         mail.Text = anterior.Mail;
                         ControlDe<TextBox>(form, "txtContraseñaLogin").Text = "Admin1234";
                         DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btninicio").PerformClick());
-                        Visual.frmMenuPropietario menu = Application.OpenForms.OfType<Visual.frmMenuPropietario>().Single(f => f.Visible);
+                        Visual.frmMenuAdministrador menu = Application.OpenForms.OfType<Visual.frmMenuAdministrador>().Single(f => f.Visible);
                         Assert.AreEqual(anterior.Id, menu.IDUsuario);
                         Assert.IsFalse(form.Visible);
                         Assert.AreEqual(anterior.Id, GestorSesion.Instance.UsuarioActual.Id);
-                        Assert.AreEqual("Propietario", GestorSesion.Instance.UsuarioActual.TipoUsuario);
+                        Assert.AreEqual("Administrador", GestorSesion.Instance.UsuarioActual.TipoUsuario);
                     }
                     finally
                     {

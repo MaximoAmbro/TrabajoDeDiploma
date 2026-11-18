@@ -124,7 +124,7 @@ namespace Visual
                             ". Podés consultarlos en eventos; el aviso no reserva un lugar.");
                     this.Hide();
                 } // Se abre el menu de cliente
-                if (usuario.TipoUsuario == "Propietario")
+                if (usuario.TipoUsuario == "Organizador")
                 {
                     frmMenuPropietario frm = new frmMenuPropietario();
                     frm.IDUsuario = usuario.Id;
@@ -132,6 +132,14 @@ namespace Visual
                     frm.Show();
                     this.Hide();
                 } // Se abre el menu de vendedor
+                else if (usuario.TipoUsuario == "Administrador")
+                {
+                    frmMenuAdministrador frm = new frmMenuAdministrador();
+                    frm.IDUsuario = usuario.Id;
+                    frm.NombreUsuario = usuario.Nombre;
+                    frm.Show();
+                    this.Hide();
+                }
             }
             else
             {
