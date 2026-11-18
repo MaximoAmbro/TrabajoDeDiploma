@@ -35,8 +35,8 @@ ORDER BY Fecha DESC,ID DESC";
             using (var conexion = AbrirConexion())
             using (var comando = CrearComando(conexion, sql))
             {
-                AgregarParametro(comando, "@Desde", desde);
-                AgregarParametro(comando, "@Hasta", hasta);
+                AgregarParametro(comando, "@Desde", AFechaUtc(desde));
+                AgregarParametro(comando, "@Hasta", AFechaUtc(hasta));
                 AgregarParametro(comando, "@Accion", string.IsNullOrWhiteSpace(accion) ? null : accion.Trim());
                 using (var lector = comando.ExecuteReader())
                     while (lector.Read()) salida.Add(new RegistroAuditoria
@@ -48,6 +48,14 @@ ORDER BY Fecha DESC,ID DESC";
                     });
             }
             return salida;
+        }
+
+        private static DateTime AFechaUtc(DateTime fecha)
+        {
+            if (fecha.Kind == DateTimeKind.Utc) return fecha;
+            if (fecha.Kind == DateTimeKind.Unspecified)
+                fecha = DateTime.SpecifyKind(fecha, DateTimeKind.Local);
+            return fecha.ToUniversalTime();
         }
     }
 }
