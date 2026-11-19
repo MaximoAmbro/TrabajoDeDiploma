@@ -209,4 +209,47 @@ ocultos o deshabilitados no son una defensa. Tampoco cubre el acceso directo a l
 sin pasar por la aplicación, ni el tiempo de respuesta de la comparación de contraseñas, que una
 prueba funcional no puede observar y se verificó leyendo el código.
 
+**La revisión de pertenencia**
+
+Cuando el sistema pasó de dos perfiles a tres, se revisó una clase de defecto completa, en lugar
+de buscar fallas sueltas: el acceso a datos que pertenecen a otro dueño. Con dos perfiles, todos
+los dueños de locales compartían el perfil de administrador, y la pregunta era si una cuenta de
+ese perfil podía leer o modificar los locales, los eventos, las ventas o las listas de espera de
+otra cuenta con solo indicar un identificador ajeno. La revisión recorrió uno por uno todos los
+métodos públicos de la capa de negocio. Para cada uno comparó el código anterior al cambio con el
+posterior, y registró qué dato quedaba expuesto y qué prueba lo cierra.
+
+Se contó como fuga solo lo que estaba efectivamente abierto en el código anterior, no lo que se
+abriría si se quitara una verificación. Con ese criterio, veinticuatro métodos permitían leer u
+operar sobre datos de otro dueño. No son veinticuatro defectos independientes, sino cinco familias
+con una misma causa: el control comprobaba el perfil de quien llamaba, pero no a quién pertenecía
+el dato. Tres métodos eran de locales; trece, de eventos y sectores, entre ellos crear, publicar,
+suspender o eliminar el evento de otro dueño; dos, de servicios y disponibilidad; uno, de listas
+de espera, que exponía el nombre y el correo de los clientes inscriptos en eventos ajenos; y
+cinco, de los reportes y de la consulta de la auditoría, que entregaban las ventas y los importes
+de toda la plataforma. Todos se cerraron con dos reglas nuevas: la gestión requiere el perfil
+Organizador (RN-48), y un Organizador solo opera sobre los datos de sus propios locales (RN-49).
+
+Aparte de esas veinticuatro, la revisión encontró un defecto de otra naturaleza en el registro de
+auditoría. La operación que escribe un registro era pública y recibía como argumento quién era el
+autor, de modo que cualquier parte del sistema podía atribuirle una acción a otra persona. Un
+registro de auditoría que se puede falsificar no sirve como evidencia. Se cerró haciendo esa
+operación interna a la capa de negocio, que toma el autor de la sesión verificada y no de quien
+llama.
+
+Otros métodos se reforzaron sin que estuvieran abiertos, y no se cuentan entre las fugas. El
+control de ingreso, por ejemplo, ya comparaba el dueño del evento con la sesión antes del cambio.
+
+La prueba que cubre las lecturas verifica que un Organizador no recibe locales, eventos, sectores,
+servicios, disponibilidad, listas de espera ni cifras de reportes de otro. Para comprobar que
+sirve, se le quitó a propósito la verificación al código: la prueba falló, y volvió a pasar al
+restaurarla. Pero la revisión deja también una lista de lo que no está probado. No todas las
+escrituras tienen su caso negativo: faltan pruebas que intenten crear, publicar, suspender,
+eliminar o modificar el evento o el sector de otro dueño, registrar un local a nombre de otra
+cuenta, consultar los locales de otro Organizador, exportar un reporte ajeno, ejecutar los
+reportes distintos del primero y consultar la auditoría como Organizador. Tampoco hay una prueba
+que intente falsificar el autor de un registro. Las verificaciones están en el código; lo que
+falta es la prueba que demostraría que siguen ahí. Se informan como huecos abiertos, no como
+defensas probadas.
+
 <!-- fin del texto para el documento -->

@@ -2999,9 +2999,10 @@ p. 108.*
 
 **Por:**
 
-> El análisis identificó siete brechas. G-01 se resolvió a partir de este mismo análisis.
+> El análisis identificó ocho brechas. G-01 se resolvió a partir de este mismo análisis.
 > En la versión 2.5 se cerró G-03 y se resolvieron G-04 y G-05; en la 2.6, G-07. G-02 quedó resuelta en el
-> nivel de requerimientos y abierta en el de reglas. G-06 quedó resuelta en nueve de sus catorce
+> nivel de requerimientos y abierta en el de reglas, y G-08, resuelta en el código y abierta en
+> las pruebas. G-06 quedó resuelta en nueve de sus catorce
 > hallazgos, entre ellos los tres de mayor peso, y abierta en los cinco restantes, con su plan.
 
 **Reemplazar la tabla completa:**
@@ -3015,6 +3016,7 @@ p. 108.*
 | G-05 | El documento no reflejaba tres reglas que el prototipo aplica: el tope de capacidad del local sobre la suma de sus sectores y la preventa exclusiva para suscriptores no estaban enunciadas, y la prioridad de los suscriptores en la lista de espera contradecía RN-35, que exigía orden estricto de inscripción. Era comportamiento implementado sin una regla documentada que lo respalde. | Alta | Resuelta | Se incorporaron RN-38 (RF-12 / CU-11) y RN-39 (RF-13 / CU-01), y se reescribió RN-35 en coherencia con RN-37. Las tres tienen sus casos de prueba: RN-38 en CP-60, RN-39 en CP-61 y RN-35 en CP-83 y CP-84. |
 | G-06 | El estudio de usabilidad de la versión 2.5, medido sobre la aplicación real, identificó trece hallazgos nuevos (U-01 a U-13), y la segunda medición uno más (U-14). Dos eran de severidad mayor: cerrar una pantalla con la X dejaba la aplicación en ejecución y sin ventanas, y nada indicaba dónde se escribe la cantidad de entradas. | Media | Parcialmente resuelta | Se corrigieron U-01, U-04 y U-05, cada uno con su prueba de regresión (CP-47 a CP-50), y se volvió a medir: los seis perfiles completan la tarea sin asistencia y la satisfacción buena pasa del 66,7 % al 100 %. La segunda medición encontró U-14, el encabezado de la cantidad cortado, que también se corrigió (CP-54). En la versión 2.6, el rediseño de la interfaz corrigió U-02, U-03, U-11 y U-13, y U-09 con su prueba de regresión (CP-148). Quedan cinco hallazgos menores, U-06, U-07, U-08, U-10 y U-12 (esfuerzo estimado: 7 horas), que pasan a trabajo futuro. |
 | G-07 | La revisión de seguridad de la versión 2.5 encontró que RN-18 prometía un único ingreso por entrada que el prototipo no controlaba, que el cambio de contraseña no exigía la contraseña actual y que las operaciones de negocio no verificaban el perfil ni la identidad de quien las invoca. | Alta | Resuelta | Se implementó el control de ingreso con registro atómico de la primera lectura, restringido a los eventos de los locales del Administrador; el cambio de contraseña pasó a exigir la actual y a responder lo mismo exista o no la cuenta, y el negocio verifica la sesión en cada operación. Se incorporaron RN-40 a RN-42 y se completó RN-18, con los casos CP-91 a CP-115, CP-123 y CP-124. El registro atómico se demostró con diez lectores simultáneos sobre la misma entrada durante cien rondas: en cada una ingresó exactamente uno (CP-104). |
+| G-08 | Al separar los perfiles en la versión 2.6, la revisión de pertenencia encontró veinticuatro métodos de la capa de negocio que permitían leer u operar sobre datos de otro dueño, en cinco familias (locales, eventos y sectores, servicios y disponibilidad, listas de espera, y reportes y consulta de la auditoría), y una operación que permitía falsificar el autor de un registro de auditoría. | Alta | Resuelta en el código; abierta en las pruebas | RN-48 y RN-49 cierran los veinticuatro métodos, y la escritura de la auditoría pasó a ser interna. Las lecturas tienen prueba negativa entre organizadores, comprobada quitando la verificación. Faltan los casos negativos de las escrituras de eventos, sectores y locales, de la exportación y de los reportes distintos del primero, de la consulta de la auditoría como Organizador y del intento de falsificar el autor (ver «La revisión de pertenencia» en «Metodología de verificación»). |
 
 **«Observación sobre G-03». Reemplazar** el párrafo completo **por:**
 
@@ -3232,6 +3234,49 @@ esquema de la base, que es donde están las defensas; no a la interfaz gráfica,
 ocultos o deshabilitados no son una defensa. Tampoco cubre el acceso directo a la base de datos
 sin pasar por la aplicación, ni el tiempo de respuesta de la comparación de contraseñas, que una
 prueba funcional no puede observar y se verificó leyendo el código.
+
+**La revisión de pertenencia**
+
+Cuando el sistema pasó de dos perfiles a tres, se revisó una clase de defecto completa, en lugar
+de buscar fallas sueltas: el acceso a datos que pertenecen a otro dueño. Con dos perfiles, todos
+los dueños de locales compartían el perfil de administrador, y la pregunta era si una cuenta de
+ese perfil podía leer o modificar los locales, los eventos, las ventas o las listas de espera de
+otra cuenta con solo indicar un identificador ajeno. La revisión recorrió uno por uno todos los
+métodos públicos de la capa de negocio. Para cada uno comparó el código anterior al cambio con el
+posterior, y registró qué dato quedaba expuesto y qué prueba lo cierra.
+
+Se contó como fuga solo lo que estaba efectivamente abierto en el código anterior, no lo que se
+abriría si se quitara una verificación. Con ese criterio, veinticuatro métodos permitían leer u
+operar sobre datos de otro dueño. No son veinticuatro defectos independientes, sino cinco familias
+con una misma causa: el control comprobaba el perfil de quien llamaba, pero no a quién pertenecía
+el dato. Tres métodos eran de locales; trece, de eventos y sectores, entre ellos crear, publicar,
+suspender o eliminar el evento de otro dueño; dos, de servicios y disponibilidad; uno, de listas
+de espera, que exponía el nombre y el correo de los clientes inscriptos en eventos ajenos; y
+cinco, de los reportes y de la consulta de la auditoría, que entregaban las ventas y los importes
+de toda la plataforma. Todos se cerraron con dos reglas nuevas: la gestión requiere el perfil
+Organizador (RN-48), y un Organizador solo opera sobre los datos de sus propios locales (RN-49).
+
+Aparte de esas veinticuatro, la revisión encontró un defecto de otra naturaleza en el registro de
+auditoría. La operación que escribe un registro era pública y recibía como argumento quién era el
+autor, de modo que cualquier parte del sistema podía atribuirle una acción a otra persona. Un
+registro de auditoría que se puede falsificar no sirve como evidencia. Se cerró haciendo esa
+operación interna a la capa de negocio, que toma el autor de la sesión verificada y no de quien
+llama.
+
+Otros métodos se reforzaron sin que estuvieran abiertos, y no se cuentan entre las fugas. El
+control de ingreso, por ejemplo, ya comparaba el dueño del evento con la sesión antes del cambio.
+
+La prueba que cubre las lecturas verifica que un Organizador no recibe locales, eventos, sectores,
+servicios, disponibilidad, listas de espera ni cifras de reportes de otro. Para comprobar que
+sirve, se le quitó a propósito la verificación al código: la prueba falló, y volvió a pasar al
+restaurarla. Pero la revisión deja también una lista de lo que no está probado. No todas las
+escrituras tienen su caso negativo: faltan pruebas que intenten crear, publicar, suspender,
+eliminar o modificar el evento o el sector de otro dueño, registrar un local a nombre de otra
+cuenta, consultar los locales de otro Organizador, exportar un reporte ajeno, ejecutar los
+reportes distintos del primero y consultar la auditoría como Organizador. Tampoco hay una prueba
+que intente falsificar el autor de un registro. Las verificaciones están en el código; lo que
+falta es la prueba que demostraría que siguen ahí. Se informan como huecos abiertos, no como
+defensas probadas.
 
 «Mantenimiento de la matriz» y el párrafo final de la página no cambian.
 

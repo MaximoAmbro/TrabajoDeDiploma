@@ -1421,9 +1421,10 @@ p. 108.*
 
 **Por:**
 
-> El análisis identificó siete brechas. G-01 se resolvió a partir de este mismo análisis.
+> El análisis identificó ocho brechas. G-01 se resolvió a partir de este mismo análisis.
 > En la versión 2.5 se cerró G-03 y se resolvieron G-04 y G-05; en la 2.6, G-07. G-02 quedó resuelta en el
-> nivel de requerimientos y abierta en el de reglas. G-06 quedó resuelta en nueve de sus catorce
+> nivel de requerimientos y abierta en el de reglas, y G-08, resuelta en el código y abierta en
+> las pruebas. G-06 quedó resuelta en nueve de sus catorce
 > hallazgos, entre ellos los tres de mayor peso, y abierta en los cinco restantes, con su plan.
 
 **Reemplazar la tabla completa:**
@@ -1437,6 +1438,7 @@ p. 108.*
 | G-05 | El documento no reflejaba tres reglas que el prototipo aplica: el tope de capacidad del local sobre la suma de sus sectores y la preventa exclusiva para suscriptores no estaban enunciadas, y la prioridad de los suscriptores en la lista de espera contradecía RN-35, que exigía orden estricto de inscripción. Era comportamiento implementado sin una regla documentada que lo respalde. | Alta | Resuelta | Se incorporaron RN-38 (RF-12 / CU-11) y RN-39 (RF-13 / CU-01), y se reescribió RN-35 en coherencia con RN-37. Las tres tienen sus casos de prueba: RN-38 en CP-60, RN-39 en CP-61 y RN-35 en CP-83 y CP-84. |
 | G-06 | El estudio de usabilidad de la versión 2.5, medido sobre la aplicación real, identificó trece hallazgos nuevos (U-01 a U-13), y la segunda medición uno más (U-14). Dos eran de severidad mayor: cerrar una pantalla con la X dejaba la aplicación en ejecución y sin ventanas, y nada indicaba dónde se escribe la cantidad de entradas. | Media | Parcialmente resuelta | Se corrigieron U-01, U-04 y U-05, cada uno con su prueba de regresión (CP-47 a CP-50), y se volvió a medir: los seis perfiles completan la tarea sin asistencia y la satisfacción buena pasa del 66,7 % al 100 %. La segunda medición encontró U-14, el encabezado de la cantidad cortado, que también se corrigió (CP-54). En la versión 2.6, el rediseño de la interfaz corrigió U-02, U-03, U-11 y U-13, y U-09 con su prueba de regresión (CP-148). Quedan cinco hallazgos menores, U-06, U-07, U-08, U-10 y U-12 (esfuerzo estimado: 7 horas), que pasan a trabajo futuro. |
 | G-07 | La revisión de seguridad de la versión 2.5 encontró que RN-18 prometía un único ingreso por entrada que el prototipo no controlaba, que el cambio de contraseña no exigía la contraseña actual y que las operaciones de negocio no verificaban el perfil ni la identidad de quien las invoca. | Alta | Resuelta | Se implementó el control de ingreso con registro atómico de la primera lectura, restringido a los eventos de los locales del Administrador; el cambio de contraseña pasó a exigir la actual y a responder lo mismo exista o no la cuenta, y el negocio verifica la sesión en cada operación. Se incorporaron RN-40 a RN-42 y se completó RN-18, con los casos CP-91 a CP-115, CP-123 y CP-124. El registro atómico se demostró con diez lectores simultáneos sobre la misma entrada durante cien rondas: en cada una ingresó exactamente uno (CP-104). |
+| G-08 | Al separar los perfiles en la versión 2.6, la revisión de pertenencia encontró veinticuatro métodos de la capa de negocio que permitían leer u operar sobre datos de otro dueño, en cinco familias (locales, eventos y sectores, servicios y disponibilidad, listas de espera, y reportes y consulta de la auditoría), y una operación que permitía falsificar el autor de un registro de auditoría. | Alta | Resuelta en el código; abierta en las pruebas | RN-48 y RN-49 cierran los veinticuatro métodos, y la escritura de la auditoría pasó a ser interna. Las lecturas tienen prueba negativa entre organizadores, comprobada quitando la verificación. Faltan los casos negativos de las escrituras de eventos, sectores y locales, de la exportación y de los reportes distintos del primero, de la consulta de la auditoría como Organizador y del intento de falsificar el autor (ver «La revisión de pertenencia» en «Metodología de verificación»). |
 
 **«Observación sobre G-03». Reemplazar** el párrafo completo **por:**
 
