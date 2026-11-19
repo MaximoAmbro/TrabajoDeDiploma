@@ -32,7 +32,7 @@ namespace Pruebas {
     Assert.AreEqual(aparece,GestorIngresos.Instance.EventosConIngresoAbierto(ahora).Any(e=>e.Id==evento.Id));
    });
   }
-        // CP-124 — RF-02, RN-40: unificar el rechazo de cambio de contrasena sin enumerar cuentas.
+        // CP-124 — RF-17, RN-40: unificar el rechazo de cambio de contrasena sin enumerar cuentas.
   [DataTestMethod]
   [DataRow(0,DisplayName="CP-124: Cambio sin sesión rechaza igual cuenta existente e inexistente")]
   [DataRow(4,DisplayName="CP-124: Quinto fallo al cambiar no revela bloqueo")]

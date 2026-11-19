@@ -13,39 +13,40 @@ Usá una sola vista completa por pantalla para mostrar la distribución. Epígra
 | mis-entradas | `completas/MiCuenta-2026-11-18/mis-entradas.png` | MiCuenta-2026-11-18, semilla Paula |
 | suscripcion | `completas/MiCuenta-2026-11-18/suscripcion.png` | MiCuenta-2026-11-18, semilla Paula |
 | ficha-evento | `completas/Fase8/ficha-evento.png` | Fase8b/despues-100 |
-| frmAdministrarEvento | `completas/Fase8/frmAdministrarEvento.png` | Fase8c/despues-100 |
-| frmAgregarEvento | `completas/Fase8/frmAgregarEvento.png` | Fase8b/despues-100 |
-| frmAgregarSector | `completas/Fase8/frmAgregarSector.png` | Fase8b/despues-100 |
-| frmAuditoria | `completas/Fase8/frmAuditoria.png` | Fase8b/despues-100 |
-| frmCambiarContraseña | `completas/Fase8/frmCambiarContraseña.png` | Fase8b/despues-100 |
+| frmAdministrarEvento | `completas/Fase8/frmAdministrarEvento.png` | Semilla regenerada 19/11/2026 |
+| frmAgregarEvento | `completas/Fase8/frmAgregarEvento.png` | Semilla regenerada 19/11/2026 |
+| frmAgregarSector | `completas/Fase8/frmAgregarSector.png` | Semilla regenerada 19/11/2026 |
+| frmAuditoria | `completas/Fase8/frmAuditoria.png` | Semilla regenerada 19/11/2026 |
+| frmCambiarContraseña | `completas/Fase8/frmCambiarContraseña.png` | Semilla regenerada 19/11/2026 |
 | FrmCompraCliente-total | `completas/Fase8/FrmCompraCliente-total.png` | Fase8b/despues-100 |
 | FrmCompraCliente | `completas/Fase8/FrmCompraCliente.png` | Fase8b/despues-100 |
 | frmConfirmacion | `completas/Fase8/frmConfirmacion.png` | Fase8b/despues-100 |
-| frmControlIngreso | `completas/Fase8/frmControlIngreso.png` | Fase8b/despues-100 |
-| frmCrearUsuario | `completas/Fase8/frmCrearUsuario.png` | Fase8b/despues-100 |
+| frmControlIngreso | `completas/Fase8/frmControlIngreso.png` | Semilla regenerada 19/11/2026 |
+| frmCrearAdministrador | `completas/Fase8/frmCrearAdministrador.png` | Alta protegida desde el panel del Administrador, 19/11/2026 |
+| frmCrearUsuario | `completas/Fase8/frmCrearUsuario.png` | Semilla regenerada 19/11/2026 |
 | frmEventosCliente | `completas/Fase8/frmEventosCliente.png` | Fase8b/despues-100 |
-| frmEventosLocal | `completas/Fase8/frmEventosLocal.png` | Fase8b/despues-100 |
+| frmEventosLocal | `completas/Fase8/frmEventosLocal.png` | Semilla regenerada 19/11/2026; incluye «Motivo del rechazo» |
 | frmHistorialCliente | `completas/Fase8/frmHistorialCliente.png` | Fase8b/despues-100 |
 | frmInicio | `completas/Fase8/frmInicio.png` | Fase8b/despues-100 |
-| frmListasEspera | `completas/Fase8/frmListasEspera.png` | Fase8b/despues-100 |
-| frmMenuAdministrador | `completas/Fase8/frmMenuAdministrador.png` | Fase8c/despues-100 |
+| frmListasEspera | `completas/Fase8/frmListasEspera.png` | Semilla regenerada 19/11/2026 |
+| frmMenuAdministrador | `completas/Fase8/frmMenuAdministrador.png` | Semilla regenerada 19/11/2026 |
 | frmMenuCliente | `completas/Fase8/frmMenuCliente.png` | Fase8b/despues-100 |
-| frmMenuPropietario | `completas/Fase8/frmMenuPropietario.png` | Fase8b/despues-100 |
-| frmMisLocales | `completas/Fase8/frmMisLocales.png` | Fase8b/despues-100 |
+| frmMenuPropietario | `completas/Fase8/frmMenuPropietario.png` | Semilla regenerada 19/11/2026 |
+| frmMisLocales | `completas/Fase8/frmMisLocales.png` | Semilla regenerada 19/11/2026 |
 | frmPago | `completas/Fase8/frmPago.png` | Fase8b/despues-100 |
-| frmRecuperarContraseña | `completas/Fase8/frmRecuperarContraseña.png` | Fase8b/despues-100 |
-| frmRegistrarLocal | `completas/Fase8/frmRegistrarLocal.png` | Fase8b/despues-100 |
-| frmReportes | `completas/Fase8/frmReportes.png` | Fase8b/despues-100 |
-| frmRevisarEventos | `completas/Fase8d/frmRevisarEventos.png` | Capturas-RechazoEvento/despues-100 |
-| frmRevisarSolicitudesOrganizador | `completas/Fase8/frmRevisarSolicitudesOrganizador.png` | Fase8b/despues-100 |
-| frmSolicitudOrganizador | `completas/Fase8/frmSolicitudOrganizador.png` | Fase8b/despues-100 |
+| frmRecuperarContraseña | `completas/Fase8/frmRecuperarContraseña.png` | Semilla regenerada 19/11/2026 |
+| frmRegistrarLocal | `completas/Fase8/frmRegistrarLocal.png` | Semilla regenerada 19/11/2026 |
+| frmReportes | `completas/Fase8/frmReportes.png` | Semilla regenerada 19/11/2026 |
+| frmRevisarEventos | `completas/Fase8/frmRevisarEventos.png` | Semilla regenerada 19/11/2026; estado vacío real |
+| frmRevisarSolicitudesOrganizador | `completas/Fase8/frmRevisarSolicitudesOrganizador.png` | Semilla regenerada 19/11/2026 |
+| frmSolicitudOrganizador | `completas/Fase8/frmSolicitudOrganizador.png` | Semilla regenerada 19/11/2026 |
 | frmSuscripcion | `completas/Fase8/frmSuscripcion.png` | Fase8b/despues-100 |
 
 ## Figuras de detalle
 
 Las cinco vistas de cliente anteriores se regeneraron el 18/11/2026 dentro de `Mi cuenta`, con el botón **Solicitar ser Organizador** visible y datos de la semilla de Paula. La vista de compra muestra el panel central actual; durante la captura el contenedor no dibujó el menú lateral en ese estado. Esa ausencia queda registrada como limitación visual observada, no reconstruida sobre la imagen.
 
-Todas las imágenes de `paneles/` son recortes de contenido: no incluyen el menú lateral ni la barra superior. Los nombres y áreas de cada recorte, incluido el desglose de tablas y formularios anchos, y su ancho de inserción están en `ancho-minimo-8_1pt.tsv`. Epígrafe: **«Detalle de [contenido], en el panel central de [pantalla].»**
+Las pantallas de Organizador y Administrador, las cuatro vistas afectadas por el cambio del canal de códigos y la vista de eventos del local se regeneraron el 19/11/2026 contra la semilla de `BaseDatos/02-semilla.sql` y las migraciones. No se usaron filas de prueba; la revisión de eventos queda vacía porque la semilla no tiene eventos pendientes. La tabla de eventos muestra la columna «Motivo del rechazo». Todas las imágenes de `paneles/` son recortes de contenido: no incluyen el menú lateral ni la barra superior. Los nombres y áreas de cada recorte, incluido el desglose de tablas y formularios anchos, y su ancho de inserción están en `ancho-minimo-8_1pt.tsv`. Epígrafe: **«Detalle de [contenido], en el panel central de [pantalla].»**
 
 Se generaron 90 recortes: 87 quedan por debajo de 16 cm. 3 mapas de sectores superan ese ancho porque el mapa completo ocupa más de 16 cm; no se redujeron cortando el mapa.
 

@@ -90,7 +90,7 @@ namespace Pruebas
             });
         }
 
-        // CP-85 — RF-11/RF-12, RNF-02/RNF-03; PA-20, 9.1/9.16/8.26: menús y separación de capas.
+        // CP-85 — RF-11/RF-12/RF-22, RNF-02/RNF-03; PA-20, 9.1/9.16/8.26: menús y separación de capas.
         [DataTestMethod]
         [DataRow("propietario", DisplayName = "CP-85: Menú de Organizador mantiene acciones visibles al 100 y 150 por ciento")]
         [DataRow("cliente", DisplayName = "CP-85: El menú de cliente no ofrece reportes")]

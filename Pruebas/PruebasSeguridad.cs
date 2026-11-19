@@ -117,7 +117,7 @@ namespace Pruebas
             Assert.IsNull(GestorSuscripciones.Instance.ActivaDe(cliente.Id));
         }
 
-        // CP-95 — RF-02, RN-04/40 propuesta: contraseña actual y contador de intentos.
+        // CP-95 — RF-17, RN-04/40: contraseña actual y contador de intentos.
         [TestMethod("CP-95: Cambiar contraseña rechaza la actual incorrecta y suma un intento")]
         public void ActualIncorrecta()
         {
@@ -128,7 +128,7 @@ namespace Pruebas
             Assert.IsNotNull(GestorUsuarios.Instance.Autenticar(cliente.Mail, "Cliente123"));
         }
 
-        // CP-96 — RF-02, RN-04: cambiar la contraseña respeta el bloqueo existente.
+        // CP-96 — RF-17, RN-04: cambiar la contraseña respeta el bloqueo existente.
         [TestMethod("CP-96: La cuenta bloqueada no cambia su contraseña")]
         public void CambioBloqueado()
         {
@@ -141,7 +141,7 @@ namespace Pruebas
             Assert.IsNotNull(GestorUsuarios.Instance.Autenticar(cliente.Mail, "Cliente123"));
         }
 
-        // CP-97 — RF-02, RN-40 propuesta: respuesta uniforme y sin revelar la existencia del mail.
+        // CP-97 — RF-17, RN-40: respuesta uniforme y sin revelar la existencia del mail.
         [TestMethod("CP-97: Mail inexistente y contraseña actual incorrecta muestran lo mismo")]
         public void CambioNoEnumera()
         {
@@ -154,7 +154,7 @@ namespace Pruebas
             Assert.AreEqual(existente.Message, inexistente.Message);
         }
 
-        // CP-98 — RF-02, RN-40 propuesta: cambio real sin sustituir la sesión activa.
+        // CP-98 — RF-17, RN-40: cambio real sin sustituir la sesión activa.
         [TestMethod("CP-98: Cambiar contraseña invalida la anterior y conserva la sesión")]
         public void CambioCorrecto()
         {

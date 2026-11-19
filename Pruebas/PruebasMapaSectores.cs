@@ -12,7 +12,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasMapaSectores
     {
-        // CP-150 — RF-04/RF-05: el mapa usa los precios reales y no permite elegir cupo agotado.
+        // CP-150 — RF-18: el mapa usa los precios reales y no permite elegir cupo agotado.
         [TestMethod("CP-150: Mapa ordena por precio y rechaza un sector agotado")]
         public void CP150_OrdenYCupo()
         {
@@ -31,7 +31,7 @@ namespace Pruebas
                 }
             });
         }
-        // CP-151 — RF-05/RN-08: seleccionar una zona utiliza el armado existente, no otro camino de compra.
+        // CP-151 — RF-18/RF-04, RN-08: seleccionar una zona utiliza el armado existente.
         [TestMethod("CP-151: Clic en mapa arma una entrada por el mismo gestor")]
         public void CP151_Compra()
         {

@@ -19,7 +19,7 @@ namespace Pruebas
         [TestCleanup]
         public void Limpiar() { GestorSesion.Instance.Cerrar(); Fake.Limpiar(); SeleccionVerificadorIdentidad.Actual = new VerificadorIdentidadSimulado(); }
 
-        // CP-184 — RF-12, RN-50: una solicitud pendiente no otorga permisos de Organizador.
+        // CP-184 — RF-20/RF-22, RN-50: una solicitud pendiente no otorga permisos de Organizador.
         [TestMethod]
         public void CP184_SolicitudPendienteNoConcedePermisos()
         {
@@ -43,7 +43,7 @@ namespace Pruebas
             Assert.AreEqual("RN-34", noAdmin.Regla);
         }
 
-        // CP-185 — RF-12, RN-52: rechazar CUIT con digito verificador incorrecto.
+        // CP-185 — RF-20, RN-52: rechazar CUIT con digito verificador incorrecto.
         [TestMethod]
         public void CP185_CuitConVerificadorIncorrectoSeRechaza()
         {
@@ -53,7 +53,7 @@ namespace Pruebas
             Assert.AreEqual("El CUIT no es válido. Revisá sus 11 dígitos y el dígito verificador.", error.Message);
         }
 
-        // CP-186 — RF-12, RN-52: rechazar CBU con digito verificador incorrecto.
+        // CP-186 — RF-20, RN-52: rechazar CBU con digito verificador incorrecto.
         [TestMethod]
         public void CP186_CbuConVerificadorIncorrectoSeRechaza()
         {
@@ -63,7 +63,7 @@ namespace Pruebas
             Assert.AreEqual("Ingresá un CBU válido de 22 dígitos o un alias bancario de 6 a 20 caracteres.", error.Message);
         }
 
-        // CP-187 — RF-12, RN-53: reservar la aprobacion de solicitudes al Administrador.
+        // CP-187 — RF-20/RF-22, RN-53: reservar la aprobacion de solicitudes al Administrador.
         [TestMethod]
         public void CP187_ClienteNoPuedeAprobarSolicitud()
         {
@@ -72,7 +72,7 @@ namespace Pruebas
             Assert.AreEqual("Esta operación es solo para el Administrador", error.Message);
         }
 
-        // CP-188 — RF-12, RN-53: exigir un motivo para rechazar una solicitud.
+        // CP-188 — RF-20, RN-53: exigir un motivo para rechazar una solicitud.
         [TestMethod]
         public void CP188_RechazoSinMotivoSeRechaza()
         {
@@ -82,7 +82,7 @@ namespace Pruebas
             Assert.AreEqual("Escribí el motivo del rechazo.", error.Message);
         }
 
-        // CP-190 — RF-12, RN-53: impedir que un Organizador revise solicitudes de plataforma.
+        // CP-190 — RF-20/RF-22, RN-53: impedir que un Organizador revise solicitudes de plataforma.
         [TestMethod]
         public void CP190_OrganizadorNoPuedeRechazarSolicitudDePlataforma()
         {
@@ -92,7 +92,7 @@ namespace Pruebas
             Assert.AreEqual("Esta operación es solo para el Administrador", error.Message);
         }
 
-        // CP-191 — RF-12, RN-51: exigir la confirmacion del telefono antes de solicitar perfil Organizador.
+        // CP-191 — RF-20, RN-51: exigir la confirmacion del telefono antes de solicitar perfil Organizador.
         [TestMethod]
         public void CP191_TelefonoSinConfirmarImpideLaSolicitud()
         {
@@ -101,7 +101,7 @@ namespace Pruebas
             Assert.AreEqual("Verificá este teléfono con el código enviado antes de presentar la solicitud.", error.Message);
         }
 
-        // CP-192 — RF-12, RN-52: rechazar documentacion que no sea imagen valida.
+        // CP-192 — RF-20, RN-52: rechazar documentacion que no sea imagen valida.
         [TestMethod]
         public void CP192_DocumentacionQueNoEsImagenSeRechaza()
         {
@@ -112,7 +112,7 @@ namespace Pruebas
             Assert.AreEqual("Adjuntá una imagen PNG o JPEG válida, comprimida y de hasta 512 KB.", error.Message);
         }
 
-        // CP-193 — RF-12, RN-53: mostrar la solicitud y proteger su revision administrativa.
+        // CP-193 — RF-20/RF-22, RN-53: mostrar la solicitud y proteger su revision administrativa.
         [TestMethod]
         public void CP193_AccesoDeSolicitudVisibleYRevisionProtegida()
         {
@@ -135,7 +135,7 @@ namespace Pruebas
             Assert.AreEqual("RN-34", error.Regla);
         }
 
-        // CP-194 — RF-12, RN-52: aceptar alias bancario con el formato definido.
+        // CP-194 — RF-20, RN-52: aceptar alias bancario con el formato definido.
         [TestMethod]
         public void CP194_AliasBancarioEsAceptado()
         {
@@ -146,7 +146,7 @@ namespace Pruebas
             Assert.IsTrue(GestorSolicitudesOrganizador.Instance.Solicitar(solicitud) > 0);
         }
 
-        // CP-196 — RF-12, RN-45/RN-53: auditar la decision de rechazo y su motivo.
+        // CP-196 — RF-16/RF-20, RN-45/RN-53: auditar la decision de rechazo y su motivo.
         [TestMethod]
         public void CP196_RechazoConMotivoQuedaAuditado()
         {
@@ -163,7 +163,7 @@ namespace Pruebas
             Assert.IsTrue(auditoria.Any(x=>x.UsuarioId==admin.Id && x.EntidadId==id && x.Resultado==solicitud.MotivoRevision));
         }
 
-        // CP-195 — RF-12, RN-51: rechazar telefonos fuera del formato argentino.
+        // CP-195 — RF-20, RN-51: rechazar telefonos fuera del formato argentino.
         [TestMethod]
         public void CP195_TelefonoNoArgentinoSeRechaza()
         {
@@ -172,7 +172,7 @@ namespace Pruebas
             Assert.AreEqual("Ingresá un teléfono argentino válido, con característica y número.", error.Message);
         }
 
-        // CP-189 — RF-12, RN-45/RN-53: promover al Organizador, crear su local y auditar la aprobacion.
+        // CP-189 — RF-16/RF-20/RF-22, RN-45/RN-53: promover al Organizador, crear su local y auditar la aprobacion.
         [TestMethod]
         public void CP189_AprobacionPromueveYRegistraAuditoria()
         {
@@ -190,7 +190,7 @@ namespace Pruebas
             Assert.IsTrue(auditoria.Any(x=>x.UsuarioId==admin.Id && x.EntidadId==id && x.Resultado=="Datos de demostración revisados."));
         }
 
-        // CP-202 — RF-01, RN-44/RN-51: el código telefónico solo se guarda para lectura externa.
+        // CP-202 — RF-20, RN-44/RN-51: el código telefónico solo se guarda para lectura externa.
         [TestMethod("CP-202: El código telefónico queda fuera de la interfaz")]
         public void CP202_CodigoTelefonoNoApareceEnLaSolicitud()
         {

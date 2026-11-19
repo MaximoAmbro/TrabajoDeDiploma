@@ -54,7 +54,7 @@ namespace Pruebas
         {
             foreach(Control c in raiz.Controls){yield return c;foreach(var h in Descendientes(c))yield return h;}
         }
-        // CP-158 — RF-03: no se usa GetHashCode aleatorio para las portadas.
+        // CP-158 — RF-19: no se usa GetHashCode aleatorio para las portadas.
         [TestMethod("CP-158: Portadas determinísticas se pintan sin archivos de imagen")]
         public void CP158_Portadas()
         {
@@ -88,7 +88,7 @@ namespace Pruebas
                 }
             });
         }
-        // CP-176 — RF-01, RN-44: conservar campos de recuperacion legibles al escalar.
+        // CP-176 — RF-15, RN-44: conservar campos de recuperacion legibles al escalar.
         [TestMethod("CP-176: La recuperación conserva espacios entre campos al escalar")]
         public void CP176_RecuperacionSinSolapamientos()
         {
@@ -110,7 +110,7 @@ namespace Pruebas
                 }
             });
         }
-        // CP-160 — RF-03/RF-05: se navega desde datos reales de tarjeta hasta el armado real.
+        // CP-160 — RF-18/RF-19/RF-03: se navega desde la tarjeta y el mapa hasta el armado real.
         [TestMethod("CP-160: Tarjeta abre ficha y el sector elegido llega al paquete")]
         public void CP160_Flujo()
         {
@@ -129,7 +129,7 @@ namespace Pruebas
                 }
             });
         }
-        // CP-161 — RF-07/RN-41: el inicio no permite consultar el resumen de otro cliente.
+        // CP-161 — RF-07/RF-22, RN-41: el inicio no permite consultar el resumen de otro cliente.
         [TestMethod("CP-161: Inicio de cliente rechaza datos de otra cuenta")]
         public void CP161_InicioAjeno()
         {
@@ -137,7 +137,7 @@ namespace Pruebas
                 using(var inicio=new InicioCliente())Assert.AreEqual("RN-41",Assert.ThrowsException<ReglaNegocioException>(()=>inicio.Cargar(b.Id)).Regla);
             });
         }
-        // CP-162 — RF-11/RN-34: cinco reportes reales; el cliente no obtiene el panel.
+        // CP-162 — RF-11/RF-22, RN-34: cinco reportes reales; el cliente no obtiene el panel.
         [TestMethod("CP-162: Panel contiene cinco indicadores y exige administrador")]
         public void CP162_Panel()
         {
@@ -147,7 +147,7 @@ namespace Pruebas
             }});
         }
 
-        // CP-165 — RF-12, RN-05: impedir que un Cliente acceda a la gestion de administradores.
+        // CP-165 — RF-22, RN-05: impedir que un Cliente acceda a la gestion de administradores.
         [TestMethod("CP-165: Un cliente no alcanza el alta de administradores ni su operación")]
         public void CP165_AltaAdministradorSoloAdmin()
         {
@@ -163,7 +163,7 @@ namespace Pruebas
             });
         }
 
-        // CP-166 — RF-12, RN-05: crear administradores solo desde el panel protegido.
+        // CP-166 — RF-22, RN-05: crear administradores solo desde el panel protegido.
         [TestMethod("CP-166: El panel administrador abre el alta protegida y crea otro administrador")]
         public void CP166_AltaAdministradorDesdePanel()
         {
