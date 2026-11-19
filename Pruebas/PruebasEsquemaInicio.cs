@@ -11,6 +11,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasEsquemaInicio
     {
+        // CP-164 — RF-12, RNF-04: detectar el primer script de esquema faltante y explicarlo al abrir.
         [TestMethod("CP-164: Inicio nombra el primer script faltante y lo muestra dentro de la ventana")]
         public void CP164_PrimerScriptYAvisoEnVentana()
         {
@@ -88,6 +89,7 @@ namespace Pruebas
             }
         }
 
+        // CP-197 — RF-12, RNF-04: mantener el diagnostico sincronizado con todas las migraciones numeradas.
         [TestMethod("CP-197: El registro de diagnóstico incluye cada migración numerada")]
         public void CP197_RegistroCoincideConMigraciones()
         {

@@ -23,7 +23,8 @@ namespace Pruebas
             Fake.Limpiar();
         }
 
-        [TestMethod]
+        // CP-204 — RF-12, RN-54: enviar el primer evento a revision y publicar directamente los siguientes tras la aprobacion.
+        [TestMethod("CP-204: Primer evento requiere revisión; los siguientes se publican tras aprobación")]
         public void PrimerEventoRequiereRevisionYLaAprobacionHabilitaPublicacionesSiguientes()
         {
             Usuario organizador = Fake.PropietarioSinLocales();
@@ -64,7 +65,8 @@ namespace Pruebas
             Assert.AreEqual(GestorEventos.EstadoPublicado, GestorEventos.Instance.ObtenerPorId(segundo.Id).Estado);
         }
 
-        [TestMethod]
+        // CP-205 — RF-12, RN-06: no publicar eventos que no tengan un sector con capacidad positiva.
+        [TestMethod("CP-205: Publicar sin sector con capacidad se rechaza")]
         public void PublicarSinSectorConCapacidadSeRechaza()
         {
             Usuario organizador = Fake.PropietarioSinLocales();
@@ -77,7 +79,6 @@ namespace Pruebas
             Assert.AreEqual(GestorEventos.EstadoBorrador, GestorEventos.Instance.ObtenerPorId(evento.Id).Estado);
         }
 
-        // CP-198 — RN-48/RN-54: solo el Administrador revisa; un rechazo requiere motivo.
         // CP-198 — RF-12/RN-48/RN-54: la revisión es global y exige fundamento.
         [TestMethod("CP-198: Organizador no rechaza eventos y el Administrador debe justificarlo")]
         public void CP198_RechazoProtegidoYMotivoObligatorio()
@@ -105,7 +106,6 @@ namespace Pruebas
             Assert.AreEqual(GestorEventos.EstadoEnRevision, GestorEventos.Instance.ObtenerPorId(propio.Id).Estado);
         }
 
-        // CP-199 — RN-06/RN-54: el rechazo vuelve a Borrador y la primera publicación sigue en revisión.
         // CP-199 — RF-03/RN-09/RN-54: el evento rechazado no se vende y vuelve a revisión al publicarse.
         [TestMethod("CP-199: Rechazo devuelve a borrador, muestra el motivo y exige nueva revisión")]
         public void CP199_RechazoDevuelveABorradorYOrganizadorVeMotivo()

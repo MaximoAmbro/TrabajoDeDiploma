@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Forms;
 using Entidades;
@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Pruebas.InterfazGrupoA;
 namespace Pruebas {
  [TestClass] public class PruebasK7K8 {
-  // CP-123 — RN-18/RN-41/RN-49: pertenencia del organizador y ventana temporal inclusiva.
+        // CP-123 — RF-07, RN-18/RN-49: restringir el control de ingreso al titular del evento y a su ventana temporal.
   [DataTestMethod]
   [DataRow("ajeno",0,false,DisplayName="CP-123: Administrador no lista, registra ni cuenta eventos ajenos")]
   [DataRow("sin-sesion",0,false,DisplayName="CP-123: Sin sesión no se listan eventos para ingreso")]
@@ -32,7 +32,7 @@ namespace Pruebas {
     Assert.AreEqual(aparece,GestorIngresos.Instance.EventosConIngresoAbierto(ahora).Any(e=>e.Id==evento.Id));
    });
   }
-  // CP-124 — RN-04/RN-40: cambio accesible sin sesión; no informa existencia ni bloqueo.
+        // CP-124 — RF-02, RN-40: unificar el rechazo de cambio de contrasena sin enumerar cuentas.
   [DataTestMethod]
   [DataRow(0,DisplayName="CP-124: Cambio sin sesión rechaza igual cuenta existente e inexistente")]
   [DataRow(4,DisplayName="CP-124: Quinto fallo al cambiar no revela bloqueo")]

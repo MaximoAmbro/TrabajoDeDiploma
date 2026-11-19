@@ -9,6 +9,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasAutorizacionOrganizador
     {
+        // CP-183 — RF-02, RN-05: separar la cuenta Administrador de plataforma de la cuenta Organizador de la semilla.
         [TestMethod("CP-183: Administrador sin locales y organizador de la semilla con acceso propio")]
         public void PerfilesDeSemillaSeparados()
         {
@@ -45,6 +46,7 @@ namespace Pruebas
             Fake.Limpiar();
         }
 
+        // CP-182 — RF-11, RN-34/RN-49: limitar reportes y eventos al Organizador titular, conservando alcance global del Administrador.
         [TestMethod("CP-182: Organizador solo ve sus eventos y cifras; Administrador conserva vista global")]
         public void ReportesYEventosQuedanLimitadosAlOrganizador()
         {

@@ -10,7 +10,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasEjecucionSinDialogos
     {
-        // CP-156 — RNF-01: los fallos de Load llegan al caso, sin diálogo del framework.
+        // CP-156 — RF-02, RNF-04: hacer que una excepcion de inicio de formulario falle sin cuadro bloqueante.
         [TestMethod("CP-156: Excepción en Load aborta el proceso de ensayo sin cartel del framework")]
         public void CP156_ExcepcionInmediata()
         {
@@ -36,7 +36,7 @@ class EnsayoExcepcionSinDialogo {
                 } finally {if(!proceso.HasExited)proceso.Kill();}
             }
         }
-        // CP-157 — RNF-01/RNF-02: un error inesperado queda dentro de la pantalla, sin bloquearla.
+        // CP-157 — RF-02, RNF-02: comunicar un error inesperado sin detalle tecnico ni dialogo modal.
         [TestMethod("CP-157: Manejador global presenta aviso no modal sin detalle técnico")]
         public void CP157_AvisoNoModal()
         {

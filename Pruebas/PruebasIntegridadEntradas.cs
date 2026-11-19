@@ -9,6 +9,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasIntegridadEntradas
     {
+        // CP-181 — RF-06, RN-08: impedir cantidades nulas o distintas de una por entrada vendida.
         [TestMethod("CP-181: SQL rechaza CantidadVendida nula, cero o distinta de uno")]
         public void CantidadVendidaDebeSerUno()
         {
@@ -71,7 +72,7 @@ namespace Pruebas
             }
         }
 
-        // CP-110 — RN-18/RN-29: los mismos cuatro estados de la clase están restringidos en SQL.
+        // CP-110 — RF-07, RN-18: restringir los estados persistidos de una entrada a los valores del dominio.
         [TestMethod("CP-110: SQL admite los cuatro estados de entrada y rechaza uno ajeno")]
         public void EstadosRestringidos()
         {

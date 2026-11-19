@@ -11,7 +11,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasIdentidadAura
     {
-        // CP-154 — RNF-02: la sesión puede sobrevivir al borrado de un usuario de prueba.
+        // CP-154 — RF-02, RN-05: tolerar una sesion cuyo usuario ya no existe al pintar la identidad.
         [TestMethod("CP-154: Encabezado sin usuario persistido no bloquea el formulario")]
         public void CP154_SesionSinUsuario()
         {
@@ -24,7 +24,7 @@ namespace Pruebas
                 }
             });
         }
-        // CP-155 — RNF-02: abrir la aplicación sin autenticarse es un estado normal.
+        // CP-155 — RF-02, RN-05: mostrar solo la marca cuando no hay una sesion autenticada.
         [TestMethod("CP-155: Barra sin sesión muestra solo la marca sin consultar un usuario")]
         public void CP155_SinSesion()
         {
@@ -38,7 +38,7 @@ namespace Pruebas
                 }
             });
         }
-        // CP-152 — RNF-02: la barra conserva el contrato del host de diseño real.
+        // CP-152 — RF-05, RNF-02: verificar que la barra de identidad no serializa estilos.
         [TestMethod("CP-152: Barra de identidad no serializa tipografía ni colores")]
         public void CP152_Host()
         {
@@ -55,7 +55,7 @@ namespace Pruebas
                 }
             });
         }
-        // CP-153 — RNF-01/RNF-02: el recurso entregado contiene las cinco resoluciones pedidas.
+        // CP-153 — RF-05, RNF-02: verificar los tamanos del icono de marca.
         [TestMethod("CP-153: Icono Aura incluye 16, 32, 48, 64 y 256 píxeles")]
         public void CP153_Icono()
         {

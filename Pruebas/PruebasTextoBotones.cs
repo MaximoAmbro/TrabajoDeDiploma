@@ -11,7 +11,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasTextoBotones
     {
-        // CP-116 — RNF-02/RNF-03: texto nativo completo, incluso con el borde de foco.
+        // CP-116 — RF-05, RNF-02/RNF-03: texto nativo completo, incluso con el borde de foco.
         [DataTestMethod]
         [DataRow("FrmCompraCliente", DisplayName = "CP-116: Botones completos de FrmCompraCliente")]
         [DataRow("frmAdministrarEvento", DisplayName = "CP-116: Botones completos de frmAdministrarEvento")]

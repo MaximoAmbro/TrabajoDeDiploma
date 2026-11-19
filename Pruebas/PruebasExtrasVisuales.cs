@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
@@ -41,7 +41,7 @@ namespace Pruebas {
     using(var listado=new Visual.frmEventosCliente{IDUsuario=cliente.Id}) {Mostrar(listado);Assert.AreEqual(1,ControlDe<IndicadorPasos>(listado,"indicadorPasos").PasoActual);}
    });
   }
-  // CP-120 — RNF-02: los nuevos componentes respetan la barrera del host real.
+        // CP-120 — RF-05, RNF-02: los controles reutilizables aplican estilo en ejecucion sin serializarlo.
   [DataTestMethod]
   [DataRow(typeof(IndicadorPasos),DisplayName="CP-120: IndicadorPasos no serializa estilo")]
   [DataRow(typeof(EtiquetaTotal),DisplayName="CP-120: EtiquetaTotal no serializa estilo")]

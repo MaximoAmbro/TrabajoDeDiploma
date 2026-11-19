@@ -15,6 +15,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasGrupoAPortadasEventos
     {
+        // CP-177 — RF-12, RN-52: redimensionar y comprimir una imagen válida para su almacenamiento.
         [TestMethod("CP-177: Codec reduce una imagen grande y conserva una portada decodificable")]
         public void CP177_RedimensionaYComprime()
         {
@@ -36,6 +37,7 @@ namespace Pruebas
             }
         }
 
+        // CP-178 — RF-12, RN-52: rechazar contenido que no se puede decodificar como imagen.
         [TestMethod("CP-178: Codec rechaza bytes que no son una imagen")]
         public void CP178_RechazaArchivoFalso()
         {
@@ -46,6 +48,7 @@ namespace Pruebas
             }
         }
 
+        // CP-180 — RF-12, RN-52: rechazar archivos de imagen por encima del límite de carga.
         [TestMethod("CP-180: Codec rechaza una imagen cuyo archivo supera 10 MB")]
         public void CP180_RechazaArchivoDemasiadoGrande()
         {
@@ -56,6 +59,7 @@ namespace Pruebas
             }
         }
 
+        // CP-179 — RF-12, RN-49/RN-52: guardar la portada válida del evento y recuperarla desde la base.
         [TestMethod("CP-179: Portada autorizada se guarda y se recupera desde la base")]
         public void CP179_PersistenciaDePortada()
         {

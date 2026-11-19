@@ -16,7 +16,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasVistasVisibles
     {
-        // CP-163 — RNF-02/RNF-03: los botones de las nuevas vistas también se renderizan completos.
+        // CP-163 — RF-05, RNF-03: comprobar textos y color renderizado de las vistas compuestas.
         [DataTestMethod]
         [DataRow(typeof(TarjetaEvento),DisplayName="CP-163: Botones de tarjeta completos y primario renderizado")]
         [DataRow(typeof(FichaEvento),DisplayName="CP-163: Botones de ficha completos y primario renderizado")]
@@ -67,7 +67,7 @@ namespace Pruebas
                 }
             });
         }
-        // CP-159 — RNF-02: los nuevos componentes conservan el contrato del Designer.
+        // CP-159 — RF-05, RNF-02: comprobar que las vistas compuestas no serializan el tema.
         [DataTestMethod]
         [DataRow(typeof(TarjetaEvento),DisplayName="CP-159: TarjetaEvento no serializa estilo")]
         [DataRow(typeof(PortadaEvento),DisplayName="CP-159: PortadaEvento no serializa estilo")]
@@ -88,6 +88,7 @@ namespace Pruebas
                 }
             });
         }
+        // CP-176 — RF-01, RN-44: conservar campos de recuperacion legibles al escalar.
         [TestMethod("CP-176: La recuperación conserva espacios entre campos al escalar")]
         public void CP176_RecuperacionSinSolapamientos()
         {
@@ -146,7 +147,7 @@ namespace Pruebas
             }});
         }
 
-        // CP-165 — RN-34: el alta de administradores aparece en administración y conserva su guarda.
+        // CP-165 — RF-12, RN-05: impedir que un Cliente acceda a la gestion de administradores.
         [TestMethod("CP-165: Un cliente no alcanza el alta de administradores ni su operación")]
         public void CP165_AltaAdministradorSoloAdmin()
         {
@@ -162,6 +163,7 @@ namespace Pruebas
             });
         }
 
+        // CP-166 — RF-12, RN-05: crear administradores solo desde el panel protegido.
         [TestMethod("CP-166: El panel administrador abre el alta protegida y crea otro administrador")]
         public void CP166_AltaAdministradorDesdePanel()
         {

@@ -12,7 +12,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasSerializacionComponentes
     {
-        // CP-112 — RNF-01/RNF-02, T-41: host real, siete filas; ninguna serializa su estilo.
+        // CP-112 — RF-05, RNF-02: garantizar que los componentes de tema no serialicen estilos.
         [DataTestMethod]
         [DataRow(typeof(BotonPrimario), DisplayName = "CP-112: BotonPrimario no serializa estilo en el host de diseño")]
         [DataRow(typeof(BotonSecundario), DisplayName = "CP-112: BotonSecundario no serializa estilo en el host de diseño")]

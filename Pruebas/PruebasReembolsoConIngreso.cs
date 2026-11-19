@@ -11,7 +11,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasReembolsoConIngreso
     {
-        // CP-111 — RN-18/RN-29: ingreso y devolución se superponen al ampliar el parámetro.
+        // CP-111 — RF-07, RN-18/RN-29: no devolver entradas que ya registraron ingreso.
         [DataTestMethod]
         [DataRow(false, DisplayName = "CP-111: Entrada usada rechazada antes de actualizar las demás")]
         [DataRow(true, DisplayName = "CP-111: Entrada usada revierte también la devolución previa de otra entrada")]
