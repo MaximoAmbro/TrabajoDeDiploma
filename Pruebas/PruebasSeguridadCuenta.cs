@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Datos;
@@ -26,8 +27,8 @@ namespace Pruebas
             Assert.AreEqual("RN-43", Assert.ThrowsException<ReglaNegocioException>(() => GestorCompras.Instance.Iniciar(new Paquete { IdEvento = evento.Id }, cliente)).Regla);
         }
 
-        // CP-168 — RF-01, RN-43: emitir y confirmar el código de correo desde la bandeja simulada.
-        [TestMethod("CP-168: El alta muestra la bandeja simulada y verifica el correo")]
+        // CP-168 — RF-01, RN-43: confirmar correo con el código leído fuera de la aplicación.
+        [TestMethod("CP-168: El alta guarda el código fuera de la aplicación y verifica el correo")]
         public void CP168_RegistroVerificaCorreoEnLaInterfaz()
         {
             EnSta(() =>
@@ -44,14 +45,21 @@ namespace Pruebas
                     ControlDe<Button>(form, "btnregistrarse").PerformClick();
                     var mensaje = EnviadorSimulado.Ultimo(correo, "Verificacion");
                     Assert.IsNotNull(mensaje);
-                    Assert.IsNotNull(form.Controls.Find("bandejaCorreoSimulada", true)[0]);
-                    Assert.IsTrue(ControlDe<Label>(form, "mensajeBandeja").Text.Contains(mensaje.Codigo));
-                    Assert.IsFalse(ControlDe<Label>(form, "estadoVerificacion").Text.Contains(mensaje.Codigo));
+                    string archivo = EnviadorSimulado.ArchivoDeBandejaParaPruebas(correo);
+                    Assert.IsTrue(File.Exists(archivo));
+                    Assert.IsTrue(File.ReadAllText(archivo).Contains(mensaje.Codigo), "El código queda en el archivo que se abre fuera de EventAura.");
+                    Assert.IsNotNull(form.Controls.Find("verificacionCorreo", true).Single());
+                    Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(mensaje.Codigo)));
+                    Assert.IsFalse(typeof(Visual.frmInicio).Assembly.GetTypes().Any(t => t.Name == "frmBandejaSimulada"));
+                    VerificarQueLaInterfazNoPuedeLeerCodigos();
                     Assert.IsFalse(RepositorioUsuarios.Instance.CorreoVerificado(RepositorioUsuarios.Instance.ObtenerPorMail(correo).Id));
                     ControlDe<TextBox>(form, "txtCodigoCorreo").Text = mensaje.Codigo;
                     ControlDe<Button>(form, "btnConfirmarCorreo").PerformClick();
                     Assert.IsTrue(RepositorioUsuarios.Instance.CorreoVerificado(RepositorioUsuarios.Instance.ObtenerPorMail(correo).Id));
                     Assert.IsTrue(ControlDe<Label>(form, "estadoVerificacion").Text.Contains("Ya podés iniciar sesión y comprar"));
+                    int usuarioId = RepositorioUsuarios.Instance.ObtenerPorMail(correo).Id;
+                    Assert.IsTrue(RepositorioAuditoria.Instance.Consultar(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), "Código emitido: Verificacion")
+                        .Any(r => r.UsuarioId == usuarioId && r.Resultado == "Correcto"));
                 }
             });
         }
@@ -69,6 +77,8 @@ namespace Pruebas
             var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorCodigosCorreo.Instance.RecuperarContrasena(cliente.Mail, mensaje.Codigo, "OtraClave123"));
             Assert.AreEqual("RN-44", error.Regla);
             Assert.AreEqual(anterior, RepositorioUsuarios.Instance.ObtenerPorMail(cliente.Mail).Contraseña);
+            Assert.IsTrue(RepositorioAuditoria.Instance.Consultar(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), "Restablecimiento de contraseña rechazado")
+                .Any(r => r.UsuarioId == cliente.Id && r.Resultado == "Rechazado: RN-44"));
         }
 
         // CP-170 — RF-01, RN-02/RN-44: recuperar la cuenta usando la validación y el hash vigentes.
@@ -83,6 +93,10 @@ namespace Pruebas
             Assert.IsTrue(Seguridad.EsHash(hash));
             Assert.IsTrue(Seguridad.Verificar("NuevaClave123", hash));
             Assert.IsFalse(Seguridad.Verificar("Cliente123", hash));
+            var auditoria = RepositorioAuditoria.Instance.Consultar(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), "Cambio de contraseña");
+            Assert.IsTrue(auditoria.Any(r => r.UsuarioId == cliente.Id && r.Resultado == "Recuperación por código"));
+            Assert.IsTrue(RepositorioAuditoria.Instance.Consultar(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), "Código de recuperación emitido")
+                .Any(r => r.UsuarioId == cliente.Id && r.Resultado == "Correcto"));
         }
 
         // CP-171 — RF-01, RN-44: la estrategia SMTP falla claramente si no está configurada.
@@ -124,8 +138,8 @@ namespace Pruebas
             });
         }
 
-        // CP-173 — RF-01, RN-44: recuperar desde la interfaz y leer el código en la bandeja.
-        [TestMethod("CP-173: La recuperacion usa la bandeja simulada y restablece desde la pantalla")]
+        // CP-173 — RF-01, RN-44: recuperar desde la interfaz; el archivo se lee fuera de la aplicación.
+        [TestMethod("CP-173: La recuperación no muestra el código y permite restablecer desde la pantalla")]
         public void CP173_RecuperacionDesdeLaInterfaz()
         {
             EnSta(() =>
@@ -138,11 +152,13 @@ namespace Pruebas
                     ControlDe<Button>(form, "btnEnviarCodigo").PerformClick();
                     var mensaje = EnviadorSimulado.Ultimo(cliente.Mail, "Recuperacion");
                     Assert.IsNotNull(mensaje);
-                    Assert.AreEqual("Si la cuenta existe, enviamos un código.", ControlDe<Label>(form, "estadoRecuperacion").Text);
-                    Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(mensaje.Codigo)), "El formulario solicitante no muestra el código.");
-                    using (var bandeja = new Visual.frmBandejaSimulada(cliente.Mail, "Recuperacion"))
-                        Assert.IsTrue(ControlDe<Label>(bandeja, "mensajeBandejaSimulada").Text.Contains(mensaje.Codigo), "El código aparece solamente al abrir la bandeja simulada.");
-                    Assert.IsTrue(AbrirBandejaYVerCodigo(form, "btnAbrirBandejaSimulada", mensaje.Codigo));
+                    string respuesta = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
+                    Assert.AreEqual(respuesta, ControlDe<Label>(form, "estadoRecuperacion").Text);
+                    Assert.IsTrue(File.ReadAllText(EnviadorSimulado.ArchivoDeBandejaParaPruebas(cliente.Mail)).Contains(mensaje.Codigo));
+                    Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(mensaje.Codigo)), "Ningún control visible ni oculto de la aplicación debe mostrar el código.");
+                    Assert.IsFalse(typeof(Visual.frmInicio).Assembly.GetTypes().Any(t => t.Name == "frmBandejaSimulada"));
+                    Assert.IsFalse(form.Controls.Find("btnAbrirBandejaSimulada", true).Any());
+                    VerificarQueLaInterfazNoPuedeLeerCodigos();
                     ControlDe<TextBox>(form, "txtActual").Text = mensaje.Codigo;
                     ControlDe<TextBox>(form, "TxtPassword").Text = "NuevaClave123";
                     ControlDe<TextBox>(form, "TxtConfirmpassword").Text = "NuevaClave123";
@@ -181,10 +197,12 @@ namespace Pruebas
                     string respuestaInexistente = ControlDe<Label>(form, "estadoRecuperacion").Text;
                     var señuelo = EnviadorSimulado.Ultimo(inexistente, "Recuperacion");
 
-                    Assert.AreEqual("Si la cuenta existe, enviamos un código.", respuestaExistente);
+                    string respuesta = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
+                    Assert.AreEqual(respuesta, respuestaExistente);
                     Assert.AreEqual(respuestaExistente, respuestaInexistente);
-                    Assert.IsNotNull(señuelo, "La bandeja simulada muestra el mismo formato para la dirección desconocida.");
+                    Assert.IsNotNull(señuelo, "La respuesta simulada mantiene el formato uniforme para la dirección desconocida.");
                     Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(señuelo.Codigo)));
+                    Assert.IsTrue(File.ReadAllText(EnviadorSimulado.ArchivoDeBandejaParaPruebas(existente)).Contains(codigoExistente.Codigo));
                     Assert.IsTrue(relojExistente.ElapsedMilliseconds >= 950 && relojInexistente.ElapsedMilliseconds >= 950,
                         "Ambas solicitudes respetan el tiempo mínimo de respuesta uniforme.");
                     Assert.IsTrue(Math.Abs(relojExistente.ElapsedMilliseconds - relojInexistente.ElapsedMilliseconds) < 400,
@@ -236,7 +254,10 @@ namespace Pruebas
                     ControlDe<Button>(nuevo, "btnregistrarse").PerformClick();
                     reloj.Stop();
                     tiempoNuevo = reloj.ElapsedMilliseconds;
-                    Assert.IsNotNull(nuevo.Controls.Find("bandejaCorreoSimulada", true).Single());
+                    Assert.IsNotNull(nuevo.Controls.Find("verificacionCorreo", true).Single());
+                    var mensajeNuevo = EnviadorSimulado.Ultimo(correo, "Verificacion");
+                    Assert.IsNotNull(mensajeNuevo);
+                    Assert.IsFalse(TextosVisibles(nuevo).Any(t => t.Contains(mensajeNuevo.Codigo)));
                 }
 
                 string hashAnterior = RepositorioUsuarios.Instance.ObtenerPorMail(correo).Contraseña;
@@ -249,10 +270,10 @@ namespace Pruebas
                     ControlDe<Button>(existente, "btnregistrarse").PerformClick();
                     reloj.Stop();
                     tiempoExistente = reloj.ElapsedMilliseconds;
-                    Assert.IsNotNull(existente.Controls.Find("bandejaCorreoSimulada", true).Single());
+                    Assert.IsNotNull(existente.Controls.Find("verificacionCorreo", true).Single());
                     var mensaje = EnviadorSimulado.Ultimo(correo, "Verificacion");
                     Assert.IsNotNull(mensaje);
-                    Assert.IsTrue(ControlDe<Label>(existente, "mensajeBandeja").Text.Contains(mensaje.Codigo));
+                    Assert.IsFalse(TextosVisibles(existente).Any(t => t.Contains(mensaje.Codigo)));
                 }
 
                 Assert.AreEqual(hashAnterior, RepositorioUsuarios.Instance.ObtenerPorMail(correo).Contraseña,
@@ -281,26 +302,18 @@ namespace Pruebas
             }
         }
 
-        private static bool AbrirBandejaYVerCodigo(Control origen, string nombreBoton, string codigo)
+        private static void VerificarQueLaInterfazNoPuedeLeerCodigos()
         {
-            bool abierta = false;
-            bool codigoVisible = false;
-            using (var temporizador = new Timer { Interval = 25 })
+            string carpeta = Path.Combine(BaseDePrueba.RaizDelRepositorio(), "Visual");
+            string[] fuentes = Directory.GetFiles(carpeta, "*.cs", SearchOption.AllDirectories);
+            foreach (string fuente in fuentes)
             {
-                temporizador.Tick += (s, e) =>
-                {
-                    var bandeja = Application.OpenForms.OfType<Visual.frmBandejaSimulada>().FirstOrDefault(f => f.Visible);
-                    if (bandeja == null) return;
-                    abierta = true;
-                    codigoVisible = ControlDe<Label>(bandeja, "mensajeBandejaSimulada").Text.Contains(codigo);
-                    bandeja.Close();
-                    temporizador.Stop();
-                };
-                temporizador.Start();
-                ControlDe<Button>(origen, nombreBoton).PerformClick();
-                temporizador.Stop();
+                string texto = File.ReadAllText(fuente);
+                Assert.IsFalse(texto.Contains("EnviadorSimulado.Ultimo"), fuente + " no puede consultar el archivo de códigos.");
+                Assert.IsFalse(texto.Contains("ArchivoDeBandejaParaPruebas"), fuente + " no puede consultar el archivo de códigos.");
+                Assert.IsFalse(texto.Contains("frmBandejaSimulada"), fuente + " no puede declarar una pantalla de bandeja.");
+                Assert.IsFalse(texto.Contains("mensaje.Codigo"), fuente + " no puede presentar el contenido de un código.");
             }
-            return abierta && codigoVisible;
         }
 
         // CP-174 — RF-11, RN-45/RN-46: registrar acciones y cerrar la sesión al vencer la inactividad.

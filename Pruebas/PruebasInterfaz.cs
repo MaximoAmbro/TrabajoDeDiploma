@@ -563,7 +563,8 @@ namespace Pruebas
                     Control<TextBox>(form, "TxtConfirmpassword").Text = "Cliente123";
 
                     Control<Button>(form, "btnregistrarse").PerformClick();
-                    Assert.IsNotNull(form.Controls.Find("bandejaCorreoSimulada", true).Single(), "El alta ahora muestra la bandeja donde se confirma el correo.");
+                    Assert.IsNotNull(form.Controls.Find("verificacionCorreo", true).Single(), "El alta permite ingresar el código leído fuera de EventAura.");
+                    Assert.IsFalse(form.Controls.Find("bandejaCorreoSimulada", true).Any());
 
                     Usuario usuario = Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail);
                     Assert.IsNotNull(usuario);

@@ -190,8 +190,8 @@ namespace Pruebas
             Assert.IsTrue(auditoria.Any(x=>x.UsuarioId==admin.Id && x.EntidadId==id && x.Resultado=="Datos de demostración revisados."));
         }
 
-        // CP-202 — RF-01, RN-44/RN-51: el código telefónico no se muestra hasta abrir la bandeja simulada.
-        [TestMethod("CP-202: El código telefónico solo aparece al abrir la bandeja simulada")]
+        // CP-202 — RF-01, RN-44/RN-51: el código telefónico solo se guarda para lectura externa.
+        [TestMethod("CP-202: El código telefónico queda fuera de la interfaz")]
         public void CP202_CodigoTelefonoNoApareceEnLaSolicitud()
         {
             InterfazGrupoA.EnSta(() =>
@@ -205,11 +205,17 @@ namespace Pruebas
                     InterfazGrupoA.ControlDe<Button>(form, "btnEnviarCodigoTelefono").PerformClick();
                     var mensaje = EnviadorSimulado.Ultimo(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
                     Assert.IsNotNull(mensaje, InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
-                    Assert.AreEqual("Si el teléfono es válido, enviamos un código a la bandeja simulada.",
+                    Assert.AreEqual("Si el teléfono es válido, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.",
                         InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
+                    string archivo = EnviadorSimulado.ArchivoDeBandejaParaPruebas(Telefono);
+                    Assert.IsTrue(System.IO.File.Exists(archivo));
+                    Assert.IsTrue(System.IO.File.ReadAllText(archivo).Contains(mensaje.Codigo));
                     Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(mensaje.Codigo)),
                         "El código no debe aparecer en el formulario que lo solicita.");
-                    Assert.IsTrue(AbrirBandejaYVerCodigo(form, mensaje.Codigo));
+                    Assert.IsFalse(typeof(Visual.frmInicio).Assembly.GetTypes().Any(t => t.Name == "frmBandejaSimulada"));
+                    string codigoAuditable = "Código emitido: " + GestorCodigosCorreo.PropositoTelefonoOrganizador;
+                    Assert.IsTrue(Datos.RepositorioAuditoria.Instance.Consultar(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), codigoAuditable)
+                        .Any(r => r.UsuarioId == solicitante.Id && r.Resultado == "Correcto"));
                 }
             });
         }
@@ -221,28 +227,6 @@ namespace Pruebas
                 if (!string.IsNullOrEmpty(control.Text)) yield return control.Text;
                 foreach (string texto in TextosVisibles(control)) yield return texto;
             }
-        }
-
-        private static bool AbrirBandejaYVerCodigo(Control origen, string codigo)
-        {
-            bool abierta = false;
-            bool codigoVisible = false;
-            using (var temporizador = new Timer { Interval = 25 })
-            {
-                temporizador.Tick += (s, e) =>
-                {
-                    var bandeja = Application.OpenForms.OfType<Visual.frmBandejaSimulada>().FirstOrDefault(f => f.Visible);
-                    if (bandeja == null) return;
-                    abierta = true;
-                    codigoVisible = InterfazGrupoA.ControlDe<Label>(bandeja, "mensajeBandejaSimulada").Text.Contains(codigo);
-                    bandeja.Close();
-                    temporizador.Stop();
-                };
-                temporizador.Start();
-                InterfazGrupoA.ControlDe<Button>(origen, "btnAbrirBandejaTelefono").PerformClick();
-                temporizador.Stop();
-            }
-            return abierta && codigoVisible;
         }
 
         private SolicitudOrganizador SolicitudValida() => new SolicitudOrganizador { Responsable="Responsable de prueba", Cuit="20-12345678-6", Telefono=Telefono,

@@ -54,10 +54,7 @@ namespace Pruebas
                     try
                     {
                         Form formulario;
-                        if (tipo.Name == "frmBandejaSimulada")
-                            formulario = new Visual.frmBandejaSimulada("sin-mensajes@pruebas.eventaura.com", "Recuperacion");
-                        else
-                            formulario = (Form)Activator.CreateInstance(tipo);
+                        formulario = (Form)Activator.CreateInstance(tipo);
                         using (formulario)
                         {
                             if (formulario.ClientSize.Height > AltoMaximo)
@@ -95,8 +92,8 @@ namespace Pruebas
             }
 
             // SEG-2 incorpora control de ingreso y la fase de seguridad incorpora auditoría.
-            // Las vistas de solicitudes, revisión del primer evento y bandeja simulada elevan el inventario a 26.
-            Assert.AreEqual(26, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
+            // Las vistas de solicitudes y revisión del primer evento elevan el inventario a 25.
+            Assert.AreEqual(25, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
 

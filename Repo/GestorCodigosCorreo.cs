@@ -31,11 +31,12 @@ namespace Negocio
                     Emitir(usuario.Id, usuario.Mail, "Recuperacion");
                 else if (SeleccionEnviadorCodigos.Actual is EnviadorSimulado)
                 {
-                    // Este señuelo deja la misma bandeja visible, pero no tiene código persistido
-                    // y por eso nunca puede restablecer una cuenta.
+                    // El archivo señuelo conserva la respuesta uniforme, pero no crea un código utilizable.
                     int minutos = GestorParametros.Instance.ObtenerEntero("CORREO_CODIGO_MIN");
                     SeleccionEnviadorCodigos.Actual.Enviar(destino, "Recuperacion", NuevoCodigo(), DateTime.UtcNow.AddMinutes(minutos));
                 }
+                GestorAuditoria.Instance.Registrar("Código de recuperación emitido", "Usuario", usuario?.Id,
+                    usuario == null ? "Señuelo sin cuenta asociada" : "Correcto", usuario?.Id, destino);
             }
             finally
             {
@@ -70,8 +71,21 @@ namespace Negocio
 
         public void RecuperarContrasena(string correo, string codigo, string nueva)
         {
-            GestorUsuarios.Instance.ValidarContrasena(nueva);
-            Confirmar(correo, codigo, "Recuperacion", Seguridad.Hash(nueva));
+            string destino = (correo ?? string.Empty).Trim();
+            var usuario = string.IsNullOrWhiteSpace(destino) ? null : RepositorioUsuarios.Instance.ObtenerPorMail(destino);
+            try
+            {
+                GestorUsuarios.Instance.ValidarContrasena(nueva);
+                Confirmar(destino, codigo, "Recuperacion", Seguridad.Hash(nueva));
+                GestorAuditoria.Instance.Registrar("Cambio de contraseña", "Usuario", usuario?.Id,
+                    "Recuperación por código", usuario?.Id, destino);
+            }
+            catch (ReglaNegocioException ex)
+            {
+                GestorAuditoria.Instance.Registrar("Restablecimiento de contraseña rechazado", "Usuario", usuario?.Id,
+                    "Rechazado: " + ex.Regla, usuario?.Id, destino);
+                throw;
+            }
         }
 
         private static void Emitir(int idUsuario, string correo, string proposito)
@@ -84,6 +98,8 @@ namespace Negocio
             int idCodigo = RepositorioCodigosCorreo.Instance.Emitir(idUsuario, proposito, sal, hash, minutos, correo);
             var pendiente = RepositorioCodigosCorreo.Instance.PorId(idCodigo);
             SeleccionEnviadorCodigos.Actual.Enviar(correo, proposito, codigo, pendiente.VenceEl);
+            GestorAuditoria.Instance.Registrar("Código emitido: " + proposito, "Usuario", idUsuario,
+                "Correcto", idUsuario, correo);
         }
 
         private static string NuevoCodigo()

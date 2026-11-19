@@ -99,7 +99,7 @@ namespace Visual
                 }
                 if (!_altaAdministrador)
                 {
-                    MostrarBandejaSimulada(txtmail.Text.Trim());
+                    MostrarVerificacionCorreo(txtmail.Text.Trim());
                     return;
                 }
                 var menu = Cerrar();
@@ -107,7 +107,7 @@ namespace Visual
             }
             else { return; }
         }
-        private void MostrarBandejaSimulada(string correo)
+        private void MostrarVerificacionCorreo(string correo)
         {
             foreach (Control control in Controls.Cast<Control>().ToArray())
                 if (control.Name != "barraSuperior") control.Visible = false;
@@ -115,10 +115,9 @@ namespace Visual
             float escala = Disposicion.Escala(this);
             int px(float valor) => (int)Math.Round(valor * escala);
             int ancho = Math.Max(px(280), ClientSize.Width - px(48));
-            var bandeja = new Panel { Name = "bandejaCorreoSimulada", Location = new Point(px(24), px(84)), Size = new Size(ancho, Math.Max(px(300), ClientSize.Height - px(108))), AutoScroll = true };
-            var titulo = new Componentes.EtiquetaTitulo { Name = "tituloBandeja", Text = "Bandeja simulada de correo", Location = new Point(px(8), px(8)), Size = new Size(ancho - px(24), px(40)) };
-            var mensaje = EnviadorSimulado.Ultimo(correo, "Verificacion");
-            var contenido = new Componentes.EtiquetaAyuda { Name = "mensajeBandeja", Location = new Point(px(8), px(60)), Size = new Size(ancho - px(24), px(92)), Text = mensaje == null ? "No hay un mensaje disponible. Volvé a registrarte para solicitar otro código." : "Para: " + correo + "\r\nAsunto: Verificá tu correo de EventAura\r\nCódigo: " + mensaje.Codigo + "\r\nVence: " + mensaje.VenceEl.ToLocalTime().ToString("dd/MM/yyyy HH:mm") };
+            var verificacion = new Panel { Name = "verificacionCorreo", Location = new Point(px(24), px(84)), Size = new Size(ancho, Math.Max(px(300), ClientSize.Height - px(108))), AutoScroll = true };
+            var titulo = new Componentes.EtiquetaTitulo { Name = "tituloVerificacion", Text = "Verificá tu correo", Location = new Point(px(8), px(8)), Size = new Size(ancho - px(24), px(40)) };
+            var contenido = new Componentes.EtiquetaAyuda { Name = "instruccionesVerificacion", Location = new Point(px(8), px(60)), Size = new Size(ancho - px(24), px(80)), Text = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar." };
             var etiqueta = new Componentes.EtiquetaRotulo { Text = "Código de verificación", Location = new Point(px(8), px(164)), Size = new Size(px(240), px(24)) };
             var codigo = new TextBox { Name = "txtCodigoCorreo", Location = new Point(px(8), px(192)), Size = new Size(px(240), px(32)), MaxLength = 6 };
             var estado = new Componentes.EtiquetaAyuda { Name = "estadoVerificacion", Location = new Point(px(8), px(232)), Size = new Size(ancho - px(24), px(54)) };
@@ -136,9 +135,9 @@ namespace Visual
                 catch (ReglaNegocioException ex) { estado.Text = ex.Message; }
             };
             volver.Click += (s, e) => Cerrar();
-            bandeja.Controls.AddRange(new Control[] { titulo, contenido, etiqueta, codigo, estado, confirmar, volver });
-            Controls.Add(bandeja);
-            bandeja.BringToFront();
+            verificacion.Controls.AddRange(new Control[] { titulo, contenido, etiqueta, codigo, estado, confirmar, volver });
+            Controls.Add(verificacion);
+            verificacion.BringToFront();
         }
         private void lblyatengocuen_Click(object sender, EventArgs e)
         {

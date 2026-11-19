@@ -17,8 +17,6 @@ namespace Visual
         private Componentes.IndicadorFortaleza _fortaleza;
         private Componentes.EtiquetaAyuda _estadoCorreo;
         private Componentes.BotonSecundario _enviarCodigo;
-        private Componentes.BotonSecundario _abrirBandeja;
-        private string _destinatarioBandeja;
         public frmCambiarContraseña() : this(false) { }
         public frmCambiarContraseña(bool recuperacion)
         {
@@ -47,8 +45,7 @@ namespace Visual
             checkbxShowPass.Text = "Mostrar contraseña nueva";
             btnconfirmar.Text = "Restablecer contraseña";
             _enviarCodigo = new Componentes.BotonSecundario { Name = "btnEnviarCodigo", Text = "Enviar código", Location = new Point(232, 216), Size = new Size(184, 36) };
-            _estadoCorreo = new Componentes.EtiquetaAyuda { Name = "estadoRecuperacion", Location = new Point(24, 260), Size = new Size(192, 36) };
-            _abrirBandeja = new Componentes.BotonSecundario { Name = "btnAbrirBandejaSimulada", Text = "Abrir bandeja", Location = new Point(232, 260), Size = new Size(184, 36), Enabled = false };
+            _estadoCorreo = new Componentes.EtiquetaAyuda { Name = "estadoRecuperacion", Location = new Point(24, 260), Size = new Size(392, 54) };
             _enviarCodigo.Click += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(txtMail.Text))
@@ -57,18 +54,10 @@ namespace Visual
                     return;
                 }
                 GestorCodigosCorreo.Instance.SolicitarRecuperacion(txtMail.Text);
-                _destinatarioBandeja = txtMail.Text.Trim();
-                _estadoCorreo.Text = "Si la cuenta existe, enviamos un código.";
-                _abrirBandeja.Enabled = true;
-            };
-            _abrirBandeja.Click += (s, e) =>
-            {
-                if (string.IsNullOrWhiteSpace(_destinatarioBandeja)) return;
-                using (var bandeja = new frmBandejaSimulada(_destinatarioBandeja, "Recuperacion")) bandeja.ShowDialog(this);
+                _estadoCorreo.Text = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
             };
             Controls.Add(_enviarCodigo);
             Controls.Add(_estadoCorreo);
-            Controls.Add(_abrirBandeja);
         }
 
         private void ActualizarFortaleza()
@@ -93,8 +82,7 @@ namespace Visual
             btnVolver.Location = new Point(px(24), px(508));
             btnconfirmar.Location = new Point(px(232), px(508));
             _enviarCodigo.SetBounds(px(232), px(216), px(184), px(36));
-            _estadoCorreo.SetBounds(px(24), px(260), px(192), px(36));
-            _abrirBandeja.SetBounds(px(232), px(260), px(184), px(36));
+            _estadoCorreo.SetBounds(px(24), px(260), px(392), px(54));
         }
         private void frmCambiarContraseña_Load(object sender, EventArgs e)
         {
@@ -170,29 +158,5 @@ namespace Visual
             return false;
         }
  // Controla que se llenen todos los campos
-    }
-
-    public sealed class frmBandejaSimulada : FormularioEventAura
-    {
-        public frmBandejaSimulada(string destinatario, string proposito)
-        {
-            Text = "EventAura · Bandeja simulada";
-            ClientSize = new Size(520, 300);
-            StartPosition = FormStartPosition.CenterParent;
-            var titulo = new Componentes.EtiquetaTitulo { Name = "tituloBandejaSimulada", Text = "Bandeja simulada", Location = new Point(24, 78), Size = new Size(460, 40) };
-            var mensaje = EnviadorSimulado.Ultimo(destinatario, proposito);
-            string asunto = proposito == "Verificacion" ? "Verificá tu correo de EventAura" :
-                proposito == "TelefonoOrg" ? "Verificá tu teléfono" : "Recuperá tu contraseña de EventAura";
-            var contenido = new Componentes.EtiquetaAyuda
-            {
-                Name = "mensajeBandejaSimulada", Location = new Point(24, 132), Size = new Size(460, 96),
-                Text = mensaje == null ? "No hay mensajes para este destino." :
-                    "Para: " + destinatario + Environment.NewLine + "Asunto: " + asunto + Environment.NewLine +
-                    "Código: " + mensaje.Codigo + Environment.NewLine + "Vence: " + mensaje.VenceEl.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
-            };
-            var cerrar = new Componentes.BotonSecundario { Name = "btnCerrarBandejaSimulada", Text = "Cerrar", Location = new Point(24, 244), Size = new Size(140, 40) };
-            cerrar.Click += (s, e) => Close();
-            Controls.AddRange(new Control[] { titulo, contenido, cerrar });
-        }
     }
 }

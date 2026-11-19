@@ -20,9 +20,7 @@ namespace Visual
         private readonly Label archivo = new Label { AutoSize = true, Text = "No seleccionaste documentación." };
         private byte[] imagen;
         private string nombreArchivo;
-        private readonly Componentes.EtiquetaAyuda bandejaTelefono = new Componentes.EtiquetaAyuda { Name="estadoEnvioTelefono", Location=new Point(24,254), Size=new Size(820,36) };
-        private readonly Componentes.BotonSecundario abrirBandejaTelefono = new Componentes.BotonSecundario { Name="btnAbrirBandejaTelefono", Text="Abrir bandeja simulada", Location=new Point(24,210), Size=new Size(200,38), Enabled=false };
-        private string destinatarioBandejaTelefono;
+        private readonly Componentes.EtiquetaAyuda estadoEnvioTelefono = new Componentes.EtiquetaAyuda { Name="estadoEnvioTelefono", Location=new Point(24,254), Size=new Size(820,36) };
 
         public frmSolicitudOrganizador()
         {
@@ -42,12 +40,7 @@ namespace Visual
             var confirmar = new Componentes.BotonSecundario { Text = "Confirmar teléfono", Location = new Point(615, 210), Size = new Size(190, 38) };
             enviar.Click += (s,e)=>EnviarCodigo();
             confirmar.Click += (s,e)=>Ejecutar(()=>GestorSolicitudesOrganizador.Instance.ConfirmarCodigoTelefono(telefono.Text,codigo.Text), "Teléfono verificado.");
-            Controls.AddRange(new Control[] { abrirBandejaTelefono, enviar, confirmar, bandejaTelefono });
-            abrirBandejaTelefono.Click += (s,e) =>
-            {
-                if (string.IsNullOrWhiteSpace(destinatarioBandejaTelefono)) return;
-                using (var bandeja = new frmBandejaSimulada(destinatarioBandejaTelefono, GestorCodigosCorreo.PropositoTelefonoOrganizador)) bandeja.ShowDialog(this);
-            };
+            Controls.AddRange(new Control[] { enviar, confirmar, estadoEnvioTelefono });
             Agregar("Nombre del local", local, 24, 298);
             Agregar("Dirección", direccion, 455, 298);
             Agregar("Capacidad", capacidad, 24, 368);
@@ -68,11 +61,9 @@ namespace Visual
             try
             {
                 GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(telefono.Text);
-                destinatarioBandejaTelefono = GestorSolicitudesOrganizador.NormalizarTelefonoArgentino(telefono.Text);
-                bandejaTelefono.Text = "Si el teléfono es válido, enviamos un código a la bandeja simulada.";
-                abrirBandejaTelefono.Enabled = true;
+                estadoEnvioTelefono.Text = "Si el teléfono es válido, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
             }
-            catch (Exception ex) { bandejaTelefono.Text = ex.Message; }
+            catch (Exception ex) { estadoEnvioTelefono.Text = ex.Message; }
         }
 
         private static TextBox Campo() => new TextBox { Width = 380 };

@@ -1,25 +1,28 @@
 # Seguridad de los códigos de verificación y recuperación
 
-La aplicación entregada usa `EnviadorSimulado`. Cada mensaje se escribe en un archivo `.eml` de la bandeja local de EventAura (`%LOCALAPPDATA%\EventAura\BandejaSimulada`), separado por destino y propósito. La vista que solicita el código devuelve siempre el mismo texto y no lo incluye. El código aparece solamente al abrir la bandeja simulada, que representa el paso de abrir el correo recibido.
+## Canal simulado
 
-La recuperación responde «Si la cuenta existe, enviamos un código.» tanto para una cuenta registrada como para una dirección inexistente. Ambas rutas tienen un mínimo de un segundo; CP-200 compara además los tiempos observados y exige una diferencia menor a 400 ms. Para una dirección inexistente se escribe un mensaje señuelo en la bandeja, pero no se persiste ningún código que permita cambiar una cuenta.
+La versión entregada usa `EnviadorSimulado`. Cada dirección tiene un archivo `.eml` propio bajo `%LOCALAPPDATA%\EventAura\BandejaSimulada`; el nombre del archivo se deriva de un hash del destino. La interfaz indica la carpeta, pero no contiene un botón, formulario ni otra función para abrirla o leer su contenido. El archivo se abre con una herramienta externa, como el Explorador de archivos. El código no se devuelve en los mensajes de estado.
 
-Los códigos vencen según `CORREO_CODIGO_MIN`, se almacenan verificados mediante hash, tienen límite de intentos y solo se consumen una vez. Emitir otro código invalida el anterior; el archivo de la bandeja se reemplaza por el último mensaje. Estas propiedades se cubren con CP-169 y CP-201. La verificación del teléfono de Organizador usa el mismo enviador y el mismo ciclo de emisión y consumo.
+Esto cambia el límite de confianza respecto de la implementación anterior. Antes, cualquier persona que pudiera usar la aplicación podía apretar «Abrir bandeja» y leer el código desde otro formulario de EventAura: era un agujero dentro de la aplicación. Ahora, la lectura del archivo ocurre fuera de EventAura y requiere acceso al archivo de correo simulado, que representa el acceso al buzón del destinatario. La simulación no demuestra la titularidad del correo ni del teléfono si otra persona ya tiene acceso a esa máquina o a ese archivo. Ese límite pertenece a la configuración de la entrega simulada; la arquitectura permite reemplazarla por `EnviadorSmtp`, que existe y no se activa sin configuración. No hay credenciales SMTP en el repositorio ni en archivos de configuración.
 
-## Límite de la simulación
+Los códigos vencen según `CORREO_CODIGO_MIN`, se guardan en la base como hash, tienen límite de intentos y se consumen una sola vez. Emitir uno nuevo invalida el anterior; en el archivo de esa dirección se reemplaza el registro del mismo propósito. Las respuestas de recuperación son uniformes para correo existente e inexistente, con tiempo mínimo de un segundo. Para la dirección inexistente se escribe un señuelo sin una cuenta ni código utilizable.
 
-La bandeja simulada **no demuestra que quien usa el sistema sea titular del correo o del teléfono**: cualquier persona con acceso a esa máquina puede abrirla. Es una decisión de configuración para la versión entregada y la demostración, no una limitación de arquitectura: `IEnviadorCodigos` admite las estrategias `EnviadorSimulado` y `EnviadorSmtp`. SMTP existe, compila y no se activa en esta entrega. No se guardan credenciales de correo en el repositorio ni en archivos de configuración.
+## Auditoría
 
-## Verificaciones
+La emisión queda registrada en auditoría: verificación de correo, recuperación y verificación de teléfono. La recuperación anota el destino y si había una cuenta asociada, sin registrar el código. El cambio de contraseña por recuperación queda registrado al completarse; los rechazos de restablecimiento también se registran con el código de regla. El cambio autenticado de contraseña ya estaba auditado por `GestorUsuarios`. CP-168, CP-169, CP-170 y CP-202 comprueban emisión, recuperación correcta/rechazada y envío telefónico.
 
-- CP-168: el alta permite consultar el código en la bandeja simulada, no en el mensaje de estado, y confirmar el correo.
-- CP-169: un código vencido se rechaza sin cambiar la contraseña.
-- CP-173: la recuperación completa se realiza desde el formulario y la bandeja.
-- CP-200: la recuperación no distingue cuenta existente de inexistente por mensaje o tiempo observado; el código no aparece en la pantalla solicitante y el señuelo no recupera cuentas.
-- CP-201: un código nuevo invalida el previo y el código vigente no se reutiliza.
-- CP-202: el código telefónico solo aparece al abrir la bandeja simulada.
-- CP-203: el alta nueva y el correo ya registrado tienen el mismo resultado visible; repetir el alta no modifica la contraseña existente.
+## Interfaz y pruebas
 
-La batería completa terminó en **347/347**. En esta tanda CP-12 se amplió de 25 a 26 formularios para incluir la nueva bandeja simulada; los 347 casos pasaron en 1 min 26 s de tiempo de pruebas. La primera corrida previa a ese ajuste contó 346/347 porque CP-12 conservaba el inventario anterior; no fue un fallo de negocio.
+Se eliminó el formulario de bandeja, el botón «Abrir bandeja» y cualquier referencia de producción que permita consultar el mensaje o el código. El inventario vuelve a **25 formularios**. CP-12 fija ese total. CP-168, CP-173 y CP-202 comprueban que el código no aparece en los controles; CP-173 además barre todos los archivos C# de `Visual/` buscando rutas de acceso o presentación del código. La misma verificación estática se ejecuta desde una prueba de alta.
 
-Las cuatro figuras regeneradas están en `docs/capturas/instructivo/` y en `Pruebas/Figuras-Instructivo-2026-11-16/100/`; muestran el recorrido de Paula y el total de $99.625. La evidencia al 150 % queda en `Pruebas/Figuras-Instructivo-2026-11-16/150/`.
+- CP-168: el registro escribe el mensaje en archivo y permite confirmar el correo ingresando el código leído fuera de EventAura.
+- CP-169: un código vencido se rechaza sin cambiar la contraseña y deja registro de auditoría.
+- CP-170: el código válido restablece la contraseña usando las validaciones y el hash vigentes; emisión y cambio quedan auditados.
+- CP-173: recuperación desde la interfaz sin mostrar el código y con cambio de contraseña exitoso.
+- CP-200: recuperación no enumera correos por texto ni por tiempo observado.
+- CP-201: un código nuevo invalida al anterior y el vigente no se reutiliza.
+- CP-202: el código telefónico se guarda fuera de la interfaz y su emisión se audita.
+- CP-203: el alta nueva y el correo existente tienen respuesta uniforme y no exponen el código.
+
+La batería completa posterior a estos cambios terminó en **347/347**, en **1,4447 minutos**. CP-12 confirma que el inventario vuelve a 25 formularios. No se modificó ninguna prueba de negocio.
