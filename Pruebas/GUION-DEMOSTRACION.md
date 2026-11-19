@@ -1,6 +1,6 @@
 # Guion de demostración de EventAura
 
-Guion para recorrer el sistema sin ayuda. Fue actualizado el 17/11/2026 contra el código y la semilla actuales. Los códigos, números de pedido y fechas concretas se generan durante el recorrido. El pago y la bandeja de correo son simulados: no uses una tarjeta real ni esperes un correo externo.
+Guion para recorrer el sistema sin ayuda. Fue actualizado el 18/11/2026 y verificado contra los recorridos de recuperación, revisión de eventos, los formularios y la semilla. Los códigos, números de pedido y fechas concretas se generan durante el recorrido. El pago y las bandejas de correo y teléfono son simulados: no uses una tarjeta real ni esperes un correo externo.
 
 ## 1. Preparar y abrir
 
@@ -13,9 +13,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\Proyecto.ps1 -Accion
 if ($LASTEXITCODE -ne 0) { throw 'Falló la compilación; no sigas con la demo.' }
 ```
 
-Para una **base nueva y vacía**, en SQL Server Management Studio ejecutá `BaseDatos/01-esquema.sql` y después `BaseDatos/02-semilla.sql`. Luego, en orden numérico, ejecutá `04-seguridad-ingreso.sql`, `05-check-estado-entradas.sql`, `06-prioridad-temporal.sql`, `07-indice-unico-seguros.sql`, `08-seguridad-cuenta-auditoria.sql`, `09-imagenes-eventos.sql`, `10-restringir-cantidad-vendida.sql`, `11-perfiles-administrador-organizador.sql`, `12-solicitudes-organizador.sql`, `13-revision-primer-evento.sql` y `14-primer-evento-aprobado.sql`. `03-datos-reporte.sql` es una carga grande para mediciones y no hace falta para esta presentación. Antes de cada ejecución confirmá en SSMS que el selector apunta a la base de demostración. No ejecutes `01` ni `02` sobre una base que ya tiene datos.
+Para una **base nueva y vacía**, en SQL Server Management Studio ejecutá `BaseDatos/01-esquema.sql` y después `BaseDatos/02-semilla.sql`. Luego, en orden numérico, ejecutá `04-seguridad-ingreso.sql`, `05-check-estado-entradas.sql`, `06-prioridad-temporal.sql`, `07-indice-unico-seguros.sql`, `08-seguridad-cuenta-auditoria.sql`, `09-imagenes-eventos.sql`, `10-restringir-cantidad-vendida.sql`, `11-perfiles-administrador-organizador.sql`, `12-solicitudes-organizador.sql`, `13-revision-primer-evento.sql`, `14-primer-evento-aprobado.sql` y `15-motivo-rechazo-evento.sql`. `03-datos-reporte.sql` es una carga grande para mediciones y no hace falta para esta presentación. Antes de cada ejecución confirmá en SSMS que el selector apunta a la base de demostración. No ejecutes `01` ni `02` sobre una base que ya tiene datos.
 
-En una base existente, no vuelvas a ejecutar `01` ni `02`: aplicá solo los scripts numerados que falten, en orden, sobre esa misma base. Los scripts 13 y 14 son los nuevos de esta actualización del guion.
+En una base existente, no vuelvas a ejecutar `01` ni `02`: aplicá solo los scripts numerados que falten, en orden, sobre esa misma base. El script `15-motivo-rechazo-evento.sql` agrega el motivo de rechazo y debe aplicarse si falta.
 
 
 Si usás la copia de demostración aislada que ya preparó el equipo, ejecutá `Pruebas/EjecutarBateriaSegura.ps1` solo antes de la demo: crea y siembra `BddEventAura_Pruebas`. **No lo vuelvas a correr en medio del recorrido**, porque recrea esa base y borra las compras de la demostración. Cerrá todas las ventanas de EventAura antes de preparar o reiniciar la base.
@@ -35,10 +35,10 @@ Abrí `Visual/bin/Debug/Visual.exe` (o la copia aislada que te haya indicado el 
 Los dos accesos de gestión son distintos a propósito. El Administrador gobierna la plataforma; el Organizador administra únicamente sus locales. Los clientes compran, se suscriben y pueden presentar solicitudes, pero una solicitud pendiente no cambia su perfil ni concede permisos. Las cuentas y contraseñas son de la semilla local, no de producción.
 ## 2. Crear una cuenta, verificarla y recuperar el acceso
 
-1. En el acceso, pulsá **Crear Cuenta**. Completá Nombre, Apellido, Mail, Contraseña y Confirmar Contraseña con datos propios de demostración. Usá una dirección nueva y una contraseña que supere el medidor; pulsá **Registrarse**. **Vas a ver** `Bandeja simulada de correo`, el destinatario, el asunto `Verificá tu correo de EventAura`, un código de seis dígitos y su vencimiento. **Importa** porque el sistema no habilita compras hasta verificar la dirección.
+1. En el acceso, pulsá **Crear Cuenta**. Completá Nombre, Apellido, Mail, Contraseña y Confirmar Contraseña con datos propios de demostración. Usá una dirección nueva y una contraseña que supere el medidor; pulsá **Registrarse**. La vista cambia a **Bandeja simulada de correo** y muestra destinatario, asunto, código de seis dígitos y vencimiento. Esta bandeja es el formulario 26 del inventario: el código se consulta abriendo la bandeja, no se incluye en el mensaje de solicitud. **Importa** porque el sistema no habilita compras hasta verificar la dirección.
 2. Copiá ese código en **Código de verificación** y pulsá **Confirmar correo**. **Vas a ver** `Correo verificado. Ya podés iniciar sesión y comprar.` y el botón **Volver al acceso**. Pulsalo e iniciá sesión con la cuenta recién creada. **Vas a ver** el inicio del cliente y la nueva cuenta en su nivel inicial.
-3. Cerrá sesión. En el acceso pulsá **Recuperar contraseña**. Escribí el correo de la cuenta y pulsá **Enviar código**. **Vas a ver** `Si la cuenta existe, enviamos un código. Revisá la bandeja simulada.`. El código aparece en la bandeja simulada del formulario, con su vencimiento.
-4. En **Código de recuperación**, copiá el número que aparece junto al estado de recuperación, escribí y confirmá la contraseña nueva, y pulsá **Restablecer contraseña**. **Vas a ver** `La contraseña se actualizó. Ya podés iniciar sesión.`. Volvé al acceso e iniciá sesión con la contraseña nueva. **Importa** porque la recuperación vuelve a validar y almacenar la contraseña usando el mismo mecanismo seguro que el registro.
+3. Cerrá sesión. En el acceso pulsá **Recuperar contraseña**. Escribí el correo de la cuenta y pulsá **Enviar código**. **Vas a ver** `Si la cuenta existe, enviamos un código.` y se habilita **Abrir bandeja**. El mismo texto aparece con un correo inexistente; la respuesta tarda al menos un segundo en ambos casos. El código no aparece en ese formulario ni en el mensaje de respuesta.
+4. Pulsá **Abrir bandeja**. **Vas a ver** la ventana **Bandeja simulada de correo**, con destinatario, asunto, código de seis dígitos y vencimiento. Es el equivalente local de abrir el correo de la persona dueña de la cuenta: el pedido de recuperación no revela el código. Copialo, cerrá la bandeja, ingresalo como **Código de recuperación**, escribí y confirmá la contraseña nueva, y pulsá **Restablecer contraseña**. **Vas a ver** `La contraseña se actualizó. Ya podés iniciar sesión.`. Volvé al acceso e iniciá sesión con la contraseña nueva. Cada código vence, se consume una sola vez y pedir otro invalida el anterior. **Importa** porque la recuperación conserva los controles de contraseña y el código solo se consulta desde la bandeja simulada.
 
 ## 3. Comprar de punta a punta
 
@@ -88,7 +88,7 @@ Cerrá la sesión del cliente e iniciá como Ana (`admin@eventaura.com` / `Admin
 
 Iniciá como el Organizador de la semilla. Pulsá **Registrar local** para crear un local propio, o **Mis locales** para elegir uno existente y abrir sus eventos. En **Agregar evento**, completá nombre, fecha futura y categoría; **Registrar** lo guarda como **Borrador**. Administralo, agregá al menos un sector con capacidad positiva y luego pulsá **Publicar**. Agregar el sector no publica el evento.
 
-El Organizador de la semilla ya tiene una publicación aprobada, así que sus siguientes eventos pasan directamente a **Publicado** y aparecen en el catálogo. Para mostrar la revisión inicial, usá una cuenta que haya sido promovida desde una solicitud nueva: su primer evento queda **EnRevision**. No aparece en el catálogo ni acepta ventas. El Administrador lo encuentra en **Eventos en revisión** y pulsa **Aprobar y publicar**; a partir de esa aprobación, las publicaciones siguientes de ese Organizador son directas.
+El Organizador de la semilla ya tiene una publicación aprobada, así que sus siguientes eventos pasan directamente a **Publicado** y aparecen en el catálogo. Para mostrar la revisión inicial, usá una cuenta que haya sido promovida desde una solicitud nueva: su primer evento queda **EnRevision**. No aparece en el catálogo ni acepta ventas. El Administrador lo encuentra en **Eventos en revisión**, selecciona el evento y puede pulsar **Aprobar y publicar** o escribir un motivo y pulsar **Rechazar y devolver**. Tras rechazarlo, el Organizador lo ve en **Mis eventos** como **Borrador**, con el motivo en la columna **Motivo del rechazo**. Puede corregirlo y volver a pulsar **Publicar**; como todavía no tuvo un evento aprobado, vuelve a **EnRevision**.
 
 El Organizador también puede controlar ingresos, administrar su lista de espera y abrir **Reportes**. Sus cifras se limitan a sus propios eventos. Cambiar de perfil a Administrador no concede propiedad sobre esos locales.
 
@@ -113,8 +113,7 @@ Probá estos rechazos solo con datos de demostración. Los textos entre comillas
 | No suscriptor intenta comprar un cupo liberado dentro de los 15 minutos de prioridad | `El lugar liberado está reservado temporalmente para suscriptores inscriptos en la lista de espera. Intentá al finalizar la ventana de prioridad.` |
 | Suscriptor intenta anotarse cuando aún quedan entradas | `El evento todavía tiene entradas: la lista de espera se habilita cuando se agota.` |
 | Anotarse en lista de espera para evento pasado o no publicado | `El evento ya pasó o no está publicado: no admite inscripciones en la lista de espera.` |
-| Ingresar código de recuperación incorrecto | `El código no es correcto. Revisá el correo y volvé a intentar.` |
-| Usar código vencido o ya utilizado | `El código venció o ya se usó. Solicitá uno nuevo.` |
+| Ingresar un código de recuperación incorrecto, vencido o ya consumido | `El código no es válido o venció. Solicitá uno nuevo.` |
 | Registrar correo que ya pertenece a una cuenta | `Ya existe una cuenta registrada con ese mail.` |
 | Usar contraseña por debajo del mínimo de fortaleza | `La contraseña no alcanza la fortaleza mínima. Sumá variedad de mayúsculas, minúsculas, números o símbolos.` |
 | Intentar contratar una segunda suscripción activa | `Ya tenés una suscripción activa: no se pueden tener dos al mismo tiempo.` La interfaz puede agregar el plan y vencimiento actuales. |
@@ -134,6 +133,8 @@ Probá estos rechazos solo con datos de demostración. Los textos entre comillas
 | Rechazar una solicitud con el motivo vacío | `Escribí el motivo del rechazo.` |
 | Vender un evento en revisión o no publicado | `El evento no está disponible para la venta: ya pasó o no está publicado.` |
 | Aprobar otra vez un evento que ya no está en revisión | `El evento ya no está pendiente de revisión.` |
+| Rechazar un evento en revisión sin escribir un motivo | `Escribí el motivo del rechazo.` El evento no cambia de estado. |
+| Un Organizador intenta rechazar su propio evento o el de otro | `Esta operación es solo para el Administrador` |
 | Comprar en evento pasado o no publicado | `El evento no está disponible para la venta: ya pasó o no está publicado.` |
 | Usar QR inexistente | `El código no existe.` |
 | Usar QR de otro evento | `La entrada corresponde a otro evento.` |
