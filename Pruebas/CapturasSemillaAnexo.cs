@@ -63,16 +63,19 @@ namespace Pruebas
                 Capturar(carpeta, "frmCrearAdministrador.png", () => new Visual.frmCrearUsuario(true));
             });
 
+            // Estas dos vistas son previas al inicio de sesión; la barra debe quedar solo con la marca.
+            GestorSesion.Instance.Cerrar();
+            Capturar(carpeta, "frmCrearUsuario.png", () => new Visual.frmCrearUsuario());
+            Capturar(carpeta, "frmRecuperarContraseña.png", () => new Visual.frmCambiarContraseña(true), form =>
+            {
+                form.Controls.Find("txtMail", true).OfType<TextBox>().Single().Text = "bronce@eventaura.com";
+                form.Controls.Find("btnEnviarCodigo", true).OfType<Button>().Single().PerformClick();
+            });
+
             var cliente = Autenticar("bronce@eventaura.com");
             CapturarComo(cliente, "Cliente", () =>
             {
-                Capturar(carpeta, "frmCrearUsuario.png", () => new Visual.frmCrearUsuario());
                 Capturar(carpeta, "frmCambiarContraseña.png", () => new Visual.frmCambiarContraseña());
-                Capturar(carpeta, "frmRecuperarContraseña.png", () => new Visual.frmCambiarContraseña(true), form =>
-                {
-                    form.Controls.Find("txtMail", true).OfType<TextBox>().Single().Text = "bronce@eventaura.com";
-                    form.Controls.Find("btnEnviarCodigo", true).OfType<Button>().Single().PerformClick();
-                });
                 Capturar(carpeta, "frmSolicitudOrganizador.png", () => new Visual.frmSolicitudOrganizador(), form =>
                 {
                     form.Controls.Find("telefono", true).OfType<TextBox>().Single().Text = "+5493410000123";

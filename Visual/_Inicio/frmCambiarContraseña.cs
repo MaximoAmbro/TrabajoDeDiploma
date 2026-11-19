@@ -70,17 +70,18 @@ namespace Visual
         {
             float escala; using (var g = CreateGraphics()) escala = g.DpiX / Tema.DpiDiseno * Font.SizeInPoints / Tema.Cuerpo.SizeInPoints;
             int px(float valor) { return (int)Math.Round(valor * escala); }
-            _fortaleza.SetBounds(px(24), px(_recuperacion ? 368 : 332), px(392), px(24));
+            int margen = px(24);
+            _fortaleza.SetBounds(margen, px(_recuperacion ? 388 : 332), Math.Max(1, ClientSize.Width - 2 * margen), px(24));
             if (!_recuperacion) return;
-            ClientSize = new Size(px(440), px(556));
+            ClientSize = new Size(px(440), px(580));
             txtActual.SetBounds(px(24), px(220), px(184), px(28));
-            label3.Location = new Point(px(24), px(300));
-            TxtPassword.Location = new Point(px(24), px(324));
-            label4.Location = new Point(px(24), px(400));
-            TxtConfirmpassword.Location = new Point(px(24), px(424));
-            checkbxShowPass.Location = new Point(px(24), px(468));
-            btnVolver.Location = new Point(px(24), px(508));
-            btnconfirmar.Location = new Point(px(232), px(508));
+            label3.Location = new Point(px(24), px(328));
+            TxtPassword.Location = new Point(px(24), px(352));
+            label4.Location = new Point(px(24), px(420));
+            TxtConfirmpassword.Location = new Point(px(24), px(444));
+            checkbxShowPass.Location = new Point(px(24), px(484));
+            btnVolver.Location = new Point(px(24), px(524));
+            btnconfirmar.Location = new Point(px(232), px(524));
             _enviarCodigo.SetBounds(px(232), px(216), px(184), px(36));
             _estadoCorreo.SetBounds(px(24), px(260), px(392), px(54));
         }

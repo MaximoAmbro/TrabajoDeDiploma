@@ -29,7 +29,7 @@ namespace Negocio
             return new[] { "Evento", "Categoría", "Entradas", "Ingreso bruto", "Ticket prom.", "% ocup." };
         }
 
-        public override DataTable Obtener(RepositorioReportes repo)
+        internal override DataTable Obtener(RepositorioReportes repo)
         {
             DataTable crudo = repo.VentasPorEvento(InicioRango, FinRango, Categoria, IdOrganizador);
             DataTable tabla = NuevaTabla(typeof(string), typeof(string), typeof(int), typeof(decimal), typeof(decimal), typeof(decimal));
@@ -63,7 +63,9 @@ namespace Negocio
             {
                 return filas.Count == 0
                     ? "No hay eventos en el período elegido."
-                    : $"Ninguno de los {filas.Count} eventos del período registra ventas confirmadas.";
+                    : filas.Count == 1
+                        ? "El único evento del período no registra ventas confirmadas."
+                        : $"Ninguno de los {filas.Count} eventos del período registra ventas confirmadas.";
             }
 
             var categoria = filas.GroupBy(f => Convert.ToString(f[1]))

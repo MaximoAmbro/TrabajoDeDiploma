@@ -16,14 +16,14 @@ Usá una sola vista completa por pantalla para mostrar la distribución. Epígra
 | frmAdministrarEvento | `completas/Fase8/frmAdministrarEvento.png` | Semilla regenerada 19/11/2026 |
 | frmAgregarEvento | `completas/Fase8/frmAgregarEvento.png` | Semilla regenerada 19/11/2026 |
 | frmAgregarSector | `completas/Fase8/frmAgregarSector.png` | Semilla regenerada 19/11/2026 |
-| frmAuditoria | `completas/Fase8/frmAuditoria.png` | Semilla regenerada 19/11/2026 |
+| frmAuditoria | `completas/Fase8/frmAuditoria.png` | Columnas traducidas y completas dentro del panel, 19/11/2026 |
 | frmCambiarContraseña | `completas/Fase8/frmCambiarContraseña.png` | Semilla regenerada 19/11/2026 |
 | FrmCompraCliente-total | `completas/Fase8/FrmCompraCliente-total.png` | Fase8b/despues-100 |
 | FrmCompraCliente | `completas/Fase8/FrmCompraCliente.png` | Fase8b/despues-100 |
 | frmConfirmacion | `completas/Fase8/frmConfirmacion.png` | Fase8b/despues-100 |
 | frmControlIngreso | `completas/Fase8/frmControlIngreso.png` | Semilla regenerada 19/11/2026 |
 | frmCrearAdministrador | `completas/Fase8/frmCrearAdministrador.png` | Alta protegida desde el panel del Administrador, 19/11/2026 |
-| frmCrearUsuario | `completas/Fase8/frmCrearUsuario.png` | Semilla regenerada 19/11/2026 |
+| frmCrearUsuario | `completas/Fase8/frmCrearUsuario.png` | Sin sesión activa; medidor completo, 19/11/2026 |
 | frmEventosCliente | `completas/Fase8/frmEventosCliente.png` | Fase8b/despues-100 |
 | frmEventosLocal | `completas/Fase8/frmEventosLocal.png` | Semilla regenerada 19/11/2026; incluye «Motivo del rechazo» |
 | frmHistorialCliente | `completas/Fase8/frmHistorialCliente.png` | Fase8b/despues-100 |
@@ -34,9 +34,9 @@ Usá una sola vista completa por pantalla para mostrar la distribución. Epígra
 | frmMenuPropietario | `completas/Fase8/frmMenuPropietario.png` | Semilla regenerada 19/11/2026 |
 | frmMisLocales | `completas/Fase8/frmMisLocales.png` | Semilla regenerada 19/11/2026 |
 | frmPago | `completas/Fase8/frmPago.png` | Fase8b/despues-100 |
-| frmRecuperarContraseña | `completas/Fase8/frmRecuperarContraseña.png` | Semilla regenerada 19/11/2026 |
-| frmRegistrarLocal | `completas/Fase8/frmRegistrarLocal.png` | Semilla regenerada 19/11/2026 |
-| frmReportes | `completas/Fase8/frmReportes.png` | Semilla regenerada 19/11/2026 |
+| frmRecuperarContraseña | `completas/Fase8/frmRecuperarContraseña.png` | Sin sesión activa; aviso separado de «Nueva Contraseña», 19/11/2026 |
+| frmRegistrarLocal | `completas/Fase8/frmRegistrarLocal.png` | Rótulo «Dirección» corregido, 19/11/2026 |
+| frmReportes | `completas/Fase8/frmReportes.png` | Lectura singular corregida para un solo evento, 19/11/2026 |
 | frmRevisarEventos | `completas/Fase8/frmRevisarEventos.png` | Semilla regenerada 19/11/2026; estado vacío real |
 | frmRevisarSolicitudesOrganizador | `completas/Fase8/frmRevisarSolicitudesOrganizador.png` | Semilla regenerada 19/11/2026 |
 | frmSolicitudOrganizador | `completas/Fase8/frmSolicitudOrganizador.png` | Semilla regenerada 19/11/2026 |
@@ -46,7 +46,7 @@ Usá una sola vista completa por pantalla para mostrar la distribución. Epígra
 
 Las cinco vistas de cliente anteriores se regeneraron el 18/11/2026 dentro de `Mi cuenta`, con el botón **Solicitar ser Organizador** visible y datos de la semilla de Paula. La vista de compra muestra el panel central actual; durante la captura el contenedor no dibujó el menú lateral en ese estado. Esa ausencia queda registrada como limitación visual observada, no reconstruida sobre la imagen.
 
-Las pantallas de Organizador y Administrador, las cuatro vistas afectadas por el cambio del canal de códigos y la vista de eventos del local se regeneraron el 19/11/2026 contra la semilla de `BaseDatos/02-semilla.sql` y las migraciones. No se usaron filas de prueba; la revisión de eventos queda vacía porque la semilla no tiene eventos pendientes. La tabla de eventos muestra la columna «Motivo del rechazo». Todas las imágenes de `paneles/` son recortes de contenido: no incluyen el menú lateral ni la barra superior. Los nombres y áreas de cada recorte, incluido el desglose de tablas y formularios anchos, y su ancho de inserción están en `ancho-minimo-8_1pt.tsv`. Epígrafe: **«Detalle de [contenido], en el panel central de [pantalla].»**
+Las pantallas de Organizador y Administrador, las cuatro vistas afectadas por el cambio del canal de códigos y la vista de eventos del local se regeneraron el 19/11/2026 contra la semilla de `BaseDatos/02-semilla.sql` y las migraciones. No se usaron filas de prueba; la revisión de eventos queda vacía porque la semilla no tiene eventos pendientes. La tabla de eventos muestra la columna «Motivo del rechazo». Las capturas de Crear cuenta y Recuperar contraseña se tomaron sin sesión activa; la barra muestra solo la marca. Todas las imágenes de `paneles/` son recortes de contenido: no incluyen el menú lateral ni la barra superior. Los nombres y áreas de cada recorte, incluido el desglose de tablas y formularios anchos, y su ancho de inserción están en `ancho-minimo-8_1pt.tsv`. Epígrafe: **«Detalle de [contenido], en el panel central de [pantalla].»**
 
 Se generaron 90 recortes: 87 quedan por debajo de 16 cm. 3 mapas de sectores superan ese ancho porque el mapa completo ocupa más de 16 cm; no se redujeron cortando el mapa.
 

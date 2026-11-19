@@ -48,7 +48,7 @@ namespace Visual
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(248, 20);
             this.label5.TabIndex = 49;
-            this.label5.Text = "Direccion";
+            this.label5.Text = "Dirección";
             // 
             // txtDireccion
             // 

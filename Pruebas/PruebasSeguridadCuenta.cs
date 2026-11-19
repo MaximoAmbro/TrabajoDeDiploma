@@ -362,7 +362,22 @@ namespace Pruebas
                 {
                     Mostrar(form);
                     Assert.IsTrue(form.Visible);
-                    Assert.IsNotNull(ControlDe<DataGridView>(form, "tablaAuditoria").DataSource);
+                    var tabla = ControlDe<DataGridView>(form, "tablaAuditoria");
+                    Assert.IsNotNull(tabla.DataSource);
+                    Assert.AreEqual(8, tabla.Columns.Count, "Se deben mostrar las ocho columnas de auditoría.");
+                    CollectionAssert.AreEqual(
+                        new[] { "N.º", "ID usuario", "Correo", "Acción", "Entidad", "ID dato", "Fecha y hora", "Resultado" },
+                        tabla.Columns.Cast<DataGridViewColumn>().Select(c => c.HeaderText).ToArray());
+                    Assert.IsTrue(tabla.Columns.Cast<DataGridViewColumn>().All(c => c.Visible), "Todas las columnas deben estar visibles: " +
+                        string.Join("; ", tabla.Columns.Cast<DataGridViewColumn>().Select(c => c.HeaderText + "=" + c.Visible + "/" + c.Width)) +
+                        $"; tabla={tabla.ClientSize.Width}, formulario={form.ClientSize.Width}.");
+                    Assert.IsTrue(tabla.Columns.Cast<DataGridViewColumn>().Where(c => c.Visible).Sum(c => c.Width)
+                        <= tabla.ClientSize.Width, "Las columnas de auditoría deben entrar sin corte horizontal.");
+                    Assert.IsTrue(Enumerable.Range(0, tabla.Columns.Count).All(i =>
+                        tabla.GetColumnDisplayRectangle(i, false).Right <= tabla.ClientSize.Width),
+                        "Todas las columnas de auditoría deben quedar dentro del panel.");
+                    Assert.IsTrue(tabla.Right <= form.ClientSize.Width,
+                        $"La grilla no debe exceder el formulario: derecha={tabla.Right}, ancho={form.ClientSize.Width}, grilla={tabla.ClientSize.Width}.");
                 }
             });
         }
