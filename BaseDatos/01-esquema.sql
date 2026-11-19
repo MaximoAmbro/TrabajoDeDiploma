@@ -22,7 +22,8 @@ CREATE TABLE Usuario (
     Apellido    VARCHAR(100) NULL,
     Mail        VARCHAR(150) NULL,
     Contraseña  VARCHAR(100) NULL,
-    TipoUsuario VARCHAR(20)  NULL      -- Cliente|Organizador|Administrador (RN-05)
+    TipoUsuario VARCHAR(20)  NULL CONSTRAINT CK_Usuario_TipoUsuario
+        CHECK (TipoUsuario IN ('Cliente','Organizador','Administrador')) -- RN-05
 );
 
 IF OBJECT_ID('dbo.Cliente', 'U') IS NULL
@@ -40,8 +41,8 @@ CREATE TABLE Propietario (
 
 IF OBJECT_ID('dbo.Administrador', 'U') IS NULL
 CREATE TABLE Administrador (
-    ID INT PRIMARY KEY,
-    FOREIGN KEY (ID) REFERENCES Usuario(ID)
+    ID INT NOT NULL CONSTRAINT PK_Administrador PRIMARY KEY,
+    CONSTRAINT FK_Administrador_Usuario FOREIGN KEY (ID) REFERENCES Usuario(ID)
 );
 
 IF OBJECT_ID('dbo.Locales', 'U') IS NULL

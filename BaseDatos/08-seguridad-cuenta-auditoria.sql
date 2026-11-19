@@ -41,14 +41,17 @@ BEGIN
 END;
 
 IF NOT EXISTS (SELECT 1 FROM dbo.Parametros WHERE Clave='CORREO_CODIGO_MIN')
-    INSERT dbo.Parametros(Clave,Valor,Descripcion,Regla) VALUES ('CORREO_CODIGO_MIN','10','Vigencia del código enviado por correo, en minutos','RN-43');
+    INSERT dbo.Parametros(Clave,Valor,Descripcion,Regla) VALUES ('CORREO_CODIGO_MIN','10','Vigencia del código enviado por correo, en minutos','RN-44');
 IF NOT EXISTS (SELECT 1 FROM dbo.Parametros WHERE Clave='CORREO_CODIGO_INTENTOS_MAX')
-    INSERT dbo.Parametros(Clave,Valor,Descripcion,Regla) VALUES ('CORREO_CODIGO_INTENTOS_MAX','5','Intentos máximos para usar un código de correo','RN-43');
+    INSERT dbo.Parametros(Clave,Valor,Descripcion,Regla) VALUES ('CORREO_CODIGO_INTENTOS_MAX','5','Intentos máximos para usar un código de correo','RN-44');
 IF NOT EXISTS (SELECT 1 FROM dbo.Parametros WHERE Clave='SESION_INACTIVIDAD_MIN')
     INSERT dbo.Parametros(Clave,Valor,Descripcion,Regla) VALUES ('SESION_INACTIVIDAD_MIN','15','Minutos de inactividad antes de cerrar sesión','RN-46');
 IF NOT EXISTS (SELECT 1 FROM dbo.Parametros WHERE Clave='SESION_AVISO_SEG')
     INSERT dbo.Parametros(Clave,Valor,Descripcion,Regla) VALUES ('SESION_AVISO_SEG','60','Segundos de aviso antes del cierre por inactividad','RN-46');
 IF NOT EXISTS (SELECT 1 FROM dbo.Parametros WHERE Clave='PWD_FORTALEZA_MIN')
     INSERT dbo.Parametros(Clave,Valor,Descripcion,Regla) VALUES ('PWD_FORTALEZA_MIN','4','Puntaje mínimo de fortaleza de contraseña','RN-47');
+
+UPDATE dbo.Parametros SET Regla='RN-44'
+WHERE Clave IN ('CORREO_CODIGO_MIN','CORREO_CODIGO_INTENTOS_MAX');
 
 COMMIT;

@@ -8,7 +8,7 @@ BEGIN TRANSACTION;
 IF OBJECT_ID('dbo.Administrador','U') IS NULL
 BEGIN
     CREATE TABLE dbo.Administrador (
-        ID INT NOT NULL PRIMARY KEY,
+        ID INT NOT NULL CONSTRAINT PK_Administrador PRIMARY KEY,
         CONSTRAINT FK_Administrador_Usuario FOREIGN KEY (ID) REFERENCES dbo.Usuario(ID)
     );
 END;
