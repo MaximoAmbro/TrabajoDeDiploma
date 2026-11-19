@@ -15,7 +15,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasSeguridadCuenta
     {
-        // CP-167 — RF-05, RN-43: impedir la compra mientras la cuenta no verificó el correo.
+        // CP-167 — RF-14, RN-43: impedir la compra mientras la cuenta no verificó el correo.
         [TestMethod("CP-167: Una cuenta sin verificar no inicia una compra")]
         public void CP167_CorreoNoVerificadoNoCompra()
         {
@@ -27,7 +27,7 @@ namespace Pruebas
             Assert.AreEqual("RN-43", Assert.ThrowsException<ReglaNegocioException>(() => GestorCompras.Instance.Iniciar(new Paquete { IdEvento = evento.Id }, cliente)).Regla);
         }
 
-        // CP-168 — RF-01, RN-43: confirmar correo con el código leído fuera de la aplicación.
+        // CP-168 — RF-14, RN-43: confirmar correo con el código leído fuera de la aplicación.
         [TestMethod("CP-168: El alta guarda el código fuera de la aplicación y verifica el correo")]
         public void CP168_RegistroVerificaCorreoEnLaInterfaz()
         {
@@ -64,7 +64,7 @@ namespace Pruebas
             });
         }
 
-        // CP-169 — RF-01, RN-44: rechazar un código vencido sin alterar la contraseña almacenada.
+        // CP-169 — RF-15, RN-44: rechazar un código vencido sin alterar la contraseña almacenada.
         [TestMethod("CP-169: Un código de recuperación vencido se rechaza sin cambiar la contraseña")]
         public void CP169_CodigoVencido()
         {
@@ -81,7 +81,7 @@ namespace Pruebas
                 .Any(r => r.UsuarioId == cliente.Id && r.Resultado == "Rechazado: RN-44"));
         }
 
-        // CP-170 — RF-01, RN-02/RN-44: recuperar la cuenta usando la validación y el hash vigentes.
+        // CP-170 — RF-15/RF-17, RN-02/RN-44: recuperar con las validaciones y el hash vigentes.
         [TestMethod("CP-170: La recuperación activa cambia la contraseña con el hash del sistema")]
         public void CP170_RecuperacionActiva()
         {
@@ -99,7 +99,7 @@ namespace Pruebas
                 .Any(r => r.UsuarioId == cliente.Id && r.Resultado == "Correcto"));
         }
 
-        // CP-171 — RF-01, RN-44: la estrategia SMTP falla claramente si no está configurada.
+        // CP-171 — RF-14/RF-15, RN-44: SMTP falla claramente si no está configurado.
         [TestMethod("CP-171: SMTP no envía si faltan variables de entorno")]
         public void CP171_SmtpSinConfigurarFallaClaro()
         {
@@ -114,7 +114,7 @@ namespace Pruebas
             finally { for (int i=0;i<nombres.Length;i++) Environment.SetEnvironmentVariable(nombres[i], anteriores[i]); }
         }
 
-        // CP-172 — RF-01, RN-02/RN-47: medir y exigir fortaleza al registrar o cambiar una clave.
+        // CP-172 — RF-17, RN-02/RN-47: medir y exigir fortaleza al registrar o cambiar una clave.
         [TestMethod("CP-172: Registro y cambio muestran y exigen la fortaleza mínima")]
         public void CP172_FortalezaMinimaYMedidor()
         {
@@ -138,7 +138,7 @@ namespace Pruebas
             });
         }
 
-        // CP-173 — RF-01, RN-44: recuperar desde la interfaz; el archivo se lee fuera de la aplicación.
+        // CP-173 — RF-15, RN-44: recuperar desde la interfaz; el archivo se lee fuera de la aplicación.
         [TestMethod("CP-173: La recuperación no muestra el código y permite restablecer desde la pantalla")]
         public void CP173_RecuperacionDesdeLaInterfaz()
         {
@@ -170,7 +170,7 @@ namespace Pruebas
             });
         }
 
-        // CP-200 — RF-01, RN-44: la recuperación no distingue correo existente por texto ni latencia.
+        // CP-200 — RF-15, RN-44: la recuperación no distingue correo existente por texto ni latencia.
         [TestMethod("CP-200: Recuperación no enumera correos y la respuesta tarda lo mismo")]
         public void CP200_RecuperacionNoEnumeraYRespondeUniforme()
         {
@@ -216,7 +216,7 @@ namespace Pruebas
             });
         }
 
-        // CP-201 — RF-01, RN-44: emitir un código nuevo invalida el anterior y cada código se consume una vez.
+        // CP-201 — RF-15, RN-44: emitir un código nuevo invalida el anterior y cada código se consume una vez.
         [TestMethod("CP-201: Un nuevo código invalida el anterior y solo se usa una vez")]
         public void CP201_CodigoAnteriorInvalidoYUnSoloUso()
         {
@@ -238,7 +238,7 @@ namespace Pruebas
             Assert.AreEqual("El código no es válido o venció. Solicitá uno nuevo.", errorReutilizado.Message);
         }
 
-        // CP-203 — RF-01, RN-01/RN-43: repetir el alta no enumera ni modifica la cuenta existente.
+        // CP-203 — RF-14, RN-01/RN-43: repetir el alta no enumera ni modifica la cuenta existente.
         [TestMethod("CP-203: El alta existente y nueva entrega la misma respuesta de verificación")]
         public void CP203_RegistroNoEnumeraCorreoExistente()
         {
@@ -316,7 +316,7 @@ namespace Pruebas
             }
         }
 
-        // CP-174 — RF-11, RN-45/RN-46: registrar acciones y cerrar la sesión al vencer la inactividad.
+        // CP-174 — RF-16/RF-17, RN-45/RN-46: registrar acciones y cerrar la sesión al vencer la inactividad.
         [TestMethod("CP-174: La sesión avisa y vence por inactividad, y la auditoría queda consultable solo por administración")]
         public void CP174_InactividadYAuditoria()
         {
@@ -337,7 +337,7 @@ namespace Pruebas
                 Assert.IsFalse(sesion.DebeCerrarPorInactividad(baseTiempo.AddSeconds(119)));
                 Assert.IsTrue(sesion.DebeCerrarPorInactividad(baseTiempo.AddMinutes(2)));
                 GestorAuditoria.Instance.Registrar("Compra confirmada", "Compra", 777);
-                Assert.AreEqual("RN-34", Assert.ThrowsException<ReglaNegocioException>(() => GestorAuditoria.Instance.Consultar(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), null)).Regla);
+                Assert.AreEqual("RN-45", Assert.ThrowsException<ReglaNegocioException>(() => GestorAuditoria.Instance.Consultar(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), null)).Regla);
                 Fake.ComoAdministrador();
                 var registros = GestorAuditoria.Instance.Consultar(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), "Compra confirmada");
                 Assert.IsTrue(registros.Exists(r => r.UsuarioId == cliente.Id && r.EntidadId == 777));
@@ -351,7 +351,7 @@ namespace Pruebas
             }
         }
 
-        // CP-175 — RF-11, RN-45: permitir que Administración consulte los registros de auditoría.
+        // CP-175 — RF-16, RN-45: permitir que Administración consulte los registros de auditoría.
         [TestMethod("CP-175: El administrador abre el registro de auditoría desde su pantalla")]
         public void CP175_PantallaAuditoria()
         {

@@ -83,7 +83,7 @@ namespace Visual
                 DialogResult = cerrada ? DialogResult.Abort : DialogResult.Cancel;
                 return;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 // La compra dejó de estar pendiente por fuera de esta pantalla (por ejemplo, el evento
                 // se eliminó mientras se pagaba). El cupo ya se liberó: se vuelve al listado.

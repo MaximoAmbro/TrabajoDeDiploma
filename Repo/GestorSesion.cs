@@ -65,6 +65,12 @@ namespace Negocio
                 throw new ReglaNegocioException("RN-34", "Esta operación es solo para el Administrador");
         }
 
+        public void RequerirAdministradorParaAuditoria()
+        {
+            if (UsuarioActual == null || UsuarioActual.TipoUsuario != "Administrador")
+                throw new ReglaNegocioException("RN-45", "Solo el Administrador puede consultar la auditoría.");
+        }
+
         // RN-48: la gestión de locales, eventos e ingresos corresponde al Organizador.
         public void RequerirOrganizador()
         {

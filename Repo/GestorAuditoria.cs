@@ -23,7 +23,7 @@ namespace Negocio
 
         public List<RegistroAuditoria> Consultar(DateTime desde, DateTime hasta, string accion)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirAdministradorParaAuditoria();
             if (hasta <= desde) throw new ArgumentException("El fin del período debe ser posterior al inicio.");
             return RepositorioAuditoria.Instance.Consultar(desde, hasta, accion);
         }

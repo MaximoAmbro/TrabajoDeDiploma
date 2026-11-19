@@ -264,7 +264,7 @@ namespace Visual
                 Avisos.Regla("Reportes", ex);
                 return;
             }
-            catch (IOException ex)
+            catch (IOException)
             {
                 Avisos.Informativo(this, "No pudimos guardar el PDF. Cerrá el archivo si está abierto y volvé a exportarlo.");
                 return;
