@@ -31,7 +31,8 @@ namespace Visual
             Shown += (s, e) =>
             {
                 float escala; using (var g = CreateGraphics()) escala = g.DpiX / Tema.DpiDiseno * Font.SizeInPoints / Tema.Cuerpo.SizeInPoints;
-                _fortaleza.SetBounds((int)Math.Round(24 * escala), (int)Math.Round(364 * escala), (int)Math.Round(192 * escala), (int)Math.Round(24 * escala));
+                int margen = (int)Math.Round(24 * escala);
+                _fortaleza.SetBounds(margen, (int)Math.Round(364 * escala), Math.Max(1, ClientSize.Width - margen * 2), (int)Math.Round(24 * escala));
             };
             if (_altaAdministrador)
             {
