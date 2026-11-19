@@ -1374,7 +1374,7 @@ filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en
 **Por:**
 
 > Una grilla que cruce los seis objetivos con los veintidós requerimientos, las cincuenta y dos
-> reglas, los veintiún casos de uso y los doscientos cuatro casos de prueba resulta ilegible en
+> reglas, los veintiún casos de uso y los doscientos cinco casos de prueba resulta ilegible en
 > formato A4
 
 **Tabla «Nomenclatura de los ejes».** Reemplazar las filas de reglas y de casos de prueba, y en
@@ -1384,14 +1384,14 @@ las de requerimientos funcionales y casos de uso cambiar la cantidad:
 |---|---|---|
 | Requerimientos funcionales | la cantidad «13» | «22» |
 | Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 52 \| Reglas de negocio (RN-27 y RN-42 dadas de baja)» |
-| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 204 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-205: Matriz de trazabilidad, catálogo de casos incorporados (el número CP-149 no se usó)» |
+| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 205 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-206: Matriz de trazabilidad, catálogo de casos incorporados (el número CP-149 no se usó)» |
 | Casos de uso | la cantidad «8» | «21» |
 
 ## Página 107 — Matriz principal
 
 **⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
-La tabla ya está armada con RF-14 a RF-22 (19/11), pero Codex está agregando una prueba más y la
-columna de casos se vuelve a generar cuando la commitee.
+La tabla ya está armada con RF-14 a RF-22 y con CP-206 (19/11), pero Codex sigue cerrando la capa de
+datos: la columna de casos se vuelve a generar cuando termine.
 
 **Reemplazar la tabla completa por:**
 
@@ -1412,7 +1412,7 @@ columna de casos se vuelve a generar cuando la commitee.
 | RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-76 a CP-78, CP-94, CP-121 | — |
 | RF-14 | OE-2 | Must | RN-43, RN-44 | CU-04, CU-14 | CP-167, CP-168, CP-171, CP-203 | — |
 | RF-15 | OE-2 | Must | RN-44 | CU-15 | CP-169 a CP-171, CP-173, CP-176, CP-200, CP-201 | — |
-| RF-16 | OE-2 | Must | RN-45 | CU-20 | CP-174, CP-175, CP-189, CP-196 | — |
+| RF-16 | OE-2 | Must | RN-45 | CU-20 | CP-174, CP-175, CP-189, CP-196, CP-206 | — |
 | RF-17 | OE-2 | Must | RN-46, RN-47 | CU-04, CU-05, CU-09, CU-15 | CP-95 a CP-98, CP-113, CP-114, CP-124, CP-170, CP-172, CP-174 | — |
 | RF-18 | OE-2 | Should | — | CU-01 | CP-150, CP-151, CP-160 | — |
 | RF-19 | OE-2 | Should | — | CU-02 | CP-158, CP-160, CP-177 a CP-180 | — |
@@ -1421,18 +1421,19 @@ columna de casos se vuelve a generar cuando la commitee.
 | RF-22 | OE-2 | Must | RN-05, RN-48, RN-49 | CU-02, CU-07, CU-10 a CU-12, CU-21 | CP-85, CP-141, CP-142, CP-161, CP-162, CP-165, CP-166, CP-182 a CP-184, CP-187, CP-189, CP-190, CP-193, CP-198 | — |
 
 *Cómo se armó:* la columna «Casos de prueba» sale de los comentarios de trazabilidad de las
-pruebas en `2ffca70` (`py -3 -X utf8 tools/Matriz/Extraer.py`); las reglas y los casos de uso, de
+pruebas en `c4ab61e` (`py -3 -X utf8 tools/Matriz/Extraer.py`); las reglas y los casos de uso, de
 la columna «RF / CU» de la tabla de reglas (pp. 25 a 27). RF-14 a RF-22 van con OE-2, como los
 demás requerimientos de la operación de la plataforma (RF-01 a RF-05, RF-07 y RF-12): ninguno
 responde a la fidelización (OE-3), al pago (OE-5) ni a la información de gestión (OE-6).
-**Para que decida JC.**
+Aprobado por JC el 19/11.
 
 El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debajo:
 
 > La categoría Won't de RF-09 corresponde a la reclasificación de la versión 2.5 (brecha
 > G-03). RF-14 a RF-22 se incorporaron en la versión 2.6. Los requerimientos no funcionales no
 > figuran en la matriz porque no originan casos de uso; sus casos de prueba son: RNF-02,
-> CP-47, CP-62, CP-63, CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119, CP-120, CP-152, CP-153, CP-157 y CP-159; RNF-03, CP-12, CP-25, CP-64, CP-69, CP-85, CP-116 y CP-163; RNF-04, CP-51, CP-53, CP-156, CP-164 y CP-197. Un caso figura en más de una fila cuando prueba una
+> CP-47, CP-62, CP-63, CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119, CP-120, CP-152, CP-153, CP-157 y CP-159; RNF-03, CP-12, CP-25, CP-64, CP-69, CP-85, CP-116 y CP-163; RNF-04, CP-51, CP-53, CP-156, CP-164 y CP-197. RNF-01, el flujo de compra en menos de cinco
+> minutos, no tiene caso automático: lo verifica la medición del informe de usabilidad. Un caso figura en más de una fila cuando prueba una
 > regla de una fila desde la operación de otra. RN-41 es una regla de autorización: vale para
 > todas las operaciones del sistema y no para un requerimiento solo, y se ubica en RF-02, que
 > establece la sesión de la que depende. RN-48 y RN-49, que reservan al Organizador la gestión de
@@ -1485,7 +1486,7 @@ la de CP-01 a CP-61:
 
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^### Tabla «Cobertura de reglas de negocio por casos de prueba» :: ^\*\*Reemplazar\*\* el párrafo que sigue a la tabla
 
-**y agregar a continuación** estas filas (CP-62 a CP-148):
+**y agregar a continuación** estas filas (CP-62 a CP-206; el número CP-149 no se usó):
 
 @@ generado/cobertura.md :: ^\| CP-62 — :: ^FIN-COBERTURA
 
@@ -1516,7 +1517,7 @@ filas de CP-11 a CP-61:
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^Va a continuación del párrafo anterior\. CP-01 a CP-10 :: ^### Tabla «Análisis de cobertura»
 
 **y, debajo, una segunda tabla** con el título «Casos de prueba incorporados en la versión 2.6
-(CP-62 a CP-148)»:
+(CP-62 a CP-206)»:
 
 @@ generado/tabla-casos.md :: ^\| Caso \| Condición :: ^FIN-TABLA
 

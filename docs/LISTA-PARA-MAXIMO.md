@@ -3396,7 +3396,7 @@ siguiente; no achiques ninguna imagen.
 **Por:**
 
 > Una grilla que cruce los seis objetivos con los veintidós requerimientos, las cincuenta y dos
-> reglas, los veintiún casos de uso y los doscientos cuatro casos de prueba resulta ilegible en
+> reglas, los veintiún casos de uso y los doscientos cinco casos de prueba resulta ilegible en
 > formato A4
 
 **Tabla «Nomenclatura de los ejes».** Reemplazar las filas de reglas y de casos de prueba, y en
@@ -3406,14 +3406,14 @@ las de requerimientos funcionales y casos de uso cambiar la cantidad:
 |---|---|---|
 | Requerimientos funcionales | la cantidad «13» | «22» |
 | Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 52 \| Reglas de negocio (RN-27 y RN-42 dadas de baja)» |
-| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 204 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-205: Matriz de trazabilidad, catálogo de casos incorporados (el número CP-149 no se usó)» |
+| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 205 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-206: Matriz de trazabilidad, catálogo de casos incorporados (el número CP-149 no se usó)» |
 | Casos de uso | la cantidad «8» | «21» |
 
 ## Página 107 — Matriz principal
 
 **⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
-La tabla ya está armada con RF-14 a RF-22 (19/11), pero Codex está agregando una prueba más y la
-columna de casos se vuelve a generar cuando la commitee.
+La tabla ya está armada con RF-14 a RF-22 y con CP-206 (19/11), pero Codex sigue cerrando la capa de
+datos: la columna de casos se vuelve a generar cuando termine.
 
 **Reemplazar la tabla completa por:**
 
@@ -3434,7 +3434,7 @@ columna de casos se vuelve a generar cuando la commitee.
 | RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-76 a CP-78, CP-94, CP-121 | — |
 | RF-14 | OE-2 | Must | RN-43, RN-44 | CU-04, CU-14 | CP-167, CP-168, CP-171, CP-203 | — |
 | RF-15 | OE-2 | Must | RN-44 | CU-15 | CP-169 a CP-171, CP-173, CP-176, CP-200, CP-201 | — |
-| RF-16 | OE-2 | Must | RN-45 | CU-20 | CP-174, CP-175, CP-189, CP-196 | — |
+| RF-16 | OE-2 | Must | RN-45 | CU-20 | CP-174, CP-175, CP-189, CP-196, CP-206 | — |
 | RF-17 | OE-2 | Must | RN-46, RN-47 | CU-04, CU-05, CU-09, CU-15 | CP-95 a CP-98, CP-113, CP-114, CP-124, CP-170, CP-172, CP-174 | — |
 | RF-18 | OE-2 | Should | — | CU-01 | CP-150, CP-151, CP-160 | — |
 | RF-19 | OE-2 | Should | — | CU-02 | CP-158, CP-160, CP-177 a CP-180 | — |
@@ -3443,18 +3443,19 @@ columna de casos se vuelve a generar cuando la commitee.
 | RF-22 | OE-2 | Must | RN-05, RN-48, RN-49 | CU-02, CU-07, CU-10 a CU-12, CU-21 | CP-85, CP-141, CP-142, CP-161, CP-162, CP-165, CP-166, CP-182 a CP-184, CP-187, CP-189, CP-190, CP-193, CP-198 | — |
 
 *Cómo se armó:* la columna «Casos de prueba» sale de los comentarios de trazabilidad de las
-pruebas en `2ffca70` (`py -3 -X utf8 tools/Matriz/Extraer.py`); las reglas y los casos de uso, de
+pruebas en `c4ab61e` (`py -3 -X utf8 tools/Matriz/Extraer.py`); las reglas y los casos de uso, de
 la columna «RF / CU» de la tabla de reglas (pp. 25 a 27). RF-14 a RF-22 van con OE-2, como los
 demás requerimientos de la operación de la plataforma (RF-01 a RF-05, RF-07 y RF-12): ninguno
 responde a la fidelización (OE-3), al pago (OE-5) ni a la información de gestión (OE-6).
-**Para que decida JC.**
+Aprobado por JC el 19/11.
 
 El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debajo:
 
 > La categoría Won't de RF-09 corresponde a la reclasificación de la versión 2.5 (brecha
 > G-03). RF-14 a RF-22 se incorporaron en la versión 2.6. Los requerimientos no funcionales no
 > figuran en la matriz porque no originan casos de uso; sus casos de prueba son: RNF-02,
-> CP-47, CP-62, CP-63, CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119, CP-120, CP-152, CP-153, CP-157 y CP-159; RNF-03, CP-12, CP-25, CP-64, CP-69, CP-85, CP-116 y CP-163; RNF-04, CP-51, CP-53, CP-156, CP-164 y CP-197. Un caso figura en más de una fila cuando prueba una
+> CP-47, CP-62, CP-63, CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119, CP-120, CP-152, CP-153, CP-157 y CP-159; RNF-03, CP-12, CP-25, CP-64, CP-69, CP-85, CP-116 y CP-163; RNF-04, CP-51, CP-53, CP-156, CP-164 y CP-197. RNF-01, el flujo de compra en menos de cinco
+> minutos, no tiene caso automático: lo verifica la medición del informe de usabilidad. Un caso figura en más de una fila cuando prueba una
 > regla de una fila desde la operación de otra. RN-41 es una regla de autorización: vale para
 > todas las operaciones del sistema y no para un requerimiento solo, y se ubica en RF-02, que
 > establece la sesión de la que depende. RN-48 y RN-49, que reservan al Organizador la gestión de
@@ -3571,7 +3572,7 @@ la de CP-01 a CP-61:
 | CP-60 — Sectores que superan la capacidad del local | RN-38 |
 | CP-61 — Preventa sin suscripción | RN-39 |
 
-**y agregar a continuación** estas filas (CP-62 a CP-148):
+**y agregar a continuación** estas filas (CP-62 a CP-206; el número CP-149 no se usó):
 
 | CP-62 — Los colores y las fuentes de Tema | — (RNF-02) |
 | CP-63 — El código de cada una de las 20 pantallas y de su Designer | — (RNF-02) |
@@ -3623,7 +3624,7 @@ la de CP-01 a CP-61:
 | CP-109 — Preparación completa de la base de pruebas | — |
 | CP-110 — Cada estado de EstadoEntrada y el estado ajeno «Usada», escritos en la tabla | RN-18, RN-29 |
 | CP-111 — Compra asegurada de 2 entradas: una ya ingresó; devolver las dos, en los dos órdenes | RN-18, RN-29 |
-| CP-112 — Los siete componentes visuales en un host de diseño real | — (RNF-01, RNF-02) |
+| CP-112 — Los siete componentes visuales en un host de diseño real | — (RNF-02) |
 | CP-113 — Contrato de la sesión: Iniciar fuera de lo público; propiedades de la sesión; perfil e identidad del… | RN-41 |
 | CP-114 — Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada | RN-04 |
 | CP-115 — Descuento configurado de Plata y de Oro por debajo, igual y por encima de DESCUENTO_MAX_ADMISIBLE | RN-20 |
@@ -3660,6 +3661,64 @@ la de CP-01 a CP-61:
 | CP-146 — Registrar el ingreso de una entrada como cliente y sin sesión | RN-34 |
 | CP-147 — Insertar en la base un segundo seguro para una entrada que ya tiene uno, y uno para otra entrada | RN-28 |
 | CP-148 — Comprar, pagar y cerrar la pantalla de confirmación (interfaz) | — |
+| CP-149 — Número no usado: se saltó al numerar los casos y no se reasigna | — |
+| CP-150 — Mapa con Campo ($100, con cupo) y VIP ($200, agotado); clic en cada zona | — |
+| CP-151 — Cliente en la compra de un evento con un sector; clic en la zona del mapa (interfaz) | RN-08 |
+| CP-152 — Barra superior de la marca en un host de diseño real | — (RNF-02) |
+| CP-153 — Archivo Visual/Recursos/EventAura.ico | — (RNF-02) |
+| CP-154 — Sesión abierta de un cliente que ya no existe en la base; se actualiza la barra (interfaz) | RN-05 |
+| CP-155 — Sin sesión, actualizar y dibujar la barra | RN-05 |
+| CP-156 — Programa de ensayo cuyo formulario lanza una excepción en Load | — (RNF-04) |
+| CP-157 — Error inesperado con un detalle interno, mostrado por ManejadorErrores (interfaz) | — (RNF-02) |
+| CP-158 — Dos portadas generadas con el mismo nombre y la misma categoría, sin imagen | — |
+| CP-159 — Ocho vistas compuestas en un host de diseño real | — (RNF-02) |
+| CP-160 — Cliente en el listado: abre la ficha de un evento desde su tarjeta, elige un sector en el mapa y pulsa… | — |
+| CP-161 — Sesión de un cliente que carga el inicio de otro cliente | RN-41 |
+| CP-162 — Panel del administrador cargado como Administrador y después como cliente | RN-34 |
+| CP-163 — Botones de tres vistas, del estado vacío y de las pantallas de auditoría y de revisión de eventos | — (RNF-03) |
+| CP-164 — Base de prueba a la que se le quitan, uno por uno, los objetos de los scripts 04 a 16; abrir el inicio de… | — (RNF-04) |
+| CP-165 — Sesión de un cliente: cargar el panel del administrador, pulsar «Crear administrador» y llamar al alta | RN-05 |
+| CP-166 — Administrador: desde su menú abre «Crear administrador» y completa el alta (interfaz) | RN-05 |
+| CP-167 — Cliente con el correo sin verificar que arma un paquete e inicia una compra | RN-43 |
+| CP-168 — Alta de un cliente desde la pantalla; el código se lee del archivo de la bandeja simulada y se ingresa… | RN-43 |
+| CP-169 — Código de recuperación vencido hace un minuto | RN-44 |
+| CP-170 — Recuperación con el código vigente y una contraseña nueva | RN-02, RN-44 |
+| CP-171 — Enviar un código por SMTP sin las cinco variables de entorno EVENTAURA_SMTP_* | RN-44 |
+| CP-172 — Contraseñas «abcdefgh1» y «Cliente123», en el gestor y en las pantallas de alta y de cambio (interfaz) | RN-02, RN-47 |
+| CP-173 — Recuperación desde la pantalla: pedir el código, leerlo del archivo y restablecer (interfaz) | RN-44 |
+| CP-174 — Inactividad configurada en 2 min, con aviso a 30 s; un cliente registra una acción y consulta la auditoría | RN-45, RN-46 |
+| CP-175 — Administrador abre la pantalla de auditoría (interfaz) | RN-45 |
+| CP-176 — Pantalla de recuperación de contraseña (interfaz) | RN-44 |
+| CP-177 — Imagen PNG de 2400 × 1600 px | RN-52 |
+| CP-178 — Bytes de texto presentados como imagen | RN-52 |
+| CP-179 — Organizador guarda la portada de su evento | RN-49, RN-52 |
+| CP-180 — Archivo de un byte más que el límite de carga | RN-52 |
+| CP-181 — Insertar en la base entradas con CantidadVendida nula, 2 y 0 | RN-08 |
+| CP-182 — Dos organizadores con un evento vendido cada uno; reporte de ventas y consultas sobre el evento y el local… | RN-34, RN-49 |
+| CP-183 — Cuentas Administrador y Organizador de la semilla; el Organizador inicia sesión (interfaz) | RN-05 |
+| CP-184 — Cliente con el teléfono confirmado presenta una solicitud válida y vuelve a iniciar sesión | RN-50 |
+| CP-185 — CUIT con el dígito verificador incorrecto | RN-52 |
+| CP-186 — CBU con el dígito verificador incorrecto | RN-52 |
+| CP-187 — Cliente que aprueba una solicitud | RN-53 |
+| CP-188 — Administrador rechaza una solicitud con el motivo en blanco | RN-53 |
+| CP-189 — Cliente con el teléfono confirmado presenta la solicitud y el Administrador la aprueba con un motivo | RN-45, RN-53 |
+| CP-190 — Organizador que rechaza una solicitud | RN-53 |
+| CP-191 — Solicitud sin el teléfono confirmado | RN-51 |
+| CP-192 — Documentación que no es una imagen | RN-52 |
+| CP-193 — Menús del Cliente y del Administrador; un cliente abre la revisión de solicitudes | RN-53 |
+| CP-194 — Solicitud con el alias bancario «eventaura.demo» | RN-52 |
+| CP-195 — Teléfono «0000000000» | RN-51 |
+| CP-196 — Administrador rechaza una solicitud con un motivo | RN-45, RN-53 |
+| CP-197 — Comparar todos los scripts numerados desde 04 con el registro de requisitos del diagnóstico de arranque | — (RNF-04) |
+| CP-198 — Rechazar el evento propio o ajeno como Organizador; rechazar como Administrador sin motivo | RN-48, RN-54 |
+| CP-199 — Administrador rechaza el primer evento; Organizador ve el motivo e intenta vender y vuelve a publicar | RN-09, RN-54 |
+| CP-200 — Pedir la recuperación desde la pantalla para un correo existente y para uno inexistente (interfaz) | RN-44 |
+| CP-201 — Pedir dos códigos de recuperación seguidos; usar el primero, el segundo y otra vez el segundo | RN-44 |
+| CP-202 — Pedir el código del teléfono desde la pantalla de la solicitud (interfaz) | RN-44, RN-51 |
+| CP-203 — Alta de un correo nuevo y, después, otra alta con el mismo correo y otra contraseña (interfaz) | RN-01, RN-43 |
+| CP-204 — Organizador nuevo publica su primer evento, primero sin sectores; un cliente intenta comprar; el… | RN-54 |
+| CP-205 — Publicar un evento sin sectores | RN-06 |
+| CP-206 — Métodos de escritura de la auditoría y de revisión de solicitudes en Datos, y el código fuente de Visual | RN-45 |
 
 **El párrafo que sigue a la tabla. Reemplazar:**
 
@@ -3743,7 +3802,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-61 | En preventa, un cliente sin suscripción no inicia la compra | `CP61_RechazaPreventaSinSuscripcion` | RF-05, RF-13 | — | 1 |
 
 **y, debajo, una segunda tabla** con el título «Casos de prueba incorporados en la versión 2.6
-(CP-62 a CP-148)»:
+(CP-62 a CP-206)»:
 
 | Caso | Condición de entrada | Resultado esperado | RF | Reglas |
 |---|---|---|---|---|
@@ -3797,7 +3856,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-109 | Preparación completa de la base de pruebas | Carga 1.178 clientes de reporte con hashes a 310.000; la guarda `_Pruebas` sigue activa | RF-11 | — |
 | CP-110 | Cada estado de `EstadoEntrada` y el estado ajeno «Usada», escritos en la tabla | La base admite los cuatro y rechaza el ajeno por `CK_Entradas_Estado`, que está activa y confiable | RF-07 | RN-18, RN-29 |
 | CP-111 | Compra asegurada de 2 entradas: una ya ingresó; devolver las dos, en los dos órdenes (2 variantes) | RN-29 rechaza la devolución y no cambia nada, ni por el gestor ni por el repositorio. La entrada no usada se puede devolver sola | RF-07 | RN-18, RN-29 |
-| CP-112 | Los siete componentes visuales en un host de diseño real (7 variantes) | Ninguno guarda su estilo en el Designer | RNF-01, RNF-02 | — |
+| CP-112 | Los siete componentes visuales en un host de diseño real (7 variantes) | Ninguno guarda su estilo en el Designer | RF-05, RNF-02 | — |
 | CP-113 | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41 |
 | CP-114 | Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada (3 variantes) | El rechazo es idéntico en texto y título, sin revelar si la cuenta existe ni si está bloqueada; el bloqueo se registra igual | RF-02 | RN-04 |
 | CP-115 | Descuento configurado de Plata y de Oro por debajo, igual y por encima de `DESCUENTO_MAX_ADMISIBLE` (6 variantes) | Por debajo o igual se aplica; por encima se rechaza con RN-20, sin recortarlo en silencio | RF-08 | RN-20 |
@@ -3834,9 +3893,64 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-146 | Registrar el ingreso de una entrada como cliente y sin sesión (2 variantes) | El rechazo es un resultado, no una excepción: motivo «no autorizado», regla RN-34 y el mensaje «Esta operación es solo para el Administrador». La entrada sigue confirmada y sin ingreso, el contador da 0 y la sesión no cambia | RF-07 | RN-34 |
 | CP-147 | Insertar en la base un segundo seguro para una entrada que ya tiene uno, y uno para otra entrada (2 variantes) | El índice único de la base rechaza el segundo seguro de la misma entrada; la otra entrada admite el suyo. La reversión deja todo como estaba | RF-06 | RN-28 |
 | CP-148 | Comprar, pagar y cerrar la pantalla de confirmación (interfaz) | Vuelve al listado de eventos, sin mostrar un armado vacío, y la sesión sigue siendo del cliente | RF-06 | — |
-| CP-197 | Comparar todos los scripts numerados desde 04 con el registro de requisitos del diagnóstico de arranque | Cada migración tiene comprobación registrada; un script nuevo sin alta en el verificador hace fallar el caso | RNF-03 | — |
-| CP-198 | Rechazar el evento propio o ajeno como Organizador; rechazar como Administrador sin motivo | El Organizador no puede revisar; al Administrador se le exige motivo y el evento permanece EnRevision | RF-12 | RN-48, RN-54 |
-| CP-199 | Administrador rechaza el primer evento; Organizador ve el motivo e intenta vender y vuelve a publicar | El evento vuelve a Borrador, conserva y muestra el motivo, no aparece en catálogo ni acepta ventas; al volver a publicar entra otra vez en revisión | RF-03, RF-05 | RN-06, RN-09, RN-54 |
+| CP-149 | Número no usado: se saltó al numerar los casos y no se reasigna | — | — | — |
+| CP-150 | Mapa con Campo ($100, con cupo) y VIP ($200, agotado); clic en cada zona | Las zonas se ordenan por precio; el clic en VIP, agotado, no elige nada, y el de Campo lo elige | RF-18 | — |
+| CP-151 | Cliente en la compra de un evento con un sector; clic en la zona del mapa (interfaz) | La grilla de sectores pasa a 1 entrada y el resumen dice «1 x Campo»: el mapa arma por el mismo gestor | RF-04, RF-18 | RN-08 |
+| CP-152 | Barra superior de la marca en un host de diseño real | No guarda tipografía ni colores en el Designer; no fija un tamaño mínimo y mide 60 px de alto | RF-05, RNF-02 | — |
+| CP-153 | Archivo `Visual/Recursos/EventAura.ico` | Contiene cinco imágenes válidas, de 16, 32, 48, 64 y 256 px | RF-05, RNF-02 | — |
+| CP-154 | Sesión abierta de un cliente que ya no existe en la base; se actualiza la barra (interfaz) | La barra no falla ni muestra un usuario | RF-02 | RN-05 |
+| CP-155 | Sin sesión, actualizar y dibujar la barra | Muestra solo la marca, sin usuario, y se dibuja sin error | RF-02 | RN-05 |
+| CP-156 | Programa de ensayo cuyo formulario lanza una excepción en `Load` | El proceso termina en menos de 5 s, con código de error y el mensaje de la excepción, sin quedar esperando un cuadro de diálogo | RF-02, RNF-04 | — |
+| CP-157 | Error inesperado con un detalle interno, mostrado por `ManejadorErrores` (interfaz) | Aviso dentro de la ventana con el mensaje general y sin el detalle interno; la ventana sigue habilitada | RF-02, RNF-02 | — |
+| CP-158 | Dos portadas generadas con el mismo nombre y la misma categoría, sin imagen | Las dos se dibujan idénticas, píxel a píxel, con el fondo en degradé | RF-19 | — |
+| CP-159 | Ocho vistas compuestas en un host de diseño real (8 variantes) | Ninguna guarda tipografía ni colores en el Designer, y ninguna fija un tamaño mínimo | RF-05, RNF-02 | — |
+| CP-160 | Cliente en el listado: abre la ficha de un evento desde su tarjeta, elige un sector en el mapa y pulsa comprar (interfaz) | La ficha muestra el evento; se abre la compra de ese evento y de ese cliente, con 1 entrada del sector elegido | RF-03, RF-18, RF-19 | — |
+| CP-161 | Sesión de un cliente que carga el inicio de otro cliente | Rechazo RN-41 | RF-07, RF-22 | RN-41 |
+| CP-162 | Panel del administrador cargado como Administrador y después como cliente | Como Administrador muestra cinco indicadores; como cliente, rechazo RN-34 | RF-11, RF-22 | RN-34 |
+| CP-163 | Botones de tres vistas, del estado vacío y de las pantallas de auditoría y de revisión de eventos (6 variantes) | Ningún botón corta su texto; los primarios se dibujan con el color primario en más del 60 % de su superficie | RF-05, RNF-03 | — |
+| CP-164 | Base de prueba a la que se le quitan, uno por uno, los objetos de los scripts 04 a 16; abrir el inicio de sesión (interfaz) | El diagnóstico nombra cada vez el primer objeto y el primer script que faltan; el inicio lo muestra dentro de la ventana y deshabilita el ingreso. Con la FK del script 16 restaurada, la base rechaza un local sin dueño | RF-12, RNF-04 | — |
+| CP-165 | Sesión de un cliente: cargar el panel del administrador, pulsar «Crear administrador» y llamar al alta | Las tres se rechazan con RN-34 | RF-22 | RN-05 |
+| CP-166 | Administrador: desde su menú abre «Crear administrador» y completa el alta (interfaz) | La pantalla se titula «EventAura · Crear administrador» y avisa «Usuario creado con éxito.»; la cuenta queda con perfil Administrador y el menú sigue abierto | RF-22 | RN-05 |
+| CP-167 | Cliente con el correo sin verificar que arma un paquete e inicia una compra | Los dos se rechazan con RN-43 | RF-14 | RN-43 |
+| CP-168 | Alta de un cliente desde la pantalla; el código se lee del archivo de la bandeja simulada y se ingresa (interfaz) | El código queda en el archivo y no en la pantalla, y la interfaz no tiene forma de leerlo. Antes de ingresarlo el correo no está verificado; después sí, con el aviso «Ya podés iniciar sesión y comprar», y la auditoría registra la emisión del código | RF-14 | RN-43 |
+| CP-169 | Código de recuperación vencido hace un minuto | Rechazo RN-44; la contraseña no cambia y la auditoría registra «Rechazado: RN-44» | RF-15 | RN-44 |
+| CP-170 | Recuperación con el código vigente y una contraseña nueva | La contraseña se guarda con el hash del sistema: la nueva sirve y la anterior no. La auditoría registra la emisión del código y el cambio | RF-15, RF-17 | RN-02, RN-44 |
+| CP-171 | Enviar un código por SMTP sin las cinco variables de entorno `EVENTAURA_SMTP_*` | Falla con «El envío SMTP no está configurado» | RF-14, RF-15 | RN-44 |
+| CP-172 | Contraseñas «abcdefgh1» y «Cliente123», en el gestor y en las pantallas de alta y de cambio (interfaz) | Puntajes 3 y 4: la primera se rechaza con RN-47 y la segunda se acepta; el medidor de las dos pantallas muestra el mismo puntaje | RF-17 | RN-02, RN-47 |
+| CP-173 | Recuperación desde la pantalla: pedir el código, leerlo del archivo y restablecer (interfaz) | La pantalla muestra solo el aviso de la bandeja; ningún control muestra el código y no existe una pantalla de bandeja. La contraseña nueva sirve y la anterior no | RF-15 | RN-44 |
+| CP-174 | Inactividad configurada en 2 min, con aviso a 30 s; un cliente registra una acción y consulta la auditoría | Avisa a los 90 s y cierra a los 120 s, no antes. El cliente no puede consultar (RN-45); el Administrador ve la acción y el inicio de sesión del cliente | RF-16, RF-17 | RN-45, RN-46 |
+| CP-175 | Administrador abre la pantalla de auditoría (interfaz) | La pantalla se muestra con la tabla cargada | RF-16 | RN-45 |
+| CP-176 | Pantalla de recuperación de contraseña (interfaz) | El medidor, los dos campos, la casilla y el botón no se superponen, y el botón entra en la ventana | RF-15 | RN-44 |
+| CP-177 | Imagen PNG de 2400 × 1600 px | Se guarda comprimida, dentro del tamaño y de las medidas máximas, y se puede volver a abrir | RF-19 | RN-52 |
+| CP-178 | Bytes de texto presentados como imagen | Rechazo «no contiene una imagen válida» | RF-19 | RN-52 |
+| CP-179 | Organizador guarda la portada de su evento | La base devuelve la misma imagen y la vista la muestra; sin imagen propia, vuelve a la portada generada | RF-19 | RN-49, RN-52 |
+| CP-180 | Archivo de un byte más que el límite de carga | Rechazo «supera el límite de 10 MB» | RF-19 | RN-52 |
+| CP-181 | Insertar en la base entradas con `CantidadVendida` nula, 2 y 0 | La base rechaza las tres (columna obligatoria y `CK_Entradas_CantidadVendida`) y no queda ninguna fila | RF-06 | RN-08 |
+| CP-182 | Dos organizadores con un evento vendido cada uno; reporte de ventas y consultas sobre el evento y el local ajenos | El Organizador ve solo su evento y sus cifras, y las once consultas sobre lo ajeno se rechazan; el Administrador ve los dos eventos | RF-11, RF-22 | RN-34, RN-49 |
+| CP-183 | Cuentas Administrador y Organizador de la semilla; el Organizador inicia sesión (interfaz) | Son cuentas distintas: el Administrador no tiene locales y el Organizador sí. El Organizador entra a su menú con su perfil | RF-22 | RN-05 |
+| CP-184 | Cliente con el teléfono confirmado presenta una solicitud válida y vuelve a iniciar sesión | La solicitud se guarda; el perfil sigue siendo Cliente y no puede ver locales (RN-48) ni las solicitudes pendientes (RN-34) | RF-20, RF-22 | RN-50 |
+| CP-185 | CUIT con el dígito verificador incorrecto | Rechazo RN-52 con el mensaje del CUIT | RF-20 | RN-52 |
+| CP-186 | CBU con el dígito verificador incorrecto | Rechazo RN-52 con el mensaje del CBU o alias | RF-20 | RN-52 |
+| CP-187 | Cliente que aprueba una solicitud | Rechazo RN-34, «Esta operación es solo para el Administrador» | RF-20, RF-22 | RN-53 |
+| CP-188 | Administrador rechaza una solicitud con el motivo en blanco | Rechazo RN-53, «Escribí el motivo del rechazo.» | RF-20 | RN-53 |
+| CP-189 | Cliente con el teléfono confirmado presenta la solicitud y el Administrador la aprueba con un motivo | El cliente pasa a Organizador y tiene el local solicitado; la auditoría registra la aprobación con el administrador, la solicitud y el motivo | RF-16, RF-20, RF-22 | RN-45, RN-53 |
+| CP-190 | Organizador que rechaza una solicitud | Rechazo RN-34 | RF-20, RF-22 | RN-53 |
+| CP-191 | Solicitud sin el teléfono confirmado | Rechazo RN-51 | RF-20 | RN-51 |
+| CP-192 | Documentación que no es una imagen | Rechazo RN-52, «Adjuntá una imagen PNG o JPEG válida…» | RF-20 | RN-52 |
+| CP-193 | Menús del Cliente y del Administrador; un cliente abre la revisión de solicitudes | El Cliente tiene «Solicitar ser Organizador» y el Administrador, la entrada a las solicitudes, las dos habilitadas; la pantalla de revisión rechaza al cliente con RN-34 | RF-20, RF-22 | RN-53 |
+| CP-194 | Solicitud con el alias bancario «eventaura.demo» | El alias es válido y la solicitud se guarda | RF-20 | RN-52 |
+| CP-195 | Teléfono «0000000000» | Rechazo RN-51 | RF-20 | RN-51 |
+| CP-196 | Administrador rechaza una solicitud con un motivo | Queda Rechazada con el motivo, el revisor y la fecha; la auditoría registra el rechazo con el motivo | RF-16, RF-20 | RN-45, RN-53 |
+| CP-197 | Comparar todos los scripts numerados desde 04 con el registro de requisitos del diagnóstico de arranque | Cada migración tiene comprobación registrada; un script nuevo sin alta en el verificador hace fallar el caso | RF-12, RNF-04 | — |
+| CP-198 | Rechazar el evento propio o ajeno como Organizador; rechazar como Administrador sin motivo | El Organizador no puede revisar; al Administrador se le exige motivo y el evento permanece EnRevision | RF-21, RF-22 | RN-48, RN-54 |
+| CP-199 | Administrador rechaza el primer evento; Organizador ve el motivo e intenta vender y vuelve a publicar | El evento vuelve a Borrador, conserva y muestra el motivo, no aparece en catálogo ni acepta ventas; al volver a publicar entra otra vez en revisión | RF-03, RF-21 | RN-09, RN-54 |
+| CP-200 | Pedir la recuperación desde la pantalla para un correo existente y para uno inexistente (interfaz) | La respuesta es el mismo texto; las dos tardan al menos 950 ms y difieren en menos de 400 ms; ningún código se ve en la pantalla. El código del correo inexistente se rechaza con RN-44 | RF-15 | RN-44 |
+| CP-201 | Pedir dos códigos de recuperación seguidos; usar el primero, el segundo y otra vez el segundo | El primero ya no sirve; el segundo restablece una vez y, al reutilizarlo, se rechaza | RF-15 | RN-44 |
+| CP-202 | Pedir el código del teléfono desde la pantalla de la solicitud (interfaz) | El código queda en el archivo de la bandeja simulada y no en la pantalla, que muestra el aviso uniforme; la auditoría registra la emisión | RF-20 | RN-44, RN-51 |
+| CP-203 | Alta de un correo nuevo y, después, otra alta con el mismo correo y otra contraseña (interfaz) | Las dos muestran la verificación del correo sin el código y tardan lo mismo (al menos 950 ms, con menos de 400 ms de diferencia); la contraseña de la cuenta existente no cambia | RF-14 | RN-01, RN-43 |
+| CP-204 | Organizador nuevo publica su primer evento, primero sin sectores; un cliente intenta comprar; el Administrador lo aprueba; después publica un segundo | Sin sectores no se publica. Con un sector pasa a revisión, no aparece en el catálogo y la venta se rechaza (RN-09); el Organizador no puede aprobarlo. Aprobado, se publica, y el segundo se publica directo | RF-21 | RN-54 |
+| CP-205 | Publicar un evento sin sectores | Rechazo RN-06; el evento sigue en Borrador | RF-21 | RN-06 |
+| CP-206 | Métodos de escritura de la auditoría y de revisión de solicitudes en `Datos`, y el código fuente de `Visual` | `Registrar`, `Aprobar` y `Rechazar` son `internal` y solo `Repositorio` los ve; ningún archivo de `Visual` nombra esos repositorios ni escribe en la auditoría | RF-16 | RN-45 |
 
 **Después de las dos tablas, agregar:**
 
