@@ -1028,12 +1028,13 @@ entrada.
 |---|---|---|
 | Descripción | «Permite al Administrador crear, modificar y desactivar eventos de la plataforma, controlando la información básica (nombre, fecha, ubicación, precio, cupos).» | «Permite al Organizador crear, suspender y eliminar eventos de sus locales, y administrar sus sectores (nombre, precio y capacidad) y su período de preventa.» |
 | Paso 1 | «El Administrador accede al módulo “Gestionar eventos”.» | «El Organizador ingresa a «Mis locales» y elige «Ver eventos» de un local.» |
-| Paso 3, viñeta 1 | «Crear un nuevo evento (título, fecha, ubicación, cupo, precios).» | «Crear un nuevo evento (nombre, fecha, categoría y preventa). Queda en borrador hasta tener un sector con capacidad.» |
+| Paso 3, viñeta 1 | «Crear un nuevo evento (título, fecha, ubicación, cupo, precios).» | «Crear un nuevo evento (nombre, fecha, categoría, preventa y portada). Queda en borrador hasta que el Organizador lo publica (CU-17).» |
 | Paso 3, viñeta 2 | «Modificar datos de un evento existente.» | «Agregar o quitar sectores, con su precio y capacidad, y cambiar la preventa.» |
 | Paso 3, viñeta 3 | «Desactivar o eliminar un evento (si aún no tiene ventas asociadas, según regla).» | «Eliminar un evento sin ventas, o suspenderlo.» |
 | Paso 5 | «(alta, modificación o baja lógica)» | «(alta, cambio de sectores o de preventa, suspensión o eliminación)» |
 | FA2 | «ofrece marcarlo como “No disponible”.» | «ofrece suspenderlo.» |
 | Después de FA2, agregar | — | «FA3 – Sectores. Para agregar o quitar sectores del evento, el Organizador elige «Administrar evento» (CU-11, que extiende este caso de uso).» |
+| Después de FA3, agregar | — | «FA4 – Evento rechazado. Si un Administrador rechazó el primer evento del Organizador (CU-19), el evento vuelve a borrador y «Eventos del local» muestra el motivo del rechazo. El Organizador lo corrige y lo vuelve a publicar (CU-17).» |
 | Postcondición 1 | «La tabla de Evento queda actualizada con las altas, modificaciones o bajas lógicas.» | «Los eventos y sus sectores quedan actualizados.» |
 | Postcondición 2 | «Solo se mostrarán a los Clientes los eventos que estén activos y con cupo.» | «Solo se muestran a los Clientes los eventos publicados con fecha futura; los agotados aparecen con la opción de lista de espera.» |
 
@@ -1540,8 +1541,8 @@ con nombre, precio y capacidad. Extiende CU-02 cuando el Organizador agrega o qu
 6. El sistema verifica los datos y que la suma de las capacidades de los sectores no supere la
    del local (RN-38).
 7. El sistema registra el sector, informa «Sector agregado correctamente.» y vacía los campos
-   para cargar otro. Si el evento estaba en borrador y el sector tiene capacidad, el evento queda
-   publicado (RN-06).
+   para cargar otro. Agregar un sector no publica el evento: un evento en borrador sigue en
+   borrador hasta que el Organizador lo publica (CU-17).
 
 **Flujo alternativo:**
 
@@ -1693,6 +1694,282 @@ historial.
   lista de espera recibe aviso (W-03).
 - Si la compra quedó reembolsada, deja de computar para el nivel (RN-24); el nivel vigente se
   conserva hasta la reevaluación mensual (RN-23).
+
+---
+
+**CU-14 – Verificar el correo**
+
+**Id y nombre:** CU-14 – Verificar el correo
+
+**Descripción:** Permite a quien se registra confirmar que el correo de su cuenta es suyo, con un
+código de un solo uso. Lo incluye CU-04 (Registrarse). Sin el correo verificado, el Cliente no
+puede iniciar una compra (RN-43).
+
+**Actor:** Visitante
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Visitante completó el registro (CU-04).
+
+**Flujo principal:**
+1. El sistema genera un código de un solo uso, lo envía a la bandeja simulada del correo
+   registrado y muestra la bandeja con el código y su vencimiento.
+2. El Visitante escribe el código y presiona «Confirmar correo».
+3. El sistema verifica que el código corresponda a ese correo, que no haya vencido y que no se
+   haya usado (RN-44).
+4. El sistema marca el correo como verificado, informa «Correo verificado. Ya podés iniciar
+   sesión y comprar.» y ofrece «Volver al acceso».
+
+**Flujo alternativo:**
+
+FA1 – Código incorrecto. En el paso 3, si el código no coincide, el sistema informa «El código no
+es correcto. Revisá el correo y volvé a intentar.» y cuenta el intento; superado el máximo de
+intentos (`CORREO_CODIGO_INTENTOS_MAX`), el código deja de servir. El Visitante vuelve al paso 2.
+
+FA2 – Código vencido o usado. En el paso 3, si el código venció o ya se usó, el sistema informa
+«El código venció o ya se usó. Solicitá uno nuevo.». Registrarse otra vez con el mismo correo
+envía un código nuevo y anula el anterior, sin cambiar la contraseña de la cuenta.
+
+**Postcondiciones:**
+- La cuenta tiene el correo verificado y el Cliente puede comprar (RN-43).
+- El código quedó usado y no vuelve a servir (RN-44).
+
+---
+
+**CU-15 – Recuperar contraseña**
+
+**⏸ Espera a JC:** el flujo depende de cómo se cierre el acceso a la bandeja simulada desde la
+pantalla de recuperación (informe a JC del 18/11). No se pega hasta entonces.
+
+---
+
+**CU-16 – Solicitar ser Organizador**
+
+**Id y nombre:** CU-16 – Solicitar ser Organizador
+
+**Descripción:** Permite a un Cliente pedir el perfil de Organizador, con los datos del
+responsable, del local que quiere registrar y de su cuenta bancaria. La solicitud no le da
+permisos hasta que un Administrador la aprueba (CU-18).
+
+**Actor:** Cliente
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Cliente inició sesión.
+- No tiene otra solicitud pendiente (RN-50).
+
+**Flujo principal:**
+1. El Cliente elige «Solicitar ser Organizador» en su menú.
+2. El sistema muestra los campos: responsable, CUIT, teléfono, nombre del local, dirección,
+   capacidad, CBU o alias, y la documentación del local.
+3. El Cliente escribe su teléfono y presiona «Enviar código». El sistema envía un código de un
+   solo uso a la bandeja simulada; el Cliente lo escribe y presiona «Confirmar teléfono» (RN-51).
+4. El Cliente completa los demás campos, adjunta la habilitación o constancia del local como
+   imagen y presiona «Enviar solicitud».
+5. El sistema valida el CUIT y el CBU con su dígito verificador, o el formato del alias, y la
+   imagen de la documentación (RN-52).
+6. El sistema registra la solicitud como pendiente e informa «Recibimos tu solicitud» con su
+   número.
+
+**Flujo alternativo:**
+
+FA1 – Datos inválidos. En el paso 5, si el CUIT, el CBU, el alias o la imagen no son válidos, el
+sistema indica el campo y el motivo, y el Cliente vuelve al paso 4.
+
+FA2 – Teléfono sin confirmar. Si el Cliente envía la solicitud sin haber confirmado el teléfono,
+el sistema la rechaza (RN-51).
+
+FA3 – Solicitud pendiente. Si el Cliente ya tiene una solicitud pendiente, el sistema no registra
+otra (RN-50).
+
+**Postcondiciones:**
+- Queda una solicitud pendiente a nombre del Cliente.
+- El perfil del Cliente no cambia hasta la revisión (RN-50).
+
+---
+
+**CU-17 – Publicar evento**
+
+**Id y nombre:** CU-17 – Publicar evento
+
+**Descripción:** Permite al Organizador poner a la venta un evento que está en borrador. El primer
+evento de un Organizador nuevo pasa a revisión de un Administrador (CU-19).
+
+**Actor:** Organizador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Organizador inició sesión.
+- El evento es de uno de sus locales y está en borrador (RN-49).
+
+**Flujo principal:**
+1. En «Eventos del local», el Organizador elige el evento y presiona «Administrar Evento».
+2. El Organizador presiona «Publicar».
+3. El sistema verifica que el evento tenga al menos un sector con capacidad mayor que cero (RN-06)
+   y que la suma de las capacidades no supere la del local (RN-38).
+4. Si el Organizador ya tuvo un evento aprobado, el sistema publica el evento e informa «El evento
+   ya está publicado y aparece en el catálogo.».
+
+**Flujo alternativo:**
+
+FA1 – Sin sectores con capacidad. En el paso 3, si ningún sector tiene capacidad, el sistema
+informa «No se puede publicar el evento: necesita al menos un sector con capacidad mayor que
+cero.» (RN-06) y el evento sigue en borrador.
+
+FA2 – Primer evento. En el paso 4, si el Organizador nunca tuvo un evento aprobado, el sistema deja
+el evento en revisión e informa «El primer evento se envió a revisión del Administrador.» (RN-54).
+Mientras está en revisión, el evento no aparece en el catálogo ni admite ventas.
+
+**Postcondiciones:**
+- El evento queda publicado o, si es el primero, en revisión.
+- Un evento publicado aparece en el catálogo de los Clientes.
+
+---
+
+**CU-18 – Revisar solicitudes de Organizador**
+
+**Id y nombre:** CU-18 – Revisar solicitudes de Organizador
+
+**Descripción:** Permite al Administrador de la plataforma aprobar o rechazar las solicitudes de
+los Clientes que quieren ser Organizadores (RN-53).
+
+**Actor:** Administrador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Administrador inició sesión.
+
+**Flujo principal:**
+1. El Administrador elige «Solicitudes de organizador» en su menú.
+2. El sistema muestra las solicitudes pendientes.
+3. El Administrador elige una; el sistema muestra el responsable, el CUIT, el teléfono, el local,
+   la cuenta bancaria y la documentación adjunta.
+4. El Administrador escribe un motivo y presiona «Aprobar y crear local».
+5. El sistema cambia el perfil de la cuenta a Organizador, crea el local solicitado a su nombre,
+   registra quién revisó y cuándo, e informa «Solicitud aprobada y local creado.».
+
+**Flujo alternativo:**
+
+FA1 – Rechazo. En el paso 4, el Administrador presiona «Rechazar». El sistema registra el
+rechazo con el motivo, el revisor y la fecha, e informa «Solicitud rechazada con el motivo
+registrado.». El perfil de la cuenta no cambia.
+
+FA2 – Sin motivo. Si el Administrador no escribe un motivo, el sistema informa «Escribí un motivo
+antes de aprobar o rechazar.» y no guarda la decisión (RN-53).
+
+FA3 – Sin pendientes. En el paso 2, si no hay solicitudes, el sistema informa «No hay solicitudes
+pendientes.».
+
+**Postcondiciones:**
+- La solicitud queda aprobada o rechazada, con su motivo, su revisor y su fecha.
+- Si se aprobó, la cuenta es Organizador y tiene el local.
+
+---
+
+**CU-19 – Revisar el primer evento de un Organizador**
+
+**Id y nombre:** CU-19 – Revisar el primer evento de un Organizador
+
+**Descripción:** Permite al Administrador de la plataforma aprobar o rechazar el primer evento que
+publica un Organizador nuevo (RN-54).
+
+**Actor:** Administrador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Administrador inició sesión.
+- Hay al menos un evento en revisión (CU-17, FA2).
+
+**Flujo principal:**
+1. El Administrador elige «Eventos en revisión» en su menú.
+2. El sistema muestra los eventos en revisión.
+3. El Administrador elige uno y presiona «Aprobar y publicar».
+4. El sistema publica el evento y registra que el Organizador ya tuvo un evento aprobado: sus
+   publicaciones siguientes son directas.
+
+**Flujo alternativo:**
+
+FA1 – Rechazo. En el paso 3, el Administrador escribe el motivo del rechazo y presiona «Rechazar y
+devolver». El sistema devuelve el evento a borrador y guarda el motivo, que el Organizador ve en
+«Eventos del local» (CU-02, FA4).
+
+FA2 – Sin motivo. Si el Administrador rechaza sin escribir un motivo, el sistema no lo acepta: el
+motivo es obligatorio, de hasta 500 caracteres (RN-54).
+
+FA3 – Sin pendientes. En el paso 2, si no hay eventos en revisión, el sistema informa «No hay
+eventos pendientes.».
+
+**Postcondiciones:**
+- El evento queda publicado, o en borrador con el motivo del rechazo.
+
+---
+
+**CU-20 – Consultar el registro de auditoría**
+
+**Id y nombre:** CU-20 – Consultar el registro de auditoría
+
+**Descripción:** Permite al Administrador de la plataforma consultar las operaciones registradas,
+con quién las hizo, cuándo y con qué resultado.
+
+**Actor:** Administrador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Administrador inició sesión.
+
+**Flujo principal:**
+1. El Administrador elige «Registro de auditoría» en su menú.
+2. El sistema muestra los filtros: período (desde y hasta) y acción (por ejemplo, «Inicio de
+   sesión», «Compra confirmada» o «Gestión de eventos: publicar»).
+3. El Administrador elige los filtros.
+4. El sistema muestra los registros del período y la acción elegidos, con el usuario, la acción,
+   la entidad afectada, la fecha y el resultado.
+
+**Flujo alternativo:**
+
+FA1 – Sin registros. En el paso 4, si no hay registros, el sistema informa «No encontramos
+movimientos con estos filtros. Probá ampliar el período.».
+
+**Postcondiciones:**
+- El registro no se modifica: la consulta es de solo lectura.
+
+---
+
+**CU-21 – Crear administrador**
+
+**Id y nombre:** CU-21 – Crear administrador
+
+**Descripción:** Permite al Administrador de la plataforma dar de alta a otro Administrador. Es la
+única forma de crear una cuenta con ese perfil: el registro público crea solo Clientes.
+
+**Actor:** Administrador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Administrador inició sesión.
+
+**Flujo principal:**
+1. El Administrador elige «Crear administrador» en su menú.
+2. El sistema muestra los campos nombre, apellido, correo, contraseña y confirmación.
+3. El Administrador los completa y confirma.
+4. El sistema verifica que el correo no esté registrado (RN-01) y que la contraseña cumpla RN-02 y
+   la fortaleza mínima (RN-47).
+5. El sistema crea la cuenta con el perfil Administrador.
+
+**Flujo alternativo:**
+
+FA1 – Datos inválidos. En el paso 4, si el correo ya existe o la contraseña no cumple, el sistema
+lo informa y el Administrador vuelve al paso 3.
+
+**Postcondiciones:**
+- Existe una cuenta nueva con el perfil Administrador, sin locales.
 
 ---
 

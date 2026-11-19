@@ -514,7 +514,7 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-01 · p\. 25 :: ^\*\*A-02
 
 **Misma oración, a continuación:** «las especificaciones de casos de uso (CU-01 a CU-08)» pasa a
-«las especificaciones de casos de uso (CU-01 a CU-13)».
+«las especificaciones de casos de uso (CU-01 a CU-21)».
 
 **Tabla «Usuarios y cuentas» (en la p. 25 o en la 26: es la que tiene RN-01 a RN-05).
 Agregar** después de RN-05:
@@ -1027,7 +1027,7 @@ diagrama general de la p. 71.
 > con suscripción activa al momento de inscribirse y después el resto, cada grupo por orden
 > de inscripción (RN-35).
 
-## Después de la página 85 — Especificaciones nuevas CU-09 a CU-13
+## Después de la página 85 — Especificaciones nuevas CU-09 a CU-21
 
 **⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
 
