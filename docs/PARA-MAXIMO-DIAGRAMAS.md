@@ -170,9 +170,9 @@ perfiles; el 19/11 se agregó la vista 6b, la escritura de la auditoría.
 | 3. Dominio: entrada y seguro | `clases-3-dominio-entrada` | **16,0 cm** (13,2) | 11,8 pt |
 | 4. Negocio: gestores de la compra | `clases-4-negocio-compra` | **16,0 cm** (18,7) | 8,5 pt |
 | 5. Negocio: administración | `clases-5-negocio-administracion` | **16,0 cm** (21,9) | 9,8 pt |
-| 5b. Negocio: cuenta y seguridad | `clases-5b-negocio-cuenta-seguridad` | **16,0 cm** (19,9) | 10,7 pt |
-| 6. Negocio: verificación de identidad, perfil y pertenencia | `clases-6-autorizacion` | **16,0 cm** (13,8) | 9,1 pt |
-| 6b. Negocio: escritura de la auditoría | `clases-6b-auditoria` | **16,0 cm** (12,7) | 9,2 pt |
+| 5b. Negocio: cuenta y seguridad | `clases-5b-negocio-cuenta-seguridad` | **16,0 cm** (20,3) | 10,7 pt |
+| 6. Negocio: verificación de identidad, perfil y pertenencia | `clases-6-autorizacion` | **16,0 cm** (13,7) | 8,8 pt |
+| 6b. Negocio: escritura de la auditoría | `clases-6b-auditoria` | **16,0 cm** (13,1) | 9,2 pt |
 | 7. Datos: repositorios | `clases-7-datos` | **14,3 cm** (23,0, página entera) | 8,9 pt |
 
 El fuente de cada una es `fuentes/<nombre>.puml` y la imagen, `<nombre>.png`.
@@ -271,7 +271,8 @@ sí con líneas: sus dependencias están en la tabla de abajo.
 | GestorLocales | `RequerirOrganizador`, `RequerirOrganizadorDeLocal` | Solo el Organizador, sobre sus locales (RN-48, RN-49) |
 | GestorIngresos | `RequerirOrganizador` | Solo el Organizador (RN-48); la pertenencia del evento se verifica después (RN-49) |
 | GestorReportes | `UsuarioActual` | Alcance según el perfil: el Organizador ve sus eventos y el Administrador, todos (RN-34) |
-| GestorAuditoria, GestorSolicitudesOrganizador | `RequerirAdministrador` | Solo el Administrador consulta la auditoría y revisa solicitudes (RN-53) |
+| GestorAuditoria | `RequerirAdministradorParaAuditoria` | Solo el Administrador consulta la auditoría (RN-45). Es una verificación aparte para que el rechazo cite RN-45 y no RN-34 |
+| GestorSolicitudesOrganizador | `RequerirAdministrador` | Solo el Administrador revisa las solicitudes (RN-53) |
 
 **Dependencias que no se dibujan, para no saturar las vistas.** Todas son dependencias de uso, que
 salen de llamadas `X.Instance.Operacion`:
@@ -296,7 +297,7 @@ multiplicidad:
 | Desde | Hacia | De dónde sale en el código |
 |---|---|---|
 | GestorUsuarios, GestorCodigosCorreo, GestorCompras, GestorEventos, GestorIngresos | GestorAuditoria (`Registrar`) | `GestorAuditoria.Instance.Registrar(…)`: inicio de sesión y cambio de contraseña; emisión de códigos y recuperación, exitosa o rechazada; compras y devoluciones; gestión de eventos; ingresos |
-| GestorAuditoria | GestorSesion (`UsuarioActual`, `RequerirAdministrador`) | `Registrar` toma el autor de `UsuarioActual`; `Consultar` llama a `RequerirAdministrador` |
+| GestorAuditoria | GestorSesion (`UsuarioActual`, `RequerirAdministradorParaAuditoria`) | `Registrar` toma el autor de `UsuarioActual`; `Consultar` llama a `RequerirAdministradorParaAuditoria` (RN-45) |
 
 El signo `~` es la visibilidad `internal` de C#, la misma que `GestorSesion.Iniciar` en la vista 6.
 En la recuperación de la contraseña no hay sesión: el autor que registra `GestorCodigosCorreo` es
@@ -512,7 +513,7 @@ Cuatro vistas, regeneradas el 18/11 con las veinte tablas de `BaseDatos/01-esque
 
 | Vista | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra impresa |
 |---|---|---|---|
-| 1. Usuarios y catálogo | `er-1-usuarios-catalogo` | **13,7 cm** (23,0 de alto, página entera) | 9,0 pt |
+| 1. Usuarios y catálogo | `er-1-usuarios-catalogo` | **16,0 cm** (21,6 de alto, página entera) | 8,5 pt |
 | 2. Compra, pago y entradas | `er-2-compras` | **14,6 cm** (23,0 de alto, página entera) | 9,3 pt |
 | 3. Suscripciones, lista de espera y parámetros | `er-3-suscripciones-espera` | **12,7 cm** (13,9 de alto) | 12,0 pt |
 | 4. Seguridad de la cuenta, auditoría y organizadores | `er-4-seguridad-organizadores` | **16,0 cm** (14,4 de alto) | 9,4 pt |
@@ -558,10 +559,12 @@ en orden.
 > que la entrada no se descontara de la capacidad, una sobreventa. Por eso la columna es
 > obligatoria y solo admite el valor 1.
 >
-> Dos vínculos con Usuario se dibujan con línea punteada porque no tienen clave foránea
-> declarada. El dueño de un local (`Locales.PropietarioID`) viene del esquema original. El autor
-> de un registro de auditoría (`Auditoria.UsuarioID`) puede no existir: el registro conserva el
-> correo de un intento de inicio de sesión aunque la cuenta no exista.
+> Un vínculo con Usuario se dibuja con línea punteada porque no tiene clave foránea declarada: el
+> autor de un registro de auditoría (`Auditoria.UsuarioID`) puede no existir, porque el registro
+> conserva el correo de un intento de inicio de sesión aunque la cuenta no exista. El dueño de un
+> local (`Locales.PropietarioID`) tiene su clave foránea desde la versión 2.6
+> (`FK_Locales_Propietario`, RN-49). Apunta a `Usuario.ID`: la base garantiza que el dueño
+> exista, y el negocio, que sea un Organizador (RN-48).
 
 **Restricciones que no entran en la figura** (van en el texto o en una tabla debajo):
 
@@ -589,7 +592,7 @@ en orden.
 | 1 | Usuario — Cliente | 1 : 0..1 | `Cliente.ID` → `Usuario.ID` (también PK) | obligatoria |
 | 1 | Usuario — Propietario | 1 : 0..1 | `Propietario.ID` → `Usuario.ID` (también PK) | obligatoria |
 | 1 | Usuario — Administrador | 1 : 0..1 | `Administrador.ID` → `Usuario.ID` (también PK) | obligatoria |
-| 1 | Propietario — Locales | 1 : 0..* | `Locales.PropietarioID` **sin FK declarada** (línea punteada) | `NOT NULL` |
+| 1 | Usuario — Locales | 1 : 0..* | `FK_Locales_Propietario`: `Locales.PropietarioID` → `Usuario.ID` (script 16) | `NOT NULL` |
 | 1 | Locales — Eventos | 1 : 0..* | `Eventos.LocalID` | `NOT NULL` |
 | 1 | Eventos — Sectores | 1 : 0..* | `Sectores.EventoID` | `NOT NULL` |
 | 1 | Eventos — ServiciosEvento — Servicios | N : M | PK compuesta `(ID_Evento, ID_Servicio)` | — |

@@ -29,6 +29,7 @@ class GestorSesion <<Singleton>> {
   + RequerirOrganizador()
   + RequerirOrganizadorDeLocal(int)
   + RequerirAdministrador()
+  + RequerirAdministradorParaAuditoria()
   + RegistrarActividad(DateTime?)
   + DebeAvisarInactividad(DateTime) : bool
   + DebeCerrarPorInactividad(DateTime) : bool

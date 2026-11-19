@@ -19,7 +19,7 @@ class GestorAuditoria <<Singleton>> {
 }
 class GestorSesion <<Singleton>> {
   + UsuarioActual : SesionAutenticada
-  + RequerirAdministrador()
+  + RequerirAdministradorParaAuditoria()
 }
 
 GestorUsuarios ..> GestorAuditoria : Registrar
@@ -27,7 +27,7 @@ GestorCodigosCorreo ..> GestorAuditoria : Registrar
 GestorCompras ..> GestorAuditoria : Registrar
 GestorEventos ..> GestorAuditoria : Registrar
 GestorIngresos ..> GestorAuditoria : Registrar
-GestorAuditoria ..> GestorSesion : UsuarioActual: autor\nAdministrador: consulta
+GestorAuditoria ..> GestorSesion : UsuarioActual: autor\nAdministradorParaAuditoria:\nconsulta (RN-45)
 
 note right of GestorAuditoria
   Registrar es interno (~):

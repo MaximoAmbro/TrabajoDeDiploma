@@ -7,7 +7,7 @@ hide empty members
 ' Diagrama de clases, vista 6 de 9: verificación de identidad, de perfil y de pertenencia en el
 ' negocio. Fuente: llamadas a GestorSesion en Repo/*.cs. Cada gestor verifica quién llama antes
 ' de operar: el titular de los datos (RN-41), el perfil Organizador (RN-48) y sus propios locales
-' (RN-49), o el Administrador de la plataforma (RN-34). UsuarioActual se omite en las flechas:
+' (RN-49), o el Administrador de la plataforma (RN-34; para la auditoría, RN-45). UsuarioActual se omite en las flechas:
 ' lo leen casi todos para saber quién opera. Las operaciones de cada gestor están en las vistas
 ' 4, 5 y 5b. Los rótulos nombran cada verificación sin el prefijo «Requerir»: «Organizador» es
 ' RequerirOrganizador().
@@ -33,6 +33,7 @@ class GestorSesion <<Singleton>> {
   + RequerirOrganizador()
   + RequerirOrganizadorDeLocal(int)
   + RequerirAdministrador()
+  + RequerirAdministradorParaAuditoria()
 }
 
 GestorUsuarios ..> GestorSesion : Iniciar, Usuario,\nAdministrador
@@ -46,6 +47,6 @@ GestorEventos ..> GestorSesion : Organizador,\nOrganizadorDeLocal,\nAdministrado
 GestorLocales ..> GestorSesion : Organizador,\nOrganizadorDeLocal
 GestorIngresos ..> GestorSesion : Organizador
 GestorReportes ..> GestorSesion : UsuarioActual
-GestorAuditoria ..> GestorSesion : Administrador
+GestorAuditoria ..> GestorSesion : Administrador\nParaAuditoria
 GestorSolicitudesOrganizador ..> GestorSesion : Administrador
 @enduml

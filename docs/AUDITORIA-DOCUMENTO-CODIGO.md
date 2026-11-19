@@ -2011,7 +2011,7 @@ movimientos con estos filtros. Probá ampliar el período.».
 - El registro no se modifica: la consulta es de solo lectura.
 
 **Regla:** solo el Administrador de la plataforma consulta el registro (RN-45). Si otro perfil
-llega a la consulta, el sistema la rechaza con «Esta operación es solo para el Administrador».
+llega a la consulta, el sistema la rechaza con «Solo el Administrador puede consultar la auditoría.»
 
 ---
 

@@ -3,7 +3,8 @@
 skinparam nodesep 22
 skinparam ranksep 40
 ' DER, vista 1 de 3: usuarios con sus tres perfiles y catálogo (locales, eventos, sectores y
-' servicios). Fuente: BaseDatos/01-esquema.sql, más 11 (CHECK del perfil). Convención:
+' servicios). Fuente: BaseDatos/01-esquema.sql, más 11 (CHECK del perfil) y 16 (FK del dueño del
+' local, que apunta a Usuario: la base garantiza que exista y el negocio, que sea Organizador). Convención:
 ' * = NOT NULL; PK, FK, UQ y CK al final.
 ' La tabla Propietario conserva su nombre: desde el script 11 es la de los organizadores.
 
@@ -38,7 +39,7 @@ entity Locales {
   Nombre : VARCHAR(100)
   Direccion : VARCHAR(100)
   * Capacidad : INT <<CK>>
-  * PropietarioID : INT
+  * PropietarioID : INT <<FK>>
 }
 entity Eventos {
   * ID : INT <<PK>>
@@ -78,7 +79,8 @@ entity ServiciosEvento {
 Usuario "1$_" ||--o| "0..1$_" Cliente
 Usuario "1$_" ||--o| "0..1$_" Propietario
 Usuario "1$_" ||--o| "0..1$_" Administrador
-Propietario "1$_" ||..o{ "0..*$_" Locales
+Usuario "1$_" ||---o{ "0..*$_" Locales
+Propietario -[hidden]- Locales
 Locales "1$_" ||--o{ "0..*$_" Eventos
 Eventos "1$_" ||--o{ "0..*$_" Sectores
 Eventos "1$_" ||--o{ "0..*$_" ServiciosEvento
