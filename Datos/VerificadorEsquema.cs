@@ -28,7 +28,8 @@ namespace Datos
             "12-solicitudes-organizador.sql",
             "13-revision-primer-evento.sql",
             "14-primer-evento-aprobado.sql",
-            "15-motivo-rechazo-evento.sql"
+            "15-motivo-rechazo-evento.sql",
+            "16-fk-local-propietario.sql"
         });
 
         public static RequisitoEsquemaFaltante PrimerFaltante()
@@ -57,7 +58,8 @@ WITH requisitos(Orden, Descripcion, Script) AS
                        CASE WHEN COL_LENGTH('dbo.CodigosCorreo','Destinatario') IS NULL THEN N'la columna CodigosCorreo.Destinatario' END), '12-solicitudes-organizador.sql'),
       (13, CASE WHEN NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id=OBJECT_ID('dbo.Eventos') AND name='CK_Eventos_Estado' AND definition LIKE '%EnRevision%' AND is_disabled=0 AND is_not_trusted=0) THEN N'el estado Eventos.EnRevision' END, '13-revision-primer-evento.sql'),
       (14, CASE WHEN COL_LENGTH('dbo.Propietario','PrimerEventoAprobado') IS NULL THEN N'la columna Propietario.PrimerEventoAprobado' END, '14-primer-evento-aprobado.sql'),
-      (15, CASE WHEN COL_LENGTH('dbo.Eventos','MotivoRechazo') IS NULL THEN N'la columna Eventos.MotivoRechazo' END, '15-motivo-rechazo-evento.sql')
+      (15, CASE WHEN COL_LENGTH('dbo.Eventos','MotivoRechazo') IS NULL THEN N'la columna Eventos.MotivoRechazo' END, '15-motivo-rechazo-evento.sql'),
+      (16, CASE WHEN NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE parent_object_id=OBJECT_ID('dbo.Locales') AND referenced_object_id=OBJECT_ID('dbo.Usuario') AND name='FK_Locales_Propietario' AND is_disabled=0 AND is_not_trusted=0) THEN N'la clave foránea Locales.PropietarioID → Usuario.ID' END, '16-fk-local-propietario.sql')
     ) AS valores(Orden, Descripcion, Script)
 )
 SELECT TOP (1) Descripcion, Script FROM requisitos

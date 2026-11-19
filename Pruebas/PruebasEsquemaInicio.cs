@@ -69,6 +69,12 @@ namespace Pruebas
                 Ejecutar("ALTER TABLE dbo.Eventos DROP COLUMN MotivoRechazo;");
                 AssertDiagnostico("la columna Eventos.MotivoRechazo", "15-motivo-rechazo-evento.sql");
                 Ejecutar("ALTER TABLE dbo.Eventos ADD MotivoRechazo NVARCHAR(500) NULL;");
+                Ejecutar("ALTER TABLE dbo.Locales DROP CONSTRAINT FK_Locales_Propietario;");
+                AssertDiagnostico("la clave foránea Locales.PropietarioID → Usuario.ID", "16-fk-local-propietario.sql");
+                Ejecutar("ALTER TABLE dbo.Locales WITH CHECK ADD CONSTRAINT FK_Locales_Propietario FOREIGN KEY (PropietarioID) REFERENCES dbo.Usuario(ID);");
+                var localSinUsuario = Assert.ThrowsException<SqlException>(() => Ejecutar(
+                    "INSERT dbo.Locales(Nombre,Direccion,Capacidad,PropietarioID) VALUES ('Local huérfano de prueba','Dirección de prueba',100,2147483000);"));
+                Assert.AreEqual(547, localSinUsuario.Number, "La FK debe bloquear un PropietarioID que no existe.");
                 Assert.IsNull(VerificadorEsquema.PrimerFaltante());
             }
             finally
@@ -86,6 +92,7 @@ namespace Pruebas
                 Ejecutar("IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id=OBJECT_ID('dbo.Eventos') AND name='CK_Eventos_Estado') ALTER TABLE dbo.Eventos WITH CHECK ADD CONSTRAINT CK_Eventos_Estado CHECK (Estado IN ('Borrador','EnRevision','Publicado','Suspendido'));");
                 Ejecutar("IF COL_LENGTH('dbo.Propietario','PrimerEventoAprobado') IS NULL ALTER TABLE dbo.Propietario ADD PrimerEventoAprobado BIT NOT NULL CONSTRAINT DF_Propietario_PrimerEventoAprobado DEFAULT(0) WITH VALUES; ELSE IF NOT EXISTS (SELECT 1 FROM sys.default_constraints WHERE parent_object_id=OBJECT_ID('dbo.Propietario') AND name='DF_Propietario_PrimerEventoAprobado') ALTER TABLE dbo.Propietario ADD CONSTRAINT DF_Propietario_PrimerEventoAprobado DEFAULT(0) FOR PrimerEventoAprobado;");
                 Ejecutar("IF COL_LENGTH('dbo.Eventos','MotivoRechazo') IS NULL ALTER TABLE dbo.Eventos ADD MotivoRechazo NVARCHAR(500) NULL;");
+                Ejecutar("IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE parent_object_id=OBJECT_ID('dbo.Locales') AND name='FK_Locales_Propietario') ALTER TABLE dbo.Locales WITH CHECK ADD CONSTRAINT FK_Locales_Propietario FOREIGN KEY (PropietarioID) REFERENCES dbo.Usuario(ID);");
             }
         }
 

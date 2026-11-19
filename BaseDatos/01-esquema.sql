@@ -51,7 +51,8 @@ CREATE TABLE Locales (
     Nombre        VARCHAR(100) NULL,
     Direccion     VARCHAR(100) NULL,
     Capacidad     INT          NULL,
-    PropietarioID INT          NULL
+    PropietarioID INT          NULL,
+    CONSTRAINT FK_Locales_Propietario FOREIGN KEY (PropietarioID) REFERENCES Usuario(ID)
 );
 
 IF OBJECT_ID('dbo.Eventos', 'U') IS NULL
