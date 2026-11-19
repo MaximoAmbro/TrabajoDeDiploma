@@ -1,9 +1,10 @@
 # LA lista para el Word — de la página 1 a la 112
 
-> ## ⚠ ANTES DE TODO: ocho scripts nuevos en tu base (18/11)
+> ## ⚠ ANTES DE TODO: nueve scripts nuevos en tu base (18/11 y 19/11)
 >
-> **El ejecutable de hoy no anda sin ellos.** Si ya corriste del `08` al `14` siguiendo una versión
-> anterior de esta lista, solo te falta el `15` (paso 9). En SQL Server Management Studio, elegí tu base de
+> **El ejecutable de hoy no anda sin ellos.** Si ya corriste del `08` al `15` siguiendo una versión
+> anterior de esta lista, solo te falta el `16` (paso 10); de paso, volvé a correr el `08`, que
+> ahora corrige a qué regla apuntan dos parámetros del código por correo (no cambia ningún valor). En SQL Server Management Studio, elegí tu base de
 > EventAura y ejecutá los archivos de la carpeta `BaseDatos/` **en este orden, de a uno**. Todos
 > se pueden ejecutar más de una vez sin dañar nada.
 >
@@ -23,7 +24,7 @@
 >    ```
 >
 >    - **Devuelve una fila:** seguí con el paso 5.
->    - **No devuelve nada:** **pará acá.** No corras del `11` al `15`: el `11` se detendría con el
+>    - **No devuelve nada:** **pará acá.** No corras del `11` al `16`: el `11` se detendría con el
 >      error 51101. Ejecutá esto y mandale el resultado a JC:
 >
 >      ```sql
@@ -41,6 +42,9 @@
 >    eventos publicados, así que `organizador@eventaura.com` publica directo, sin revisión.
 > 9. **`15-motivo-rechazo-evento.sql`**: guarda el motivo cuando el Administrador rechaza el primer
 >    evento de un organizador, para que el organizador lo vea.
+> 10. **`16-fk-local-propietario.sql`**: hace que cada local tenga que pertenecer a un usuario que
+>    exista. Si se detiene con el error 51161, hay locales sin un dueño válido: pará y avisale a
+>    JC; no borres nada.
 >
 > **⚠ Lo que cambia y no es un error:** desde el `11`, **`admin@eventaura.com` ya no tiene
 > locales.** Entra a un menú de administrador de la plataforma (solicitudes, eventos en
@@ -66,7 +70,7 @@
 >    ```
 >
 >    Tiene que dar un número, no `NULL`.
-> 2. Abrí el ejecutable. Si falta alguno de los scripts del `04` al `15`, al iniciar te dice
+> 2. Abrí el ejecutable. Si falta alguno de los scripts del `04` al `16`, al iniciar te dice
 >    cuál.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
@@ -2429,7 +2433,7 @@ movimientos con estos filtros. Probá ampliar el período.».
 - El registro no se modifica: la consulta es de solo lectura.
 
 **Regla:** solo el Administrador de la plataforma consulta el registro (RN-45). Si otro perfil
-llega a la consulta, el sistema la rechaza con «Esta operación es solo para el Administrador».
+llega a la consulta, el sistema la rechaza con «Solo el Administrador puede consultar la auditoría.»
 
 ---
 
@@ -2485,7 +2489,8 @@ a **16,0 cm** (si ya la habías pegado, reemplazala: cambió). Texto debajo del 
 **Diagrama de clases:** reemplazar la figura por diez figuras, **una por página**, cada una con
 su subtítulo. Si ya habías pegado las siete anteriores, reemplazalas todas: cambiaron. **Si ya
 pegaste las nueve del 18/11:** agregá la 6b después de la 6, y volvé a pegar el texto de abajo
-(cambió el párrafo de la capa de negocio).
+(cambió el párrafo de la capa de negocio). **Si ya pegaste la 5b, la 6 o la 6b:** reemplazalas;
+desde el 19/11 a la tarde muestran la verificación propia de la consulta de la auditoría (RN-45).
 
 | Subtítulo | Imagen (`docs/diagramas/`) | Ancho |
 |---|---|---|
@@ -2709,14 +2714,14 @@ cambiaron. Texto:
 
 ## Página 89 — Entidad-relación
 
-**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles. **Si la pegaste el 18/11 o el 19/11 a la mañana:** reemplazá solo la figura 1 y el texto de abajo; el dueño de un local ahora tiene clave foránea (script 16) y la línea Usuario–Locales pasó a ser continua.
 
 Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el título), insertar
 cuatro figuras, una por página, en este orden:
 
 | Vista | Archivo (`docs/diagramas/`) | Ancho |
 |---|---|---|
-| 1. Usuarios y catálogo | `er-1-usuarios-catalogo.png` | **13,7 cm** (página entera) |
+| 1. Usuarios y catálogo | `er-1-usuarios-catalogo.png` | **16,0 cm** (página entera) |
 | 2. Compra, pago y entradas | `er-2-compras.png` | **14,6 cm** (página entera) |
 | 3. Suscripciones, lista de espera y parámetros | `er-3-suscripciones-espera.png` | **12,7 cm** |
 | 4. Seguridad de la cuenta, auditoría y organizadores | `er-4-seguridad-organizadores.png` | **16,0 cm** |
@@ -2756,10 +2761,12 @@ Si ya habías pegado las dos figuras anteriores, reemplazalas: cambiaron las dos
 > que la entrada no se descontara de la capacidad, una sobreventa. Por eso la columna es
 > obligatoria y solo admite el valor 1.
 >
-> Dos vínculos con Usuario se dibujan con línea punteada porque no tienen clave foránea
-> declarada. El dueño de un local (`Locales.PropietarioID`) viene del esquema original. El autor
-> de un registro de auditoría (`Auditoria.UsuarioID`) puede no existir: el registro conserva el
-> correo de un intento de inicio de sesión aunque la cuenta no exista.
+> Un vínculo con Usuario se dibuja con línea punteada porque no tiene clave foránea declarada: el
+> autor de un registro de auditoría (`Auditoria.UsuarioID`) puede no existir, porque el registro
+> conserva el correo de un intento de inicio de sesión aunque la cuenta no exista. El dueño de un
+> local (`Locales.PropietarioID`) tiene su clave foránea desde la versión 2.6
+> (`FK_Locales_Propietario`, RN-49). Apunta a `Usuario.ID`: la base garantiza que el dueño
+> exista, y el negocio, que sea un Organizador (RN-48).
 
 ## Páginas 90 a 97 — Informe de pruebas de usabilidad
 
@@ -3015,7 +3022,7 @@ ORDER BY IngresoBruto DESC;
 
 ## Después de la página 105 — Anexo nuevo «Pantallas del sistema»
 
-**⏸ NO PEGAR TODAVÍA (19/11): Codex está recapturando las pantallas con los datos de la semilla.** Las de Organizador y Administrador muestran hoy datos de las pruebas («test Evento 22»), y faltan seis pantallas. Cuando lleguen, el anexo se pega entero de una vez. Va como anexo nuevo, después del anexo A02 y antes de la matriz de trazabilidad, empezando en página nueva.
+**⏸ NO PEGAR TODAVÍA (19/11): faltan siete de las 28 pantallas.** Las de Organizador y Administrador ya están con los datos de la semilla; faltan cuatro del Cliente que todavía muestran datos de las pruebas, las dos con el indicador de fortaleza cortado y la recuperación de la contraseña. Cuando estén, el anexo se pega entero de una vez. Va como anexo nuevo, después del anexo A02 y antes de la matriz de trazabilidad, empezando en página nueva.
 
 **El mapa de sectores (figura P7.2) va solo, en una página apaisada:** insertá un salto de sección «Página siguiente» antes y otro después, y poné en horizontal solo esa sección (*Disposición › Orientación › Horizontal*). Así el resto del anexo sigue vertical.
 
@@ -3028,7 +3035,7 @@ ORDER BY IngresoBruto DESC;
 > Organizador y Administrador de la plataforma. Cada pantalla tiene una vista completa. Cuando
 > esa vista no se puede leer a tamaño de página, el epígrafe la identifica como vista de
 > disposición y la siguen recortes del panel central a tamaño legible. Los datos que se ven son
-> los de demostración de la semilla y de la batería de pruebas, no datos reales.
+> los de demostración de la semilla, no datos reales.
 
 **Las pantallas, en este orden.** Cada imagen va centrada, con su epígrafe debajo, al ancho de
 la tabla. Si una figura y sus recortes no entran en la misma página, pasá los recortes a la
@@ -3036,39 +3043,25 @@ siguiente; no achiques ninguna imagen.
 
 **Acceso y cuenta**
 
-**Pantalla 1. Inicio de sesión (frmInicio).**
+**Pantalla 1. Inicio de sesión (frmInicio).** ⏸ Todavía no: La captura disponible es de la batería de pruebas (en la barra superior se lee «Cliente Prueba 25»), no de la semilla. Codex tiene que recapturarla con la semilla. Dejá el título y seguí.
+
+**Pantalla 2. Crear cuenta (frmCrearUsuario).** ⏸ Todavía no: El indicador de fortaleza de la contraseña sale cortado («Fortaleza: Insuficiente (0/5; míni…»), igual que en «Crear administrador», que Codex está rehaciendo. Dejá el título y seguí.
+
+**Pantalla 3. Cambiar contraseña (frmCambiarContraseña).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
-| P1 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmInicio.png` | 10,7 cm | 9,0 pt |
-| P1.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmInicio/panel.png` | 10,3 cm | 9,0 pt |
+| P3 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmCambiarContraseña.png` | 11,8 cm | 9,0 pt |
 
 **Epígrafes:**
 
-> Figura P1 — Inicio de sesión: el acceso con correo y contraseña, y los caminos para crear una cuenta y recuperar la contraseña.
->
-> Figura P1.1 — Detalle del formulario de acceso, en la pantalla «Inicio de sesión».
+> Figura P3 — Cambiar contraseña: el cambio de la contraseña con la actual, la nueva y su fortaleza.
 
-**Pantalla 2. Crear cuenta (frmCrearUsuario).** ⏸ Todavía no: Codex cambió la verificación del correo en `5a4b645` (el código va a un archivo que se abre fuera de la aplicación); falta la captura nueva. Dejá el título y seguí.
-
-**Pantalla 3. Cambiar contraseña (frmCambiarContraseña).** ⏸ Todavía no: Codex la cambió en `5a4b645`; falta la captura nueva. Dejá el título y seguí.
-
-**Pantalla 4. Recuperar contraseña (frmCambiarContraseña, modo recuperación).** ⏸ Todavía no: Codex cerró la recuperación en `5a4b645`; falta la captura nueva. Dejá el título y seguí.
+**Pantalla 4. Recuperar contraseña (frmCambiarContraseña, modo recuperación).** ⏸ Todavía no: La etiqueta «Nueva Contraseña» queda tapada por el aviso del código (en `frmCambiarContraseña.cs` el aviso ocupa de 260 a 314 px y la etiqueta está en 300). Es un defecto de la pantalla: Codex tiene que corregirlo y recapturarla. Dejá el título y seguí.
 
 **Cliente**
 
-**Pantalla 5. Inicio de «Mi cuenta» (frmMenuCliente).**
-
-| Figura | Archivo | Ancho | Letra impresa |
-|---|---|---|---|
-| P5 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmMenuCliente.png` | 16,0 cm | 4,5 pt (disposición) |
-| P5.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmMenuCliente/inicio-cliente.png` | 11,4 cm | 9,0 pt |
-
-**Epígrafes:**
-
-> Figura P5 — Inicio de «Mi cuenta». Vista de disposición: muestra cómo se organiza la pantalla (el menú lateral del Cliente y el panel de inicio con su nivel, sus próximas entradas y su lista de espera) y no está pensada para leerse a tamaño de página. El detalle legible está en la figura siguiente.
->
-> Figura P5.1 — Detalle del panel de inicio del Cliente, en el inicio de «Mi cuenta».
+**Pantalla 5. Inicio de «Mi cuenta» (frmMenuCliente).** ⏸ Todavía no: La captura disponible es de la batería de pruebas (en la barra superior se lee «Cliente Prueba 32»), no de la semilla. Codex tiene que recapturarla con la semilla. Dejá el título y seguí.
 
 **Pantalla 6. Eventos disponibles (frmEventosCliente, dentro de «Mi cuenta»).**
 
@@ -3115,37 +3108,9 @@ siguiente; no achiques ninguna imagen.
 >
 > Figura P8.2 — Detalle del resumen y el total del paquete, en la pantalla «Armado del paquete».
 
-**Pantalla 9. Pago simulado (frmPago).**
+**Pantalla 9. Pago simulado (frmPago).** ⏸ Todavía no: La captura disponible es de la batería de pruebas (en la barra superior se lee «Cliente Prueba 38»), no de la semilla. Codex tiene que recapturarla con la semilla. Dejá el título y seguí.
 
-| Figura | Archivo | Ancho | Letra impresa |
-|---|---|---|---|
-| P9 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmPago.png` | 11,8 cm | 9,0 pt |
-| P9.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmPago/panel.png` | 11,4 cm | 9,0 pt |
-
-**Epígrafes:**
-
-> Figura P9 — Pago simulado: los datos de la tarjeta para el pago simulado.
->
-> Figura P9.1 — Detalle del formulario de pago, en la pantalla «Pago simulado».
-
-**Pantalla 10. Confirmación de la compra (frmConfirmacion).**
-
-| Figura | Archivo | Ancho | Letra impresa |
-|---|---|---|---|
-| P10 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmConfirmacion.png` | 16,0 cm | 7,1 pt (disposición) |
-| P10.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmConfirmacion/comprobante.png` | 8,5 cm | 9,0 pt |
-| P10.2 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmConfirmacion/total.png` | 9,0 cm | 9,0 pt |
-| P10.3 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmConfirmacion/entradas-pdf.png` | 9,0 cm | 9,0 pt |
-
-**Epígrafes:**
-
-> Figura P10 — Confirmación de la compra. Vista de disposición: muestra cómo se organiza la pantalla (el pedido confirmado, su comprobante y las entradas en PDF con su código QR) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
->
-> Figura P10.1 — Detalle del desglose del comprobante, en la pantalla «Confirmación de la compra».
->
-> Figura P10.2 — Detalle del total de la compra, en la pantalla «Confirmación de la compra».
->
-> Figura P10.3 — Detalle de las entradas en PDF y su código QR, en la pantalla «Confirmación de la compra».
+**Pantalla 10. Confirmación de la compra (frmConfirmacion).** ⏸ Todavía no: La captura disponible es de la batería de pruebas (en la barra superior se lee «Cliente Prueba 13»), no de la semilla. Codex tiene que recapturarla con la semilla. Muestra además una ruta de `TestResults`. Dejá el título y seguí.
 
 **Pantalla 11. Mis entradas (frmHistorialCliente, dentro de «Mi cuenta»).**
 
@@ -3176,7 +3141,30 @@ siguiente; no achiques ninguna imagen.
 >
 > Figura P12.1 — Detalle de los planes y los beneficios, en la pantalla «Mi suscripción».
 
-**Pantalla 13. Solicitar ser Organizador (frmSolicitudOrganizador).** ⏸ Todavía no: Codex cambió la confirmación del teléfono en `5a4b645`; falta la captura nueva. Dejá el título y seguí.
+**Pantalla 13. Solicitar ser Organizador (frmSolicitudOrganizador).**
+
+| Figura | Archivo | Ancho | Letra impresa |
+|---|---|---|---|
+| P13 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmSolicitudOrganizador.png` | 16,0 cm | 5,9 pt (disposición) |
+| P13.1 | `docs/capturas/pantallas/solicitud-responsable.png` | 10,8 cm | 9,0 pt |
+| P13.2 | `docs/capturas/pantallas/solicitud-codigo.png` | 10,9 cm | 9,0 pt |
+| P13.3 | `docs/capturas/pantallas/solicitud-local-1.png` | 10,8 cm | 9,0 pt |
+| P13.4 | `docs/capturas/pantallas/solicitud-local-2.png` | 10,9 cm | 9,0 pt |
+| P13.5 | `docs/capturas/pantallas/solicitud-envio.png` | 15,9 cm | 9,0 pt |
+
+**Epígrafes:**
+
+> Figura P13 — Solicitar ser Organizador. Vista de disposición: muestra cómo se organiza la pantalla (los datos del responsable, la confirmación del teléfono con un código que llega a un archivo de correo simulado, los datos del local y la documentación) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
+>
+> Figura P13.1 — Detalle del responsable y el teléfono, en la pantalla «Solicitar ser Organizador».
+>
+> Figura P13.2 — Detalle del CUIT y la confirmación del teléfono, en la pantalla «Solicitar ser Organizador».
+>
+> Figura P13.3 — Detalle del nombre y la capacidad del local, en la pantalla «Solicitar ser Organizador».
+>
+> Figura P13.4 — Detalle de la dirección y el CBU, en la pantalla «Solicitar ser Organizador».
+>
+> Figura P13.5 — Detalle de la documentación y el envío de la solicitud, en la pantalla «Solicitar ser Organizador».
 
 **Organizador**
 
@@ -3185,21 +3173,24 @@ siguiente; no achiques ninguna imagen.
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P14 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmMenuPropietario.png` | 16,0 cm | 5,4 pt (disposición) |
-| P14.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmMenuPropietario/panel-organizador.png` | 16,0 cm | 8,4 pt |
+| P14.1 | `docs/capturas/pantallas/organizador-menu.png` | 7,7 cm | 9,0 pt |
+| P14.2 | `docs/capturas/pantallas/organizador-bienvenida.png` | 14,0 cm | 9,0 pt |
 
 **Epígrafes:**
 
-> Figura P14 — Menú del Organizador. Vista de disposición: muestra cómo se organiza la pantalla (las operaciones del Organizador sobre sus locales) y no está pensada para leerse a tamaño de página. El detalle legible está en la figura siguiente.
+> Figura P14 — Menú del Organizador. Vista de disposición: muestra cómo se organiza la pantalla (las operaciones del Organizador sobre sus locales) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
 >
-> Figura P14.1 — Detalle del panel de organización, en la pantalla «Menú del Organizador».
+> Figura P14.1 — Detalle de las operaciones del Organizador, en la pantalla «Menú del Organizador».
+>
+> Figura P14.2 — Detalle del panel de bienvenida, en la pantalla «Menú del Organizador».
 
 **Pantalla 15. Mis locales (frmMisLocales).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P15 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmMisLocales.png` | 16,0 cm | 6,4 pt (disposición) |
-| P15.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmMisLocales/locales.png` | 13,9 cm | 9,0 pt |
-| P15.2 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmMisLocales/capacidad.png` | 7,0 cm | 9,0 pt |
+| P15.1 | `docs/capturas/pantallas/locales-nombre-direccion.png` | 14,0 cm | 9,0 pt |
+| P15.2 | `docs/capturas/pantallas/locales-capacidad.png` | 7,2 cm | 9,0 pt |
 
 **Epígrafes:**
 
@@ -3214,40 +3205,45 @@ siguiente; no achiques ninguna imagen.
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P16 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmRegistrarLocal.png` | 11,4 cm | 9,0 pt |
-| P16.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmRegistrarLocal/panel.png` | 11,0 cm | 9,0 pt |
 
 **Epígrafes:**
 
 > Figura P16 — Registrar local: el alta de un local.
->
-> Figura P16.1 — Detalle del formulario del local, en la pantalla «Registrar local».
 
-**Pantalla 17. Eventos del local (frmEventosLocal).** ⏸ Todavía no: La captura disponible es anterior a la columna «Motivo del rechazo» (commit `40e91b3`). Codex tiene que recapturarla. Dejá el título y seguí.
+**Pantalla 17. Eventos del local (frmEventosLocal).**
+
+| Figura | Archivo | Ancho | Letra impresa |
+|---|---|---|---|
+| P17 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmEventosLocal.png` | 16,0 cm | 6,4 pt (disposición) |
+| P17.1 | `docs/capturas/pantallas/eventos-local-tabla.png` | 13,8 cm | 9,0 pt |
+
+**Epígrafes:**
+
+> Figura P17 — Eventos del local. Vista de disposición: muestra cómo se organiza la pantalla (los eventos de un local con su estado y el motivo del rechazo, y sus acciones) y no está pensada para leerse a tamaño de página. El detalle legible está en la figura siguiente.
+>
+> Figura P17.1 — Detalle de los eventos del local, su estado y el motivo del rechazo, en la pantalla «Eventos del local».
 
 **Pantalla 18. Agregar evento (frmAgregarEvento).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P18 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmAgregarEvento.png` | 16,0 cm | 8,8 pt |
-| P18.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmAgregarEvento/panel.png` | 15,9 cm | 9,0 pt |
 
 **Epígrafes:**
 
 > Figura P18 — Agregar evento: el alta de un evento, que queda en borrador.
->
-> Figura P18.1 — Detalle del formulario del evento, en la pantalla «Agregar evento».
 
 **Pantalla 19. Administrar evento (frmAdministrarEvento).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P19 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmAdministrarEvento.png` | 16,0 cm | 6,4 pt (disposición) |
-| P19.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8c/frmAdministrarEvento/datos-y-sectores.png` | 15,5 cm | 9,0 pt |
-| P19.2 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8c/frmAdministrarEvento/portada.png` | 5,0 cm | 9,0 pt |
+| P19.1 | `docs/capturas/pantallas/administrar-preventa-sectores.png` | 9,5 cm | 9,0 pt |
+| P19.2 | `docs/capturas/pantallas/administrar-portada.png` | 11,4 cm | 9,0 pt |
 
 **Epígrafes:**
 
-> Figura P19 — Administrar evento. Vista de disposición: muestra cómo se organiza la pantalla (la preventa, los sectores, la portada y la publicación del evento) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
+> Figura P19 — Administrar evento. Vista de disposición: muestra cómo se organiza la pantalla (la preventa, los sectores y la portada del evento) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
 >
 > Figura P19.1 — Detalle de la preventa y los sectores, en la pantalla «Administrar evento».
 >
@@ -3258,120 +3254,135 @@ siguiente; no achiques ninguna imagen.
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P20 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmAgregarSector.png` | 11,4 cm | 9,0 pt |
-| P20.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmAgregarSector/panel.png` | 11,0 cm | 9,0 pt |
 
 **Epígrafes:**
 
 > Figura P20 — Agregar sector: el alta de un sector con su capacidad y su precio.
->
-> Figura P20.1 — Detalle del formulario del sector, en la pantalla «Agregar sector».
 
 **Pantalla 21. Control de ingreso (frmControlIngreso).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P21 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmControlIngreso.png` | 16,0 cm | 7,4 pt (disposición) |
-| P21.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmControlIngreso/formulario.png` | 16,0 cm | 8,2 pt |
+| P21.1 | `docs/capturas/pantallas/control-ingreso.png` | 15,9 cm | 9,0 pt |
 
 **Epígrafes:**
 
-> Figura P21 — Control de ingreso. Vista de disposición: muestra cómo se organiza la pantalla (la validación del código de una entrada en la puerta) y no está pensada para leerse a tamaño de página. El detalle legible está en la figura siguiente.
+> Figura P21 — Control de ingreso. Vista de disposición: muestra cómo se organiza la pantalla (la validación de las entradas en la puerta, aquí sin eventos con el ingreso abierto) y no está pensada para leerse a tamaño de página. El detalle legible está en la figura siguiente.
 >
-> Figura P21.1 — Detalle del control de ingreso, en la pantalla «Control de ingreso».
+> Figura P21.1 — Detalle del control de ingreso sin eventos abiertos, en la pantalla «Control de ingreso».
 
 **Pantalla 22. Listas de espera (frmListasEspera).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P22 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmListasEspera.png` | 16,0 cm | 6,4 pt (disposición) |
-| P22.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmListasEspera/estado-lista.png` | 15,1 cm | 9,0 pt |
+| P22.1 | `docs/capturas/pantallas/listas-espera.png` | 15,9 cm | 9,0 pt |
 
 **Epígrafes:**
 
 > Figura P22 — Listas de espera. Vista de disposición: muestra cómo se organiza la pantalla (las listas de espera de los eventos del Organizador) y no está pensada para leerse a tamaño de página. El detalle legible está en la figura siguiente.
 >
-> Figura P22.1 — Detalle de la lista y su estado vacío, en la pantalla «Listas de espera».
-
-**Pantalla 23. Reportes (frmReportes).**
-
-| Figura | Archivo | Ancho | Letra impresa |
-|---|---|---|---|
-| P23 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmReportes.png` | 16,0 cm | 6,0 pt (disposición) |
-| P23.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmReportes/estado-reporte.png` | 8,6 cm | 9,0 pt |
-
-**Epígrafes:**
-
-> Figura P23 — Reportes. Vista de disposición: muestra cómo se organiza la pantalla (los reportes de ventas limitados a los eventos del Organizador) y no está pensada para leerse a tamaño de página. El detalle legible está en la figura siguiente.
->
-> Figura P23.1 — Detalle del estado vacío y la acción para generar un reporte, en la pantalla «Reportes».
+> Figura P22.1 — Detalle del evento elegido y el estado de su lista, en la pantalla «Listas de espera».
 
 **Administrador de la plataforma**
 
-**Pantalla 24. Panel de plataforma (frmMenuAdministrador).**
+**Pantalla 23. Panel de plataforma (frmMenuAdministrador).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
-| P24 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmMenuAdministrador.png` | 16,0 cm | 5,4 pt (disposición) |
-| P24.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8c/frmMenuAdministrador/indicadores-izquierda.png` | 11,9 cm | 9,0 pt |
-| P24.2 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8c/frmMenuAdministrador/indicadores-derecha.png` | 11,9 cm | 9,0 pt |
+| P23 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmMenuAdministrador.png` | 16,0 cm | 5,4 pt (disposición) |
+| P23.1 | `docs/capturas/pantallas/administrador-operaciones-1.png` | 11,1 cm | 9,0 pt |
+| P23.2 | `docs/capturas/pantallas/administrador-operaciones-2.png` | 13,9 cm | 9,0 pt |
+| P23.3 | `docs/capturas/pantallas/administrador-indicadores-1.png` | 12,2 cm | 9,0 pt |
+| P23.4 | `docs/capturas/pantallas/administrador-indicadores-2.png` | 12,2 cm | 9,0 pt |
 
 **Epígrafes:**
 
-> Figura P24 — Panel de plataforma. Vista de disposición: muestra cómo se organiza la pantalla (las operaciones del Administrador y los indicadores globales) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
+> Figura P23 — Panel de plataforma. Vista de disposición: muestra cómo se organiza la pantalla (las operaciones del Administrador y los indicadores globales) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
 >
-> Figura P24.1 — Detalle de los indicadores globales, columna izquierda, en la pantalla «Panel de plataforma».
+> Figura P23.1 — Detalle de las operaciones, primera parte, en la pantalla «Panel de plataforma».
 >
-> Figura P24.2 — Detalle de los indicadores globales, columna derecha, en la pantalla «Panel de plataforma».
+> Figura P23.2 — Detalle de las operaciones, segunda parte, en la pantalla «Panel de plataforma».
+>
+> Figura P23.3 — Detalle de los indicadores globales, columna izquierda, en la pantalla «Panel de plataforma».
+>
+> Figura P23.4 — Detalle de los indicadores globales, columna derecha, en la pantalla «Panel de plataforma».
 
-**Pantalla 25. Crear administrador (frmCrearUsuario, modo administrador).** ⏸ Todavía no: No hay captura de este modo. Es la misma pantalla que la 2, con otro título y otro botón; se captura junto con ella. Dejá el título y seguí.
+**Pantalla 24. Reportes (frmReportes).**
+
+| Figura | Archivo | Ancho | Letra impresa |
+|---|---|---|---|
+| P24 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmReportes.png` | 16,0 cm | 6,0 pt (disposición) |
+| P24.1 | `docs/capturas/pantallas/reportes-filtros-1.png` | 11,8 cm | 9,0 pt |
+| P24.2 | `docs/capturas/pantallas/reportes-filtros-2.png` | 10,6 cm | 9,0 pt |
+| P24.3 | `docs/capturas/pantallas/reportes-tabla-1.png` | 11,4 cm | 9,0 pt |
+| P24.4 | `docs/capturas/pantallas/reportes-tabla-2.png` | 11,4 cm | 9,0 pt |
+| P24.5 | `docs/capturas/pantallas/reportes-lectura.png` | 12,0 cm | 9,0 pt |
+
+**Epígrafes:**
+
+> Figura P24 — Reportes. Vista de disposición: muestra cómo se organiza la pantalla (los reportes de gestión por período y categoría, con su exportación a PDF; el Organizador ve la misma pantalla limitada a sus eventos) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
+>
+> Figura P24.1 — Detalle del reporte y la categoría, en la pantalla «Reportes».
+>
+> Figura P24.2 — Detalle del período y la generación, en la pantalla «Reportes».
+>
+> Figura P24.3 — Detalle de la tabla del reporte, primeras columnas, en la pantalla «Reportes».
+>
+> Figura P24.4 — Detalle de la tabla del reporte, últimas columnas, en la pantalla «Reportes».
+>
+> Figura P24.5 — Detalle de la lectura del reporte, en la pantalla «Reportes».
+
+**Pantalla 25. Crear administrador (frmCrearUsuario, modo administrador).** ⏸ Todavía no: Codex la está rehaciendo porque el indicador de fortaleza sale cortado. Dejá el título y seguí.
 
 **Pantalla 26. Solicitudes de organizador (frmRevisarSolicitudesOrganizador).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P26 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmRevisarSolicitudesOrganizador.png` | 16,0 cm | 4,6 pt (disposición) |
-| P26.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmRevisarSolicitudesOrganizador/lista.png` | 7,9 cm | 9,0 pt |
-| P26.2 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmRevisarSolicitudesOrganizador/datos.png` | 11,4 cm | 9,0 pt |
-| P26.3 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmRevisarSolicitudesOrganizador/documento.png` | 9,5 cm | 9,0 pt |
+| P26.1 | `docs/capturas/pantallas/solicitudes-datos.png` | 16,0 cm | 8,9 pt |
+| P26.2 | `docs/capturas/pantallas/solicitudes-documento.png` | 9,7 cm | 9,0 pt |
+| P26.3 | `docs/capturas/pantallas/solicitudes-acciones.png` | 15,9 cm | 9,0 pt |
 
 **Epígrafes:**
 
 > Figura P26 — Solicitudes de organizador. Vista de disposición: muestra cómo se organiza la pantalla (la revisión de una solicitud con los datos del responsable, del local y la documentación) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
 >
-> Figura P26.1 — Detalle de la lista de solicitudes, en la pantalla «Solicitudes de organizador».
+> Figura P26.1 — Detalle de la lista y los datos de la solicitud, en la pantalla «Solicitudes de organizador».
 >
-> Figura P26.2 — Detalle de los datos del responsable y del local, en la pantalla «Solicitudes de organizador».
+> Figura P26.2 — Detalle de la documentación adjunta, en la pantalla «Solicitudes de organizador».
 >
-> Figura P26.3 — Detalle del documento adjunto, en la pantalla «Solicitudes de organizador».
+> Figura P26.3 — Detalle del motivo y las acciones, en la pantalla «Solicitudes de organizador».
 
 **Pantalla 27. Eventos en revisión (frmRevisarEventos).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
-| P27 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8d/frmRevisarEventos.png` | 16,0 cm | 5,1 pt (disposición) |
-| P27.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8d/frmRevisarEventos/lista.png` | 16,0 cm | 8,9 pt |
-| P27.2 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8d/frmRevisarEventos/revision.png` | 9,8 cm | 9,0 pt |
+| P27 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmRevisarEventos.png` | 16,0 cm | 5,1 pt (disposición) |
+| P27.1 | `docs/capturas/pantallas/revision-eventos.png` | 9,6 cm | 9,0 pt |
 
 **Epígrafes:**
 
-> Figura P27 — Eventos en revisión. Vista de disposición: muestra cómo se organiza la pantalla (la aprobación o el rechazo, con motivo, del primer evento de un Organizador) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
+> Figura P27 — Eventos en revisión. Vista de disposición: muestra cómo se organiza la pantalla (la aprobación o el rechazo, con motivo, del primer evento de un Organizador; la semilla no tiene eventos pendientes) y no está pensada para leerse a tamaño de página. El detalle legible está en la figura siguiente.
 >
-> Figura P27.1 — Detalle de la lista de eventos en revisión, en la pantalla «Eventos en revisión».
->
-> Figura P27.2 — Detalle de los datos, el motivo y las acciones, en la pantalla «Eventos en revisión».
+> Figura P27.1 — Detalle del estado, el motivo del rechazo y las acciones, en la pantalla «Eventos en revisión».
 
 **Pantalla 28. Registro de auditoría (frmAuditoria).**
 
 | Figura | Archivo | Ancho | Letra impresa |
 |---|---|---|---|
 | P28 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmAuditoria.png` | 16,0 cm | 5,9 pt (disposición) |
-| P28.1 | `Pruebas/Recortes-Documento-Fases7-8/paneles/Fase8b/frmAuditoria/estado-vacio.png` | 8,7 cm | 9,0 pt |
+| P28.1 | `docs/capturas/pantallas/auditoria-1.png` | 15,3 cm | 9,0 pt |
+| P28.2 | `docs/capturas/pantallas/auditoria-2.png` | 13,9 cm | 9,0 pt |
 
 **Epígrafes:**
 
-> Figura P28 — Registro de auditoría. Vista de disposición: muestra cómo se organiza la pantalla (la consulta del registro de auditoría por período y acción) y no está pensada para leerse a tamaño de página. El detalle legible está en la figura siguiente.
+> Figura P28 — Registro de auditoría. Vista de disposición: muestra cómo se organiza la pantalla (la consulta del registro de auditoría por período y acción) y no está pensada para leerse a tamaño de página. El detalle legible está en las figuras siguientes.
 >
-> Figura P28.1 — Detalle de los filtros y el estado vacío, en la pantalla «Registro de auditoría».
+> Figura P28.1 — Detalle de los filtros y las primeras columnas, en la pantalla «Registro de auditoría».
+>
+> Figura P28.2 — Detalle del filtro de acción y las últimas columnas, en la pantalla «Registro de auditoría».
 
 ## Página 106 — Matriz: criterio y nomenclatura
 
@@ -3384,54 +3395,70 @@ siguiente; no achiques ninguna imagen.
 
 **Por:**
 
-> Una grilla que cruce los seis objetivos con los trece requerimientos, las cuarenta y una
-> reglas, los trece casos de uso y los ciento cuarenta y ocho casos de prueba resulta ilegible en
+> Una grilla que cruce los seis objetivos con los veintidós requerimientos, las cincuenta y dos
+> reglas, los veintiún casos de uso y los doscientos cuatro casos de prueba resulta ilegible en
 > formato A4
 
 **Tabla «Nomenclatura de los ejes».** Reemplazar las filas de reglas y de casos de prueba, y en
-la de casos de uso cambiar la cantidad:
+las de requerimientos funcionales y casos de uso cambiar la cantidad:
 
 | Fila | Dice | Poner |
 |---|---|---|
-| Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 41 \| Reglas de negocio (RN-27 dada de baja)» |
-| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 148 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-148: Matriz de trazabilidad, catálogo de casos incorporados» |
-| Casos de uso | la cantidad «8» | «13» |
+| Requerimientos funcionales | la cantidad «13» | «22» |
+| Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 52 \| Reglas de negocio (RN-27 y RN-42 dadas de baja)» |
+| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 204 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-205: Matriz de trazabilidad, catálogo de casos incorporados (el número CP-149 no se usó)» |
+| Casos de uso | la cantidad «8» | «21» |
 
 ## Página 107 — Matriz principal
 
 **⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+La tabla ya está armada con RF-14 a RF-22 (19/11), pero Codex está agregando una prueba más y la
+columna de casos se vuelve a generar cuando la commitee.
 
 **Reemplazar la tabla completa por:**
 
 | RF | OE | MoSCoW | Reglas de negocio | CU | Casos de prueba | Hall. |
 |---|---|---|---|---|---|---|
 | RF-01 | OE-2 | Must | RN-01, RN-02, RN-03 | CU-04 | CP-14, CP-15, CP-26, CP-44, CP-45, CP-55 | — |
-| RF-02 | OE-2 | Must | RN-04, RN-05, RN-40, RN-41 | CU-05, CU-09 | CP-27, CP-28, CP-29, CP-46, CP-55, CP-66 a CP-68, CP-91, CP-92, CP-94 a CP-98, CP-105, CP-107, CP-108, CP-113, CP-114, CP-124, CP-130 | — |
-| RF-03 | OE-2 | Must | RN-09 | CU-01 | CP-16, CP-17, CP-18, CP-30, CP-81, CP-106 | — |
-| RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49, CP-54, CP-94 | H-03 |
-| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61, CP-79, CP-81, CP-119, CP-122, CP-140 | H-04 |
-| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43, CP-52, CP-80, CP-122, CP-127, CP-129, CP-147, CP-148 | H-02 |
-| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123, CP-128, CP-131 a CP-136, CP-142, CP-145, CP-146 | — |
-| RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08, CP-09, CP-11, CP-42, CP-91, CP-92, CP-115, CP-138, CP-139 | H-01, H-05 |
+| RF-02 | OE-2 | Must | RN-04, RN-40, RN-41 | CU-05, CU-09 | CP-27 a CP-29, CP-46, CP-47, CP-51, CP-53, CP-66 a CP-68, CP-105, CP-107, CP-108, CP-130, CP-154 a CP-157 | — |
+| RF-03 | OE-2 | Must | RN-09 | CU-01 | CP-16 a CP-18, CP-30, CP-81, CP-106, CP-160, CP-199 | — |
+| RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49, CP-54, CP-94, CP-151 | H-03 |
+| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-05, CP-11, CP-13, CP-19, CP-22 a CP-25, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61 a CP-64, CP-79, CP-81, CP-112, CP-116, CP-119, CP-120, CP-140, CP-152, CP-153, CP-159, CP-163 | H-04 |
+| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32 a CP-34, CP-39, CP-43, CP-52, CP-80, CP-122, CP-127, CP-129, CP-147, CP-148, CP-181 | H-02 |
+| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123, CP-128, CP-131 a CP-136, CP-142, CP-145, CP-146, CP-161 | — |
+| RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08 a CP-11, CP-42, CP-91, CP-92, CP-115, CP-138, CP-139 | H-01, H-05 |
 | RF-09 | — | Won't | — | — | — | — |
 | RF-10 | OE-6 ind. | Could | RN-10, RN-35, RN-36 | CU-07 | CP-24, CP-37, CP-83, CP-84, CP-117, CP-118, CP-125, CP-126, CP-137 | — |
-| RF-11 | OE-6 | Should | RN-34 | CU-08 | CP-35 a CP-38, CP-85 a CP-90, CP-109, CP-143, CP-144 | — |
-| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38, RN-42 | CU-02, CU-10, CU-11 | CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94, CP-123, CP-141 | — |
-| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-61, CP-76, CP-77, CP-78, CP-94, CP-121 | — |
+| RF-11 | OE-6 | Should | RN-34 | CU-08 | CP-35 a CP-38, CP-85 a CP-90, CP-109, CP-143, CP-144, CP-162, CP-182 | — |
+| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38 | CU-02, CU-10, CU-11 | CP-12, CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94, CP-141, CP-164, CP-197 | — |
+| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-76 a CP-78, CP-94, CP-121 | — |
+| RF-14 | OE-2 | Must | RN-43, RN-44 | CU-04, CU-14 | CP-167, CP-168, CP-171, CP-203 | — |
+| RF-15 | OE-2 | Must | RN-44 | CU-15 | CP-169 a CP-171, CP-173, CP-176, CP-200, CP-201 | — |
+| RF-16 | OE-2 | Must | RN-45 | CU-20 | CP-174, CP-175, CP-189, CP-196 | — |
+| RF-17 | OE-2 | Must | RN-46, RN-47 | CU-04, CU-05, CU-09, CU-15 | CP-95 a CP-98, CP-113, CP-114, CP-124, CP-170, CP-172, CP-174 | — |
+| RF-18 | OE-2 | Should | — | CU-01 | CP-150, CP-151, CP-160 | — |
+| RF-19 | OE-2 | Should | — | CU-02 | CP-158, CP-160, CP-177 a CP-180 | — |
+| RF-20 | OE-2 | Must | RN-50 a RN-53 | CU-16, CU-18 | CP-184 a CP-196, CP-202 | — |
+| RF-21 | OE-2 | Must | RN-06, RN-54 | CU-17, CU-19 | CP-198, CP-199, CP-204, CP-205 | — |
+| RF-22 | OE-2 | Must | RN-05, RN-48, RN-49 | CU-02, CU-07, CU-10 a CU-12, CU-21 | CP-85, CP-141, CP-142, CP-161, CP-162, CP-165, CP-166, CP-182 a CP-184, CP-187, CP-189, CP-190, CP-193, CP-198 | — |
+
+*Cómo se armó:* la columna «Casos de prueba» sale de los comentarios de trazabilidad de las
+pruebas en `2ffca70` (`py -3 -X utf8 tools/Matriz/Extraer.py`); las reglas y los casos de uso, de
+la columna «RF / CU» de la tabla de reglas (pp. 25 a 27). RF-14 a RF-22 van con OE-2, como los
+demás requerimientos de la operación de la plataforma (RF-01 a RF-05, RF-07 y RF-12): ninguno
+responde a la fidelización (OE-3), al pago (OE-5) ni a la información de gestión (OE-6).
+**Para que decida JC.**
 
 El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debajo:
 
 > La categoría Won't de RF-09 corresponde a la reclasificación de la versión 2.5 (brecha
-> G-03). Los requerimientos no funcionales no figuran en la matriz porque no originan casos
-> de uso; sus casos de prueba son: RNF-01, CP-112; RNF-02, CP-47, CP-51, CP-53, CP-62, CP-63,
-> CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119 y CP-120; RNF-03, CP-12, CP-25, CP-64, CP-69,
-> CP-85 y CP-116. Un caso
-> figura en más de una fila cuando prueba una regla de una fila desde la operación de otra.
-> RN-41 y RN-42 son reglas de autorización: valen para todas las operaciones del sistema y no
-> para un requerimiento solo. Se ubican en RF-02, que establece la sesión de la que dependen, y
-> en RF-12, que reúne las operaciones del Administrador. CP-94 figura en varias filas porque
-> verifica las dos reglas en las operaciones de cada una; CP-123, en RF-07 y RF-12, porque
-> verifica RN-42 en el control de ingreso.
+> G-03). RF-14 a RF-22 se incorporaron en la versión 2.6. Los requerimientos no funcionales no
+> figuran en la matriz porque no originan casos de uso; sus casos de prueba son: RNF-02,
+> CP-47, CP-62, CP-63, CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119, CP-120, CP-152, CP-153, CP-157 y CP-159; RNF-03, CP-12, CP-25, CP-64, CP-69, CP-85, CP-116 y CP-163; RNF-04, CP-51, CP-53, CP-156, CP-164 y CP-197. Un caso figura en más de una fila cuando prueba una
+> regla de una fila desde la operación de otra. RN-41 es una regla de autorización: vale para
+> todas las operaciones del sistema y no para un requerimiento solo, y se ubica en RF-02, que
+> establece la sesión de la que depende. RN-48 y RN-49, que reservan al Organizador la gestión de
+> sus locales, se ubican en RF-22.
 
 **Agregar a continuación** el subtítulo «Trazabilidad del requerimiento core» y:
 
@@ -4244,7 +4271,7 @@ cifras, así que no cambia cuando se congelen los números.
 
 | Dos verificaciones dependen de una persona y de un dispositivo: la lectura de los códigos QR impresos con la cámara de un celular y el aspecto del PDF de los reportes en tres lectores. | Se hicieron una vez; no se repiten en cada corrida como los casos automáticos. |
 |---|---|
-| El envío de los códigos de verificación y de recuperación es simulado: cada mensaje se escribe en un archivo de correo de la misma computadora, fuera de la aplicación. Por eso no demuestra que quien lee el código sea el titular del correo o del teléfono. | Es una decisión de configuración, no un hueco de arquitectura: el envío está implementado con el patrón Strategy, y pasar a correo real es elegir la estrategia `EnviadorSmtp`, que ya existe, y configurar el servidor, sin cambiar la capa de negocio. La aplicación no puede abrir ni leer ese archivo, y todo restablecimiento, exitoso o rechazado, queda en el registro de auditoría con la cuenta y la fecha. |
+| El envío de los códigos de verificación y de recuperación es simulado: cada mensaje se escribe en un archivo de correo de la misma computadora, fuera de la aplicación. Por eso no demuestra que quien lee el código sea el titular del correo o del teléfono. | Es una decisión de configuración, no un hueco de arquitectura: el envío está implementado con el patrón Strategy, y pasar a correo real es elegir la estrategia `EnviadorSmtp`, que ya existe, y configurar el servidor, sin cambiar la capa de negocio. La aplicación no puede abrir ni leer ese archivo, y todo restablecimiento, exitoso o rechazado, queda en el registro de auditoría con la cuenta y la fecha. Ese registro no es inalterable para quien accede directamente a la base, porque se guarda en la misma base y con las mismas credenciales que el resto de los datos. |
 | La aplicación de escritorio accede a la base con la cuenta de Windows del usuario. | Las verificaciones de perfil del negocio (RN-34, RN-41, RN-42) protegen la operación desde la aplicación; en producción tienen que acompañarse de permisos en la base o de un servicio intermedio. |
 
 ## Página 111 — Trabajo futuro

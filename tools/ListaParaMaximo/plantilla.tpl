@@ -1,9 +1,10 @@
 # LA lista para el Word — de la página 1 a la 112
 
-> ## ⚠ ANTES DE TODO: ocho scripts nuevos en tu base (18/11)
+> ## ⚠ ANTES DE TODO: nueve scripts nuevos en tu base (18/11 y 19/11)
 >
-> **El ejecutable de hoy no anda sin ellos.** Si ya corriste del `08` al `14` siguiendo una versión
-> anterior de esta lista, solo te falta el `15` (paso 9). En SQL Server Management Studio, elegí tu base de
+> **El ejecutable de hoy no anda sin ellos.** Si ya corriste del `08` al `15` siguiendo una versión
+> anterior de esta lista, solo te falta el `16` (paso 10); de paso, volvé a correr el `08`, que
+> ahora corrige a qué regla apuntan dos parámetros del código por correo (no cambia ningún valor). En SQL Server Management Studio, elegí tu base de
 > EventAura y ejecutá los archivos de la carpeta `BaseDatos/` **en este orden, de a uno**. Todos
 > se pueden ejecutar más de una vez sin dañar nada.
 >
@@ -23,7 +24,7 @@
 >    ```
 >
 >    - **Devuelve una fila:** seguí con el paso 5.
->    - **No devuelve nada:** **pará acá.** No corras del `11` al `15`: el `11` se detendría con el
+>    - **No devuelve nada:** **pará acá.** No corras del `11` al `16`: el `11` se detendría con el
 >      error 51101. Ejecutá esto y mandale el resultado a JC:
 >
 >      ```sql
@@ -41,6 +42,9 @@
 >    eventos publicados, así que `organizador@eventaura.com` publica directo, sin revisión.
 > 9. **`15-motivo-rechazo-evento.sql`**: guarda el motivo cuando el Administrador rechaza el primer
 >    evento de un organizador, para que el organizador lo vea.
+> 10. **`16-fk-local-propietario.sql`**: hace que cada local tenga que pertenecer a un usuario que
+>    exista. Si se detiene con el error 51161, hay locales sin un dueño válido: pará y avisale a
+>    JC; no borres nada.
 >
 > **⚠ Lo que cambia y no es un error:** desde el `11`, **`admin@eventaura.com` ya no tiene
 > locales.** Entra a un menú de administrador de la plataforma (solicitudes, eventos en
@@ -66,7 +70,7 @@
 >    ```
 >
 >    Tiene que dar un número, no `NULL`.
-> 2. Abrí el ejecutable. Si falta alguno de los scripts del `04` al `15`, al iniciar te dice
+> 2. Abrí el ejecutable. Si falta alguno de los scripts del `04` al `16`, al iniciar te dice
 >    cuál.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
@@ -1197,7 +1201,8 @@ a **16,0 cm** (si ya la habías pegado, reemplazala: cambió). Texto debajo del 
 **Diagrama de clases:** reemplazar la figura por diez figuras, **una por página**, cada una con
 su subtítulo. Si ya habías pegado las siete anteriores, reemplazalas todas: cambiaron. **Si ya
 pegaste las nueve del 18/11:** agregá la 6b después de la 6, y volvé a pegar el texto de abajo
-(cambió el párrafo de la capa de negocio).
+(cambió el párrafo de la capa de negocio). **Si ya pegaste la 5b, la 6 o la 6b:** reemplazalas;
+desde el 19/11 a la tarde muestran la verificación propia de la consulta de la auditoría (RN-45).
 
 | Subtítulo | Imagen (`docs/diagramas/`) | Ancho |
 |---|---|---|
@@ -1282,14 +1287,14 @@ cambiaron. Texto:
 
 ## Página 89 — Entidad-relación
 
-**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles. **Si la pegaste el 18/11 o el 19/11 a la mañana:** reemplazá solo la figura 1 y el texto de abajo; el dueño de un local ahora tiene clave foránea (script 16) y la línea Usuario–Locales pasó a ser continua.
 
 Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el título), insertar
 cuatro figuras, una por página, en este orden:
 
 | Vista | Archivo (`docs/diagramas/`) | Ancho |
 |---|---|---|
-| 1. Usuarios y catálogo | `er-1-usuarios-catalogo.png` | **13,7 cm** (página entera) |
+| 1. Usuarios y catálogo | `er-1-usuarios-catalogo.png` | **16,0 cm** (página entera) |
 | 2. Compra, pago y entradas | `er-2-compras.png` | **14,6 cm** (página entera) |
 | 3. Suscripciones, lista de espera y parámetros | `er-3-suscripciones-espera.png` | **12,7 cm** |
 | 4. Seguridad de la cuenta, auditoría y organizadores | `er-4-seguridad-organizadores.png` | **16,0 cm** |
@@ -1351,7 +1356,7 @@ filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en
 
 ## Después de la página 105 — Anexo nuevo «Pantallas del sistema»
 
-**⏸ NO PEGAR TODAVÍA (19/11): Codex está recapturando las pantallas con los datos de la semilla.** Las de Organizador y Administrador muestran hoy datos de las pruebas («test Evento 22»), y faltan seis pantallas. Cuando lleguen, el anexo se pega entero de una vez. Va como anexo nuevo, después del anexo A02 y antes de la matriz de trazabilidad, empezando en página nueva.
+**⏸ NO PEGAR TODAVÍA (19/11): faltan siete de las 28 pantallas.** Las de Organizador y Administrador ya están con los datos de la semilla; faltan cuatro del Cliente que todavía muestran datos de las pruebas, las dos con el indicador de fortaleza cortado y la recuperación de la contraseña. Cuando estén, el anexo se pega entero de una vez. Va como anexo nuevo, después del anexo A02 y antes de la matriz de trazabilidad, empezando en página nueva.
 
 **El mapa de sectores (figura P7.2) va solo, en una página apaisada:** insertá un salto de sección «Página siguiente» antes y otro después, y poné en horizontal solo esa sección (*Disposición › Orientación › Horizontal*). Así el resto del anexo sigue vertical.
 
@@ -1368,54 +1373,70 @@ filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en
 
 **Por:**
 
-> Una grilla que cruce los seis objetivos con los trece requerimientos, las cuarenta y una
-> reglas, los trece casos de uso y los ciento cuarenta y ocho casos de prueba resulta ilegible en
+> Una grilla que cruce los seis objetivos con los veintidós requerimientos, las cincuenta y dos
+> reglas, los veintiún casos de uso y los doscientos cuatro casos de prueba resulta ilegible en
 > formato A4
 
 **Tabla «Nomenclatura de los ejes».** Reemplazar las filas de reglas y de casos de prueba, y en
-la de casos de uso cambiar la cantidad:
+las de requerimientos funcionales y casos de uso cambiar la cantidad:
 
 | Fila | Dice | Poner |
 |---|---|---|
-| Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 41 \| Reglas de negocio (RN-27 dada de baja)» |
-| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 148 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-148: Matriz de trazabilidad, catálogo de casos incorporados» |
-| Casos de uso | la cantidad «8» | «13» |
+| Requerimientos funcionales | la cantidad «13» | «22» |
+| Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 52 \| Reglas de negocio (RN-27 y RN-42 dadas de baja)» |
+| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 204 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-205: Matriz de trazabilidad, catálogo de casos incorporados (el número CP-149 no se usó)» |
+| Casos de uso | la cantidad «8» | «21» |
 
 ## Página 107 — Matriz principal
 
 **⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+La tabla ya está armada con RF-14 a RF-22 (19/11), pero Codex está agregando una prueba más y la
+columna de casos se vuelve a generar cuando la commitee.
 
 **Reemplazar la tabla completa por:**
 
 | RF | OE | MoSCoW | Reglas de negocio | CU | Casos de prueba | Hall. |
 |---|---|---|---|---|---|---|
 | RF-01 | OE-2 | Must | RN-01, RN-02, RN-03 | CU-04 | CP-14, CP-15, CP-26, CP-44, CP-45, CP-55 | — |
-| RF-02 | OE-2 | Must | RN-04, RN-05, RN-40, RN-41 | CU-05, CU-09 | CP-27, CP-28, CP-29, CP-46, CP-55, CP-66 a CP-68, CP-91, CP-92, CP-94 a CP-98, CP-105, CP-107, CP-108, CP-113, CP-114, CP-124, CP-130 | — |
-| RF-03 | OE-2 | Must | RN-09 | CU-01 | CP-16, CP-17, CP-18, CP-30, CP-81, CP-106 | — |
-| RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49, CP-54, CP-94 | H-03 |
-| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61, CP-79, CP-81, CP-119, CP-122, CP-140 | H-04 |
-| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32, CP-33, CP-34, CP-39, CP-43, CP-52, CP-80, CP-122, CP-127, CP-129, CP-147, CP-148 | H-02 |
-| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123, CP-128, CP-131 a CP-136, CP-142, CP-145, CP-146 | — |
-| RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08, CP-09, CP-11, CP-42, CP-91, CP-92, CP-115, CP-138, CP-139 | H-01, H-05 |
+| RF-02 | OE-2 | Must | RN-04, RN-40, RN-41 | CU-05, CU-09 | CP-27 a CP-29, CP-46, CP-47, CP-51, CP-53, CP-66 a CP-68, CP-105, CP-107, CP-108, CP-130, CP-154 a CP-157 | — |
+| RF-03 | OE-2 | Must | RN-09 | CU-01 | CP-16 a CP-18, CP-30, CP-81, CP-106, CP-160, CP-199 | — |
+| RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49, CP-54, CP-94, CP-151 | H-03 |
+| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-05, CP-11, CP-13, CP-19, CP-22 a CP-25, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61 a CP-64, CP-79, CP-81, CP-112, CP-116, CP-119, CP-120, CP-140, CP-152, CP-153, CP-159, CP-163 | H-04 |
+| RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32 a CP-34, CP-39, CP-43, CP-52, CP-80, CP-122, CP-127, CP-129, CP-147, CP-148, CP-181 | H-02 |
+| RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123, CP-128, CP-131 a CP-136, CP-142, CP-145, CP-146, CP-161 | — |
+| RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08 a CP-11, CP-42, CP-91, CP-92, CP-115, CP-138, CP-139 | H-01, H-05 |
 | RF-09 | — | Won't | — | — | — | — |
 | RF-10 | OE-6 ind. | Could | RN-10, RN-35, RN-36 | CU-07 | CP-24, CP-37, CP-83, CP-84, CP-117, CP-118, CP-125, CP-126, CP-137 | — |
-| RF-11 | OE-6 | Should | RN-34 | CU-08 | CP-35 a CP-38, CP-85 a CP-90, CP-109, CP-143, CP-144 | — |
-| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38, RN-42 | CU-02, CU-10, CU-11 | CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94, CP-123, CP-141 | — |
-| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-61, CP-76, CP-77, CP-78, CP-94, CP-121 | — |
+| RF-11 | OE-6 | Should | RN-34 | CU-08 | CP-35 a CP-38, CP-85 a CP-90, CP-109, CP-143, CP-144, CP-162, CP-182 | — |
+| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38 | CU-02, CU-10, CU-11 | CP-12, CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94, CP-141, CP-164, CP-197 | — |
+| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-76 a CP-78, CP-94, CP-121 | — |
+| RF-14 | OE-2 | Must | RN-43, RN-44 | CU-04, CU-14 | CP-167, CP-168, CP-171, CP-203 | — |
+| RF-15 | OE-2 | Must | RN-44 | CU-15 | CP-169 a CP-171, CP-173, CP-176, CP-200, CP-201 | — |
+| RF-16 | OE-2 | Must | RN-45 | CU-20 | CP-174, CP-175, CP-189, CP-196 | — |
+| RF-17 | OE-2 | Must | RN-46, RN-47 | CU-04, CU-05, CU-09, CU-15 | CP-95 a CP-98, CP-113, CP-114, CP-124, CP-170, CP-172, CP-174 | — |
+| RF-18 | OE-2 | Should | — | CU-01 | CP-150, CP-151, CP-160 | — |
+| RF-19 | OE-2 | Should | — | CU-02 | CP-158, CP-160, CP-177 a CP-180 | — |
+| RF-20 | OE-2 | Must | RN-50 a RN-53 | CU-16, CU-18 | CP-184 a CP-196, CP-202 | — |
+| RF-21 | OE-2 | Must | RN-06, RN-54 | CU-17, CU-19 | CP-198, CP-199, CP-204, CP-205 | — |
+| RF-22 | OE-2 | Must | RN-05, RN-48, RN-49 | CU-02, CU-07, CU-10 a CU-12, CU-21 | CP-85, CP-141, CP-142, CP-161, CP-162, CP-165, CP-166, CP-182 a CP-184, CP-187, CP-189, CP-190, CP-193, CP-198 | — |
+
+*Cómo se armó:* la columna «Casos de prueba» sale de los comentarios de trazabilidad de las
+pruebas en `2ffca70` (`py -3 -X utf8 tools/Matriz/Extraer.py`); las reglas y los casos de uso, de
+la columna «RF / CU» de la tabla de reglas (pp. 25 a 27). RF-14 a RF-22 van con OE-2, como los
+demás requerimientos de la operación de la plataforma (RF-01 a RF-05, RF-07 y RF-12): ninguno
+responde a la fidelización (OE-3), al pago (OE-5) ni a la información de gestión (OE-6).
+**Para que decida JC.**
 
 El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debajo:
 
 > La categoría Won't de RF-09 corresponde a la reclasificación de la versión 2.5 (brecha
-> G-03). Los requerimientos no funcionales no figuran en la matriz porque no originan casos
-> de uso; sus casos de prueba son: RNF-01, CP-112; RNF-02, CP-47, CP-51, CP-53, CP-62, CP-63,
-> CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119 y CP-120; RNF-03, CP-12, CP-25, CP-64, CP-69,
-> CP-85 y CP-116. Un caso
-> figura en más de una fila cuando prueba una regla de una fila desde la operación de otra.
-> RN-41 y RN-42 son reglas de autorización: valen para todas las operaciones del sistema y no
-> para un requerimiento solo. Se ubican en RF-02, que establece la sesión de la que dependen, y
-> en RF-12, que reúne las operaciones del Administrador. CP-94 figura en varias filas porque
-> verifica las dos reglas en las operaciones de cada una; CP-123, en RF-07 y RF-12, porque
-> verifica RN-42 en el control de ingreso.
+> G-03). RF-14 a RF-22 se incorporaron en la versión 2.6. Los requerimientos no funcionales no
+> figuran en la matriz porque no originan casos de uso; sus casos de prueba son: RNF-02,
+> CP-47, CP-62, CP-63, CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119, CP-120, CP-152, CP-153, CP-157 y CP-159; RNF-03, CP-12, CP-25, CP-64, CP-69, CP-85, CP-116 y CP-163; RNF-04, CP-51, CP-53, CP-156, CP-164 y CP-197. Un caso figura en más de una fila cuando prueba una
+> regla de una fila desde la operación de otra. RN-41 es una regla de autorización: vale para
+> todas las operaciones del sistema y no para un requerimiento solo, y se ubica en RF-02, que
+> establece la sesión de la que depende. RN-48 y RN-49, que reservan al Organizador la gestión de
+> sus locales, se ubican en RF-22.
 
 **Agregar a continuación** el subtítulo «Trazabilidad del requerimiento core» y:
 
@@ -1701,7 +1722,7 @@ cifras, así que no cambia cuando se congelen los números.
 
 | Dos verificaciones dependen de una persona y de un dispositivo: la lectura de los códigos QR impresos con la cámara de un celular y el aspecto del PDF de los reportes en tres lectores. | Se hicieron una vez; no se repiten en cada corrida como los casos automáticos. |
 |---|---|
-| El envío de los códigos de verificación y de recuperación es simulado: cada mensaje se escribe en un archivo de correo de la misma computadora, fuera de la aplicación. Por eso no demuestra que quien lee el código sea el titular del correo o del teléfono. | Es una decisión de configuración, no un hueco de arquitectura: el envío está implementado con el patrón Strategy, y pasar a correo real es elegir la estrategia `EnviadorSmtp`, que ya existe, y configurar el servidor, sin cambiar la capa de negocio. La aplicación no puede abrir ni leer ese archivo, y todo restablecimiento, exitoso o rechazado, queda en el registro de auditoría con la cuenta y la fecha. |
+| El envío de los códigos de verificación y de recuperación es simulado: cada mensaje se escribe en un archivo de correo de la misma computadora, fuera de la aplicación. Por eso no demuestra que quien lee el código sea el titular del correo o del teléfono. | Es una decisión de configuración, no un hueco de arquitectura: el envío está implementado con el patrón Strategy, y pasar a correo real es elegir la estrategia `EnviadorSmtp`, que ya existe, y configurar el servidor, sin cambiar la capa de negocio. La aplicación no puede abrir ni leer ese archivo, y todo restablecimiento, exitoso o rechazado, queda en el registro de auditoría con la cuenta y la fecha. Ese registro no es inalterable para quien accede directamente a la base, porque se guarda en la misma base y con las mismas credenciales que el resto de los datos. |
 | La aplicación de escritorio accede a la base con la cuenta de Windows del usuario. | Las verificaciones de perfil del negocio (RN-34, RN-41, RN-42) protegen la operación desde la aplicación; en producción tienen que acompañarse de permisos en la base o de un servicio intermedio. |
 
 ## Página 111 — Trabajo futuro
