@@ -29,7 +29,7 @@ está al final, en «Para regenerar una imagen».
 | 71 | «Diagramas de caso de uso»: el general viejo | Cuatro diagramas: cuenta, cliente, organizador y administrador | [1](#1-casos-de-uso) |
 | 72 a 85 | Especificaciones CU-01 a CU-08, cada una con un diagrama chico | **Se quitan los ocho diagramas chicos** (D-7, 14/11): el general ya muestra todas sus relaciones | — |
 | 86, arriba | «Modelo de dominio conceptual» | El dominio conceptual nuevo | [7](#7-modelo-de-dominio-conceptual) |
-| 86, abajo | «Diagrama de clases» | Nueve vistas de clases más cuatro de patrones (13 figuras) | [2](#2-diagrama-de-clases) y [3](#3-patrones-de-diseño) |
+| 86, abajo | «Diagrama de clases» | Diez vistas de clases más cuatro de patrones (14 figuras) | [2](#2-diagrama-de-clases) y [3](#3-patrones-de-diseño) |
 | 87, arriba | «Diagrama de secuencia – Comprar paquete» | La secuencia en tres partes | [4](#4-secuencia-comprar-paquete) |
 | 87, abajo | «Diagrama de estados – Ciclo de vida de la entrada» | El diagrama de estados nuevo | [5](#5-transición-de-estados-de-la-entrada) |
 | 88, arriba | «Diagrama de robustez (ICONIX)» | La robustez de «Comprar paquete» | [9](#9-robustez-comprar-paquete) |
@@ -159,8 +159,8 @@ sesión: por eso cuelga de «Usuario registrado» y no del Visitante.
 ## 2. Diagrama de clases
 
 El diagrama de clases completo tiene más de sesenta clases y no entra legible en una página. Se
-presenta en nueve vistas, más cuatro de patrones (ficha 3). Regenerado el 18/11 con los tres
-perfiles.
+presenta en diez vistas, más cuatro de patrones (ficha 3). Regenerado el 18/11 con los tres
+perfiles; el 19/11 se agregó la vista 6b, la escritura de la auditoría.
 
 | Vista | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra |
 |---|---|---|---|
@@ -172,6 +172,7 @@ perfiles.
 | 5. Negocio: administración | `clases-5-negocio-administracion` | **16,0 cm** (21,9) | 9,8 pt |
 | 5b. Negocio: cuenta y seguridad | `clases-5b-negocio-cuenta-seguridad` | **16,0 cm** (19,9) | 10,7 pt |
 | 6. Negocio: verificación de identidad, perfil y pertenencia | `clases-6-autorizacion` | **16,0 cm** (13,8) | 9,1 pt |
+| 6b. Negocio: escritura de la auditoría | `clases-6b-auditoria` | **16,0 cm** (12,7) | 9,2 pt |
 | 7. Datos: repositorios | `clases-7-datos` | **14,3 cm** (23,0, página entera) | 8,9 pt |
 
 El fuente de cada una es `fuentes/<nombre>.puml` y la imagen, `<nombre>.png`.
@@ -183,7 +184,7 @@ ahora. Una vista por página, cada una con el subtítulo de la tabla.
 
 > El diagrama de clases se presenta en vistas, porque el sistema completo supera las sesenta
 > clases y en una sola figura resultaría ilegible. Las vistas siguen las capas de la arquitectura:
-> cuatro para las entidades del dominio (proyecto Entidades), cuatro para la capa de negocio
+> cuatro para las entidades del dominio (proyecto Entidades), cinco para la capa de negocio
 > (proyecto Repositorio, espacio de nombres Negocio) y una para la capa de datos. Una clase que
 > aparece en más de una vista se dibuja completa en una sola y, en las demás, solo con su nombre y
 > la indicación de la vista donde está completa.
@@ -210,7 +211,11 @@ ahora. Una vista por página, cada una con el subtítulo de la tabla.
 > titular de los datos (RN-41), que tenga el perfil Organizador (RN-48) y que el local o el evento
 > sean suyos (RN-49), o que sea el Administrador de la plataforma (RN-34). La sesión guarda una
 > copia de la identidad verificada (`SesionAutenticada`), y no el objeto de usuario que podría
-> recibir de quien llama. La vista 7 muestra la capa de datos: dieciséis repositorios que heredan
+> recibir de quien llama. La vista 6b muestra quién escribe el registro de auditoría (RN-45): cinco
+> gestores llaman a `GestorAuditoria.Registrar`, una operación interna de la capa de negocio que
+> toma el autor de la sesión verificada. Hasta la revisión de la fase 8a era pública y recibía al
+> autor como argumento, de modo que cualquier parte del sistema podía atribuirle una acción a otra
+> persona. La vista 7 muestra la capa de datos: dieciséis repositorios que heredan
 > de `RepositorioBase`, únicos responsables del acceso a SQL Server; de cada uno se muestran los
 > métodos que aparecen en los diagramas de secuencia.
 
@@ -280,11 +285,22 @@ salen de llamadas `X.Instance.Operacion`:
 | GestorUsuarios | GestorCodigosCorreo (`EnviarVerificacion`) |
 | GestorCodigosCorreo | GestorUsuarios (`ValidarContrasena`), `SeleccionEnviadorCodigos.Actual` (ficha 3, vista 8d) |
 | GestorSolicitudesOrganizador | GestorCodigosCorreo (`EnviarCodigoTelefono`, `ConfirmarCodigoTelefono`), `SeleccionVerificadorIdentidad.Actual` (vista 8d) |
-| GestorCompras, GestorEventos, GestorIngresos, GestorUsuarios | GestorAuditoria (`Registrar`, interna) |
 | GestorCompras, GestorFidelizacion, GestorPaquetes, GestorSuscripciones, GestorIngresos, GestorUsuarios, GestorCodigosCorreo, GestorSesion, ReporteUsuariosPorNivel | GestorParametros: leen los valores de las reglas |
 | RepositorioCompras | RepositorioEntradas, RepositorioSectores (dentro de la misma transacción) |
 | RepositorioEventos | RepositorioCompras, RepositorioSectores |
 | RepositorioSectores | RepositorioCompras |
+
+**Justificación, vista 6b (escritura de la auditoría).** Todas son dependencias de uso (`..>`), sin
+multiplicidad:
+
+| Desde | Hacia | De dónde sale en el código |
+|---|---|---|
+| GestorUsuarios, GestorCodigosCorreo, GestorCompras, GestorEventos, GestorIngresos | GestorAuditoria (`Registrar`) | `GestorAuditoria.Instance.Registrar(…)`: inicio de sesión y cambio de contraseña; emisión de códigos y recuperación, exitosa o rechazada; compras y devoluciones; gestión de eventos; ingresos |
+| GestorAuditoria | GestorSesion (`UsuarioActual`, `RequerirAdministrador`) | `Registrar` toma el autor de `UsuarioActual`; `Consultar` llama a `RequerirAdministrador` |
+
+El signo `~` es la visibilidad `internal` de C#, la misma que `GestorSesion.Iniciar` en la vista 6.
+En la recuperación de la contraseña no hay sesión: el autor que registra `GestorCodigosCorreo` es
+la cuenta del código, y la decide el negocio, no quien llama.
 
 **Justificación, vista 7:** cada uno de los dieciséis repositorios → `RepositorioBase` es una
 generalización (`: RepositorioBase`). `RepositorioBase` → `Conexion` es una dependencia de uso
@@ -347,8 +363,8 @@ texto.
 > El mismo patrón resuelve dos integraciones externas que la versión entregada simula. El envío
 > de los códigos de un solo uso (verificación del correo, recuperación de la contraseña y
 > confirmación del teléfono) depende de la interfaz `IEnviadorCodigos`: la estrategia elegida es
-> `EnviadorSimulado`, que deja el mensaje en una bandeja simulada, y existe `EnviadorSmtp`, que lo
-> enviaría por correo real. La verificación de identidad de quien solicita ser Organizador depende
+> `EnviadorSimulado`, que escribe el mensaje en un archivo de correo fuera de la aplicación, que la
+> aplicación no puede abrir ni leer, y existe `EnviadorSmtp`, que lo enviaría por correo real. La verificación de identidad de quien solicita ser Organizador depende
 > de `IVerificadorIdentidad`, con una estrategia simulada, que valida el formato del CUIT, y una
 > externa, que consultaría un servicio de verificación. En los dos casos, la capa de negocio solo
 > conoce la interfaz, y pasar a la estrategia real es una decisión de configuración, no un cambio
@@ -377,6 +393,10 @@ texto.
 | 8d | VerificadorIdentidadSimulado, VerificadorIdentidadExterno → IVerificadorIdentidad | Realización | `Repo/GestorSolicitudesOrganizador.cs` |
 | 8d | GestorSolicitudesOrganizador → SeleccionVerificadorIdentidad | Dependencia | `SeleccionVerificadorIdentidad.Actual.Verificar(…)` en `Solicitar` |
 | 8d | SeleccionVerificadorIdentidad → IVerificadorIdentidad | Asociación | propiedad estática `Actual`, que arranca con la simulada |
+
+**Vista 8d, 19/11:** `EnviadorSimulado.Ultimo` pasó a `~` (interno; commit `5a4b645`). Solo lo
+usan las pruebas: ninguna pantalla puede leer un código, que va a un archivo `.eml` fuera de la
+aplicación.
 
 **Qué no se documenta, a propósito.** State, Facade, Observer y Composite **no están en el
 código**, aunque Composite (permisos) y Observer (idioma) los pide la Carpeta modelo para anexos
@@ -927,7 +947,7 @@ también con qué figuras comparte la sección apaisada.
 | 13. Estados distintos en diagrama, clase y base | **Cumple:** los cuatro estados coinciden en diagrama, `EstadoEntrada`, `CK_Entradas_Estado` y el SQL |
 | 14. Objetivos | **No aplica** a estos diagramas |
 | 15. Patrón nombrado que no se ve | **Cumple:** los cuatro patrones nombrados están en las vistas 8a a 8d, con estereotipo; Strategy aparece en tres usos (reportes, envío de códigos y verificación de identidad); no se nombra ningún otro |
-| 16. Legible al 100 % | **Cumple:** la letra más chica impresa va de 8,5 a 12 pt en los 34 diagramas, todos regenerados y medidos el 18/11, medida por `Renderizar.py` con la regla de ancho; ninguno pasa de 16 cm ni necesita página apaisada |
+| 16. Legible al 100 % | **Cumple:** la letra más chica impresa va de 8,5 a 12 pt en los 35 diagramas, todos regenerados y medidos el 18/11 (la vista 6b, el 19/11), medida por `Renderizar.py` con la regla de ancho; ninguno pasa de 16 cm ni necesita página apaisada |
 
 **Un detalle visual, sin efecto en las reglas.** El motor de diagramación pone los números de
 multiplicidad cerca de la punta de la flecha. Se corrieron para que no se pisen, pero en algún

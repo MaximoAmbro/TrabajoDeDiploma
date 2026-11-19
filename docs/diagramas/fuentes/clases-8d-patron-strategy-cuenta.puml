@@ -14,7 +14,7 @@ interface IEnviadorCodigos <<Strategy>> {
 }
 class EnviadorSimulado <<ConcreteStrategy>> {
   + Enviar(string, string, string, DateTime)
-  + {static} Ultimo(string, string) : MensajeCorreoSimulado
+  ~ {static} Ultimo(string, string) : MensajeCorreoSimulado
 }
 class EnviadorSmtp <<ConcreteStrategy>> {
   + Enviar(string, string, string, DateTime)
