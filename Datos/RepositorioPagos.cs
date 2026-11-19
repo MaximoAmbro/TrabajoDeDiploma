@@ -7,7 +7,7 @@ namespace Datos
 {
     // RN-30 + RN-31: intentos de pago. Esta capa nunca recibe el número completo de la tarjeta:
     // Pago solo tiene los últimos 4 dígitos y el token.
-    public sealed class RepositorioPagos : RepositorioBase
+    internal sealed class RepositorioPagos : RepositorioBase
     {
         private static RepositorioPagos _instance;
 

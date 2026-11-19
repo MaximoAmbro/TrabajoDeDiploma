@@ -39,7 +39,7 @@ namespace Negocio
             return new[] { "Nivel", $"Criterio (ventana de {Meses} meses)", "Usuarios", "Part.", "Compras prom.", "Desc." };
         }
 
-        public override DataTable Obtener(RepositorioReportes repo)
+        internal override DataTable Obtener(RepositorioReportes repo)
         {
             int plata = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_PLATA");
             int oro = GestorParametros.Instance.ObtenerEntero("FIDELIDAD_UMBRAL_ORO");

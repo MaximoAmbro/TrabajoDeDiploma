@@ -6,7 +6,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class RepositorioEventos : RepositorioBase
+    internal sealed class RepositorioEventos : RepositorioBase
     {
         private const string Columnas =
             "SELECT ID, Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa, ImagenPortada, MotivoRechazo FROM Eventos ";

@@ -6,7 +6,7 @@ using Microsoft.Data.SqlClient;
 namespace Datos
 {
     // RF-10: lista de espera de los eventos agotados. UX_ListaEspera impone RN-36 en la base.
-    public sealed class RepositorioListaEspera : RepositorioBase
+    internal sealed class RepositorioListaEspera : RepositorioBase
     {
         private static RepositorioListaEspera _instance;
 

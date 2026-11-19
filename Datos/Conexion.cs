@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class Conexion
+    internal sealed class Conexion
     {
         // Nombre con el que Visual/App.config declara la cadena de conexión.
         private const string NombreCadena = "Visual.Properties.Settings.BddEventAura";

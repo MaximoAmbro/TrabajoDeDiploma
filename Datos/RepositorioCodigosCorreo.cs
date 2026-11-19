@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class CodigoCorreo
+    internal sealed class CodigoCorreo
     {
         public int Id { get; set; }
         public int UsuarioId { get; set; }
@@ -16,7 +16,7 @@ namespace Datos
         public string Destinatario { get; set; }
     }
 
-    public sealed class RepositorioCodigosCorreo : RepositorioBase
+    internal sealed class RepositorioCodigosCorreo : RepositorioBase
     {
         private static readonly RepositorioCodigosCorreo Instancia = new RepositorioCodigosCorreo();
         public static RepositorioCodigosCorreo Instance { get { return Instancia; } }

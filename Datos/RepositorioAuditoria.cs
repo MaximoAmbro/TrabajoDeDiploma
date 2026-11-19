@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class RepositorioAuditoria : RepositorioBase
+    internal sealed class RepositorioAuditoria : RepositorioBase
     {
         private static readonly RepositorioAuditoria Instancia = new RepositorioAuditoria();
         public static RepositorioAuditoria Instance { get { return Instancia; } }
@@ -26,7 +26,7 @@ namespace Datos
             }
         }
 
-        public List<RegistroAuditoria> Consultar(DateTime desde, DateTime hasta, string accion)
+        internal List<RegistroAuditoria> Consultar(DateTime desde, DateTime hasta, string accion)
         {
             const string sql = @"SELECT TOP (500) ID,UsuarioID,UsuarioMail,Accion,Entidad,EntidadID,Fecha,Resultado
 FROM dbo.Auditoria WHERE Fecha>=@Desde AND Fecha<@Hasta AND (@Accion IS NULL OR Accion=@Accion)

@@ -2,7 +2,7 @@ using System;
 
 namespace Datos
 {
-    public sealed class RegistroAuditoria
+    internal sealed class RegistroAuditoria
     {
         public long Id { get; set; }
         public int? UsuarioId { get; set; }

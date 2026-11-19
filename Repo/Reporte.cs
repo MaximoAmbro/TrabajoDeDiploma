@@ -58,7 +58,7 @@ namespace Negocio
         }
 
         public abstract string[] Encabezados();
-        public abstract DataTable Obtener(RepositorioReportes repo);
+        internal abstract DataTable Obtener(RepositorioReportes repo);
         public abstract string Lectura(DataTable datos);
 
         // Texto del bloque de filtros del PDF.

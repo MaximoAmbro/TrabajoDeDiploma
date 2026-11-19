@@ -9,7 +9,7 @@ namespace Datos
     //
     // Los rangos [desde, hasta] llegan ya ajustados por Negocio: hasta es el último instante
     // del día, así un evento del 30/11 a las 20:30 entra en un rango que termina el 30/11.
-    public sealed class RepositorioReportes : RepositorioBase
+    internal sealed class RepositorioReportes : RepositorioBase
     {
         private static RepositorioReportes _instance;
 

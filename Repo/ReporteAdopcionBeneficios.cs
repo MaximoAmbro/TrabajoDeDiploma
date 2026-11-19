@@ -27,7 +27,7 @@ namespace Negocio
             return new[] { "Beneficio", "Contrataciones", "Base de referencia", "Tasa", "Ingreso asociado" };
         }
 
-        public override DataTable Obtener(RepositorioReportes repo)
+        internal override DataTable Obtener(RepositorioReportes repo)
         {
             DataRow d = repo.AdopcionBeneficios(InicioRango, FinRango,
                 GestorSuscripciones.PlanMensual, GestorSuscripciones.PlanAnual, IdOrganizador).Rows[0];

@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class RepositorioSolicitudesOrganizador : RepositorioBase
+    internal sealed class RepositorioSolicitudesOrganizador : RepositorioBase
     {
         private static readonly RepositorioSolicitudesOrganizador Instancia = new RepositorioSolicitudesOrganizador();
         public static RepositorioSolicitudesOrganizador Instance { get { return Instancia; } }

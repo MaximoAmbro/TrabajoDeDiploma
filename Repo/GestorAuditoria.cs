@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Datos;
 
 namespace Negocio
@@ -25,7 +26,19 @@ namespace Negocio
         {
             GestorSesion.Instance.RequerirAdministradorParaAuditoria();
             if (hasta <= desde) throw new ArgumentException("El fin del período debe ser posterior al inicio.");
-            return RepositorioAuditoria.Instance.Consultar(desde, hasta, accion);
+            return RepositorioAuditoria.Instance.Consultar(desde, hasta, accion)
+                .Select(registro => new RegistroAuditoria
+                {
+                    Id = registro.Id,
+                    UsuarioId = registro.UsuarioId,
+                    UsuarioMail = registro.UsuarioMail,
+                    Accion = registro.Accion,
+                    Entidad = registro.Entidad,
+                    EntidadId = registro.EntidadId,
+                    Fecha = registro.Fecha,
+                    Resultado = registro.Resultado
+                })
+                .ToList();
         }
     }
 }

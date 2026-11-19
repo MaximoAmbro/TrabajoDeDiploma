@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class RepositorioSectores : RepositorioBase
+    internal sealed class RepositorioSectores : RepositorioBase
     {
         private const string InsertarSector =
             "INSERT INTO Sectores (EventoID, Nombre, Precio, Capacidad) " +
@@ -257,10 +257,10 @@ namespace Datos
         }
     }
 
-    public sealed class CupoPrioritarioException : Exception { }
+    internal sealed class CupoPrioritarioException : Exception { }
 
     // El cupo del sector no alcanzó para la reserva (RN-08). Negocio la traduce a la regla.
-    public class CupoInsuficienteException : Exception
+    internal class CupoInsuficienteException : Exception
     {
         public int IdSector { get; }
 

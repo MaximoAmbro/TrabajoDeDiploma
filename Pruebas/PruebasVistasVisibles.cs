@@ -59,9 +59,14 @@ namespace Pruebas
         {
             var registrar = typeof(Datos.RepositorioAuditoria).GetMethod(
                 "Registrar", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsFalse(typeof(Datos.RepositorioAuditoria).IsPublic, "El tipo del repositorio de auditoría no debe exportarse desde Datos.");
             Assert.IsNotNull(registrar, "El método de escritura de auditoría debe existir para la capa de negocio.");
             Assert.IsTrue(registrar.IsAssembly, "Registrar debe ser internal y no público.");
             Assert.IsFalse(registrar.IsPublic, "Registrar no debe formar parte de la API pública de Datos.");
+            var consultar = typeof(Datos.RepositorioAuditoria).GetMethod(
+                "Consultar", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(consultar);
+            Assert.IsTrue(consultar.IsAssembly, "Consultar también debe permanecer dentro de Datos y Negocio.");
 
             foreach (string metodo in new[] { "Aprobar", "Rechazar" })
             {
@@ -77,8 +82,12 @@ namespace Pruebas
                 .Select(a => new AssemblyName(a.AssemblyName).Name)
                 .OrderBy(n => n)
                 .ToArray();
-            CollectionAssert.AreEqual(new[] { "Repositorio" }, amigos,
-                "Solo el ensamblado de negocio debe recibir acceso a miembros internal de Datos.");
+            CollectionAssert.AreEqual(new[] { "Pruebas", "Repositorio" }, amigos,
+                "Solo Negocio y el ensamblado de pruebas deben recibir acceso a miembros internal de Datos.");
+            CollectionAssert.AreEqual(
+                new[] { "Datos.RequisitoEsquemaFaltante", "Datos.VerificadorEsquema" },
+                typeof(Datos.VerificadorEsquema).Assembly.GetExportedTypes().Select(t => t.FullName).OrderBy(n => n).ToArray(),
+                "La interfaz pública de Datos debe limitarse al verificador de esquema que consume frmInicio.");
 
             string raiz = AppDomain.CurrentDomain.BaseDirectory;
             while (raiz != null && !File.Exists(Path.Combine(raiz, "SistemaEntradas.sln")))
@@ -92,6 +101,8 @@ namespace Pruebas
                 string rutaRelativa = archivo.Substring(raiz.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                 Assert.IsFalse(fuente.Contains("RepositorioAuditoria"),
                     "Visual no debe conocer el repositorio de auditoría: " + rutaRelativa);
+                Assert.IsFalse(fuente.Contains("Repositorio"),
+                    "Visual no debe conocer repositorios de Datos: " + rutaRelativa);
                 Assert.IsFalse(fuente.Contains("RepositorioSolicitudesOrganizador"),
                     "Visual no debe llamar directamente al repositorio de solicitudes: " + rutaRelativa);
                 Assert.IsFalse(fuente.Contains("GestorAuditoria.Instance.Registrar"),

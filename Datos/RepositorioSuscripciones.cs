@@ -6,7 +6,7 @@ namespace Datos
 {
     // RF-13: suscripciones. UX_Suscripcion_Activa (índice filtrado WHERE Activa = 1) impone RN-25
     // en la base: una sola fila Activa por usuario.
-    public sealed class RepositorioSuscripciones : RepositorioBase
+    internal sealed class RepositorioSuscripciones : RepositorioBase
     {
         private const string Columnas =
             "SELECT ID, ID_Usuario, [Plan], FechaInicio, FechaFin, Precio, Activa FROM Suscripciones ";
