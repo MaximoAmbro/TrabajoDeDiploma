@@ -2,8 +2,10 @@
 !include _estilo.iuml
 skinparam nodesep 22
 skinparam ranksep 40
-' DER, vista 1 de 2: usuarios, catálogo de eventos, servicios, suscripciones y lista de espera.
-' Fuente: BaseDatos/01-esquema.sql. Convención: * = NOT NULL; PK, FK, UQ y CK al final.
+' DER, vista 1 de 3: usuarios con sus tres perfiles y catálogo (locales, eventos, sectores y
+' servicios). Fuente: BaseDatos/01-esquema.sql, más 11 (CHECK del perfil). Convención:
+' * = NOT NULL; PK, FK, UQ y CK al final.
+' La tabla Propietario conserva su nombre: desde el script 11 es la de los organizadores.
 
 entity Usuario {
   * ID : INT <<PK>>
@@ -12,16 +14,22 @@ entity Usuario {
   Apellido : VARCHAR(100)
   Mail : VARCHAR(150) <<UQ>>
   Contraseña : VARCHAR(100)
-  TipoUsuario : VARCHAR(20)
+  TipoUsuario : VARCHAR(20) <<CK>>
   * Nivel : VARCHAR(8)
   FechaUltimaEvaluacion : DATE
   * IntentosFallidos : INT
   BloqueadoHasta : DATETIME
+  * CorreoVerificado : BIT
 }
 entity Cliente {
   * ID : INT <<PK, FK>>
 }
-entity Propietario {
+entity "Propietario\n(Organizador)" as Propietario {
+  * ID : INT <<PK, FK>>
+  --
+  * PrimerEventoAprobado : BIT
+}
+entity Administrador {
   * ID : INT <<PK, FK>>
 }
 entity Locales {
@@ -41,6 +49,8 @@ entity Eventos {
   Categoria : VARCHAR(20)
   * Estado : VARCHAR(12) <<CK>>
   FinPreventa : DATETIME
+  ImagenPortada : VARBINARY(MAX)
+  MotivoRechazo : NVARCHAR(500)
 }
 entity Sectores {
   * ID : INT <<PK>>
@@ -50,6 +60,7 @@ entity Sectores {
   Precio : DECIMAL(12,2)
   Capacidad : INT
   * CantidadReservada : INT
+  CupoLiberadoEl : DATETIME
 }
 entity Servicios {
   * ID : INT <<PK>>
@@ -63,42 +74,13 @@ entity ServiciosEvento {
   * ID_Evento : INT <<PK, FK>>
   * ID_Servicio : INT <<PK, FK>>
 }
-entity Suscripciones {
-  * ID : INT <<PK>>
-  --
-  * ID_Usuario : INT <<FK>>
-  * Plan : VARCHAR(10)
-  * FechaInicio : DATE
-  * FechaFin : DATE
-  * Precio : DECIMAL(12,2)
-  * Activa : BIT
-}
-entity ListaEspera {
-  * ID : INT <<PK>>
-  --
-  * ID_Evento : INT <<FK, UQ1>>
-  * ID_Usuario : INT <<FK, UQ1>>
-  * FechaAlta : DATETIME
-  * ConSuscripcion : BIT
-}
-entity Parametros {
-  * Clave : VARCHAR(40) <<PK>>
-  --
-  * Valor : VARCHAR(40)
-  Descripcion : VARCHAR(160)
-  Regla : VARCHAR(10)
-}
 
 Usuario "1$_" ||--o| "0..1$_" Cliente
 Usuario "1$_" ||--o| "0..1$_" Propietario
+Usuario "1$_" ||--o| "0..1$_" Administrador
 Propietario "1$_" ||..o{ "0..*$_" Locales
 Locales "1$_" ||--o{ "0..*$_" Eventos
 Eventos "1$_" ||--o{ "0..*$_" Sectores
 Eventos "1$_" ||--o{ "0..*$_" ServiciosEvento
 Servicios "1$_" ||--o{ "0..*$_" ServiciosEvento
-Usuario "1$_" ||--o{ "0..*$_" Suscripciones
-Eventos "1$_" ||--o{ "0..*$_" ListaEspera
-Usuario "1$_" ||--o{ "0..*$_" ListaEspera
-
-Cliente -[hidden]down- Parametros
 @enduml

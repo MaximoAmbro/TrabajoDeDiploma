@@ -3,17 +3,14 @@
 left to right direction
 skinparam nodesep 12
 skinparam ranksep 25
-' Casos de uso del cliente. Cada caso de uso corresponde a una pantalla real y a una operación
-' de negocio (ver la tabla de justificación). El pago lo resuelve una pasarela simulada dentro
-' del sistema, por eso no es un actor.
+' Casos de uso del Cliente. Los de la cuenta (iniciar sesión, cambiar y recuperar la
+' contraseña) están en casos-uso-cuenta. Cada caso de uso corresponde a una pantalla real y a
+' una operación de negocio (ver la tabla de justificación). El pago lo resuelve una pasarela
+' simulada dentro del sistema, por eso no es un actor.
 
-actor Visitante
 actor Cliente
 
 rectangle "EventAura" {
-  usecase "Registrarse" as Registrarse
-  usecase "Iniciar sesión" as Iniciar
-  usecase "Cambiar\ncontraseña" as Cambiar
   usecase "Buscar eventos" as Buscar
   usecase "Comprar paquete" as Comprar
   usecase "Aplicar\ndescuento\npor nivel" as Descuento
@@ -23,15 +20,14 @@ rectangle "EventAura" {
   usecase "Ver historial\nde compras" as Historial
   usecase "Devolver\nentrada" as Devolver
   usecase "Gestionar\nsuscripción" as Suscripcion
+  usecase "Solicitar ser\nOrganizador" as Solicitar
 }
 
-Visitante --> Registrarse
-Cliente --> Iniciar
-Cliente --> Cambiar
 Cliente --> Buscar
 Cliente --> Comprar
 Cliente --> Historial
 Cliente --> Suscripcion
+Cliente --> Solicitar
 Comprar ..> Descuento : <<include>>
 Comprar ..> Pagar : <<include>>
 Seguro ..> Comprar : <<extend>>\n[lo elige]

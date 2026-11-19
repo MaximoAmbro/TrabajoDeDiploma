@@ -67,7 +67,7 @@
 >    dice cuál. Los demás no los detecta: para eso son las consultas del paso 1.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33) y «Arquitectura e implementación» (pp. 57 a 61).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), los diagramas de casos de uso (p. 71) y el entidad-relación (p. 89).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -133,7 +133,7 @@
 > | p. 45 | Prototipos | Son figuras de la interfaz |
 > | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
 > | pp. 62 a 70 | Entidades, código y pruebas | Clases, tablas y pruebas nuevas |
-> | pp. 71 a 89 | Casos de uso, especificaciones y todos los diagramas | Casos de uso nuevos; los diagramas se regeneran |
+> | pp. 72 a 88 | Especificaciones de casos de uso y los demás diagramas (las pp. 71 y 89 ya se pegan) | Casos de uso nuevos; los diagramas se están regenerando |
 > | pp. 90 a 97 | Usabilidad: el párrafo sobre el rediseño | La interfaz vuelve a cambiar |
 > | pp. 98 a 105 | Anexo A02 | Depende de las pantallas y de las consultas |
 > | pp. 106 a 109 | Matriz de trazabilidad, cobertura y brechas | Requerimientos, reglas y casos nuevos |
@@ -955,14 +955,22 @@ El listado de código **queda como está**. Debajo del título «Implementación
 
 @@- docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*pp\. 68 a 70, código de las pruebas :: ^## Anexo 3
 
-## Página 71 — Diagramas de casos de uso (dos figuras)
+## Página 71 — Diagramas de casos de uso (cuatro figuras)
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles.
 
-**Reemplazar** la figura que está bajo «Diagramas de caso de uso» por:
-- `docs/diagramas/casos-uso-cliente.png`, a **16,0 cm** de ancho;
-- en la página siguiente, con el título «Diagramas de caso de uso (Administrador)»,
-  `docs/diagramas/casos-uso-administrador.png`, a **16,0 cm**.
+**Reemplazar** la figura que está bajo «Diagramas de caso de uso» por cuatro, una por página,
+cada una con su subtítulo:
+
+| Subtítulo | Archivo (`docs/diagramas/`) | Ancho |
+|---|---|---|
+| «Cuenta» | `casos-uso-cuenta.png` | **13,8 cm** |
+| «Cliente» | `casos-uso-cliente.png` | **16,0 cm** |
+| «Organizador» | `casos-uso-organizador.png` | **16,0 cm** |
+| «Administrador» | `casos-uso-administrador.png` | **16,0 cm** |
+
+Si ya habías pegado las dos figuras anteriores (cliente y administrador), reemplazalas: cambiaron
+las dos.
 
 Siempre con la proporción bloqueada (clic derecho › *Tamaño y posición* › *Bloquear relación de
 aspecto*). **Si la achicás, deja de leerse.**
@@ -1113,11 +1121,19 @@ tres, una por página: `actividad-1-armado.png` a **16,0 cm**, `actividad-2-pago
 
 ## Página 89 — Entidad-relación
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles.
 
 Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el título), insertar
-`er-1-usuarios-catalogo.png` a **15,4 cm** y, en la página siguiente, `er-2-compras.png` a
-**14,6 cm**. Las dos ocupan la página entera. Texto:
+cuatro figuras, una por página, en este orden:
+
+| Vista | Archivo (`docs/diagramas/`) | Ancho |
+|---|---|---|
+| 1. Usuarios y catálogo | `er-1-usuarios-catalogo.png` | **13,7 cm** (página entera) |
+| 2. Compra, pago y entradas | `er-2-compras.png` | **14,6 cm** (página entera) |
+| 3. Suscripciones, lista de espera y parámetros | `er-3-suscripciones-espera.png` | **12,7 cm** |
+| 4. Seguridad de la cuenta, auditoría y organizadores | `er-4-seguridad-organizadores.png` | **16,0 cm** |
+
+Si ya habías pegado las dos figuras anteriores, reemplazalas: cambiaron las dos. Texto:
 
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 6\. Entidad-relación >> ^\*\*Texto para el documento :: ^(\*\*|## )
 

@@ -67,7 +67,7 @@
 >    dice cuál. Los demás no los detecta: para eso son las consultas del paso 1.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33) y «Arquitectura e implementación» (pp. 57 a 61).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), los diagramas de casos de uso (p. 71) y el entidad-relación (p. 89).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -133,7 +133,7 @@
 > | p. 45 | Prototipos | Son figuras de la interfaz |
 > | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
 > | pp. 62 a 70 | Entidades, código y pruebas | Clases, tablas y pruebas nuevas |
-> | pp. 71 a 89 | Casos de uso, especificaciones y todos los diagramas | Casos de uso nuevos; los diagramas se regeneran |
+> | pp. 72 a 88 | Especificaciones de casos de uso y los demás diagramas (las pp. 71 y 89 ya se pegan) | Casos de uso nuevos; los diagramas se están regenerando |
 > | pp. 90 a 97 | Usabilidad: el párrafo sobre el rediseño | La interfaz vuelve a cambiar |
 > | pp. 98 a 105 | Anexo A02 | Depende de las pantallas y de las consultas |
 > | pp. 106 a 109 | Matriz de trazabilidad, cobertura y brechas | Requerimientos, reglas y casos nuevos |
@@ -1460,35 +1460,54 @@ las pruebas», agregar:
 > `CP10_LaSuscripcionNoSumaPorcentaje`, y preparan los datos sobre una base de prueba que se
 > recrea en cada ejecución.
 
-## Página 71 — Diagramas de casos de uso (dos figuras)
+## Página 71 — Diagramas de casos de uso (cuatro figuras)
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles.
 
-**Reemplazar** la figura que está bajo «Diagramas de caso de uso» por:
-- `docs/diagramas/casos-uso-cliente.png`, a **16,0 cm** de ancho;
-- en la página siguiente, con el título «Diagramas de caso de uso (Administrador)»,
-  `docs/diagramas/casos-uso-administrador.png`, a **16,0 cm**.
+**Reemplazar** la figura que está bajo «Diagramas de caso de uso» por cuatro, una por página,
+cada una con su subtítulo:
+
+| Subtítulo | Archivo (`docs/diagramas/`) | Ancho |
+|---|---|---|
+| «Cuenta» | `casos-uso-cuenta.png` | **13,8 cm** |
+| «Cliente» | `casos-uso-cliente.png` | **16,0 cm** |
+| «Organizador» | `casos-uso-organizador.png` | **16,0 cm** |
+| «Administrador» | `casos-uso-administrador.png` | **16,0 cm** |
+
+Si ya habías pegado las dos figuras anteriores (cliente y administrador), reemplazalas: cambiaron
+las dos.
 
 Siempre con la proporción bloqueada (clic derecho › *Tamaño y posición* › *Bloquear relación de
 aspecto*). **Si la achicás, deja de leerse.**
 
 **Texto, debajo del título:**
 
-> Los casos de uso se presentan en dos diagramas, uno por actor, para que cada uno se lea a
-> tamaño de página. La mayoría de los casos de uso corresponde a una pantalla del sistema y a una
-> operación de la capa de negocio. Otros ocurren dentro de la compra, sin pantalla propia: el
-> descuento por nivel, que la compra aplica siempre, y el seguro, que el cliente elige mientras
-> arma el paquete. Se dibujan para que esas reglas del negocio queden visibles y trazables en el
-> diagrama. El pago se resuelve con una pasarela simulada que forma parte del sistema,
-> por lo que no se modela como actor. Las relaciones «include» indican pasos que la compra
-> realiza siempre (el descuento por nivel y el pago); las «extend» indican comportamiento
-> opcional, con su condición entre corchetes: contratar el seguro, inscribirse en la lista de
-> espera cuando el evento está agotado y devolver una entrada asegurada con más de 48 horas de
-> anticipación.
+> Los casos de uso se presentan en cuatro diagramas: uno con los casos comunes a todas las
+> cuentas y uno por cada perfil, para que cada diagrama se lea a tamaño de página. El sistema
+> distingue tres perfiles excluyentes (RN-05): el Cliente, que compra; el Organizador, que
+> administra sus propios locales y eventos; y el Administrador de la plataforma, que no es dueño
+> de locales y supervisa a los organizadores. Los tres son especializaciones de un Usuario
+> registrado y heredan sus casos de uso: iniciar sesión, cambiar la contraseña y recuperarla. El
+> Visitante, que todavía no tiene cuenta, solo puede registrarse; el registro incluye la
+> verificación del correo, que se exige antes de la primera compra (RN-43).
 >
-> El Administrador corresponde al perfil «Propietario» de la base de datos (RN-05). Además de los
-> casos de uso de gestión, incorpora el control de ingreso, que verifica que cada código QR se use
-> una sola vez (RN-18).
+> La mayoría de los casos de uso corresponde a una pantalla del sistema y a una operación de la
+> capa de negocio. Otros ocurren dentro de la compra, sin pantalla propia: el descuento por nivel,
+> que la compra aplica siempre, y el seguro, que el cliente elige mientras arma el paquete. Se
+> dibujan para que esas reglas del negocio queden visibles y trazables en el diagrama. El pago se
+> resuelve con una pasarela simulada que forma parte del sistema, por lo que no se modela como
+> actor. Las relaciones «include» indican pasos que el caso de uso base realiza siempre; las
+> «extend» indican comportamiento opcional, con su condición entre corchetes: contratar el
+> seguro, inscribirse en la lista de espera cuando el evento está agotado, devolver una entrada
+> asegurada con más de 48 horas de anticipación, agregar o quitar sectores de un evento y
+> exportar un reporte.
+>
+> Un Cliente puede solicitar ser Organizador; la solicitud no le da permisos hasta que un
+> Administrador la aprueba (RN-50 a RN-53). El Organizador publica sus eventos de forma
+> explícita, y el primer evento de un Organizador nuevo pasa a revisión: un Administrador lo
+> aprueba o lo rechaza con un motivo (RN-54). «Generar reportes» aparece en los diagramas de los
+> dos perfiles de gestión porque lo usan ambos con distinto alcance: el Organizador ve sus
+> eventos, y el Administrador, todos (RN-34).
 
 ## Páginas 72 a 85 — Especificaciones CU-01 a CU-08
 
@@ -2122,33 +2141,45 @@ tres, una por página: `actividad-1-armado.png` a **16,0 cm**, `actividad-2-pago
 
 ## Página 89 — Entidad-relación
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles.
 
 Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el título), insertar
-`er-1-usuarios-catalogo.png` a **15,4 cm** y, en la página siguiente, `er-2-compras.png` a
-**14,6 cm**. Las dos ocupan la página entera. Texto:
+cuatro figuras, una por página, en este orden:
+
+| Vista | Archivo (`docs/diagramas/`) | Ancho |
+|---|---|---|
+| 1. Usuarios y catálogo | `er-1-usuarios-catalogo.png` | **13,7 cm** (página entera) |
+| 2. Compra, pago y entradas | `er-2-compras.png` | **14,6 cm** (página entera) |
+| 3. Suscripciones, lista de espera y parámetros | `er-3-suscripciones-espera.png` | **12,7 cm** |
+| 4. Seguridad de la cuenta, auditoría y organizadores | `er-4-seguridad-organizadores.png` | **16,0 cm** |
+
+Si ya habías pegado las dos figuras anteriores, reemplazalas: cambiaron las dos. Texto:
 
 > El diagrama entidad-relación se obtiene del script de creación de la base
-> (`BaseDatos/01-esquema.sql`) y muestra sus dieciséis tablas en dos vistas. La primera reúne
-> usuarios, locales, eventos, sectores, servicios, suscripciones, lista de espera y parámetros; la
-> segunda, la compra con sus pagos, entradas, servicios contratados y pólizas. Las tablas que
-> aparecen en las dos vistas se muestran completas en una sola y, en la otra, solo con su clave.
+> (`BaseDatos/01-esquema.sql`) y muestra sus veinte tablas en cuatro vistas. La primera reúne
+> los usuarios con sus tres perfiles, los locales, los eventos, los sectores y los servicios; la
+> segunda, la compra con sus pagos, entradas, servicios contratados y pólizas; la tercera, las
+> suscripciones, la lista de espera y los parámetros; y la cuarta, los códigos de un solo uso, el
+> registro de auditoría y las solicitudes de Organizador. Las tablas que aparecen en más de una
+> vista se muestran completas en una sola y, en las otras, solo con su clave.
 >
 > Cada columna indica su tipo; el asterisco marca las obligatorias (`NOT NULL`), y las marcas PK,
 > FK, UQ y CK señalan la clave primaria, las claves foráneas, las restricciones de unicidad y las de
 > verificación. Las relaciones usan la notación de pata de gallo, con la cardinalidad escrita en
-> cada extremo. Cliente y Propietario comparten la clave de Usuario (una tabla por tipo de
-> usuario). La relación entre Eventos y Servicios es de muchos a muchos y se resuelve con la tabla
-> intermedia ServiciosEvento. La contraseña se guarda como `PBKDF2$iteraciones$sal$hash`, nunca en
-> texto plano.
+> cada extremo. Cliente, Propietario y Administrador comparten la clave de Usuario: una tabla por
+> perfil (RN-05). La tabla Propietario conserva el nombre del esquema original y hoy es la de los
+> organizadores; guarda además si el Organizador ya tuvo un evento aprobado, que es lo que decide
+> si su próxima publicación pasa a revisión (RN-54). La relación entre Eventos y Servicios es de
+> muchos a muchos y se resuelve con la tabla intermedia ServiciosEvento. La contraseña se guarda
+> como `PBKDF2$iteraciones$sal$hash`, nunca en texto plano, y los códigos de verificación y de
+> recuperación, también como hash con su sal.
 >
 > La tabla Entradas proviene del esquema original, anterior a las compras. Por eso guarda el
 > usuario además de la compra, y por eso la compra y el sector son columnas agregadas después que
 > admiten valores nulos. El sistema escribe en cada entrada el mismo usuario de su compra, y nunca
-> crea una entrada sin compra ni sin sector. Cada fila es una sola entrada: la cantidad vendida
-> vale 1 en todas las filas que guarda el sistema, y cada una tiene su propio código QR, que se
-> admite una sola vez en el ingreso (RN-18). La cantidad elegida para cada sector existe solo
-> mientras se arma el paquete, que no se guarda en la base.
+> crea una entrada sin compra ni sin sector. Cada fila es una sola entrada, y cada una tiene su
+> propio código QR, que se admite una sola vez en el ingreso (RN-18). La cantidad elegida para
+> cada sector existe solo mientras se arma el paquete, que no se guarda en la base.
 >
 > El criterio para restringir en la base es uno solo: se restringe lo que, al violarse, hace daño,
 > y se documenta lo que no. Dos seguros sobre una misma entrada serían dos cargos al cliente: por
@@ -2156,6 +2187,11 @@ Debajo de «DER – Diagrama entidad-relación» (hoy la página tiene solo el t
 > disponibles de cada sector: un valor distinto de 1 altera el cupo, y uno vacío o en cero haría
 > que la entrada no se descontara de la capacidad, una sobreventa. Por eso la columna es
 > obligatoria y solo admite el valor 1.
+>
+> Dos vínculos con Usuario se dibujan con línea punteada porque no tienen clave foránea
+> declarada. El dueño de un local (`Locales.PropietarioID`) viene del esquema original. El autor
+> de un registro de auditoría (`Auditoria.UsuarioID`) puede no existir: el registro conserva el
+> correo de un intento de inicio de sesión aunque la cuenta no exista.
 
 ## Páginas 90 a 97 — Informe de pruebas de usabilidad
 
@@ -2594,7 +2630,7 @@ la de CP-01 a CP-61:
 | CP-71 — «Mis locales» con dos locales; mover la celda actual al segundo | — (RNF-02) |
 | CP-72 — El botón de sectores; precio «12500,50» y «12500.50» | — |
 | CP-73 — Alta de un evento con categoría y sin categoría | RN-06 |
-| CP-74 — Agregar a un borrador un sector de capacidad 0 y uno de capacidad 10 | RN-06 |
+| CP-74 — Agregar a un borrador un sector de capacidad 0 y uno de capacidad 10, luego publicar explícitamente | RN-06, RN-54 |
 | CP-75 — Desde la pantalla, un sector que supera la capacidad del local; eliminar el último sector | RN-06, RN-38 |
 | CP-76 — «Mi suscripción» sin plan | — (RNF-02) |
 | CP-77 — Contratar el plan mensual; cancelarlo | RN-25 |
@@ -2602,7 +2638,7 @@ la de CP-01 a CP-61:
 | CP-79 — Resumen de compra de 2 entradas con suscripción y sin ella | RN-37 |
 | CP-80 — Pagar con seguro siendo suscriptor; pagar sin seguro | RN-37 |
 | CP-81 — Evento en preventa: cliente sin plan, suscriptor; evento sin preventa | RN-39 |
-| CP-82 — Alta con preventa; preventa posterior al evento; administrar con preventa; quitarla; administrar sin preventa | RN-06, RN-39 |
+| CP-82 — Alta con preventa; preventa posterior al evento; administrar con preventa; quitarla; administrar sin preventa | RN-06, RN-39, RN-54 |
 | CP-83 — Lista de espera de un evento agotado; un organizador sin locales ni listas | RN-35 |
 | CP-84 — Un suscriptor inscripto en la lista cancela su plan | RN-35 |
 | CP-85 — Menú del organizador al 100 % y al 150 %; menú del cliente; código de Visual | — (RNF-02, RNF-03) |
@@ -2613,13 +2649,13 @@ la de CP-01 a CP-61:
 | CP-90 — PDF exportado desde la pantalla de reportes | — |
 | CP-91 — Sesión de un cliente que intenta devolver la compra de otro, con el titular del objeto cambiado a mano | RN-41 |
 | CP-92 — Sesión de un cliente que pide el historial, la suscripción y el perfil de otro | RN-41 |
-| CP-93 — Sesión de un cliente que elimina un evento | RN-34, RN-42 |
-| CP-94 — Sin sesión: 16 operaciones protegidas y CrearAdministrador; después, CrearAdministrador como cliente y… | RN-41, RN-42 |
+| CP-93 — Sesión de un cliente que elimina un evento | RN-34, RN-48 |
+| CP-94 — Sin sesión: 16 operaciones protegidas y CrearAdministrador; después, CrearAdministrador como cliente y… | RN-41, RN-48 |
 | CP-95 — Cambiar la contraseña con la actual incorrecta | RN-04, RN-40 |
 | CP-96 — Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | RN-04 |
 | CP-97 — Cambiar la contraseña con un correo inexistente y con la actual incorrecta | RN-40 |
 | CP-98 — Con la sesión del Administrador, cambiar la contraseña de un cliente; abrir la pantalla | RN-40 |
-| CP-99 — Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y… | RN-18, RN-34, RN-42 |
+| CP-99 — Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y… | RN-18, RN-34, RN-49 |
 | CP-100 — El mismo código escaneado dos veces | RN-18 |
 | CP-101 — Entrada reembolsada | RN-18, RN-29 |
 | CP-102 — Código con formato válido que no existe | RN-18 |
@@ -2633,7 +2669,7 @@ la de CP-01 a CP-61:
 | CP-110 — Cada estado de EstadoEntrada y el estado ajeno «Usada», escritos en la tabla | RN-18, RN-29 |
 | CP-111 — Compra asegurada de 2 entradas: una ya ingresó; devolver las dos, en los dos órdenes | RN-18, RN-29 |
 | CP-112 — Los siete componentes visuales en un host de diseño real | — (RNF-01, RNF-02) |
-| CP-113 — Contrato de la sesión: Iniciar fuera de lo público; propiedades de la sesión; perfil e identidad del… | RN-41, RN-42 |
+| CP-113 — Contrato de la sesión: Iniciar fuera de lo público; propiedades de la sesión; perfil e identidad del… | RN-41 |
 | CP-114 — Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada | RN-04 |
 | CP-115 — Descuento configurado de Plata y de Oro por debajo, igual y por encima de DESCUENTO_MAX_ADMISIBLE | RN-20 |
 | CP-116 — El texto de cada botón de las 20 pantallas, dibujado por Windows, también con el borde de foco | — (RNF-02, RNF-03) |
@@ -2643,7 +2679,7 @@ la de CP-01 a CP-61:
 | CP-120 — Los componentes nuevos IndicadorPasos y EtiquetaTotal en un host de diseño real | — (RNF-02) |
 | CP-121 — Suscripción contratada y vencida; consultarla y abrir su pantalla varias veces | RN-26 |
 | CP-122 — Compra confirmada sin seguro; volver a confirmarla agregándole seguro | RN-28 |
-| CP-123 — Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los… | RN-18, RN-41, RN-42 |
+| CP-123 — Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los… | RN-18, RN-41, RN-49 |
 | CP-124 — Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente | RN-04, RN-40 |
 | CP-125 — Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor… | RN-35, RN-37 |
 | CP-126 — Pedir la lista de espera de un evento como cliente y sin sesión | RN-34 |
@@ -2662,7 +2698,7 @@ la de CP-01 a CP-61:
 | CP-139 — Calcular el descuento de otro cliente, y sin sesión | RN-41 |
 | CP-140 — Armar un paquete a nombre de otro cliente, y sin sesión | RN-41 |
 | CP-141 — Consultar los locales de un organizador sin la sesión de ese organizador, y con ella | RN-48 |
-| CP-142 — Listar los eventos con ingreso abierto como cliente, y sin sesión | RN-34 |
+| CP-142 — Listar los eventos con ingreso abierto sin sesión y con sesión de Organizador | RN-48 |
 | CP-143 — Ejecutar un reporte ya creado después de cerrar la sesión del administrador o como cliente | RN-34 |
 | CP-144 — Pedir el catálogo de eventos de un reporte como cliente, y sin sesión | RN-34 |
 | CP-145 — Insertar dos entradas con el mismo código QR | RN-18 |
@@ -2768,7 +2804,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-71 | «Mis locales» con dos locales; mover la celda actual al segundo (2 variantes) | La grilla aplica las propiedades y los colores del tema; se abren los eventos del segundo local | RF-12, RNF-02 | — |
 | CP-72 | El botón de sectores; precio «12500,50» y «12500.50» (3 variantes) | El botón dice «Agregar sector»; los dos precios se guardan como 12.500,50 | RF-12 | — |
 | CP-73 | Alta de un evento con categoría y sin categoría (2 variantes) | Con categoría, se guarda y se lista como borrador; sin categoría, no se inserta | RF-12 | RN-06 |
-| CP-74 | Agregar a un borrador un sector de capacidad 0 y uno de capacidad 10 (2 variantes) | Con capacidad 0 sigue en borrador; el primer sector con capacidad publica el evento | RF-12 | RN-06 |
+| CP-74 | Agregar a un borrador un sector de capacidad 0 y uno de capacidad 10 (2 variantes), luego publicar explícitamente | Agregar el sector nunca publica: el borrador sigue en Borrador. Al publicar el primer evento del Organizador queda EnRevision | RF-12 | RN-06, RN-54 |
 | CP-75 | Desde la pantalla, un sector que supera la capacidad del local; eliminar el último sector (2 variantes) | RN-38 informa la capacidad disponible y no inserta; RN-06 informa el código y conserva el sector | RF-12 | RN-06, RN-38 |
 | CP-76 | «Mi suscripción» sin plan | Muestra precios, beneficios y controles completos, sin recortes | RF-13, RNF-02 | — |
 | CP-77 | Contratar el plan mensual; cancelarlo (2 variantes) | Al contratar, muestra precio y vencimiento y habilita los beneficios. Al cancelar, pide confirmación con No por defecto y quita los beneficios | RF-13 | RN-25 |
@@ -2776,7 +2812,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-79 | Resumen de compra de 2 entradas con suscripción y sin ella (2 variantes) | El suscriptor tiene el seguro sin cargo y no recibe la pregunta del seguro; sin suscripción, el seguro de 2 entradas cuesta $10.000 | RF-05 | RN-37 |
 | CP-80 | Pagar con seguro siendo suscriptor; pagar sin seguro (2 variantes) | Con seguro, una póliza gratuita por entrada; sin seguro, ninguna póliza | RF-06, RF-07 | RN-37 |
 | CP-81 | Evento en preventa: cliente sin plan, suscriptor; evento sin preventa (3 variantes) | El evento se lista; al cliente sin plan se le rechaza con la fecha y hora en que termina la preventa; el suscriptor abre la compra; sin preventa compran todos. **Falla:** la preventa rechazada deja visible la compra | RF-03, RF-05 | RN-39 |
-| CP-82 | Alta con preventa; preventa posterior al evento; administrar con preventa; quitarla; administrar sin preventa (5 variantes) | La fecha se guarda y se conserva al publicar; la posterior al evento se rechaza sin insertar; la pantalla muestra lo guardado; quitarla guarda NULL | RF-12 | RN-06, RN-39 |
+| CP-82 | Alta con preventa; preventa posterior al evento; administrar con preventa; quitarla; administrar sin preventa (5 variantes) | La fecha se guarda y se conserva al publicar en revisión; la posterior al evento se rechaza sin insertar; la pantalla muestra lo guardado; quitarla guarda NULL | RF-12 | RN-06, RN-39, RN-54 |
 | CP-83 | Lista de espera de un evento agotado; un organizador sin locales ni listas (2 variantes) | Columnas, prioridad y contadores a la vista; sin listas, el desplegable queda deshabilitado | RF-10 | RN-35 |
 | CP-84 | Un suscriptor inscripto en la lista cancela su plan | Conserva la prioridad con que se inscribió | RF-10 | RN-35 |
 | CP-85 | Menú del organizador al 100 % y al 150 %; menú del cliente; código de `Visual` (3 variantes) | Las acciones del organizador siguen visibles; el cliente no ve reportes; `Visual` no tiene conexiones ni comandos SQL. | RF-11, RF-12, RNF-02, RNF-03 | — |
@@ -2787,13 +2823,13 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-90 | PDF exportado desde la pantalla de reportes | El texto contiene la marca, el código, el período, quién lo pidió y la paginación | RF-11 | — |
 | CP-91 | Sesión de un cliente que intenta devolver la compra de otro, con el titular del objeto cambiado a mano | Rechazado; tampoco ve las entradas. La compra sigue Confirmada y sin reembolso | RF-08 | RN-41 |
 | CP-92 | Sesión de un cliente que pide el historial, la suscripción y el perfil de otro | Los tres, rechazados | RF-08 | RN-41 |
-| CP-93 | Sesión de un cliente que elimina un evento | Rechazado con RN-34; el evento sigue existiendo | RF-12 | RN-34, RN-42 |
-| CP-94 | Sin sesión: 16 operaciones protegidas y `CrearAdministrador`; después, `CrearAdministrador` como cliente y como Administrador | Las 17 se rechazan sin sesión, y el cliente tampoco puede. El Administrador crea la cuenta con perfil Propietario. El registro genérico no es público. La compra sigue Pendiente y sin suscripción | RF-04, RF-12, RF-13 | RN-41, RN-42 |
+| CP-93 | Sesión de un cliente que elimina un evento | Rechazado con RN-34; el evento sigue existiendo | RF-12 | RN-34, RN-48 |
+| CP-94 | Sin sesión: 16 operaciones protegidas y `CrearAdministrador`; después, `CrearAdministrador` como cliente y como Administrador | Las 17 se rechazan sin sesión, y el cliente tampoco puede. El Administrador crea la cuenta con perfil Propietario. El registro genérico no es público. La compra sigue Pendiente y sin suscripción | RF-04, RF-12, RF-13 | RN-41, RN-48 |
 | CP-95 | Cambiar la contraseña con la actual incorrecta | Rechazado; el contador de intentos sube a 1 y la contraseña anterior sigue sirviendo | RF-02 | RN-04, RN-40 |
 | CP-96 | Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | Rechazado con el mensaje genérico «Mail o contraseña actual incorrectos.», sin decir que está bloqueada; al vencer el bloqueo, la anterior sigue sirviendo | RF-02 | RN-04 |
 | CP-97 | Cambiar la contraseña con un correo inexistente y con la actual incorrecta | Las dos respuestas son iguales: misma regla y mismo mensaje | RF-02 | RN-40 |
 | CP-98 | Con la sesión del Administrador, cambiar la contraseña de un cliente; abrir la pantalla | La anterior deja de servir y la nueva sirve; la sesión sigue siendo del Administrador. Pantalla: tres campos enmascarados y vacíos, todo dentro de la ventana | RF-02 | RN-40 |
-| CP-99 | Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y una consulta del contador sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». Al cliente se le rechaza el registro por RN-34, sin alterar el ingreso; sin sesión, el contador se rechaza | RF-07 | RN-18, RN-34, RN-42 |
+| CP-99 | Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y una consulta del contador sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». Al cliente se le rechaza el registro por RN-34, sin alterar el ingreso; sin sesión, el contador se rechaza | RF-07 | RN-18, RN-34, RN-49 |
 | CP-100 | El mismo código escaneado dos veces | El segundo se rechaza como ya usado, con la fecha y hora del primero | RF-07 | RN-18 |
 | CP-101 | Entrada reembolsada | Se rechaza como reembolsada; el contador queda en 0 | RF-07 | RN-18, RN-29 |
 | CP-102 | Código con formato válido que no existe | Se rechaza como inexistente; el contador queda en 0 | RF-07 | RN-18 |
@@ -2807,7 +2843,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-110 | Cada estado de `EstadoEntrada` y el estado ajeno «Usada», escritos en la tabla | La base admite los cuatro y rechaza el ajeno por `CK_Entradas_Estado`, que está activa y confiable | RF-07 | RN-18, RN-29 |
 | CP-111 | Compra asegurada de 2 entradas: una ya ingresó; devolver las dos, en los dos órdenes (2 variantes) | RN-29 rechaza la devolución y no cambia nada, ni por el gestor ni por el repositorio. La entrada no usada se puede devolver sola | RF-07 | RN-18, RN-29 |
 | CP-112 | Los siete componentes visuales en un host de diseño real (7 variantes) | Ninguno guarda su estilo en el Designer | RNF-01, RNF-02 | — |
-| CP-113 | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41, RN-42 |
+| CP-113 | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41 |
 | CP-114 | Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada (3 variantes) | El rechazo es idéntico en texto y título, sin revelar si la cuenta existe ni si está bloqueada; el bloqueo se registra igual | RF-02 | RN-04 |
 | CP-115 | Descuento configurado de Plata y de Oro por debajo, igual y por encima de `DESCUENTO_MAX_ADMISIBLE` (6 variantes) | Por debajo o igual se aplica; por encima se rechaza con RN-20, sin recortarlo en silencio | RF-08 | RN-20 |
 | CP-116 | El texto de cada botón de las 20 pantallas, dibujado por Windows, también con el borde de foco (20 variantes) | Ningún botón recorta su texto | RNF-02, RNF-03 | — |
@@ -2817,7 +2853,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-120 | Los componentes nuevos `IndicadorPasos` y `EtiquetaTotal` en un host de diseño real (2 variantes) | Ninguno guarda su estilo en el Designer | RNF-02 | — |
 | CP-121 | Suscripción contratada y vencida; consultarla y abrir su pantalla varias veces | No queda ninguna activa, y consultar o abrir la pantalla no crea ni renueva el registro | RF-13 | RN-26 |
 | CP-122 | Compra confirmada sin seguro; volver a confirmarla agregándole seguro | Rechazo con «La compra ya no está pendiente de pago.»; la compra queda sin seguro, sin póliza y sin segundo pago | RF-06 | RN-28 |
-| CP-123 | Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-41, RN-42 |
+| CP-123 | Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-41, RN-49 |
 | CP-124 | Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente (3 variantes) | El rechazo es el mismo en texto, título y comportamiento: no revela si la cuenta existe ni si está bloqueada. El bloqueo interno sigue funcionando | RF-02 | RN-04, RN-40 |
 | CP-125 | Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor inscripto en la lista de espera; compran un no suscriptor, el suscriptor inscripto, un suscriptor sin inscripción y un reintento de pago anterior, dentro y fuera de la ventana (8 variantes) | Dentro de la ventana solo compra el suscriptor inscripto; los demás reciben el rechazo RN-35 sin consumir el cupo ni dejar compra o pago nuevo. Fuera de la ventana compra cualquiera | RF-10 | RN-35, RN-37 |
 | CP-126 | Pedir la lista de espera de un evento como cliente y sin sesión | Rechazo RN-34 sin devolver nombres ni correos; el administrador la obtiene | RF-10 | RN-34 |
@@ -2836,13 +2872,16 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-139 | Calcular el descuento de otro cliente, y sin sesión | Rechazo RN-41 sin devolver el dato | RF-08 | RN-41 |
 | CP-140 | Armar un paquete a nombre de otro cliente, y sin sesión | Rechazo RN-41; no se crea el paquete | RF-05 | RN-41 |
 | CP-141 | Consultar los locales de un organizador sin la sesión de ese organizador, y con ella | Sin perfil Organizador, rechazo RN-48 sin devolver el dato; el organizador dueño ve sus locales | RF-12 | RN-48 |
-| CP-142 | Listar los eventos con ingreso abierto como cliente, y sin sesión | Rechazo RN-34 sin devolver el listado | RF-07 | RN-34 |
+| CP-142 | Listar los eventos con ingreso abierto sin sesión y con sesión de Organizador | Sin perfil Organizador, rechazo RN-48 sin devolver el listado; el Organizador puede consultar los eventos propios | RF-07 | RN-48 |
 | CP-143 | Ejecutar un reporte ya creado después de cerrar la sesión del administrador o como cliente | Rechazo RN-34 sin devolver el reporte | RF-11 | RN-34 |
 | CP-144 | Pedir el catálogo de eventos de un reporte como cliente, y sin sesión | Rechazo RN-34 sin devolver el catálogo | RF-11 | RN-34 |
 | CP-145 | Insertar dos entradas con el mismo código QR | El índice único de la base rechaza la segunda y la reversión deja intacta la primera | RF-07 | RN-18 |
 | CP-146 | Registrar el ingreso de una entrada como cliente y sin sesión (2 variantes) | El rechazo es un resultado, no una excepción: motivo «no autorizado», regla RN-34 y el mensaje «Esta operación es solo para el Administrador». La entrada sigue confirmada y sin ingreso, el contador da 0 y la sesión no cambia | RF-07 | RN-34 |
 | CP-147 | Insertar en la base un segundo seguro para una entrada que ya tiene uno, y uno para otra entrada (2 variantes) | El índice único de la base rechaza el segundo seguro de la misma entrada; la otra entrada admite el suyo. La reversión deja todo como estaba | RF-06 | RN-28 |
 | CP-148 | Comprar, pagar y cerrar la pantalla de confirmación (interfaz) | Vuelve al listado de eventos, sin mostrar un armado vacío, y la sesión sigue siendo del cliente | RF-06 | — |
+| CP-197 | Comparar todos los scripts numerados desde 04 con el registro de requisitos del diagnóstico de arranque | Cada migración tiene comprobación registrada; un script nuevo sin alta en el verificador hace fallar el caso | RNF-03 | — |
+| CP-198 | Rechazar el evento propio o ajeno como Organizador; rechazar como Administrador sin motivo | El Organizador no puede revisar; al Administrador se le exige motivo y el evento permanece EnRevision | RF-12 | RN-48, RN-54 |
+| CP-199 | Administrador rechaza el primer evento; Organizador ve el motivo e intenta vender y vuelve a publicar | El evento vuelve a Borrador, conserva y muestra el motivo, no aparece en catálogo ni acepta ventas; al volver a publicar entra otra vez en revisión | RF-03, RF-05 | RN-06, RN-09, RN-54 |
 
 **Después de las dos tablas, agregar:**
 

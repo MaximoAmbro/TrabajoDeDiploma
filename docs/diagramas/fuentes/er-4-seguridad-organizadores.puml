@@ -1,0 +1,63 @@
+@startuml er-4-seguridad-organizadores
+!include _estilo.iuml
+skinparam nodesep 40
+skinparam ranksep 40
+' DER, vista 4 de 4: códigos de un solo uso, registro de auditoría y solicitudes de Organizador.
+' Fuente: BaseDatos/01-esquema.sql, 08-seguridad-cuenta-auditoria.sql y
+' 12-solicitudes-organizador.sql. Usuario está completo en la vista 1: acá solo su clave.
+' Auditoria.UsuarioID no tiene clave foránea declarada (línea punteada): el registro conserva el
+' correo del intento aunque la cuenta no exista.
+
+entity Usuario {
+  * ID : INT <<PK>>
+}
+entity CodigosCorreo {
+  * ID : INT <<PK>>
+  --
+  * UsuarioID : INT <<FK>>
+  * Proposito : VARCHAR(16) <<CK>>
+  * Sal : VARBINARY(16)
+  * CodigoHash : VARBINARY(32)
+  Destinatario : VARCHAR(180)
+  * CreadoEl : DATETIME2
+  * VenceEl : DATETIME2
+  * Usado : BIT
+  * Intentos : INT
+}
+entity Auditoria {
+  * ID : BIGINT <<PK>>
+  --
+  UsuarioID : INT
+  UsuarioMail : VARCHAR(150)
+  * Accion : VARCHAR(80)
+  Entidad : VARCHAR(80)
+  EntidadID : INT
+  * Fecha : DATETIME2
+  * Resultado : VARCHAR(200)
+}
+entity SolicitudesOrganizador {
+  * ID : INT <<PK>>
+  --
+  * UsuarioID : INT <<FK>>
+  * Responsable : NVARCHAR(160)
+  * CUIT : CHAR(11)
+  * Telefono : VARCHAR(20)
+  * TelefonoVerificado : BIT <<CK>>
+  * NombreLocal : NVARCHAR(100)
+  * Direccion : NVARCHAR(160)
+  * Capacidad : INT <<CK>>
+  * Documentacion : VARBINARY(MAX)
+  * NombreArchivo : NVARCHAR(180)
+  * CBUAlias : VARCHAR(30)
+  * Estado : VARCHAR(12) <<CK>>
+  MotivoRevision : NVARCHAR(500)
+  RevisadaPor : INT <<FK>>
+  RevisadaEl : DATETIME2
+  * CreadaEl : DATETIME2
+}
+
+Usuario "1$_" ||--o{ "0..*$_" CodigosCorreo
+Usuario "1$_" ||-right-o{ "0..*$_" SolicitudesOrganizador : presenta
+Usuario "0..1$_" |o-right-o{ "0..*$_" SolicitudesOrganizador : revisa
+Usuario "0..1$_" |o..o{ "0..*$_" Auditoria
+@enduml

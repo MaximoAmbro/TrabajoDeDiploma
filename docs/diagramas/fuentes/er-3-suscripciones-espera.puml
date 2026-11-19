@@ -1,0 +1,44 @@
+@startuml er-3-suscripciones-espera
+!include _estilo.iuml
+skinparam nodesep 22
+skinparam ranksep 40
+' DER, vista 3 de 4: suscripciones, lista de espera y parámetros.
+' Fuente: BaseDatos/01-esquema.sql. Usuario y Eventos están completos en la vista 1: acá solo su clave.
+
+entity Usuario {
+  * ID : INT <<PK>>
+}
+entity Eventos {
+  * ID : INT <<PK>>
+}
+entity Suscripciones {
+  * ID : INT <<PK>>
+  --
+  * ID_Usuario : INT <<FK>>
+  * Plan : VARCHAR(10)
+  * FechaInicio : DATE
+  * FechaFin : DATE
+  * Precio : DECIMAL(12,2)
+  * Activa : BIT
+}
+entity ListaEspera {
+  * ID : INT <<PK>>
+  --
+  * ID_Evento : INT <<FK, UQ1>>
+  * ID_Usuario : INT <<FK, UQ1>>
+  * FechaAlta : DATETIME
+  * ConSuscripcion : BIT
+}
+entity Parametros {
+  * Clave : VARCHAR(40) <<PK>>
+  --
+  * Valor : VARCHAR(40)
+  Descripcion : VARCHAR(160)
+  Regla : VARCHAR(10)
+}
+
+Suscripciones "0..*$_" }o-up-|| "1$_" Usuario
+Usuario "1$_" ||--o{ "0..*$_" ListaEspera
+Eventos "1$_" ||--o{ "0..*$_" ListaEspera
+ListaEspera -[hidden]down- Parametros
+@enduml

@@ -26,7 +26,7 @@ está al final, en «Para regenerar una imagen».
 
 | Página hoy | Qué hay | Qué va | Ficha |
 |---|---|---|---|
-| 71 | «Diagramas de caso de uso»: el general viejo | Dos diagramas: cliente y administrador | [1](#1-casos-de-uso) |
+| 71 | «Diagramas de caso de uso»: el general viejo | Cuatro diagramas: cuenta, cliente, organizador y administrador | [1](#1-casos-de-uso) |
 | 72 a 85 | Especificaciones CU-01 a CU-08, cada una con un diagrama chico | **Se quitan los ocho diagramas chicos** (D-7, 14/11): el general ya muestra todas sus relaciones | — |
 | 86, arriba | «Modelo de dominio conceptual» | El dominio conceptual nuevo | [7](#7-modelo-de-dominio-conceptual) |
 | 86, abajo | «Diagrama de clases» | Siete vistas de clases más tres de patrones (10 figuras) | [2](#2-diagrama-de-clases) y [3](#3-patrones-de-diseño) |
@@ -35,7 +35,7 @@ está al final, en «Para regenerar una imagen».
 | 88, arriba | «Diagrama de robustez (ICONIX)» | La robustez de «Comprar paquete» | [9](#9-robustez-comprar-paquete) |
 | 88, medio | «Diagrama de dominio actualizado» | Dos vistas del dominio actualizado | [8](#8-modelo-de-dominio-actualizado) |
 | 88 abajo y 89 arriba | «Diagrama de Actividad (flujo del Cliente)» | La actividad del proceso de negocio en tres partes | [10](#10-actividad-del-proceso-de-negocio) |
-| 89, abajo | «DER – Diagrama entidad-relación», **con la página en blanco** | Dos vistas del entidad-relación | [6](#6-entidad-relación) |
+| 89, abajo | «DER – Diagrama entidad-relación», **con la página en blanco** | Cuatro vistas del entidad-relación | [6](#6-entidad-relación) |
 
 **Páginas nuevas.** Se agregan unas 20 páginas entre la 71 y la 89. Todo lo que sigue se corre, y
 el índice (páginas 2 a 5) hay que regenerarlo.
@@ -44,42 +44,60 @@ el índice (páginas 2 a 5) hay que regenerarlo.
 
 ## 1. Casos de uso
 
-| | Cliente | Administrador |
-|---|---|---|
-| Fuente | `docs/diagramas/fuentes/casos-uso-cliente.puml` | `docs/diagramas/fuentes/casos-uso-administrador.puml` |
-| Imagen | `docs/diagramas/casos-uso-cliente.png` | `docs/diagramas/casos-uso-administrador.png` |
-| Insertar a | **16,0 cm** de ancho (13,4 de alto) | **16,0 cm** de ancho (15,1 de alto) |
-| Letra impresa | 8,9 pt | 10,5 pt |
+Cuatro diagramas, regenerados el 18/11 con los tres perfiles (RN-05).
+
+| Diagrama | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra impresa |
+|---|---|---|---|
+| Cuenta (común a los tres perfiles) | `casos-uso-cuenta` | **13,8 cm** de ancho (18,8 de alto) | 12,0 pt |
+| Cliente | `casos-uso-cliente` | **16,0 cm** de ancho (11,5 de alto) | 9,0 pt |
+| Organizador | `casos-uso-organizador` | **16,0 cm** de ancho (14,1 de alto) | 10,8 pt |
+| Administrador | `casos-uso-administrador` | **16,0 cm** de ancho (11,6 de alto) | 10,4 pt |
+
+El fuente de cada uno es `fuentes/<nombre>.puml` y la imagen, `<nombre>.png`.
 
 **Dónde va:** página 71. Reemplaza la figura que está bajo el título «Diagramas de caso de uso».
-El diagrama del administrador va en la página siguiente, con el título «Diagramas de caso de uso
-(Administrador)».
+Un diagrama por página, en este orden, cada uno con su subtítulo: «Cuenta», «Cliente»,
+«Organizador» y «Administrador».
 
 **Texto para el documento:**
 
-> Los casos de uso se presentan en dos diagramas, uno por actor, para que cada uno se lea a
-> tamaño de página. La mayoría de los casos de uso corresponde a una pantalla del sistema y a una
-> operación de la capa de negocio. Otros ocurren dentro de la compra, sin pantalla propia: el
-> descuento por nivel, que la compra aplica siempre, y el seguro, que el cliente elige mientras
-> arma el paquete. Se dibujan para que esas reglas del negocio queden visibles y trazables en el
-> diagrama. El pago se resuelve con una pasarela simulada que forma parte del sistema,
-> por lo que no se modela como actor. Las relaciones «include» indican pasos que la compra
-> realiza siempre (el descuento por nivel y el pago); las «extend» indican comportamiento
-> opcional, con su condición entre corchetes: contratar el seguro, inscribirse en la lista de
-> espera cuando el evento está agotado y devolver una entrada asegurada con más de 48 horas de
-> anticipación.
+> Los casos de uso se presentan en cuatro diagramas: uno con los casos comunes a todas las
+> cuentas y uno por cada perfil, para que cada diagrama se lea a tamaño de página. El sistema
+> distingue tres perfiles excluyentes (RN-05): el Cliente, que compra; el Organizador, que
+> administra sus propios locales y eventos; y el Administrador de la plataforma, que no es dueño
+> de locales y supervisa a los organizadores. Los tres son especializaciones de un Usuario
+> registrado y heredan sus casos de uso: iniciar sesión, cambiar la contraseña y recuperarla. El
+> Visitante, que todavía no tiene cuenta, solo puede registrarse; el registro incluye la
+> verificación del correo, que se exige antes de la primera compra (RN-43).
 >
-> El Administrador corresponde al perfil «Propietario» de la base de datos (RN-05). Además de los
-> casos de uso de gestión, incorpora el control de ingreso, que verifica que cada código QR se use
-> una sola vez (RN-18).
+> La mayoría de los casos de uso corresponde a una pantalla del sistema y a una operación de la
+> capa de negocio. Otros ocurren dentro de la compra, sin pantalla propia: el descuento por nivel,
+> que la compra aplica siempre, y el seguro, que el cliente elige mientras arma el paquete. Se
+> dibujan para que esas reglas del negocio queden visibles y trazables en el diagrama. El pago se
+> resuelve con una pasarela simulada que forma parte del sistema, por lo que no se modela como
+> actor. Las relaciones «include» indican pasos que el caso de uso base realiza siempre; las
+> «extend» indican comportamiento opcional, con su condición entre corchetes: contratar el
+> seguro, inscribirse en la lista de espera cuando el evento está agotado, devolver una entrada
+> asegurada con más de 48 horas de anticipación, agregar o quitar sectores de un evento y
+> exportar un reporte.
+>
+> Un Cliente puede solicitar ser Organizador; la solicitud no le da permisos hasta que un
+> Administrador la aprueba (RN-50 a RN-53). El Organizador publica sus eventos de forma
+> explícita, y el primer evento de un Organizador nuevo pasa a revisión: un Administrador lo
+> aprueba o lo rechaza con un motivo (RN-54). «Generar reportes» aparece en los diagramas de los
+> dos perfiles de gestión porque lo usan ambos con distinto alcance: el Organizador ve sus
+> eventos, y el Administrador, todos (RN-34).
 
 **Justificación de relaciones:**
 
 | Relación | Tipo | Condición | De dónde sale |
 |---|---|---|---|
+| Cliente, Organizador, Administrador → Usuario registrado | Generalización de actores | — | Un único perfil por cuenta (RN-05); `TipoUsuario` y las tablas `Cliente`, `Propietario` y `Administrador` |
 | Visitante → Registrarse | Asociación | — | `frmCrearUsuario` → `GestorUsuarios.RegistrarCliente` |
-| Cliente, Administrador → Iniciar sesión | Asociación | — | `frmInicio` → `GestorUsuarios.Autenticar` |
-| Cliente, Administrador → Cambiar contraseña | Asociación | — | `frmCambiarContraseña` → `GestorUsuarios.CambiarContrasena` (RN-40) |
+| Registrarse → Verificar el correo | «include» | siempre | `GestorUsuarios.RegistrarCliente` llama a `GestorCodigosCorreo.EnviarVerificacion`; `frmCrearUsuario` → `ConfirmarVerificacion` (RN-43, RN-44) |
+| Usuario registrado → Iniciar sesión | Asociación | — | `frmInicio` → `GestorUsuarios.Autenticar` |
+| Usuario registrado → Cambiar contraseña | Asociación | — | `frmCambiarContraseña` → `GestorUsuarios.CambiarContrasena` (RN-40) |
+| Usuario registrado → Recuperar contraseña | Asociación | — | `frmCambiarContraseña`, modo recuperación → `GestorCodigosCorreo.SolicitarRecuperacion` y `RecuperarContrasena` (RN-44) |
 | Cliente → Buscar eventos | Asociación | — | `frmEventosCliente` → `GestorEventos.Buscar` |
 | Cliente → Comprar paquete | Asociación | — | `FrmCompraCliente` → `GestorCompras.Iniciar`; `frmPago` → `GestorCompras.Confirmar` |
 | Comprar paquete → Aplicar descuento por nivel | «include» | siempre | `GestorCompras.Iniciar` llama a `GestorFidelizacion.CalcularDescuento` |
@@ -89,14 +107,20 @@ El diagrama del administrador va en la página siguiente, con el título «Diagr
 | Cliente → Ver historial de compras | Asociación | — | `frmHistorialCliente` → `GestorCompras.HistorialDe` |
 | Devolver entrada → Ver historial de compras | «extend» | con seguro y a más de 48 h | `frmHistorialCliente` → `GestorCompras.Reembolsar` (RN-29) |
 | Cliente → Gestionar suscripción | Asociación | — | `frmSuscripcion` → `GestorSuscripciones.Contratar` / `Cancelar` |
-| Administrador → Registrar local | Asociación | — | `frmRegistrarLocal` → `GestorLocales.Registrar` |
-| Administrador → Consultar mis locales | Asociación | — | `frmMisLocales` → `GestorLocales.PorPropietario` |
-| Administrador → Gestionar eventos | Asociación | — | `frmAgregarEvento`, `frmAdministrarEvento`, `frmEventosLocal` → `GestorEventos.Crear` / `Suspender` / `Eliminar` / `CambiarPreventa` |
-| Gestionar sectores → Gestionar eventos | «extend» | edita sectores | `frmAgregarSector` → `GestorEventos.AgregarSector`; `frmAdministrarEvento` → `EliminarSector` (RN-38) |
-| Administrador → Consultar listas de espera | Asociación | — | `frmListasEspera` → `GestorListaEspera.DeEvento` |
-| Administrador → Controlar ingreso | Asociación | — | `frmControlIngreso` → `GestorIngresos.Registrar` (RN-18) |
-| Administrador → Generar reportes | Asociación | — | `frmReportes` → `GestorReportes.Crear` / `Ejecutar` |
+| Cliente → Solicitar ser Organizador | Asociación | — | `frmSolicitudOrganizador` → `GestorSolicitudesOrganizador.EnviarCodigoTelefono`, `ConfirmarCodigoTelefono` y `Solicitar` (RN-50 a RN-52) |
+| Organizador → Registrar local | Asociación | — | `frmRegistrarLocal` → `GestorLocales.Registrar` |
+| Organizador → Consultar mis locales | Asociación | — | `frmMisLocales` → `GestorLocales.PorPropietario` (RN-49) |
+| Organizador → Gestionar eventos | Asociación | — | `frmAgregarEvento`, `frmAdministrarEvento`, `frmEventosLocal` → `GestorEventos.Crear` / `Suspender` / `Eliminar` / `CambiarPreventa` / `CambiarImagenPortada` |
+| Gestionar sectores → Gestionar eventos | «extend» | agrega o quita un sector | `frmAgregarSector` → `GestorEventos.AgregarSector`; `frmAdministrarEvento` → `EliminarSector` (RN-06, RN-38) |
+| Organizador → Publicar evento | Asociación | — | `frmAdministrarEvento` → `GestorEventos.Publicar` (RN-06, RN-54) |
+| Organizador → Consultar listas de espera | Asociación | — | `frmListasEspera` → `GestorListaEspera.DeEvento` (RN-49) |
+| Organizador → Controlar ingreso | Asociación | — | `frmControlIngreso` → `GestorIngresos.Registrar` (RN-18, RN-49) |
+| Organizador, Administrador → Generar reportes | Asociación | — | `frmReportes` → `GestorReportes.Crear` / `Ejecutar`, con el alcance de RN-34 |
 | Exportar reporte a PDF → Generar reportes | «extend» | pide exportar | `frmReportes` → `GestorReportes.Exportar` |
+| Administrador → Revisar solicitudes de Organizador | Asociación | — | `frmRevisarSolicitudesOrganizador` → `GestorSolicitudesOrganizador.Pendientes` / `Aprobar` / `Rechazar` (RN-53) |
+| Administrador → Revisar el primer evento de un Organizador | Asociación | — | `frmRevisarEventos` → `GestorEventos.PendientesDeRevision` / `AprobarPrimerEvento` / `RechazarPrimerEvento` (RN-54) |
+| Administrador → Consultar el registro de auditoría | Asociación | — | `frmAuditoria` → `GestorAuditoria.Consultar` |
+| Administrador → Crear administrador | Asociación | — | `frmMenuAdministrador` → `frmCrearUsuario` en modo alta de administrador → `GestorUsuarios.CrearAdministrador` |
 
 **Para la defensa (no se pega): «Aplicar descuento por nivel» y «Pagar la compra».** Criterio de
 JC del 17/11: se quedan. La descomposición funcional no está entre los 16 errores frecuentes del
@@ -114,11 +138,21 @@ las dos cumplen).
   una pantalla propia (`frmPago`), y el pago puede fallar y reintentarse (RN-32). Va como
   «include» porque no hay compra sin pago.
 
+**Para la defensa (no se pega): la generalización de actores.** Cliente, Organizador y
+Administrador heredan de «Usuario registrado» los tres casos de la cuenta. Es la forma estándar de
+UML de no repetir tres veces las mismas asociaciones, y responde a RN-05: los tres son la misma
+cuenta con un perfil distinto. «Recuperar contraseña» la usa un usuario registrado que no inició
+sesión: por eso cuelga de «Usuario registrado» y no del Visitante.
+
 **Qué cambió respecto del diagrama viejo:**
 - **Desaparecen** «Ver carrito», «Modificar local», «Eliminar local» y «Gestionar stock de
   entradas», que el sistema no tiene. La pasarela de pago deja de ser un actor.
 - **Aparecen** Controlar ingreso, Devolver entrada, Cambiar contraseña e Inscribirse en lista de
   espera, que existen y no estaban.
+- **Versión 2.6 (18/11):** el antiguo Administrador se divide en Organizador y Administrador de
+  la plataforma. Aparecen Verificar el correo, Recuperar contraseña, Solicitar ser Organizador,
+  Publicar evento, Revisar solicitudes de Organizador, Revisar el primer evento de un Organizador,
+  Consultar el registro de auditoría y Crear administrador.
 
 ---
 
@@ -394,40 +428,48 @@ Reemplaza la figura de ahí. Como ocupa la página entera, el título pasa a la 
 
 ## 6. Entidad-relación
 
-| | Vista 1: usuarios y catálogo | Vista 2: compra, pago y entradas |
-|---|---|---|
-| Fuente | `docs/diagramas/fuentes/er-1-usuarios-catalogo.puml` | `docs/diagramas/fuentes/er-2-compras.puml` |
-| Imagen | `docs/diagramas/er-1-usuarios-catalogo.png` | `docs/diagramas/er-2-compras.png` |
-| Insertar a | **15,4 cm** (23,0 de alto, página entera) | **14,6 cm** (23,0 de alto, página entera) |
-| Letra impresa | 9,0 pt | 9,3 pt |
+Cuatro vistas, regeneradas el 18/11 con las veinte tablas de `BaseDatos/01-esquema.sql`.
+
+| Vista | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra impresa |
+|---|---|---|---|
+| 1. Usuarios y catálogo | `er-1-usuarios-catalogo` | **13,7 cm** (23,0 de alto, página entera) | 9,0 pt |
+| 2. Compra, pago y entradas | `er-2-compras` | **14,6 cm** (23,0 de alto, página entera) | 9,3 pt |
+| 3. Suscripciones, lista de espera y parámetros | `er-3-suscripciones-espera` | **12,7 cm** (13,9 de alto) | 12,0 pt |
+| 4. Seguridad de la cuenta, auditoría y organizadores | `er-4-seguridad-organizadores` | **16,0 cm** (14,4 de alto) | 9,4 pt |
+
+El fuente de cada una es `fuentes/<nombre>.puml` y la imagen, `<nombre>.png`.
 
 **Dónde va:** página 89, debajo de «DER – Diagrama entidad-relación». **Esa página hoy tiene el
-título y nada más**: el diagrama se perdió al armar la versión 2 del PDF. La vista 2 va en la
-página siguiente.
+título y nada más**: el diagrama se perdió al armar la versión 2 del PDF. Una vista por página,
+en orden.
 
 **Texto para el documento:**
 
 > El diagrama entidad-relación se obtiene del script de creación de la base
-> (`BaseDatos/01-esquema.sql`) y muestra sus dieciséis tablas en dos vistas. La primera reúne
-> usuarios, locales, eventos, sectores, servicios, suscripciones, lista de espera y parámetros; la
-> segunda, la compra con sus pagos, entradas, servicios contratados y pólizas. Las tablas que
-> aparecen en las dos vistas se muestran completas en una sola y, en la otra, solo con su clave.
+> (`BaseDatos/01-esquema.sql`) y muestra sus veinte tablas en cuatro vistas. La primera reúne
+> los usuarios con sus tres perfiles, los locales, los eventos, los sectores y los servicios; la
+> segunda, la compra con sus pagos, entradas, servicios contratados y pólizas; la tercera, las
+> suscripciones, la lista de espera y los parámetros; y la cuarta, los códigos de un solo uso, el
+> registro de auditoría y las solicitudes de Organizador. Las tablas que aparecen en más de una
+> vista se muestran completas en una sola y, en las otras, solo con su clave.
 >
 > Cada columna indica su tipo; el asterisco marca las obligatorias (`NOT NULL`), y las marcas PK,
 > FK, UQ y CK señalan la clave primaria, las claves foráneas, las restricciones de unicidad y las de
 > verificación. Las relaciones usan la notación de pata de gallo, con la cardinalidad escrita en
-> cada extremo. Cliente y Propietario comparten la clave de Usuario (una tabla por tipo de
-> usuario). La relación entre Eventos y Servicios es de muchos a muchos y se resuelve con la tabla
-> intermedia ServiciosEvento. La contraseña se guarda como `PBKDF2$iteraciones$sal$hash`, nunca en
-> texto plano.
+> cada extremo. Cliente, Propietario y Administrador comparten la clave de Usuario: una tabla por
+> perfil (RN-05). La tabla Propietario conserva el nombre del esquema original y hoy es la de los
+> organizadores; guarda además si el Organizador ya tuvo un evento aprobado, que es lo que decide
+> si su próxima publicación pasa a revisión (RN-54). La relación entre Eventos y Servicios es de
+> muchos a muchos y se resuelve con la tabla intermedia ServiciosEvento. La contraseña se guarda
+> como `PBKDF2$iteraciones$sal$hash`, nunca en texto plano, y los códigos de verificación y de
+> recuperación, también como hash con su sal.
 >
 > La tabla Entradas proviene del esquema original, anterior a las compras. Por eso guarda el
 > usuario además de la compra, y por eso la compra y el sector son columnas agregadas después que
 > admiten valores nulos. El sistema escribe en cada entrada el mismo usuario de su compra, y nunca
-> crea una entrada sin compra ni sin sector. Cada fila es una sola entrada: la cantidad vendida
-> vale 1 en todas las filas que guarda el sistema, y cada una tiene su propio código QR, que se
-> admite una sola vez en el ingreso (RN-18). La cantidad elegida para cada sector existe solo
-> mientras se arma el paquete, que no se guarda en la base.
+> crea una entrada sin compra ni sin sector. Cada fila es una sola entrada, y cada una tiene su
+> propio código QR, que se admite una sola vez en el ingreso (RN-18). La cantidad elegida para
+> cada sector existe solo mientras se arma el paquete, que no se guarda en la base.
 >
 > El criterio para restringir en la base es uno solo: se restringe lo que, al violarse, hace daño,
 > y se documenta lo que no. Dos seguros sobre una misma entrada serían dos cargos al cliente: por
@@ -435,49 +477,76 @@ página siguiente.
 > disponibles de cada sector: un valor distinto de 1 altera el cupo, y uno vacío o en cero haría
 > que la entrada no se descontara de la capacidad, una sobreventa. Por eso la columna es
 > obligatoria y solo admite el valor 1.
-
-**⏸ El último párrafo depende del encargo pendiente** `docs/ENCARGO-CANTIDADVENDIDA-BORRADOR.md`:
-hoy la columna admite NULL y no tiene restricción. Cuando Codex agregue el script, se regenera
-`er-2-compras` (asterisco y `CK` en `CantidadVendida`) y se suma la fila a la tabla de abajo.
+>
+> Dos vínculos con Usuario se dibujan con línea punteada porque no tienen clave foránea
+> declarada. El dueño de un local (`Locales.PropietarioID`) viene del esquema original. El autor
+> de un registro de auditoría (`Auditoria.UsuarioID`) puede no existir: el registro conserva el
+> correo de un intento de inicio de sesión aunque la cuenta no exista.
 
 **Restricciones que no entran en la figura** (van en el texto o en una tabla debajo):
 
 | Tabla | Restricción | Definición |
 |---|---|---|
 | Usuario | `UQ_Usuario_Mail` | `UNIQUE (Mail)` |
+| Usuario | `CK_Usuario_TipoUsuario` | `TipoUsuario IN ('Cliente','Organizador','Administrador')` (RN-05, script 11) |
 | Locales | `CK_Locales_Capacidad` | `Capacidad > 0` |
-| Eventos | `CK_Eventos_Estado` | `Estado IN ('Borrador','Publicado','Suspendido')` |
+| Eventos | `CK_Eventos_Estado` | `Estado IN ('Borrador','EnRevision','Publicado','Suspendido')` (RN-54, script 13) |
 | Entradas | `CK_Entradas_Estado` | `Estado IN ('Pendiente','Confirmada','Reembolsada','Vencida')` |
+| Entradas | `CK_Entradas_CantidadVendida` | `CantidadVendida = 1`, columna `NOT NULL` (script 10) |
 | Entradas | `UX_Entradas_CodigoQR` | único cuando `CodigoQR IS NOT NULL` |
 | Compras | `CK_Compras_Estado` | `Estado IN ('Pendiente','Confirmada','Reembolsada','Vencida')` |
 | Pagos | `CK_Pagos_Estado`, `CK_Pagos_Ultimos4` | `Estado IN ('Aprobado','Rechazado')`; cuatro dígitos |
 | Suscripciones | `UX_Suscripcion_Activa` | una sola activa por usuario (índice único filtrado, RN-25) |
 | ListaEspera | `UX_ListaEspera` (UQ1 en la figura) | `UNIQUE (ID_Evento, ID_Usuario)` (RN-36) |
+| CodigosCorreo | `CK_CodigosCorreo_Proposito` | `Proposito IN ('Verificacion','Recuperacion','TelefonoOrg')` (RN-44) |
+| SolicitudesOrganizador | `CK_SolicitudesOrganizador_Estado`, `_Capacidad`, `_TelefonoVerificado` | `Estado IN ('Pendiente','Aprobada','Rechazada')`; `Capacidad > 0`; `TelefonoVerificado = 1` (RN-51) |
+| SolicitudesOrganizador | `UX_SolicitudesOrganizador_Pendiente` | una sola pendiente por usuario (índice único filtrado, RN-50) |
 
 **Justificación de relaciones:**
 
-| Relación | Cardinalidad | Clave foránea | Opcionalidad |
-|---|---|---|---|
-| Usuario — Cliente | 1 : 0..1 | `Cliente.ID` → `Usuario.ID` (también PK) | obligatoria |
-| Usuario — Propietario | 1 : 0..1 | `Propietario.ID` → `Usuario.ID` (también PK) | obligatoria |
-| Propietario — Locales | 1 : 0..* | `Locales.PropietarioID` **sin FK declarada** (línea punteada) | `NOT NULL` |
-| Locales — Eventos | 1 : 0..* | `Eventos.LocalID` | `NOT NULL` |
-| Eventos — Sectores | 1 : 0..* | `Sectores.EventoID` | `NOT NULL` |
-| Eventos — ServiciosEvento — Servicios | N : M | PK compuesta `(ID_Evento, ID_Servicio)` | — |
-| Usuario — Suscripciones | 1 : 0..* | `Suscripciones.ID_Usuario` | `NOT NULL` |
-| Eventos — ListaEspera | 1 : 0..* | `ListaEspera.ID_Evento` | `NOT NULL` |
-| Usuario — ListaEspera | 1 : 0..* | `ListaEspera.ID_Usuario` | `NOT NULL` |
-| Usuario — Compras | 1 : 0..* | `FK_Compras_Usuario` | `NOT NULL` |
-| Compras — Pagos | 1 : 0..* | `FK_Pagos_Compras` | `NOT NULL` |
-| Compras — Entradas | 0..1 : 0..* | `FK_Entradas_Compras` | admite NULL |
-| Usuario — Entradas | 1 : 0..* | `FK_Entradas_Usuario` | `NOT NULL` |
-| Eventos — Entradas | 1 : 0..* | `Entradas.ID_Evento` | `NOT NULL` |
-| Sectores — Entradas | 0..1 : 0..* | `FK_Entradas_Sectores` | admite NULL |
-| Compras — CompraServicios | 1 : 0..* | `CompraServicios.ID_Compra` | `NOT NULL` |
-| Servicios — CompraServicios | 1 : 0..* | `CompraServicios.ID_Servicio` | `NOT NULL` |
-| Entradas — Seguros | 1 : 0..1 | `Seguros.ID_Entrada` | `NOT NULL`, índice único `UX_Seguros_ID_Entrada` (script 07) |
+| Vista | Relación | Cardinalidad | Clave foránea | Opcionalidad |
+|---|---|---|---|---|
+| 1 | Usuario — Cliente | 1 : 0..1 | `Cliente.ID` → `Usuario.ID` (también PK) | obligatoria |
+| 1 | Usuario — Propietario | 1 : 0..1 | `Propietario.ID` → `Usuario.ID` (también PK) | obligatoria |
+| 1 | Usuario — Administrador | 1 : 0..1 | `Administrador.ID` → `Usuario.ID` (también PK) | obligatoria |
+| 1 | Propietario — Locales | 1 : 0..* | `Locales.PropietarioID` **sin FK declarada** (línea punteada) | `NOT NULL` |
+| 1 | Locales — Eventos | 1 : 0..* | `Eventos.LocalID` | `NOT NULL` |
+| 1 | Eventos — Sectores | 1 : 0..* | `Sectores.EventoID` | `NOT NULL` |
+| 1 | Eventos — ServiciosEvento — Servicios | N : M | PK compuesta `(ID_Evento, ID_Servicio)` | — |
+| 2 | Usuario — Compras | 1 : 0..* | `FK_Compras_Usuario` | `NOT NULL` |
+| 2 | Compras — Pagos | 1 : 0..* | `FK_Pagos_Compras` | `NOT NULL` |
+| 2 | Compras — Entradas | 0..1 : 0..* | `FK_Entradas_Compras` | admite NULL |
+| 2 | Usuario — Entradas | 1 : 0..* | `FK_Entradas_Usuario` | `NOT NULL` |
+| 2 | Eventos — Entradas | 1 : 0..* | `Entradas.ID_Evento` | `NOT NULL` |
+| 2 | Sectores — Entradas | 0..1 : 0..* | `FK_Entradas_Sectores` | admite NULL |
+| 2 | Compras — CompraServicios | 1 : 0..* | `CompraServicios.ID_Compra` | `NOT NULL` |
+| 2 | Servicios — CompraServicios | 1 : 0..* | `CompraServicios.ID_Servicio` | `NOT NULL` |
+| 2 | Entradas — Seguros | 1 : 0..1 | `Seguros.ID_Entrada` | `NOT NULL`, índice único `UX_Seguros_ID_Entrada` (script 07) |
+| 3 | Usuario — Suscripciones | 1 : 0..* | `Suscripciones.ID_Usuario` | `NOT NULL` |
+| 3 | Eventos — ListaEspera | 1 : 0..* | `ListaEspera.ID_Evento` | `NOT NULL` |
+| 3 | Usuario — ListaEspera | 1 : 0..* | `ListaEspera.ID_Usuario` | `NOT NULL` |
+| 4 | Usuario — CodigosCorreo | 1 : 0..* | `FK_CodigosCorreo_Usuario`, con borrado en cascada | `NOT NULL` |
+| 4 | Usuario — SolicitudesOrganizador («presenta») | 1 : 0..* | `FK_SolicitudesOrganizador_Usuario` | `NOT NULL` |
+| 4 | Usuario — SolicitudesOrganizador («revisa») | 0..1 : 0..* | `FK_SolicitudesOrganizador_Revisor` (`RevisadaPor`) | admite NULL mientras está pendiente |
+| 4 | Usuario — Auditoria | 0..1 : 0..* | `Auditoria.UsuarioID` **sin FK declarada** (línea punteada) | admite NULL |
 
 `Parametros` no tiene relaciones: guarda los valores de las reglas por clave.
+
+**Qué cambió (versión 2.6, 18/11):**
+- **Dos vistas pasan a cuatro:** con las cuatro tablas nuevas, la vista 1 vieja no entraba
+  legible. Las suscripciones, la lista de espera y los parámetros pasan a la vista 3.
+- **Tablas nuevas:** Administrador (script 11), CodigosCorreo y Auditoria (script 08) y
+  SolicitudesOrganizador (script 12).
+- **Columnas nuevas:**
+  - `Usuario.CorreoVerificado` (script 08);
+  - `Propietario.PrimerEventoAprobado` (script 14);
+  - `Eventos.ImagenPortada` (script 09);
+  - `Eventos.MotivoRechazo` (script 15).
+- **`Sectores.CupoLiberadoEl`** (script 06) faltaba en la versión anterior del diagrama.
+- **Restricciones nuevas:**
+  - `Entradas.CantidadVendida` pasa a obligatoria y con `CK` (script 10);
+  - `Eventos.Estado` suma «EnRevision» (script 13);
+  - `TipoUsuario` tiene `CK` (script 11).
 
 ---
 
