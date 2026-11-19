@@ -1,6 +1,6 @@
 # Borrador: requerimientos nuevos, costos y reglas de la versión 2.6
 
-Claude Code, 18/11/2026. **Es un borrador para que JC lo revise antes de que entre a la lista
+Claude Code, 18/11/2026; actualizado el 19/11 con las decisiones de JC. **Es un borrador para que JC lo revise antes de que entre a la lista
 para Máximo.** Nada de esto está en `docs/LISTA-PARA-MAXIMO.md` todavía. Cuando JC lo apruebe,
 pasa a las pp. 23, 25 a 27, 35, 36 y 38.
 
@@ -18,6 +18,14 @@ pasa a las pp. 23, 25 a 27, 35, 36 y 38.
   aparte, porque es una revisión de seguridad y no una función.
 - RF-15 espera la medición nueva de Codex.
 
+## Lo que JC decidió el 19/11
+
+- El rediseño queda como fila de costo de RNF-02 y RNF-03, no como RF-23.
+- **RF-15 son 2 puntos:** Codex midió 402 líneas, 277 de código y 125 de pruebas; a 250 por
+  punto da 1,6, que se redondea a 2.
+- La fase 8a queda en 1 punto, con una frase que aclara que la fila mide volumen de código.
+- RN-45 ya está escrita y commiteada por Codex (`f3acc75`).
+
 ## Cómo se midió
 
 Se sumaron las líneas que agregó cada commit en archivos `.cs` y `.sql`, de código y de pruebas.
@@ -31,7 +39,7 @@ los proyectos ni la documentación. Cuando un commit hizo varias cosas, se repar
 | RF | Requerimiento | Prioridad | Pts | Líneas | De dónde | Reglas | CU |
 |---|---|---|---|---|---|---|---|
 | RF-14 | Verificación del correo | Must | 1 | ~288 | `ff489ce`: registro, bandeja y exigencia antes de comprar, más la mitad de la infraestructura de códigos | RN-43, RN-44 | CU-04, CU-14 |
-| RF-15 | Recuperación de la contraseña | Must | ⏸ | ⏸ | `ff489ce` (~323) más el cierre de `8d0f371` y `60238a4` (~384): espera la medición de Codex | RN-44, RN-47 | CU-15 |
+| RF-15 | Recuperación de la contraseña | Must | 2 | ~402 | Medición de Codex: 277 líneas de código y 125 de pruebas | RN-44, RN-47 | CU-15 |
 | RF-16 | Registro de auditoría | Must | 1 | ~236 | `ff489ce`: tabla, repositorio, gestor, pantalla y llamadas | RN-45 | CU-20 |
 | RF-17 | Protección de la sesión y de la contraseña | Must | 1 | ~184 | `ff489ce`: cierre por inactividad e indicador de fortaleza | RN-46, RN-47 | CU-05, CU-09 |
 | RF-18 | Mapa de sectores | Should | 1 | ~216 | `fed7918` | — | CU-01 |
@@ -99,6 +107,12 @@ escala):
 | Rediseño de la interfaz (RNF-02, RNF-03) | 8 | ~2.048 | `02989e3`, `ede18ed`, `c19348e`, `888461d` | Es un requerimiento no funcional: mejora la experiencia de los RF existentes, no agrega una función |
 | Revisión de pertenencia (fase 8a) | 1 | ~373 | `a48eb43`, la parte de pertenencia: guardas de los gestores, filtro de reportes y la prueba CP-182 | Es una revisión de seguridad, no una función (decisión de JC) |
 
+**Frase para debajo de la tabla de la p. 35** (decisión de JC del 19/11):
+
+> La fila de la revisión de pertenencia mide el volumen de código que agregó, como las demás. El
+> peso de esa revisión no está en sus líneas sino en lo que verificó: 24 métodos en cinco
+> familias, descriptos en «Metodología de verificación», junto con la prueba de mutación.
+
 **Decisión que tomé y anoto:** JC pidió el rediseño «como requerimiento». Lo puse como fila de
 costo atribuida a RNF-02 y RNF-03, sin número de RF, porque un rediseño no es una función nueva.
 Si JC prefiere un RF, es RF-23 con los mismos 8 puntos.
@@ -108,18 +122,23 @@ Si JC prefiere un RF, es RF-23 con los mismos 8 puntos.
 | Fila | Requerimientos | Puntos | Horas | Costo |
 |---|---|---|---|---|
 | Fases 4 a 8, como estaban | RF-01 a RF-08, RF-10 a RF-13 | 70 | 280 | $8.540.000 |
-| **Ampliación de la versión 2.6, medida a posteriori** | RF-14, RF-16 a RF-22 | **11** | **44** | **$1.342.000** |
+| **Ampliación de la versión 2.6, medida a posteriori** | RF-14 a RF-22 | **13** | **52** | **$1.586.000** |
 | **Rediseño de la interfaz, medido** | RNF-02, RNF-03 | **8** | **32** | **$976.000** |
 | **Revisión de pertenencia, medida** | — | **1** | **4** | **$122.000** |
-| **Alcance construido** | | **90** | **360** | **$10.980.000** |
+| **Alcance construido** | | **92** | **368** | **$11.224.000** |
 | RF-09, estimado y no construido | RF-09 | 8 | 32 | $976.000 |
-| **Total** | | **98** | **392** | **$11.956.000** |
+| **Total** | | **100** | **400** | **$12.200.000** |
 
-**⏸ Falta RF-15.** Con la medición provisoria (~707 líneas, 3 puntos), el alcance construido
-pasaría a 93 puntos, 372 h y $11.346.000, y el total, a 101 puntos, 404 h y $12.322.000.
+**Composición de la ampliación (13 puntos):** RF-14 1, RF-15 2, RF-16 1, RF-17 1, RF-18 1,
+RF-19 1, RF-20 3, RF-21 2 y RF-22 1.
 
-**Cuentas verificadas:** 70 + 11 + 8 + 1 = 90; 90 × 4 = 360 h; 360 × 30.500 = 10.980.000;
-90 + 8 = 98; 98 × 4 = 392 h; 392 × 30.500 = 11.956.000.
+**Cuentas verificadas:** 1 + 2 + 1 + 1 + 1 + 1 + 3 + 2 + 1 = 13; 13 × 4 = 52 h;
+52 × 30.500 = 1.586.000. 70 + 13 + 8 + 1 = 92; 92 × 4 = 368 h; 368 × 30.500 = 11.224.000.
+92 + 8 = 100; 100 × 4 = 400 h; 400 × 30.500 = 12.200.000.
+
+**Cambio respecto del borrador del 18/11:** con RF-15 en 2 puntos, la ampliación pasa de 11 a
+13 puntos ($1.342.000 a $1.586.000), el alcance construido de 90 a 92 puntos ($10.980.000 a
+$11.224.000) y el total de 98 a 100 puntos ($11.956.000 a $12.200.000).
 
 **Cómo se explica si el profesor pregunta:** la estimación aprobada (78 puntos, $9.516.000) se
 conserva tal cual. Lo construido después se midió, con la misma relación entre puntos y código que
@@ -128,7 +147,9 @@ mezclen.
 
 **Lo que también cambia:**
 - **p. 35:** «trece requerimientos funcionales» pasa a «veintidós».
-- **p. 36:** los porcentajes Must, Should y Could, a recalcular cuando RF-15 tenga sus puntos.
+- **p. 36:** la tabla «Distribución del esfuerzo estimado» no se recalcula (ya estaba decidido:
+  es la estimación aprobada). Debajo va una línea para la ampliación medida: Must 11 puntos
+  (84,6 %: RF-14 a RF-17 y RF-20 a RF-22) y Should 2 puntos (15,4 %: RF-18 y RF-19), sobre 13.
 - **p. 38:** el orden de implementación suma una «Fase 9, ampliación de la versión 2.6».
 
 ## 4. Reglas nuevas y modificadas (pp. 25 a 27)
@@ -162,7 +183,7 @@ CU propuestos arriba:
 | RN-43 | Una cuenta de Cliente debe verificar el correo antes de iniciar una compra. El código de verificación se envía al correo registrado; la entrega usa la bandeja simulada del sistema. | A | RF-14 / CU-04, CU-14 |
 |---|---|---|---|
 | RN-44 | Los códigos de verificación de correo, recuperación de contraseña y confirmación telefónica son de un solo uso, se almacenan protegidos, vencen según `CORREO_CODIGO_MIN` y admiten como máximo `CORREO_CODIGO_INTENTOS_MAX` intentos. La recuperación cambia la contraseña mediante las mismas validaciones y el mismo hash que el registro. | A | RF-14, RF-15 / CU-14 a CU-16 |
-| RN-45 | ⏸ Codex la está escribiendo (sin commitear el 18/11): entra cuando la publique. | A | RF-16 / CU-20 |
+| RN-45 | Las operaciones de inicio de sesión, cambio de contraseña, compras, devoluciones, control de ingreso y gestión de eventos se registran en `Auditoria` con el usuario, la acción, la entidad afectada, la fecha y el resultado. Solo el Administrador de plataforma puede consultar esos registros, con filtros por período y acción. | A | RF-16 / CU-20 |
 | RN-46 | Una sesión sin actividad se cierra al cumplirse `SESION_INACTIVIDAD_MIN`. La aplicación avisa con `SESION_AVISO_SEG` segundos de anticipación; cualquier actividad reinicia el plazo. | A | RF-17 / CU-05 |
 | RN-47 | Una contraseña nueva debe cumplir la longitud y composición mínima de RN-02 y alcanzar el puntaje configurado en `PWD_FORTALEZA_MIN`, calculado por la variedad de minúsculas, mayúsculas, números y símbolos. | A | RF-17 / CU-04, CU-09, CU-15 |
 
@@ -181,7 +202,32 @@ CU propuestos arriba:
 | RN-53 | Solo el Administrador de plataforma puede aprobar o rechazar solicitudes de Organizador. Ambas decisiones requieren un motivo de hasta 200 caracteres y registran la identidad del revisor y la fecha; aprobar cambia el perfil a Organizador y crea el local solicitado. | A | RF-20 / CU-18 |
 | RN-54 | La primera publicación de un Organizador se envía a revisión del Administrador y no aparece en el catálogo ni admite ventas mientras está en revisión. El Administrador puede aprobarla o rechazarla; para rechazar debe ingresar un motivo no vacío de hasta 500 caracteres. El rechazo devuelve el evento a Borrador y conserva el motivo para el Organizador. Si vuelve a publicarlo antes de que se haya aprobado un evento suyo, vuelve a revisión. Tras su primera aprobación, sus publicaciones siguientes son directas. | A | RF-21 / CU-17, CU-19 |
 
+**RN-45 y RN-34 no se superponen:** RN-45 regula qué se registra en la auditoría y quién la
+consulta; RN-34, el alcance administrativo y los reportes. Por eso RN-34 cita RF-11 y RN-45 cita
+RF-16.
+
 **Cuenta de reglas vigentes:** de RN-01 a RN-54 hay 54 números; menos RN-27 y RN-42, dadas de
-baja, quedan **52 vigentes** cuando RN-45 entre. Cambia «cuarenta y una» en las pp. 106 y 110 y
+baja, quedan **52 vigentes**. Cambia «cuarenta y una» en las pp. 106 y 110 y
 en la sección «Metodología de verificación». La cobertura (cuántas tienen caso) espera los números
 finales de la batería.
+
+## 5. Lo que esto cambia en la matriz (p. 107), para decidir con el borrador
+
+Las 157 pruebas (202 casos) ya tienen su comentario `// CP-xx — RF, RN` (Codex, `f3acc75`). Pero
+las pruebas de las funciones nuevas citan los requerimientos viejos, porque RF-14 a RF-22 todavía
+no existen:
+
+| Regla | Casos | RF que cita hoy el comentario | RF del borrador |
+|---|---|---|---|
+| RN-43 | CP-167, CP-168, CP-203 | RF-05, RF-01 | RF-14 |
+| RN-44 | CP-169 a CP-171, CP-173, CP-176, CP-200 a CP-202 | RF-01 | RF-14, RF-15 |
+| RN-45 | CP-174, CP-175, CP-189, CP-196 | RF-11, RF-12 | RF-16 |
+| RN-46, RN-47 | CP-172, CP-174 | RF-01, RF-11 | RF-17 |
+| RN-50 a RN-53 | CP-177 a CP-180, CP-184 a CP-196, CP-202 | RF-12, RF-01 | RF-20 |
+| RN-54 | CP-198, CP-199, CP-204 | RF-12, RF-03 | RF-21 |
+| RN-48, RN-49 | CP-94, CP-123, CP-141, CP-142, CP-179, CP-182, CP-198 | RF-04, RF-07, RF-11 a RF-13 | RF-22 |
+
+**Propuesta:** cuando JC apruebe la numeración, Codex cambia el RF de esos comentarios, para que
+el código y la matriz digan lo mismo. La matriz se arma después, desde los comentarios, como
+hasta ahora. Si se armara con los RF de hoy, las funciones nuevas quedarían repartidas entre
+RF-01, RF-11 y RF-12, y RF-14 a RF-22 aparecerían sin casos.

@@ -1699,6 +1699,10 @@ historial.
 
 **CU-14 – Verificar el correo**
 
+**⏸ Espera a Codex (19/11):** el paso 1 dice que el sistema muestra la bandeja con el código.
+Codex está cambiando eso: el código va a un archivo que se abre fuera de la aplicación. El paso 1
+se reescribe cuando lo commitee.
+
 **Id y nombre:** CU-14 – Verificar el correo
 
 **Descripción:** Permite a quien se registra confirmar que el correo de su cuenta es suyo, con un
@@ -1914,7 +1918,7 @@ eventos pendientes.».
 **Id y nombre:** CU-20 – Consultar el registro de auditoría
 
 **Descripción:** Permite al Administrador de la plataforma consultar las operaciones registradas,
-con quién las hizo, cuándo y con qué resultado.
+con quién las hizo, cuándo y con qué resultado (RN-45).
 
 **Actor:** Administrador
 
@@ -1938,6 +1942,9 @@ movimientos con estos filtros. Probá ampliar el período.».
 
 **Postcondiciones:**
 - El registro no se modifica: la consulta es de solo lectura.
+
+**Regla:** solo el Administrador de la plataforma consulta el registro (RN-45). Si otro perfil
+llega a la consulta, el sistema la rechaza con «Esta operación es solo para el Administrador».
 
 ---
 
