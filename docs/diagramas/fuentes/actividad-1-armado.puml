@@ -7,15 +7,12 @@ skinparam SwimlaneTitleFontSize 13
 skinparam ActivityBorderColor #333333
 skinparam ActivityBackgroundColor #F7F7F7
 skinparam ActivityDiamondBackgroundColor #F7F7F7
-' Diagrama de actividad del proceso de negocio, parte 1 de 3: de la carga del evento a la
+' Diagrama de actividad del proceso de negocio, parte 2 de 4: del evento publicado a la
 ' reserva del cupo. Un carril por actor; el sistema no es un carril (regla 12).
 
-|Administrador|
-start
-:Registrar el local;
-:Crear el evento;
-:Agregar sectores (con el primero queda publicado);
+|Organizador|
 |Cliente|
+(P)
 :Buscar un evento;
 if (¿Hay cupo?) then (no)
   :Inscribirse en la lista de espera;

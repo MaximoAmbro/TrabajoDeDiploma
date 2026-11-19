@@ -34,7 +34,7 @@ está al final, en «Para regenerar una imagen».
 | 87, abajo | «Diagrama de estados – Ciclo de vida de la entrada» | El diagrama de estados nuevo | [5](#5-transición-de-estados-de-la-entrada) |
 | 88, arriba | «Diagrama de robustez (ICONIX)» | La robustez de «Comprar paquete» | [9](#9-robustez-comprar-paquete) |
 | 88, medio | «Diagrama de dominio actualizado» | Tres vistas del dominio actualizado | [8](#8-modelo-de-dominio-actualizado) |
-| 88 abajo y 89 arriba | «Diagrama de Actividad (flujo del Cliente)» | La actividad del proceso de negocio en tres partes | [10](#10-actividad-del-proceso-de-negocio) |
+| 88 abajo y 89 arriba | «Diagrama de Actividad (flujo del Cliente)» | La actividad del proceso de negocio en cuatro partes | [10](#10-actividad-del-proceso-de-negocio) |
 | 89, abajo | «DER – Diagrama entidad-relación», **con la página en blanco** | Cuatro vistas del entidad-relación | [6](#6-entidad-relación) |
 
 **Páginas nuevas.** Se agregan unas 20 páginas entre la 71 y la 89. Todo lo que sigue se corre, y
@@ -389,7 +389,7 @@ no tienen constructor privado, así que no son Singleton.
 
 | Parte | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra |
 |---|---|---|---|
-| 1. Reserva del cupo | `secuencia-compra-1-reserva` | **16,0 cm** (17,2) | 9,2 pt |
+| 1. Reserva del cupo | `secuencia-compra-1-reserva` | **16,0 cm** (18,5) | 8,6 pt |
 | 2. Pago | `secuencia-compra-2-pago` | **16,0 cm** (21,6) | 8,6 pt |
 | 3. Emisión de las entradas | `secuencia-compra-3-emision` | **16,0 cm** (14,5) | 8,6 pt |
 
@@ -405,7 +405,7 @@ figura de ahí, una parte por página.
 > lo hace siempre a través de un gestor y un repositorio.
 >
 > Antes de operar, `GestorCompras` verifica con `GestorSesion` que quien compra es el titular
-> (RN-41). La reserva congela los precios y el descuento por nivel, y deja la compra y sus entradas
+> (RN-41), y con `GestorUsuarios` que su correo esté verificado (RN-43). La reserva congela los precios y el descuento por nivel, y deja la compra y sus entradas
 > en estado Pendiente durante el plazo de reserva (RN-15). Si el pago se rechaza, el cupo se
 > devuelve y la compra admite un reintento (RN-32). Si se aprueba, cada entrada recibe un código QR
 > único (RN-18), y la compra y sus entradas pasan a Confirmada en una sola transacción. El nivel
@@ -416,7 +416,7 @@ figura de ahí, una parte por página.
 | Parte | Mensaje | Código |
 |---|---|---|
 | 1 | `Iniciar(p, c)` | `FrmCompraCliente.cs:267` → `GestorCompras.Iniciar` |
-| 1 | `RequerirUsuario`, `Validar`, `VerificarPreventa`, `CalcularDescuento` | `GestorCompras.Iniciar`, en ese orden |
+| 1 | `RequerirUsuario`, `ExigirCorreoVerificado`, `Validar`, `VerificarPreventa`, `CalcularDescuento` | `GestorCompras.Iniciar`, en ese orden |
 | 1 | `Iniciar(compra, servicios, entradas)` | `RepositorioCompras.Iniciar`; si no hay cupo lanza `CupoInsuficienteException` |
 | 2 | `Confirmar(c, t)` | `frmPago.cs:76` → `GestorCompras.Confirmar` |
 | 2 | `RequerirUsuario`, `ValidarTarjeta`, `ObtenerPorId` | `GestorCompras.RequerirCompra` y `Confirmar` |
@@ -425,10 +425,15 @@ figura de ahí, una parte por página.
 | 3 | `ObtenerCliente`, `ReevaluarNivel`, `AscenderSiCorresponde` | `GestorCompras.Confirmar`, al final |
 | 3 | genera el ticket y abre `frmConfirmacion` | `FrmCompraCliente.cs:294-295` |
 
+**Lo que no se dibuja, a propósito:** `GestorAuditoria.Registrar`, que `Iniciar` y `Confirmar`
+llaman al final para dejar constancia de la operación. Es una llamada interna sin efecto sobre la
+compra, y dibujarla agregaba un participante que dejaba la parte 1 por debajo de la letra mínima.
+
 **Qué cambió respecto del diagrama viejo:**
 - **Desaparecen** ControladorCompra, ServicioCompra, ServicioNivel, RepositorioCompra y
   `actualizarPuntos`, que no existen.
 - **Aparecen** la verificación de identidad y la pasarela.
+- **Versión 2.6 (18/11):** aparece la exigencia del correo verificado (`GestorUsuarios`, RN-43).
 
 ---
 
@@ -731,9 +736,9 @@ Lo que se agrega:
 |---|---|
 | Fuente | `docs/diagramas/fuentes/robustez-comprar-paquete.puml` |
 | Imagen | `docs/diagramas/robustez-comprar-paquete.png` |
-| Insertar a | **16,0 cm** de ancho (18,1 de alto) |
+| Insertar a | **16,0 cm** de ancho (19,6 de alto) |
 | Letra impresa | 9,5 pt |
-| Verificación de conexiones | `py -3 tools/Diagramas/VerificarRobustez.py docs/diagramas/fuentes/robustez-comprar-paquete.puml` → 22 elementos, 26 conexiones, 0 prohibidas |
+| Verificación de conexiones | `py -3 tools/Diagramas/VerificarRobustez.py docs/diagramas/fuentes/robustez-comprar-paquete.puml` → 23 elementos, 28 conexiones, 0 prohibidas |
 
 **Dónde va:** página 88, arriba, debajo de «Diagrama de robustez (ICONIX)». Reemplaza la figura
 de ahí, que era un diagrama de secuencia con los íconos de robustez.
@@ -746,8 +751,9 @@ de ahí, que era un diagrama de secuencia con los íconos de robustez.
 > resuelven cada paso; las entidades, los conceptos del dominio que se leen o se modifican. Se
 > respetan las reglas de conexión del método: el actor solo se comunica con fronteras, las
 > fronteras solo con controles, y las entidades solo con controles. Los controles pueden
-> comunicarse entre sí: el control de la compra verifica la identidad del cliente, cobra con la
-> pasarela simulada, genera los códigos QR y usa los controles de paquetes y fidelización.
+> comunicarse entre sí: el control de la compra verifica la identidad del cliente y que su correo
+> esté verificado, cobra con la pasarela simulada, genera los códigos QR y usa los controles de
+> paquetes y fidelización.
 >
 > El Cliente aparece dos veces, con dos papeles distintos: como actor es la persona que usa las
 > pantallas, y como entidad es la información que el sistema guarda de ella, su identidad para la
@@ -762,10 +768,10 @@ de ahí, que era un diagrama de secuencia con los íconos de robustez.
 | Pantalla de compra — GestorEventos, GestorPaquetes, GestorFidelizacion, GestorListaEspera, GestorCompras | Frontera–control | llamadas `X.Instance.…` en `FrmCompraCliente.cs` |
 | Pantalla de pago — GestorCompras | Frontera–control | `Confirmar`, `Liberar` en `frmPago.cs` |
 | Pantalla de confirmación — GestorCompras | Frontera–control | `PagosDe` en `frmConfirmacion.cs` |
-| GestorCompras — GestorSesion, PasarelaSimulada, GeneradorQR, GestorPaquetes, GestorFidelizacion | Control–control | `GestorCompras.Iniciar` y `Confirmar` |
+| GestorCompras — GestorSesion, GestorUsuarios, PasarelaSimulada, GeneradorQR, GestorPaquetes, GestorFidelizacion | Control–control | `GestorCompras.Iniciar` y `Confirmar` |
 | GestorEventos — Evento, Sector | Control–entidad | `ObtenerPorId`, `Sectores`, `EstaAgotado` |
 | GestorPaquetes — Paquete, Servicio | Control–entidad | `Nuevo`, `AgregarEntradas`, `AgregarServicio` |
-| GestorFidelizacion — Cliente; GestorSesion — Cliente | Control–entidad | `ObtenerCliente`, `CalcularDescuento`; `UsuarioActual` |
+| GestorFidelizacion — Cliente; GestorSesion — Cliente; GestorUsuarios — Cliente | Control–entidad | `ObtenerCliente`, `CalcularDescuento`; `UsuarioActual`; `ExigirCorreoVerificado` (RN-43) |
 | GestorListaEspera — Inscripción | Control–entidad | `Inscribir`, `EstaInscripto` |
 | GestorCompras — Compra, Entrada, Pago, Seguro | Control–entidad | `Iniciar`, `Confirmar` |
 
@@ -779,34 +785,42 @@ de ahí, que era un diagrama de secuencia con los íconos de robustez.
 
 | Parte | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra |
 |---|---|---|---|
-| 1. Del evento a la reserva | `actividad-1-armado` | **16,0 cm** (20,9) | 8,7 pt |
-| 2. Pago y entrega | `actividad-2-pago` | **13,6 cm** (17,6) | 12,0 pt |
-| 3. Devolución e ingreso | `actividad-3-ingreso` | **16,0 cm** (16,4) | 9,8 pt |
+| 1. Publicación del evento | `actividad-0-publicacion` | **10,4 cm** (23,0, página entera) | 9,1 pt |
+| 2. Del evento publicado a la reserva | `actividad-1-armado` | **14,2 cm** (23,0, página entera) | 12,0 pt |
+| 3. Pago y entrega | `actividad-2-pago` | **13,3 cm** (17,6) | 12,0 pt |
+| 4. Devolución e ingreso | `actividad-3-ingreso` | **16,0 cm** (16,4) | 9,8 pt |
 
 **Dónde va:** página 88, abajo, debajo de «Diagrama de Actividad (flujo del Cliente)», que conviene
 renombrar «Diagrama de actividad (proceso de venta)». Reemplaza la figura de la página 89. Una
-parte por página. Las partes se encadenan con los conectores A y B.
+parte por página. Las partes se encadenan con los conectores P, A y B.
 
 **Texto para el documento:**
 
 > El diagrama de actividad describe el proceso de negocio de punta a punta, desde que el
-> Administrador carga un evento hasta que el Cliente ingresa con su entrada. Tiene un carril por
-> actor y ninguno para el sistema, que no es un actor del proceso. Se presenta en tres partes,
-> unidas por los conectores A y B. El evento se crea en borrador y queda publicado cuando se le
-> agrega el primer sector con capacidad (RN-06). El Cliente busca un evento; si está agotado, se
+> Organizador carga un evento hasta que el Cliente ingresa con su entrada. Tiene un carril por
+> actor y ninguno para el sistema, que no es un actor del proceso. Se presenta en cuatro partes,
+> unidas por los conectores P, A y B. El evento se crea en borrador; el Organizador le agrega
+> sectores y lo publica de forma explícita, y la publicación exige al menos un sector con
+> capacidad (RN-06). Si es el primer evento de ese Organizador, pasa a revisión: un Administrador
+> lo aprueba o lo rechaza con un motivo, y un evento rechazado vuelve a borrador para que el
+> Organizador lo corrija y lo publique de nuevo (RN-54). Una vez que tuvo un evento aprobado, sus
+> publicaciones siguientes son directas. El Cliente busca un evento; si está agotado, se
 > anota en la lista de espera. Si hay cupo, arma el paquete, elige si agrega el seguro, revisa el
 > resumen con el descuento de su nivel y confirma, con lo que reserva el cupo por un plazo
 > limitado (RN-15). Puede reintentar el pago mientras dure ese plazo; si no lo concreta, pierde la
 > reserva. Con el pago aprobado recibe sus entradas con código QR. Antes del evento puede devolver
 > una entrada asegurada con más de 48 horas de anticipación (RN-29); el día del evento la presenta
-> en el ingreso, y el Administrador la acepta solo si está confirmada, corresponde al evento, está
+> en el ingreso, y el Organizador la acepta solo si está confirmada, corresponde al evento, está
 > dentro del horario y no ingresó antes (RN-18).
 
 **Justificación de cada decisión del diagrama:**
 
 | Elemento | Regla | Dónde está en el código |
 |---|---|---|
-| Agregar sectores; con el primero queda publicado | RN-06 | `GestorEventos.Crear` (Borrador) y `AgregarSector` |
+| Crear el evento en borrador y agregarle sectores | RN-06, RN-38 | `GestorEventos.Crear` (Borrador) y `AgregarSector` |
+| Publicar el evento, con al menos un sector con capacidad | RN-06 | `GestorEventos.Publicar(int)` |
+| ¿Ya tuvo un evento aprobado? → revisión del Administrador | RN-54 | `RepositorioEventos.OrganizadorYaTuvoEventoAprobado`; estado `EnRevision` |
+| Aprobar o rechazar con un motivo; el rechazado vuelve a borrador | RN-54 | `GestorEventos.AprobarPrimerEvento` y `RechazarPrimerEvento` |
 | ¿Hay cupo? → lista de espera | RF-10, RN-35, RN-36 | `GestorEventos.EstaAgotado`, `GestorListaEspera.Inscribir` |
 | ¿Quiere seguro? | RN-28 | `Paquete.ConSeguro` |
 | Revisar el resumen con el descuento por nivel | RF-08, RN-19 | `GestorFidelizacion.CalcularDescuento` |
@@ -814,7 +828,7 @@ parte por página. Las partes se encadenan con los conectores A y B.
 | Reintentar el pago dentro del plazo | RN-15, RN-32 | `GestorCompras.Confirmar`, `Liberar`, `Rereservar` |
 | Recibir las entradas con su QR | RF-07, RN-18 | `GestorCompras.Confirmar`, `GeneradorQR` |
 | Devolver la entrada | RN-29 | `GestorCompras.Reembolsar` |
-| Leer el QR y registrar o rechazar | RN-18 | `GestorIngresos.Registrar` y sus motivos de rechazo |
+| Leer el QR y registrar o rechazar | RN-18, RN-49 | `GestorIngresos.Registrar` y sus motivos de rechazo; solo eventos de los locales del Organizador |
 
 **Qué cambió respecto del diagrama viejo:**
 - **Desaparecen:**
@@ -828,6 +842,10 @@ parte por página. Las partes se encadenan con los conectores A y B.
   - el plazo de reserva;
   - la devolución;
   - el control de ingreso.
+- **Versión 2.6 (18/11):**
+  - el carril de gestión pasa a ser el del Organizador;
+  - aparece la parte 1, de la publicación: publicar es explícito, y el primer evento pasa por la revisión del Administrador, que puede rechazarlo;
+  - las partes pasan de tres a cuatro.
 
 ---
 
@@ -898,18 +916,18 @@ también con qué figuras comparte la sección apaisada.
 | 2. Multiplicidad en los dos extremos | **Cumple** en todas las asociaciones. Las dependencias y generalizaciones no llevan |
 | 3. Composición mal usada | **No aplica:** no hay composiciones; el código no tiene ciclo de vida dependiente entre entidades |
 | 4. Navegabilidad invertida | **Cumple:** cada flecha sigue la propiedad del código (tabla de la ficha 2). Bidireccional solo donde hay propiedad en las dos clases |
-| 5. 1:N dibujado como 1:1 | **Cumple.** Las únicas 1:0..1 son Usuario–Cliente y Usuario–Propietario, respaldadas por la PK compartida |
+| 5. 1:N dibujado como 1:1 | **Cumple.** En el ER, las 1:0..1 son Usuario–Cliente, Usuario–Propietario y Usuario–Administrador, respaldadas por la PK compartida, y Entradas–Seguros, por el índice único |
 | 6. N:M sin tabla intermedia | **Cumple:** Eventos–Servicios por ServiciosEvento |
-| 7. Herencia por conveniencia | **Cumple:** Cliente y Propietario son Usuario y no repiten atributos; los reportes son Reporte |
+| 7. Herencia por conveniencia | **Cumple:** Cliente y Propietario (el Organizador) son Usuario y no repiten atributos; el Administrador no tiene clase propia porque no agrega nada; los reportes son Reporte. En casos de uso, la generalización de actores hacia «Usuario registrado» evita repetir tres veces los casos de la cuenta |
 | 8. include/extend al revés o extend sin condición | **Cumple:** «include» va de la base al incluido; «extend», del que extiende a la base, siempre con condición |
-| 9. Robustez | **Cumple, verificado por programa:** `VerificarRobustez.py` da 0 conexiones prohibidas en las 26. Comprobado también al revés: sobre una copia con tres conexiones prohibidas, las detecta las tres |
+| 9. Robustez | **Cumple, verificado por programa:** `VerificarRobustez.py` da 0 conexiones prohibidas en las 28 (18/11). Comprobado también al revés: sobre una copia con tres conexiones prohibidas, las detecta las tres |
 | 10. Secuencia que accede a la base o no coincide | **Cumple:** la vista habla con gestores, y cada mensaje es una llamada real (tabla de la ficha 4) |
-| 11. Clases de software en el dominio | **Cumple:** los dos modelos de dominio tienen solo conceptos del negocio; ningún gestor, repositorio ni pantalla |
-| 12. Sistema como actor o como carril | **Cumple:** la pasarela simulada dejó de ser actor, y la actividad tiene solo los carriles Cliente y Administrador |
+| 11. Clases de software en el dominio | **Cumple:** los modelos de dominio tienen solo conceptos del negocio; ningún gestor, repositorio ni pantalla. Los códigos de un solo uso quedaron afuera por ser un mecanismo de seguridad |
+| 12. Sistema como actor o como carril | **Cumple:** la pasarela simulada dejó de ser actor, y la actividad tiene solo los carriles de los actores: Organizador, Administrador y Cliente |
 | 13. Estados distintos en diagrama, clase y base | **Cumple:** los cuatro estados coinciden en diagrama, `EstadoEntrada`, `CK_Entradas_Estado` y el SQL |
 | 14. Objetivos | **No aplica** a estos diagramas |
-| 15. Patrón nombrado que no se ve | **Cumple:** los cuatro patrones nombrados están en las vistas 8a a 8c, con estereotipo; no se nombra ningún otro |
-| 16. Legible al 100 % | **Cumple:** la letra más chica impresa va de 8,5 a 12 pt, medida sobre una página A4 armada con cada diagrama |
+| 15. Patrón nombrado que no se ve | **Cumple:** los cuatro patrones nombrados están en las vistas 8a a 8d, con estereotipo; Strategy aparece en tres usos (reportes, envío de códigos y verificación de identidad); no se nombra ningún otro |
+| 16. Legible al 100 % | **Cumple:** la letra más chica impresa va de 8,5 a 12 pt en los 34 diagramas, todos regenerados y medidos el 18/11, medida por `Renderizar.py` con la regla de ancho; ninguno pasa de 16 cm ni necesita página apaisada |
 
 **Un detalle visual, sin efecto en las reglas.** El motor de diagramación pone los números de
 multiplicidad cerca de la punta de la flecha. Se corrieron para que no se pisen, pero en algún

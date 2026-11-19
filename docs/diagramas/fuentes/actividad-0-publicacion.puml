@@ -1,0 +1,41 @@
+@startuml actividad-0-publicacion
+!include _estilo.iuml
+skinparam ActivityFontSize 12
+skinparam ActivityDiamondFontSize 12
+skinparam ArrowFontSize 12
+skinparam SwimlaneTitleFontSize 13
+skinparam ActivityBorderColor #333333
+skinparam ActivityBackgroundColor #F7F7F7
+skinparam ActivityDiamondBackgroundColor #F7F7F7
+' Diagrama de actividad del proceso de negocio, parte 1 de 4: la publicación del evento.
+' Un carril por actor; el sistema no es un carril (regla 12). Publicación explícita (RN-06) y
+' revisión del primer evento de un Organizador (RN-54).
+
+|Organizador|
+start
+:Registrar el local;
+:Crear el evento
+(queda en borrador);
+repeat
+  :Agregar o corregir
+  los sectores;
+  :Publicar el evento
+  [al menos un sector
+  con capacidad];
+  if (¿Ya tuvo un evento
+  aprobado?) then (no)
+    |Administrador|
+    :Revisar el evento;
+    if (¿Lo aprueba?) then (no)
+      :Rechazarlo con
+      un motivo;
+    else (sí)
+    endif
+  else (sí)
+  endif
+  |Organizador|
+repeat while (¿Rechazado? Vuelve a\nborrador con el motivo) is (sí) not (no)
+:El evento queda publicado;
+(P)
+detach
+@enduml

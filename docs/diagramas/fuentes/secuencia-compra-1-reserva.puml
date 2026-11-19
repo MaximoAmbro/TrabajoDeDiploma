@@ -5,25 +5,27 @@ hide footbox
 ' Fuente: Visual/Cliente/FrmCompraCliente.cs y Repo/GestorCompras.cs (Iniciar).
 
 actor Cliente
-boundary "Frm\nCompraCliente" as Frm
+boundary "Frm\nCompra\nCliente" as Frm
 control "Gestor\nCompras" as GC
 control "Gestor\nSesion" as GS
+control "Gestor\nUsuarios" as GU
 control "Gestor\nPaquetes" as GP
 control "Gestor\nFidelizacion" as GF
 participant "Repositorio\nCompras" as RC
 
 Cliente -> Frm : confirma
 Frm -> GC : Iniciar(p, c)
-GC -> GS : RequerirUsuario\n(c.Id) [RN-41]
+GC -> GS : Requerir\nUsuario(c.Id)\n[RN-41]
+GC -> GU : ExigirCorreo\nVerificado(c.Id)\n[RN-43]
 GC -> GP : Validar(p)
-GC -> GP : VerificarPreventa(..)\n[RN-39]
-GC -> GF : CalcularDescuento(c, p)
+GC -> GP : Verificar\nPreventa(..)\n[RN-39]
+GC -> GF : Calcular\nDescuento(c, p)
 GF --> GC : ResumenDescuento\n[RN-19, RN-22]
 GC -> RC : Iniciar(compra, servicios,\nentradas) [RN-15]
 alt hay cupo
   RC --> GC
   GC --> Frm : compra
-  Frm -> Frm : abre frmPago\n(parte 2)
+  Frm -> Frm : frmPago\n(parte 2)
 else sin cupo en un sector
   RC --> GC : sin cupo
   GC --> Frm : excepción

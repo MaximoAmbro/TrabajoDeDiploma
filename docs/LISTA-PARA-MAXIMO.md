@@ -67,7 +67,7 @@
 >    dice cuál. Los demás no los detecta: para eso son las consultas del paso 1.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), los diagramas de casos de uso (p. 71), el dominio conceptual, las clases y los patrones (p. 86) y el entidad-relación (p. 89).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), y todos los diagramas con sus textos (pp. 71 y 86 a 89).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -133,7 +133,7 @@
 > | p. 45 | Prototipos | Son figuras de la interfaz |
 > | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
 > | pp. 62 a 70 | Entidades, código y pruebas | Clases, tablas y pruebas nuevas |
-> | pp. 72 a 85, 87 y 88 | Especificaciones de casos de uso y los demás diagramas (las pp. 71, 86 y 89 ya se pegan) | Casos de uso nuevos; los diagramas se están regenerando |
+> | pp. 72 a 85 | Especificaciones de casos de uso (los diagramas, pp. 71 y 86 a 89, ya se pegan) | Casos de uso nuevos |
 > | pp. 90 a 97 | Usabilidad: el párrafo sobre el rediseño | La interfaz vuelve a cambiar |
 > | pp. 98 a 105 | Anexo A02 | Depende de las pantallas y de las consultas |
 > | pp. 106 a 109 | Matriz de trazabilidad, cobertura y brechas | Requerimientos, reglas y casos nuevos |
@@ -2052,7 +2052,7 @@ Texto, debajo del título:
 
 ## Página 87 — Secuencia y estados
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambiaron figuras y texto con los tres perfiles.
 
 **Diagrama de secuencia – Comprar paquete:** reemplazar la figura por tres, una por página:
 `secuencia-compra-1-reserva.png`, `secuencia-compra-2-pago.png` y
@@ -2065,7 +2065,7 @@ Texto, debajo del título:
 > lo hace siempre a través de un gestor y un repositorio.
 >
 > Antes de operar, `GestorCompras` verifica con `GestorSesion` que quien compra es el titular
-> (RN-41). La reserva congela los precios y el descuento por nivel, y deja la compra y sus entradas
+> (RN-41), y con `GestorUsuarios` que su correo esté verificado (RN-43). La reserva congela los precios y el descuento por nivel, y deja la compra y sus entradas
 > en estado Pendiente durante el plazo de reserva (RN-15). Si el pago se rechaza, el cupo se
 > devuelve y la compra admite un reintento (RN-32). Si se aprueba, cada entrada recibe un código QR
 > único (RN-18), y la compra y sus entradas pasan a Confirmada en una sola transacción. El nivel
@@ -2090,7 +2090,7 @@ Texto:
 
 ## Página 88 — Robustez, dominio actualizado y actividad
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambiaron figuras y texto con los tres perfiles.
 
 **Diagrama de robustez (ICONIX):** reemplazar la figura por `robustez-comprar-paquete.png`, a
 **16,0 cm**. Texto:
@@ -2101,17 +2101,18 @@ Texto:
 > resuelven cada paso; las entidades, los conceptos del dominio que se leen o se modifican. Se
 > respetan las reglas de conexión del método: el actor solo se comunica con fronteras, las
 > fronteras solo con controles, y las entidades solo con controles. Los controles pueden
-> comunicarse entre sí: el control de la compra verifica la identidad del cliente, cobra con la
-> pasarela simulada, genera los códigos QR y usa los controles de paquetes y fidelización.
+> comunicarse entre sí: el control de la compra verifica la identidad del cliente y que su correo
+> esté verificado, cobra con la pasarela simulada, genera los códigos QR y usa los controles de
+> paquetes y fidelización.
 >
 > El Cliente aparece dos veces, con dos papeles distintos: como actor es la persona que usa las
 > pantallas, y como entidad es la información que el sistema guarda de ella, su identidad para la
 > sesión y su nivel de fidelidad. El método distingue así a quien interactúa con el sistema de los
 > datos que el sistema conserva sobre él.
 
-**Diagrama de dominio actualizado:** reemplazar la figura por dos, una por página:
-`dominio-actualizado-1-cuentas-catalogo.png` y `dominio-actualizado-2-compra.png`, las dos a
-**16,0 cm**. Texto:
+**Diagrama de dominio actualizado:** reemplazar la figura por tres, una por página:
+`dominio-actualizado-1-cuentas-catalogo.png` y `dominio-actualizado-2-compra.png` a **16,0 cm**,
+y `dominio-actualizado-3-organizacion.png` a **11,4 cm** (página entera). Texto:
 
 > El modelo de dominio actualizado retoma los conceptos del modelo conceptual y les agrega sus
 > atributos con el tipo de cada uno. No incluye identificadores ni claves foráneas, porque las
@@ -2146,20 +2147,26 @@ agrega el índice; la vista 3 de clases y el entidad-relación de compras ya mue
 
 **Diagrama de actividad:** el título «Diagrama de Actividad (flujo del Cliente)» pasa a
 «Diagrama de actividad (proceso de venta)». Reemplazar la figura (que sigue en la p. 89) por
-tres, una por página: `actividad-1-armado.png` a **16,0 cm**, `actividad-2-pago.png` a
-**13,6 cm** y `actividad-3-ingreso.png` a **16,0 cm**. Texto:
+cuatro, una por página, en este orden: `actividad-0-publicacion.png` a **10,4 cm**,
+`actividad-1-armado.png` a **14,2 cm**, `actividad-2-pago.png` a **13,3 cm** y
+`actividad-3-ingreso.png` a **16,0 cm**. Si ya habías pegado las tres anteriores, reemplazalas:
+cambiaron. Texto:
 
 > El diagrama de actividad describe el proceso de negocio de punta a punta, desde que el
-> Administrador carga un evento hasta que el Cliente ingresa con su entrada. Tiene un carril por
-> actor y ninguno para el sistema, que no es un actor del proceso. Se presenta en tres partes,
-> unidas por los conectores A y B. El evento se crea en borrador y queda publicado cuando se le
-> agrega el primer sector con capacidad (RN-06). El Cliente busca un evento; si está agotado, se
+> Organizador carga un evento hasta que el Cliente ingresa con su entrada. Tiene un carril por
+> actor y ninguno para el sistema, que no es un actor del proceso. Se presenta en cuatro partes,
+> unidas por los conectores P, A y B. El evento se crea en borrador; el Organizador le agrega
+> sectores y lo publica de forma explícita, y la publicación exige al menos un sector con
+> capacidad (RN-06). Si es el primer evento de ese Organizador, pasa a revisión: un Administrador
+> lo aprueba o lo rechaza con un motivo, y un evento rechazado vuelve a borrador para que el
+> Organizador lo corrija y lo publique de nuevo (RN-54). Una vez que tuvo un evento aprobado, sus
+> publicaciones siguientes son directas. El Cliente busca un evento; si está agotado, se
 > anota en la lista de espera. Si hay cupo, arma el paquete, elige si agrega el seguro, revisa el
 > resumen con el descuento de su nivel y confirma, con lo que reserva el cupo por un plazo
 > limitado (RN-15). Puede reintentar el pago mientras dure ese plazo; si no lo concreta, pierde la
 > reserva. Con el pago aprobado recibe sus entradas con código QR. Antes del evento puede devolver
 > una entrada asegurada con más de 48 horas de anticipación (RN-29); el día del evento la presenta
-> en el ingreso, y el Administrador la acepta solo si está confirmada, corresponde al evento, está
+> en el ingreso, y el Organizador la acepta solo si está confirmada, corresponde al evento, está
 > dentro del horario y no ingresó antes (RN-18).
 
 ## Página 89 — Entidad-relación

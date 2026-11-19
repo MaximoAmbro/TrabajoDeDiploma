@@ -67,7 +67,7 @@
 >    dice cuál. Los demás no los detecta: para eso son las consultas del paso 1.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), los diagramas de casos de uso (p. 71), el dominio conceptual, las clases y los patrones (p. 86) y el entidad-relación (p. 89).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), y todos los diagramas con sus textos (pp. 71 y 86 a 89).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -133,7 +133,7 @@
 > | p. 45 | Prototipos | Son figuras de la interfaz |
 > | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
 > | pp. 62 a 70 | Entidades, código y pruebas | Clases, tablas y pruebas nuevas |
-> | pp. 72 a 85, 87 y 88 | Especificaciones de casos de uso y los demás diagramas (las pp. 71, 86 y 89 ya se pegan) | Casos de uso nuevos; los diagramas se están regenerando |
+> | pp. 72 a 85 | Especificaciones de casos de uso (los diagramas, pp. 71 y 86 a 89, ya se pegan) | Casos de uso nuevos |
 > | pp. 90 a 97 | Usabilidad: el párrafo sobre el rediseño | La interfaz vuelve a cambiar |
 > | pp. 98 a 105 | Anexo A02 | Depende de las pantallas y de las consultas |
 > | pp. 106 a 109 | Matriz de trazabilidad, cobertura y brechas | Requerimientos, reglas y casos nuevos |
@@ -1077,7 +1077,7 @@ Texto, debajo del título:
 
 ## Página 87 — Secuencia y estados
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambiaron figuras y texto con los tres perfiles.
 
 **Diagrama de secuencia – Comprar paquete:** reemplazar la figura por tres, una por página:
 `secuencia-compra-1-reserva.png`, `secuencia-compra-2-pago.png` y
@@ -1093,16 +1093,16 @@ Texto:
 
 ## Página 88 — Robustez, dominio actualizado y actividad
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambiaron figuras y texto con los tres perfiles.
 
 **Diagrama de robustez (ICONIX):** reemplazar la figura por `robustez-comprar-paquete.png`, a
 **16,0 cm**. Texto:
 
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 9\. Robustez >> ^\*\*Texto para el documento :: ^\*\*Justificación de conexiones:\*\*
 
-**Diagrama de dominio actualizado:** reemplazar la figura por dos, una por página:
-`dominio-actualizado-1-cuentas-catalogo.png` y `dominio-actualizado-2-compra.png`, las dos a
-**16,0 cm**. Texto:
+**Diagrama de dominio actualizado:** reemplazar la figura por tres, una por página:
+`dominio-actualizado-1-cuentas-catalogo.png` y `dominio-actualizado-2-compra.png` a **16,0 cm**,
+y `dominio-actualizado-3-organizacion.png` a **11,4 cm** (página entera). Texto:
 
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 8\. Modelo de dominio actualizado >> ^\*\*Texto para el documento :: ^\*\*Justificación
 
@@ -1117,8 +1117,10 @@ agrega el índice; la vista 3 de clases y el entidad-relación de compras ya mue
 
 **Diagrama de actividad:** el título «Diagrama de Actividad (flujo del Cliente)» pasa a
 «Diagrama de actividad (proceso de venta)». Reemplazar la figura (que sigue en la p. 89) por
-tres, una por página: `actividad-1-armado.png` a **16,0 cm**, `actividad-2-pago.png` a
-**13,6 cm** y `actividad-3-ingreso.png` a **16,0 cm**. Texto:
+cuatro, una por página, en este orden: `actividad-0-publicacion.png` a **10,4 cm**,
+`actividad-1-armado.png` a **14,2 cm**, `actividad-2-pago.png` a **13,3 cm** y
+`actividad-3-ingreso.png` a **16,0 cm**. Si ya habías pegado las tres anteriores, reemplazalas:
+cambiaron. Texto:
 
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 10\. Actividad >> ^\*\*Texto para el documento :: ^(\*\*|## )
 
