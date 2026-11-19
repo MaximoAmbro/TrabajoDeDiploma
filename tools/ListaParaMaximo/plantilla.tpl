@@ -67,7 +67,7 @@
 >    dice cuál. Los demás no los detecta: para eso son las consultas del paso 1.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), los diagramas de casos de uso (p. 71) y el entidad-relación (p. 89).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), los diagramas de casos de uso (p. 71), el dominio conceptual, las clases y los patrones (p. 86) y el entidad-relación (p. 89).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -133,7 +133,7 @@
 > | p. 45 | Prototipos | Son figuras de la interfaz |
 > | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
 > | pp. 62 a 70 | Entidades, código y pruebas | Clases, tablas y pruebas nuevas |
-> | pp. 72 a 88 | Especificaciones de casos de uso y los demás diagramas (las pp. 71 y 89 ya se pegan) | Casos de uso nuevos; los diagramas se están regenerando |
+> | pp. 72 a 85, 87 y 88 | Especificaciones de casos de uso y los demás diagramas (las pp. 71, 86 y 89 ya se pegan) | Casos de uso nuevos; los diagramas se están regenerando |
 > | pp. 90 a 97 | Usabilidad: el párrafo sobre el rediseño | La interfaz vuelve a cambiar |
 > | pp. 98 a 105 | Anexo A02 | Depende de las pantallas y de las consultas |
 > | pp. 106 a 109 | Matriz de trazabilidad, cobertura y brechas | Requerimientos, reglas y casos nuevos |
@@ -1036,37 +1036,40 @@ de título y de campos). No llevan diagrama chico.
 
 ## Página 86 — Modelo de dominio conceptual y diagrama de clases
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambiaron las figuras y el texto con los tres perfiles.
 
 **Modelo de dominio conceptual:** reemplazar la figura por `docs/diagramas/dominio-conceptual.png`,
-a **16,0 cm**. Texto debajo del título:
+a **16,0 cm** (si ya la habías pegado, reemplazala: cambió). Texto debajo del título:
 
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 7\. Modelo de dominio conceptual >> ^\*\*Texto para el documento :: ^\*\*Justificación de relaciones:\*\*
 
-**Diagrama de clases:** reemplazar la figura por siete figuras, **una por página**, cada una con
-su subtítulo:
+**Diagrama de clases:** reemplazar la figura por nueve figuras, **una por página**, cada una con
+su subtítulo. Si ya habías pegado las siete anteriores, reemplazalas todas: cambiaron.
 
 | Subtítulo | Imagen (`docs/diagramas/`) | Ancho |
 |---|---|---|
-| 1. Dominio: cuentas y catálogo | `clases-1-dominio-catalogo.png` | **15,9 cm** (página entera) |
+| 1. Dominio: cuentas y catálogo | `clases-1-dominio-catalogo.png` | **14,9 cm** (página entera) |
+| 1b. Dominio: suscripción, lista de espera y solicitud de Organizador | `clases-1b-dominio-cuenta.png` | **11,4 cm** |
 | 2. Dominio: compra y pago | `clases-2-dominio-compra.png` | **16,0 cm** |
 | 3. Dominio: entrada y seguro | `clases-3-dominio-entrada.png` | **16,0 cm** |
 | 4. Negocio: gestores de la compra | `clases-4-negocio-compra.png` | **16,0 cm** |
-| 5. Negocio: administración y cuenta | `clases-5-negocio-administracion.png` | **16,0 cm** |
-| 6. Negocio: verificación de identidad | `clases-6-autorizacion.png` | **16,0 cm** |
-| 7. Datos: repositorios | `clases-7-datos.png` | **15,1 cm** (página entera) |
+| 5. Negocio: administración | `clases-5-negocio-administracion.png` | **16,0 cm** |
+| 5b. Negocio: cuenta y seguridad | `clases-5b-negocio-cuenta-seguridad.png` | **16,0 cm** |
+| 6. Negocio: verificación de identidad, perfil y pertenencia | `clases-6-autorizacion.png` | **16,0 cm** |
+| 7. Datos: repositorios | `clases-7-datos.png` | **14,3 cm** (página entera) |
 
 Texto, debajo del título «Diagrama de clases»:
 
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 2\. Diagrama de clases >> ^\*\*Texto para el documento :: ^\*\*Justificación de relaciones, vistas 1 a 3
 
-**Sección nueva «Patrones de diseño»**, a continuación de las vistas de clases. Tres figuras:
+**Sección nueva «Patrones de diseño»**, a continuación de las vistas de clases. Cuatro figuras:
 
 | Subtítulo | Imagen (`docs/diagramas/`) | Ancho |
 |---|---|---|
 | Singleton y Repository | `clases-8a-patron-singleton-repository.png` | **16,0 cm** |
-| Strategy | `clases-8b-patron-strategy.png` | **15,5 cm** |
+| Strategy: formato de los reportes | `clases-8b-patron-strategy.png` | **15,5 cm** |
 | Jerarquía de Reporte | `clases-8c-jerarquia-reportes.png` | **16,0 cm** (es baja: puede compartir página con el texto) |
+| Strategy: envío de códigos y verificación de identidad | `clases-8d-patron-strategy-cuenta.png` | **13,9 cm** (página entera) |
 
 Texto, debajo del título:
 

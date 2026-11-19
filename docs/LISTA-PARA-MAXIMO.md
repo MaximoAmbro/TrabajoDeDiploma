@@ -67,7 +67,7 @@
 >    dice cuál. Los demás no los detecta: para eso son las consultas del paso 1.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), los diagramas de casos de uso (p. 71) y el entidad-relación (p. 89).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), los diagramas de casos de uso (p. 71), el dominio conceptual, las clases y los patrones (p. 86) y el entidad-relación (p. 89).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -133,7 +133,7 @@
 > | p. 45 | Prototipos | Son figuras de la interfaz |
 > | pp. 47 a 55 | Guion de interfaz, instructivo y sus figuras | Pantallas nuevas (de 20 a unas 24) e identidad visual nueva |
 > | pp. 62 a 70 | Entidades, código y pruebas | Clases, tablas y pruebas nuevas |
-> | pp. 72 a 88 | Especificaciones de casos de uso y los demás diagramas (las pp. 71 y 89 ya se pegan) | Casos de uso nuevos; los diagramas se están regenerando |
+> | pp. 72 a 85, 87 y 88 | Especificaciones de casos de uso y los demás diagramas (las pp. 71, 86 y 89 ya se pegan) | Casos de uso nuevos; los diagramas se están regenerando |
 > | pp. 90 a 97 | Usabilidad: el párrafo sobre el rediseño | La interfaz vuelve a cambiar |
 > | pp. 98 a 105 | Anexo A02 | Depende de las pantallas y de las consultas |
 > | pp. 106 a 109 | Matriz de trazabilidad, cobertura y brechas | Requerimientos, reglas y casos nuevos |
@@ -1936,42 +1936,46 @@ historial.
 
 ## Página 86 — Modelo de dominio conceptual y diagrama de clases
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambiaron las figuras y el texto con los tres perfiles.
 
 **Modelo de dominio conceptual:** reemplazar la figura por `docs/diagramas/dominio-conceptual.png`,
-a **16,0 cm**. Texto debajo del título:
+a **16,0 cm** (si ya la habías pegado, reemplazala: cambió). Texto debajo del título:
 
 > El modelo de dominio conceptual muestra los conceptos del negocio y cómo se relacionan, sin
-> atributos ni operaciones y sin clases de software. Surge de los requerimientos (RF-01 a RF-13) y
-> de las reglas de negocio. Los usuarios son de dos tipos, Cliente y Administrador. El
-> Administrador gestiona locales y los eventos que se realizan en ellos, divididos en sectores, y
-> cada evento ofrece servicios complementarios. El Cliente arma un paquete para un evento, con
+> atributos ni operaciones y sin clases de software. Surge de los requerimientos y de las reglas
+> de negocio. Los usuarios tienen uno de tres perfiles: Cliente, Organizador o Administrador
+> (RN-05). El Organizador administra locales y los eventos que se realizan en ellos, divididos en
+> sectores, y cada evento ofrece servicios complementarios. Un Cliente puede presentar una
+> solicitud para ser Organizador, que revisa un Administrador; y cada operación relevante deja un
+> registro de auditoría, atribuido al usuario que la hizo. El Cliente arma un paquete para un evento, con
 > entradas y servicios; al confirmarse, el paquete se convierte en una compra, que emite las
 > entradas, cada una correspondiente a un sector y opcionalmente cubierta por un seguro. Una compra
 > admite varios intentos de pago. El Cliente tiene un nivel de fidelidad, puede contratar
 > suscripciones y anotarse en la lista de espera de un evento agotado.
 
-**Diagrama de clases:** reemplazar la figura por siete figuras, **una por página**, cada una con
-su subtítulo:
+**Diagrama de clases:** reemplazar la figura por nueve figuras, **una por página**, cada una con
+su subtítulo. Si ya habías pegado las siete anteriores, reemplazalas todas: cambiaron.
 
 | Subtítulo | Imagen (`docs/diagramas/`) | Ancho |
 |---|---|---|
-| 1. Dominio: cuentas y catálogo | `clases-1-dominio-catalogo.png` | **15,9 cm** (página entera) |
+| 1. Dominio: cuentas y catálogo | `clases-1-dominio-catalogo.png` | **14,9 cm** (página entera) |
+| 1b. Dominio: suscripción, lista de espera y solicitud de Organizador | `clases-1b-dominio-cuenta.png` | **11,4 cm** |
 | 2. Dominio: compra y pago | `clases-2-dominio-compra.png` | **16,0 cm** |
 | 3. Dominio: entrada y seguro | `clases-3-dominio-entrada.png` | **16,0 cm** |
 | 4. Negocio: gestores de la compra | `clases-4-negocio-compra.png` | **16,0 cm** |
-| 5. Negocio: administración y cuenta | `clases-5-negocio-administracion.png` | **16,0 cm** |
-| 6. Negocio: verificación de identidad | `clases-6-autorizacion.png` | **16,0 cm** |
-| 7. Datos: repositorios | `clases-7-datos.png` | **15,1 cm** (página entera) |
+| 5. Negocio: administración | `clases-5-negocio-administracion.png` | **16,0 cm** |
+| 5b. Negocio: cuenta y seguridad | `clases-5b-negocio-cuenta-seguridad.png` | **16,0 cm** |
+| 6. Negocio: verificación de identidad, perfil y pertenencia | `clases-6-autorizacion.png` | **16,0 cm** |
+| 7. Datos: repositorios | `clases-7-datos.png` | **14,3 cm** (página entera) |
 
 Texto, debajo del título «Diagrama de clases»:
 
-> El diagrama de clases se presenta en vistas, porque el sistema completo supera las cuarenta
+> El diagrama de clases se presenta en vistas, porque el sistema completo supera las sesenta
 > clases y en una sola figura resultaría ilegible. Las vistas siguen las capas de la arquitectura:
-> tres para las entidades del dominio (proyecto Entidades), tres para la capa de negocio (proyecto
-> Repositorio, espacio de nombres Negocio) y una para la capa de datos. Una clase que aparece en
-> más de una vista se dibuja completa en una sola y, en las demás, solo con su nombre y la
-> indicación de la vista donde está completa.
+> cuatro para las entidades del dominio (proyecto Entidades), cuatro para la capa de negocio
+> (proyecto Repositorio, espacio de nombres Negocio) y una para la capa de datos. Una clase que
+> aparece en más de una vista se dibuja completa en una sola y, en las demás, solo con su nombre y
+> la indicación de la vista donde está completa.
 >
 > Las entidades son clases sin lógica, con propiedades públicas. Cada asociación entre entidades
 > se implementa con una propiedad que guarda el identificador de la otra (por ejemplo,
@@ -1982,35 +1986,42 @@ Texto, debajo del título «Diagrama de clases»:
 > base de datos.
 >
 > Tres conceptos del modelo de dominio llevan otro nombre en el código, y así aparecen en las
-> vistas: el Administrador es la clase `Propietario`, que es el nombre de su perfil en la base de
-> datos (RN-05); la Inscripción en la lista de espera es la clase `ListaEspera`, y el Servicio
-> contratado es la clase `CompraServicio`. El Paquete existe como clase pero no se guarda en la
-> base: es el armado en curso, y al confirmarlo se convierte en una Compra.
+> vistas: el Organizador es la clase `Propietario`, que es el nombre de su tabla en la base de
+> datos; la Inscripción en la lista de espera es la clase `ListaEspera`, y el Servicio contratado
+> es la clase `CompraServicio`. El Administrador de la plataforma no tiene una clase propia: es un
+> `Usuario` cuyo perfil (`TipoUsuario`) es «Administrador», porque no agrega datos ni
+> asociaciones. El Paquete existe como clase pero no se guarda en la base: es el armado en curso,
+> y al confirmarlo se convierte en una Compra.
 >
-> En la capa de negocio, las vistas 4 y 5 muestran las operaciones públicas de cada gestor, más
-> las internas que aparecen en el diagrama de secuencia, y la vista 6, la verificación de identidad que agregó la revisión de seguridad: antes de operar, cada
-> gestor consulta a `GestorSesion` si quien llama es el titular de los datos (RN-41) o el
-> Administrador (RN-34, RN-42). La vista 7 muestra la capa de datos: trece repositorios que
-> heredan de `RepositorioBase`, únicos responsables del acceso a SQL Server; de cada uno se
-> muestran los métodos que aparecen en los diagramas de secuencia.
+> En la capa de negocio, las vistas 4, 5 y 5b muestran las operaciones públicas de cada gestor,
+> más las internas que aparecen en el diagrama de secuencia. La vista 6 muestra la verificación
+> que hace cada gestor antes de operar, a través de `GestorSesion`: que quien llama sea el
+> titular de los datos (RN-41), que tenga el perfil Organizador (RN-48) y que el local o el evento
+> sean suyos (RN-49), o que sea el Administrador de la plataforma (RN-34). La sesión guarda una
+> copia de la identidad verificada (`SesionAutenticada`), y no el objeto de usuario que podría
+> recibir de quien llama. La vista 7 muestra la capa de datos: dieciséis repositorios que heredan
+> de `RepositorioBase`, únicos responsables del acceso a SQL Server; de cada uno se muestran los
+> métodos que aparecen en los diagramas de secuencia.
 
-**Sección nueva «Patrones de diseño»**, a continuación de las vistas de clases. Tres figuras:
+**Sección nueva «Patrones de diseño»**, a continuación de las vistas de clases. Cuatro figuras:
 
 | Subtítulo | Imagen (`docs/diagramas/`) | Ancho |
 |---|---|---|
 | Singleton y Repository | `clases-8a-patron-singleton-repository.png` | **16,0 cm** |
-| Strategy | `clases-8b-patron-strategy.png` | **15,5 cm** |
+| Strategy: formato de los reportes | `clases-8b-patron-strategy.png` | **15,5 cm** |
 | Jerarquía de Reporte | `clases-8c-jerarquia-reportes.png` | **16,0 cm** (es baja: puede compartir página con el texto) |
+| Strategy: envío de códigos y verificación de identidad | `clases-8d-patron-strategy-cuenta.png` | **13,9 cm** (página entera) |
 
 Texto, debajo del título:
 
 > El sistema aplica cuatro patrones de diseño. Cada uno se muestra con su estructura y con un caso
 > real del código.
 >
-> **Singleton.** Los doce gestores que aplican las reglas de negocio, los trece repositorios de
-> datos, la conexión, la pasarela simulada y el generador de códigos QR tienen una única instancia: un campo estático privado
-> `_instance`, un constructor privado y una propiedad estática `Instance` que crea la instancia la
-> primera vez que se pide (veintiocho clases en total). La implementación no usa bloqueo, porque la
+> **Singleton.** Los quince gestores que aplican las reglas de negocio, los dieciséis
+> repositorios de datos, la conexión, la pasarela simulada y el generador de códigos QR tienen una
+> única instancia: un campo estático privado `_instance`, un constructor privado y una propiedad
+> estática `Instance` que crea la instancia la primera vez que se pide (treinta y cuatro clases en
+> total). La implementación no usa bloqueo, porque la
 > aplicación es de escritorio y todas las llamadas ocurren en el hilo de la interfaz. En la figura,
 > el campo `_instance` aparece subrayado por ser estático.
 >
@@ -2024,6 +2035,16 @@ Texto, debajo del título:
 > `ExportadorPDF`, que está en la capa de presentación porque usa la biblioteca iText. Agregar otro
 > formato es agregar otra clase que implemente la interfaz, sin modificar ningún reporte. Hoy existe
 > una sola estrategia concreta.
+>
+> El mismo patrón resuelve dos integraciones externas que la versión entregada simula. El envío
+> de los códigos de un solo uso (verificación del correo, recuperación de la contraseña y
+> confirmación del teléfono) depende de la interfaz `IEnviadorCodigos`: la estrategia elegida es
+> `EnviadorSimulado`, que deja el mensaje en una bandeja simulada, y existe `EnviadorSmtp`, que lo
+> enviaría por correo real. La verificación de identidad de quien solicita ser Organizador depende
+> de `IVerificadorIdentidad`, con una estrategia simulada, que valida el formato del CUIT, y una
+> externa, que consultaría un servicio de verificación. En los dos casos, la capa de negocio solo
+> conoce la interfaz, y pasar a la estrategia real es una decisión de configuración, no un cambio
+> de arquitectura.
 >
 > **Jerarquía de reportes.** Los cinco reportes del anexo A02 heredan de la clase abstracta
 > `Reporte`, que define qué se informa (encabezados, datos y lectura); cada subclase redefine esas
@@ -2094,14 +2115,16 @@ Texto:
 
 > El modelo de dominio actualizado retoma los conceptos del modelo conceptual y les agrega sus
 > atributos con el tipo de cada uno. No incluye identificadores ni claves foráneas, porque las
-> asociaciones ya representan esos vínculos. Se presenta en dos vistas para que se lea a tamaño de
-> página: la primera reúne usuarios, catálogo, suscripciones, lista de espera y las enumeraciones;
-> la segunda, el paquete, la compra y lo que la compra genera.
+> asociaciones ya representan esos vínculos. Se presenta en tres vistas para que se lea a tamaño de
+> página: la primera reúne los usuarios con sus tres perfiles, el catálogo, las suscripciones y la
+> lista de espera; la segunda, el paquete, la compra y lo que la compra genera; y la tercera, la
+> solicitud para ser Organizador, el registro de auditoría y las enumeraciones del dominio.
 >
 > Respecto del conceptual, el nivel de fidelidad pasa a ser un atributo del cliente con un tipo
 > enumerado (Bronce, Plata, Oro), y la cantidad de compras de los últimos doce meses aparece como
 > atributo derivado, porque se calcula y no se guarda (RN-19). Los estados de la compra, de la
-> entrada y del pago son enumeraciones con los mismos valores que la base de datos. La relación de
+> entrada, del pago, del evento y de la solicitud son enumeraciones con los mismos valores que la
+> base de datos. La relación de
 > muchos a muchos entre compra y servicio complementario lleva una clase de asociación, Servicio
 > contratado, con la cantidad y el precio unitario congelado al comprar (RN-16).
 >

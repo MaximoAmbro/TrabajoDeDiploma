@@ -3,9 +3,10 @@
 skinparam nodesep 25
 skinparam ranksep 45
 hide empty members
-' Modelo de dominio actualizado, vista 1 de 2: cuentas y catálogo. Los mismos conceptos del
+' Modelo de dominio actualizado, vista 1 de 3: cuentas y catálogo. Los mismos conceptos del
 ' dominio conceptual, con sus atributos y tipos. Sin identificadores ni claves foráneas: las
 ' asociaciones las representan. El atributo «/» es derivado (se calcula, no se guarda).
+' Las enumeraciones están en la vista 3.
 
 class Usuario {
   nombre : string
@@ -14,34 +15,17 @@ class Usuario {
   contraseña : string
   intentosFallidos : int
   bloqueadoHasta : DateTime?
+  correoVerificado : bool
 }
 class Cliente {
   nivel : NivelFidelidad
   fechaUltimaEvaluacion : DateTime?
   /comprasUltimos12Meses : int
 }
+class Organizador {
+  primerEventoAprobado : bool
+}
 class Administrador
-enum NivelFidelidad {
-  Bronce
-  Plata
-  Oro
-}
-enum EstadoCompra {
-  Pendiente
-  Confirmada
-  Reembolsada
-  Vencida
-}
-enum EstadoEntrada {
-  Pendiente
-  Confirmada
-  Reembolsada
-  Vencida
-}
-enum EstadoPago {
-  Aprobado
-  Rechazado
-}
 class Suscripción {
   plan : string
   fechaInicio : DateTime
@@ -58,8 +42,10 @@ class Evento {
   nombre : string
   fecha : DateTime
   categoria : string
-  estado : string
+  estado : EstadoEvento
   finPreventa : DateTime?
+  imagenPortada : byte[]
+  motivoRechazo : string
 }
 class Sector {
   nombre : string
@@ -79,15 +65,13 @@ class "Inscripción en lista de espera" as Inscripcion {
 }
 
 Usuario <|-- Cliente
+Usuario <|-- Organizador
 Usuario <|-- Administrador
-Administrador "1" -- "0..*$_" Local : administra
+Organizador "1" -- "0..*$_" Local : administra
 Local "1" -- "0..*$_" Evento : se realiza en
 Evento "1" -- "0..*$_" Sector : se divide en
 Evento "0..*" -- "0..*$_" Servicio : ofrece
 Cliente "1" -- "0..*$_" Suscripción : contrata
 Cliente "1" -- "0..*$_" Inscripcion : se anota en
 Inscripcion "0..*" -- "1$_" Evento : es para
-NivelFidelidad -[hidden]down- EstadoCompra
-EstadoCompra -[hidden]down- EstadoEntrada
-EstadoEntrada -[hidden]down- EstadoPago
 @enduml

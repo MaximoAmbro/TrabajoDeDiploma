@@ -29,11 +29,11 @@ está al final, en «Para regenerar una imagen».
 | 71 | «Diagramas de caso de uso»: el general viejo | Cuatro diagramas: cuenta, cliente, organizador y administrador | [1](#1-casos-de-uso) |
 | 72 a 85 | Especificaciones CU-01 a CU-08, cada una con un diagrama chico | **Se quitan los ocho diagramas chicos** (D-7, 14/11): el general ya muestra todas sus relaciones | — |
 | 86, arriba | «Modelo de dominio conceptual» | El dominio conceptual nuevo | [7](#7-modelo-de-dominio-conceptual) |
-| 86, abajo | «Diagrama de clases» | Siete vistas de clases más tres de patrones (10 figuras) | [2](#2-diagrama-de-clases) y [3](#3-patrones-de-diseño) |
+| 86, abajo | «Diagrama de clases» | Nueve vistas de clases más cuatro de patrones (13 figuras) | [2](#2-diagrama-de-clases) y [3](#3-patrones-de-diseño) |
 | 87, arriba | «Diagrama de secuencia – Comprar paquete» | La secuencia en tres partes | [4](#4-secuencia-comprar-paquete) |
 | 87, abajo | «Diagrama de estados – Ciclo de vida de la entrada» | El diagrama de estados nuevo | [5](#5-transición-de-estados-de-la-entrada) |
 | 88, arriba | «Diagrama de robustez (ICONIX)» | La robustez de «Comprar paquete» | [9](#9-robustez-comprar-paquete) |
-| 88, medio | «Diagrama de dominio actualizado» | Dos vistas del dominio actualizado | [8](#8-modelo-de-dominio-actualizado) |
+| 88, medio | «Diagrama de dominio actualizado» | Tres vistas del dominio actualizado | [8](#8-modelo-de-dominio-actualizado) |
 | 88 abajo y 89 arriba | «Diagrama de Actividad (flujo del Cliente)» | La actividad del proceso de negocio en tres partes | [10](#10-actividad-del-proceso-de-negocio) |
 | 89, abajo | «DER – Diagrama entidad-relación», **con la página en blanco** | Cuatro vistas del entidad-relación | [6](#6-entidad-relación) |
 
@@ -158,33 +158,35 @@ sesión: por eso cuelga de «Usuario registrado» y no del Visitante.
 
 ## 2. Diagrama de clases
 
-El diagrama de clases completo tiene más de 40 clases y no entra legible en una página. Se
-presenta en siete vistas, más tres de patrones (ficha 3).
+El diagrama de clases completo tiene más de sesenta clases y no entra legible en una página. Se
+presenta en nueve vistas, más cuatro de patrones (ficha 3). Regenerado el 18/11 con los tres
+perfiles.
 
 | Vista | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra |
 |---|---|---|---|
-| 1. Dominio: cuentas y catálogo | `clases-1-dominio-catalogo` | **15,9 cm** (23,0 de alto, página entera) | 8,6 pt |
+| 1. Dominio: cuentas y catálogo | `clases-1-dominio-catalogo` | **14,9 cm** (23,0 de alto, página entera) | 9,9 pt |
+| 1b. Dominio: suscripción, lista de espera y solicitud de Organizador | `clases-1b-dominio-cuenta` | **11,4 cm** (17,3) | 12,0 pt |
 | 2. Dominio: compra y pago | `clases-2-dominio-compra` | **16,0 cm** (15,9) | 9,8 pt |
 | 3. Dominio: entrada y seguro | `clases-3-dominio-entrada` | **16,0 cm** (13,2) | 11,8 pt |
-| 4. Negocio: gestores de la compra | `clases-4-negocio-compra` | **16,0 cm** (18,3) | 8,5 pt |
-| 5. Negocio: administración y cuenta | `clases-5-negocio-administracion` | **16,0 cm** (19,6) | 9,2 pt |
-| 6. Negocio: verificación de identidad | `clases-6-autorizacion` | **16,0 cm** (11,9) | 9,9 pt |
-| 7. Datos: repositorios | `clases-7-datos` | **15,0 cm** (23,0, página entera) | 9,3 pt |
+| 4. Negocio: gestores de la compra | `clases-4-negocio-compra` | **16,0 cm** (18,7) | 8,5 pt |
+| 5. Negocio: administración | `clases-5-negocio-administracion` | **16,0 cm** (21,9) | 9,8 pt |
+| 5b. Negocio: cuenta y seguridad | `clases-5b-negocio-cuenta-seguridad` | **16,0 cm** (19,9) | 10,7 pt |
+| 6. Negocio: verificación de identidad, perfil y pertenencia | `clases-6-autorizacion` | **16,0 cm** (13,8) | 9,1 pt |
+| 7. Datos: repositorios | `clases-7-datos` | **14,3 cm** (23,0, página entera) | 8,9 pt |
 
 El fuente de cada una es `fuentes/<nombre>.puml` y la imagen, `<nombre>.png`.
 
 **Dónde va:** página 86, debajo del título «Diagrama de clases», en lugar de la figura que hay
-ahora. Una vista por página, cada una con el subtítulo de la tabla. **El «Modelo de dominio
-conceptual» de la misma página no se toca en esta entrega.**
+ahora. Una vista por página, cada una con el subtítulo de la tabla.
 
 **Texto para el documento:**
 
-> El diagrama de clases se presenta en vistas, porque el sistema completo supera las cuarenta
+> El diagrama de clases se presenta en vistas, porque el sistema completo supera las sesenta
 > clases y en una sola figura resultaría ilegible. Las vistas siguen las capas de la arquitectura:
-> tres para las entidades del dominio (proyecto Entidades), tres para la capa de negocio (proyecto
-> Repositorio, espacio de nombres Negocio) y una para la capa de datos. Una clase que aparece en
-> más de una vista se dibuja completa en una sola y, en las demás, solo con su nombre y la
-> indicación de la vista donde está completa.
+> cuatro para las entidades del dominio (proyecto Entidades), cuatro para la capa de negocio
+> (proyecto Repositorio, espacio de nombres Negocio) y una para la capa de datos. Una clase que
+> aparece en más de una vista se dibuja completa en una sola y, en las demás, solo con su nombre y
+> la indicación de la vista donde está completa.
 >
 > Las entidades son clases sin lógica, con propiedades públicas. Cada asociación entre entidades
 > se implementa con una propiedad que guarda el identificador de la otra (por ejemplo,
@@ -195,33 +197,40 @@ conceptual» de la misma página no se toca en esta entrega.**
 > base de datos.
 >
 > Tres conceptos del modelo de dominio llevan otro nombre en el código, y así aparecen en las
-> vistas: el Administrador es la clase `Propietario`, que es el nombre de su perfil en la base de
-> datos (RN-05); la Inscripción en la lista de espera es la clase `ListaEspera`, y el Servicio
-> contratado es la clase `CompraServicio`. El Paquete existe como clase pero no se guarda en la
-> base: es el armado en curso, y al confirmarlo se convierte en una Compra.
+> vistas: el Organizador es la clase `Propietario`, que es el nombre de su tabla en la base de
+> datos; la Inscripción en la lista de espera es la clase `ListaEspera`, y el Servicio contratado
+> es la clase `CompraServicio`. El Administrador de la plataforma no tiene una clase propia: es un
+> `Usuario` cuyo perfil (`TipoUsuario`) es «Administrador», porque no agrega datos ni
+> asociaciones. El Paquete existe como clase pero no se guarda en la base: es el armado en curso,
+> y al confirmarlo se convierte en una Compra.
 >
-> En la capa de negocio, las vistas 4 y 5 muestran las operaciones públicas de cada gestor, más
-> las internas que aparecen en el diagrama de secuencia, y la vista 6, la verificación de identidad que agregó la revisión de seguridad: antes de operar, cada
-> gestor consulta a `GestorSesion` si quien llama es el titular de los datos (RN-41) o el
-> Administrador (RN-34, RN-42). La vista 7 muestra la capa de datos: trece repositorios que
-> heredan de `RepositorioBase`, únicos responsables del acceso a SQL Server; de cada uno se
-> muestran los métodos que aparecen en los diagramas de secuencia.
+> En la capa de negocio, las vistas 4, 5 y 5b muestran las operaciones públicas de cada gestor,
+> más las internas que aparecen en el diagrama de secuencia. La vista 6 muestra la verificación
+> que hace cada gestor antes de operar, a través de `GestorSesion`: que quien llama sea el
+> titular de los datos (RN-41), que tenga el perfil Organizador (RN-48) y que el local o el evento
+> sean suyos (RN-49), o que sea el Administrador de la plataforma (RN-34). La sesión guarda una
+> copia de la identidad verificada (`SesionAutenticada`), y no el objeto de usuario que podría
+> recibir de quien llama. La vista 7 muestra la capa de datos: dieciséis repositorios que heredan
+> de `RepositorioBase`, únicos responsables del acceso a SQL Server; de cada uno se muestran los
+> métodos que aparecen en los diagramas de secuencia.
 
 **Justificación de relaciones, vistas 1 a 3 (entidades):**
 
 | Vista | Relación | Tipo | Multiplicidad | Navegabilidad | De dónde sale en el código |
 |---|---|---|---|---|---|
 | 1 | Cliente → Usuario | Generalización | — | — | `class Cliente : Usuario` (`Entidade/Cliente.cs`); tabla `Cliente(ID)` FK a `Usuario` |
-| 1 | Propietario → Usuario | Generalización | — | — | `class Propietario : Usuario` |
+| 1 | Propietario → Usuario | Generalización | — | — | `class Propietario : Usuario`; el Organizador (RN-05) |
 | 1 | Propietario — Local | Asociación | 1 / 0..* | Bidireccional | `Propietario.Locales` y `Local.IdPropietario` |
 | 1 | Local — Evento | Asociación | 1 / 0..* | Bidireccional | `Local.Eventos` y `Evento.IdLocal` (`LocalID NOT NULL`) |
 | 1 | Cliente → Evento | Asociación | 0..* / 0..* | Cliente → Evento | `Cliente.entradasUsuario : List<Evento>` |
 | 1 | Evento — Sector | Asociación | 1 / 0..* | Bidireccional | `Evento.Sectores` y `Sector.IdEvento` |
 | 1 | ServicioEvento → Evento | Asociación | 0..* / 1 | → Evento | `ServicioEvento.IdEvento` (tabla intermedia N:M) |
 | 1 | ServicioEvento → Servicio | Asociación | 0..* / 1 | → Servicio | `ServicioEvento.IdServicio` |
-| 1 | Suscripcion → Usuario | Asociación | 0..* / 1 | → Usuario | `Suscripcion.IdUsuario` |
-| 1 | ListaEspera → Evento | Asociación | 0..* / 1 | → Evento | `ListaEspera.IdEvento` |
-| 1 | ListaEspera → Usuario | Asociación | 0..* / 1 | → Usuario | `ListaEspera.Usuario` e `IdUsuario` |
+| 1b | Suscripcion → Usuario | Asociación | 0..* / 1 | → Usuario | `Suscripcion.IdUsuario` |
+| 1b | ListaEspera → Evento | Asociación | 0..* / 1 | → Evento | `ListaEspera.IdEvento` |
+| 1b | ListaEspera → Usuario | Asociación | 0..* / 1 | → Usuario | `ListaEspera.Usuario` e `IdUsuario` |
+| 1b | SolicitudOrganizador → Usuario (quien la presenta) | Asociación | 0..* / 1 | → Usuario | `SolicitudOrganizador.UsuarioId` |
+| 1b | SolicitudOrganizador → Usuario (quien la revisa) | Asociación | 0..* / 0..1 | → Usuario | `SolicitudOrganizador.RevisadaPor : int?` |
 | 2 | Paquete → Evento | Asociación | 0..* / 1 | → Evento | `Paquete.IdEvento` |
 | 2 | Paquete → Entrada | Asociación | 0..1 / 0..* | → Entrada | `Paquete.Entradas : List<Entrada>` |
 | 2 | Paquete → Servicio | Asociación | 0..* / 0..* | → Servicio | `Paquete.Servicios : List<Servicio>` |
@@ -239,34 +248,62 @@ conceptual» de la misma página no se toca en esta entrega.**
 Las enumeraciones `NivelFidelidad`, `EstadoCompra`, `EstadoPago` y `EstadoEntrada` son el tipo de
 un atributo. Por eso no llevan línea: llevarla repetiría el atributo, que es la regla 1.
 
+**Justificación, vista 5b.** `GestorSesion → SesionAutenticada` es una asociación 1 / 0..1
+(`UsuarioActual`, que es nula sin sesión). Las demás clases de la vista no se relacionan entre
+sí con líneas: sus dependencias están en la tabla de abajo.
+
 **Justificación, vista 6 (dependencias de autorización).** Todas son dependencias de uso
-(`..>`), sin multiplicidad:
+(`..>`), sin multiplicidad. En las flechas, cada verificación se nombra sin el prefijo
+«Requerir»:
 
 | Gestor | Llama a `GestorSesion.…` | Para qué |
 |---|---|---|
-| GestorEventos, GestorLocales, GestorIngresos | `RequerirAdministrador()` | Solo el Administrador gestiona y controla ingreso (RN-42) |
-| GestorReportes | `UsuarioActual` | Verifica el perfil Administrador (RN-34) |
-| GestorUsuarios | `Iniciar(Usuario)`, `RequerirAdministrador()` | Abre la sesión al autenticar; solo el Administrador crea administradores |
-| GestorCompras, GestorPaquetes, GestorFidelizacion, GestorSuscripciones | `RequerirUsuario(id)` | Solo el titular o el Administrador (RN-41) |
-| GestorListaEspera | `RequerirUsuario(id)`, `RequerirAdministrador()` | Inscribirse es del titular; consultar la lista, del Administrador |
+| GestorUsuarios | `Iniciar`, `RequerirUsuario`, `RequerirAdministrador` | Abre la sesión al autenticar; solo el Administrador crea administradores |
+| GestorCodigosCorreo | `RequerirUsuario` | El código telefónico se pide para la cuenta propia |
+| GestorCompras, GestorFidelizacion, GestorSuscripciones, GestorListaEspera | `RequerirUsuario` | Solo el titular de los datos (RN-41) |
+| GestorPaquetes | `RequerirUsuario`, `HaySesion` | El titular arma su paquete (RN-41); si quien consulta un evento es un Organizador, el evento tiene que ser suyo (RN-49) |
+| GestorEventos | `RequerirOrganizador`, `RequerirOrganizadorDeLocal`, `RequerirAdministrador` | Gestiona el Organizador dueño (RN-48, RN-49); revisa el primer evento el Administrador (RN-54) |
+| GestorLocales | `RequerirOrganizador`, `RequerirOrganizadorDeLocal` | Solo el Organizador, sobre sus locales (RN-48, RN-49) |
+| GestorIngresos | `RequerirOrganizador` | Solo el Organizador (RN-48); la pertenencia del evento se verifica después (RN-49) |
+| GestorReportes | `UsuarioActual` | Alcance según el perfil: el Organizador ve sus eventos y el Administrador, todos (RN-34) |
+| GestorAuditoria, GestorSolicitudesOrganizador | `RequerirAdministrador` | Solo el Administrador consulta la auditoría y revisa solicitudes (RN-53) |
 
 **Dependencias que no se dibujan, para no saturar las vistas.** Todas son dependencias de uso, que
 salen de llamadas `X.Instance.Operacion`:
 
 | Desde | Hacia |
 |---|---|
-| GestorCompras | GestorPaquetes (`Validar`, `VerificarPreventa`), GestorFidelizacion (`CalcularDescuento`, `ObtenerCliente`, `ReevaluarNivel`, `AscenderSiCorresponde`), PasarelaSimulada (`Cobrar`), GeneradorQR (`NuevoCodigo`) |
+| GestorCompras | GestorPaquetes (`Validar`, `VerificarPreventa`), GestorFidelizacion (`CalcularDescuento`, `ObtenerCliente`, `ReevaluarNivel`, `AscenderSiCorresponde`), GestorUsuarios (`ExigirCorreoVerificado`), PasarelaSimulada (`Cobrar`), GeneradorQR (`NuevoCodigo`) |
 | GestorFidelizacion | GestorPaquetes (subtotales), GestorSuscripciones (`TieneActiva`) |
-| GestorPaquetes | GestorSuscripciones (`TieneActiva`) |
+| GestorPaquetes | GestorEventos (`ObtenerPorId`), GestorSuscripciones (`TieneActiva`), GestorUsuarios (`ExigirCorreoVerificado`) |
 | GestorListaEspera | GestorEventos (`EstaAgotado`, `ObtenerPorId`), GestorSuscripciones (`TieneActiva`) |
-| GestorCompras, GestorFidelizacion, GestorPaquetes, GestorSuscripciones, GestorIngresos, GestorUsuarios, ReporteUsuariosPorNivel | GestorParametros: leen los valores de las reglas |
+| GestorUsuarios | GestorCodigosCorreo (`EnviarVerificacion`) |
+| GestorCodigosCorreo | GestorUsuarios (`ValidarContrasena`), `SeleccionEnviadorCodigos.Actual` (ficha 3, vista 8d) |
+| GestorSolicitudesOrganizador | GestorCodigosCorreo (`EnviarCodigoTelefono`, `ConfirmarCodigoTelefono`), `SeleccionVerificadorIdentidad.Actual` (vista 8d) |
+| GestorCompras, GestorEventos, GestorIngresos, GestorUsuarios | GestorAuditoria (`Registrar`, interna) |
+| GestorCompras, GestorFidelizacion, GestorPaquetes, GestorSuscripciones, GestorIngresos, GestorUsuarios, GestorCodigosCorreo, GestorSesion, ReporteUsuariosPorNivel | GestorParametros: leen los valores de las reglas |
 | RepositorioCompras | RepositorioEntradas, RepositorioSectores (dentro de la misma transacción) |
 | RepositorioEventos | RepositorioCompras, RepositorioSectores |
 | RepositorioSectores | RepositorioCompras |
 
-**Justificación, vista 7:** cada repositorio → `RepositorioBase` es una generalización
-(`: RepositorioBase`). `RepositorioBase` → `Conexion` es una dependencia de uso
+**Justificación, vista 7:** cada uno de los dieciséis repositorios → `RepositorioBase` es una
+generalización (`: RepositorioBase`). `RepositorioBase` → `Conexion` es una dependencia de uso
 (`AbrirConexion` llama a `Conexion.Instance.Crear()`).
+
+**Qué cambió (versión 2.6, 18/11):**
+- **Siete vistas pasan a nueve.** La vista 1 vieja no entraba legible con la solicitud de
+  Organizador: la suscripción, la lista de espera y la solicitud pasan a la vista 1b. Los
+  gestores de la cuenta y la seguridad pasan a la vista 5b.
+- **Clases nuevas:**
+  - `SolicitudOrganizador` (entidad);
+  - `GestorAuditoria`, `GestorCodigosCorreo`, `GestorSolicitudesOrganizador` y `SesionAutenticada` (negocio);
+  - `RepositorioAuditoria`, `RepositorioCodigosCorreo` y `RepositorioSolicitudesOrganizador` (datos).
+- **Atributos y operaciones nuevos:**
+  - en `Evento`, la portada y el motivo de rechazo;
+  - en `GestorEventos`, publicar, aprobar y rechazar el primer evento, y cambiar la portada;
+  - en `GestorUsuarios`, la fortaleza de la contraseña y la exigencia del correo verificado;
+  - en `GestorSesion`, las verificaciones de Organizador y de pertenencia, y el control de inactividad.
+- **`UsuarioActual` es ahora una `SesionAutenticada`,** no un `Usuario` (RN-41).
 
 ---
 
@@ -277,6 +314,7 @@ salen de llamadas `X.Instance.Operacion`:
 | 8a. Singleton y Repository | `clases-8a-patron-singleton-repository` | **16,0 cm** (14,9) | 11,2 pt |
 | 8b. Strategy | `clases-8b-patron-strategy` | **15,5 cm** (20,6) | 12,0 pt |
 | 8c. Jerarquía de Reporte | `clases-8c-jerarquia-reportes` | **16,0 cm** (8,4) | 11,1 pt |
+| 8d. Strategy: envío de códigos y verificación de identidad | `clases-8d-patron-strategy-cuenta` | **13,9 cm** (23,0, página entera) | 8,8 pt |
 
 **Dónde va:** a continuación de las vistas de clases, con el título «Patrones de diseño». **Es
 una sección nueva:** el documento hoy no la tiene. La 8c es baja y puede compartir página con el
@@ -287,10 +325,11 @@ texto.
 > El sistema aplica cuatro patrones de diseño. Cada uno se muestra con su estructura y con un caso
 > real del código.
 >
-> **Singleton.** Los doce gestores que aplican las reglas de negocio, los trece repositorios de
-> datos, la conexión, la pasarela simulada y el generador de códigos QR tienen una única instancia: un campo estático privado
-> `_instance`, un constructor privado y una propiedad estática `Instance` que crea la instancia la
-> primera vez que se pide (veintiocho clases en total). La implementación no usa bloqueo, porque la
+> **Singleton.** Los quince gestores que aplican las reglas de negocio, los dieciséis
+> repositorios de datos, la conexión, la pasarela simulada y el generador de códigos QR tienen una
+> única instancia: un campo estático privado `_instance`, un constructor privado y una propiedad
+> estática `Instance` que crea la instancia la primera vez que se pide (treinta y cuatro clases en
+> total). La implementación no usa bloqueo, porque la
 > aplicación es de escritorio y todas las llamadas ocurren en el hilo de la interfaz. En la figura,
 > el campo `_instance` aparece subrayado por ser estático.
 >
@@ -304,6 +343,16 @@ texto.
 > `ExportadorPDF`, que está en la capa de presentación porque usa la biblioteca iText. Agregar otro
 > formato es agregar otra clase que implemente la interfaz, sin modificar ningún reporte. Hoy existe
 > una sola estrategia concreta.
+>
+> El mismo patrón resuelve dos integraciones externas que la versión entregada simula. El envío
+> de los códigos de un solo uso (verificación del correo, recuperación de la contraseña y
+> confirmación del teléfono) depende de la interfaz `IEnviadorCodigos`: la estrategia elegida es
+> `EnviadorSimulado`, que deja el mensaje en una bandeja simulada, y existe `EnviadorSmtp`, que lo
+> enviaría por correo real. La verificación de identidad de quien solicita ser Organizador depende
+> de `IVerificadorIdentidad`, con una estrategia simulada, que valida el formato del CUIT, y una
+> externa, que consultaría un servicio de verificación. En los dos casos, la capa de negocio solo
+> conoce la interfaz, y pasar a la estrategia real es una decisión de configuración, no un cambio
+> de arquitectura.
 >
 > **Jerarquía de reportes.** Los cinco reportes del anexo A02 heredan de la clase abstracta
 > `Reporte`, que define qué se informa (encabezados, datos y lectura); cada subclase redefine esas
@@ -322,6 +371,12 @@ texto.
 | 8b | ExportadorPDF → IExportador | Realización | `class ExportadorPDF : IExportador` (`Visual/ExportadorPDF.cs`) |
 | 8b | GestorReportes, IExportador → Reporte | Dependencia | parámetros `Reporte r` |
 | 8c | Cada una de las cinco subclases → Reporte | Generalización | `sealed class ReporteVentasPorEvento : Reporte` y las otras cuatro |
+| 8d | EnviadorSimulado, EnviadorSmtp → IEnviadorCodigos | Realización | `Repo/IEnviadorCodigos.cs`, `Visual/EnviadorSmtp.cs` |
+| 8d | GestorCodigosCorreo → SeleccionEnviadorCodigos | Dependencia | `SeleccionEnviadorCodigos.Actual.Enviar(…)` en `GestorCodigosCorreo`; `Visual/Program.cs` fija `new EnviadorSimulado()` |
+| 8d | SeleccionEnviadorCodigos → IEnviadorCodigos | Asociación | propiedad estática `Actual` |
+| 8d | VerificadorIdentidadSimulado, VerificadorIdentidadExterno → IVerificadorIdentidad | Realización | `Repo/GestorSolicitudesOrganizador.cs` |
+| 8d | GestorSolicitudesOrganizador → SeleccionVerificadorIdentidad | Dependencia | `SeleccionVerificadorIdentidad.Actual.Verificar(…)` en `Solicitar` |
+| 8d | SeleccionVerificadorIdentidad → IVerificadorIdentidad | Asociación | propiedad estática `Actual`, que arranca con la simulada |
 
 **Qué no se documenta, a propósito.** State, Facade, Observer y Composite **no están en el
 código**, aunque Composite (permisos) y Observer (idioma) los pide la Carpeta modelo para anexos
@@ -556,8 +611,8 @@ en orden.
 |---|---|
 | Fuente | `docs/diagramas/fuentes/dominio-conceptual.puml` |
 | Imagen | `docs/diagramas/dominio-conceptual.png` |
-| Insertar a | **16,0 cm** de ancho (14,8 de alto) |
-| Letra impresa | 9,1 pt |
+| Insertar a | **16,0 cm** de ancho (15,3 de alto) |
+| Letra impresa | 8,9 pt |
 
 **Dónde va:** página 86, arriba, debajo de «Modelo de dominio conceptual». Reemplaza la figura de
 ahí. Como el diagrama de clases que sigue ocupa varias páginas nuevas, este queda solo en su
@@ -566,10 +621,12 @@ página.
 **Texto para el documento:**
 
 > El modelo de dominio conceptual muestra los conceptos del negocio y cómo se relacionan, sin
-> atributos ni operaciones y sin clases de software. Surge de los requerimientos (RF-01 a RF-13) y
-> de las reglas de negocio. Los usuarios son de dos tipos, Cliente y Administrador. El
-> Administrador gestiona locales y los eventos que se realizan en ellos, divididos en sectores, y
-> cada evento ofrece servicios complementarios. El Cliente arma un paquete para un evento, con
+> atributos ni operaciones y sin clases de software. Surge de los requerimientos y de las reglas
+> de negocio. Los usuarios tienen uno de tres perfiles: Cliente, Organizador o Administrador
+> (RN-05). El Organizador administra locales y los eventos que se realizan en ellos, divididos en
+> sectores, y cada evento ofrece servicios complementarios. Un Cliente puede presentar una
+> solicitud para ser Organizador, que revisa un Administrador; y cada operación relevante deja un
+> registro de auditoría, atribuido al usuario que la hizo. El Cliente arma un paquete para un evento, con
 > entradas y servicios; al confirmarse, el paquete se convierte en una compra, que emite las
 > entradas, cada una correspondiente a un sector y opcionalmente cubierta por un seguro. Una compra
 > admite varios intentos de pago. El Cliente tiene un nivel de fidelidad, puede contratar
@@ -579,8 +636,11 @@ página.
 
 | Relación | Multiplicidad | Requerimiento o regla | Dónde está en el código |
 |---|---|---|---|
-| Cliente, Administrador → Usuario | Generalización | RN-05 (dos perfiles) | `Cliente : Usuario`, `Propietario : Usuario` |
-| Administrador administra Local | 1 / 0..* | RF-12 | `Local.IdPropietario` |
+| Cliente, Organizador, Administrador → Usuario | Generalización | RN-05 (tres perfiles) | `Cliente : Usuario`, `Propietario : Usuario`; el Administrador es un `Usuario` con `TipoUsuario` «Administrador» |
+| Organizador administra Local | 1 / 0..* | RF-12, RN-49 | `Local.IdPropietario` |
+| Cliente presenta Solicitud de Organizador | 1 / 0..* | RN-50 | `SolicitudOrganizador.UsuarioId` |
+| Administrador revisa Solicitud de Organizador | 0..1 / 0..* | RN-53 | `SolicitudOrganizador.RevisadaPor` |
+| Usuario genera Registro de auditoría | 0..1 / 0..* | — | `Auditoria.UsuarioID`, que admite NULL: el registro conserva el correo de un intento fallido aunque la cuenta no exista |
 | Evento se realiza en Local | 0..* / 1 | RF-12, RN-38 | `Evento.IdLocal` |
 | Evento se divide en Sector | 1 / 0..* | RF-12, RN-06 | `Sector.IdEvento` |
 | Evento ofrece Servicio complementario | 0..* / 0..* | RN-14 | tabla `ServiciosEvento` |
@@ -609,12 +669,11 @@ página.
 
 ## 8. Modelo de dominio actualizado
 
-| | Vista 1: cuentas y catálogo | Vista 2: compra |
-|---|---|---|
-| Fuente | `docs/diagramas/fuentes/dominio-actualizado-1-cuentas-catalogo.puml` | `docs/diagramas/fuentes/dominio-actualizado-2-compra.puml` |
-| Imagen | `docs/diagramas/dominio-actualizado-1-cuentas-catalogo.png` | `docs/diagramas/dominio-actualizado-2-compra.png` |
-| Insertar a | **16,0 cm** (21,0 de alto) | **16,0 cm** (20,2 de alto) |
-| Letra impresa | 9,5 pt | 9,4 pt |
+| Vista | Fuente e imagen (`docs/diagramas/…`) | Insertar a | Letra |
+|---|---|---|---|
+| 1. Cuentas y catálogo | `dominio-actualizado-1-cuentas-catalogo` | **16,0 cm** (20,8 de alto) | 9,0 pt |
+| 2. Compra | `dominio-actualizado-2-compra` | **16,0 cm** (20,2 de alto) | 9,4 pt |
+| 3. Organización, auditoría y enumeraciones | `dominio-actualizado-3-organizacion` | **11,4 cm** (23,0, página entera) | 10,5 pt |
 
 **Dónde va:** página 88, debajo de «Diagrama de dominio actualizado». Reemplaza la figura de ahí,
 una vista por página.
@@ -623,14 +682,16 @@ una vista por página.
 
 > El modelo de dominio actualizado retoma los conceptos del modelo conceptual y les agrega sus
 > atributos con el tipo de cada uno. No incluye identificadores ni claves foráneas, porque las
-> asociaciones ya representan esos vínculos. Se presenta en dos vistas para que se lea a tamaño de
-> página: la primera reúne usuarios, catálogo, suscripciones, lista de espera y las enumeraciones;
-> la segunda, el paquete, la compra y lo que la compra genera.
+> asociaciones ya representan esos vínculos. Se presenta en tres vistas para que se lea a tamaño de
+> página: la primera reúne los usuarios con sus tres perfiles, el catálogo, las suscripciones y la
+> lista de espera; la segunda, el paquete, la compra y lo que la compra genera; y la tercera, la
+> solicitud para ser Organizador, el registro de auditoría y las enumeraciones del dominio.
 >
 > Respecto del conceptual, el nivel de fidelidad pasa a ser un atributo del cliente con un tipo
 > enumerado (Bronce, Plata, Oro), y la cantidad de compras de los últimos doce meses aparece como
 > atributo derivado, porque se calcula y no se guarda (RN-19). Los estados de la compra, de la
-> entrada y del pago son enumeraciones con los mismos valores que la base de datos. La relación de
+> entrada, del pago, del evento y de la solicitud son enumeraciones con los mismos valores que la
+> base de datos. La relación de
 > muchos a muchos entre compra y servicio complementario lleva una clase de asociación, Servicio
 > contratado, con la cantidad y el precio unitario congelado al comprar (RN-16).
 >
@@ -650,11 +711,15 @@ Lo que se agrega:
 | `nivel : NivelFidelidad` | Atributo con tipo enumerado. En el conceptual era una asociación con el concepto «Nivel de fidelidad» | `Cliente.Nivel`, `Entidade/NivelFidelidad.cs` |
 | `/comprasUltimos12Meses` | Atributo derivado (se calcula) | `GestorFidelizacion.ComprasEnVentana`, RN-19 |
 | `EstadoCompra`, `EstadoEntrada`, `EstadoPago` | Enumeraciones | `Entidade/Estado*.cs`; `CHECK` de la base |
+| `EstadoEvento`, `EstadoSolicitud` | Enumeraciones del dominio | En el código son textos (`Evento.Estado`, `SolicitudOrganizador.Estado`); sus valores son los de `CK_Eventos_Estado` y `CK_SolicitudesOrganizador_Estado` |
+| `correoVerificado`, `primerEventoAprobado`, `imagenPortada`, `motivoRechazo` | Atributos nuevos | `Usuario.CorreoVerificado`, `Propietario.PrimerEventoAprobado`, `Eventos.ImagenPortada`, `Evento.MotivoRechazo` |
+| `mailDelAutor` | Atributo del registro de auditoría | `Auditoria.UsuarioMail`: el correo de quien hizo la operación o del intento de inicio de sesión |
 | Servicio contratado | Clase de asociación de Compra–Servicio | tabla `CompraServicios` (`Cantidad`, `PrecioUnit`) |
 
 **Qué no está, a propósito:**
-- `TipoUsuario`: la generalización ya distingue Cliente de Administrador; repetirlo como atributo
-  es redundante (regla 7).
+- `TipoUsuario`: la generalización ya distingue Cliente, Organizador y Administrador; repetirlo
+  como atributo es redundante (regla 7).
+- Los códigos de un solo uso y su hash: son un mecanismo de seguridad, no un concepto del negocio.
 - `Evento.Hora`: se deriva de la fecha.
 - `Entrada.CantidadVendida`: siempre vale 1, porque cada entrada es una fila.
 

@@ -1,15 +1,18 @@
 @startuml dominio-conceptual
 !include _estilo.iuml
-skinparam nodesep 30
+skinparam nodesep 10
 skinparam ranksep 60
 hide empty members
 ' Modelo de dominio conceptual: conceptos del negocio, sin atributos, sin métodos y sin clases
-' de software. Sale de RF-01 a RF-13 y de las reglas de negocio; se contrastó con el código
+' de software. Sale de los requerimientos y de las reglas de negocio; se contrastó con el código
 ' (ver la tabla de justificación en docs/PARA-MAXIMO-DIAGRAMAS.md).
 
 class Usuario
 class Cliente
+class Organizador
 class Administrador
+class "Solicitud de\nOrganizador" as Solicitud
+class "Registro de\nauditoría" as Registro
 class "Nivel de fidelidad" as Nivel
 class Suscripción
 class Local
@@ -24,8 +27,12 @@ class Seguro
 class "Inscripción en\nlista de espera" as Inscripcion
 
 Usuario <|-- Cliente
+Usuario <|-- Organizador
 Usuario <|-- Administrador
-Administrador "1" -- "0..*$_" Local : administra
+Organizador "1" -- "0..*$_" Local : administra
+Cliente "1" -- "0..*$_" Solicitud : presenta
+Administrador "0..1" -- "0..*$_" Solicitud : revisa
+Usuario "0..1" -- "0..*$_" Registro : genera
 Local "1" -- "0..*$_" Evento : se realiza en
 Evento "1" -- "0..*$_" Sector : se divide en
 Evento "0..*" -- "0..*$_" Servicio : ofrece

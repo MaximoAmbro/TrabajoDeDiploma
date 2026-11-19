@@ -1,40 +1,51 @@
 @startuml clases-6-autorizacion
 !include _estilo.iuml
 left to right direction
-skinparam nodesep 12
-skinparam ranksep 140
+skinparam nodesep 10
+skinparam ranksep 90
 hide empty members
-' Diagrama de clases, vista 6 de 8: verificación de identidad y de perfil en el negocio.
-' Fuente: llamadas a GestorSesion en Repo/*.cs. Cada gestor verifica quién llama antes de
-' operar (RN-34, RN-41, RN-42). Las demás dependencias entre gestores están en la tabla de
-' justificación, y las operaciones de cada gestor en las vistas 4 y 5.
+' Diagrama de clases, vista 6 de 9: verificación de identidad, de perfil y de pertenencia en el
+' negocio. Fuente: llamadas a GestorSesion en Repo/*.cs. Cada gestor verifica quién llama antes
+' de operar: el titular de los datos (RN-41), el perfil Organizador (RN-48) y sus propios locales
+' (RN-49), o el Administrador de la plataforma (RN-34). UsuarioActual se omite en las flechas:
+' lo leen casi todos para saber quién opera. Las operaciones de cada gestor están en las vistas
+' 4, 5 y 5b. Los rótulos nombran cada verificación sin el prefijo «Requerir»: «Organizador» es
+' RequerirOrganizador().
 
 class GestorUsuarios
-class GestorEventos
-class GestorLocales
-class GestorIngresos
-class GestorReportes
+class GestorCodigosCorreo
 class GestorCompras
 class GestorPaquetes
 class GestorFidelizacion
 class GestorSuscripciones
 class GestorListaEspera
+class GestorEventos
+class GestorLocales
+class GestorIngresos
+class GestorReportes
+class GestorAuditoria
+class GestorSolicitudesOrganizador
 class GestorSesion <<Singleton>> {
-  + UsuarioActual : Usuario
-  + Iniciar(Usuario)
-  + RequerirAdministrador()
+  + UsuarioActual : SesionAutenticada
+  + HaySesion : bool
+  ~ Iniciar(Usuario)
   + RequerirUsuario(int)
-  + Cerrar()
+  + RequerirOrganizador()
+  + RequerirOrganizadorDeLocal(int)
+  + RequerirAdministrador()
 }
 
-GestorUsuarios ..> GestorSesion : Iniciar,\nRequerirAdministrador
-GestorEventos ..> GestorSesion : RequerirAdministrador
-GestorLocales ..> GestorSesion : RequerirAdministrador
-GestorIngresos ..> GestorSesion : RequerirAdministrador
+GestorUsuarios ..> GestorSesion : Iniciar, Usuario,\nAdministrador
+GestorCodigosCorreo ..> GestorSesion : Usuario
+GestorCompras ..> GestorSesion : Usuario
+GestorPaquetes ..> GestorSesion : Usuario, HaySesion
+GestorFidelizacion ..> GestorSesion : Usuario
+GestorSuscripciones ..> GestorSesion : Usuario
+GestorListaEspera ..> GestorSesion : Usuario
+GestorEventos ..> GestorSesion : Organizador,\nOrganizadorDeLocal,\nAdministrador
+GestorLocales ..> GestorSesion : Organizador,\nOrganizadorDeLocal
+GestorIngresos ..> GestorSesion : Organizador
 GestorReportes ..> GestorSesion : UsuarioActual
-GestorCompras ..> GestorSesion : RequerirUsuario
-GestorPaquetes ..> GestorSesion : RequerirUsuario
-GestorFidelizacion ..> GestorSesion : RequerirUsuario
-GestorSuscripciones ..> GestorSesion : RequerirUsuario
-GestorListaEspera ..> GestorSesion : RequerirUsuario,\nRequerirAdministrador
+GestorAuditoria ..> GestorSesion : Administrador
+GestorSolicitudesOrganizador ..> GestorSesion : Administrador
 @enduml
