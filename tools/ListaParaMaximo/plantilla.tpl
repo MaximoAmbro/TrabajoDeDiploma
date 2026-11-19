@@ -1,8 +1,9 @@
 # LA lista para el Word — de la página 1 a la 112
 
-> ## ⚠ ANTES DE TODO: siete scripts nuevos en tu base (18/11)
+> ## ⚠ ANTES DE TODO: ocho scripts nuevos en tu base (18/11)
 >
-> **El ejecutable de hoy no anda sin ellos.** En SQL Server Management Studio, elegí tu base de
+> **El ejecutable de hoy no anda sin ellos.** Si ya corriste del `08` al `14` siguiendo una versión
+> anterior de esta lista, solo te falta el `15` (paso 9). En SQL Server Management Studio, elegí tu base de
 > EventAura y ejecutá los archivos de la carpeta `BaseDatos/` **en este orden, de a uno**. Todos
 > se pueden ejecutar más de una vez sin dañar nada.
 >
@@ -22,7 +23,7 @@
 >    ```
 >
 >    - **Devuelve una fila:** seguí con el paso 5.
->    - **No devuelve nada:** **pará acá.** No corras del `11` al `14`: el `11` se detendría con el
+>    - **No devuelve nada:** **pará acá.** No corras del `11` al `15`: el `11` se detendría con el
 >      error 51101. Ejecutá esto y mandale el resultado a JC:
 >
 >      ```sql
@@ -38,6 +39,8 @@
 > 7. **`13-revision-primer-evento.sql`**: agrega el estado «en revisión» de los eventos.
 > 8. **`14-primer-evento-aprobado.sql`**: marca como ya aprobados a los organizadores que tienen
 >    eventos publicados, así que `organizador@eventaura.com` publica directo, sin revisión.
+> 9. **`15-motivo-rechazo-evento.sql`**: guarda el motivo cuando el Administrador rechaza el primer
+>    evento de un organizador, para que el organizador lo vea.
 >
 > **⚠ Lo que cambia y no es un error:** desde el `11`, **`admin@eventaura.com` ya no tiene
 > locales.** Entra a un menú de administrador de la plataforma (solicitudes, eventos en
@@ -63,8 +66,8 @@
 >    ```
 >
 >    Tiene que dar un número, no `NULL`.
-> 2. Abrí el ejecutable. Si falta alguno de los scripts del `04` al `09` o el `12`, al iniciar te
->    dice cuál. Los demás no los detecta: para eso son las consultas del paso 1.
+> 2. Abrí el ejecutable. Si falta alguno de los scripts del `04` al `15`, al iniciar te dice
+>    cuál.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
 > ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), y todos los diagramas con sus textos (pp. 71 y 86 a 89).
