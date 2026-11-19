@@ -10,7 +10,7 @@ namespace Datos
         public static RepositorioAuditoria Instance { get { return Instancia; } }
         private RepositorioAuditoria() { }
 
-        public void Registrar(int? usuarioId, string usuarioMail, string accion, string entidad, int? entidadId, string resultado)
+        internal void Registrar(int? usuarioId, string usuarioMail, string accion, string entidad, int? entidadId, string resultado)
         {
             const string sql = "INSERT dbo.Auditoria(UsuarioID,UsuarioMail,Accion,Entidad,EntidadID,Resultado) VALUES(@UsuarioID,@Mail,@Accion,@Entidad,@EntidadID,@Resultado)";
             using (var conexion = AbrirConexion())

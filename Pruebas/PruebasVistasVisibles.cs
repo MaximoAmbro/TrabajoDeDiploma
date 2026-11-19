@@ -2,8 +2,10 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Entidades;
 using Datos;
@@ -50,6 +52,55 @@ namespace Pruebas
                 }
             });
         }
+
+        // CP-206 — RF-16, RN-45: Visual no puede escribir auditoría suplantando al autor.
+        [TestMethod("CP-206: Visual no tiene acceso al registro de auditoría")]
+        public void CP206_VisualNoPuedeEscribirAuditoria()
+        {
+            var registrar = typeof(Datos.RepositorioAuditoria).GetMethod(
+                "Registrar", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(registrar, "El método de escritura de auditoría debe existir para la capa de negocio.");
+            Assert.IsTrue(registrar.IsAssembly, "Registrar debe ser internal y no público.");
+            Assert.IsFalse(registrar.IsPublic, "Registrar no debe formar parte de la API pública de Datos.");
+
+            foreach (string metodo in new[] { "Aprobar", "Rechazar" })
+            {
+                var revision = typeof(Datos.RepositorioSolicitudesOrganizador).GetMethod(
+                    metodo, BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert.IsNotNull(revision, "La operación de revisión debe existir en la capa de datos.");
+                Assert.IsTrue(revision.IsAssembly, metodo + " debe estar limitado al ensamblado de negocio.");
+                Assert.IsFalse(revision.IsPublic, metodo + " no debe permitir que Visual falsifique al administrador.");
+            }
+
+            var amigos = typeof(Datos.RepositorioAuditoria).Assembly
+                .GetCustomAttributes<InternalsVisibleToAttribute>()
+                .Select(a => new AssemblyName(a.AssemblyName).Name)
+                .OrderBy(n => n)
+                .ToArray();
+            CollectionAssert.AreEqual(new[] { "Repositorio" }, amigos,
+                "Solo el ensamblado de negocio debe recibir acceso a miembros internal de Datos.");
+
+            string raiz = AppDomain.CurrentDomain.BaseDirectory;
+            while (raiz != null && !File.Exists(Path.Combine(raiz, "SistemaEntradas.sln")))
+                raiz = Directory.GetParent(raiz)?.FullName;
+            Assert.IsNotNull(raiz, "No se pudo localizar la raíz del repositorio para inspeccionar Visual.");
+
+            string[] archivos = Directory.GetFiles(Path.Combine(raiz, "Visual"), "*.cs", SearchOption.AllDirectories);
+            foreach (string archivo in archivos)
+            {
+                string fuente = File.ReadAllText(archivo);
+                string rutaRelativa = archivo.Substring(raiz.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                Assert.IsFalse(fuente.Contains("RepositorioAuditoria"),
+                    "Visual no debe conocer el repositorio de auditoría: " + rutaRelativa);
+                Assert.IsFalse(fuente.Contains("RepositorioSolicitudesOrganizador"),
+                    "Visual no debe llamar directamente al repositorio de solicitudes: " + rutaRelativa);
+                Assert.IsFalse(fuente.Contains("GestorAuditoria.Instance.Registrar"),
+                    "Visual no debe registrar auditoría desde la interfaz: " + rutaRelativa);
+                Assert.IsFalse(fuente.Contains("INSERT dbo.Auditoria"),
+                    "Visual no debe contener escrituras directas de auditoría: " + rutaRelativa);
+            }
+        }
+
         private static System.Collections.Generic.IEnumerable<Control> Descendientes(Control raiz)
         {
             foreach(Control c in raiz.Controls){yield return c;foreach(var h in Descendientes(c))yield return h;}

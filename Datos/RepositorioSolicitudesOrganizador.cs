@@ -43,7 +43,7 @@ OUTPUT INSERTED.ID VALUES(@UsuarioID,@Responsable,@CUIT,@Telefono,1,@NombreLocal
             return salida;
         }
 
-        public void Aprobar(int id, int administradorId, string motivo)
+        internal void Aprobar(int id, int administradorId, string motivo)
         {
             using (var conexion = AbrirConexion())
             using (var tx = conexion.BeginTransaction())
@@ -65,7 +65,7 @@ OUTPUT INSERTED.ID VALUES(@UsuarioID,@Responsable,@CUIT,@Telefono,1,@NombreLocal
             }
         }
 
-        public void Rechazar(int id, int administradorId, string motivo)
+        internal void Rechazar(int id, int administradorId, string motivo)
         {
             const string actualizar = @"UPDATE dbo.SolicitudesOrganizador SET Estado='Rechazada',MotivoRevision=@Motivo,RevisadaPor=@Admin,RevisadaEl=SYSUTCDATETIME()
 WHERE ID=@ID AND Estado='Pendiente'";
