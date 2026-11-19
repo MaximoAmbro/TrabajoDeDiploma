@@ -70,7 +70,7 @@
 >    cuál.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), y todos los diagramas con sus textos (pp. 71 y 86 a 89).
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), todos los diagramas con sus textos (pp. 71 y 86 a 89), y el anexo nuevo «Pantallas del sistema» (después de la p. 105), salvo seis pantallas marcadas ⏸.
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -1198,6 +1198,14 @@ filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en
 
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^## 12\. Página 99 :: ^## 17\. Página 106
 
+## Después de la página 105 — Anexo nuevo «Pantallas del sistema»
+
+**✅ Se pega hoy (19/11), salvo las seis pantallas marcadas ⏸.** De esas seis, pegá solo el título («Pantalla 2. …») y seguí con la siguiente: las imágenes llegan cuando Codex termine. Va como anexo nuevo, después del anexo A02 y antes de la matriz de trazabilidad, empezando en página nueva.
+
+**El mapa de sectores (figura P7.2) va solo, en una página apaisada:** insertá un salto de sección «Página siguiente» antes y otro después, y poné en horizontal solo esa sección (*Disposición › Orientación › Horizontal*). Así el resto del anexo sigue vertical.
+
+@@- docs/ANEXO-PANTALLAS-SISTEMA.md :: ^## Texto para pegar :: ^## Fin del texto para pegar
+
 ## Página 106 — Matriz: criterio y nomenclatura
 
 **⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
@@ -1566,7 +1574,7 @@ cifras, así que no cambia cuando se congelen los números.
 2. **Comprobá que el índice tenga estas entradas nuevas:** «Estimación de costos»,
    «Arquitectura e implementación» (antes «Implementación»), las cinco especificaciones CU-09 a
    CU-13, «Patrones de diseño», «Metodología de verificación» (entre «Matriz de trazabilidad» y
-   «Conclusiones»), los títulos nuevos de CU-06, CU-07 y CU-08, y que ya no estén
+   «Conclusiones»), el anexo «Pantallas del sistema» (después del anexo A02), los títulos nuevos de CU-06, CU-07 y CU-08, y que ya no estén
    «Especificación de requerimientos funcionales» de la p. 42 ni la primera copia de «Minutas de
    reunión (simuladas)» y «Prototipos de interfaz gráfica» (p. 39).
 3. **Corregí los números de página que el texto cita a mano** (no se actualizan solos). Buscá
