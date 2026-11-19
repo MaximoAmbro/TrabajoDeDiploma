@@ -6,12 +6,12 @@ Usá una sola vista completa por pantalla para mostrar la distribución. Epígra
 
 | Pantalla | Figura completa | Fuente |
 |---|---|---|
-| compra | `completas/Fase7/compra.png` | Fase7/despues-100 |
-| eventos | `completas/Fase7/eventos.png` | Fase7/despues-100 |
-| ficha | `completas/Fase7/ficha.png` | Fase7/despues-100 |
+| compra | `completas/MiCuenta-2026-11-18/compra.png` | MiCuenta-2026-11-18, semilla Paula |
+| eventos | `completas/MiCuenta-2026-11-18/eventos.png` | MiCuenta-2026-11-18, semilla Paula |
+| ficha | `completas/MiCuenta-2026-11-18/ficha-evento.png` | MiCuenta-2026-11-18, semilla Paula |
 | inicio | `completas/Fase7/inicio.png` | Fase7/despues-100 |
-| mis-entradas | `completas/Fase7/mis-entradas.png` | Fase7/despues-100 |
-| suscripcion | `completas/Fase7/suscripcion.png` | Fase7/despues-100 |
+| mis-entradas | `completas/MiCuenta-2026-11-18/mis-entradas.png` | MiCuenta-2026-11-18, semilla Paula |
+| suscripcion | `completas/MiCuenta-2026-11-18/suscripcion.png` | MiCuenta-2026-11-18, semilla Paula |
 | ficha-evento | `completas/Fase8/ficha-evento.png` | Fase8b/despues-100 |
 | frmAdministrarEvento | `completas/Fase8/frmAdministrarEvento.png` | Fase8c/despues-100 |
 | frmAgregarEvento | `completas/Fase8/frmAgregarEvento.png` | Fase8b/despues-100 |
@@ -42,6 +42,8 @@ Usá una sola vista completa por pantalla para mostrar la distribución. Epígra
 | frmSuscripcion | `completas/Fase8/frmSuscripcion.png` | Fase8b/despues-100 |
 
 ## Figuras de detalle
+
+Las cinco vistas de cliente anteriores se regeneraron el 18/11/2026 dentro de `Mi cuenta`, con el botón **Solicitar ser Organizador** visible y datos de la semilla de Paula. La vista de compra muestra el panel central actual; durante la captura el contenedor no dibujó el menú lateral en ese estado. Esa ausencia queda registrada como limitación visual observada, no reconstruida sobre la imagen.
 
 Todas las imágenes de `paneles/` son recortes de contenido: no incluyen el menú lateral ni la barra superior. Los nombres y áreas de cada recorte, incluido el desglose de tablas y formularios anchos, y su ancho de inserción están en `ancho-minimo-8_1pt.tsv`. Epígrafe: **«Detalle de [contenido], en el panel central de [pantalla].»**
 
