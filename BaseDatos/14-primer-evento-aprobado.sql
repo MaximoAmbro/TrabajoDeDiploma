@@ -6,6 +6,7 @@ BEGIN TRANSACTION;
 IF COL_LENGTH('dbo.Propietario','PrimerEventoAprobado') IS NULL
     ALTER TABLE dbo.Propietario ADD PrimerEventoAprobado BIT NOT NULL
         CONSTRAINT DF_Propietario_PrimerEventoAprobado DEFAULT (0) WITH VALUES;
+GO
 
 -- Los organizadores que ya tienen una publicación se consideran aprobados al migrar.
 UPDATE p SET PrimerEventoAprobado=1
