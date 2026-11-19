@@ -8,7 +8,7 @@ R = [
  ("> - la lista de espera para los eventos agotados;",
   "> - la lista de espera para los eventos agotados, con la consulta de la posición y el aviso al\n>   iniciar sesión cuando vuelve a haber entradas;"),
  ("> - los avisos por correo electrónico, incluido el aviso de la lista de espera (W-03);",
-  "> - el envío real de correos: los códigos de verificación y de recuperación se entregan en una\n>   bandeja simulada, y no hay avisos por correo ni notificaciones push (W-03); el aviso de la\n>   lista de espera se muestra dentro de la aplicación;"),
+  "> - el envío real de correos: los códigos de verificación y de recuperación se escriben en un\n>   archivo de correo simulado, fuera de la aplicación, y no hay avisos por correo ni\n>   notificaciones push (W-03); el aviso de la lista de espera se muestra dentro de la\n>   aplicación;"),
  # Notas internas dentro de E-09 a E-16.
  (r"re:\n> FA4 describe lo que hace el negocio\..*?«Limitaciones»\.\n", "\n"),
  (r"re:\n> Desde `2af267a` \(14/11\) el inicio de sesión.*?el aviso de la lista de espera\.\n", "\n"),

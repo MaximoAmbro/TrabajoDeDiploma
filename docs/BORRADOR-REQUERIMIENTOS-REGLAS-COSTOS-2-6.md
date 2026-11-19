@@ -1,8 +1,11 @@
 # Borrador: requerimientos nuevos, costos y reglas de la versión 2.6
 
-Claude Code, 18/11/2026; actualizado el 19/11 con las decisiones de JC. **Es un borrador para que JC lo revise antes de que entre a la lista
-para Máximo.** Nada de esto está en `docs/LISTA-PARA-MAXIMO.md` todavía. Cuando JC lo apruebe,
-pasa a las pp. 23, 25 a 27, 35, 36 y 38.
+Claude Code, 18/11/2026; actualizado el 19/11 con las decisiones de JC.
+
+**Aprobado por JC el 19/11** (numeración RF-14 a RF-22, puntos, reparto y costo) **y pasado a la
+lista para Máximo:** pp. 23, 25 a 27, 35 (con la «Estimación de costos» de
+`docs/AUDITORIA-DOCUMENTO-CODIGO.md`, Anexo 4), 36 y 38. Este archivo queda como registro de la
+medición; lo que se pega sale de la lista.
 
 ## Lo que JC ya decidió (18/11)
 

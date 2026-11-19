@@ -3,6 +3,11 @@
 Claude Code, 19/11/2026. Fuente del anexo nuevo que pidió JC (18/11): el juego completo de
 pantallas, una vista por pantalla, con su epígrafe. La lista para Máximo lo incluye desde acá.
 
+**En pausa (19/11):** JC pidió que todo el anexo use datos de la semilla. Codex recaptura las
+pantallas de Organizador y Administrador, que hoy muestran datos de las pruebas, y las seis que
+faltan. Las cinco de «Mi cuenta» ya son las definitivas. Cuando lleguen, se rehacen las filas y se
+miden de nuevo con `tools/Pantallas/Recortar.ps1` y el mismo cálculo.
+
 ## Cómo se eligió cada captura
 
 - **Una sola versión por pantalla: la que coincide con cómo se ve hoy la aplicación al
@@ -69,11 +74,11 @@ siguiente; no achiques ninguna imagen.
 >
 > Figura P1.1 — Detalle del formulario de acceso, en la pantalla «Inicio de sesión».
 
-**Pantalla 2. Crear cuenta (frmCrearUsuario).** ⏸ Todavía no: Codex está cambiando la verificación del correo que sigue al registro (el código pasa a un archivo que se abre fuera de la aplicación). Se recaptura cuando lo commitee. Dejá el título y seguí.
+**Pantalla 2. Crear cuenta (frmCrearUsuario).** ⏸ Todavía no: Codex cambió la verificación del correo en `5a4b645` (el código va a un archivo que se abre fuera de la aplicación); falta la captura nueva. Dejá el título y seguí.
 
-**Pantalla 3. Cambiar contraseña (frmCambiarContraseña).** ⏸ Todavía no: Codex está cambiando esta pantalla (cierre de la recuperación). Dejá el título y seguí.
+**Pantalla 3. Cambiar contraseña (frmCambiarContraseña).** ⏸ Todavía no: Codex la cambió en `5a4b645`; falta la captura nueva. Dejá el título y seguí.
 
-**Pantalla 4. Recuperar contraseña (frmCambiarContraseña, modo recuperación).** ⏸ Todavía no: Codex está sacando el botón «Abrir bandeja»; espera la confirmación de JC. Dejá el título y seguí.
+**Pantalla 4. Recuperar contraseña (frmCambiarContraseña, modo recuperación).** ⏸ Todavía no: Codex cerró la recuperación en `5a4b645`; falta la captura nueva. Dejá el título y seguí.
 
 **Cliente**
 
@@ -196,7 +201,7 @@ siguiente; no achiques ninguna imagen.
 >
 > Figura P12.1 — Detalle de los planes y los beneficios, en la pantalla «Mi suscripción».
 
-**Pantalla 13. Solicitar ser Organizador (frmSolicitudOrganizador).** ⏸ Todavía no: Codex está cambiando la confirmación del teléfono, que también usaba la bandeja. Dejá el título y seguí.
+**Pantalla 13. Solicitar ser Organizador (frmSolicitudOrganizador).** ⏸ Todavía no: Codex cambió la confirmación del teléfono en `5a4b645`; falta la captura nueva. Dejá el título y seguí.
 
 **Organizador**
 

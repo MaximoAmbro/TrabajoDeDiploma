@@ -70,7 +70,7 @@
 >    cuál.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), las minutas (p. 44), los parámetros (p. 33), «Arquitectura e implementación» (pp. 57 a 61), todos los diagramas con sus textos (pp. 71 y 86 a 89), y el anexo nuevo «Pantallas del sistema» (después de la p. 105), salvo seis pantallas marcadas ⏸.
+> ## ✅ HOY SOLO SE PUEDE PEGAR: introducción, planteo del problema, objetivos y justificación (pp. 9 a 11), los requerimientos y las reglas (pp. 23 y 25 a 27), los parámetros (p. 33), la priorización y la estimación de costos (pp. 35, 36 y 38), el borrado de la primera copia de minutas y prototipos (pp. 39 y 40), la descripción funcional (p. 40), las minutas (p. 44), «Arquitectura e implementación» (pp. 57 a 61), las especificaciones CU-09 a CU-21 (después de la p. 85), todos los diagramas con sus textos (pp. 71 y 86 a 89).
 >
 > **Todo lo demás está en pausa** (⏸ en su lugar): el sistema se está ampliando y cambian los
 > requerimientos, las reglas, los casos de uso, las pruebas, la arquitectura, las cifras y todas
@@ -467,7 +467,7 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 
 ## Página 23 — Requerimientos funcionales
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (19/11).** Si ya la habías pegado antes, volvé a pegarla: entran los requerimientos y las reglas de la versión 2.6.
 
 **RF-10, criterio de aceptación. Reemplazar:**
 
@@ -483,6 +483,74 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-02 · p\. 23 :: ^\*\*B-03
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-03 · p\. 23 :: ^\*\*B-04
+
+**Después del requerimiento 13 y antes de la «Nota sobre los requerimientos RF-12 y RF-13», agregar**
+(mismo formato que los anteriores: número y nombre, descripción, criterio de aceptación):
+
+> 14. Verificación del correo
+> Confirmar, con un código de un solo uso enviado al correo, que la cuenta de Cliente pertenece a
+> quien se registra, antes de permitirle comprar.
+> Criterio de aceptación: El sistema no debe permitir iniciar una compra sin el correo
+> verificado. El código vence, admite un número limitado de intentos, no sirve dos veces y no se
+> muestra en ninguna pantalla de la aplicación.
+>
+> 15. Recuperación de la contraseña
+> Permitir restablecer una contraseña olvidada con un código de un solo uso enviado al correo de
+> la cuenta.
+> Criterio de aceptación: El sistema debe responder lo mismo exista o no la cuenta, validar la
+> contraseña nueva con las mismas reglas que el registro, anular el código anterior al emitir uno
+> nuevo y registrar en la auditoría cada restablecimiento, exitoso o rechazado.
+>
+> 16. Registro de auditoría
+> Registrar las operaciones relevantes con el usuario, la acción, la entidad afectada, la fecha y
+> el resultado.
+> Criterio de aceptación: El Administrador de la plataforma debe poder consultar el registro
+> filtrado por período y por acción, y ningún otro perfil debe poder consultarlo.
+>
+> 17. Protección de la sesión y de la contraseña
+> Cerrar una sesión sin actividad después de un plazo configurable, con aviso previo, y exigir
+> una fortaleza mínima a toda contraseña nueva.
+> Criterio de aceptación: La aplicación debe avisar antes del cierre y cerrar la sesión al vencer
+> el plazo. Debe rechazar una contraseña que no alcance el puntaje mínimo y mostrar la fortaleza
+> mientras se escribe.
+>
+> 18. Mapa de sectores
+> Mostrar los sectores de un evento en un mapa orientativo, con su precio y su disponibilidad.
+> Criterio de aceptación: Elegir un sector en el mapa debe agregarlo al armado del paquete por el
+> mismo camino que la tabla, y un sector agotado no debe poder elegirse.
+>
+> 19. Portadas de los eventos
+> Permitir al Organizador cargar una imagen de portada para cada evento y mostrarla en el catálogo.
+> Criterio de aceptación: La imagen debe reducirse y guardarse; un archivo que no es una imagen, o
+> que supera el tamaño máximo, debe rechazarse; un evento sin portada debe mostrar una generada.
+>
+> 20. Solicitud para ser Organizador
+> Permitir a un Cliente solicitar ser Organizador, con los datos del responsable, del local y de
+> la cuenta bancaria, y al Administrador de la plataforma aprobar o rechazar la solicitud.
+> Criterio de aceptación: La solicitud debe exigir un teléfono confirmado y validar el CUIT y el
+> CBU. La decisión del Administrador debe requerir un motivo; aprobarla debe cambiar el perfil a
+> Organizador y crear el local.
+>
+> 21. Publicación explícita y revisión del primer evento
+> Publicar un evento solo cuando el Organizador lo decide, y enviar a revisión el primer evento de
+> un Organizador nuevo.
+> Criterio de aceptación: El sistema no debe publicar un evento sin un sector con capacidad. El
+> primer evento debe quedar en revisión hasta que un Administrador lo apruebe o lo rechace con un
+> motivo; un evento rechazado vuelve a borrador, con el motivo a la vista del Organizador.
+>
+> 22. Tres perfiles de usuario
+> Distinguir al Cliente, al Organizador y al Administrador de la plataforma, cada uno con su menú
+> y sus permisos.
+> Criterio de aceptación: Cada perfil debe acceder solo a sus operaciones; el Organizador debe
+> operar solo sobre sus locales, y solo un Administrador debe poder crear otro Administrador.
+
+**Después de la «Nota sobre los requerimientos RF-12 y RF-13», agregar** con el mismo formato:
+
+> Nota sobre los requerimientos RF-14 a RF-22. Se incorporaron en la versión 2.6, durante la
+> construcción del prototipo, con sus reglas (RN-43 a RN-54) y sus casos de uso (CU-14 a CU-21).
+> Sus puntos no se estimaron: se midieron después de construirlos (ver «Priorización de
+> requerimientos funcionales» y «Estimación de costos»).
+
 
 ## Página 24 — Requerimientos no funcionales, punto 3 (RNF-03)
 
@@ -512,7 +580,7 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 
 ## Página 25 — Reglas de negocio
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (19/11).** Si ya la habías pegado antes, volvé a pegarla: entran los requerimientos y las reglas de la versión 2.6.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-01 · p\. 25 :: ^\*\*A-02
 
@@ -520,16 +588,30 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 «las especificaciones de casos de uso (CU-01 a CU-21)».
 
 **Tabla «Usuarios y cuentas» (en la p. 25 o en la 26: es la que tiene RN-01 a RN-05).
-Agregar** después de RN-05:
+Reemplazar** la fila de RN-05 por:
 
-| RN-40 | Cambiar la contraseña exige la contraseña actual. Una contraseña actual incorrecta cuenta como intento fallido a los efectos de RN-04, y con la cuenta bloqueada el cambio se rechaza. | A | RF-02 / CU-09 |
+| RN-05 | Un usuario tiene un único perfil excluyente: Cliente, Organizador o Administrador de plataforma. El administrador de plataforma no es dueño de locales; el organizador administra solo los locales, eventos e ingresos de su cuenta. | E | RF-22 / CU-05 |
 |---|---|---|---|
-| RN-41 | Un cliente solo consulta y opera sobre sus propias compras, entradas, pagos, pólizas, suscripción e inscripciones en listas de espera. El Administrador puede hacerlo sobre las de cualquier cliente. | A | RF-02 / CU-05 |
-| RN-42 | La gestión de eventos, sectores y locales, la consulta de las listas de espera y el control de ingreso son exclusivos del perfil Administrador. Los reportes se rigen por RN-34. | A | RF-12 / CU-02 |
+
+**Agregar** después de RN-05 (si ya habías pegado RN-40, RN-41 y RN-42 de una versión anterior
+de esta lista, reemplazalas por estas):
+
+| RN-40 | Para cambiar una contraseña se debe comprobar la contraseña actual. El rechazo no revela si el correo existe, si la contraseña es incorrecta o si la cuenta está bloqueada; los intentos y el bloqueo se aplican internamente. | A | RF-02 / CU-09 |
+|---|---|---|---|
+| RN-41 | Las operaciones sobre datos privados de una cuenta solo pueden devolverlos o modificarlos para el usuario autenticado titular de esa cuenta. La sesión conserva una identidad verificada y no acepta como autorización un objeto de usuario alterado por quien llama. | A | RF-02 / CU-05 |
+| RN-42 | **Dada de baja.** La autorización por perfil para gestión e ingreso fue reemplazada por RN-48; la autorización por pertenencia a los datos del Organizador, incluidos sectores, listas de espera e ingresos, está en RN-49. Los reportes se rigen por RN-34. El número no se reasigna. | — | — |
+| RN-43 | Una cuenta de Cliente debe verificar el correo antes de iniciar una compra. El código de verificación se envía al correo registrado; la entrega usa la bandeja simulada del sistema. | A | RF-14 / CU-04, CU-14 |
+| RN-44 | Los códigos de verificación de correo, recuperación de contraseña y confirmación telefónica son de un solo uso, se almacenan protegidos, vencen según `CORREO_CODIGO_MIN` y admiten como máximo `CORREO_CODIGO_INTENTOS_MAX` intentos. La recuperación cambia la contraseña mediante las mismas validaciones y el mismo hash que el registro. | A | RF-14, RF-15 / CU-14 a CU-16 |
+| RN-45 | Las operaciones de inicio de sesión, cambio de contraseña, compras, devoluciones, control de ingreso y gestión de eventos se registran en `Auditoria` con el usuario, la acción, la entidad afectada, la fecha y el resultado. Solo el Administrador de plataforma puede consultar esos registros, con filtros por período y acción. | A | RF-16 / CU-20 |
+| RN-46 | Una sesión sin actividad se cierra al cumplirse `SESION_INACTIVIDAD_MIN`. La aplicación avisa con `SESION_AVISO_SEG` segundos de anticipación; cualquier actividad reinicia el plazo. | A | RF-17 / CU-05 |
+| RN-47 | Una contraseña nueva debe cumplir la longitud y composición mínima de RN-02 y alcanzar el puntaje configurado en `PWD_FORTALEZA_MIN`, calculado por la variedad de minúsculas, mayúsculas, números y símbolos. | A | RF-17 / CU-04, CU-09, CU-15 |
+
+*Razón:* texto de `docs/02-reglas-negocio.md` (Codex), sin cambios; la cuarta columna usa la
+numeración RF-14 a RF-22 y CU-14 a CU-21 aprobada por JC el 19/11.
 
 ## Página 26 — Reglas de negocio
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (19/11).** Si ya la habías pegado antes, volvé a pegarla: entran los requerimientos y las reglas de la versión 2.6.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-02 · p\. 26 :: ^> \*\*Resuelta el 14/11
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-03 · p\. 26 :: ^\*\*A-04
@@ -553,7 +635,7 @@ Agregar** después de RN-05:
 
 ## Página 27 — Reglas de negocio
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (19/11).** Si ya la habías pegado antes, volvé a pegarla: entran los requerimientos y las reglas de la versión 2.6.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-06 · p\. 27 :: ^\*\*A-07
 
@@ -595,6 +677,30 @@ Agregar** después de RN-05:
 en la misma transacción que reserva el cupo; el parámetro es `PRIORIDAD_ESPERA_MINUTOS` (15) y lo
 prueba CP-125 (ocho variantes). Con la ventana construida, «prioridad en lista de espera» de las
 pp. 27, 30, 40, 55 y 82 ya es exacto y no se toca.
+
+**Tabla de reportes y listas de espera (la que tiene RN-34). Reemplazar** la fila de RN-34 por:
+
+| RN-34 | El administrador de plataforma accede a la administración global y a los reportes globales; los organizadores acceden a reportes limitados a eventos de sus propios locales. | A | RF-11 / CU-08 |
+|---|---|---|---|
+
+**Misma tabla, agregar al final:**
+
+| RN-48 | La gestión de locales, eventos y control de ingreso requiere perfil Organizador. | A | RF-22 / CU-02, CU-10 a CU-12 |
+|---|---|---|---|
+| RN-49 | Un Organizador solo puede consultar o modificar locales, eventos, sectores, ingresos y listas de espera pertenecientes a sus locales. | A | RF-22 / CU-02, CU-07, CU-10 a CU-12 |
+
+**Tabla nueva, a continuación, con el mismo formato y el título «Solicitudes de Organizador y
+revisión del primer evento»:**
+
+| RN-50 | Solo una cuenta Cliente puede presentar una solicitud para ser Organizador y no puede mantener más de una solicitud pendiente. La solicitud pendiente no cambia el perfil ni concede permisos de Organizador. | A | RF-20 / CU-16 |
+|---|---|---|---|
+| RN-51 | Antes de presentar la solicitud, el responsable debe ingresar un teléfono argentino válido y confirmarlo mediante un código de un solo uso enviado por el mecanismo de códigos del sistema. | A | RF-20 / CU-16 |
+| RN-52 | La solicitud valida el dígito verificador del CUIT y del CBU; también admite un alias bancario con el formato definido. La documentación debe ser una imagen PNG o JPEG válida, comprimida y de hasta 512 KB. La verificación externa de identidad es simulada y no sustituye la revisión del Administrador. | A | RF-20 / CU-16 |
+| RN-53 | Solo el Administrador de plataforma puede aprobar o rechazar solicitudes de Organizador. Ambas decisiones requieren un motivo de hasta 200 caracteres y registran la identidad del revisor y la fecha; aprobar cambia el perfil a Organizador y crea el local solicitado. | A | RF-20 / CU-18 |
+| RN-54 | La primera publicación de un Organizador se envía a revisión del Administrador y no aparece en el catálogo ni admite ventas mientras está en revisión. El Administrador puede aprobarla o rechazarla; para rechazar debe ingresar un motivo no vacío de hasta 500 caracteres. El rechazo devuelve el evento a Borrador y conserva el motivo para el Organizador. Si vuelve a publicarlo antes de que se haya aprobado un evento suyo, vuelve a revisión. Tras su primera aprobación, sus publicaciones siguientes son directas. | A | RF-21 / CU-17, CU-19 |
+
+*Razón:* texto de `docs/02-reglas-negocio.md` (Codex), sin cambios. De RN-01 a RN-54 quedan 52
+reglas vigentes: RN-27 y RN-42 están dadas de baja y sus números no se reasignan.
 
 ## Página 28 — Factibilidad económica
 
@@ -638,7 +744,7 @@ pp. 27, 30, 40, 55 y 82 ya es exacto y no se toca.
 
 ## Página 35 — Priorización
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está. Incluye la sección nueva «Estimación de costos»: su tabla suma los puntos de cada requerimiento, y llegan requerimientos nuevos.
+**✅ Se pega hoy (19/11).** Incluye la sección nueva «Estimación de costos», con la ampliación de la versión 2.6 medida y aprobada por JC. Si ya la habías pegado antes, volvé a pegarla entera: cambió.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-04 · p\. 35 :: ^\*\*B-05
 
@@ -649,7 +755,30 @@ estimación absoluta.»). Pegar completo:
 
 ## Página 36 — Priorización de requerimientos funcionales
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (19/11).** Si ya la habías pegado antes, volvé a pegarla: entran los requerimientos y las reglas de la versión 2.6.
+
+**Tabla «Priorización de requerimientos funcionales». Agregar** al final, con el mismo formato,
+estas nueve filas:
+
+| RF-14 | Verificación del correo | Must | 1 | Hace cumplir RN-43: sin el correo verificado no se compra. |
+|---|---|---|---|---|
+| RF-15 | Recuperación de la contraseña | Must | 2 | Hace cumplir RN-44: devuelve el acceso a quien olvidó la contraseña, sin conocer la actual. |
+| RF-16 | Registro de auditoría | Must | 1 | Hace cumplir RN-45: deja evidencia de las operaciones sensibles. |
+| RF-17 | Protección de la sesión y de la contraseña | Must | 1 | Hace cumplir RN-46 y RN-47. |
+| RF-18 | Mapa de sectores | Should | 1 | Mejora la elección del sector; la tabla ya permitía elegirlo. |
+| RF-19 | Portadas de los eventos | Should | 1 | Mejora la presentación del catálogo; no agrega una operación. |
+| RF-20 | Solicitud para ser Organizador | Must | 3 | Hace cumplir RN-50 a RN-53: ninguna cuenta se vuelve Organizador sin revisión. |
+| RF-21 | Publicación explícita y revisión del primer evento | Must | 2 | Hace cumplir RN-06 y RN-54: un evento llega al catálogo solo por decisión del Organizador y, la primera vez, después de una revisión. |
+| RF-22 | Tres perfiles de usuario | Must | 1 | Hace cumplir RN-05, RN-48 y RN-49: separa la administración de la plataforma de la de los locales. |
+
+**Nota al pie de esa tabla, sobre RF-14 a RF-22:**
+
+> Los puntos de RF-14 a RF-22 no se estimaron: se midieron después de construir cada
+> requerimiento, contando las líneas de código y de pruebas que agregó, a razón de unas 250 líneas
+> por punto. Esa relación es la mediana de cuatro requerimientos estimados (RF-01, RF-10, RF-11 y
+> RF-13) medidos con la misma vara; varía entre 129 y 268 líneas por punto. Se redondea al entero
+> más cercano, con un mínimo de un punto. Criterio de la categoría: lo que hace cumplir una regla
+> o cierra un riesgo de seguridad es Must; el resto de lo construido es Should.
 
 **Fila RF-09. Reemplazar:**
 
@@ -671,6 +800,12 @@ estimado», y la columna «Puntos», a «Puntos estimados». La tabla no se reca
 > puntos se liberan sin afectar a ningún requerimiento Must, como prevé la mitigación
 > descrita: la categoría Could funcionó como amortiguador. La tabla de distribución se
 > conserva como la estimación aprobada.
+
+**Debajo de la nota anterior, agregar:**
+
+> **Versión 2.6.** Los nueve requerimientos agregados suman 13 puntos medidos: 11 son Must
+> (84,6 %: RF-14 a RF-17 y RF-20 a RF-22) y 2 son Should (15,4 %: RF-18 y RF-19). No se suman a
+> la distribución anterior, que es la de la estimación.
 
 ## Página 37
 
@@ -696,12 +831,23 @@ justificación:
 
 ## Página 38 — Orden de implementación derivado
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (19/11).** Si ya la habías pegado antes, volvé a pegarla: entran los requerimientos y las reglas de la versión 2.6.
 
 **Fila de la Fase 8:**
 - en la columna Requerimientos, «RF-09 y RF-10, según margen disponible» pasa a «RF-10 (RF-09
   pasó a Won't have en la versión 2.5)»;
 - en la columna Pts, «11» pasa a «3».
+
+**Tabla, agregar al final** la fila:
+
+| Fase 9 — Ampliación de la versión 2.6 | Must y Should | RF-14 a RF-22 | 13 |
+|---|---|---|---|
+
+**Debajo de la tabla, antes de «Riesgo de concentración», agregar:**
+
+> Los puntos de la Fase 9 se midieron después de construirla (ver «Estimación de costos»). El
+> rediseño de la interfaz (8 puntos) y la revisión de pertenencia (1 punto) no son
+> requerimientos funcionales y no figuran en esta tabla.
 
 **En «Riesgo de concentración»:** «es decir el 52,6 % del esfuerzo total» pasa a «es decir el
 52,6 % del esfuerzo total estimado».
@@ -726,7 +872,7 @@ que queda dice «Fecha: x».
 
 ## Página 40 — Descripción funcional
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (19/11).** Si ya la habías pegado antes, volvé a pegarla: entran la solicitud de Organizador, la publicación y la revisión, y la seguridad de la cuenta.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*B-09 · p\. 40 :: ^> Si se elige la opción \(b\) de D-6
 
@@ -923,7 +1069,7 @@ contando. En los dos casos el nivel se conserva hasta la reevaluación mensual.�
 
 ## Páginas 57 a 61 — «Implementación» pasa a «Arquitectura e implementación»
 
-**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad. **Cambio del 19/11:** en «Patrones de diseño», el párrafo de **Strategy** cambió en su segunda mitad (el envío de los códigos). Si ya pegaste esta sección, reemplazá solo ese párrafo.
 
 @@- docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^## Anexo 1 — Texto para D-1 :: ^\*Razón:\* código\. Las 4 capas
 
@@ -1032,7 +1178,7 @@ diagrama general de la p. 71.
 
 ## Después de la página 85 — Especificaciones nuevas CU-09 a CU-21
 
-**⏸ NO PEGAR TODAVÍA: página en pausa, depende del código.** Saltéala. Si ya la pegaste, dejala como está.
+**✅ Se pega hoy (19/11).** Las trece especificaciones están completas: CU-14 y CU-15 describen la verificación y la recuperación con el código fuera de la aplicación.
 
 **Insertar** a continuación de CU-08, con el mismo formato que CU-01 a CU-08 (los mismos estilos
 de título y de campos). No llevan diagrama chico.
@@ -1048,8 +1194,10 @@ a **16,0 cm** (si ya la habías pegado, reemplazala: cambió). Texto debajo del 
 
 @@- docs/PARA-MAXIMO-DIAGRAMAS.md :: ^## 7\. Modelo de dominio conceptual >> ^\*\*Texto para el documento :: ^\*\*Justificación de relaciones:\*\*
 
-**Diagrama de clases:** reemplazar la figura por nueve figuras, **una por página**, cada una con
-su subtítulo. Si ya habías pegado las siete anteriores, reemplazalas todas: cambiaron.
+**Diagrama de clases:** reemplazar la figura por diez figuras, **una por página**, cada una con
+su subtítulo. Si ya habías pegado las siete anteriores, reemplazalas todas: cambiaron. **Si ya
+pegaste las nueve del 18/11:** agregá la 6b después de la 6, y volvé a pegar el texto de abajo
+(cambió el párrafo de la capa de negocio).
 
 | Subtítulo | Imagen (`docs/diagramas/`) | Ancho |
 |---|---|---|
@@ -1061,6 +1209,7 @@ su subtítulo. Si ya habías pegado las siete anteriores, reemplazalas todas: ca
 | 5. Negocio: administración | `clases-5-negocio-administracion.png` | **16,0 cm** |
 | 5b. Negocio: cuenta y seguridad | `clases-5b-negocio-cuenta-seguridad.png` | **16,0 cm** |
 | 6. Negocio: verificación de identidad, perfil y pertenencia | `clases-6-autorizacion.png` | **16,0 cm** |
+| 6b. Negocio: escritura de la auditoría | `clases-6b-auditoria.png` | **16,0 cm** |
 | 7. Datos: repositorios | `clases-7-datos.png` | **14,3 cm** (página entera) |
 
 Texto, debajo del título «Diagrama de clases»:
@@ -1075,6 +1224,8 @@ Texto, debajo del título «Diagrama de clases»:
 | Strategy: formato de los reportes | `clases-8b-patron-strategy.png` | **15,5 cm** |
 | Jerarquía de Reporte | `clases-8c-jerarquia-reportes.png` | **16,0 cm** (es baja: puede compartir página con el texto) |
 | Strategy: envío de códigos y verificación de identidad | `clases-8d-patron-strategy-cuenta.png` | **13,9 cm** (página entera) |
+
+**Si ya pegaste la figura de Strategy de códigos del 18/11, reemplazala** (19/11): cambió un signo de visibilidad. En el texto de abajo cambió una oración del segundo párrafo de Strategy («…que escribe el mensaje en un archivo de correo fuera de la aplicación…»).
 
 Texto, debajo del título:
 
@@ -1200,7 +1351,7 @@ filtro de fecha sigue sin rótulo), U-10 (el foco de «Crear cuenta» empieza en
 
 ## Después de la página 105 — Anexo nuevo «Pantallas del sistema»
 
-**✅ Se pega hoy (19/11), salvo las seis pantallas marcadas ⏸.** De esas seis, pegá solo el título («Pantalla 2. …») y seguí con la siguiente: las imágenes llegan cuando Codex termine. Va como anexo nuevo, después del anexo A02 y antes de la matriz de trazabilidad, empezando en página nueva.
+**⏸ NO PEGAR TODAVÍA (19/11): Codex está recapturando las pantallas con los datos de la semilla.** Las de Organizador y Administrador muestran hoy datos de las pruebas («test Evento 22»), y faltan seis pantallas. Cuando lleguen, el anexo se pega entero de una vez. Va como anexo nuevo, después del anexo A02 y antes de la matriz de trazabilidad, empezando en página nueva.
 
 **El mapa de sectores (figura P7.2) va solo, en una página apaisada:** insertá un salto de sección «Página siguiente» antes y otro después, y poné en horizontal solo esa sección (*Disposición › Orientación › Horizontal*). Así el resto del anexo sigue vertical.
 
@@ -1550,7 +1701,7 @@ cifras, así que no cambia cuando se congelen los números.
 
 | Dos verificaciones dependen de una persona y de un dispositivo: la lectura de los códigos QR impresos con la cámara de un celular y el aspecto del PDF de los reportes en tres lectores. | Se hicieron una vez; no se repiten en cada corrida como los casos automáticos. |
 |---|---|
-| No existe recuperación de contraseña por correo. | Una contraseña olvidada la restablece el Administrador; el usuario solo puede cambiarla conociendo la actual (RN-40). |
+| El envío de los códigos de verificación y de recuperación es simulado: cada mensaje se escribe en un archivo de correo de la misma computadora, fuera de la aplicación. Por eso no demuestra que quien lee el código sea el titular del correo o del teléfono. | Es una decisión de configuración, no un hueco de arquitectura: el envío está implementado con el patrón Strategy, y pasar a correo real es elegir la estrategia `EnviadorSmtp`, que ya existe, y configurar el servidor, sin cambiar la capa de negocio. La aplicación no puede abrir ni leer ese archivo, y todo restablecimiento, exitoso o rechazado, queda en el registro de auditoría con la cuenta y la fecha. |
 | La aplicación de escritorio accede a la base con la cuenta de Windows del usuario. | Las verificaciones de perfil del negocio (RN-34, RN-41, RN-42) protegen la operación desde la aplicación; en producción tienen que acompañarse de permisos en la base o de un servicio intermedio. |
 
 ## Página 111 — Trabajo futuro

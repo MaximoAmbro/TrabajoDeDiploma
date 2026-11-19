@@ -41,8 +41,9 @@ ejecuciones. Donde este archivo da un texto para el mismo lugar, **vale este**.
 ## 2. Reglas de negocio (páginas 25 a 27, 32, 33 y 55)
 
 **A-01 · p. 25 · R.** Dice: «los once requerimientos funcionales (RF-01 a RF-11)». Poner: «los
-trece requerimientos funcionales (RF-01 a RF-13)». *Razón:* el propio documento agrega RF-12 y
-RF-13 en la p. 23, y las reglas RN-06, RN-07 y RN-11 los citan como origen.
+veintidós requerimientos funcionales (RF-01 a RF-22)». *Razón:* el propio documento agrega RF-12
+y RF-13 en la p. 23, y la versión 2.6 agrega RF-14 a RF-22 (aprobados por JC el 19/11); las
+reglas citan esos requerimientos como origen.
 
 **A-02 · p. 26 · RN-11 · R.** Dice: «Un evento con entradas vendidas no puede eliminarse: sólo
 puede suspenderse o reprogramarse, conservando la trazabilidad de lo vendido.» Poner: «Un evento
@@ -163,14 +164,17 @@ exportables.» Poner: «El sistema debe mostrar tablas con datos ficticios, expo
 
 **B-03 · p. 23 · RF-12 · R.** Dice: «Permitir al Administrador crear, modificar y desactivar
 eventos, definiendo sus sectores, capacidades y precios.» Poner: «Permitir al Organizador
-crear, suspender y eliminar eventos de sus locales, agregar y quitar sus sectores con capacidad y
-precio, y fijar su período de preventa.» *Razón:* `GestorEventos` (completa T-7).
+crear, publicar, suspender y eliminar eventos de sus locales, agregar y quitar sus sectores con
+capacidad y precio, y fijar su período de preventa.» *Razón:* `GestorEventos` (completa T-7);
+publicar es explícito desde la versión 2.6 (RF-21).
 
 **B-04 · p. 35 · R+N.** Dice: «Los once requerimientos funcionales y los cinco no funcionales».
-Poner: «Los trece requerimientos funcionales y los cinco no funcionales».
+Poner: «Los veintidós requerimientos funcionales y los cinco no funcionales».
 - Dice: «nueve de los once requerimientos funcionales quedaran en esa categoría, concentrando
   alrededor del 85 % del esfuerzo». Poner: «diez de los trece requerimientos funcionales
-  quedaran en esa categoría, concentrando alrededor del 80 % del esfuerzo estimado».
+  estimados quedaran en esa categoría, concentrando alrededor del 80 % del esfuerzo estimado».
+  Esa proporción es la de la estimación aprobada; los nueve requerimientos de la versión 2.6 se
+  midieron después (ver «Estimación de costos») y no la modifican.
 - *Cuenta:* 49 + 5 + 8 = 62 de 78 puntos, que da 79,5 %.
 
 **B-05 · p. 37 · W-06 · R.** En la columna Motivo, dice: «Requiere hardware específico. El código
@@ -223,15 +227,33 @@ EventAura» hasta «nivel alcanzado y beneficios vigentes.», **por:**
 > anual, no otorga descuento: bonifica el seguro, habilita la preventa y da prioridad en la lista
 > de espera. Si un evento está agotado, el cliente puede inscribirse en su lista de espera.
 >
-> El sistema distingue tres perfiles. El Organizador registra sus locales, crea eventos con sus
-> sectores y su preventa, consulta las listas de espera de sus eventos, controla el ingreso y
-> genera cinco reportes de gestión exportables a PDF, limitados a sus propios eventos. El
-> Administrador de la plataforma no es dueño de locales: consulta los mismos reportes sobre todos
-> los eventos y el registro de auditoría, y da de alta a otros administradores.
+> El sistema distingue tres perfiles. Un cliente puede solicitar ser Organizador con los datos
+> del responsable, del local y de su cuenta bancaria; la solicitud no le da permisos hasta que el
+> Administrador de la plataforma la aprueba. El Organizador registra sus locales y crea eventos,
+> que quedan en borrador hasta que los publica, con sus sectores y su preventa; el primer evento
+> de un Organizador nuevo pasa por la revisión del Administrador antes de llegar al catálogo.
+> También consulta las listas de espera de sus eventos, controla el ingreso y genera cinco
+> reportes de gestión exportables a PDF, limitados a sus propios eventos. El Administrador de la
+> plataforma no es dueño de locales: revisa las solicitudes y los primeros eventos, consulta los
+> mismos reportes sobre todos los eventos y el registro de auditoría, y da de alta a otros
+> administradores.
+>
+> Para registrarse, el visitante crea una cuenta de Cliente y confirma su correo con un código de
+> un solo uso; sin el correo verificado no puede comprar. Quien olvida su contraseña la
+> restablece con un código enviado al correo de su cuenta, y la respuesta al pedido es la misma
+> exista o no la cuenta. Los códigos vencen, admiten un número limitado de intentos y sirven una
+> sola vez; pedir uno nuevo anula el anterior. En esta versión el envío es simulado: cada mensaje
+> se escribe en un archivo de correo fuera de la aplicación, que la aplicación no puede abrir ni
+> leer.
+> La sesión se cierra sola después de un período sin actividad, y toda contraseña nueva debe
+> alcanzar una fortaleza mínima. El inicio de sesión, los cambios de contraseña, la emisión de
+> códigos y los restablecimientos, exitosos o rechazados, quedan en el registro de auditoría.
 
 *Razón:* código. Cada afirmación sale de un gestor: `GestorEventos.Buscar`, `GestorPaquetes`,
 `GestorFidelizacion.CalcularDescuento`, `GestorCompras.Iniciar`, `Confirmar` y `Reembolsar`,
-`GestorIngresos`, `GestorSuscripciones`, `GestorListaEspera` y `GestorReportes`.
+`GestorIngresos`, `GestorSuscripciones`, `GestorListaEspera` y `GestorReportes`; los dos
+párrafos de la versión 2.6, de `GestorSolicitudesOrganizador`, `GestorEventos.Publicar`,
+`AprobarPrimerEvento` y `RechazarPrimerEvento`, `GestorCodigosCorreo`, `ControlSesionInactiva` y `GestorAuditoria` (commit `5a4b645`).
 
 > Si se elige la opción (b) de D-6, la oración de la lista de espera agrega: «; el sistema no
 > envía avisos (W-03)».
@@ -1208,9 +1230,11 @@ Reemplaza las páginas 57 a 61 completas, desde el título «Implementación» h
 > - **Strategy**, en la exportación de reportes: el negocio conoce solo la interfaz
 >   `IExportador`, y la pantalla de reportes elige la implementación (`ExportadorPDF`, con iText).
 >   También en el envío de los códigos de verificación y de recuperación: el negocio conoce solo
->   la interfaz `IEnviadorCodigos`. La versión entregada usa `EnviadorSimulado`, una bandeja de
->   correo simulada; la implementación `EnviadorSmtp`, que enviaría correos reales, existe pero no
->   se activa. Cambiar de una a otra no toca la capa de negocio.
+>   la interfaz `IEnviadorCodigos`. La versión entregada usa `EnviadorSimulado`, que escribe cada
+>   mensaje en un archivo de correo fuera de la aplicación; la aplicación indica dónde está, pero
+>   no puede abrirlo ni leerlo. La implementación `EnviadorSmtp`, que enviaría correos reales,
+>   existe pero no se elige. Pasar a correo real es elegir esa estrategia al iniciar la aplicación
+>   y configurar el servidor de correo: la capa de negocio no cambia.
 > - **Herencia en los reportes:** una clase abstracta `Reporte` con cinco especializaciones, una
 >   por reporte, creadas por `GestorReportes`.
 >
@@ -1699,10 +1723,6 @@ historial.
 
 **CU-14 – Verificar el correo**
 
-**⏸ Espera a Codex (19/11):** el paso 1 dice que el sistema muestra la bandeja con el código.
-Codex está cambiando eso: el código va a un archivo que se abre fuera de la aplicación. El paso 1
-se reescribe cuando lo commitee.
-
 **Id y nombre:** CU-14 – Verificar el correo
 
 **Descripción:** Permite a quien se registra confirmar que el correo de su cuenta es suyo, con un
@@ -1717,34 +1737,80 @@ puede iniciar una compra (RN-43).
 - El Visitante completó el registro (CU-04).
 
 **Flujo principal:**
-1. El sistema genera un código de un solo uso, lo envía a la bandeja simulada del correo
-   registrado y muestra la bandeja con el código y su vencimiento.
-2. El Visitante escribe el código y presiona «Confirmar correo».
-3. El sistema verifica que el código corresponda a ese correo, que no haya vencido y que no se
-   haya usado (RN-44).
+1. El sistema genera un código de un solo uso y lo envía al correo registrado (RN-44). Muestra
+   «Verificá tu correo» con el aviso «Si la cuenta existe, enviamos un código.» y dónde está el
+   archivo de correo simulado, que se abre fuera de la aplicación.
+2. El Visitante lee el código en su correo, lo escribe en «Código de verificación» y presiona
+   «Confirmar correo».
+3. El sistema verifica que el código corresponda a ese correo, que no haya vencido, que no se
+   haya usado y que no se haya superado el máximo de intentos (RN-44).
 4. El sistema marca el correo como verificado, informa «Correo verificado. Ya podés iniciar
    sesión y comprar.» y ofrece «Volver al acceso».
 
 **Flujo alternativo:**
 
-FA1 – Código incorrecto. En el paso 3, si el código no coincide, el sistema informa «El código no
-es correcto. Revisá el correo y volvé a intentar.» y cuenta el intento; superado el máximo de
-intentos (`CORREO_CODIGO_INTENTOS_MAX`), el código deja de servir. El Visitante vuelve al paso 2.
+FA1 – Código incorrecto, vencido o usado. En el paso 3, si el código no sirve, el sistema informa
+«El código no es válido o venció. Solicitá uno nuevo.» y cuenta el intento; superado el máximo
+(`CORREO_CODIGO_INTENTOS_MAX`), el código deja de servir. El Visitante vuelve al paso 2.
 
-FA2 – Código vencido o usado. En el paso 3, si el código venció o ya se usó, el sistema informa
-«El código venció o ya se usó. Solicitá uno nuevo.». Registrarse otra vez con el mismo correo
-envía un código nuevo y anula el anterior, sin cambiar la contraseña de la cuenta.
+FA2 – Código nuevo. Registrarse otra vez con el mismo correo envía un código nuevo y anula el
+anterior, sin cambiar la contraseña de la cuenta. La respuesta es la misma que la de un registro
+nuevo, para no revelar qué correos tienen cuenta.
 
 **Postcondiciones:**
 - La cuenta tiene el correo verificado y el Cliente puede comprar (RN-43).
 - El código quedó usado y no vuelve a servir (RN-44).
+- La emisión del código quedó en el registro de auditoría (RN-45).
 
 ---
 
 **CU-15 – Recuperar contraseña**
 
-**⏸ Espera a JC:** el flujo depende de cómo se cierre el acceso a la bandeja simulada desde la
-pantalla de recuperación (informe a JC del 18/11). No se pega hasta entonces.
+**Id y nombre:** CU-15 – Recuperar contraseña
+
+**Descripción:** Permite a quien olvidó su contraseña restablecerla con un código de un solo uso
+enviado al correo de su cuenta, sin conocer la contraseña actual.
+
+**Actor:** Usuario registrado (Cliente, Organizador o Administrador)
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Usuario no inició sesión.
+
+**Flujo principal:**
+1. En el acceso, el Usuario presiona «Recuperar contraseña».
+2. El Usuario escribe su correo y presiona «Enviar código».
+3. El sistema genera un código de un solo uso, lo envía al correo de la cuenta (RN-44) y muestra
+   «Si la cuenta existe, enviamos un código.», con la ubicación del archivo de correo simulado,
+   que se abre fuera de la aplicación.
+4. El Usuario lee el código en su correo, lo escribe en «Código de recuperación», escribe y
+   confirma la contraseña nueva, y presiona «Restablecer contraseña».
+5. El sistema valida la contraseña nueva con las mismas reglas que el registro (RN-02 y RN-47) y
+   verifica el código (RN-44).
+6. El sistema guarda la contraseña nueva con el mismo hash que el registro, marca el código como
+   usado, registra el restablecimiento en la auditoría (RN-45) e informa «La contraseña se
+   actualizó. Ya podés iniciar sesión.».
+
+**Flujo alternativo:**
+
+FA1 – Correo sin cuenta. En el paso 3, si no hay una cuenta con ese correo, el sistema responde
+igual y tarda lo mismo (al menos un segundo), para no revelar qué correos tienen cuenta. No se
+genera un código que sirva.
+
+FA2 – Código incorrecto, vencido o usado. En el paso 5, si el código no sirve, el sistema informa
+«El código no es válido o venció. Solicitá uno nuevo.», cuenta el intento y registra el rechazo en
+la auditoría. La contraseña no cambia.
+
+FA3 – Contraseña débil. En el paso 5, si la contraseña nueva no cumple RN-02 o no alcanza la
+fortaleza mínima (RN-47), el sistema lo indica en el campo y la contraseña no cambia.
+
+FA4 – Código nuevo. Si el Usuario pide otro código, el anterior deja de servir.
+
+**Postcondiciones:**
+- La cuenta tiene la contraseña nueva y el código quedó usado.
+- La emisión del código y el restablecimiento, exitoso o rechazado, quedan en el registro de
+  auditoría.
 
 ---
 
@@ -1769,7 +1835,8 @@ permisos hasta que un Administrador la aprueba (CU-18).
 2. El sistema muestra los campos: responsable, CUIT, teléfono, nombre del local, dirección,
    capacidad, CBU o alias, y la documentación del local.
 3. El Cliente escribe su teléfono y presiona «Enviar código». El sistema envía un código de un
-   solo uso a la bandeja simulada; el Cliente lo escribe y presiona «Confirmar teléfono» (RN-51).
+   solo uso a ese teléfono (en esta versión, al archivo de mensajes simulado, que se abre fuera de
+   la aplicación); el Cliente lo escribe y presiona «Confirmar teléfono» (RN-51).
 4. El Cliente completa los demás campos, adjunta la habilitación o constancia del local como
    imagen y presiona «Enviar solicitud».
 5. El sistema valida el CUIT y el CBU con su dígito verificador, o el formato del alias, y la
@@ -2013,9 +2080,11 @@ número que tocar.
 > estudiantes. Todos los importes de esta sección resultan de multiplicar las horas por V: si V
 > cambia, basta con repetir esa multiplicación.
 >
-> Las horas son horas-persona de trabajo de ingeniería y surgen de la escala de esfuerzo (un punto
-> equivale a cuatro horas). Cubren el desarrollo que esa escala estima; no se agregan horas de
-> relevamiento ni de documentación, que el proyecto no estimó por separado.
+> Las horas son horas-persona de trabajo de ingeniería, a razón de cuatro horas por punto de la
+> escala de esfuerzo. Cubren el desarrollo; no se agregan horas de relevamiento ni de
+> documentación, que el proyecto no estimó por separado.
+>
+> **Estimación aprobada.** Es la que surge de la priorización, y se conserva sin cambios:
 >
 > | Fase | Requerimientos | Puntos | Horas | Costo (horas × V) |
 > |---|---|---|---|---|
@@ -2023,9 +2092,33 @@ número que tocar.
 > | Fase 6 — Desarrollo ampliado, 2ª iteración | RF-06, RF-08, RF-13 | 18 | 72 | $2.196.000 |
 > | Fase 7 — Generación de reportes | RF-11 | 8 | 32 | $976.000 |
 > | Fase 8 — Ajustes finales | RF-10 | 3 | 12 | $366.000 |
-> | **Alcance construido** | | **70** | **280** | **$8.540.000** |
+> | Construido de lo estimado | | 70 | 280 | $8.540.000 |
 > | RF-09, estimado y no construido (Won't have desde la versión 2.5) | RF-09 | 8 | 32 | $976.000 |
 > | **Estimación aprobada** | | **78** | **312** | **$9.516.000** |
+>
+> **Ampliación de la versión 2.6, medida.** Lo construido después de la estimación no se estimó:
+> se midió, contando las líneas de código y de pruebas que agregó cada parte, a razón de unas 250
+> líneas por punto, la misma relación que tienen los requerimientos estimados. Va en filas
+> separadas, para que lo estimado y lo medido no se mezclen:
+>
+> | Trabajo | Requerimientos | Puntos | Horas | Costo (horas × V) |
+> |---|---|---|---|---|
+> | Fase 9 — Ampliación de la versión 2.6 | RF-14 a RF-22 | 13 | 52 | $1.586.000 |
+> | Rediseño de la interfaz | RNF-02, RNF-03 | 8 | 32 | $976.000 |
+> | Revisión de pertenencia (fase 8a) | — | 1 | 4 | $122.000 |
+> | **Ampliación medida** | | **22** | **88** | **$2.684.000** |
+>
+> La fila de la revisión de pertenencia mide el volumen de código que agregó, como las demás. El
+> peso de esa revisión no está en sus líneas sino en lo que verificó: 24 métodos en cinco
+> familias, descriptos en «Metodología de verificación», junto con la prueba de mutación.
+>
+> **Total.**
+>
+> | Concepto | Puntos | Horas | Costo (horas × V) |
+> |---|---|---|---|
+> | **Alcance construido** (70 estimados y construidos más 22 medidos) | **92** | **368** | **$11.224.000** |
+> | RF-09, estimado y no construido | 8 | 32 | $976.000 |
+> | **Total con RF-09** | **100** | **400** | **$12.200.000** |
 >
 > **Otros costos.** No hay costo de licencias: las herramientas empleadas (Visual Studio, SQL
 > Server Express y PlantUML) se usan en versiones gratuitas o provistas por la universidad. Los
@@ -2033,21 +2126,27 @@ número que tocar.
 >
 > **Sensibilidad al valor hora.**
 >
-> | Escenario | Valor hora | Alcance construido (280 h) | Estimación aprobada (312 h) |
+> | Escenario | Valor hora | Alcance construido (368 h) | Total con RF-09 (400 h) |
 > |---|---|---|---|
-> | V − 25 % | $22.875 | $6.405.000 | $7.137.000 |
-> | Supuesto | $30.500 | $8.540.000 | $9.516.000 |
-> | V + 25 % | $38.125 | $10.675.000 | $11.895.000 |
+> | V − 25 % | $22.875 | $8.418.000 | $9.150.000 |
+> | Supuesto | $30.500 | $11.224.000 | $12.200.000 |
+> | V + 25 % | $38.125 | $14.030.000 | $15.250.000 |
 >
-> Una variación de ±25 % en el valor hora mueve el costo de la estimación aprobada entre
-> $7.137.000 y $11.895.000. Como el costo es proporcional al valor hora, el resultado no depende
-> de ningún otro supuesto.
+> Una variación de ±25 % en el valor hora mueve el costo del alcance construido entre $8.418.000
+> y $14.030.000. Como el costo es proporcional al valor hora, el resultado no depende de ningún
+> otro supuesto.
 
 **Cuentas verificadas:**
-- 41 + 18 + 8 + 3 = 70 puntos, y 70 + 8 = 78.
-- Horas: 164 + 72 + 32 + 12 = 280, y 280 + 32 = 312.
-- Importes: 5.002.000 + 2.196.000 + 976.000 + 366.000 = 8.540.000, y 8.540.000 + 976.000 =
-  9.516.000, igual a 312 × 30.500.
+- Estimación aprobada: 41 + 18 + 8 + 3 = 70 puntos, y 70 + 8 = 78; 164 + 72 + 32 + 12 = 280 h, y
+  280 + 32 = 312; 312 × 30.500 = 9.516.000.
+- Ampliación: RF-14 1, RF-15 2, RF-16 1, RF-17 1, RF-18 1, RF-19 1, RF-20 3, RF-21 2 y RF-22 1 =
+  13; 13 + 8 + 1 = 22 puntos; 22 × 4 = 88 h; 88 × 30.500 = 2.684.000 (1.586.000 + 976.000 +
+  122.000).
+- Total: 70 + 22 = 92 puntos, 368 h, 368 × 30.500 = 11.224.000; 92 + 8 = 100 puntos, 400 h,
+  400 × 30.500 = 12.200.000.
+- Sensibilidad: 368 × 22.875 = 8.418.000; 400 × 22.875 = 9.150.000; 368 × 38.125 = 14.030.000;
+  400 × 38.125 = 15.250.000.
+- Aprobado por JC el 19/11 (puntos, reparto y costo).
 
 **Para JC, antes de pegar:**
 - **V es un supuesto mío con fuente oficial, para que lo confirmes o lo cambies.** Leí la
