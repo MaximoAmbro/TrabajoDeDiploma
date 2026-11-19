@@ -627,6 +627,8 @@ pp. 27, 30, 40, 55 y 82 ya es exacto y no se toca.
 
 **✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad.
 
+**Corrección de la tarde del 18/11:** las filas «Vigencia del código enviado por correo» e «Intentos para usar un código enviado por correo» citan **RN-44**, no RN-43. Si ya las pegaste con RN-43, cambiá solo ese número en las dos filas.
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-10 · p\. 33 :: ^\*\*A-11
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*A-11 · p\. 33 :: ^## 3\. Requerimientos y alcance

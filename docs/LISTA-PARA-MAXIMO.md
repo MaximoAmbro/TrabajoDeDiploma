@@ -716,6 +716,8 @@ documento.
 
 **✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad.
 
+**Corrección de la tarde del 18/11:** las filas «Vigencia del código enviado por correo» e «Intentos para usar un código enviado por correo» citan **RN-44**, no RN-43. Si ya las pegaste con RN-43, cambiá solo ese número en las dos filas.
+
 **A-10 · p. 33 · Parámetros configurables · R.**
 - **Borrar la fila** «Periodicidad de reevaluación de nivel | RN-23 | Mensual». No es un
   parámetro: no existe en la tabla `Parametros`.
@@ -731,8 +733,8 @@ documento.
 | Horas de ingreso antes del evento | RN-18 | 6 |
 | Horas de ingreso después del evento | RN-18 | 12 |
 | Minutos de prioridad de los suscriptores al liberarse un lugar | RN-35 | 15 |
-| Vigencia del código enviado por correo | RN-43 | 10 minutos |
-| Intentos para usar un código enviado por correo | RN-43 | 5 |
+| Vigencia del código enviado por correo | RN-44 | 10 minutos |
+| Intentos para usar un código enviado por correo | RN-44 | 5 |
 | Minutos de inactividad antes de cerrar la sesión | RN-46 | 15 |
 | Segundos de aviso antes del cierre por inactividad | RN-46 | 60 |
 | Puntaje mínimo de fortaleza de la contraseña (de 0 a 5) | RN-47 | 4 |
