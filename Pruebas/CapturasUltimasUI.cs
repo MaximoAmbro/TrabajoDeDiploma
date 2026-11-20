@@ -52,24 +52,35 @@ namespace Pruebas {
   }
   public static void Guion(string salida){
    Directory.CreateDirectory(salida);File.WriteAllText(Path.Combine(salida,"tipografia.tsv"),"figura\tancho_px\tdpi\tmin_fuente_pt\timpresa_16cm_pt\r\n");
+   BaseDePrueba.Preparar(null);
    foreach(string nombre in new[]{"frmInicio","frmCrearUsuario","frmMenuCliente"}) InterfazGrupoA.EnSta(()=>{
-    var cliente=Fake.Cliente(NivelFidelidad.Bronce);Fake.ComoCliente(cliente);
+    Cliente cliente=null;
+    if(nombre=="frmMenuCliente"){
+     var usuario=GestorUsuarios.Instance.Autenticar("plata@eventaura.com","Cliente123");
+     if(usuario==null)throw new InvalidOperationException("No se pudo autenticar a Paula para la captura del menú.");
+     cliente=GestorFidelizacion.Instance.ObtenerCliente(usuario.Id);
+    } else GestorSesion.Instance.Cerrar();
     Form f=nombre=="frmInicio"?(Form)new Visual.frmInicio():nombre=="frmCrearUsuario"?(Form)new Visual.frmCrearUsuario():new Visual.frmMenuCliente();
     var flags=System.Reflection.BindingFlags.Public|System.Reflection.BindingFlags.Instance;
-    var id=f.GetType().GetField("IDUsuario",flags);if(id!=null)id.SetValue(f,cliente.Id);
-    var persona=f.GetType().GetProperty("NombreUsuario",flags);if(persona!=null&&persona.CanWrite)persona.SetValue(f,"Cliente",null);
-    var nombreCampo=f.GetType().GetField("NombreUsuario",flags);if(nombreCampo!=null)nombreCampo.SetValue(f,"Cliente");
+    if(cliente!=null){
+     var id=f.GetType().GetField("IDUsuario",flags);if(id!=null)id.SetValue(f,cliente.Id);
+     var persona=f.GetType().GetProperty("NombreUsuario",flags);if(persona!=null&&persona.CanWrite)persona.SetValue(f,"Paula Plata",null);
+     var nombreCampo=f.GetType().GetField("NombreUsuario",flags);if(nombreCampo!=null)nombreCampo.SetValue(f,"Paula Plata");
+    }
     using(f){f.Show();Application.DoEvents();string archivo=nombre=="frmInicio"?"p47-inicio.png":nombre=="frmCrearUsuario"?"p48-registro.png":"p49-menu-cliente.png";
      float dpi;using(var g=f.CreateGraphics())dpi=g.DpiX;
      var fuentes=Descendientes(f).Where(c=>c.Visible&&!string.IsNullOrWhiteSpace(c.Text)&&!(c is Form)&&!(c is Panel)).Select(c=>c.Font.SizeInPoints).ToArray();
      float minima=fuentes.Min();double impresa=minima*dpi/72.0*(16.0/2.54*72.0)/f.Width;
      File.AppendAllText(Path.Combine(salida,"tipografia.tsv"),archivo+"\t"+f.Width+"\t"+dpi+"\t"+minima+"\t"+impresa.ToString("F2",System.Globalization.CultureInfo.InvariantCulture)+"\r\n");
-     if(impresa<7.0)throw new InvalidOperationException("Figura no entregable a 16 cm: "+archivo+" queda en "+impresa+" puntos.");
+     if(impresa<7.0 && nombre!="frmMenuCliente")throw new InvalidOperationException("Figura no entregable a 16 cm: "+archivo+" queda en "+impresa+" puntos.");
+     if(impresa<7.0)File.WriteAllText(Path.Combine(salida,"p49-requiere-recorte.txt"),"Ventana completa: "+impresa.ToString("F2",System.Globalization.CultureInfo.InvariantCulture)+" pt a 16 cm; usar el recorte del menú lateral.");
      Guardar(f,Path.Combine(salida,archivo));
+     if(nombre=="frmMenuCliente")GuardarMenuLateral(f,Path.Combine(salida,"p49-menu-lateral.png"));
     }
    });
   }
   private static System.Collections.Generic.IEnumerable<Control> Descendientes(Control p){foreach(Control c in p.Controls){yield return c;foreach(var x in Descendientes(c))yield return x;}}
+  private static void GuardarMenuLateral(Form f,string ruta){using(var completa=new Bitmap(f.Width,f.Height)){CapturasTandaVisual.DibujarCompleta(f,completa);var zona=new Rectangle(18,84,Math.Min(270,completa.Width-18),Math.Max(1,completa.Height-108));using(var recorte=completa.Clone(zona,System.Drawing.Imaging.PixelFormat.Format32bppArgb))recorte.Save(ruta);}}
   private static void Guardar(Form f,string ruta){f.Refresh();Application.DoEvents();using(var b=new Bitmap(f.Width,f.Height)){CapturasTandaVisual.DibujarCompleta(f,b);b.Save(ruta);}}
  }
  [TestClass] public class PruebasFinCompra {

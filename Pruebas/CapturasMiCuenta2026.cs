@@ -32,6 +32,8 @@ namespace Pruebas
                     menu.Location = new Point(30, 30);
                     menu.Show();
                     Application.DoEvents();
+                    Guardar(menu, Path.Combine(salida, "mi-cuenta.png"));
+                    GuardarMenuLateral(menu, Path.Combine(salida, "mi-cuenta-menu-lateral.png"));
                     menu.Controls.Find("btnEventos", true).OfType<Button>().Single().PerformClick();
                     var alternarVista = (Button)Descendientes(menu).First(c => c.Name == "btnVista");
                     alternarVista.PerformClick();
@@ -75,12 +77,21 @@ namespace Pruebas
         private static void Guardar(Form menu, string ruta)
         {
             menu.Activate(); menu.Refresh(); Application.DoEvents(); Thread.Sleep(200); Application.DoEvents();
-            using (var bitmap = new Bitmap(menu.ClientSize.Width, menu.ClientSize.Height))
+            using (var bitmap = new Bitmap(menu.Width, menu.Height))
             {
-                Point origen = menu.PointToScreen(Point.Empty);
-                using (var graphics = Graphics.FromImage(bitmap))
-                    graphics.CopyFromScreen(origen, Point.Empty, menu.ClientSize);
+                CapturasTandaVisual.DibujarCompleta(menu, bitmap);
                 bitmap.Save(ruta);
+            }
+        }
+
+        private static void GuardarMenuLateral(Form menu, string ruta)
+        {
+            using (var completa = new Bitmap(menu.Width, menu.Height))
+            {
+                CapturasTandaVisual.DibujarCompleta(menu, completa);
+                var zona = new Rectangle(18, 84, Math.Min(270, completa.Width - 18), Math.Max(1, completa.Height - 108));
+                using (var recorte = completa.Clone(zona, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+                    recorte.Save(ruta);
             }
         }
     }
