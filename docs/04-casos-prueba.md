@@ -301,7 +301,7 @@ sección 0).
 | CP-162 | PruebasVistasVisibles | Panel del administrador cargado como Administrador y después como cliente | Como Administrador muestra cinco indicadores; como cliente, rechazo RN-34 | RF-11, RF-22 | RN-34 | Vistas |
 | CP-163 | PruebasVistasVisibles | Botones de tres vistas, del estado vacío y de las pantallas de auditoría y de revisión de eventos (6 variantes) | Ningún botón corta su texto; los primarios se dibujan con el color primario en más del 60 % de su superficie | RF-05, RNF-03 | — | Vistas |
 | CP-164 | PruebasEsquemaInicio | Base de prueba a la que se le quitan, uno por uno, los objetos de los scripts 04 a 16; abrir el inicio de sesión (interfaz) | El diagnóstico nombra cada vez el primer objeto y el primer script que faltan; el inicio lo muestra dentro de la ventana y deshabilita el ingreso. Con la FK del script 16 restaurada, la base rechaza un local sin dueño | RF-12, RNF-04 | — | Esquema |
-| CP-165 | PruebasVistasVisibles | Sesión de un cliente: cargar el panel del administrador, pulsar «Crear administrador» y llamar al alta | Las tres se rechazan con RN-34 | RF-22 | RN-05 | Administradores |
+| CP-165 | PruebasVistasVisibles | Sesión de un cliente: cargar el panel del administrador, pulsar «Crear administrador» y llamar al alta | Las tres se rechazan con RN-34 | RF-22 | RN-34 | Administradores |
 | CP-166 | PruebasVistasVisibles | Administrador: desde su menú abre «Crear administrador» y completa el alta (interfaz) | La pantalla se titula «EventAura · Crear administrador» y avisa «Usuario creado con éxito.»; la cuenta queda con perfil Administrador y el menú sigue abierto | RF-22 | RN-05 | Administradores |
 | CP-167 | PruebasSeguridadCuenta | Cliente con el correo sin verificar que arma un paquete e inicia una compra | Los dos se rechazan con RN-43 | RF-14 | RN-43 | Seguridad de cuenta |
 | CP-168 | PruebasSeguridadCuenta | Alta de un cliente desde la pantalla; el código se lee del archivo de la bandeja simulada y se ingresa (interfaz) | El código queda en el archivo y no en la pantalla, y la interfaz no tiene forma de leerlo. Antes de ingresarlo el correo no está verificado; después sí, con el aviso «Ya podés iniciar sesión y comprar», y la auditoría registra la emisión del código | RF-14 | RN-43 | Seguridad de cuenta |
@@ -323,13 +323,13 @@ sección 0).
 | CP-184 | PruebasSolicitudesOrganizador | Cliente con el teléfono confirmado presenta una solicitud válida y vuelve a iniciar sesión | La solicitud se guarda; el perfil sigue siendo Cliente y no puede ver locales (RN-48) ni las solicitudes pendientes (RN-34) | RF-20, RF-22 | RN-50 | Solicitudes |
 | CP-185 | PruebasSolicitudesOrganizador | CUIT con el dígito verificador incorrecto | Rechazo RN-52 con el mensaje del CUIT | RF-20 | RN-52 | Solicitudes |
 | CP-186 | PruebasSolicitudesOrganizador | CBU con el dígito verificador incorrecto | Rechazo RN-52 con el mensaje del CBU o alias | RF-20 | RN-52 | Solicitudes |
-| CP-187 | PruebasSolicitudesOrganizador | Cliente que aprueba una solicitud | Rechazo RN-34, «Esta operación es solo para el Administrador» | RF-20, RF-22 | RN-53 | Solicitudes |
+| CP-187 | PruebasSolicitudesOrganizador | Cliente que aprueba una solicitud | Rechazo RN-34, «Esta operación es solo para el Administrador» | RF-20, RF-22 | RN-34 | Solicitudes |
 | CP-188 | PruebasSolicitudesOrganizador | Administrador rechaza una solicitud con el motivo en blanco | Rechazo RN-53, «Escribí el motivo del rechazo.» | RF-20 | RN-53 | Solicitudes |
 | CP-189 | PruebasSolicitudesOrganizador | Cliente con el teléfono confirmado presenta la solicitud y el Administrador la aprueba con un motivo | El cliente pasa a Organizador y tiene el local solicitado; la auditoría registra la aprobación con el administrador, la solicitud y el motivo | RF-16, RF-20, RF-22 | RN-45, RN-53 | Solicitudes |
-| CP-190 | PruebasSolicitudesOrganizador | Organizador que rechaza una solicitud | Rechazo RN-34 | RF-20, RF-22 | RN-53 | Solicitudes |
+| CP-190 | PruebasSolicitudesOrganizador | Organizador que rechaza una solicitud | Rechazo RN-34 | RF-20, RF-22 | RN-34 | Solicitudes |
 | CP-191 | PruebasSolicitudesOrganizador | Solicitud sin el teléfono confirmado | Rechazo RN-51 | RF-20 | RN-51 | Solicitudes |
 | CP-192 | PruebasSolicitudesOrganizador | Documentación que no es una imagen | Rechazo RN-52, «Adjuntá una imagen PNG o JPEG válida…» | RF-20 | RN-52 | Solicitudes |
-| CP-193 | PruebasSolicitudesOrganizador | Menús del Cliente y del Administrador; un cliente abre la revisión de solicitudes | El Cliente tiene «Solicitar ser Organizador» y el Administrador, la entrada a las solicitudes, las dos habilitadas; la pantalla de revisión rechaza al cliente con RN-34 | RF-20, RF-22 | RN-53 | Solicitudes |
+| CP-193 | PruebasSolicitudesOrganizador | Menús del Cliente y del Administrador; un cliente abre la revisión de solicitudes | El Cliente tiene «Solicitar ser Organizador» y el Administrador, la entrada a las solicitudes, las dos habilitadas; la pantalla de revisión rechaza al cliente con RN-34 | RF-20, RF-22 | RN-34 | Solicitudes |
 | CP-194 | PruebasSolicitudesOrganizador | Solicitud con el alias bancario «eventaura.demo» | El alias es válido y la solicitud se guarda | RF-20 | RN-52 | Solicitudes |
 | CP-195 | PruebasSolicitudesOrganizador | Teléfono «0000000000» | Rechazo RN-51 | RF-20 | RN-51 | Solicitudes |
 | CP-196 | PruebasSolicitudesOrganizador | Administrador rechaza una solicitud con un motivo | Queda Rechazada con el motivo, el revisor y la fecha; la auditoría registra el rechazo con el motivo | RF-16, RF-20 | RN-45, RN-53 | Solicitudes |
@@ -376,13 +376,12 @@ sección 0).
   CP-110, CP-123, CP-124, CP-125 y CP-133) nombran en el catálogo una regla más, o en un caso otra,
   que la que cita el comentario. La cobertura de reglas no cambia con ninguna de las dos
   versiones: 50 de 52.
-- **Cuatro casos citan una regla y comprueban el rechazo con otra.** CP-165 cita RN-05 y
-  CP-187, CP-190 y CP-193 citan RN-53, pero los cuatro esperan el rechazo con RN-34: el control
-  de perfil Administrador es el mismo para toda la administración. El catálogo y la matriz usan la
-  regla del comentario. La cobertura no cambia: RN-05 y RN-53 tienen otros casos (CP-183, CP-188,
-  CP-189 y CP-196).
-- **CP-184 a CP-196 no muestran su ID en el nombre visible:** usan `[TestMethod]` sin texto, en
-  contra del punto 7 de la definición de terminado. Lo corrige Codex.
+- **CP-165, CP-187, CP-190 y CP-193 verifican RN-34.** Citaban RN-05 y RN-53 pero esperaban el
+  rechazo con RN-34: el control de perfil Administrador es el mismo para toda la administración.
+  Codex corrigió los comentarios en `e2d8ff6` (20/11) y el catálogo los sigue. La cobertura no
+  cambia: RN-05 y RN-53 tienen otros casos (CP-183, CP-188, CP-189 y CP-196).
+- **CP-184 a CP-196 muestran su ID en el nombre visible** desde `e2d8ff6` (20/11), como pide el
+  punto 7 de la definición de terminado.
 - **CP-105 y CP-109 son mediciones:** no verifican una defensa. CP-105 sí afirma que un hash más
   fuerte no se degrada.
 - **CP-77 cubre RN-25, no RN-26:** solo lee el texto «No se renueva automáticamente». Por eso
