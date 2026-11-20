@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,11 +15,13 @@ namespace Visual
         [STAThread]
         static void Main()
         {
-            ManejadorErrores.Instalar();
-            ControlSesionInactiva.Instalar();
-            SeleccionEnviadorCodigos.Actual = new EnviadorSimulado();
+            // Las dos llamadas de Application van primero: SetCompatibleTextRenderingDefault
+            // falla si ya existe una ventana, y ControlSesionInactiva.Instalar crea una.
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            ManejadorErrores.Instalar();
+            ControlSesionInactiva.Instalar();
+            SeleccionEnviadorCodigos.Actual = EnviadorSmtp.Seleccionar();
             Application.Run(new frmInicio());
         }
     }

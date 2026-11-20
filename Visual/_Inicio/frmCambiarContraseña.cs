@@ -13,6 +13,8 @@ namespace Visual
 {
     public partial class frmCambiarContraseña : FormularioEventAura
     {
+        public string CorreoInicial { get; set; }
+        public Form Retorno { get; set; }
         private readonly bool _recuperacion;
         private Componentes.IndicadorFortaleza _fortaleza;
         private Componentes.EtiquetaAyuda _estadoCorreo;
@@ -53,8 +55,15 @@ namespace Visual
                     ValidacionCampo.Mostrar(txtMail, "Escribí tu correo electrónico."); txtMail.Focus();
                     return;
                 }
-                GestorCodigosCorreo.Instance.SolicitarRecuperacion(txtMail.Text);
-                _estadoCorreo.Text = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
+                try
+                {
+                    GestorCodigosCorreo.Instance.SolicitarRecuperacion(txtMail.Text);
+                    _estadoCorreo.Text = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
+                }
+                catch (Exception)
+                {
+                    _estadoCorreo.Text = "No pudimos enviar el código. Revisá la conexión o la configuración de correo y volvé a intentarlo.";
+                }
             };
             Controls.Add(_enviarCodigo);
             Controls.Add(_estadoCorreo);
@@ -87,6 +96,7 @@ namespace Visual
         }
         private void frmCambiarContraseña_Load(object sender, EventArgs e)
         {
+            if (!string.IsNullOrWhiteSpace(CorreoInicial)) txtMail.Text = CorreoInicial;
             txtActual.BackColor = TxtPassword.BackColor;
             txtActual.BorderStyle = TxtPassword.BorderStyle;
             txtActual.Font = TxtPassword.Font;
@@ -136,6 +146,12 @@ namespace Visual
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void btnVolver_Click(object sender, EventArgs e)
         {
+            if (Retorno != null && !Retorno.IsDisposed)
+            {
+                Retorno.Show();
+                Hide();
+                return;
+            }
             frmInicio frm = new frmInicio();
             frm.Show();
             this.Hide();

@@ -1,13 +1,26 @@
 using System;
 using System.Net;
 using System.Net.Mail;
+using System.Linq;
 using Negocio;
 
 namespace Visual
 {
-    // Strategy opcional para despliegues externos. EventAura nunca la selecciona por defecto.
+    // Strategy opcional: solo se selecciona cuando las cinco variables están configuradas.
     public sealed class EnviadorSmtp : IEnviadorCodigos
     {
+        private static readonly string[] Variables = { "EVENTAURA_SMTP_HOST", "EVENTAURA_SMTP_PORT", "EVENTAURA_SMTP_USER", "EVENTAURA_SMTP_PASSWORD", "EVENTAURA_SMTP_FROM" };
+
+        public static bool EstaConfigurado()
+        {
+            return Variables.All(nombre => !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(nombre)));
+        }
+
+        public static IEnviadorCodigos Seleccionar()
+        {
+            return EstaConfigurado() ? (IEnviadorCodigos)new EnviadorSmtp() : new EnviadorSimulado();
+        }
+
         public void Enviar(string correo, string proposito, string codigo, DateTime venceEl)
         {
             string host = Environment.GetEnvironmentVariable("EVENTAURA_SMTP_HOST");

@@ -98,6 +98,11 @@ namespace Visual
                     else Avisos.Regla(this, "Crear cuenta", ex);
                     return;
                 }
+                catch (Exception)
+                {
+                    ValidacionCampo.Mostrar(txtmail, "No pudimos completar el alta o enviar el código. Revisá la conexión y volvé a intentarlo.");
+                    return;
+                }
                 if (!_altaAdministrador)
                 {
                     MostrarVerificacionCorreo(txtmail.Text.Trim());
@@ -123,7 +128,7 @@ namespace Visual
             var codigo = new TextBox { Name = "txtCodigoCorreo", Location = new Point(px(8), px(192)), Size = new Size(px(240), px(32)), MaxLength = 6 };
             var estado = new Componentes.EtiquetaAyuda { Name = "estadoVerificacion", Location = new Point(px(8), px(232)), Size = new Size(ancho - px(24), px(54)) };
             var confirmar = new Componentes.BotonPrimario { Name = "btnConfirmarCorreo", Text = "Confirmar correo", Location = new Point(px(8), px(292)), Size = new Size(px(200), px(40)) };
-            var volver = new Componentes.BotonSecundario { Name = "btnVolverAcceso", Text = "Volver al acceso", Location = new Point(px(220), px(292)), Size = new Size(px(180), px(40)), Visible = false };
+            var volver = new Componentes.BotonSecundario { Name = "btnVolverAcceso", Text = "Volver al acceso", Location = new Point(px(220), px(292)), Size = new Size(px(180), px(40)), Visible = true };
             confirmar.Click += (s, e) =>
             {
                 try
@@ -136,6 +141,7 @@ namespace Visual
                 catch (ReglaNegocioException ex) { estado.Text = ex.Message; }
             };
             volver.Click += (s, e) => Cerrar();
+            Tema.Normalizar(verificacion);
             verificacion.Controls.AddRange(new Control[] { titulo, contenido, etiqueta, codigo, estado, confirmar, volver });
             Controls.Add(verificacion);
             verificacion.BringToFront();

@@ -63,7 +63,8 @@ namespace Visual
                 GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(telefono.Text);
                 estadoEnvioTelefono.Text = "Si el teléfono es válido, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
             }
-            catch (Exception ex) { estadoEnvioTelefono.Text = ex.Message; }
+            catch (ReglaNegocioException ex) { estadoEnvioTelefono.Text = ex.Message; }
+            catch (Exception) { estadoEnvioTelefono.Text = "No pudimos enviar el código. Revisá la conexión o la configuración de correo y volvé a intentarlo."; }
         }
 
         private static TextBox Campo() => new TextBox { Width = 380 };

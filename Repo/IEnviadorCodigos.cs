@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Negocio
 {
@@ -45,23 +44,25 @@ namespace Negocio
                 Directory.CreateDirectory(Carpeta);
                 string ruta = Ruta(correo);
                 string temporal = ruta + "." + Guid.NewGuid().ToString("N") + ".tmp";
-                var mensajes = Leer(ruta)
-                    .Where(m => !string.Equals(m.Proposito, proposito, StringComparison.Ordinal))
-                    .ToList();
-                mensajes.Add(new MensajeCorreoSimulado
+                var mensaje = new MensajeCorreoSimulado
                 {
                     Correo = correo ?? string.Empty,
                     Proposito = proposito ?? string.Empty,
                     Codigo = codigo ?? string.Empty,
                     VenceEl = venceEl.ToUniversalTime()
-                });
-                string contenido = string.Join(Environment.NewLine + "---" + Environment.NewLine, mensajes.Select(m =>
-                    "Para: " + m.Correo + Environment.NewLine +
-                    "Asunto: " + Asunto(m.Proposito) + Environment.NewLine +
-                    "Propósito: " + m.Proposito + Environment.NewLine +
-                    "Código: " + m.Codigo + Environment.NewLine +
-                    "Vence: " + m.VenceEl.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.GetCultureInfo("es-AR")) + Environment.NewLine +
-                    "VenceUtcTicks: " + m.VenceEl.Ticks.ToString(CultureInfo.InvariantCulture)));
+                };
+                string contenido =
+                    "From: EventAura <eventaura@simulado.invalid>\r\n" +
+                    "To: " + LimpiarEncabezado(mensaje.Correo) + "\r\n" +
+                    "Subject: " + Asunto(mensaje.Proposito) + "\r\n" +
+                    "Date: " + DateTimeOffset.UtcNow.ToString("r", CultureInfo.InvariantCulture) + "\r\n" +
+                    "MIME-Version: 1.0\r\n" +
+                    "Content-Type: text/plain; charset=utf-8\r\n" +
+                    "Content-Transfer-Encoding: 8bit\r\n" +
+                    "X-EventAura-Purpose: " + LimpiarEncabezado(mensaje.Proposito) + "\r\n\r\n" +
+                    "Código: " + mensaje.Codigo + "\r\n" +
+                    "Vence: " + mensaje.VenceEl.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss zzz", CultureInfo.GetCultureInfo("es-AR")) + "\r\n" +
+                    "VenceUtcTicks: " + mensaje.VenceEl.Ticks.ToString(CultureInfo.InvariantCulture) + "\r\n";
                 File.WriteAllText(temporal, contenido, new UTF8Encoding(false));
                 if (File.Exists(ruta)) File.Delete(ruta);
                 File.Move(temporal, ruta);
@@ -87,35 +88,34 @@ namespace Negocio
         {
             var mensajes = new List<MensajeCorreoSimulado>();
             if (!File.Exists(ruta)) return mensajes;
-            foreach (string bloque in Regex.Split(File.ReadAllText(ruta, Encoding.UTF8), @"\r?\n---\r?\n"))
-            {
-                var campos = bloque.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
-                    .Select(linea => linea.Split(new[] { ':' }, 2))
-                    .Where(partes => partes.Length == 2)
-                    .ToDictionary(partes => partes[0].Trim(), partes => partes[1].Trim(), StringComparer.OrdinalIgnoreCase);
-                long ticks;
-                if (campos.TryGetValue("Para", out string destino) &&
-                    campos.TryGetValue("Propósito", out string proposito) &&
-                    campos.TryGetValue("Código", out string codigo) &&
-                    campos.TryGetValue("VenceUtcTicks", out string textoTicks) &&
-                    long.TryParse(textoTicks, NumberStyles.Integer, CultureInfo.InvariantCulture, out ticks))
-                {
-                    mensajes.Add(new MensajeCorreoSimulado
-                    {
-                        Correo = destino,
-                        Proposito = proposito,
-                        Codigo = codigo,
-                        VenceEl = new DateTime(ticks, DateTimeKind.Utc)
-                    });
-                }
-            }
+            string contenido = File.ReadAllText(ruta, Encoding.UTF8);
+            int separador = contenido.IndexOf("\r\n\r\n", StringComparison.Ordinal);
+            if (separador < 0) return mensajes;
+            var encabezados = contenido.Substring(0, separador).Split(new[] { "\r\n" }, StringSplitOptions.None)
+                .Select(linea => linea.Split(new[] { ':' }, 2))
+                .Where(partes => partes.Length == 2)
+                .ToDictionary(partes => partes[0].Trim(), partes => partes[1].Trim(), StringComparer.OrdinalIgnoreCase);
+            string cuerpo = contenido.Substring(separador + 4);
+            var campos = cuerpo.Split(new[] { "\r\n" }, StringSplitOptions.None)
+                .Select(linea => linea.Split(new[] { ':' }, 2))
+                .Where(partes => partes.Length == 2)
+                .ToDictionary(partes => partes[0].Trim(), partes => partes[1].Trim(), StringComparer.OrdinalIgnoreCase);
+            long ticks;
+            if (encabezados.TryGetValue("To", out string destino) &&
+                encabezados.TryGetValue("X-EventAura-Purpose", out string proposito) &&
+                campos.TryGetValue("Código", out string codigo) &&
+                campos.TryGetValue("VenceUtcTicks", out string textoTicks) &&
+                long.TryParse(textoTicks, NumberStyles.Integer, CultureInfo.InvariantCulture, out ticks))
+                mensajes.Add(new MensajeCorreoSimulado { Correo = destino, Proposito = proposito, Codigo = codigo, VenceEl = new DateTime(ticks, DateTimeKind.Utc) });
             return mensajes;
         }
 
+        private static string LimpiarEncabezado(string valor) => (valor ?? string.Empty).Replace("\r", string.Empty).Replace("\n", string.Empty);
+
         private static string Asunto(string proposito)
         {
-            return proposito == "Verificacion" ? "Verificá tu correo de EventAura" :
-                proposito == "TelefonoOrg" ? "Verificá tu teléfono" : "Recuperá tu contraseña de EventAura";
+            return proposito == "Verificacion" ? "Verificacion de correo - EventAura" :
+                proposito == "TelefonoOrg" ? "Verificacion de telefono - EventAura" : "Recuperacion de contrasena - EventAura";
         }
 
         private static string Ruta(string correo)

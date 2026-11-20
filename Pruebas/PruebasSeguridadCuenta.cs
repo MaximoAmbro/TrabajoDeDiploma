@@ -15,6 +15,50 @@ namespace Pruebas
     [TestClass]
     public class PruebasSeguridadCuenta
     {
+        // CP-349 — RF-14/RF-15, RN-43/RN-44: el correo simulado es un mensaje MIME legible.
+        [TestMethod("CP-349: El archivo de correo simulado es MIME y contiene el código en el cuerpo")]
+        public void CP349_CorreoMimLegible()
+        {
+            string correo = Fake.MailNuevo();
+            const string codigo = "482619";
+            var vence = DateTime.UtcNow.AddMinutes(9);
+            SeleccionEnviadorCodigos.Actual = new EnviadorSimulado();
+            SeleccionEnviadorCodigos.Actual.Enviar(correo, "Verificacion", codigo, vence);
+            string ruta = EnviadorSimulado.ArchivoDeBandejaParaPruebas(correo);
+            string eml = File.ReadAllText(ruta, System.Text.Encoding.UTF8);
+            int separador = eml.IndexOf("\r\n\r\n", StringComparison.Ordinal);
+            Assert.IsTrue(separador > 0, "El mensaje debe separar encabezados y cuerpo MIME con una línea vacía.");
+            string encabezados = eml.Substring(0, separador);
+            string cuerpo = eml.Substring(separador + 4);
+            StringAssert.Contains(encabezados, "From: EventAura <eventaura@simulado.invalid>");
+            StringAssert.Contains(encabezados, "To: " + correo);
+            StringAssert.Contains(encabezados, "Subject: Verificacion de correo - EventAura");
+            StringAssert.Contains(encabezados, "Date: ");
+            StringAssert.Contains(encabezados, "Content-Type: text/plain; charset=utf-8");
+            Assert.IsTrue(DateTimeOffset.TryParse(encabezados.Split(new[] { "Date: " }, StringSplitOptions.None)[1].Split('\r')[0], out _));
+            StringAssert.Contains(cuerpo, "Código: " + codigo);
+            StringAssert.Contains(cuerpo, "Vence:");
+        }
+
+        // CP-350 — RF-14/RF-15, RN-43/RN-44: SMTP solo se selecciona cuando están las cinco variables.
+        [TestMethod("CP-350: El emisor se selecciona según las cinco variables SMTP")]
+        public void CP350_SeleccionEmisorPorEntorno()
+        {
+            string[] nombres = { "EVENTAURA_SMTP_HOST", "EVENTAURA_SMTP_PORT", "EVENTAURA_SMTP_USER", "EVENTAURA_SMTP_PASSWORD", "EVENTAURA_SMTP_FROM" };
+            var anteriores = nombres.Select(nombre => Environment.GetEnvironmentVariable(nombre)).ToArray();
+            try
+            {
+                foreach (string nombre in nombres) Environment.SetEnvironmentVariable(nombre, "configurado-para-prueba");
+                Assert.IsInstanceOfType(Visual.EnviadorSmtp.Seleccionar(), typeof(Visual.EnviadorSmtp));
+                Environment.SetEnvironmentVariable(nombres[3], null);
+                Assert.IsInstanceOfType(Visual.EnviadorSmtp.Seleccionar(), typeof(EnviadorSimulado));
+            }
+            finally
+            {
+                for (int i = 0; i < nombres.Length; i++) Environment.SetEnvironmentVariable(nombres[i], anteriores[i]);
+            }
+        }
+
         // CP-167 — RF-14, RN-43: impedir la compra mientras la cuenta no verificó el correo.
         [TestMethod("CP-167: Una cuenta sin verificar no inicia una compra")]
         public void CP167_CorreoNoVerificadoNoCompra()
@@ -49,6 +93,7 @@ namespace Pruebas
                     Assert.IsTrue(File.Exists(archivo));
                     Assert.IsTrue(File.ReadAllText(archivo).Contains(mensaje.Codigo), "El código queda en el archivo que se abre fuera de EventAura.");
                     Assert.IsNotNull(form.Controls.Find("verificacionCorreo", true).Single());
+                    Assert.IsTrue(ControlDe<Button>(form, "btnVolverAcceso").Visible, "La verificación debe ofrecer una salida visible.");
                     Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(mensaje.Codigo)));
                     Assert.IsFalse(typeof(Visual.frmInicio).Assembly.GetTypes().Any(t => t.Name == "frmBandejaSimulada"));
                     VerificarQueLaInterfazNoPuedeLeerCodigos();
