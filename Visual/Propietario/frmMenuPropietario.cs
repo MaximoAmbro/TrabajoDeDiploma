@@ -17,6 +17,7 @@ namespace Visual
         private readonly Panel zonaOrganizador;
         private readonly Componentes.EtiquetaTitulo tituloOrganizador;
         private readonly Componentes.EtiquetaAyuda ayudaOrganizador;
+        private readonly Componentes.BotonSecundario btnCambiarContrasena;
         public int IDUsuario;
         public string NombreUsuario;
 
@@ -29,7 +30,17 @@ namespace Visual
             zonaOrganizador.Controls.Add(tituloOrganizador);
             zonaOrganizador.Controls.Add(ayudaOrganizador);
             Controls.Add(zonaOrganizador);
+            btnCambiarContrasena = new Componentes.BotonSecundario { Name = "btnCambiarContrasena", Text = "Cambiar contraseña", Location = new Point(24, 440), Size = new Size(272, 40) };
+            btnCambiarContrasena.Click += (s, e) =>
+            {
+                var cambio = new frmCambiarContraseña { CorreoInicial = GestorSesion.Instance.UsuarioActual?.Mail, Retorno = this };
+                cambio.Show();
+                Hide();
+            };
+            Controls.Add(btnCambiarContrasena);
+            btnCambiarContrasena.BringToFront();
             zonaOrganizador.BringToFront();
+            btnCambiarContrasena.BringToFront();
             SizeChanged+=(s,e)=>DistribuirPanel();
         }
 

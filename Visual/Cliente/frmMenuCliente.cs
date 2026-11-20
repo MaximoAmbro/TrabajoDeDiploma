@@ -16,6 +16,7 @@ namespace Visual
         private Control paginaActual;
         private Button navegacionActiva;
         private Componentes.BotonSecundario btnSolicitudOrganizador;
+        private Componentes.BotonSecundario btnCambiarContrasena;
 
         public frmMenuCliente()
         {
@@ -24,6 +25,15 @@ namespace Visual
             btnSolicitudOrganizador.Click += (s, e) => { using (var solicitud = new frmSolicitudOrganizador()) solicitud.ShowDialog(this); };
             Controls.Add(btnSolicitudOrganizador);
             btnSolicitudOrganizador.BringToFront();
+            btnCambiarContrasena = new Componentes.BotonSecundario { Name = "btnCambiarContrasena", Text = "Cambiar contraseña", Location = new Point(24, 500), Size = new Size(240, 40) };
+            btnCambiarContrasena.Click += (s, e) =>
+            {
+                var cambio = new frmCambiarContraseña { CorreoInicial = GestorSesion.Instance.UsuarioActual?.Mail, Retorno = this };
+                cambio.Show();
+                Hide();
+            };
+            Controls.Add(btnCambiarContrasena);
+            btnCambiarContrasena.BringToFront();
             contenido = new Panel { Name = "contenidoNavegacion", Bounds = inicioCliente.Bounds, Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right };
             Controls.Remove(inicioCliente);
             Controls.Add(contenido);
@@ -73,6 +83,7 @@ namespace Visual
             lblNombre.BringToFront();
             label1.BringToFront();
             btnAtras.BringToFront();
+            btnCambiarContrasena.BringToFront();
             lblvolver.BringToFront();
             MarcarEstadoAtras();
         }

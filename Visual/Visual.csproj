@@ -260,7 +260,9 @@
       <DependentUpon>frmSuscripcion.cs</DependentUpon>
     </Compile>
     <Compile Include="Cliente\NavegacionCliente.cs" />
-    <Compile Include="Cliente\HostFormularioCliente.cs" />
+    <Compile Include="Cliente\HostFormularioCliente.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Cliente\frmMenuCliente.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -294,40 +296,90 @@
     <Compile Include="ExportadorPDF.cs" />
     <Compile Include="ImagenEventoCodec.cs" />
     <Compile Include="ValidacionCampo.cs" />
-    <Compile Include="FormularioEventAura.cs" />
+    <Compile Include="FormularioEventAura.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ManejadorErrores.cs" />
     <Compile Include="Tema.cs" />
-    <Compile Include="Componentes\MapaSectores.cs" />
+    <Compile Include="Componentes\MapaSectores.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Componentes\MarcaAura.cs" />
     <Compile Include="AvisosEnPantalla.cs" />
-    <Compile Include="Componentes\SuperficieTematica.cs" />
-    <Compile Include="Componentes\IndicadorFortaleza.cs" />
-    <Compile Include="Componentes\EstadoVacio.cs"><SubType>UserControl</SubType></Compile>
-    <Compile Include="Componentes\EstadoVacio.Designer.cs"><DependentUpon>EstadoVacio.cs</DependentUpon></Compile>
-    <Compile Include="Componentes\PortadaEvento.cs" />
-    <Compile Include="Componentes\DatoPanel.cs"><SubType>UserControl</SubType></Compile>
-    <Compile Include="Componentes\DatoPanel.Designer.cs"><DependentUpon>DatoPanel.cs</DependentUpon></Compile>
-    <Compile Include="Propietario\PanelAdministrador.cs"><SubType>UserControl</SubType></Compile>
-    <Compile Include="Propietario\PanelAdministrador.Designer.cs"><DependentUpon>PanelAdministrador.cs</DependentUpon></Compile>
-    <Compile Include="Componentes\TarjetaEvento.cs"><SubType>UserControl</SubType></Compile>
-    <Compile Include="Cliente\Vistas\FichaEvento.cs"><SubType>UserControl</SubType></Compile>
-    <Compile Include="Cliente\Vistas\InicioCliente.cs"><SubType>UserControl</SubType></Compile>
-    <Compile Include="Cliente\Vistas\InicioCliente.Designer.cs"><DependentUpon>InicioCliente.cs</DependentUpon></Compile>
-    <Compile Include="Cliente\Vistas\FichaEvento.Designer.cs"><DependentUpon>FichaEvento.cs</DependentUpon></Compile>
-    <Compile Include="Componentes\TarjetaEvento.Designer.cs"><DependentUpon>TarjetaEvento.cs</DependentUpon></Compile>
-    <Compile Include="Componentes\BarraSuperior.cs"><SubType>UserControl</SubType></Compile>
-    <Compile Include="Componentes\BarraSuperior.Designer.cs"><DependentUpon>BarraSuperior.cs</DependentUpon></Compile>
+    <Compile Include="Componentes\SuperficieTematica.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Componentes\IndicadorFortaleza.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Componentes\EstadoVacio.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Componentes\EstadoVacio.Designer.cs">
+      <DependentUpon>EstadoVacio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Componentes\PortadaEvento.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Componentes\DatoPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Componentes\DatoPanel.Designer.cs">
+      <DependentUpon>DatoPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Propietario\PanelAdministrador.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Propietario\PanelAdministrador.Designer.cs">
+      <DependentUpon>PanelAdministrador.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Componentes\TarjetaEvento.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Cliente\Vistas\FichaEvento.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Cliente\Vistas\InicioCliente.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Cliente\Vistas\InicioCliente.Designer.cs">
+      <DependentUpon>InicioCliente.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cliente\Vistas\FichaEvento.Designer.cs">
+      <DependentUpon>FichaEvento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Componentes\TarjetaEvento.Designer.cs">
+      <DependentUpon>TarjetaEvento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Componentes\BarraSuperior.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Componentes\BarraSuperior.Designer.cs">
+      <DependentUpon>BarraSuperior.cs</DependentUpon>
+    </Compile>
     <Compile Include="Avisos.cs" />
     <EmbeddedResource Include="Recursos\EventAura.ico">
       <LogicalName>Visual.Recursos.EventAura.ico</LogicalName>
     </EmbeddedResource>
-    <Compile Include="Componentes\BotonTematico.cs" />
-    <Compile Include="Componentes\Etiquetas.cs" />
-    <Compile Include="Componentes\ExtrasVisuales.cs" />
+    <Compile Include="Componentes\BotonTematico.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Componentes\Etiquetas.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Componentes\ExtrasVisuales.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Disposicion.cs" />
-    <Compile Include="Componentes\BotonPrimario.cs" />
-    <Compile Include="Componentes\BotonSecundario.cs" />
-    <Compile Include="Componentes\BotonPeligro.cs" />
+    <Compile Include="Componentes\BotonPrimario.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Componentes\BotonSecundario.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Componentes\BotonPeligro.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Propietario\frmControlIngreso.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -349,7 +401,9 @@
     <Compile Include="Propietario\frmMenuPropietario.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Propietario\frmMenuAdministrador.cs" />
+    <Compile Include="Propietario\frmMenuAdministrador.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Propietario\frmMenuAdministrador.Designer.cs">
       <DependentUpon>frmMenuAdministrador.cs</DependentUpon>
     </Compile>
@@ -389,10 +443,18 @@
     <Compile Include="Program.cs" />
     <Compile Include="EnviadorSmtp.cs" />
     <Compile Include="ControlSesionInactiva.cs" />
-    <Compile Include="Propietario\frmAuditoria.cs" />
-    <Compile Include="Propietario\frmSolicitudOrganizador.cs" />
-    <Compile Include="Propietario\frmRevisarSolicitudesOrganizador.cs" />
-    <Compile Include="Propietario\frmRevisarEventos.cs" />
+    <Compile Include="Propietario\frmAuditoria.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Propietario\frmSolicitudOrganizador.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Propietario\frmRevisarSolicitudesOrganizador.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Propietario\frmRevisarEventos.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Propietario\frmAuditoria.Designer.cs">
       <DependentUpon>frmAuditoria.cs</DependentUpon>
     </Compile>

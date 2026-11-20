@@ -25,6 +25,7 @@ namespace Visual.Componentes
             btnAuditoria.Click += (s, e) => { GestorSesion.Instance.RequerirAdministrador(); AuditoriaSolicitada?.Invoke(this, EventArgs.Empty); };
             Controls.Add(btnAuditoria);
             btnCrearAdministrador.BringToFront();
+            Tema.Normalizar(this);
             datos.SizeChanged += (s,e)=>Distribuir();
             SizeChanged += (s,e)=>Distribuir();
         }

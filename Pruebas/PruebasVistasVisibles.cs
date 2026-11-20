@@ -234,7 +234,10 @@ namespace Pruebas
                 string mail=Fake.MailNuevo();
                 using(var menu=new Visual.frmMenuAdministrador()) {
                     Mostrar(menu);
-                    ControlDe<Button>(menu,"btnCrearAdministrador").PerformClick();
+                    var botonAlta = ControlDe<Button>(menu,"btnCrearAdministrador");
+                    Assert.IsTrue(botonAlta.Visible, "El alta debe estar visible en el panel del administrador.");
+                    Assert.IsTrue(menu.RectangleToScreen(botonAlta.Bounds).IntersectsWith(menu.Bounds), "El botón de alta debe quedar dentro de la ventana.");
+                    botonAlta.PerformClick();
                     var alta=System.Windows.Forms.Application.OpenForms.OfType<Visual.frmCrearUsuario>().Single(f=>f.Visible);
                     Assert.AreEqual("EventAura · Crear administrador",alta.Text);
                     ControlDe<TextBox>(alta,"txtNombre").Text="Admin";
@@ -247,6 +250,28 @@ namespace Pruebas
                     Assert.AreEqual("Administrador",RepositorioUsuarios.Instance.ObtenerPorMail(mail).TipoUsuario);
                     Assert.IsTrue(menu.Visible);
                     alta.Dispose();
+                }
+            });
+        }
+
+        // CP-353 — RF-17/RF-22, RN-02: el usuario autenticado recupera el cambio con contraseña actual.
+        [TestMethod("CP-353: El menú de Mi cuenta abre el cambio de contraseña con sesión")]
+        public void CP353_AccesoCambiarContrasena()
+        {
+            EnSta(() =>
+            {
+                var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
+                using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id, NombreUsuario = cliente.Nombre })
+                {
+                    Mostrar(menu);
+                    ControlDe<Button>(menu, "btnCambiarContrasena").PerformClick();
+                    var cambio = System.Windows.Forms.Application.OpenForms.OfType<Visual.frmCambiarContraseña>().Single(f => f.Visible);
+                    Assert.IsFalse(cambio.Controls.Find("btnEnviarCodigo", true).Any(), "El menú autenticado debe abrir modo cambio, no recuperación.");
+                    Assert.AreEqual(cliente.Mail, cambio.CorreoInicial);
+                    Assert.AreEqual(menu, cambio.Retorno);
+                    cambio.Close();
+                    menu.Close();
                 }
             });
         }

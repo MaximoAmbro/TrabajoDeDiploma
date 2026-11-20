@@ -4,6 +4,8 @@ using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using Entidades;
+using Negocio;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Pruebas
@@ -34,13 +36,17 @@ namespace Pruebas
         [DataRow("frmRegistrarLocal", DisplayName = "CP-116: Botones completos de frmRegistrarLocal")]
         [DataRow("frmReportes", DisplayName = "CP-116: Botones completos de frmReportes")]
         [DataRow("frmRevisarEventos", DisplayName = "CP-116: Botones completos de frmRevisarEventos")]
+        [DataRow("frmAuditoria", DisplayName = "CP-116: Botones completos de frmAuditoria")]
+        [DataRow("frmRevisarSolicitudesOrganizador", DisplayName = "CP-116: Botones completos de frmRevisarSolicitudesOrganizador")]
+        [DataRow("frmSolicitudOrganizador", DisplayName = "CP-116: Botones completos de frmSolicitudOrganizador")]
         [DataRow("frmSuscripcion", DisplayName = "CP-116: Botones completos de frmSuscripcion")]
         public void CP116_TextoCompleto(string pantalla)
         {
             PruebasSeguridad.EnStaSinCambiarDatos(() =>
             {
                 var tipo = typeof(Visual.frmInicio).Assembly.GetTypes().Single(t => t.Name == pantalla);
-                if (pantalla == "frmRevisarEventos") Fake.ComoAdministrador();
+                if (pantalla == "frmRevisarEventos" || pantalla == "frmAuditoria" || pantalla == "frmRevisarSolicitudesOrganizador") Fake.ComoAdministrador();
+                if (pantalla == "frmSolicitudOrganizador") Fake.ComoCliente(Fake.Cliente(NivelFidelidad.Bronce));
                 using (var form = (Form)Activator.CreateInstance(tipo))
                 {
                     Visual.Tema.Normalizar(form);
@@ -48,6 +54,17 @@ namespace Pruebas
                     var filas = new List<string> { "Pantalla;Control;Texto;Ancho;Alto;NecesitaAncho;NecesitaAlto;Completo" };
                     foreach (Button boton in Descendientes(form).OfType<Button>())
                     {
+                        int dpiBoton = Math.Max(96, boton.DeviceDpi);
+                        int altoEsperado = (int)Math.Round((boton is Visual.Componentes.BotonPrimario ? Visual.Tema.AltoBotonPrimario : Visual.Tema.AltoBoton) * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
+                        int anchoMinimo = (int)Math.Round(Visual.Tema.AnchoMinimoBoton * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
+                        int relleno = (int)Math.Round(Visual.Tema.RellenoHorizontalBoton * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
+                        Assert.AreEqual(altoEsperado, boton.Height, pantalla + "/" + boton.Name + " alto normalizado");
+                        Assert.IsTrue(boton.Width >= anchoMinimo, pantalla + "/" + boton.Name + " ancho mínimo");
+                        Assert.AreEqual(Visual.Tema.Boton.Name, boton.Font.Name, pantalla + "/" + boton.Name + " tipografía");
+                        int rellenoIzquierdo = boton.Controls.OfType<Label>().Any(etiqueta => etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase))
+                            ? (int)Math.Round(Visual.Tema.RellenoIconoBoton * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero)
+                            : relleno;
+                        Assert.AreEqual(rellenoIzquierdo, boton.Padding.Left, pantalla + "/" + boton.Name + " margen interior");
                         // También se prueban estados habilitables que nacen deshabilitados/ocultos.
                         foreach(string texto in Textos(boton))
                         using (var copia = new Button { Text = texto, Font = boton.Font, Padding = boton.Padding,
@@ -73,6 +90,23 @@ namespace Pruebas
                             filas.Add(string.Join(";",pantalla,boton.Name,texto,disponible.Width,disponible.Height,necesaria.Width,necesaria.Height,completo));
                             if (!completo) errores.Add(boton.Name + " «" + texto + "»: " + disponible + ", necesita " + necesaria);
                         }
+                    }
+                    foreach (Control contenedor in new Control[] { form }.Concat(Descendientes(form)))
+                    {
+                        var botonesFila = contenedor.Controls.OfType<Button>().OrderBy(b => b.Top).ThenBy(b => b.Left).ToArray();
+                        for (int i = 0; i < botonesFila.Length; i++)
+                            for (int j = i + 1; j < botonesFila.Length; j++)
+                            {
+                                var a = botonesFila[i]; var b = botonesFila[j];
+                                int solape = Math.Min(a.Bottom, b.Bottom) - Math.Max(a.Top, b.Top);
+                                if (solape >= Math.Min(a.Height, b.Height) / 2 && b.Left >= a.Left)
+                                {
+                                    int requerido = (int)Math.Round(Visual.Tema.Espacio.S * Math.Max(96, contenedor.DeviceDpi) / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
+                                    int anchoRequerido = a.Width + b.Width + requerido + contenedor.Padding.Horizontal;
+                                    if (contenedor.ClientSize.Width > 0 && contenedor.ClientSize.Width < anchoRequerido) continue;
+                                    Assert.IsTrue(b.Left - a.Right >= requerido, pantalla + " separación " + a.Name + " / " + b.Name + "; gap=" + (b.Left - a.Right) + "; a=" + a.Bounds + "; b=" + b.Bounds + "; parent=" + contenedor.ClientSize);
+                                }
+                            }
                     }
                     float dpi; using(var grafico=Graphics.FromHwnd(IntPtr.Zero)) dpi=grafico.DpiX;
                     string salida = Path.Combine(BaseDePrueba.RaizDelRepositorio(), "TestResults", "Botones", dpi.ToString());

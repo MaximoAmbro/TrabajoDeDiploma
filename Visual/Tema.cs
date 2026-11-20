@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Visual.Componentes;
 using System.Drawing;
@@ -76,7 +77,7 @@ namespace Visual
 
         public const float DpiDiseno = 96f;
         public const int AltoBoton = 32, AltoBotonPrimario = 36, AnchoMinimoBoton = 120;
-        public const int RellenoHorizontalBoton = 20, AltoFila = 32, AltoEncabezadoGrilla = 36;
+        public const int RellenoHorizontalBoton = 20, RellenoIconoBoton = 46, AltoFila = 32, AltoEncabezadoGrilla = 36;
         public const int AltoEncabezadoVentana = 72, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
 
         // Medidas del ticket en puntos PDF; no dependen de los DPI del monitor.
@@ -193,15 +194,60 @@ namespace Visual
             if (raiz.ForeColor == TextoAnterior) raiz.ForeColor = TextoSecundario;
             if (raiz.ForeColor == TextoOscuroAnterior) raiz.ForeColor = Texto;
             var boton = raiz as Button;
-            if (boton != null && !(boton is Componentes.BotonPrimario) &&
-                !(boton is Componentes.BotonSecundario) && !(boton is Componentes.BotonPeligro))
+            if (boton != null)
             {
-                if (boton.BackColor == Primario) EstiloBoton(boton, true);
-                else if (boton.BackColor == BotonAnterior) EstiloBoton(boton, false);
+                RolBoton rol = boton is Componentes.BotonPrimario ? RolBoton.Primario :
+                    boton is Componentes.BotonPeligro ? RolBoton.Peligro : RolBoton.Secundario;
+                if (!(boton is BotonTematico))
+                    PrepararBoton(boton, rol);
+                boton.Font = Boton;
+                int dpi = Math.Max(96, boton.DeviceDpi);
+                bool tieneIcono = boton.Controls.OfType<Label>().Any(etiqueta =>
+                    etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase));
+                int rellenoIzquierdo = tieneIcono ? RellenoIconoBoton : RellenoHorizontalBoton;
+                boton.Padding = new Padding(MedidaDpi(rellenoIzquierdo, dpi), 0, MedidaDpi(RellenoHorizontalBoton, dpi), 0);
+                boton.Width = Math.Max(MedidaDpi(AnchoMinimoBoton, dpi), boton.Width);
+                boton.Height = MedidaDpi(rol == RolBoton.Primario ? AltoBotonPrimario : AltoBoton, dpi);
             }
             var grilla = raiz as DataGridView;
             if (grilla != null) EstiloGrilla(grilla);
             foreach (Control hijo in raiz.Controls) Normalizar(hijo);
+            NormalizarSeparacionBotones(raiz);
+        }
+
+        private static void NormalizarSeparacionBotones(Control contenedor)
+        {
+            int separacion = MedidaDpi(Espacio.S, Math.Max(96, contenedor.DeviceDpi));
+            var botones = contenedor.Controls.Cast<Control>().OfType<Button>()
+                .Where(b => b.Bounds.Width > 0 && b.Bounds.Height > 0)
+                .OrderBy(b => b.Top).ThenBy(b => b.Left).ToArray();
+            for (int i = 0; i < botones.Length; i++)
+            {
+                var actual = botones[i];
+                for (int j = i + 1; j < botones.Length; j++)
+                {
+                    var siguiente = botones[j];
+                    int solape = Math.Min(actual.Bottom, siguiente.Bottom) - Math.Max(actual.Top, siguiente.Top);
+                    if (solape < Math.Min(actual.Height, siguiente.Height) / 2) continue;
+                    int anchoNecesario = actual.Width + siguiente.Width + separacion + contenedor.Padding.Horizontal;
+                    if (contenedor.ClientSize.Width > 0 && contenedor.ClientSize.Width < anchoNecesario) continue;
+                    if (siguiente.Left < actual.Right + separacion)
+                    {
+                        int margen = Math.Max(contenedor.Padding.Left, MedidaDpi(Espacio.XL, Math.Max(96, contenedor.DeviceDpi)));
+                        if (siguiente.Anchor.HasFlag(AnchorStyles.Right) && siguiente.Left - actual.Width - separacion >= margen)
+                            actual.Left = siguiente.Left - actual.Width - separacion;
+                        else if (siguiente.Left <= actual.Left && actual.Anchor.HasFlag(AnchorStyles.Left))
+                            siguiente.Left = actual.Right + separacion;
+                        else
+                            siguiente.Left = actual.Right + separacion;
+                    }
+                }
+            }
+        }
+
+        private static int MedidaDpi(int logico, int dpi)
+        {
+            return (int)Math.Round(logico * (dpi / DpiDiseno), MidpointRounding.AwayFromZero);
         }
 
         // Los componentes y los botones heredados comparten todos los estados de estilo.
