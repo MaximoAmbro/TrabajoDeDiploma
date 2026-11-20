@@ -3,14 +3,12 @@
 Claude Code, 19/11/2026. Fuente del anexo nuevo que pidió JC (18/11): el juego completo de
 pantallas, una vista por pantalla, con su epígrafe. La lista para Máximo lo incluye desde acá.
 
-**En pausa (19/11, tarde):** Codex recapturó con la semilla las pantallas de Organizador y
-Administrador, «Eventos del local» y las de la recuperación (`037c6b4`). Con ellas el anexo tiene
-21 de las 28 pantallas listas. Faltan siete, cada una con su motivo en su lugar: cuatro del Cliente
-que siguen mostrando datos de las pruebas (inicio de sesión, inicio de «Mi cuenta», pago y
-confirmación), las dos con el indicador de fortaleza cortado (crear cuenta y crear administrador) y
-la recuperación de la contraseña, donde el aviso del código tapa la etiqueta de la contraseña
-nueva. El anexo se pega entero cuando estén las
-siete.
+**En pausa (20/11):** 24 de las 28 pantallas están listas. Codex rehízo «Crear administrador»
+(`c4ab61e`), y «Crear cuenta» y «Recuperar contraseña» (`ee01a85`): el indicador de fortaleza sale
+completo, el aviso del código ya no tapa la etiqueta de la contraseña nueva, y las dos se tomaron
+sin sesión, con la barra superior solo con la marca. Faltan cuatro del Cliente que siguen
+mostrando datos de las pruebas: inicio de sesión, inicio de «Mi cuenta», pago y confirmación. El
+anexo se pega entero cuando estén las cuatro.
 
 ## Cómo se eligió cada captura
 
@@ -74,7 +72,15 @@ siguiente; no achiques ninguna imagen.
 
 **Pantalla 1. Inicio de sesión (frmInicio).** ⏸ Todavía no: La captura disponible es de la batería de pruebas (en la barra superior se lee «Cliente Prueba 25»), no de la semilla. Codex tiene que recapturarla con la semilla. Dejá el título y seguí.
 
-**Pantalla 2. Crear cuenta (frmCrearUsuario).** ⏸ Todavía no: El indicador de fortaleza de la contraseña sale cortado («Fortaleza: Insuficiente (0/5; míni…»), igual que en «Crear administrador», que Codex está rehaciendo. Dejá el título y seguí.
+**Pantalla 2. Crear cuenta (frmCrearUsuario).**
+
+| Figura | Archivo | Ancho | Letra impresa |
+|---|---|---|---|
+| P2 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmCrearUsuario.png` | 11,8 cm | 9,0 pt |
+
+**Epígrafes:**
+
+> Figura P2 — Crear cuenta: el alta de un Cliente, con la fortaleza de la contraseña a la vista.
 
 **Pantalla 3. Cambiar contraseña (frmCambiarContraseña).**
 
@@ -86,7 +92,15 @@ siguiente; no achiques ninguna imagen.
 
 > Figura P3 — Cambiar contraseña: el cambio de la contraseña con la actual, la nueva y su fortaleza.
 
-**Pantalla 4. Recuperar contraseña (frmCambiarContraseña, modo recuperación).** ⏸ Todavía no: La etiqueta «Nueva Contraseña» queda tapada por el aviso del código (en `frmCambiarContraseña.cs` el aviso ocupa de 260 a 314 px y la etiqueta está en 300). Es un defecto de la pantalla: Codex tiene que corregirlo y recapturarla. Dejá el título y seguí.
+**Pantalla 4. Recuperar contraseña (frmCambiarContraseña, modo recuperación).**
+
+| Figura | Archivo | Ancho | Letra impresa |
+|---|---|---|---|
+| P4 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmRecuperarContraseña.png` | 11,8 cm | 9,0 pt |
+
+**Epígrafes:**
+
+> Figura P4 — Recuperar contraseña: el pedido del código de recuperación, que se envía fuera de la aplicación, y la contraseña nueva.
 
 **Cliente**
 
@@ -363,7 +377,15 @@ siguiente; no achiques ninguna imagen.
 >
 > Figura P24.5 — Detalle de la lectura del reporte, en la pantalla «Reportes».
 
-**Pantalla 25. Crear administrador (frmCrearUsuario, modo administrador).** ⏸ Todavía no: Codex la está rehaciendo porque el indicador de fortaleza sale cortado. Dejá el título y seguí.
+**Pantalla 25. Crear administrador (frmCrearUsuario, modo administrador).**
+
+| Figura | Archivo | Ancho | Letra impresa |
+|---|---|---|---|
+| P25 | `Pruebas/Recortes-Documento-Fases7-8/completas/Fase8/frmCrearAdministrador.png` | 11,8 cm | 9,0 pt |
+
+**Epígrafes:**
+
+> Figura P25 — Crear administrador: el alta de otro Administrador de la plataforma, que solo puede hacer un Administrador.
 
 **Pantalla 26. Solicitudes de organizador (frmRevisarSolicitudesOrganizador).**
 

@@ -273,10 +273,14 @@ administrador de eventos.», **por:**
 > - la verificación del correo de las cuentas nuevas, la recuperación de la contraseña con un
 >   código y el cierre de la sesión por inactividad;
 > - el registro de auditoría de las operaciones;
-> - el alta de locales y de eventos por parte de cada organizador, con sus sectores, precios y
->   período de preventa;
-> - la búsqueda de eventos y el armado de paquetes personalizados: entradas y servicios
->   complementarios (hospedaje, traslado, merchandising y experiencia VIP);
+> - la solicitud de un cliente para ser organizador, que la administración de la plataforma
+>   aprueba o rechaza;
+> - el alta de locales y de eventos por parte de cada organizador, con sus sectores, precios,
+>   período de preventa e imagen de portada, y su publicación, con la revisión del primer evento
+>   de cada organizador nuevo;
+> - la búsqueda de eventos y el armado de paquetes personalizados: entradas, elegidas en una
+>   tabla o en un mapa de los sectores, y servicios complementarios (hospedaje, traslado,
+>   merchandising y experiencia VIP);
 > - la compra con pago simulado y la emisión de una entrada por persona, con un código único;
 > - el control de ingreso al evento, que acepta cada entrada una sola vez;
 > - el programa de fidelización por niveles, con su descuento sobre las entradas;
@@ -939,7 +943,7 @@ el campo «Id y nombre». Los cinco casos nuevos están en el Anexo 3.
 
 **E-02 · p. 49 · R (T-6).**
 - **Dice:** «(por ejemplo, Cliente, Administrador de local, Conductor)».
-- **Poner:** «(Cliente o Administrador)».
+- **Poner:** «(Cliente, Organizador o Administrador)».
 
 **E-03 · p. 51, «Composición de un paquete» · R.** Tres filas:
 
@@ -957,28 +961,35 @@ completa por:
 
 | Control | Tipo | Contenido y comportamiento |
 |---|---|---|
+| indicadorPasos | Indicador | Los cuatro pasos de la compra («1 Elegí», «2 Armá», «3 Pagá» y «4 Listo»), con el paso 2 marcado. |
 | label1 | Etiqueta | Nombre del evento. Sólo lectura. |
 | lblNivel | Etiqueta | Nivel de fidelidad vigente y porcentaje de descuento, por ejemplo «Tu nivel: Plata · 5,0 % de descuento». |
 | lnkNiveles | Enlace | «¿Cómo funcionan los niveles?»: explica los umbrales vigentes (RN-19). |
+| mapaSectores | Mapa | Un bloque por sector, con su precio y su disponibilidad; un sector agotado no se puede elegir. Elegir un sector lleva a su fila de la grilla con una entrada. |
 | dgvSectores | Grilla | Una fila por sector, con su nombre, su precio y las entradas disponibles. El precio queda congelado al iniciar la compra (RN-16). En la columna «Cantidad (escribí aquí)» el cliente escribe cuántas entradas quiere. La suma no puede superar 6 (RN-12) ni el cupo del sector (RN-08). |
 | chkHospedaje / chkTraslado / chkMerch / chkVIP | Casilla | Servicios complementarios. Aparecen deshabilitados si el evento no los ofrece (RN-14). |
 | chkSeguro | Casilla | Seguro de entrada, con devolución hasta 48 h antes. Se habilita solo cuando hay al menos una entrada (RN-28). |
-| pnlResumen | Panel | Desglose del paquete. Se recalcula automáticamente ante cada cambio. |
+| pnlResumen / lblTotalDestacado | Panel y etiqueta | Desglose del paquete, con el total destacado al pie. Se recalcula automáticamente ante cada cambio. |
 | lblAgotado / btnListaEspera | Etiqueta y botón | Aparecen solo con el evento agotado, y ofrecen la inscripción en la lista de espera (RN-10). |
+| lnkPosicionEspera | Enlace | «Consultar mi posición»: aparece si el cliente ya está inscripto y le informa su posición en la lista (RN-35). |
 | btnComprar | Botón | Reserva el cupo y abre el pago. Deshabilitado mientras no haya al menos una entrada (RN-13). Sin seguro, pide confirmar que se continúa sin él. |
 | btnVolver | Botón | «Volver al listado». Si hay un paquete armado, pide confirmación antes de descartarlo; no reserva cupo. |
 
-**E-05 · p. 52, «Recorrido paso a paso», pasos 6 y 7 · R.**
+**E-05 · p. 52, «Recorrido paso a paso», pasos 2, 6 y 7 · R.**
 
 | Paso | Columna | Dice | Poner |
 |---|---|---|---|
+| 2 | Acción del cliente | «Selecciona un evento del listado.» | «Elige «Ver entradas» en la tarjeta de un evento.» |
+| 2 | Respuesta del sistema | «Abre la pantalla de armado y presenta los sectores con precio y disponibilidad.» | «Abre la ficha del evento, con su portada, sus datos y un mapa de los sectores con su precio y su disponibilidad. Con «Armar paquete», abre la pantalla de armado, con el sector que se haya elegido en el mapa.» |
 | 6 | Acción del cliente | «Revisa el resumen del paquete.» | «Revisa el resumen del paquete y presiona «Comprar».» |
 | 6 | Respuesta del sistema | «Muestra base de entradas, descuento por nivel, servicios sin descuento, cargo por servicio y total.» | «Muestra base de entradas, descuento por nivel, servicios sin descuento, cargo por servicio, seguro y total. Al confirmar, reserva el cupo por diez minutos y abre el pago.» |
 | 6 | Reglas | «RN-20, RN-21, RN-37» | «RN-15, RN-20, RN-21, RN-37» |
 | 7 | Respuesta del sistema | «Reserva el cupo por diez minutos, tokeniza los datos y envía la operación a la pasarela simulada.» | «Tokeniza los datos y envía la operación a la pasarela simulada, dentro del plazo de la reserva.» |
 
 *Razón:* código. `GestorCompras.Iniciar` reserva al presionar «Comprar»; la pantalla de pago
-llega después y muestra la cuenta regresiva.
+llega después y muestra la cuenta regresiva. El paso 2, desde el 17/11: la tarjeta abre
+`FichaEvento` (`frmEventosCliente.ElegirEvento`), y su botón «Armar paquete» abre el armado con
+el sector elegido (CP-160).
 
 **E-06 · p. 55, «Mensajes de validación» · R.**
 - **En la oración inicial, dice:** «Cada bloqueo se acompaña de un mensaje que indica la causa y
@@ -1064,7 +1075,7 @@ entrada.
 
 | Lugar | Dice | Poner |
 |---|---|---|
-| Paso 1 | «El Cliente ingresa a su perfil y selecciona “Ver historial de compras”.» | «El Cliente selecciona «Mis eventos» en su menú.» |
+| Paso 1 | «El Cliente ingresa a su perfil y selecciona “Ver historial de compras”.» | «El Cliente selecciona «Mis entradas» en su menú.» |
 | Paso 2 | «(evento, fecha, monto, estado)» | «(pedido, evento, fecha, estado, cantidad de entradas, total pagado y monto devuelto)» |
 | Paso 3 | «El Cliente selecciona una compra para ver el detalle del paquete (entradas, servicios adicionales, descuentos).» | «El Cliente selecciona una compra para ver sus entradas: sector, precio, estado, seguro y código. Si alguna tiene seguro, puede elegirla para devolverla.» |
 | FA1 | «“No se registran compras realizadas”» | ««Todavía no tenés compras.»» |
@@ -1385,7 +1396,7 @@ Y las líneas `if (n >= 7) …` y `if (n >= 3) …` **por:**
 - **Agregar** como primera línea del método, antes del comentario «// Base: solo entradas»:
 
 ```csharp
-    GestorSesion.Instance.RequerirUsuario(cliente.Id);   // RN-41: solo el titular o el Administrador
+    GestorSesion.Instance.RequerirUsuario(cliente.Id);   // RN-41: solo el titular de la cuenta
 ```
 
 - **Reemplazar** la línea del cargo **por:**
@@ -1649,7 +1660,7 @@ motivo, «La entrada cambió. Volvé a escanear.».
 
 FA4 – Evento de otro Organizador. Si el evento no es de uno de sus locales, el sistema no
 registra ni cuenta ingresos e informa «Solo podés controlar el ingreso de eventos de tus
-locales.» (RN-42).
+locales.» (RN-49).
 
 **Postcondiciones:**
 - La entrada queda con su fecha de ingreso: no puede volver a ingresar ni devolverse (RN-29).
