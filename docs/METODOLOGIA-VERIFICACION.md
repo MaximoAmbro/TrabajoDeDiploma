@@ -4,16 +4,16 @@ Claude Code, 16/11/2026, a pedido de JC. Es texto para el documento entregable: 
 desde `docs/LISTA-PARA-MAXIMO.md`, entre el final de «Matriz de trazabilidad» (p. 109) y
 «Conclusiones» (p. 110).
 
-**Cifras definitivas.** La mutación se midió sobre el código congelado, `65225e7`. El código que se entrega es posterior, `dba674c` (`dba674c5d3e870003f3b194de2ee905c6d83da69`): Codex corrigió M-22 y otras cuatro tareas. La cifra de mutación corresponde al commit medido y no se vuelve a medir (decisión de JC del 17/11). La batería y la cobertura son las del código que se entrega.
+**Cifras definitivas.** La mutación se midió sobre el código congelado, `65225e7`. El código que se entrega es posterior, `967e038` (`967e038a79ce94ace3469f75843f01ec44310cfb`): después de la medición se corrigió M-22, se pasó a tres perfiles y se agregaron RF-14 a RF-22. La cifra de mutación corresponde al commit medido y no se vuelve a medir (decisión de JC del 17/11). La batería y la cobertura son las del código que se entrega.
 
 | Cifra en el texto | Valor | Fuente |
 |---|---|---|
-| Casos y ejecuciones | 148 casos, 276 ejecuciones, todas correctas, sobre `dba674c` | La corrió Codex y la repitió Claude Code en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-dba674c/bateria.log`). Sobre `65225e7` eran 145 y 271 |
-| Cobertura de reglas | 39 de 41 (95,1 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` |
+| Casos y ejecuciones | 205 casos (CP-01 a CP-206; CP-149 no se usó), 348 ejecuciones, todas correctas, sobre `967e038` | La corrió Codex el 19/11 y la repitió Claude Code el 20/11 en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-967e038/bateria.log`). Sobre `dba674c` eran 148 y 276; sobre `65225e7`, 145 y 271 |
+| Cobertura de reglas | 50 de 52 (96,2 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` y los comentarios de las pruebas en `967e038` (`tools/Matriz/Extraer.py`): dan lo mismo |
 | Mutación, primera medición | 51 de 77 (66,2 %), sobre `fe04b1f` | `docs/INFORME-MUTACION-SEGURIDAD.md`, secciones 1 a 9 |
 | Mutación, medición final | **73 de 77 (94,8 %), sobre `65225e7`**; dos equivalentes descubiertas después, adentro (sin ellas, 97,3 %) | `docs/INFORME-MUTACION-SEGURIDAD.md`, sección 0 |
 
-El texto nombra solo el commit medido, `65225e7`: en el párrafo «Resultado» y otra vez después del de las cuatro no detectadas, donde dice que después se reescribió la autorización (RN-34 pasó a RN-48) y que no se volvió a medir (JC, 18/11). No nombra la versión que se entrega, para que no quede vieja cuando cambie. **⏸ Las cifras de esta tabla (casos, ejecuciones, cobertura) y `dba674c` de arriba esperan los números de JC.**
+El texto nombra solo el commit medido, `65225e7`: en el párrafo «Resultado» y otra vez después del de las cuatro no detectadas, donde dice que después se reescribió la autorización (RN-34 pasó a RN-48) y que no se volvió a medir (JC, 18/11). No nombra la versión que se entrega, para que no quede vieja cuando cambie. **Cifras definitivas desde el 20/11**, con el código congelado en `967e038`.
 
 ---
 
@@ -35,9 +35,9 @@ corrida, con el mismo esquema y los mismos datos iniciales que se entregan, y nu
 desarrollo. Las pruebas de interfaz abren los formularios reales de la aplicación, los operan y
 leen lo que muestran.
 
-La batería tiene ciento cuarenta y ocho casos de prueba. Algunos se ejecutan varias veces con datos
-distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman doscientas
-setenta y seis ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
+La batería tiene doscientos cinco casos de prueba. Algunos se ejecutan varias veces con datos
+distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman trescientas
+cuarenta y ocho ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
 base, los resultados no dependen de lo que haya quedado de una corrida anterior.
 
 **Cobertura de las reglas de negocio**
@@ -54,8 +54,8 @@ situación y no se contaron como cubiertas hasta que tuvieron un caso que verifi
 comportamiento: la de no renovación automática (RN-26) y la que impide agregar el seguro después
 de la compra (RN-28).
 
-Con ese criterio, treinta y nueve de las cuarenta y una reglas vigentes tienen caso automatizado,
-un 95,1 %. Las dos restantes no rechazan ninguna operación: RN-07 describe un cálculo y RN-33
+Con ese criterio, cincuenta de las cincuenta y dos reglas vigentes tienen caso automatizado,
+un 96,2 %. Las dos restantes no rechazan ninguna operación: RN-07 describe un cálculo y RN-33
 fija la moneda.
 
 **El límite de la cobertura**
@@ -235,7 +235,9 @@ auditoría. La operación que escribe un registro era pública y recibía como a
 autor, de modo que cualquier parte del sistema podía atribuirle una acción a otra persona. Un
 registro de auditoría que se puede falsificar no sirve como evidencia. Se cerró haciendo esa
 operación interna a la capa de negocio, que toma el autor de la sesión verificada y no de quien
-llama.
+llama. Después se cerró también la capa de datos: sus repositorios dejaron de ser públicos, de
+modo que la interfaz no puede escribir un registro de auditoría por ningún camino, y un caso
+automático lo comprueba.
 
 Otros métodos se reforzaron sin que estuvieran abiertos, y no se cuentan entre las fugas. El
 control de ingreso, por ejemplo, ya comparaba el dueño del evento con la sesión antes del cambio.
@@ -247,8 +249,7 @@ restaurarla. Pero la revisión deja también una lista de lo que no está probad
 escrituras tienen su caso negativo: faltan pruebas que intenten crear, publicar, suspender,
 eliminar o modificar el evento o el sector de otro dueño, registrar un local a nombre de otra
 cuenta, consultar los locales de otro Organizador, exportar un reporte ajeno, ejecutar los
-reportes distintos del primero y consultar la auditoría como Organizador. Tampoco hay una prueba
-que intente falsificar el autor de un registro. Las verificaciones están en el código; lo que
+reportes distintos del primero y consultar la auditoría como Organizador. Las verificaciones están en el código; lo que
 falta es la prueba que demostraría que siguen ahí. Se informan como huecos abiertos, no como
 defensas probadas.
 

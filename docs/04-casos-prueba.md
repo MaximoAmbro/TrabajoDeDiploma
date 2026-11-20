@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 148 casos, que suman **276 ejecuciones**, las 276 correctas sobre el código que se entrega, `dba674c` (`dba674c5d3e870003f3b194de2ee905c6d83da69`). **Verificado por dos agentes, por separado:** la corrida de Codex (`Pruebas/EVIDENCIA-CIERRE-DEFINITIVO-2026-11-16/bateria-final.trx`) y la de Claude Code en el árbol principal, que compiló y corrió la batería completa con `tools/Proyecto.ps1 -Accion Probar` (`TestResults/Claude-dba674c/bateria.log`: 276 correctas, 0 fallidas, 148 casos distintos). Sobre el código congelado de la medición de mutación, `65225e7`, eran 145 casos y 271 ejecuciones, también verificados por los dos.
-CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-148 se
-agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-148» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 205 casos, de CP-01 a CP-206 (el número CP-149 no se usó), que suman **348 ejecuciones**, las 348 correctas sobre el código que se entrega, `967e038` (`967e038a79ce94ace3469f75843f01ec44310cfb`). **Verificado por dos agentes, por separado:** la corrida de Codex del 19/11, al cerrar la capa `Datos`, y la de Claude Code del 20/11 en el árbol principal, que compiló sin advertencias y corrió la batería completa con `tools/Proyecto.ps1 -Accion Probar` (`TestResults/Claude-967e038/bateria.log`: 348 correctas, 0 fallidas, 205 casos distintos). Antes: sobre `dba674c`, el código que se iba a entregar el 16/11, 148 casos y 276 ejecuciones; sobre el código congelado de la medición de mutación, `65225e7`, 145 casos y 271 ejecuciones. Los dos agentes verificaron las dos cifras.
+CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-206 se
+agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-206» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -121,7 +121,7 @@ la batería suma **73 ejecuciones**.
 | CP-52 | PruebasInterfaz | Pantalla de pago abierta; se elimina el evento; «Pagar» | Aviso «Pago no realizado»; la pantalla devuelve Abort; ningún pago registrado | RF-06 | — | — |
 | CP-53 | PruebasFormularios | Texto de `Visual/Program.cs` | `ManejadorErrores.Instalar();` está antes de `Application.Run` | RNF-02 | — | — |
 | CP-54 | PruebasInterfaz | Abrir la compra del evento 1 | Cada encabezado visible de la grilla de sectores entra completo en su alto, con ajuste de línea | RF-04 | — | H-03 |
-| CP-55 | PruebasRechazosNegocio | `Registrar` con un perfil inexistente | RN-05; no se crea la cuenta | RF-01, RF-02 | RN-05 | — |
+| CP-55 | PruebasRechazosNegocio | `Registrar` con un perfil inexistente | RN-05; no se crea la cuenta | RF-01 | RN-05 | — |
 | CP-56 | PruebasRechazosNegocio | Eliminar el único sector de un evento publicado | RN-06; el sector y el estado del evento no cambian | RF-12 | RN-06 | — |
 | CP-57 | PruebasRechazosNegocio | Agregar al paquete un servicio de otro evento | RN-14; el paquete conserva sus entradas y no suma el servicio | RF-05 | RN-14 | — |
 | CP-58 | PruebasRechazosNegocio | Contratar el plan anual con el mensual activo | RN-25; sigue activa la suscripción original, con su plan | RF-13 | RN-25 | — |
@@ -157,7 +157,8 @@ escritorio abierta.
 
 | Ejecuciones | Casos |
 |---|---|
-| 20 | CP-63 y CP-116 |
+| 22 | CP-116 |
+| 21 | CP-63 |
 | 8 | CP-88 y CP-125 |
 | 7 | CP-112 |
 | 5 | CP-82 y CP-87 |
@@ -167,8 +168,10 @@ escritorio abierta.
 | 2 | CP-66, CP-68, CP-69, CP-70, CP-71, CP-73, CP-74, CP-75, CP-77, CP-79, CP-80, CP-83, CP-89, CP-105, CP-111, CP-119, CP-120, CP-146 y CP-147 |
 | 1 | El resto |
 
-CP-62 a CP-148 suman **203 ejecuciones**. Con las 73 de CP-01 a CP-61, la batería da **276**.
-En el cierre de Codex (`dba674c`) se suman dos de CP-146, dos de CP-147 y una de CP-148 a las 271
+CP-62 a CP-148 suman **206 ejecuciones**, y CP-150 a CP-206, **69**. Con las 73 de CP-01 a CP-61,
+la batería da **348** (corrida de Claude Code del 20/11 sobre `967e038`). Sobre `dba674c` eran 203
+de CP-62 a CP-148: desde entonces CP-63 sumó una pantalla (de 20 a 21) y CP-116, dos (de 20 a 22).
+En el cierre de Codex (`dba674c`) se sumaron dos de CP-146, dos de CP-147 y una de CP-148 a las 271
 de `65225e7`; la limpieza de las ocho filas de CP-125 no agregó ninguna.
 Contadas en la salida de la segunda corrida de Codex del 16/11 (`TestResults/Cola16/final.log`):
 271 líneas «Correctas». Respecto de la primera corrida del 16/11 (243) se suman las 8 de CP-125 y
@@ -196,7 +199,7 @@ sección 0).
 | CP | Archivo | Condición de entrada | Resultado esperado | RF | Reglas | Hall. |
 |---|---|---|---|---|---|---|
 | CP-62 | PruebasFormularios | Los colores y las fuentes de `Tema` | Cada par de texto y fondo cumple el contraste WCAG (el foco sobre el primario, al menos 3:1); las familias tipográficas existen en el sistema | RNF-02 | — | 6A |
-| CP-63 | PruebasFormularios | El código de cada una de las 20 pantallas y de su Designer (20 variantes) | Ninguna declara colores, fuentes ni medidas propias: el estilo sale de `Tema` | RNF-02 | — | T-48 |
+| CP-63 | PruebasFormularios | El código de cada una de las 21 pantallas que tienen Designer, y de su Designer (21 variantes) | Ninguna declara colores, fuentes ni medidas propias: el estilo sale de `Tema` | RNF-02 | — | T-48 |
 | CP-64 | PruebasFormularios | El proyecto `Visual` | El DPI se declara en el manifiesto, sin llamadas manuales en `Program` | RNF-03 | — | 6A |
 | CP-65 | PruebasInterfaz | Ticket PDF de una entrada confirmada, generado en una carpeta temporal | El texto del PDF conserva evento, sector, número de pedido y el código QR completo | RF-07 | RN-18 | — |
 | CP-66 | PruebasGrupoALogin | Abrir el login; iniciar sesión como Administrador (2 variantes) | El foco arranca en el correo; el Administrador llega al menú de administración de la plataforma y queda en la sesión con ese perfil | RF-02 | RN-05 | PA-01 (3.1, C.1) |
@@ -218,7 +221,7 @@ sección 0).
 | CP-82 | PruebasGrupoAPreventa | Alta con preventa; preventa posterior al evento; administrar con preventa; quitarla; administrar sin preventa (5 variantes) | La fecha se guarda y se conserva al publicar en revisión; la posterior al evento se rechaza sin insertar; la pantalla muestra lo guardado; quitarla guarda NULL | RF-12 | RN-06, RN-39, RN-54 | PA-17 (C9.2, C9.3, C9.6, C9.7, C9.9) |
 | CP-83 | PruebasGrupoAListasYMenus | Lista de espera de un evento agotado; un organizador sin locales ni listas (2 variantes) | Columnas, prioridad y contadores a la vista; sin listas, el desplegable queda deshabilitado | RF-10 | RN-35 | PA-18 (8.23, 8.25) |
 | CP-84 | PruebasGrupoAListasYMenus | Un suscriptor inscripto en la lista cancela su plan | Conserva la prioridad con que se inscribió | RF-10 | RN-35 | PA-19 (8.24) |
-| CP-85 | PruebasGrupoAListasYMenus | Menú del organizador al 100 % y al 150 %; menú del cliente; código de `Visual` (3 variantes) | Las acciones del organizador siguen visibles; el cliente no ve reportes; `Visual` no tiene conexiones ni comandos SQL. | RF-11, RF-12, RNF-02, RNF-03 | — | PA-20 (9.1, 9.16, 8.26) |
+| CP-85 | PruebasGrupoAListasYMenus | Menú del organizador al 100 % y al 150 %; menú del cliente; código de `Visual` (3 variantes) | Las acciones del organizador siguen visibles; el cliente no ve reportes; `Visual` no tiene conexiones ni comandos SQL. | RF-11, RF-12, RF-22, RNF-02, RNF-03 | — | PA-20 (9.1, 9.16, 8.26) |
 | CP-86 | PruebasGrupoAReportes | La semilla sola, sin datos de volumen | Los cinco reportes se generan y se exportan | RF-11 | — | PA-21 (9.15) |
 | CP-87 | PruebasGrupoAReportes | Los filtros de cada reporte, RPT-01 a RPT-05 (5 variantes) | Valores iniciales, visibilidad y limpieza correctos en cada uno | RF-11 | — | PA-22 (9.2, 9.3) |
 | CP-88 | PruebasGrupoAReportes | Los datos de demostración del anexo A02 (8 variantes) | RPT-01 a RPT-05 reproducen las cifras del anexo y sus filtros; RPT-01 alinea los números, resalta el TOTAL y muestra la lectura | RF-11, RNF-02 | — | PA-23 (9.4 a 9.10) |
@@ -249,11 +252,11 @@ sección 0).
 | CP-113 | PruebasRevisionSeguridad | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41 | K-6 (R-01) |
 | CP-114 | PruebasRevisionSeguridad | Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada (3 variantes) | El rechazo es idéntico en texto y título, sin revelar si la cuenta existe ni si está bloqueada; el bloqueo se registra igual | RF-02 | RN-04 | K-3 |
 | CP-115 | PruebasRevisionSeguridad | Descuento configurado de Plata y de Oro por debajo, igual y por encima de `DESCUENTO_MAX_ADMISIBLE` (6 variantes) | Por debajo o igual se aplica; por encima se rechaza con RN-20, sin recortarlo en silencio | RF-08 | RN-20 | K-4 |
-| CP-116 | PruebasTextoBotones | El texto de cada botón de las 20 pantallas, dibujado por Windows, también con el borde de foco (20 variantes) | Ningún botón recorta su texto | RNF-02, RNF-03 | — | Rediseño |
+| CP-116 | PruebasTextoBotones | El texto de cada botón de 22 pantallas, dibujado por Windows, también con el borde de foco (22 variantes) | Ningún botón recorta su texto | RNF-02, RNF-03 | — | Rediseño |
 | CP-117 | PruebasListaEsperaCliente | Consultar la posición en la lista de espera: la propia, con suscriptores adelante, la de otro cliente y sin sesión (4 variantes) | El cliente ve su posición, que respeta la prioridad de los suscriptores; la de otro y sin sesión se rechazan | RF-10 | RN-35, RN-41 | D-6 |
 | CP-118 | PruebasListaEsperaCliente | Aviso de disponibilidad: evento agotado, entrada liberada, avisos de otra cuenta, sin sesión, reserva que ocupa el último cupo, evento suspendido (6 variantes) | Solo hay aviso al iniciar sesión cuando de verdad se puede comprar; no se leen avisos ajenos ni sin sesión | RF-10 | RN-41 | D-6 |
 | CP-119 | PruebasExtrasVisuales | Resumen de compra vacío y con dos entradas (2 variantes) | El TOTAL destacado coincide con el resumen, y el indicador marca el paso correcto | RF-05, RNF-02 | — | Rediseño |
-| CP-120 | PruebasExtrasVisuales | Los componentes nuevos `IndicadorPasos` y `EtiquetaTotal` en un host de diseño real (2 variantes) | Ninguno guarda su estilo en el Designer | RNF-02 | — | Rediseño |
+| CP-120 | PruebasExtrasVisuales | Los componentes nuevos `IndicadorPasos` y `EtiquetaTotal` en un host de diseño real (2 variantes) | Ninguno guarda su estilo en el Designer | RF-05, RNF-02 | — | Rediseño |
 | CP-121 | PruebasReglasD5 | Suscripción contratada y vencida; consultarla y abrir su pantalla varias veces | No queda ninguna activa, y consultar o abrir la pantalla no crea ni renueva el registro | RF-13 | RN-26 | D-5 |
 | CP-122 | PruebasReglasD5 | Compra confirmada sin seguro; volver a confirmarla agregándole seguro | Rechazo con «La compra ya no está pendiente de pago.»; la compra queda sin seguro, sin póliza y sin segundo pago | RF-06 | RN-28 | D-5 |
 | CP-123 | PruebasK7K8 | Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-41, RN-49 | K-7 |
@@ -274,8 +277,8 @@ sección 0).
 | CP-138 | PruebasGuardasMutacion | Contar las compras de fidelización de otro cliente, y sin sesión | Rechazo RN-41 sin devolver el dato | RF-08 | RN-41 | Mutación |
 | CP-139 | PruebasGuardasMutacion | Calcular el descuento de otro cliente, y sin sesión | Rechazo RN-41 sin devolver el dato | RF-08 | RN-41 | Mutación |
 | CP-140 | PruebasGuardasMutacion | Armar un paquete a nombre de otro cliente, y sin sesión | Rechazo RN-41; no se crea el paquete | RF-05 | RN-41 | Mutación |
-| CP-141 | PruebasGuardasMutacion | Consultar los locales de un organizador sin la sesión de ese organizador, y con ella | Sin perfil Organizador, rechazo RN-48 sin devolver el dato; el organizador dueño ve sus locales | RF-12 | RN-48 | Mutación |
-| CP-142 | PruebasGuardasMutacion | Listar los eventos con ingreso abierto sin sesión y con sesión de Organizador | Sin perfil Organizador, rechazo RN-48 sin devolver el listado; el Organizador puede consultar los eventos propios | RF-07 | RN-48 | Mutación |
+| CP-141 | PruebasGuardasMutacion | Consultar los locales de un organizador sin la sesión de ese organizador, y con ella | Sin perfil Organizador, rechazo RN-48 sin devolver el dato; el organizador dueño ve sus locales | RF-12, RF-22 | RN-48 | Mutación |
+| CP-142 | PruebasGuardasMutacion | Listar los eventos con ingreso abierto sin sesión y con sesión de Organizador | Sin perfil Organizador, rechazo RN-48 sin devolver el listado; el Organizador puede consultar los eventos propios | RF-07, RF-22 | RN-48 | Mutación |
 | CP-143 | PruebasGuardasMutacion | Ejecutar un reporte ya creado después de cerrar la sesión del administrador o como cliente | Rechazo RN-34 sin devolver el reporte | RF-11 | RN-34 | Mutación |
 | CP-144 | PruebasGuardasMutacion | Pedir el catálogo de eventos de un reporte como cliente, y sin sesión | Rechazo RN-34 sin devolver el catálogo | RF-11 | RN-34 | Mutación |
 | CP-145 | PruebasGuardasMutacion | Insertar dos entradas con el mismo código QR | El índice único de la base rechaza la segunda y la reversión deja intacta la primera | RF-07 | RN-18 | Mutación |
@@ -349,6 +352,30 @@ sección 0).
   la medición del informe de usabilidad (`docs/usabilidad/INFORME-USABILIDAD.md`, «Tiempo del
   flujo completo»).
 - **CP-149 no existe.** El número se saltó al numerar y no se reasigna, igual que RN-27.
+- **Requerimientos alineados con los comentarios el 20/11, leyendo cada prueba.** Codex cambió el
+  requerimiento de 22 comentarios en `037c6b4`. En cinco, la prueba ejercita lo que dice el
+  comentario y el catálogo ya lo sigue: CP-55 (solo RF-01), CP-85 (suma RF-22), CP-120 (suma RF-05),
+  CP-141 y CP-142 (suman RF-22). **En los otros diecisiete la prueba no coincide con el comentario,
+  y la columna RF conserva lo anterior hasta que decida JC:**
+  - CP-95 a CP-98, CP-113, CP-114 y CP-124 pasaron de RF-02 a RF-17, pero verifican RN-04, RN-40
+    y RN-41, que la tabla de reglas asigna a RF-02. RF-17 es el cierre por inactividad y la
+    fortaleza de la contraseña, y ninguna de estas siete los prueba;
+  - CP-12, CP-62, CP-63, CP-64 y CP-116 suman RF-12 o RF-05, pero comprueban algo de toda la
+    aplicación: el alto de todos los formularios, el tema, el estilo de cada pantalla, el
+    manifiesto y los botones de cada pantalla;
+  - CP-47, CP-51 y CP-53 suman RF-02, pero comprueban el cierre de la última ventana y el manejo
+    global de errores, no el inicio de sesión. El cambio de RNF-02 a RNF-04 de CP-51 y CP-53 sí
+    coincide: los dos verifican que el mensaje no muestre detalles técnicos;
+  - CP-31 pierde RF-05 y CP-61 pierde RF-13, pero los dos siguen verificando una regla de ese
+    requerimiento (RN-13 y RN-39), y la matriz pone en las dos filas el caso que prueba una regla
+    de un requerimiento desde la operación de otro.
+- **Diecinueve filas tienen en la columna Reglas algo distinto del comentario.** No se tocaron:
+  CP-39 a CP-42, CP-44, CP-50 y CP-52 son regresiones de la interfaz que muestran una regla sin
+  verificarla, y el catálogo deja la columna vacía a propósito (ver el párrafo que sigue a la
+  tabla de cobertura del documento). Las demás (CP-45, CP-74, CP-82, CP-93, CP-95, CP-99, CP-101,
+  CP-110, CP-123, CP-124, CP-125 y CP-133) nombran en el catálogo una regla más, o en un caso otra,
+  que la que cita el comentario. La cobertura de reglas no cambia con ninguna de las dos
+  versiones: 50 de 52.
 - **Cuatro casos citan una regla y comprueban el rechazo con otra.** CP-165 cita RN-05 y
   CP-187, CP-190 y CP-193 citan RN-53, pero los cuatro esperan el rechazo con RN-34: el control
   de perfil Administrador es el mismo para toda la administración. El catálogo y la matriz usan la
