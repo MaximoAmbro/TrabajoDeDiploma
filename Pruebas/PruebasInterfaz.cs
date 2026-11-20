@@ -602,7 +602,7 @@ namespace Pruebas
             });
         }
 
-        // CP-47 — RF-02, RNF-02: mantener o cerrar la aplicacion segun sus ventanas visibles.
+        // CP-47 — RNF-02: mantener o cerrar la aplicacion segun sus ventanas visibles.
         [DataTestMethod]
         [DataRow(CloseReason.UserClosing, true, false, false, DisplayName = "CP-47: Otra ventana visible mantiene la aplicación")]
         [DataRow(CloseReason.UserClosing, false, false, true, DisplayName = "CP-47: Sin otras ventanas termina la aplicación")]
@@ -710,7 +710,7 @@ namespace Pruebas
             });
         }
 
-        // CP-51 — RF-02, RNF-04: presentar errores accionables sin filtrar detalles tecnicos.
+        // CP-51 — RNF-04: presentar errores accionables sin filtrar detalles tecnicos.
         [DataTestMethod]
         [DataRow("base de datos", DisplayName = "CP-51: Error de base de datos sin detalle técnico")]
         [DataRow("negocio", DisplayName = "CP-51: Error real de negocio conserva su mensaje")]

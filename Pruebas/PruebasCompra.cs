@@ -57,7 +57,7 @@ namespace Pruebas
             Assert.IsFalse(GestorEventos.Instance.Buscar(suspendido.Nombre, null, null).Any(e => e.Id == suspendido.Id));
         }
 
-        // CP-31 — RF-04, RN-08, RN-12, RN-13: cupo por sector, máximo total y entrada obligatoria.
+        // CP-31 — RF-04/RF-05, RN-08, RN-12, RN-13: cupo por sector, máximo total y entrada obligatoria.
         [TestMethod("CP-31: Topes de cupo y paquete sin entradas")]
         public void CP31_TopesDelPaquete()
         {

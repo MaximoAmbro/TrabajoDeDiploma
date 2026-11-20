@@ -146,7 +146,7 @@ namespace Pruebas
             Assert.AreEqual(0, excesivo.Id);
         }
 
-        // CP-61 — RF-05, RN-39: un cliente sin suscripción no puede comprar durante la preventa.
+        // CP-61 — RF-05/RF-13, RN-39: un cliente sin suscripción no puede comprar durante la preventa.
         [TestMethod("CP-61: Preventa rechaza al cliente sin suscripción activa")]
         public void CP61_RechazaPreventaSinSuscripcion()
         {

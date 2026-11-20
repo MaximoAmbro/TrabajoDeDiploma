@@ -30,7 +30,7 @@ namespace Pruebas
         private static readonly Regex Escala =
             new Regex(@"this\.AutoScaleDimensions\s*=\s*new\s+System\.Drawing\.SizeF\(\s*([\d.]+)F\s*,\s*([\d.]+)F\s*\)");
 
-        // CP-12 — RF-12, RNF-03: mantener los formularios dentro del alto compatible con notebook.
+        // CP-12 — RNF-03: mantener los formularios dentro del alto compatible con notebook.
         [TestMethod("CP-12: Altura de los formularios")]
         public void RNF03_NingunFormularioPasaDe790DeAlto()
         {
@@ -97,7 +97,7 @@ namespace Pruebas
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
 
-        // CP-53 — RF-02, RNF-04: instalar el manejo global de errores antes de abrir formularios.
+        // CP-53 — RNF-04: instalar el manejo global de errores antes de abrir formularios.
         [TestMethod("CP-53: Program instala el manejador global antes de ejecutar formularios")]
         public void CP53_ProgramInstalaManejadorGlobal()
         {
@@ -109,7 +109,7 @@ namespace Pruebas
             Assert.IsTrue(ejecucion > instalacion, "El manejador debe instalarse antes de Application.Run.");
         }
 
-        // CP-62 — RF-05, RNF-02: verificar tipografia y contraste del sistema visual.
+        // CP-62 — RNF-02: verificar tipografia y contraste del sistema visual.
         [TestMethod("CP-62: Contraste y fuentes del sistema de diseño")]
         public void CP62_ContrasteYFuentesDelTema()
         {
@@ -145,7 +145,7 @@ namespace Pruebas
             return 0.2126 * lineal(color.R) + 0.7152 * lineal(color.G) + 0.0722 * lineal(color.B);
         }
 
-        // CP-63 — RF-05, RNF-02: las 20 pantallas centralizan el estilo; solo el piloto migra a 96 DPI.
+        // CP-63 — RNF-02: las 20 pantallas centralizan el estilo; solo el piloto migra a 96 DPI.
         [DataTestMethod]
         [DataRow("Cliente/FrmCompraCliente", DisplayName = "CP-63: FrmCompraCliente sin estilo propio")]
         [DataRow("Cliente/frmConfirmacion", DisplayName = "CP-63: frmConfirmacion sin estilo propio")]
@@ -196,7 +196,7 @@ namespace Pruebas
             }
         }
 
-        // CP-64 — RF-05, RNF-03: declarar DPI de sistema para escalar de forma consistente.
+        // CP-64 — RNF-03: declarar DPI de sistema para escalar de forma consistente.
         [TestMethod("CP-64: DPI de sistema declarado mediante el manifiesto")]
         public void CP64_DpiEnManifiesto()
         {

@@ -10,7 +10,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasRevisionSeguridad
     {
-        // CP-113 — RF-17, RN-41: impedir que el llamador suplante la identidad o el perfil de sesion.
+        // CP-113 — RF-02, RN-41: impedir que el llamador suplante la identidad o el perfil de sesion.
         [DataTestMethod]
         [DataRow("inicio", DisplayName = "CP-113: Iniciar no pertenece al contrato público de sesión")]
         [DataRow("salida", DisplayName = "CP-113: La sesión expone solo propiedades de lectura")]
@@ -52,7 +52,7 @@ namespace Pruebas
             }
             finally { sesion.Cerrar(); }
         }
-        // CP-114 — RF-17, RN-04: unificar mensaje y comportamiento de autenticacion para cuentas distintas.
+        // CP-114 — RF-02, RN-04: unificar mensaje y comportamiento de autenticacion para cuentas distintas.
         [DataTestMethod]
         [DataRow(0, DisplayName = "CP-114: Correo existente e inexistente muestran el mismo rechazo")]
         [DataRow(4, DisplayName = "CP-114: El quinto fallo bloquea internamente sin enumerar cuentas")]
