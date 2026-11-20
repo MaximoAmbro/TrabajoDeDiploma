@@ -209,7 +209,7 @@ namespace Pruebas
             }});
         }
 
-        // CP-165 — RF-22, RN-05: impedir que un Cliente acceda a la gestion de administradores.
+        // CP-165 — RF-22, RN-34: impedir que un Cliente acceda a la gestión administrativa global.
         [TestMethod("CP-165: Un cliente no alcanza el alta de administradores ni su operación")]
         public void CP165_AltaAdministradorSoloAdmin()
         {

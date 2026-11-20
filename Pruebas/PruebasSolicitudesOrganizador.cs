@@ -20,7 +20,7 @@ namespace Pruebas
         public void Limpiar() { GestorSesion.Instance.Cerrar(); Fake.Limpiar(); SeleccionVerificadorIdentidad.Actual = new VerificadorIdentidadSimulado(); }
 
         // CP-184 — RF-20/RF-22, RN-50: una solicitud pendiente no otorga permisos de Organizador.
-        [TestMethod]
+        [TestMethod("CP-184: Solicitud pendiente no concede permisos de Organizador")]
         public void CP184_SolicitudPendienteNoConcedePermisos()
         {
             Assert.IsTrue(GestorSolicitudesOrganizador.CuitValido("20-12345678-6"));
@@ -44,7 +44,7 @@ namespace Pruebas
         }
 
         // CP-185 — RF-20, RN-52: rechazar CUIT con digito verificador incorrecto.
-        [TestMethod]
+        [TestMethod("CP-185: CUIT con dígito verificador incorrecto se rechaza")]
         public void CP185_CuitConVerificadorIncorrectoSeRechaza()
         {
             var solicitud = SolicitudValida(); solicitud.Cuit = "20-12345678-5";
@@ -54,7 +54,7 @@ namespace Pruebas
         }
 
         // CP-186 — RF-20, RN-52: rechazar CBU con digito verificador incorrecto.
-        [TestMethod]
+        [TestMethod("CP-186: CBU con dígito verificador incorrecto se rechaza")]
         public void CP186_CbuConVerificadorIncorrectoSeRechaza()
         {
             var solicitud = SolicitudValida(); solicitud.CbuAlias = "0000000000000000000001";
@@ -63,8 +63,8 @@ namespace Pruebas
             Assert.AreEqual("Ingresá un CBU válido de 22 dígitos o un alias bancario de 6 a 20 caracteres.", error.Message);
         }
 
-        // CP-187 — RF-20/RF-22, RN-53: reservar la aprobacion de solicitudes al Administrador.
-        [TestMethod]
+        // CP-187 — RF-20/RF-22, RN-34: el acceso a aprobar solicitudes se rechaza para Cliente.
+        [TestMethod("CP-187: Cliente no puede aprobar una solicitud")]
         public void CP187_ClienteNoPuedeAprobarSolicitud()
         {
             var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Aprobar(1, "Revisada"));
@@ -73,7 +73,7 @@ namespace Pruebas
         }
 
         // CP-188 — RF-20, RN-53: exigir un motivo para rechazar una solicitud.
-        [TestMethod]
+        [TestMethod("CP-188: Rechazar una solicitud exige motivo")]
         public void CP188_RechazoSinMotivoSeRechaza()
         {
             Fake.ComoAdministrador();
@@ -82,8 +82,8 @@ namespace Pruebas
             Assert.AreEqual("Escribí el motivo del rechazo.", error.Message);
         }
 
-        // CP-190 — RF-20/RF-22, RN-53: impedir que un Organizador revise solicitudes de plataforma.
-        [TestMethod]
+        // CP-190 — RF-20/RF-22, RN-34: el acceso a rechazar solicitudes se deniega a Organizador.
+        [TestMethod("CP-190: Organizador no puede rechazar solicitud de plataforma")]
         public void CP190_OrganizadorNoPuedeRechazarSolicitudDePlataforma()
         {
             Fake.ComoOrganizador();
@@ -93,7 +93,7 @@ namespace Pruebas
         }
 
         // CP-191 — RF-20, RN-51: exigir la confirmacion del telefono antes de solicitar perfil Organizador.
-        [TestMethod]
+        [TestMethod("CP-191: Teléfono sin verificar impide solicitar perfil Organizador")]
         public void CP191_TelefonoSinConfirmarImpideLaSolicitud()
         {
             var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Solicitar(SolicitudValida()));
@@ -102,7 +102,7 @@ namespace Pruebas
         }
 
         // CP-192 — RF-20, RN-52: rechazar documentacion que no sea imagen valida.
-        [TestMethod]
+        [TestMethod("CP-192: Documentación que no es imagen válida se rechaza")]
         public void CP192_DocumentacionQueNoEsImagenSeRechaza()
         {
             VerificarTelefono();
@@ -112,8 +112,8 @@ namespace Pruebas
             Assert.AreEqual("Adjuntá una imagen PNG o JPEG válida, comprimida y de hasta 512 KB.", error.Message);
         }
 
-        // CP-193 — RF-20/RF-22, RN-53: mostrar la solicitud y proteger su revision administrativa.
-        [TestMethod]
+        // CP-193 — RF-20/RF-22, RN-34: la revisión administrativa se protege con el control de acceso global.
+        [TestMethod("CP-193: Solicitud visible para Cliente y revisión protegida")]
         public void CP193_AccesoDeSolicitudVisibleYRevisionProtegida()
         {
             using (var menuCliente = new Visual.frmMenuCliente())
@@ -136,7 +136,7 @@ namespace Pruebas
         }
 
         // CP-194 — RF-20, RN-52: aceptar alias bancario con el formato definido.
-        [TestMethod]
+        [TestMethod("CP-194: Alias bancario válido se acepta")]
         public void CP194_AliasBancarioEsAceptado()
         {
             var enviador = new EnviadorSimulado(); SeleccionEnviadorCodigos.Actual = enviador;
@@ -147,7 +147,7 @@ namespace Pruebas
         }
 
         // CP-196 — RF-16/RF-20, RN-45/RN-53: auditar la decision de rechazo y su motivo.
-        [TestMethod]
+        [TestMethod("CP-196: Rechazo con motivo queda auditado")]
         public void CP196_RechazoConMotivoQuedaAuditado()
         {
             VerificarTelefono();
@@ -164,7 +164,7 @@ namespace Pruebas
         }
 
         // CP-195 — RF-20, RN-51: rechazar telefonos fuera del formato argentino.
-        [TestMethod]
+        [TestMethod("CP-195: Teléfono fuera del formato argentino se rechaza")]
         public void CP195_TelefonoNoArgentinoSeRechaza()
         {
             var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono("0000000000"));
@@ -173,7 +173,7 @@ namespace Pruebas
         }
 
         // CP-189 — RF-16/RF-20/RF-22, RN-45/RN-53: promover al Organizador, crear su local y auditar la aprobacion.
-        [TestMethod]
+        [TestMethod("CP-189: Aprobación promueve a Organizador y audita")]
         public void CP189_AprobacionPromueveYRegistraAuditoria()
         {
             var enviador = new EnviadorSimulado(); SeleccionEnviadorCodigos.Actual=enviador;
