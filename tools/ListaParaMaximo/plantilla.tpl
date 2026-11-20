@@ -74,18 +74,22 @@
 >    cuál.
 > 3. Entrá con `organizador@eventaura.com` / `Cliente123`: tenés que ver tus locales y eventos.
 
-> ## ✅ DESDE EL 20/11 SE PEGA TODA LA LISTA, salvo cuatro cosas
+> ## ✅ SE PEGA TODA LA LISTA, salvo lo que describe pantallas (20/11)
 >
-> El código quedó congelado en `967e038` (348 ejecuciones de prueba, todas correctas), y cada
-> página que estaba en pausa se revisó contra ese código. Siguen en pausa, con la marca ⏸ en su
-> lugar:
+> Cada página que estaba en pausa se revisó contra el código de `967e038` (348 ejecuciones de
+> prueba, todas correctas). **Pero Codex está cambiando la interfaz** (normaliza los botones,
+> devuelve el acceso a «Cambiar contraseña» y rehace las capturas), así que esperan, con la marca
+> ⏸ en su lugar, las páginas que describen pantallas:
 >
-> - **el punto 3 de la p. 24 y la fila RNF-03 de la p. 37:** la limitación del escalado de
->   pantalla cambió con el código y JC tiene que confirmar el texto nuevo;
-> - **las tres capturas de las pp. 47 a 49 y una oración de la p. 47:** son de antes de la
->   identidad visual nueva; faltan capturas nuevas y una decisión de JC;
-> - **CU-09, «Cambiar contraseña»** (después de la p. 85): espera a JC. CU-10 a CU-21 se pegan;
-> - **el anexo «Pantallas del sistema»:** faltan cuatro capturas.
+> - los prototipos (p. 45) y el guion de interfaz con sus capturas (pp. 47 a 49);
+> - el instructivo: controles, recorrido, figuras y mensajes (pp. 51 a 53 y 55);
+> - las especificaciones de casos de uso, CU-01 a CU-21 (pp. 72 a 85 y las nuevas);
+> - el párrafo sobre el rediseño en el informe de usabilidad (pp. 90 a 97);
+> - el anexo «Pantallas del sistema».
+>
+> Todo lo demás se pega: definición, requerimientos (incluido RNF-03), reglas, priorización,
+> arquitectura, diagramas, A02, matriz, cobertura, brechas, metodología, conclusiones y
+> bibliografía.
 >
 > Siguen esperando también los datos marcados «⏸ ESPERA A JC» (tabla de abajo). **Si ya habías
 > pegado alguna de las páginas que estaban en pausa, volvé a pegarla entera** (ver «Cambió
@@ -108,17 +112,18 @@
 >
 > | Dónde | Qué no se pega | De qué depende |
 > |---|---|---|
-> | p. 24, punto 3, y p. 37, fila RNF-03 | El texto de la limitación del escalado | Que JC confirme el texto nuevo: la aplicación ya declara compatibilidad con el escalado de Windows |
-> | pp. 47 a 49 | Las tres capturas y la oración de los enlaces del inicio de sesión | Capturas nuevas de Codex y la decisión de JC sobre «Cambiar contraseña» |
-> | Después de la p. 85 | CU-09, «Cambiar contraseña» | La decisión de JC sobre «Cambiar contraseña» |
-> | Anexo «Pantallas del sistema» | El anexo entero | Cuatro capturas de Codex |
+> | pp. 45, 47 a 49, 51 a 53 y 55 | Prototipos, guion, controles, recorrido, figuras y mensajes del instructivo | Codex normaliza los botones y rehace las capturas |
+> | pp. 72 a 85 y especificaciones nuevas | CU-01 a CU-21 | Los nombres de botones y menús; CU-09, además, el acceso a «Cambiar contraseña» que agrega Codex |
+> | pp. 90 a 97 | El párrafo «El estudio y el rediseño de la interfaz» | La interfaz nueva |
+> | Anexo «Pantallas del sistema» | El anexo entero | Las capturas nuevas de Codex |
 >
 > **Datos de JC:**
 >
 > | Dónde | Qué no se pega | De qué depende |
 > |---|---|---|
-> | p. 1 y pie de todas las páginas | Comisión, turno, legajos, año | Datos de JC |
-> | p. 6, historial | La fecha de las filas nuevas | El día en que se pega (JC) |
+> | p. 1 y pie de todas las páginas | Comisión, turno, legajos, año, y «Maximo» o «Máximo» | Datos de JC |
+> | p. 6, historial | La fecha de las filas nuevas (una para la 2.5 y otra para la 2.6) | Datos de JC |
+> | pp. 6, 44 y 112 | Los años 2025 de las fechas del historial, de las minutas, de la bibliografía y de la consulta de las comisiones | El año que decida JC |
 > | p. 9 | El período «entre junio y diciembre de 2025» | El año que decida JC |
 > | pp. 12 a 14, registro de interesados | El rol de Juan Cruz | Dato de JC |
 > | pp. 15 a 17, cronograma de hitos | Las nueve «Fecha estimada: x» | Datos de JC |
@@ -208,23 +213,26 @@ No se toca ahora: se regenera al final («Hacé esto último»).
 **Agregar** estas siete filas al final de la tabla. «fecha» es el día en que se pegan los
 cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega. Las seis primeras son la versión
 2.5 (las correcciones del 4 al 11 de noviembre); la última, la 2.6, que es la que se entrega.
+El autor va como en las filas anteriores de la tabla («J. C. Riggio»).
 
 | Fecha | Versión | Autor | Descripción del cambio |
 |---|---|---|---|
-| «fecha» | 2.5 | Riggio, Juan Cruz | Reglas de negocio alineadas con el prototipo: se incorporan RN-38 (capacidad del local) y RN-39 (preventa para suscriptores), que el sistema ya aplicaba, y se reescribe RN-35 (prioridad de los suscriptores en la lista de espera, coherente con RN-37). Se detallan RN-06, RN-18, RN-23, RN-24, RN-26, RN-29 y RN-31 (brecha G-05). |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Revisión de seguridad: control de ingreso por QR (RN-18), cambio de contraseña con la contraseña actual (RN-40) y verificación de identidad y de perfil en la capa de negocio (RN-41 y RN-42). Reglas vigentes: 41. Brecha G-07. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Instructivo del requerimiento core: estado de implementación actualizado. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Matriz de trazabilidad: casos de prueba CP-11 a CP-61. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta. |
-| «fecha» | 2.5 | Riggio, Juan Cruz | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, cuatro de ellos corregidos con prueba de regresión, y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
-| «fecha» | 2.6 | Riggio, Juan Cruz | Respecto de la 2.5: requerimientos nuevos RF-14 a RF-22 (verificación del correo, recuperación de la contraseña, registro de auditoría, protección de la sesión y de la contraseña, mapa de sectores, portadas de los eventos, solicitud para ser Organizador, publicación con revisión del primer evento y tres perfiles de usuario), con sus reglas RN-43 a RN-54 y su estimación de costos. Arquitectura e implementación descriptas sobre el prototipo, con los diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-21. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, anexo nuevo «Pantallas del sistema» y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 52 vigentes, de RN-01 a RN-54; RN-27 (versión 2.0) y RN-42 (versión 2.6) están dadas de baja y sus números no se reutilizan. Matriz de trazabilidad con los casos CP-62 a CP-206 y cobertura de 50 de las 52 reglas; brecha G-07 resuelta y brecha nueva G-08. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura, prueba de mutación de las defensas de seguridad y revisión de pertenencia. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
+| «fecha» | 2.5 | J. C. Riggio | Reglas de negocio alineadas con el prototipo: se incorporan RN-38 (capacidad del local) y RN-39 (preventa para suscriptores), que el sistema ya aplicaba, y se reescribe RN-35 (prioridad de los suscriptores en la lista de espera, coherente con RN-37). Se detallan RN-06, RN-18, RN-23, RN-24, RN-26, RN-29 y RN-31 (brecha G-05). |
+| «fecha» | 2.5 | J. C. Riggio | Revisión de seguridad: control de ingreso por QR (RN-18), cambio de contraseña con la contraseña actual (RN-40) y verificación de identidad y de perfil en la capa de negocio (RN-41 y RN-42). Reglas vigentes: 41. Brecha G-07. |
+| «fecha» | 2.5 | J. C. Riggio | Instructivo del requerimiento core: estado de implementación actualizado. |
+| «fecha» | 2.5 | J. C. Riggio | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
+| «fecha» | 2.5 | J. C. Riggio | Matriz de trazabilidad: casos de prueba CP-11 a CP-61. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta. |
+| «fecha» | 2.5 | J. C. Riggio | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, cuatro de ellos corregidos con prueba de regresión, y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
+| «fecha» | 2.6 | J. C. Riggio | Respecto de la 2.5: requerimientos nuevos RF-14 a RF-22 (verificación del correo, recuperación de la contraseña, registro de auditoría, protección de la sesión y de la contraseña, mapa de sectores, portadas de los eventos, solicitud para ser Organizador, publicación con revisión del primer evento y tres perfiles de usuario), con sus reglas RN-43 a RN-54 y su estimación de costos. Arquitectura e implementación descriptas sobre el prototipo, con los diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-21. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, anexo nuevo «Pantallas del sistema» y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 52 vigentes, de RN-01 a RN-54; RN-27 (versión 2.0) y RN-42 (versión 2.6) están dadas de baja y sus números no se reutilizan. Matriz de trazabilidad con los casos CP-62 a CP-206 y cobertura de 50 de las 52 reglas; brecha G-07 resuelta y brecha nueva G-08. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura, prueba de mutación de las defensas de seguridad y revisión de pertenencia. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 ## Página 7 — Resumen ejecutivo, «Qué contiene este informe»
 
 | Fila | Dice | Poner |
 |---|---|---|
+| Definición | «…alcance y trece requerimientos funcionales con sus criterios de verificación.» | «…alcance y veintidós requerimientos funcionales con sus criterios de verificación.» |
 | Reglas de negocio | «Treinta y seis reglas vigentes que fijan las condiciones bajo las cuales opera el sistema» | «Cincuenta y dos reglas vigentes que fijan las condiciones bajo las cuales opera el sistema» |
 | Diseño | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, especificaciones de ocho casos de uso y modelo de dominio completo.» | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, arquitectura en cuatro capas, especificaciones de veintiún casos de uso y diagramas de dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación.» |
+| Desarrollo | «Lógica de descuento por nivel con su modelo de datos, algoritmos, implementación y diez casos de prueba ejecutables.» | «Prototipo funcional de escritorio con tres perfiles de usuario (cliente, organizador y administrador de la plataforma), y la lógica de descuento por nivel con su modelo de datos, algoritmos, implementación y diez casos de prueba ejecutables.» |
 | Validación | «Informe de pruebas de usabilidad con cinco participantes y anexo A02 con cinco reportes de gestión.» | «Informe de pruebas de usabilidad (simulado, medido sobre la aplicación) con seis perfiles, y anexo A02 con cinco reportes de gestión.» |
 | Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, doscientos cinco casos de prueba automatizados y hallazgos.» |
 
@@ -511,9 +519,9 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 
 ## Página 24 — Requerimientos no funcionales, punto 3 (RNF-03)
 
-**⏸ ESPERA A JC: no la pegues todavía.** La limitación que decía este punto ya no es cierta: desde
-el 10/11 la aplicación declara compatibilidad con el escalado de pantalla de Windows. El texto de
-abajo ya está corregido; falta que JC lo confirme.
+**✅ Se pega (confirmado por JC el 20/11).** Si ya habías pegado la versión anterior, la de la
+limitación por el escalado, reemplazala: desde el 10/11 la aplicación declara compatibilidad con
+el escalado de pantalla de Windows.
 
 **Reemplazar** el punto 3 completo:
 
@@ -768,9 +776,8 @@ estimado», y la columna «Puntos», a «Puntos estimados». La tabla no se reca
 
 ## Página 37
 
-**Tabla «Priorización de requerimientos no funcionales», fila RNF-03. ⏸ ESPERA A JC** (es el
-mismo texto de la p. 24): no la pegues todavía. El resto de la página se pega. Reemplazar la
-justificación:
+**Tabla «Priorización de requerimientos no funcionales», fila RNF-03** (confirmada por JC el
+20/11; si ya la habías pegado, reemplazala). Reemplazar la justificación:
 
 > Deseable, pero la evaluación del prototipo se realiza en escritorio.
 
@@ -873,6 +880,8 @@ relevamiento…»): las minutas y los prototipos siguen en esta sección.
 
 ## Página 45 — Prototipos (la copia que queda)
 
+**⏸ EN ESPERA (20/11): describe pantallas, y Codex está cambiando la interfaz** (botones y accesos). Saltéala hasta que esta marca desaparezca. Si ya la pegaste, dejala como está.
+
 **⏸ ESPERA A JC** para la frase de Figma: «Los siguientes prototipos fueron desarrollados en Figma
 y entregados como archivo complementario en formato PDF y versión interactiva.» Si el archivo no
 existe, va: «Los siguientes prototipos se elaboraron como bocetos de las pantallas principales y
@@ -895,10 +904,10 @@ del anexo «Pantallas del sistema» el 20/11 («Mis entradas» y «Reportes»): 
 ## Páginas 47 a 49 — Guion de interfaz: las tres capturas
 
 **⏸ NO PEGAR TODAVÍA (20/11): ni las tres capturas ni la oración de la p. 47.** Las capturas son
-del 16/11 a la tarde, antes de la identidad visual nueva y de la navegación en una sola ventana:
-el menú del cliente ya no se ve así. Además, el inicio de sesión ya no tiene el enlace «Cambiar
-contraseña», y la oración de abajo lo nombra. Las páginas 48 y 49 (las dos entradas siguientes)
-sí se pegan.
+del 16/11 a la tarde, antes de la identidad visual nueva y de la navegación en una sola ventana.
+Codex las rehace después de normalizar los botones y de devolver al inicio de sesión el acceso a
+«Cambiar contraseña», que la oración de abajo nombra. Las páginas 48 y 49 (las dos entradas
+siguientes) sí se pegan.
 
 **Reemplazar las tres imágenes.** Las de hoy muestran la interfaz de antes del rediseño (la de
 la p. 47 dice «Show Password»). Las nuevas están en
@@ -938,14 +947,20 @@ dos accesos como enlaces («Cambiar contraseña» y «Crear Cuenta»).
 
 ## Página 51
 
+**⏸ EN ESPERA (20/11): describe pantallas, y Codex está cambiando la interfaz** (botones y accesos). Saltéala hasta que esta marca desaparezca. Si ya la pegaste, dejala como está.
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-03 · p\. 51 :: ^\*\*E-04
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-04 · p\. 51 :: ^\*\*E-05
 
 ## Página 52
 
+**⏸ EN ESPERA (20/11): describe pantallas, y Codex está cambiando la interfaz** (botones y accesos). Saltéala hasta que esta marca desaparezca. Si ya la pegaste, dejala como está.
+
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*E-05 · p\. 52 :: ^\*\*E-06
 
 ## Páginas 52 y 53 — Figuras 1 a 4 del instructivo
+
+**⏸ EN ESPERA (20/11): describe pantallas, y Codex está cambiando la interfaz** (botones y accesos). Saltéala hasta que esta marca desaparezca. Si ya la pegaste, dejala como está.
 
 Reemplazar cada «Espacio reservado para captura de pantalla» por la imagen de la tabla. **Se
 pegan hoy las cuatro.** **La figura 2 cambió:** es una versión recortada, en otra carpeta. Si ya
@@ -984,6 +999,8 @@ y el paso 2 cambió (ver «Página 52»).
 Sin cambios.
 
 ## Página 55 — Situaciones particulares y mensajes de validación
+
+**⏸ EN ESPERA (20/11): describe pantallas, y Codex está cambiando la interfaz** (botones y accesos). Saltéala hasta que esta marca desaparezca. Si ya la pegaste, dejala como está.
 
 **Fila «Bajé de nivel…». Dice:** «El nivel se reevalúa el primer día de cada mes. Una compra que
 sale de la ventana de doce meses recién impacta en esa fecha.» **Poner:** «El nivel se reevalúa
@@ -1072,6 +1089,8 @@ aspecto*). **Si la achicás, deja de leerse.**
 
 ## Páginas 72 a 85 — Especificaciones CU-01 a CU-08
 
+**⏸ EN ESPERA (20/11): describe pantallas, y Codex está cambiando la interfaz** (botones y accesos). Saltéala hasta que esta marca desaparezca. Si ya la pegaste, dejala como está.
+
 **En las ocho especificaciones, borrar el diagrama chico** que está debajo del título de cada una
 (son ocho figuras, una por caso de uso). Las relaciones de cada caso de uso ya están en el
 diagrama general de la p. 71.
@@ -1117,15 +1136,15 @@ bloqueantes del 16/11.
 
 ## Después de la página 85 — Especificaciones nuevas CU-09 a CU-21
 
-**✅ Se pega hoy (19/11).** Las trece especificaciones están completas: CU-14 y CU-15 describen la verificación y la recuperación con el código fuera de la aplicación.
+Las trece especificaciones están completas: CU-14 y CU-15 describen la verificación y la recuperación con el código fuera de la aplicación.
 
 **Insertar** a continuación de CU-08, con el mismo formato que CU-01 a CU-08 (los mismos estilos
 de título y de campos). No llevan diagrama chico.
 
-**⏸ ESPERA A JC (20/11): CU-09 no se pega todavía.** Dice que el usuario elige «Cambiar
-contraseña» en el inicio de sesión, y desde el 17/11 ese enlace es «Recuperar contraseña»:
-ninguna pantalla abre el cambio de contraseña con la actual. Dejá el título de CU-09 y pegá CU-10
-a CU-21.
+**⏸ EN ESPERA (20/11): no pegues ninguna de las trece.** Nombran botones y menús que Codex está
+normalizando. CU-09 espera además el acceso a «Cambiar contraseña», que hoy no está en ninguna
+pantalla y Codex vuelve a agregar. Si ya las pegaste, dejalas como están: cuando se liberen,
+esta entrada dice cuáles cambiaron.
 
 @@ docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^\*\*CU-09 – Cambiar contraseña\*\*$ :: ^\*\*Lo que no se especifica y por qué\.\*\*
 
@@ -1247,6 +1266,9 @@ Si ya habías pegado las dos figuras anteriores, reemplazalas: cambiaron las dos
 
 @@- docs/CORRECCIONES-DOCUMENTO.md :: ^## 11b\. Páginas 90 a 97 :: ^## 12\. Página 99
 
+**⏸ EN ESPERA (20/11): el párrafo que sigue describe la interfaz, y Codex la está cambiando.**
+Pegá el informe y su título, y dejá este párrafo para cuando se libere.
+
 **Agregar al final de la introducción del informe** (después de la entrada anterior):
 
 > **El estudio y el rediseño de la interfaz.** Las dos mediciones de este estudio corresponden a
@@ -1292,7 +1314,7 @@ U-03 se volvió a leer el 20/11: desde el 16/11 los avisos son mensajes dentro d
 
 ## Después de la página 105 — Anexo nuevo «Pantallas del sistema»
 
-**⏸ NO PEGAR TODAVÍA (20/11): faltan cuatro de las 28 pantallas.** Están las de Organizador y Administrador y, desde el 19/11 a la tarde, «Crear cuenta», «Recuperar contraseña» y «Crear administrador». Faltan cuatro del Cliente que todavía muestran datos de las pruebas: inicio de sesión, inicio de «Mi cuenta», pago y confirmación. Cuando estén, el anexo se pega entero de una vez. Va como anexo nuevo, después del anexo A02 y antes de la matriz de trazabilidad, empezando en página nueva.
+**⏸ NO PEGAR TODAVÍA (20/11): Codex va a rehacer las capturas.** Normaliza los botones de todas las pantallas, así que las 24 capturas que ya estaban listas también cambian. Faltaban además cuatro del Cliente con datos de las pruebas: inicio de sesión, inicio de «Mi cuenta», pago y confirmación. Cuando estén, el anexo se pega entero de una vez. Va como anexo nuevo, después del anexo A02 y antes de la matriz de trazabilidad, empezando en página nueva.
 
 **El mapa de sectores (figura P7.2) va solo, en una página apaisada:** insertá un salto de sección «Página siguiente» antes y otro después, y poné en horizontal solo esa sección (*Disposición › Orientación › Horizontal*). Así el resto del anexo sigue vertical.
 
@@ -1610,6 +1632,10 @@ estilo de «Criterio de construcción». **Se pega entera.**
 > tarea sin asistencia, y la satisfacción buena pasó del 66,7 % al 100 %. Medir, corregir y
 > volver a medir resultó más convincente que cualquier estimación.
 
+**«Sobre el requerimiento core»:** «$1.840 sobre un ticket promedio de $19.356» pasa a «$1.840
+sobre un ticket promedio de $19.355» (el mismo recálculo de la p. 28 y del anexo A02; el 9,5 % no
+cambia).
+
 **«Sobre las reglas de negocio»:** «Explicitar las treinta y seis reglas resultó más productivo de
 lo esperado.» pasa a «Explicitar las cincuenta y dos reglas resultó más productivo de lo
 esperado.»
@@ -1625,8 +1651,18 @@ esperado.»
 > reclasificar una mutación después de conocer su resultado: un porcentaje que se ajusta a
 > posteriori deja de medir.
 
-*Razón:* coherencia con la sección nueva «Metodología de verificación». El párrafo no lleva
-cifras, así que no cambia cuando se congelen los números.
+**Y a continuación, otro con el mismo formato:**
+
+> **Sobre la seguridad de los datos.** Separar los perfiles de cliente, organizador y
+> administrador de la plataforma obligó a revisar una clase completa de defecto, el acceso a
+> datos de otro dueño, en lugar de buscar fallas sueltas. La revisión encontró veinticuatro
+> métodos expuestos con una misma causa: el control verificaba quién llamaba, pero no a quién
+> pertenecía el dato. Buscar por clase de defecto encontró en una sola pasada lo que una
+> revisión hecha operación por operación no se había propuesto buscar.
+
+*Razón:* coherencia con la sección nueva «Metodología de verificación» («La revisión de
+pertenencia») y con la brecha G-08. Los dos párrafos no llevan cifras que dependan de la
+batería.
 
 **Tabla «Limitaciones del trabajo», primera fila. Reemplazar:**
 
@@ -1662,7 +1698,69 @@ cifras, así que no cambia cuando se congelen los números.
 | 1 | «Ejecutar las sesiones de usabilidad con participantes reales y contrastar los resultados con la línea base establecida en este informe.» | «Evaluar la interfaz rediseñada con las mismas herramientas del estudio de usabilidad, para contrastar los resultados, y aplicar lo que queda abierto de su plan de mejora (U-06, U-07, U-08, U-10 y U-12).» |
 | 2 | «Extender el conjunto de pruebas al flujo de compra completo, de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» | «Completar los casos de prueba de las dos reglas sin verificación (RN-07 y RN-33), de modo de cerrar la brecha G-02 de la matriz de trazabilidad.» |
 | 4 | «Definir un caso de prueba de regresión por cada hallazgo de usabilidad antes de aplicar las correcciones de la Fase 6.» | «Mantener una prueba de regresión por cada hallazgo de las próximas rondas de usabilidad, como se hizo con H-01 a H-06.» |
-| 5 | «Resolver la duplicación de contenido detectada entre las secciones de requerimientos, minutas y prototipos del cuerpo del informe.» | **Borrar el punto** y renumerar los siguientes: la duplicación se resolvió en esta versión (pp. 39, 40, 42 y 43). |
+| 5 | «Resolver la duplicación de contenido detectada entre las secciones de requerimientos, minutas y prototipos del cuerpo del informe.» | «Escribir los casos de prueba negativos de pertenencia que faltan: las escrituras de eventos, sectores y locales de otro organizador, la exportación y los reportes distintos del primero, y la consulta de la auditoría como organizador, de modo de cerrar la brecha G-08.» La duplicación que nombraba el punto se resolvió en esta versión (pp. 39, 40, 42 y 43). |
+
+**Agregar** un punto 6, con el mismo formato:
+
+> 6. Enviar los códigos de verificación y de recuperación por correo real, eligiendo la
+>    estrategia de envío por SMTP que ya existe y configurando el servidor, y mover el registro
+>    de auditoría a un almacenamiento que no se pueda modificar con las credenciales de la
+>    aplicación.
+
+*Razón:* los dos puntos nuevos son las dos limitaciones de la versión 2.6 que tienen solución
+conocida: G-08 (p. 109) y la fila del envío simulado en «Limitaciones del trabajo» (p. 110).
+
+## Página 112 — Bibliografía
+
+**«Fuentes metodológicas».** Agregar estas entradas en orden alfabético entre las que ya están,
+con el mismo formato:
+
+> Card, S. K., Moran, T. P., & Newell, A. (1980). The keystroke-level model for user performance
+> time with interactive systems. Communications of the ACM, 23(7), 396–410.
+>
+> DeMillo, R. A., Lipton, R. J., & Sayward, F. G. (1978). Hints on test data selection: Help for
+> the practicing programmer. Computer, 11(4), 34–41.
+>
+> Fowler, M. (2002). Patterns of Enterprise Application Architecture. Boston: Addison-Wesley.
+>
+> Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). Design Patterns: Elements of Reusable
+> Object-Oriented Software. Reading: Addison-Wesley.
+>
+> Jia, Y., & Harman, M. (2011). An analysis and survey of the development of mutation testing.
+> IEEE Transactions on Software Engineering, 37(5), 649–678.
+>
+> Kieras, D. (2001). Using the Keystroke-Level Model to estimate execution times. Ann Arbor:
+> University of Michigan.
+>
+> Nielsen, J. (1994). Heuristic evaluation. En J. Nielsen & R. L. Mack (Eds.), Usability
+> Inspection Methods (pp. 25–62). Nueva York: John Wiley & Sons.
+>
+> Rosenberg, D., & Stephens, M. (2007). Use Case Driven Object Modeling with UML: Theory and
+> Practice. Berkeley: Apress.
+>
+> Wharton, C., Rieman, J., Lewis, C., & Polson, P. (1994). The cognitive walkthrough method: A
+> practitioner's guide. En J. Nielsen & R. L. Mack (Eds.), Usability Inspection Methods
+> (pp. 105–140). Nueva York: John Wiley & Sons.
+
+**«Documentación técnica».** Agregar, con el mismo formato:
+
+> Microsoft. (2025). .NET Framework 4.8 y Windows Forms — Documentación de la plataforma de
+> aplicaciones de escritorio.
+>
+> Microsoft. (2025). MSTest — Documentación del marco de pruebas para .NET.
+>
+> Microsoft. (2025). SQL Server Express — Documentación del motor de base de datos.
+>
+> PlantUML. (2025). PlantUML — Documentación de la herramienta de diagramas UML a partir de texto.
+
+*Razón:* el informe de usabilidad rehecho (pp. 90 a 97) cita a Card, Moran y Newell, a Kieras, a
+Nielsen (1994) y a Wharton et al., que no estaban en la bibliografía. Las otras cinco son las
+fuentes de lo que el documento nombra sin citar: los patrones Singleton y Strategy (Gamma et al.)
+y Repository (Fowler) de «Arquitectura e implementación», el diagrama de robustez de ICONIX
+(Rosenberg y Stephens) y la prueba de mutación (DeMillo et al.; Jia y Harman). La documentación
+técnica suma las herramientas que nombran los supuestos y las restricciones (pp. 21 y 41). El
+año 2025 de las entradas técnicas sigue al de las que ya están: si JC fija otro año de entrega,
+cambia junto con el de la carátula.
 
 ---
 
