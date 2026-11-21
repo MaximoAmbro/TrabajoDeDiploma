@@ -125,10 +125,7 @@
 > | p. 6, historial | La fecha de las filas nuevas (una para la 2.5 y otra para la 2.6) | Datos de JC |
 > | pp. 6, 44 y 112 | Los años 2025 de las fechas del historial, de las minutas, de la bibliografía y de la consulta de las comisiones | El año que decida JC |
 > | p. 9 | El período «entre junio y diciembre de 2025» | El año que decida JC |
-> | pp. 12 a 14, registro de interesados | El rol de Juan Cruz | Dato de JC |
 > | pp. 15 a 17, cronograma de hitos | Las nueve «Fecha estimada: x» | Datos de JC |
-> | p. 44, Minuta Nº 2 | Si el profesor figura «de la cátedra (rol simulado)» | Dato de JC |
-> | p. 45, prototipos | La frase sobre Figma | Si existe el archivo de Figma (JC) |
 
 > ## ⚠ Las páginas 63 a 67 (y el código de las 102 a 105): bloques de código que Word estropea sin que se note
 >
@@ -348,7 +345,7 @@ completo, desde su número hasta su «Cuándo evaluarlo», **por:**
 
 ## Páginas 12 a 14 — Registro de interesados
 
-**⏸ ESPERA A JC** (confirma el rol de Juan Cruz). Cuando confirme, las tres cosas van juntas:
+**✅ Se pega (20/11): JC confirmó el rol de Desarrollador.** Las tres cosas van juntas:
 
 1. **Título:** «Registro de interesados» pasa a «Registro de interesados (simulado)».
 2. **Debajo del Interesado 2, agregar** con el mismo formato:
@@ -870,10 +867,12 @@ que queda dice «Fecha: x».
 |---|---|---|
 | Minuta Nº 1 | «Fecha: x» | «Fecha: 05/06/2025» |
 | Minuta Nº 2 | «Fecha: x» | «Fecha: 17/06/2025» |
+| Minuta Nº 2, participantes | «Máximo Ambrosino, Profesor (evaluador académico)» | «Máximo Ambrosino, Profesor de la cátedra (rol simulado)» |
 
 El año de las dos fechas sigue la decisión del año de entrega (ver «Hacé esto último»).
-**⏸ ESPERA A JC** solo para un dato: si en la Minuta Nº 2 «Profesor (evaluador académico)» pasa a
-«Profesor de la cátedra (rol simulado)».
+*Razón del cambio de participantes (decisión de JC, 20/11):* la minuta es simulada y el profesor
+es real. «Evaluador académico» da a entender una evaluación que no existió; «rol simulado» lo
+aclara.
 
 La remisión de la p. 42 queda entera, con su última oración («Esta sección reúne el material de
 relevamiento…»): las minutas y los prototipos siguen en esta sección.
@@ -882,10 +881,11 @@ relevamiento…»): las minutas y los prototipos siguen en esta sección.
 
 **⏸ EN ESPERA (20/11): describe pantallas, y Codex está cambiando la interfaz** (botones y accesos). Saltéala hasta que esta marca desaparezca. Si ya la pegaste, dejala como está.
 
-**⏸ ESPERA A JC** para la frase de Figma: «Los siguientes prototipos fueron desarrollados en Figma
-y entregados como archivo complementario en formato PDF y versión interactiva.» Si el archivo no
-existe, va: «Los siguientes prototipos se elaboraron como bocetos de las pantallas principales y
-representan el flujo completo de compra previsto en esta etapa.»
+**Frase de Figma (decisión de JC, 20/11).** No hay archivo de Figma: no está en el repositorio ni
+en ningún documento del proyecto. Cuando esta página se libere, **reemplazar** «Los siguientes
+prototipos fueron desarrollados en Figma y entregados como archivo complementario en formato PDF y
+versión interactiva.» **por** «Los siguientes prototipos se elaboraron como bocetos de las
+pantallas principales y representan el flujo completo de compra previsto en esta etapa.»
 
 Estas correcciones se pegan ya, en la copia de la p. 45:
 

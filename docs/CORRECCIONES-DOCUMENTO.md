@@ -1287,11 +1287,12 @@ esfuerzo total estimado».
 - Es una minuta simulada con una persona real.
 - El rótulo «(simuladas)» la cubre, pero conviene que el docente no la lea como una reunión
   que se le atribuye.
-- **Propuesta:** «Profesor de la cátedra (rol simulado)». Lo decide JC.
+- **Decidido (JC, 20/11):** «Profesor de la cátedra (rol simulado)». En la copia que queda
+  (p. 44) el texto es «Profesor (evaluador académico)»; se reemplaza por ese.
 
 ### Página 45 — Prototipos
 
-**⚠ A CONFIRMAR CON JC Y MÁXIMO.** El texto dice:
+**Decidido (JC, 20/11): va la frase de bocetos.** No hay archivo de Figma. El texto dice:
 
 > Los siguientes prototipos fueron desarrollados en Figma y entregados como archivo
 > complementario en formato PDF y versión interactiva.
