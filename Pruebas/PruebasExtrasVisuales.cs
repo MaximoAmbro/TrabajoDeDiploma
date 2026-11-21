@@ -35,8 +35,15 @@ namespace Pruebas {
     using(var pago=new Visual.frmPago{Compra=pendiente}) {Mostrar(pago);Assert.AreEqual(3,ControlDe<IndicadorPasos>(pago,"indicadorPasos").PasoActual);}
     var confirmada=Fake.CompraConfirmada(cliente,evento,Math.Max(1,cantidad),false);
     using(var confirmacion=new Visual.frmConfirmacion{Compra=confirmada}) {
+     confirmacion.Rutas.AddRange(new[]{@"C:\privado\Ticket_1.pdf", @"C:\privado\Ticket_2.pdf"});
+     confirmacion.Carpeta=@"C:\privado";
      Mostrar(confirmacion);Assert.AreEqual(4,ControlDe<IndicadorPasos>(confirmacion,"indicadorPasos").PasoActual);
      Assert.AreEqual("TOTAL "+confirmada.TotalPagado.ToString("C2",new System.Globalization.CultureInfo("es-AR")),ControlDe<EtiquetaTotal>(confirmacion,"lblTotalConfirmado").Text);
+     var visibles=new[]{ControlDe<Label>(confirmacion,"lblDesglose").Text,ControlDe<TextBox>(confirmacion,"txtCarpeta").Text}
+      .Concat(ControlDe<ListBox>(confirmacion,"lstArchivos").Items.Cast<object>().Select(x=>Convert.ToString(x))).ToArray();
+     Assert.IsFalse(visibles.Any(t=>t.Contains("tok_sim_")||t.Contains("Token de pago:")||t.Contains(@"C:\privado")||t.Contains("Ticket_1.pdf")));
+     Assert.AreEqual("Entrada 1",ControlDe<ListBox>(confirmacion,"lstArchivos").Items[0]);
+     Assert.AreEqual("Guardadas en Documentos.",ControlDe<TextBox>(confirmacion,"txtCarpeta").Text);
     }
     using(var listado=new Visual.frmEventosCliente{IDUsuario=cliente.Id}) {Mostrar(listado);Assert.AreEqual(1,ControlDe<IndicadorPasos>(listado,"indicadorPasos").PasoActual);}
    });

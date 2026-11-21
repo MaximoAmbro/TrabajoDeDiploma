@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Forms;
 using Entidades;
@@ -205,7 +205,7 @@ namespace Pruebas
                     InterfazGrupoA.ControlDe<Button>(form, "btnEnviarCodigoTelefono").PerformClick();
                     var mensaje = EnviadorSimulado.Ultimo(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
                     Assert.IsNotNull(mensaje, InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
-                    Assert.AreEqual("Si el teléfono es válido, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.",
+                    Assert.AreEqual("Si el teléfono es válido, enviamos un código. Para continuar, abrí fuera de EventAura el mensaje simulado de esa dirección.",
                         InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
                     string archivo = EnviadorSimulado.ArchivoDeBandejaParaPruebas(Telefono);
                     Assert.IsTrue(System.IO.File.Exists(archivo));

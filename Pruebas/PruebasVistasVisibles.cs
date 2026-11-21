@@ -215,11 +215,15 @@ namespace Pruebas
         {
             EnSta(()=>{
                 var cliente=Fake.Cliente(NivelFidelidad.Bronce);
-                using(var panel=new PanelAdministrador()) {
-                    Assert.IsNotNull(ControlDe<Button>(panel,"btnCrearAdministrador"));
+                Fake.ComoAdministrador();
+                using(var menu=new Visual.frmMenuAdministrador()) {
+                    Mostrar(menu);
+                    var panel=ControlDe<PanelAdministrador>(menu,"panelAdministrador");
+                    var boton=ControlDe<Button>(menu,"btnCrearAdministrador");
+                    Assert.IsTrue(boton.Visible);
                     Fake.ComoCliente(cliente);
                     Assert.AreEqual("RN-34",Assert.ThrowsException<ReglaNegocioException>(()=>panel.Cargar()).Regla);
-                    Assert.AreEqual("RN-34",Assert.ThrowsException<ReglaNegocioException>(()=>ControlDe<Button>(panel,"btnCrearAdministrador").PerformClick()).Regla);
+                    Assert.AreEqual("RN-34",Assert.ThrowsException<ReglaNegocioException>(()=>boton.PerformClick()).Regla);
                     Assert.AreEqual("RN-34",Assert.ThrowsException<ReglaNegocioException>(()=>GestorUsuarios.Instance.CrearAdministrador(Fake.MailNuevo(),"ClaveSegura123","Admin","Prueba")).Regla);
                 }
             });

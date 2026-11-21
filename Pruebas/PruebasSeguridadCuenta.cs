@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -197,7 +197,7 @@ namespace Pruebas
                     ControlDe<Button>(form, "btnEnviarCodigo").PerformClick();
                     var mensaje = EnviadorSimulado.Ultimo(cliente.Mail, "Recuperacion");
                     Assert.IsNotNull(mensaje);
-                    string respuesta = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
+                    string respuesta = "Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.";
                     Assert.AreEqual(respuesta, ControlDe<Label>(form, "estadoRecuperacion").Text);
                     Assert.IsTrue(File.ReadAllText(EnviadorSimulado.ArchivoDeBandejaParaPruebas(cliente.Mail)).Contains(mensaje.Codigo));
                     Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(mensaje.Codigo)), "Ningún control visible ni oculto de la aplicación debe mostrar el código.");
@@ -242,7 +242,7 @@ namespace Pruebas
                     string respuestaInexistente = ControlDe<Label>(form, "estadoRecuperacion").Text;
                     var señuelo = EnviadorSimulado.Ultimo(inexistente, "Recuperacion");
 
-                    string respuesta = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
+                    string respuesta = "Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.";
                     Assert.AreEqual(respuesta, respuestaExistente);
                     Assert.AreEqual(respuestaExistente, respuestaInexistente);
                     Assert.IsNotNull(señuelo, "La respuesta simulada mantiene el formato uniforme para la dirección desconocida.");
@@ -409,13 +409,12 @@ namespace Pruebas
                     Assert.IsTrue(form.Visible);
                     var tabla = ControlDe<DataGridView>(form, "tablaAuditoria");
                     Assert.IsNotNull(tabla.DataSource);
-                    Assert.AreEqual(8, tabla.Columns.Count, "Se deben mostrar las ocho columnas de auditoría.");
+                    Assert.AreEqual(8, tabla.Columns.Count, "Se conservan las ocho columnas de auditoría en los datos.");
                     CollectionAssert.AreEqual(
-                        new[] { "N.º", "ID usuario", "Correo", "Acción", "Entidad", "ID dato", "Fecha y hora", "Resultado" },
+                        new[] { "Id", "UsuarioId", "Correo", "Acción", "Qué se modificó", "EntidadId", "Fecha y hora", "Resultado" },
                         tabla.Columns.Cast<DataGridViewColumn>().Select(c => c.HeaderText).ToArray());
-                    Assert.IsTrue(tabla.Columns.Cast<DataGridViewColumn>().All(c => c.Visible), "Todas las columnas deben estar visibles: " +
-                        string.Join("; ", tabla.Columns.Cast<DataGridViewColumn>().Select(c => c.HeaderText + "=" + c.Visible + "/" + c.Width)) +
-                        $"; tabla={tabla.ClientSize.Width}, formulario={form.ClientSize.Width}.");
+                    Assert.IsTrue(new[] { "Id", "UsuarioId", "EntidadId" }.All(n => !tabla.Columns[n].Visible), "Los identificadores internos no se muestran al usuario.");
+                    Assert.AreEqual(5, tabla.Columns.Cast<DataGridViewColumn>().Count(c => c.Visible), "Se muestran solo los cinco datos útiles para consultar la auditoría.");
                     Assert.IsTrue(tabla.Columns.Cast<DataGridViewColumn>().Where(c => c.Visible).Sum(c => c.Width)
                         <= tabla.ClientSize.Width, "Las columnas de auditoría deben entrar sin corte horizontal.");
                     Assert.IsTrue(Enumerable.Range(0, tabla.Columns.Count).All(i =>

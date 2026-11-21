@@ -50,16 +50,27 @@ namespace Pruebas
                 using (var form = (Form)Activator.CreateInstance(tipo))
                 {
                     Visual.Tema.Normalizar(form);
+                    int margen = (int)Math.Round(Visual.Tema.MargenFormulario * Math.Max(96, form.DeviceDpi) / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
+                    if (pantalla == "FrmCompraCliente")
+                    {
+                        Assert.AreEqual(24, Descendientes(form).OfType<Panel>().Single(p => p.Name == "pnlContenidoCompra").AutoScrollMargin.Width, "margen interior del contenido de compra");
+                        Assert.AreEqual(24, Descendientes(form).OfType<Panel>().Single(p => p.Name == "pnlAccionesCompra").Padding.Left, "margen del pie de compra");
+                    }
+                    else Assert.AreEqual(margen, form.Padding.Left, pantalla + " margen común de ventana");
                     var errores = new List<string>();
                     var filas = new List<string> { "Pantalla;Control;Texto;Ancho;Alto;NecesitaAncho;NecesitaAlto;Completo" };
                     foreach (Button boton in Descendientes(form).OfType<Button>())
                     {
                         int dpiBoton = Math.Max(96, boton.DeviceDpi);
                         int altoEsperado = (int)Math.Round((boton is Visual.Componentes.BotonPrimario ? Visual.Tema.AltoBotonPrimario : Visual.Tema.AltoBoton) * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
-                        int anchoMinimo = (int)Math.Round(Visual.Tema.AnchoMinimoBoton * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
+                        int[] anchosNormalizados = { Visual.Tema.AnchoBotonCompacto, Visual.Tema.AnchoBotonNormal, Visual.Tema.AnchoBotonAmplio, Visual.Tema.AnchoBotonExtra };
                         int relleno = (int)Math.Round(Visual.Tema.RellenoHorizontalBoton * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
                         Assert.AreEqual(altoEsperado, boton.Height, pantalla + "/" + boton.Name + " alto normalizado");
-                        Assert.IsTrue(boton.Width >= anchoMinimo, pantalla + "/" + boton.Name + " ancho mínimo");
+                        if (pantalla == "frmInicio" && boton.Name == "btninicio")
+                            Assert.AreEqual(form.ClientSize.Width - boton.Left - Visual.Tema.MargenFormulario, boton.Width, pantalla + "/" + boton.Name + " ancho de fila");
+                        else
+                            Assert.IsTrue(anchosNormalizados.Any(ancho => boton.Width == (int)Math.Round(ancho * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero)),
+                                pantalla + "/" + boton.Name + " debe usar uno de los anchos comunes: " + boton.Width);
                         Assert.AreEqual(Visual.Tema.Boton.Name, boton.Font.Name, pantalla + "/" + boton.Name + " tipografía");
                         int rellenoIzquierdo = boton.Controls.OfType<Label>().Any(etiqueta => etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase))
                             ? (int)Math.Round(Visual.Tema.RellenoIconoBoton * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero)
@@ -90,6 +101,12 @@ namespace Pruebas
                             filas.Add(string.Join(";",pantalla,boton.Name,texto,disponible.Width,disponible.Height,necesaria.Width,necesaria.Height,completo));
                             if (!completo) errores.Add(boton.Name + " «" + texto + "»: " + disponible + ", necesita " + necesaria);
                         }
+                    }
+                    foreach (Control control in Descendientes(form).Where(c => c.Parent is FlowLayoutPanel || c.Parent is TableLayoutPanel))
+                    {
+                        int dpiControl = Math.Max(96, control.DeviceDpi);
+                        int margenEsperado = (int)Math.Round((Visual.Tema.SeparacionControl / 2) * dpiControl / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
+                        Assert.AreEqual(new Padding(margenEsperado), control.Margin, pantalla + "/" + control.Name + " separación de layout");
                     }
                     foreach (Control contenedor in new Control[] { form }.Concat(Descendientes(form)))
                     {
