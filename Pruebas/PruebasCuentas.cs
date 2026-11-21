@@ -101,8 +101,7 @@ namespace Pruebas
             Assert.AreEqual(0, recuperado.IntentosFallidos);
             Assert.IsNull(recuperado.BloqueadoHasta);
         }
-
-        // CP-45 — RF-01, RN-05: el alta pública de negocio crea exclusivamente clientes Bronce.
+        // CP-45 — RF-01, RN-03: RegistrarCliente crea un Cliente Bronce por defecto.
         [TestMethod("CP-45: RegistrarCliente crea un cliente Bronce")]
         public void CP45_AltaPublicaDeNegocioCreaClienteBronce()
         {

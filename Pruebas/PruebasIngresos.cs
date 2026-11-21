@@ -31,8 +31,7 @@ namespace Pruebas
 
         [TestCleanup]
         public void Terminar() { GestorSesion.Instance.Cerrar(); Fake.Limpiar(); }
-
-        // CP-99 — RF-07, RN-18: registro y persistencia sin alterar ventas.
+        // CP-99 — RF-07, RN-18/RN-48: registrar ingreso solo para Organizador autorizado; el Cliente se rechaza.
         [TestMethod("CP-99: Una entrada válida ingresa sin cambiar su estado de venta")]
         public void EntradaValida()
         {

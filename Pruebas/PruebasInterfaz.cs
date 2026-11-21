@@ -427,8 +427,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-39 — RF-06, RN-15, H-02: cuenta regresiva visible y aviso rojo durante el último minuto.
+        // CP-39 — RF-06, H-02: cuenta regresiva visible y aviso rojo durante el último minuto.
         [TestMethod("CP-39: Temporizador de reserva normal y en el último minuto")]
         public void CP39_TemporizadorDeReservaALaVista()
         {
@@ -462,8 +461,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-40 — RF-04, RN-08, H-03: cupo restante por sector y edición exclusiva de Cantidad.
+        // CP-40 — RF-04, H-03: cupo restante por sector y edición exclusiva de Cantidad.
         [TestMethod("CP-40: Cupo restante por sector y única columna editable")]
         public void CP40_CupoRestantePorSector()
         {
@@ -488,8 +486,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-41 — RF-05, RN-28, H-04: cancelar la advertencia de compra sin seguro no reserva cupo.
+        // CP-41 — RF-05, H-04: cancelar la advertencia de compra sin seguro no reserva cupo.
         [TestMethod("CP-41: Confirmación al comprar sin seguro con No por defecto")]
         public void CP41_ConfirmacionAlComprarSinSeguro()
         {
@@ -518,8 +515,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-42 — RF-08, RN-19, RN-20, H-05: enlace visible y explicación con umbrales configurados.
+        // CP-42 — RF-08, H-05: enlace visible y explicación con umbrales configurados.
         [TestMethod("CP-42: Explicación de niveles con los umbrales vigentes")]
         public void CP42_ExplicacionDeLosNiveles()
         {
@@ -543,8 +539,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-44 — RF-01, RN-05: el alta pública no permite elegir ni escribir un perfil privilegiado.
+        // CP-44 — RF-01, RN-05: el alta pública crea Cliente y no permite elegir un perfil privilegiado.
         [TestMethod("CP-44: Registro sin selector de perfil crea solo clientes")]
         public void CP44_AltaPublicaSinSelectorDePerfil()
         {
@@ -675,8 +670,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-50 — RF-05, RN-13, RN-28: Comprar y Seguro requieren entradas; quitarlas desactiva y destilda el seguro.
+        // CP-50 — RF-05: Comprar y Seguro requieren entradas; quitarlas desactiva y destilda el seguro.
         [TestMethod("CP-50: Comprar y Seguro se habilitan solo con entradas")]
         public void CP50_CompraYSeguroRequierenEntradas()
         {
@@ -709,11 +703,10 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-51 — RNF-04: presentar errores accionables sin filtrar detalles tecnicos.
+        // CP-51 — RNF-02: presentar errores accionables sin filtrar detalles técnicos.
         [DataTestMethod]
         [DataRow("base de datos", DisplayName = "CP-51: Error de base de datos sin detalle técnico")]
-        [DataRow("negocio", DisplayName = "CP-51: Error real de negocio conserva su mensaje")]
+        [DataRow("negocio", DisplayName = "CP-51: Error de negocio con mensaje claro y sin ID interno")]
         [DataRow("general", DisplayName = "CP-51: Error inesperado sin detalle técnico")]
         public void CP51_MensajeDeErrorParaUsuario(string caso)
         {
@@ -731,8 +724,8 @@ namespace Pruebas
                     var cliente = Fake.Cliente(NivelFidelidad.Bronce);
                     Fake.ComoCliente(cliente);
                     error = Assert.ThrowsException<InvalidOperationException>(() => GestorPaquetes.Instance.Nuevo(999999, cliente.Id));
-                    esperado = "No se encontró ningún evento con ese ID.";
-                    Assert.AreEqual(esperado, error.Message);
+                    esperado = "Ese evento ya no está disponible. Actualizá la pantalla e intentá de nuevo.";
+                    StringAssert.Contains(error.Message, "ID");
                 }
                 else
                 {
@@ -743,6 +736,7 @@ namespace Pruebas
                 string mensaje = Visual.ManejadorErrores.MensajeParaUsuario(error);
                 Assert.AreEqual(esperado, mensaje);
                 Assert.IsFalse(mensaje.Contains("detalle técnico"));
+                Assert.IsFalse(mensaje.Contains("ID"), "No se muestran identificadores internos.");
             });
         }
 
@@ -750,8 +744,7 @@ namespace Pruebas
         {
             public ErrorDeBaseDeDatosDePrueba() : base("detalle técnico") { }
         }
-
-        // CP-52 — RF-06, RN-11: eliminar un evento durante el pago aborta con aviso y no registra un cobro.
+        // CP-52 — RF-06: eliminar un evento durante el pago aborta con aviso y no registra un cobro.
         [TestMethod("CP-52: Pago de evento eliminado vuelve al listado sin cobrar")]
         public void CP52_PagoDeEventoEliminado()
         {

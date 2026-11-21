@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Drawing;
@@ -13,7 +13,7 @@ namespace Pruebas
     [TestClass]
     public class PruebasTextoBotones
     {
-        // CP-116 — RF-05, RNF-02/RNF-03: texto nativo completo, incluso con el borde de foco.
+        // CP-116 — RNF-02/RNF-03: ningún botón recorta su texto al dibujarse.
         [DataTestMethod]
         [DataRow("FrmCompraCliente", DisplayName = "CP-116: Botones completos de FrmCompraCliente")]
         [DataRow("frmAdministrarEvento", DisplayName = "CP-116: Botones completos de frmAdministrarEvento")]
@@ -63,11 +63,13 @@ namespace Pruebas
                     {
                         int dpiBoton = Math.Max(96, boton.DeviceDpi);
                         int altoEsperado = (int)Math.Round((boton is Visual.Componentes.BotonPrimario ? Visual.Tema.AltoBotonPrimario : Visual.Tema.AltoBoton) * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
-                        int[] anchosNormalizados = { Visual.Tema.AnchoBotonCompacto, Visual.Tema.AnchoBotonNormal, Visual.Tema.AnchoBotonAmplio, Visual.Tema.AnchoBotonExtra };
+                        int[] anchosNormalizados = { Visual.Tema.AnchoBotonCompacto, Visual.Tema.AnchoBotonNormal, Visual.Tema.AnchoBotonAmplio };
                         int relleno = (int)Math.Round(Visual.Tema.RellenoHorizontalBoton * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
                         Assert.AreEqual(altoEsperado, boton.Height, pantalla + "/" + boton.Name + " alto normalizado");
                         if (pantalla == "frmInicio" && boton.Name == "btninicio")
                             Assert.AreEqual(form.ClientSize.Width - boton.Left - Visual.Tema.MargenFormulario, boton.Width, pantalla + "/" + boton.Name + " ancho de fila");
+                        else if (boton.Name == "btnListaEspera")
+                            Assert.AreEqual(boton.Parent.ClientSize.Width - boton.Left * 2, boton.Width, pantalla + "/" + boton.Name + " ancho de fila");
                         else
                             Assert.IsTrue(anchosNormalizados.Any(ancho => boton.Width == (int)Math.Round(ancho * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero)),
                                 pantalla + "/" + boton.Name + " debe usar uno de los anchos comunes: " + boton.Width);

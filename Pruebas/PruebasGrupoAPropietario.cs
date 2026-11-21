@@ -67,7 +67,7 @@ namespace Pruebas
                     if (!registrar)
                     {
                         ControlDe<TextBox>(form, "txtNombre").Select();
-                        foreach (string nombre in new[] { "txtDireccion", "txtAltura", "txtCapacidad", "btnregistrarse" })
+                        foreach (string nombre in new[] { "txtDireccion", "txtAltura", "txtCapacidad", "lblyatengocuen", "btnregistrarse" })
                         {
                             Assert.IsTrue(form.SelectNextControl(form.ActiveControl, true, true, true, false));
                             Assert.AreSame(ControlDe<Control>(form, nombre), form.ActiveControl);
@@ -199,8 +199,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-74 — RF-12, RN-06: ningún sector publica el evento como efecto secundario.
+        // CP-74 — RF-12, RN-06/RN-54: agregar sectores no publica y el primer evento va a revisión.
         [DataTestMethod]
         [DataRow(0, DisplayName = "CP-74: Sector de capacidad cero conserva Borrador")]
         [DataRow(10, DisplayName = "CP-74: Agregar sector conserva Borrador antes de publicar")]

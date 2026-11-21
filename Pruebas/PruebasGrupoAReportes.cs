@@ -363,8 +363,10 @@ namespace Pruebas
         }
         private static void Exportar(Form form, string ruta)
         {
-            DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnExportar").PerformClick(),
-                new DialogoEsperado { Titulo = "Exportar", Texto = ruta, Predeterminado = DialogResult.Yes, Respuesta = DialogResult.No });
+            ControlDe<Button>(form, "btnExportar").PerformClick();
+            Label aviso = ControlDe<Label>(form, "avisoSistema");
+            StringAssert.Contains(aviso.Text, "El reporte se guardó en tu carpeta de documentos.");
+            Assert.IsFalse(aviso.Text.Contains(ruta), "La interfaz no muestra rutas internas ni nombres de archivo.");
         }
     }
 }

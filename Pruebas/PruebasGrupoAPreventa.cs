@@ -59,8 +59,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-82 — RF-12, RN-06/RN-39; PA-17, C9.2/C9.3/C9.6/C9.7/C9.9: alta y edición de preventa.
+        // CP-82 — RF-12, RN-06/RN-39/RN-54: alta y edición de preventa, conservada al enviar a revisión.
         [DataTestMethod]
         [DataRow("alta", DisplayName = "CP-82: Alta guarda preventa y conserva la fecha al publicar")]
         [DataRow("posterior", DisplayName = "CP-82: Preventa posterior al evento se rechaza sin insertar")]

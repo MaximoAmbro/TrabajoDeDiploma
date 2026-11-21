@@ -96,8 +96,7 @@ namespace Pruebas
             Assert.AreEqual(25, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
-
-        // CP-53 — RNF-04: instalar el manejo global de errores antes de abrir formularios.
+        // CP-53 — RNF-02: instalar el manejo global de errores antes de abrir formularios.
         [TestMethod("CP-53: Program instala el manejador global antes de ejecutar formularios")]
         public void CP53_ProgramInstalaManejadorGlobal()
         {
@@ -209,6 +208,49 @@ namespace Pruebas
             Assert.AreEqual("true", manifiesto.SelectSingleNode("//*[local-name()='dpiAware']")?.InnerText.Trim());
             Assert.AreEqual("system", manifiesto.SelectSingleNode("//*[local-name()='dpiAwareness']")?.InnerText.Trim());
             Assert.IsFalse(File.ReadAllText(Path.Combine(visual, "Program.cs")).Contains("SetProcessDPIAware"));
+        }
+
+        // CP-354 — RF-05, RNF-02: teclado, foco inicial y tamaño estable para ventanas sin diseño adaptable.
+        [TestMethod("CP-354: Enter, Esc, orden de tabulación, foco inicial y ventana no adaptable")]
+        public void CP354_TecladoYRedimensionamiento()
+        {
+            var formulariosProducto = typeof(Visual.FormularioEventAura).Assembly.GetTypes()
+                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Visual.FormularioEventAura))
+                .ToArray();
+            Assert.AreEqual(25, formulariosProducto.Length);
+            Assert.IsTrue(formulariosProducto.All(t => typeof(Visual.FormularioEventAura).IsAssignableFrom(t)),
+                "Todas las pantallas deben heredar la política común de teclado y redimensionamiento.");
+
+            InterfazGrupoA.EnSta(() =>
+            {
+                using (var formulario = new FormularioDePruebaTeclado())
+                {
+                    formulario.Show();
+                    Application.DoEvents();
+                    Assert.AreSame(formulario.Correo, formulario.ActiveControl, "El foco inicial debe ir al primer campo.");
+                    Assert.AreEqual(0, formulario.Correo.TabIndex);
+                    Assert.AreEqual(1, formulario.Clave.TabIndex);
+                    Assert.AreEqual(2, formulario.Confirmar.TabIndex);
+                    Assert.AreSame(formulario.Confirmar, formulario.AcceptButton, "Enter debe confirmar la acción principal.");
+                    Assert.AreSame(formulario.Volver, formulario.CancelButton, "Esc debe volver o cancelar.");
+                    Assert.AreEqual(FormBorderStyle.FixedSingle, formulario.FormBorderStyle, "Una ventana sin controles adaptables no debe ofrecer redimensionamiento roto.");
+                    Assert.IsFalse(formulario.MaximizeBox);
+                }
+            });
+        }
+
+        private sealed class FormularioDePruebaTeclado : Visual.FormularioEventAura
+        {
+            public readonly TextBox Correo = new TextBox { Name = "txtCorreo", Location = new Point(20, 20), Size = new Size(200, 28) };
+            public readonly TextBox Clave = new TextBox { Name = "txtClave", Location = new Point(20, 60), Size = new Size(200, 28) };
+            public readonly Button Confirmar = new Visual.Componentes.BotonPrimario { Name = "btnConfirmar", Text = "Confirmar", Location = new Point(20, 100), Size = new Size(140, 36) };
+            public readonly Button Volver = new Visual.Componentes.BotonSecundario { Name = "btnVolver", Text = "Volver", Location = new Point(170, 100), Size = new Size(120, 36) };
+
+            public FormularioDePruebaTeclado()
+            {
+                ClientSize = new Size(320, 160);
+                Controls.AddRange(new Control[] { Correo, Clave, Confirmar, Volver });
+            }
         }
 
         // Nombre de la clase → texto de su .Designer.cs.

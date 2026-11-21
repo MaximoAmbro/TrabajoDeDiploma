@@ -132,12 +132,12 @@ namespace Pruebas
                     for (int i = 0; i < controles.Length; i++) controles[i].Font = new Font(fuentes[i].FontFamily, fuentes[i].SizeInPoints * escala, fuentes[i].Style);
                     menu.Size = new Size(Math.Min(menu.Width, 1366), Math.Min(menu.Height, 728));
                     string[] nombres = { "btnRegistrarLocal", "btnMisLocales", "btnListasEspera", "btnReportes", "lblvolver" };
-                    string[] textos = { "Registrar local", "Mis locales", "Listas de espera", "Reportes", "Volver al inicio" };
+                    string[] textos = { "Registrar local", "Mis locales", "Listas de espera", "Reportes", "Cerrar sesión" };
                     for (int i = 0; i < nombres.Length; i++)
                     {
                         Control c = ControlDe<Control>(menu, nombres[i]);
                         Assert.AreEqual(textos[i], c.Text);
-                        Assert.IsTrue(c.Visible && menu.ClientRectangle.Contains(c.Bounds), nombres[i] + " fuera del menú a " + escala);
+                        Assert.IsTrue(c.Visible && menu.ClientRectangle.Contains(c.Bounds), nombres[i] + " fuera del menú a " + escala + ": " + c.Bounds + " dentro de " + menu.ClientRectangle);
                     }
                 }
             });

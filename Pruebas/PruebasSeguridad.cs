@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Entidades;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -57,8 +57,7 @@ namespace Pruebas
             Assert.ThrowsException<ReglaNegocioException>(() => GestorSuscripciones.Instance.ActivaDe(propietario.Id));
             Assert.ThrowsException<ReglaNegocioException>(() => GestorFidelizacion.Instance.ObtenerCliente(propietario.Id));
         }
-
-        // CP-93 — RF-12, RN-34 generalizada: gestión reservada al administrador.
+        // CP-93 — RF-12, RN-48: la gestión de eventos requiere perfil Administrador de plataforma.
         [TestMethod("CP-93: Un cliente no elimina eventos")]
         public void EliminarEventoAjeno()
         {
