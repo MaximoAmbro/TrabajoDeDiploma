@@ -116,6 +116,7 @@
 > | pp. 72 a 85 y especificaciones nuevas | CU-01 a CU-21 | Los nombres de botones y menús; CU-09, además, el acceso a «Cambiar contraseña» que agrega Codex |
 > | pp. 90 a 97 | El párrafo «El estudio y el rediseño de la interfaz» | La interfaz nueva |
 > | Anexo «Pantallas del sistema» | El anexo entero | Las capturas nuevas de Codex |
+> | pp. 57 a 61, 110 y 111 | El párrafo de Strategy, la fila del envío simulado en «Limitaciones del trabajo» y el punto 6 de trabajo futuro | Cómo queda el envío de correo (cambió en el código el 20/11) |
 >
 > **Datos de JC:**
 >
@@ -1034,6 +1035,8 @@ contando. En los dos casos el nivel se conserva hasta la reevaluación mensual.�
 
 **✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad. **Cambio del 19/11:** en «Patrones de diseño», el párrafo de **Strategy** cambió en su segunda mitad (el envío de los códigos). Si ya pegaste esta sección, reemplazá solo ese párrafo.
 
+**⏸ EN ESPERA (21/11) solo el párrafo de Strategy:** desde el commit `c6d54a2` la aplicación envía correo real si están configuradas las cinco variables `EVENTAURA_SMTP_*`, y el texto dice que SMTP no se elige. Espera a que JC confirme cómo queda el envío. El resto de la sección se pega.
+
 @@- docs/AUDITORIA-DOCUMENTO-CODIGO.md :: ^## Anexo 1 — Texto para D-1 :: ^\*Razón:\* código\. Las 4 capas
 
 ## Página 62 — Entidades
@@ -1686,12 +1689,16 @@ batería.
 
 **Misma tabla, agregar al final estas tres filas:**
 
+**⏸ EN ESPERA (21/11) solo la fila del envío simulado de esta tabla:** desde el commit `c6d54a2` la aplicación envía correo real si están configuradas las cinco variables `EVENTAURA_SMTP_*`, y el texto dice que SMTP no se elige. Espera a que JC confirme cómo queda el envío. Las otras filas se pegan.
+
 | Dos verificaciones dependen de una persona y de un dispositivo: la lectura de los códigos QR impresos con la cámara de un celular y el aspecto del PDF de los reportes en tres lectores. | Se hicieron una vez; no se repiten en cada corrida como los casos automáticos. |
 |---|---|
 | El envío de los códigos de verificación y de recuperación es simulado: cada mensaje se escribe en un archivo de correo de la misma computadora, fuera de la aplicación. Por eso no demuestra que quien lee el código sea el titular del correo o del teléfono. | Es una decisión de configuración, no un hueco de arquitectura: el envío está implementado con el patrón Strategy, y pasar a correo real es elegir la estrategia `EnviadorSmtp`, que ya existe, y configurar el servidor, sin cambiar la capa de negocio. La aplicación no puede abrir ni leer ese archivo, y todo restablecimiento, exitoso o rechazado, queda en el registro de auditoría con la cuenta y la fecha. Ese registro no es inalterable para quien accede directamente a la base, porque se guarda en la misma base y con las mismas credenciales que el resto de los datos. |
 | La aplicación de escritorio accede a la base con la cuenta de Windows del usuario. | Las verificaciones de perfil y de pertenencia del negocio (RN-34, RN-41, RN-48 y RN-49) protegen la operación desde la aplicación; en producción tienen que acompañarse de permisos en la base o de un servicio intermedio. |
 
 ## Página 111 — Trabajo futuro
+
+**⏸ EN ESPERA (21/11) solo el punto 6:** desde el commit `c6d54a2` la aplicación envía correo real si están configuradas las cinco variables `EVENTAURA_SMTP_*`, y el texto dice que SMTP no se elige. Espera a que JC confirme cómo queda el envío. Los puntos 1, 2, 4 y 5 se pegan.
 
 | Punto | Dice | Poner |
 |---|---|---|
