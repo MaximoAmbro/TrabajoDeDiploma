@@ -76,9 +76,11 @@ namespace Visual
         }
 
         public const float DpiDiseno = 96f;
-        public const int AltoBoton = 32, AltoBotonPrimario = 36, AnchoMinimoBoton = 120;
+        public const int AltoBoton = 32, AltoBotonPrimario = 36;
+        public const int AnchoBotonCompacto = 136, AnchoBotonNormal = 184, AnchoBotonAmplio = 240, AnchoBotonExtra = 272;
+        public const int MargenFormulario = 24, SeparacionControl = 8;
         public const int RellenoHorizontalBoton = 20, RellenoIconoBoton = 46, AltoFila = 32, AltoEncabezadoGrilla = 36;
-        public const int AltoEncabezadoVentana = 72, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
+        public const int AltoEncabezadoVentana = 72, AltoBarraSuperior = 60, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
 
         // Medidas del ticket en puntos PDF; no dependen de los DPI del monitor.
         public static class Ticket
@@ -138,6 +140,7 @@ namespace Visual
 
         private static readonly Dictionary<string, Font> fuentesNormalizadas = new Dictionary<string, Font>();
         private static readonly ConditionalWeakTable<Button, object> botonesPreparados = new ConditionalWeakTable<Button, object>();
+        private static readonly ConditionalWeakTable<Form, object> barrasAjustadas = new ConditionalWeakTable<Form, object>();
 
         private static Font NormalizarFuente(Font fuente)
         {
@@ -188,6 +191,20 @@ namespace Visual
 
         public static void Normalizar(Control raiz)
         {
+            if (raiz.Parent is FlowLayoutPanel || raiz.Parent is TableLayoutPanel)
+            {
+                int dpiContenedor = Math.Max(96, raiz.DeviceDpi);
+                int margen = MedidaDpi(SeparacionControl / 2, dpiContenedor);
+                raiz.Margin = new Padding(margen);
+            }
+            var formulario = raiz as FormularioEventAura;
+            if (formulario != null)
+            {
+                // La compra ya distribuye el margen de 24 px dentro de sus paneles desplazables.
+                if (!(formulario is FrmCompraCliente))
+                    formulario.Padding = new Padding(MedidaDpi(MargenFormulario, Math.Max(96, formulario.DeviceDpi)));
+                AjustarBarraSuperior(formulario);
+            }
             string familia = raiz.Font.Name;
             if (familia == "Nirmala UI" || familia == "MS Gothic" || familia == "Microsoft Sans Serif")
                 raiz.Font = NormalizarFuente(raiz.Font);
@@ -206,7 +223,7 @@ namespace Visual
                     etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase));
                 int rellenoIzquierdo = tieneIcono ? RellenoIconoBoton : RellenoHorizontalBoton;
                 boton.Padding = new Padding(MedidaDpi(rellenoIzquierdo, dpi), 0, MedidaDpi(RellenoHorizontalBoton, dpi), 0);
-                boton.Width = Math.Max(MedidaDpi(AnchoMinimoBoton, dpi), boton.Width);
+                boton.Width = MedidaDpi(AnchoBotonSegunDiseno(boton), dpi);
                 boton.Height = MedidaDpi(rol == RolBoton.Primario ? AltoBotonPrimario : AltoBoton, dpi);
             }
             var grilla = raiz as DataGridView;
@@ -217,7 +234,7 @@ namespace Visual
 
         private static void NormalizarSeparacionBotones(Control contenedor)
         {
-            int separacion = MedidaDpi(Espacio.S, Math.Max(96, contenedor.DeviceDpi));
+            int separacion = MedidaDpi(SeparacionControl, Math.Max(96, contenedor.DeviceDpi));
             var botones = contenedor.Controls.Cast<Control>().OfType<Button>()
                 .Where(b => b.Bounds.Width > 0 && b.Bounds.Height > 0)
                 .OrderBy(b => b.Top).ThenBy(b => b.Left).ToArray();
@@ -248,6 +265,43 @@ namespace Visual
         private static int MedidaDpi(int logico, int dpi)
         {
             return (int)Math.Round(logico * (dpi / DpiDiseno), MidpointRounding.AwayFromZero);
+        }
+
+        private static void AjustarBarraSuperior(Form formulario)
+        {
+            foreach (var barra in formulario.Controls.OfType<Componentes.BarraSuperior>())
+            {
+                if (barra.Dock == DockStyle.Top)
+                {
+                    barra.Dock = DockStyle.None;
+                    barra.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+                    barra.SetBounds(0, 0, formulario.ClientSize.Width, MedidaDpi(AltoBarraSuperior, Math.Max(96, formulario.DeviceDpi)));
+                    object marca;
+                    if (!barrasAjustadas.TryGetValue(formulario, out marca))
+                    {
+                        barrasAjustadas.Add(formulario, new object());
+                        formulario.SizeChanged += (s, e) =>
+                        {
+                            var actual = formulario.Controls.OfType<Componentes.BarraSuperior>().FirstOrDefault();
+                            if (actual != null) actual.SetBounds(0, 0, formulario.ClientSize.Width, MedidaDpi(AltoBarraSuperior, Math.Max(96, formulario.DeviceDpi)));
+                        };
+                    }
+                }
+            }
+        }
+
+        private static int AnchoBotonSegunDiseno(Button boton)
+        {
+            if (boton.FindForm() is frmInicio && boton.Name == "btninicio")
+                return Math.Max(AnchoBotonNormal, boton.Parent.ClientSize.Width - boton.Left - MargenFormulario);
+            if (boton.Name == "btnDevolver") return AnchoBotonExtra;
+            bool tieneIcono = boton.Controls.OfType<Label>().Any(etiqueta => etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase));
+            int relleno = tieneIcono ? RellenoIconoBoton + RellenoHorizontalBoton : RellenoHorizontalBoton * 2;
+            int requerido = TextRenderer.MeasureText(boton.Text ?? string.Empty, Boton, Size.Empty,
+                TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width + relleno + BordeFoco * 2 + 8;
+            foreach (int ancho in new[] { AnchoBotonCompacto, AnchoBotonNormal, AnchoBotonAmplio, AnchoBotonExtra })
+                if (ancho >= requerido) return ancho;
+            return AnchoBotonExtra;
         }
 
         // Los componentes y los botones heredados comparten todos los estados de estilo.

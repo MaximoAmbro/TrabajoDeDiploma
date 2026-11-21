@@ -23,6 +23,7 @@ namespace Visual
 
         private void frmSuscripcion_Load(object sender, EventArgs e)
         {
+            label1.Location = new System.Drawing.Point(Tema.MargenFormulario, Tema.AltoBarraSuperior + Tema.MargenFormulario);
             rdbMensual.Tag = GestorSuscripciones.PlanMensual;
             rdbAnual.Tag = GestorSuscripciones.PlanAnual;
             rdbMensual.Text = Opcion(GestorSuscripciones.PlanMensual, "por mes");

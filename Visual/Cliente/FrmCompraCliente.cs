@@ -79,7 +79,7 @@ namespace Visual
             pnlResumen.Paint += Disposicion.PintarTarjeta;
             label1.TextChanged += (sender, e) => AjustarEncabezado();
             label1.FontChanged += (sender, e) => AjustarEncabezado();
-            contenidoCompra.AutoScrollMargin = Size.Empty;
+            contenidoCompra.AutoScrollMargin = new Size(Tema.MargenFormulario, Tema.MargenFormulario);
             contenidoCompra.SizeChanged += (sender, e) => AjustarEncabezado();
             lblResumen.SizeChanged += (sender, e) => AjustarEncabezado();
             AjustarEncabezado();

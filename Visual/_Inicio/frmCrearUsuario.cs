@@ -123,7 +123,7 @@ namespace Visual
             int ancho = Math.Max(px(280), ClientSize.Width - px(48));
             var verificacion = new Panel { Name = "verificacionCorreo", Location = new Point(px(24), px(84)), Size = new Size(ancho, Math.Max(px(300), ClientSize.Height - px(108))), AutoScroll = true };
             var titulo = new Componentes.EtiquetaTitulo { Name = "tituloVerificacion", Text = "Verificá tu correo", Location = new Point(px(8), px(8)), Size = new Size(ancho - px(24), px(40)) };
-            var contenido = new Componentes.EtiquetaAyuda { Name = "instruccionesVerificacion", Location = new Point(px(8), px(60)), Size = new Size(ancho - px(24), px(80)), Text = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar." };
+            var contenido = new Componentes.EtiquetaAyuda { Name = "instruccionesVerificacion", Location = new Point(px(8), px(60)), Size = new Size(ancho - px(24), px(80)), Text = "Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección." };
             var etiqueta = new Componentes.EtiquetaRotulo { Text = "Código de verificación", Location = new Point(px(8), px(164)), Size = new Size(px(240), px(24)) };
             var codigo = new TextBox { Name = "txtCodigoCorreo", Location = new Point(px(8), px(192)), Size = new Size(px(240), px(32)), MaxLength = 6 };
             var estado = new Componentes.EtiquetaAyuda { Name = "estadoVerificacion", Location = new Point(px(8), px(232)), Size = new Size(ancho - px(24), px(54)) };

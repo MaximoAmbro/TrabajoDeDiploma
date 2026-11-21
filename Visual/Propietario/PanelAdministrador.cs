@@ -6,25 +6,15 @@ namespace Visual.Componentes
 {
     public partial class PanelAdministrador : SuperficieTematica
     {
-        private readonly BotonPrimario btnCrearAdministrador;
         private readonly BotonSecundario btnAuditoria;
-        public event EventHandler CrearAdministradorSolicitado;
         public event EventHandler AuditoriaSolicitada;
 
         public PanelAdministrador()
         {
             InitializeComponent();
-            btnCrearAdministrador = new BotonPrimario { Name = "btnCrearAdministrador", Text = "Crear administrador", Size = new System.Drawing.Size(180, 40), Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right };
-            btnCrearAdministrador.Click += (s, e) =>
-            {
-                GestorSesion.Instance.RequerirAdministrador();
-                CrearAdministradorSolicitado?.Invoke(this, EventArgs.Empty);
-            };
-            Controls.Add(btnCrearAdministrador);
             btnAuditoria = new BotonSecundario { Name = "btnAuditoria", Text = "Registro de auditoría", Size = new System.Drawing.Size(180, 40), Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right };
             btnAuditoria.Click += (s, e) => { GestorSesion.Instance.RequerirAdministrador(); AuditoriaSolicitada?.Invoke(this, EventArgs.Empty); };
             Controls.Add(btnAuditoria);
-            btnCrearAdministrador.BringToFront();
             Tema.Normalizar(this);
             datos.SizeChanged += (s,e)=>Distribuir();
             SizeChanged += (s,e)=>Distribuir();
@@ -56,13 +46,10 @@ namespace Visual.Componentes
         }
         private void Distribuir()
         {
-            var prefCrear = btnCrearAdministrador.GetPreferredSize(System.Drawing.Size.Empty);
             var prefAuditoria = btnAuditoria.GetPreferredSize(System.Drawing.Size.Empty);
-            btnCrearAdministrador.Size = new System.Drawing.Size(Math.Max(btnCrearAdministrador.Width, prefCrear.Width + 8), Math.Max(btnCrearAdministrador.Height, prefCrear.Height + 4));
             btnAuditoria.Size = new System.Drawing.Size(Math.Max(btnAuditoria.Width, prefAuditoria.Width + 8), Math.Max(btnAuditoria.Height, prefAuditoria.Height + 4));
-            periodo.SetBounds(0, 0, Math.Max(1, ClientSize.Width - btnCrearAdministrador.Width - btnAuditoria.Width - 24), 52);
-            btnCrearAdministrador.Location = new System.Drawing.Point(Math.Max(0, ClientSize.Width - btnCrearAdministrador.Width), 6);
-            btnAuditoria.Location = new System.Drawing.Point(Math.Max(0, ClientSize.Width - btnCrearAdministrador.Width - btnAuditoria.Width - 8), 6);
+            periodo.SetBounds(0, 0, Math.Max(1, ClientSize.Width - btnAuditoria.Width - 16), 52);
+            btnAuditoria.Location = new System.Drawing.Point(Math.Max(0, ClientSize.Width - btnAuditoria.Width), 6);
             foreach(System.Windows.Forms.Control dato in datos.Controls)
                 dato.Width=Math.Max(1,(datos.ClientSize.Width-System.Windows.Forms.SystemInformation.VerticalScrollBarWidth)/2-dato.Margin.Horizontal);
         }

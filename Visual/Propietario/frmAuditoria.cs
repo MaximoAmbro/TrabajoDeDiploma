@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Negocio;
 
@@ -39,19 +40,19 @@ namespace Visual
         {
             var nombres = new System.Collections.Generic.Dictionary<string, string>
             {
-                { "Id", "N.º" }, { "UsuarioId", "ID usuario" }, { "UsuarioMail", "Correo" },
-                { "Accion", "Acción" }, { "Entidad", "Entidad" }, { "EntidadId", "ID dato" },
+                { "UsuarioMail", "Correo" }, { "Accion", "Acción" }, { "Entidad", "Qué se modificó" },
                 { "Fecha", "Fecha y hora" }, { "Resultado", "Resultado" }
             };
             var minimos = new System.Collections.Generic.Dictionary<string, int>
             {
-                { "Id", 42 }, { "UsuarioId", 68 }, { "UsuarioMail", 126 }, { "Accion", 118 },
-                { "Entidad", 72 }, { "EntidadId", 54 }, { "Fecha", 108 }, { "Resultado", 112 }
+                { "UsuarioMail", 126 }, { "Accion", 118 }, { "Entidad", 120 }, { "Fecha", 108 }, { "Resultado", 112 }
             };
             foreach (DataGridViewColumn columna in tabla.Columns)
             {
                 if (nombres.ContainsKey(columna.DataPropertyName)) columna.HeaderText = nombres[columna.DataPropertyName];
                 if (minimos.ContainsKey(columna.DataPropertyName)) columna.MinimumWidth = minimos[columna.DataPropertyName];
+                if (columna.DataPropertyName == "Id" || columna.DataPropertyName == "UsuarioId" || columna.DataPropertyName == "EntidadId")
+                    columna.Visible = false;
                 columna.SortMode = DataGridViewColumnSortMode.NotSortable;
                 columna.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             }
@@ -68,16 +69,17 @@ namespace Visual
             if (tabla.Columns.Count == 0) return;
             int anchoDisponible = tabla.ClientSize.Width - tabla.RowHeadersWidth - SystemInformation.VerticalScrollBarWidth - 4;
             if (anchoDisponible <= 0) return;
-            int[] pesos = { 5, 7, 24, 16, 8, 6, 17, 17 };
+            var visibles = tabla.Columns.Cast<DataGridViewColumn>().Where(c => c.Visible).ToArray();
+            int[] pesos = { 28, 24, 12, 20, 16 };
             int sumaPesos = 100;
             int asignado = 0;
-            for (int i = 0; i < tabla.Columns.Count; i++)
+            for (int i = 0; i < visibles.Length; i++)
             {
-                int ancho = i == tabla.Columns.Count - 1
+                int ancho = i == visibles.Length - 1
                     ? anchoDisponible - asignado
                     : (int)Math.Floor(anchoDisponible * (double)pesos[Math.Min(i, pesos.Length - 1)] / sumaPesos);
-                tabla.Columns[i].Width = Math.Max(tabla.Columns[i].MinimumWidth, ancho);
-                asignado += tabla.Columns[i].Width;
+                visibles[i].Width = Math.Max(visibles[i].MinimumWidth, ancho);
+                asignado += visibles[i].Width;
             }
         }
 

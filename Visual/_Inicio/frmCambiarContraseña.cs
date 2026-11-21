@@ -58,7 +58,7 @@ namespace Visual
                 try
                 {
                     GestorCodigosCorreo.Instance.SolicitarRecuperacion(txtMail.Text);
-                    _estadoCorreo.Text = "Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
+                    _estadoCorreo.Text = "Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.";
                 }
                 catch (Exception)
                 {

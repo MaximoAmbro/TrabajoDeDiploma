@@ -37,7 +37,7 @@ namespace Visual
             var s=Actual; documento.Image=null;
             if(s==null){detalle.Text="No hay solicitudes pendientes.";return;}
             detalle.Text="Responsable: "+s.Responsable+Environment.NewLine+"CUIT: "+s.Cuit+Environment.NewLine+"Teléfono: "+s.Telefono+Environment.NewLine+
-                "Local: "+s.NombreLocal+Environment.NewLine+"Dirección: "+s.Direccion+Environment.NewLine+"Capacidad: "+s.Capacidad+Environment.NewLine+"CBU / alias: "+s.CbuAlias+Environment.NewLine+"Archivo: "+s.NombreArchivo;
+                "Local: "+s.NombreLocal+Environment.NewLine+"Dirección: "+s.Direccion+Environment.NewLine+"Capacidad: "+s.Capacidad+Environment.NewLine+"CBU / alias: "+s.CbuAlias+Environment.NewLine+"Documentación adjunta: imagen validada.";
             using(var stream=new MemoryStream(s.Documentacion)) using(var imagen=Image.FromStream(stream)) documento.Image=new Bitmap(imagen);
         }
         private void Revisar(bool aprobarSolicitud)

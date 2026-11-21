@@ -61,7 +61,7 @@ namespace Visual
             try
             {
                 GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(telefono.Text);
-                estadoEnvioTelefono.Text = "Si el teléfono es válido, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\\EventAura\\BandejaSimulada para continuar.";
+                estadoEnvioTelefono.Text = "Si el teléfono es válido, enviamos un código. Para continuar, abrí fuera de EventAura el mensaje simulado de esa dirección.";
             }
             catch (ReglaNegocioException ex) { estadoEnvioTelefono.Text = ex.Message; }
             catch (Exception) { estadoEnvioTelefono.Text = "No pudimos enviar el código. Revisá la conexión o la configuración de correo y volvé a intentarlo."; }
@@ -78,7 +78,7 @@ namespace Visual
             using (var dialogo = new OpenFileDialog { Filter = "Imágenes PNG o JPEG|*.png;*.jpg;*.jpeg", Title = "Elegí la documentación" })
             {
                 if (dialogo.ShowDialog(this) != DialogResult.OK) return;
-                try { using (var stream = File.OpenRead(dialogo.FileName)) imagen = ImagenEventoCodec.Preparar(stream); nombreArchivo = Path.GetFileName(dialogo.FileName); archivo.Text = nombreArchivo + " · imagen validada y comprimida"; }
+                try { using (var stream = File.OpenRead(dialogo.FileName)) imagen = ImagenEventoCodec.Preparar(stream); nombreArchivo = Path.GetFileName(dialogo.FileName); archivo.Text = "Documentación adjunta y validada."; }
                 catch (Exception ex) { imagen = null; MessageBox.Show(this, ex.Message, "No pudimos leer la imagen", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             }
         }
@@ -86,9 +86,9 @@ namespace Visual
         {
             try
             {
-                int id = GestorSolicitudesOrganizador.Instance.Solicitar(new SolicitudOrganizador { Responsable=responsable.Text, Cuit=cuit.Text, Telefono=telefono.Text,
+                GestorSolicitudesOrganizador.Instance.Solicitar(new SolicitudOrganizador { Responsable=responsable.Text, Cuit=cuit.Text, Telefono=telefono.Text,
                     NombreLocal=local.Text, Direccion=direccion.Text, Capacidad=(int)capacidad.Value, CbuAlias=cbu.Text, Documentacion=imagen, NombreArchivo=nombreArchivo });
-                MessageBox.Show(this, "Recibimos tu solicitud (N.º " + id + "). Tu cuenta sigue siendo Cliente mientras esté pendiente.", "Solicitud enviada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, "Recibimos tu solicitud. Tu cuenta sigue siendo Cliente mientras esté pendiente.", "Solicitud enviada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Close();
             }
             catch (Exception ex) { MessageBox.Show(this, ex.Message, "Revisá los datos", MessageBoxButtons.OK, MessageBoxIcon.Warning); }

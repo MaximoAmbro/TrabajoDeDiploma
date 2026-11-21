@@ -54,20 +54,18 @@ namespace Visual
             if (pago != null)
             {
                 texto.AppendLine($"Tarjeta •••• {pago.Ultimos4}");
-                texto.AppendLine("Token de pago:");
-                texto.AppendLine(pago.Token);
             }
             lblDesglose.UseMnemonic = false;
             lblDesglose.Text = texto.ToString();
 
             lblTickets.Text = Rutas.Count == 1
-                ? "1 entrada en PDF, con su código QR:"
-                : $"{Rutas.Count} entradas en PDF, cada una con su QR:";
-            txtCarpeta.Text = Carpeta;
+                ? "Tu entrada está lista en PDF, con su código QR:"
+                : $"Tus {Rutas.Count} entradas están listas en PDF, cada una con su QR:";
+            txtCarpeta.Text = "Guardadas en Documentos.";
             lstArchivos.Items.Clear();
-            foreach (string ruta in Rutas)
+            for (int i = 0; i < Rutas.Count; i++)
             {
-                lstArchivos.Items.Add(System.IO.Path.GetFileName(ruta));
+                lstArchivos.Items.Add("Entrada " + (i + 1));
             }
             ActiveControl = btnAceptar;
         }
