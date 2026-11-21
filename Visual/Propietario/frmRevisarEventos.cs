@@ -14,7 +14,8 @@ namespace Visual
         private readonly TextBox motivo = new TextBox { Name = "txtMotivoRechazoEvento", Location = new Point(670, 232), Size = new Size(350, 60), Multiline = true, MaxLength = 500, ScrollBars = ScrollBars.Vertical };
         private readonly Button aprobar = new Componentes.BotonPrimario { Name = "btnAprobarPrimerEvento", Text = "Aprobar y publicar", Location = new Point(670, 310), Size = new Size(300, 44) };
         private readonly Button rechazar = new Componentes.BotonPeligro { Name = "btnRechazarPrimerEvento", Text = "Rechazar y devolver", Location = new Point(670, 366), Size = new Size(300, 44) };
-        private readonly Button cerrar = new Componentes.BotonSecundario { Text = "Cerrar", Location = new Point(24, 510), Size = new Size(140, 40) };
+        private readonly Button cerrar = new Componentes.BotonSecundario { Name = "btnCerrarRevision", Text = "Cerrar", Location = new Point(24, 510), Size = new Size(140, 40) };
+        private readonly Componentes.EstadoVacio estadoSinEventos = new Componentes.EstadoVacio { Name = "estadoSinEventosRevision", Visible = false };
 
         public frmRevisarEventos()
         {
@@ -24,6 +25,10 @@ namespace Visual
             ClientSize = new Size(1060, 570);
             Controls.Add(new Componentes.EtiquetaTitulo { Text = "Primer evento de cada organizador", Location = new Point(24, 24), Size = new Size(700, 44) });
             Controls.AddRange(new Control[] { pendientes, detalle, etiquetaMotivo, motivo, aprobar, rechazar, cerrar });
+            estadoSinEventos.AjustarA(pendientes);
+            estadoSinEventos.Cargar("Todavía no hay eventos pendientes de revisión. Cuando un Organizador publique su primer evento, va a aparecer acá.", "Actualizar");
+            estadoSinEventos.Accion += Cargar;
+            Controls.Add(estadoSinEventos);
             pendientes.SelectedIndexChanged += (s, e) => MostrarSeleccion();
             aprobar.Click += (s, e) => Aprobar();
             rechazar.Click += (s, e) => Rechazar();
@@ -35,6 +40,9 @@ namespace Visual
         {
             pendientes.DataSource = null;
             pendientes.DataSource = GestorEventos.Instance.PendientesDeRevision();
+            bool hayPendientes = pendientes.Items.Count > 0;
+            pendientes.Visible = hayPendientes;
+            estadoSinEventos.Visible = !hayPendientes;
             MostrarSeleccion();
         }
 

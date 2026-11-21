@@ -77,7 +77,7 @@ namespace Visual
 
         public const float DpiDiseno = 96f;
         public const int AltoBoton = 32, AltoBotonPrimario = 36;
-        public const int AnchoBotonCompacto = 136, AnchoBotonNormal = 184, AnchoBotonAmplio = 240, AnchoBotonExtra = 272;
+        public const int AnchoBotonCompacto = 136, AnchoBotonNormal = 184, AnchoBotonAmplio = 240;
         public const int MargenFormulario = 24, SeparacionControl = 8;
         public const int RellenoHorizontalBoton = 20, RellenoIconoBoton = 46, AltoFila = 32, AltoEncabezadoGrilla = 36;
         public const int AltoEncabezadoVentana = 72, AltoBarraSuperior = 60, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
@@ -294,14 +294,16 @@ namespace Visual
         {
             if (boton.FindForm() is frmInicio && boton.Name == "btninicio")
                 return Math.Max(AnchoBotonNormal, boton.Parent.ClientSize.Width - boton.Left - MargenFormulario);
-            if (boton.Name == "btnDevolver") return AnchoBotonExtra;
+            if (boton.Name == "btnDevolver") return AnchoBotonAmplio;
+            if (boton.Name == "btnListaEspera")
+                return Math.Max(AnchoBotonAmplio, boton.Parent.ClientSize.Width - boton.Left * 2);
             bool tieneIcono = boton.Controls.OfType<Label>().Any(etiqueta => etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase));
             int relleno = tieneIcono ? RellenoIconoBoton + RellenoHorizontalBoton : RellenoHorizontalBoton * 2;
             int requerido = TextRenderer.MeasureText(boton.Text ?? string.Empty, Boton, Size.Empty,
                 TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width + relleno + BordeFoco * 2 + 8;
-            foreach (int ancho in new[] { AnchoBotonCompacto, AnchoBotonNormal, AnchoBotonAmplio, AnchoBotonExtra })
+            foreach (int ancho in new[] { AnchoBotonCompacto, AnchoBotonNormal, AnchoBotonAmplio })
                 if (ancho >= requerido) return ancho;
-            return AnchoBotonExtra;
+            return AnchoBotonAmplio;
         }
 
         // Los componentes y los botones heredados comparten todos los estados de estilo.

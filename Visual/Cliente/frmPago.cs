@@ -16,6 +16,7 @@ namespace Visual
 
         private DateTime vence;
         private bool cerrada;   // pagada o vencida: ya no hay reserva que liberar al cerrar
+        private bool procesandoPago;
 
         public frmPago()
         {
@@ -56,6 +57,7 @@ namespace Visual
 
         private void btnPagar_Click(object sender, EventArgs e)
         {
+            if (procesandoPago || cerrada) return;
             // RN-30: el número completo vive solo en este objeto, en memoria, durante el cobro.
             var tarjeta = new DatosTarjeta
             {
@@ -66,18 +68,27 @@ namespace Visual
             };
 
             bool aprobado;
+            procesandoPago = true;
+            btnPagar.Enabled = false;
             try
             {
-                aprobado = GestorCompras.Instance.Confirmar(Compra, tarjeta);
+                using (Avisos.Esperar(this, btnPagar))
+                    aprobado = GestorCompras.Instance.Confirmar(Compra, tarjeta);
+                procesandoPago = false;
+                btnPagar.Enabled = true;
             }
             catch (ArgumentException ex)
             {
+                procesandoPago = false;
+                btnPagar.Enabled = true;
                 lblEstado.Text = ex.Message;
                 return;
             }
             catch (ReglaNegocioException ex)
             {
                 tmrReserva.Stop();
+                procesandoPago = false;
+                btnPagar.Enabled = true;
                 cerrada = ex.Regla == "RN-15";
                 Avisos.Regla("Pago", ex);
                 DialogResult = cerrada ? DialogResult.Abort : DialogResult.Cancel;
@@ -88,6 +99,8 @@ namespace Visual
                 // La compra dejó de estar pendiente por fuera de esta pantalla (por ejemplo, el evento
                 // se eliminó mientras se pagaba). El cupo ya se liberó: se vuelve al listado.
                 tmrReserva.Stop();
+                procesandoPago = false;
+                btnPagar.Enabled = false;
                 cerrada = true;
                 DialogResult = DialogResult.Abort;
                 return;

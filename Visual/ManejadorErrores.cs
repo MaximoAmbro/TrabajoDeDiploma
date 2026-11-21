@@ -34,10 +34,15 @@ namespace Visual
         public static string MensajeParaUsuario(Exception ex)
         {
             if (ex is System.Data.Common.DbException) return MensajeBaseDeDatos;
-            if (ex is InvalidOperationException && ex.Message != null &&
-                (ex.Message == "No se encontró ningún evento con ese ID." ||
-                 ex.Message == "No se encontró ningún usuario con ese ID." ||
-                 ex.Message == "No se encontró ningún sector con ese ID.")) return ex.Message;
+            if (ex is InvalidOperationException && ex.Message != null)
+            {
+                if (ex.Message == "No se encontró ningún evento con ese ID.")
+                    return "Ese evento ya no está disponible. Actualizá la pantalla e intentá de nuevo.";
+                if (ex.Message == "No se encontró ningún usuario con ese ID.")
+                    return "No encontramos esa cuenta. Revisá los datos e intentá de nuevo.";
+                if (ex.Message == "No se encontró ningún sector con ese ID.")
+                    return "Ese sector ya no está disponible. Actualizá la pantalla e intentá de nuevo.";
+            }
             return MensajeGeneral;
         }
 

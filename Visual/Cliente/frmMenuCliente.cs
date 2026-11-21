@@ -17,15 +17,32 @@ namespace Visual
         private Button navegacionActiva;
         private Componentes.BotonSecundario btnSolicitudOrganizador;
         private Componentes.BotonSecundario btnCambiarContrasena;
+        private Componentes.EtiquetaRotulo seccionExplorar;
+        private Componentes.EtiquetaRotulo seccionCompras;
+        private Componentes.EtiquetaRotulo seccionCuenta;
 
         public frmMenuCliente()
         {
             InitializeComponent();
-            btnSolicitudOrganizador = new Componentes.BotonSecundario { Name = "btnSolicitudOrganizador", Text = "Solicitar ser Organizador", Location = new Point(24, 448), Size = new Size(240, 40) };
-            btnSolicitudOrganizador.Click += (s, e) => { using (var solicitud = new frmSolicitudOrganizador()) solicitud.ShowDialog(this); };
+            seccionExplorar = Seccion("seccionExplorar", "EXPLORAR", 164);
+            seccionCompras = Seccion("seccionTusCompras", "TUS COMPRAS", 292);
+            seccionCuenta = Seccion("seccionCuenta", "CUENTA", 484);
+            Controls.AddRange(new Control[] { seccionExplorar, seccionCompras, seccionCuenta });
+            btnInicio.Location = new Point(24, 188);
+            btnEventos.Location = new Point(24, 232);
+            btnHistorial.Location = new Point(24, 316);
+            btnSuscripcion.Location = new Point(24, 360);
+            btnAtras.Location = new Point(24, 424);
+            btnSolicitudOrganizador = new Componentes.BotonSecundario { Name = "btnSolicitudOrganizador", Text = "Solicitar ser Organizador", Location = new Point(24, 512), Size = new Size(240, 40) };
+            btnSolicitudOrganizador.Click += (s, e) =>
+            {
+                using (var solicitud = new frmSolicitudOrganizador())
+                    if (solicitud.ShowDialog(this) == DialogResult.OK)
+                        Avisos.Informativo(this, "Recibimos tu solicitud. Tu cuenta sigue siendo Cliente mientras esté pendiente.");
+            };
             Controls.Add(btnSolicitudOrganizador);
             btnSolicitudOrganizador.BringToFront();
-            btnCambiarContrasena = new Componentes.BotonSecundario { Name = "btnCambiarContrasena", Text = "Cambiar contraseña", Location = new Point(24, 500), Size = new Size(240, 40) };
+            btnCambiarContrasena = new Componentes.BotonSecundario { Name = "btnCambiarContrasena", Text = "Cambiar contraseña", Location = new Point(24, 560), Size = new Size(240, 40) };
             btnCambiarContrasena.Click += (s, e) =>
             {
                 var cambio = new frmCambiarContraseña { CorreoInicial = GestorSesion.Instance.UsuarioActual?.Mail, Retorno = this };
@@ -34,6 +51,7 @@ namespace Visual
             };
             Controls.Add(btnCambiarContrasena);
             btnCambiarContrasena.BringToFront();
+            lblvolver.Location = new Point(24, 680);
             contenido = new Panel { Name = "contenidoNavegacion", Bounds = inicioCliente.Bounds, Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right };
             Controls.Remove(inicioCliente);
             Controls.Add(contenido);
@@ -50,6 +68,11 @@ namespace Visual
             FormClosed += (s, e) => NavegacionCliente.Desregistrar(this);
             NavegacionCliente.Registrar(this);
             MarcarActivo(btnInicio);
+        }
+
+        private static Componentes.EtiquetaRotulo Seccion(string nombre, string texto, int arriba)
+        {
+            return new Componentes.EtiquetaRotulo { Name = nombre, Text = texto, Location = new Point(24, arriba), Size = new Size(240, 20) };
         }
 
         private void frmMenuCliente_Load(object sender, EventArgs e)

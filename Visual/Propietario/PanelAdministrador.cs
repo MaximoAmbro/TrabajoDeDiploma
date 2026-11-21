@@ -51,7 +51,10 @@ namespace Visual.Componentes
             periodo.SetBounds(0, 0, Math.Max(1, ClientSize.Width - btnAuditoria.Width - 16), 52);
             btnAuditoria.Location = new System.Drawing.Point(Math.Max(0, ClientSize.Width - btnAuditoria.Width), 6);
             foreach(System.Windows.Forms.Control dato in datos.Controls)
-                dato.Width=Math.Max(1,(datos.ClientSize.Width-System.Windows.Forms.SystemInformation.VerticalScrollBarWidth)/2-dato.Margin.Horizontal);
+            {
+                dato.Width=Math.Max(1,(datos.ClientSize.Width-System.Windows.Forms.SystemInformation.VerticalScrollBarWidth)/3-dato.Margin.Horizontal);
+                dato.Height = 128;
+            }
         }
     }
 }

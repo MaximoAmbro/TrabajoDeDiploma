@@ -224,7 +224,8 @@ namespace Visual
             DataTable datos;
             try
             {
-                datos = GestorReportes.Instance.Ejecutar(r);
+                using (Avisos.Esperar(this, btnGenerar))
+                    datos = GestorReportes.Instance.Ejecutar(r);
             }
             catch (ReglaNegocioException ex)
             {
@@ -257,7 +258,8 @@ namespace Visual
             string ruta = Path.Combine(carpeta, reporte.NombreArchivo + ".pdf");
             try
             {
-                ruta = GestorReportes.Instance.Exportar(reporte, new ExportadorPDF(), ruta);
+                using (Avisos.Esperar(this, btnExportar))
+                    ruta = GestorReportes.Instance.Exportar(reporte, new ExportadorPDF(), ruta);
             }
             catch (ReglaNegocioException ex)
             {
@@ -269,7 +271,7 @@ namespace Visual
                 Avisos.Informativo(this, "No pudimos guardar el PDF. Cerrá el archivo si está abierto y volvé a exportarlo.");
                 return;
             }
-            Avisos.Informativo(this, "Reporte exportado en " + ruta + ". Abrilo desde el Explorador de archivos.");
+            Avisos.Informativo(this, "El reporte se guardó en tu carpeta de documentos. Abrilo desde el Explorador de archivos.");
         }
 
         // Los formatos los declara el reporte en la tabla: la pantalla no conoce ninguno.

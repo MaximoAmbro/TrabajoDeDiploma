@@ -43,6 +43,8 @@ namespace Visual
         private Cliente cliente;   // RN-22: su nivel persistido es el que se aplica
         private Dictionary<int, Sector> sectores = new Dictionary<int, Sector>();
         private bool cargandoGrilla;
+        private bool compraEnCurso;
+        private bool compraFinalizada;
         private bool agotado;
         private Panel contenidoCompra;
         private Panel accionesCompra;
@@ -228,7 +230,7 @@ namespace Visual
         private void ActualizarHabilitados()
         {
             bool hayEntradas = GestorPaquetes.Instance.CantidadEntradas(paquete) > 0;
-            btnComprar.Enabled = hayEntradas && !agotado;
+            btnComprar.Enabled = hayEntradas && !agotado && !compraEnCurso && !compraFinalizada;
             chkSeguro.Enabled = hayEntradas && !agotado;
             if (!chkSeguro.Enabled && chkSeguro.Checked)
             {
@@ -278,6 +280,7 @@ namespace Visual
         // RF-06: reserva el cupo y pasa a la pantalla de pago.
         private void btnComprar_Click(object sender, EventArgs e)
         {
+            if (compraEnCurso || compraFinalizada) return;
             // H-04: el seguro solo se contrata durante la compra (RN-28).
             if (!paquete.ConSeguro && GestorPaquetes.Instance.CantidadEntradas(paquete) > 0)
             {
@@ -293,12 +296,17 @@ namespace Visual
             }
 
             Compra compra;
+            compraEnCurso = true;
+            btnComprar.Enabled = false;
             try
             {
-                compra = GestorCompras.Instance.Iniciar(paquete, cliente);
+                using (Avisos.Esperar(this, btnComprar))
+                    compra = GestorCompras.Instance.Iniciar(paquete, cliente);
             }
             catch (ReglaNegocioException ex)
             {
+                compraEnCurso = false;
+                ActualizarHabilitados();
                 Avisos.Regla("No se puede completar la compra", ex);
                 RecargarDisponibles();
                 return;
@@ -312,12 +320,16 @@ namespace Visual
 
             if (resultado == DialogResult.Abort)
             {
+                compraEnCurso = false;
+                ActualizarHabilitados();
                 // H-02: venció el plazo; el cupo ya se liberó.
                 VolverAlListado("La reserva venció o cambió. Volvé a armar la compra desde eventos.");
                 return;
             }
             if (resultado != DialogResult.OK)
             {
+                compraEnCurso = false;
+                ActualizarHabilitados();
                 RecargarDisponibles();
                 if (resultado == DialogResult.Cancel)
                     Avisos.Informativo(this, "Cancelaste el pago. La reserva se liberó; podés volver a intentarlo.");
@@ -325,6 +337,7 @@ namespace Visual
             }
 
             List<string> rutas = GenerarTicket(compra);
+            compraFinalizada = true;
             var confirmacion = new frmConfirmacion { Compra = compra, Rutas = rutas, Carpeta = CarpetaTickets() };
             if (NavegacionCliente.Activa)
             {

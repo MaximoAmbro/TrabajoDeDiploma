@@ -82,8 +82,11 @@ namespace Visual
             {
                 try
                 {
-                    if (_altaAdministrador) GestorUsuarios.Instance.CrearAdministrador(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text);
-                    else GestorUsuarios.Instance.RegistrarCliente(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text);
+                    using (Avisos.Esperar(this, btnregistrarse))
+                    {
+                        if (_altaAdministrador) GestorUsuarios.Instance.CrearAdministrador(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text);
+                        else GestorUsuarios.Instance.RegistrarCliente(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text);
+                    }
                 }
                 catch (ReglaNegocioException ex)
                 {
@@ -127,13 +130,15 @@ namespace Visual
             var etiqueta = new Componentes.EtiquetaRotulo { Text = "Código de verificación", Location = new Point(px(8), px(164)), Size = new Size(px(240), px(24)) };
             var codigo = new TextBox { Name = "txtCodigoCorreo", Location = new Point(px(8), px(192)), Size = new Size(px(240), px(32)), MaxLength = 6 };
             var estado = new Componentes.EtiquetaAyuda { Name = "estadoVerificacion", Location = new Point(px(8), px(232)), Size = new Size(ancho - px(24), px(54)) };
-            var confirmar = new Componentes.BotonPrimario { Name = "btnConfirmarCorreo", Text = "Confirmar correo", Location = new Point(px(8), px(292)), Size = new Size(px(200), px(40)) };
-            var volver = new Componentes.BotonSecundario { Name = "btnVolverAcceso", Text = "Volver al acceso", Location = new Point(px(220), px(292)), Size = new Size(px(180), px(40)), Visible = true };
+            codigo.TabIndex = 0;
+            var confirmar = new Componentes.BotonPrimario { Name = "btnConfirmarCorreo", Text = "Confirmar correo", Location = new Point(px(8), px(292)), Size = new Size(px(200), px(40)), TabIndex = 1 };
+            var volver = new Componentes.BotonSecundario { Name = "btnVolverAcceso", Text = "Volver al acceso", Location = new Point(px(220), px(292)), Size = new Size(px(180), px(40)), Visible = true, TabIndex = 2 };
             confirmar.Click += (s, e) =>
             {
                 try
                 {
-                    GestorCodigosCorreo.Instance.ConfirmarVerificacion(correo, codigo.Text.Trim());
+                    using (Avisos.Esperar(this, confirmar))
+                        GestorCodigosCorreo.Instance.ConfirmarVerificacion(correo, codigo.Text.Trim());
                     estado.Text = "Correo verificado. Ya podés iniciar sesión y comprar.";
                     confirmar.Enabled = false;
                     volver.Visible = true;
@@ -145,6 +150,10 @@ namespace Visual
             verificacion.Controls.AddRange(new Control[] { titulo, contenido, etiqueta, codigo, estado, confirmar, volver });
             Controls.Add(verificacion);
             verificacion.BringToFront();
+            AcceptButton = confirmar;
+            CancelButton = volver;
+            ReconfigurarTeclado();
+            codigo.Focus();
         }
         private void lblyatengocuen_Click(object sender, EventArgs e)
         {

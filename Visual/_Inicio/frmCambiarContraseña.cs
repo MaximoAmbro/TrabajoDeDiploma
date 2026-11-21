@@ -57,7 +57,8 @@ namespace Visual
                 }
                 try
                 {
-                    GestorCodigosCorreo.Instance.SolicitarRecuperacion(txtMail.Text);
+                    using (Avisos.Esperar(this, _enviarCodigo))
+                        GestorCodigosCorreo.Instance.SolicitarRecuperacion(txtMail.Text);
                     _estadoCorreo.Text = "Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.";
                 }
                 catch (Exception)
@@ -120,7 +121,8 @@ namespace Visual
             {
                 try
                 {
-                    GestorCodigosCorreo.Instance.RecuperarContrasena(txtMail.Text, txtActual.Text.Trim(), TxtPassword.Text);
+                    using (Avisos.Esperar(this, btnconfirmar))
+                        GestorCodigosCorreo.Instance.RecuperarContrasena(txtMail.Text, txtActual.Text.Trim(), TxtPassword.Text);
                     _estadoCorreo.Text = "La contraseña se actualizó. Ya podés iniciar sesión.";
                     btnconfirmar.Enabled = false;
                 }
