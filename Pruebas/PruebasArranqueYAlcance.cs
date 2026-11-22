@@ -11,10 +11,10 @@ namespace Pruebas
     [TestClass]
     public class PruebasArranqueYAlcance
     {
-        // CP-351 — RF-01, RNF-03: comprobar que el ejecutable real completa el arranque.
-        [TestMethod("CP-351: El ejecutable Visual.exe arranca y permanece abierto")]
+        // CP-209 — RF-01, RNF-03: comprobar que el ejecutable real completa el arranque.
+        [TestMethod("CP-209: El ejecutable Visual.exe arranca y permanece abierto")]
         [TestCategory("Smoke")]
-        public void CP351_EjecutableArranca()
+        public void CP209_EjecutableArranca()
         {
             string raiz = RaizRepositorio();
             string exe = Path.Combine(raiz, "Visual", "bin", "Debug", "Visual.exe");
@@ -46,10 +46,10 @@ namespace Pruebas
             }
         }
 
-        // CP-352 — RF-01/RF-22, RNF-03: comprobar referencias de navegación y salida de formularios.
-        [TestMethod("CP-352: Las pantallas tienen una ruta de entrada y una salida visible")]
+        // CP-210 — RF-01/RF-22, RNF-03: comprobar referencias de navegación y salida de formularios.
+        [TestMethod("CP-210: Las pantallas tienen una ruta de entrada y una salida visible")]
         [TestCategory("Experiencia")]
-        public void CP352_RutasYSalidasDePantallas()
+        public void CP210_RutasYSalidasDePantallas()
         {
             string raizVisual = Path.Combine(RaizRepositorio(), "Visual");
             var fuentes = Directory.GetFiles(raizVisual, "*.cs", SearchOption.AllDirectories)

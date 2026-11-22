@@ -8,8 +8,8 @@ using Negocio;
 
 namespace Visual
 {
-    // RF-10 + CU-07: consulta de las listas de espera, solo lectura en esta versión. Se elige un
-    // evento agotado de los locales del administrador y se ve la lista en el orden de RN-35.
+    // RF-10 + CU-07: consulta de las listas de espera de los locales del Organizador, solo lectura.
+    // Se elige un evento agotado y se ve la lista en el orden de RN-35.
     public partial class frmListasEspera : FormularioEventAura
     {
         public int IDUsuario;
@@ -67,7 +67,7 @@ namespace Visual
             CargarEventos();
         }
 
-        // Eventos agotados de los locales del administrador (RN-10). También los que ya no están
+        // Eventos agotados de los locales del Organizador (RN-10). También los que ya no están
         // agotados pero conservan inscriptos, por ejemplo después de una devolución.
         private void CargarEventos()
         {

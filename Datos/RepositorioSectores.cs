@@ -36,9 +36,8 @@ namespace Datos
             }
         }
 
-        // Inserta el sector y cambia el estado de su evento en una misma transacción
-        // (un Borrador pasa a Publicado con su primer sector con capacidad).
-        // Lo usa RepositorioEventos para dar de alta el evento y sus sectores en una sola transacción.
+        // Inserta el sector dentro de la conexión y transacción recibidas, y devuelve su Id.
+        // La inserción no cambia el estado del evento; publicar es una operación explícita del negocio.
         internal int Insertar(Sector sector, SqlConnection conexion, SqlTransaction transaccion)
         {
             using (SqlCommand comando = CrearComando(conexion, InsertarSector, transaccion))

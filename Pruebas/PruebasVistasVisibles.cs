@@ -258,9 +258,9 @@ namespace Pruebas
             });
         }
 
-        // CP-353 — RF-17/RF-22, RN-02: el usuario autenticado recupera el cambio con contraseña actual.
-        [TestMethod("CP-353: El menú de Mi cuenta abre el cambio de contraseña con sesión")]
-        public void CP353_AccesoCambiarContrasena()
+        // CP-211 — RF-17/RF-22, RN-02: el usuario autenticado recupera el cambio con contraseña actual.
+        [TestMethod("CP-211: El menú de Mi cuenta abre el cambio de contraseña con sesión")]
+        public void CP211_AccesoCambiarContrasena()
         {
             EnSta(() =>
             {

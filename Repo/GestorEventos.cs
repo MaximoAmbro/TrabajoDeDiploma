@@ -49,8 +49,9 @@ namespace Negocio
     }
     public partial class GestorEventos //Metodos
     {
-        // Guarda el evento sin sectores, en Borrador: RN-06 todavía no aplica. Pasa a Publicado
-        // con su primer sector con capacidad (AgregarSector). Devuelve el Id generado.
+        // Guarda el evento sin sectores, en Borrador. Agregar sectores no lo publica: el organizador
+        // debe elegir Publicar; si es su primer evento aprobado, queda EnRevision (RN-54).
+        // Devuelve el Id generado.
         public int Crear(Evento e)
         {
             GestorSesion.Instance.RequerirOrganizador();

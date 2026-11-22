@@ -27,8 +27,8 @@ namespace Datos
 
         private RepositorioEventos() { }
 
-        // Inserta el evento y sus sectores en una misma transacción: o se publica completo o no se publica.
-        // Asigna el Id generado al evento y a cada sector.
+        // Inserta el evento y los sectores incluidos en una misma transacción, sin cambiar su estado.
+        // Asigna los Id generados al evento y a cada sector.
         public int Insertar(Evento evento)
         {
             const string consulta =

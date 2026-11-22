@@ -128,7 +128,7 @@ namespace Negocio
 
     public static class SeleccionEnviadorCodigos
     {
-        // La versión entregada siempre usa la estrategia simulada; SMTP no se activa ni se configura.
+        // Program elige SMTP si están definidas las cinco variables de entorno; si falta alguna, usa el emisor simulado.
         public static IEnviadorCodigos Actual { get; set; } = new EnviadorSimulado();
     }
 }

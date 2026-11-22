@@ -8,7 +8,7 @@ namespace Pruebas {
  [TestClass] public class PruebasPrioridadTemporal {
   [TestInitialize] public void Preparar(){GestorSesion.Instance.Cerrar();Fake.Limpiar();}
   [TestCleanup] public void Limpiar(){GestorSesion.Instance.Cerrar();Fake.Limpiar();}
-  // CP-125 — RF-10, RN-35/37: prioridad real, persistencia y límites del privilegio.
+  // CP-125 — RF-10, RN-35: aplica la ventana de prioridad por sector y rechaza fuera del grupo prioritario.
   [TestMethod("CP-125: Prioridad temporal por sector")]
   [DataRow("reembolso",false,false,DisplayName="CP-125: Reembolso rechaza no suscriptor dentro de la ventana")]
   [DataRow("reembolso",true,false,DisplayName="CP-125: Suscriptor inscripto compra dentro de la ventana")]

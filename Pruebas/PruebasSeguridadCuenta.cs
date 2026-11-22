@@ -15,9 +15,9 @@ namespace Pruebas
     [TestClass]
     public class PruebasSeguridadCuenta
     {
-        // CP-349 — RF-14/RF-15, RN-43/RN-44: el correo simulado es un mensaje MIME legible.
-        [TestMethod("CP-349: El archivo de correo simulado es MIME y contiene el código en el cuerpo")]
-        public void CP349_CorreoMimLegible()
+        // CP-207 — RF-14/RF-15, RN-43/RN-44: el correo simulado es un mensaje MIME legible.
+        [TestMethod("CP-207: El archivo de correo simulado es MIME y contiene el código en el cuerpo")]
+        public void CP207_CorreoMimLegible()
         {
             string correo = Fake.MailNuevo();
             const string codigo = "482619";
@@ -40,9 +40,9 @@ namespace Pruebas
             StringAssert.Contains(cuerpo, "Vence:");
         }
 
-        // CP-350 — RF-14/RF-15, RN-43/RN-44: SMTP solo se selecciona cuando están las cinco variables.
-        [TestMethod("CP-350: El emisor se selecciona según las cinco variables SMTP")]
-        public void CP350_SeleccionEmisorPorEntorno()
+        // CP-208 — RF-14/RF-15, RN-43/RN-44: SMTP solo se selecciona cuando están las cinco variables.
+        [TestMethod("CP-208: El emisor se selecciona según las cinco variables SMTP")]
+        public void CP208_SeleccionEmisorPorEntorno()
         {
             string[] nombres = { "EVENTAURA_SMTP_HOST", "EVENTAURA_SMTP_PORT", "EVENTAURA_SMTP_USER", "EVENTAURA_SMTP_PASSWORD", "EVENTAURA_SMTP_FROM" };
             var anteriores = nombres.Select(nombre => Environment.GetEnvironmentVariable(nombre)).ToArray();

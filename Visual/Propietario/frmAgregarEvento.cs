@@ -45,8 +45,8 @@ namespace Visual.Propietario
             }
         }
 
-        // El evento se guarda en Borrador y se vuelve al listado. Se publica solo al agregarle,
-        // desde Administrar evento, su primer sector con capacidad mayor que cero.
+        // El evento se guarda en Borrador y se vuelve al listado. Agregar sectores no lo publica:
+        // desde Administrar evento, el organizador elige Publicar cuando haya capacidad disponible.
         private void btnRegistrar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))

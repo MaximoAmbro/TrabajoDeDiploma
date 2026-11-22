@@ -36,7 +36,7 @@ namespace Visual.Vendedor
                 }
                 try
                 {
-                    // Si el evento está en Borrador y el sector tiene capacidad, queda publicado.
+                    // Agregar un sector no publica el evento; la publicación es una acción explícita.
                     GestorEventos.Instance.AgregarSector(IDEvento, sector);
                     Avisos.Informativo(this, "Sector agregado correctamente. Ya podés asignarle entradas.");
                     txtCapacidad.Clear(); txtNombre.Clear(); txtPrecio.Clear();
