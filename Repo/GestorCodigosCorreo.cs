@@ -95,9 +95,10 @@ namespace Negocio
             using (var rng = RandomNumberGenerator.Create()) rng.GetBytes(sal);
             int minutos = GestorParametros.Instance.ObtenerEntero("CORREO_CODIGO_MIN");
             byte[] hash = CalcularHash(sal, proposito, codigo);
-            int idCodigo = RepositorioCodigosCorreo.Instance.Emitir(idUsuario, proposito, sal, hash, minutos, correo);
-            var pendiente = RepositorioCodigosCorreo.Instance.PorId(idCodigo);
-            SeleccionEnviadorCodigos.Actual.Enviar(correo, proposito, codigo, pendiente.VenceEl);
+            var venceEl = DateTime.UtcNow.AddMinutes(minutos);
+            // Entrega primero: si el proveedor falla, no queda un código activo imposible de recibir.
+            SeleccionEnviadorCodigos.Para(proposito).Enviar(correo, proposito, codigo, venceEl);
+            RepositorioCodigosCorreo.Instance.Emitir(idUsuario, proposito, sal, hash, minutos, correo);
             GestorAuditoria.Instance.Registrar("Código emitido: " + proposito, "Usuario", idUsuario,
                 "Correcto", idUsuario, correo);
         }

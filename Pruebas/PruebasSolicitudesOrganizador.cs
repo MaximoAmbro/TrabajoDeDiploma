@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.IO;
 using System.Windows.Forms;
 using Entidades;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -205,9 +206,9 @@ namespace Pruebas
                     InterfazGrupoA.ControlDe<Button>(form, "btnEnviarCodigoTelefono").PerformClick();
                     var mensaje = EnviadorSimulado.Ultimo(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
                     Assert.IsNotNull(mensaje, InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
-                    Assert.AreEqual("Si el teléfono es válido, enviamos un código. Para continuar, abrí fuera de EventAura el mensaje simulado de esa dirección.",
+                    Assert.AreEqual("Si el teléfono es válido, guardamos un SMS simulado fuera de EventAura. Abrí el archivo del mensaje para continuar.",
                         InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
-                    string archivo = EnviadorSimulado.ArchivoDeBandejaParaPruebas(Telefono);
+                    string archivo = EnviadorSimulado.ArchivoDeBandejaParaPruebas(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
                     Assert.IsTrue(System.IO.File.Exists(archivo));
                     Assert.IsTrue(System.IO.File.ReadAllText(archivo).Contains(mensaje.Codigo));
                     Assert.IsFalse(TextosVisibles(form).Any(t => t.Contains(mensaje.Codigo)),
@@ -218,6 +219,53 @@ namespace Pruebas
                         .Any(r => r.UsuarioId == solicitante.Id && r.Resultado == "Correcto"));
                 }
             });
+        }
+
+        // CP-355 — RF-20, RN-51: el SMS simulado permite completar la solicitud aunque SMTP esté configurado.
+        [TestMethod("CP-355: Solicitud de Organizador completa con SMTP configurado usa SMS simulado")]
+        public void CP355_SolicitudCompletaConSmtpConfigurado()
+        {
+            string[] nombres = { "EVENTAURA_SMTP_HOST", "EVENTAURA_SMTP_PORT", "EVENTAURA_SMTP_USER", "EVENTAURA_SMTP_PASSWORD", "EVENTAURA_SMTP_FROM" };
+            string[] previos = nombres.Select(Environment.GetEnvironmentVariable).ToArray();
+            try
+            {
+                string[] valores = { "smtp.example.invalid", "587", "demo", "no-secret-test", "eventaura@example.invalid" };
+                for (int i = 0; i < nombres.Length; i++) Environment.SetEnvironmentVariable(nombres[i], valores[i]);
+                SeleccionEnviadorCodigos.Actual = Visual.EnviadorSmtp.Seleccionar();
+                Assert.IsInstanceOfType(SeleccionEnviadorCodigos.Actual, typeof(Visual.EnviadorSmtp));
+
+                GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(Telefono);
+                var mensaje = EnviadorSimulado.Ultimo(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
+                Assert.IsNotNull(mensaje, "El propósito telefónico debe seleccionar SMS simulado aun cuando SMTP esté activo.");
+                StringAssert.Contains(File.ReadAllText(EnviadorSimulado.ArchivoDeBandejaParaPruebas(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador)), mensaje.Codigo);
+                GestorSolicitudesOrganizador.Instance.ConfirmarCodigoTelefono(Telefono, mensaje.Codigo);
+                Assert.IsTrue(GestorSolicitudesOrganizador.Instance.Solicitar(SolicitudValida()) > 0,
+                    "La solicitud debe completar el flujo de verificación telefónica sin intentar enviar un correo a un número.");
+            }
+            finally
+            {
+                for (int i = 0; i < nombres.Length; i++) Environment.SetEnvironmentVariable(nombres[i], previos[i]);
+                SeleccionEnviadorCodigos.Actual = new EnviadorSimulado();
+            }
+        }
+
+        // CP-356 — RF-14/RF-15, RN-43/RN-44: un proveedor fallido no deja un código activo en la base.
+        [TestMethod("CP-356: Envío fallido no persiste el código")]
+        public void CP356_EnvioFallidoNoPersisteCodigo()
+        {
+            var destinatario = Fake.Cliente(NivelFidelidad.Bronce);
+            SeleccionEnviadorCodigos.Actual = new EnviadorQueFalla();
+            Assert.ThrowsException<IOException>(() => GestorCodigosCorreo.Instance.SolicitarRecuperacion(destinatario.Mail));
+            Assert.IsNull(Datos.RepositorioCodigosCorreo.Instance.Ultimo(destinatario.Id, "Recuperacion"),
+                "La emisión debe ocurrir después de que el proveedor confirme la entrega.");
+        }
+
+        private sealed class EnviadorQueFalla : IEnviadorCodigos
+        {
+            public void Enviar(string correo, string proposito, string codigo, DateTime venceEl)
+            {
+                throw new IOException("Fallo de entrega simulado para la prueba.");
+            }
         }
 
         private static System.Collections.Generic.IEnumerable<string> TextosVisibles(Control padre)

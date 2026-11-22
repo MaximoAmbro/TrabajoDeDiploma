@@ -25,6 +25,8 @@ namespace Visual
         public frmSolicitudOrganizador()
         {
             GestorSesion.Instance.RequerirUsuario(GestorSesion.Instance.UsuarioActual?.Id ?? 0);
+            responsable.Name = "responsable"; cuit.Name = "cuit"; codigo.Name = "codigo";
+            local.Name = "local"; direccion.Name = "direccion"; cbu.Name = "cbu"; capacidad.Name = "capacidad";
             telefono.Name = "telefono";
             if (GestorSesion.Instance.UsuarioActual.TipoUsuario != "Cliente")
                 throw new ReglaNegocioException("RN-50", "La solicitud de Organizador está disponible para cuentas Cliente.");
@@ -62,7 +64,7 @@ namespace Visual
             {
                 using (Avisos.Esperar(this, boton))
                     GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(telefono.Text);
-                estadoEnvioTelefono.Text = "Si el teléfono es válido, enviamos un código. Para continuar, abrí fuera de EventAura el mensaje simulado de esa dirección.";
+                estadoEnvioTelefono.Text = "Si el teléfono es válido, guardamos un SMS simulado fuera de EventAura. Abrí el archivo del mensaje para continuar.";
             }
             catch (ReglaNegocioException ex) { estadoEnvioTelefono.Text = ex.Message; }
             catch (Exception) { estadoEnvioTelefono.Text = "No pudimos enviar el código. Revisá la conexión o la configuración de correo y volvé a intentarlo."; }
