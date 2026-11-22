@@ -1241,11 +1241,13 @@ Reemplaza las páginas 57 a 61 completas, desde el título «Implementación» h
 > - **Strategy**, en la exportación de reportes: el negocio conoce solo la interfaz
 >   `IExportador`, y la pantalla de reportes elige la implementación (`ExportadorPDF`, con iText).
 >   También en el envío de los códigos de verificación y de recuperación: el negocio conoce solo
->   la interfaz `IEnviadorCodigos`. La versión entregada usa `EnviadorSimulado`, que escribe cada
->   mensaje en un archivo de correo fuera de la aplicación; la aplicación indica dónde está, pero
->   no puede abrirlo ni leerlo. La implementación `EnviadorSmtp`, que enviaría correos reales,
->   existe pero no se elige. Pasar a correo real es elegir esa estrategia al iniciar la aplicación
->   y configurar el servidor de correo: la capa de negocio no cambia.
+>   la interfaz `IEnviadorCodigos`, y la aplicación elige la implementación al iniciar. Por
+>   defecto usa `EnviadorSimulado`, que escribe cada mensaje en un archivo de correo fuera de la
+>   aplicación; la aplicación indica dónde está, pero no puede abrirlo ni leerlo. Si en la
+>   computadora están configuradas las cinco variables de entorno del servidor de correo
+>   (`EVENTAURA_SMTP_HOST`, `EVENTAURA_SMTP_PORT`, `EVENTAURA_SMTP_USER`, `EVENTAURA_SMTP_PASSWORD` y `EVENTAURA_SMTP_FROM`),
+>   usa `EnviadorSmtp`, que envía los códigos por correo real con conexión cifrada. Pasar de un
+>   modo al otro es una decisión de configuración: la capa de negocio no cambia.
 > - **Herencia en los reportes:** una clase abstracta `Reporte` con cinco especializaciones, una
 >   por reporte, creadas por `GestorReportes`.
 >

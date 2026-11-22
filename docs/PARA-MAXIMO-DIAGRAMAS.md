@@ -361,11 +361,13 @@ texto.
 > formato es agregar otra clase que implemente la interfaz, sin modificar ningún reporte. Hoy existe
 > una sola estrategia concreta.
 >
-> El mismo patrón resuelve dos integraciones externas que la versión entregada simula. El envío
-> de los códigos de un solo uso (verificación del correo, recuperación de la contraseña y
-> confirmación del teléfono) depende de la interfaz `IEnviadorCodigos`: la estrategia elegida es
-> `EnviadorSimulado`, que escribe el mensaje en un archivo de correo fuera de la aplicación, que la
-> aplicación no puede abrir ni leer, y existe `EnviadorSmtp`, que lo enviaría por correo real. La verificación de identidad de quien solicita ser Organizador depende
+> El mismo patrón resuelve dos integraciones externas. El envío de los códigos de un solo uso
+> (verificación del correo, recuperación de la contraseña y confirmación del teléfono) depende de
+> la interfaz `IEnviadorCodigos`. Por defecto, la aplicación usa `EnviadorSimulado`, que escribe
+> el mensaje en un archivo de correo fuera de la aplicación, que la aplicación no puede abrir ni
+> leer. Si están configuradas las cinco variables de entorno del servidor de correo, usa
+> `EnviadorSmtp`, que envía por correo real los códigos de verificación y de recuperación. La
+> verificación de identidad de quien solicita ser Organizador depende
 > de `IVerificadorIdentidad`, con una estrategia simulada, que valida el formato del CUIT, y una
 > externa, que consultaría un servicio de verificación. En los dos casos, la capa de negocio solo
 > conoce la interfaz, y pasar a la estrategia real es una decisión de configuración, no un cambio

@@ -116,7 +116,6 @@
 > | pp. 72 a 85 y especificaciones nuevas | CU-01 a CU-21 | Los nombres de botones y menús; CU-09, además, el acceso a «Cambiar contraseña» que agrega Codex |
 > | pp. 90 a 97 | El párrafo «El estudio y el rediseño de la interfaz» | La interfaz nueva |
 > | Anexo «Pantallas del sistema» | El anexo entero | Las capturas nuevas de Codex |
-> | pp. 57 a 61, 110 y 111 | El párrafo de Strategy, la fila del envío simulado en «Limitaciones del trabajo» y el punto 6 de trabajo futuro | Cómo queda el envío de correo (cambió en el código el 20/11) |
 >
 > **Datos de JC:**
 >
@@ -1411,9 +1410,7 @@ contando. En los dos casos el nivel se conserva hasta la reevaluación mensual.�
 
 ## Páginas 57 a 61 — «Implementación» pasa a «Arquitectura e implementación»
 
-**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad. **Cambio del 19/11:** en «Patrones de diseño», el párrafo de **Strategy** cambió en su segunda mitad (el envío de los códigos). Si ya pegaste esta sección, reemplazá solo ese párrafo.
-
-**⏸ EN ESPERA (21/11) solo el párrafo de Strategy:** desde el commit `c6d54a2` la aplicación envía correo real si están configuradas las cinco variables `EVENTAURA_SMTP_*`, y el texto dice que SMTP no se elige. Espera a que JC confirme cómo queda el envío. El resto de la sección se pega.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad. **Cambio del 19/11:** en «Patrones de diseño», el párrafo de **Strategy** cambió en su segunda mitad (el envío de los códigos). Si ya pegaste esta sección, reemplazá solo ese párrafo. **Cambio del 22/11:** ese mismo párrafo cambió otra vez: la aplicación ahora elige el correo real si se configura el servidor. Si ya lo pegaste, reemplazalo de nuevo.
 
 Reemplaza las páginas 57 a 61 completas, desde el título «Implementación» hasta el final de
 `class GestorReportes`. El título queda: **«Arquitectura e implementación»**.
@@ -1438,11 +1435,13 @@ Reemplaza las páginas 57 a 61 completas, desde el título «Implementación» h
 > - **Strategy**, en la exportación de reportes: el negocio conoce solo la interfaz
 >   `IExportador`, y la pantalla de reportes elige la implementación (`ExportadorPDF`, con iText).
 >   También en el envío de los códigos de verificación y de recuperación: el negocio conoce solo
->   la interfaz `IEnviadorCodigos`. La versión entregada usa `EnviadorSimulado`, que escribe cada
->   mensaje en un archivo de correo fuera de la aplicación; la aplicación indica dónde está, pero
->   no puede abrirlo ni leerlo. La implementación `EnviadorSmtp`, que enviaría correos reales,
->   existe pero no se elige. Pasar a correo real es elegir esa estrategia al iniciar la aplicación
->   y configurar el servidor de correo: la capa de negocio no cambia.
+>   la interfaz `IEnviadorCodigos`, y la aplicación elige la implementación al iniciar. Por
+>   defecto usa `EnviadorSimulado`, que escribe cada mensaje en un archivo de correo fuera de la
+>   aplicación; la aplicación indica dónde está, pero no puede abrirlo ni leerlo. Si en la
+>   computadora están configuradas las cinco variables de entorno del servidor de correo
+>   (`EVENTAURA_SMTP_HOST`, `EVENTAURA_SMTP_PORT`, `EVENTAURA_SMTP_USER`, `EVENTAURA_SMTP_PASSWORD` y `EVENTAURA_SMTP_FROM`),
+>   usa `EnviadorSmtp`, que envía los códigos por correo real con conexión cifrada. Pasar de un
+>   modo al otro es una decisión de configuración: la capa de negocio no cambia.
 > - **Herencia en los reportes:** una clase abstracta `Reporte` con cinco especializaciones, una
 >   por reporte, creadas por `GestorReportes`.
 >
@@ -2524,7 +2523,7 @@ Texto, debajo del título «Diagrama de clases»:
 | Jerarquía de Reporte | `clases-8c-jerarquia-reportes.png` | **16,0 cm** (es baja: puede compartir página con el texto) |
 | Strategy: envío de códigos y verificación de identidad | `clases-8d-patron-strategy-cuenta.png` | **13,9 cm** (página entera) |
 
-**Si ya pegaste la figura de Strategy de códigos del 18/11, reemplazala** (19/11): cambió un signo de visibilidad. En el texto de abajo cambió una oración del segundo párrafo de Strategy («…que escribe el mensaje en un archivo de correo fuera de la aplicación…»).
+**Si ya pegaste la figura de Strategy de códigos del 18/11, reemplazala** (19/11): cambió un signo de visibilidad. En el texto de abajo cambió una oración del segundo párrafo de Strategy («…que escribe el mensaje en un archivo de correo fuera de la aplicación…»). **Cambio del 22/11:** ese segundo párrafo cambió otra vez, en sus primeras cinco oraciones (el correo real). Si ya lo pegaste, reemplazalo entero.
 
 Texto, debajo del título:
 
@@ -2550,11 +2549,13 @@ Texto, debajo del título:
 > formato es agregar otra clase que implemente la interfaz, sin modificar ningún reporte. Hoy existe
 > una sola estrategia concreta.
 >
-> El mismo patrón resuelve dos integraciones externas que la versión entregada simula. El envío
-> de los códigos de un solo uso (verificación del correo, recuperación de la contraseña y
-> confirmación del teléfono) depende de la interfaz `IEnviadorCodigos`: la estrategia elegida es
-> `EnviadorSimulado`, que escribe el mensaje en un archivo de correo fuera de la aplicación, que la
-> aplicación no puede abrir ni leer, y existe `EnviadorSmtp`, que lo enviaría por correo real. La verificación de identidad de quien solicita ser Organizador depende
+> El mismo patrón resuelve dos integraciones externas. El envío de los códigos de un solo uso
+> (verificación del correo, recuperación de la contraseña y confirmación del teléfono) depende de
+> la interfaz `IEnviadorCodigos`. Por defecto, la aplicación usa `EnviadorSimulado`, que escribe
+> el mensaje en un archivo de correo fuera de la aplicación, que la aplicación no puede abrir ni
+> leer. Si están configuradas las cinco variables de entorno del servidor de correo, usa
+> `EnviadorSmtp`, que envía por correo real los códigos de verificación y de recuperación. La
+> verificación de identidad de quien solicita ser Organizador depende
 > de `IVerificadorIdentidad`, con una estrategia simulada, que valida el formato del CUIT, y una
 > externa, que consultaría un servicio de verificación. En los dos casos, la capa de negocio solo
 > conoce la interfaz, y pasar a la estrategia real es una decisión de configuración, no un cambio
@@ -4396,18 +4397,14 @@ batería.
 | La cobertura de pruebas alcanza el 96,2 % de las reglas. | Todos los requerimientos en alcance tienen pruebas; dos reglas, ninguna de las que rechazan operaciones, carecen de verificación automatizada. |
 |---|---|
 
-**Misma tabla, agregar al final estas tres filas:**
-
-**⏸ EN ESPERA (21/11) solo la fila del envío simulado de esta tabla:** desde el commit `c6d54a2` la aplicación envía correo real si están configuradas las cinco variables `EVENTAURA_SMTP_*`, y el texto dice que SMTP no se elige. Espera a que JC confirme cómo queda el envío. Las otras filas se pegan.
+**Misma tabla, agregar al final estas tres filas** (la segunda, la del envío de los códigos, cambió el 22/11: si ya la pegaste, reemplazala):
 
 | Dos verificaciones dependen de una persona y de un dispositivo: la lectura de los códigos QR impresos con la cámara de un celular y el aspecto del PDF de los reportes en tres lectores. | Se hicieron una vez; no se repiten en cada corrida como los casos automáticos. |
 |---|---|
-| El envío de los códigos de verificación y de recuperación es simulado: cada mensaje se escribe en un archivo de correo de la misma computadora, fuera de la aplicación. Por eso no demuestra que quien lee el código sea el titular del correo o del teléfono. | Es una decisión de configuración, no un hueco de arquitectura: el envío está implementado con el patrón Strategy, y pasar a correo real es elegir la estrategia `EnviadorSmtp`, que ya existe, y configurar el servidor, sin cambiar la capa de negocio. La aplicación no puede abrir ni leer ese archivo, y todo restablecimiento, exitoso o rechazado, queda en el registro de auditoría con la cuenta y la fecha. Ese registro no es inalterable para quien accede directamente a la base, porque se guarda en la misma base y con las mismas credenciales que el resto de los datos. |
+| Por defecto, el envío de los códigos es simulado: cada mensaje se escribe en un archivo de correo de la misma computadora, fuera de la aplicación. En ese modo no demuestra que quien lee el código sea el titular del correo o del teléfono. | El envío real de los códigos de verificación y de recuperación ya está implementado con el patrón Strategy: si se configuran las cinco variables de entorno del servidor de correo, la aplicación usa `EnviadorSmtp`, sin cambios en la capa de negocio. Un caso automático comprueba esa elección; el envío a un servidor de correo real no forma parte de la batería. La aplicación no puede abrir ni leer el archivo simulado, y todo restablecimiento, exitoso o rechazado, queda en el registro de auditoría con la cuenta y la fecha. Ese registro no es inalterable para quien accede directamente a la base, porque se guarda en la misma base y con las mismas credenciales que el resto de los datos. |
 | La aplicación de escritorio accede a la base con la cuenta de Windows del usuario. | Las verificaciones de perfil y de pertenencia del negocio (RN-34, RN-41, RN-48 y RN-49) protegen la operación desde la aplicación; en producción tienen que acompañarse de permisos en la base o de un servicio intermedio. |
 
 ## Página 111 — Trabajo futuro
-
-**⏸ EN ESPERA (21/11) solo el punto 6:** desde el commit `c6d54a2` la aplicación envía correo real si están configuradas las cinco variables `EVENTAURA_SMTP_*`, y el texto dice que SMTP no se elige. Espera a que JC confirme cómo queda el envío. Los puntos 1, 2, 4 y 5 se pegan.
 
 | Punto | Dice | Poner |
 |---|---|---|
@@ -4418,13 +4415,14 @@ batería.
 
 **Agregar** un punto 6, con el mismo formato:
 
-> 6. Enviar los códigos de verificación y de recuperación por correo real, eligiendo la
->    estrategia de envío por SMTP que ya existe y configurando el servidor, y mover el registro
->    de auditoría a un almacenamiento que no se pueda modificar con las credenciales de la
->    aplicación.
+> 6. Mover el registro de auditoría a un almacenamiento que no se pueda modificar con las
+>    credenciales de la aplicación.
 
 *Razón:* los dos puntos nuevos son las dos limitaciones de la versión 2.6 que tienen solución
-conocida: G-08 (p. 109) y la fila del envío simulado en «Limitaciones del trabajo» (p. 110).
+conocida: G-08 (p. 109) y el registro de auditoría, de la fila del envío de los códigos en
+«Limitaciones del trabajo» (p. 110). El correo real no entra en trabajo futuro: ya está
+implementado y se activa configurando el servidor (cambio del 22/11). Si ya pegaste el punto 6,
+reemplazalo.
 
 ## Página 112 — Bibliografía
 
