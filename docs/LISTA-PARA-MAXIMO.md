@@ -3574,6 +3574,10 @@ la de CP-01 a CP-61:
 
 **y agregar a continuación** estas filas (CP-62 a CP-206; el número CP-149 no se usó):
 
+**Cambio del 22/11:** cambiaron las reglas de CP-93, CP-99, CP-110, CP-123 y CP-125, aquí y en la
+tabla de casos de la versión 2.6 de más abajo (en CP-93, CP-99 y CP-123, también el resultado o la
+condición). Si ya pegaste esas filas, reemplazá solo esas cinco en las dos tablas.
+
 | CP-62 — Los colores y las fuentes de Tema | — (RNF-02) |
 | CP-63 — El código de cada una de las 21 pantallas que tienen Designer, y de su Designer | — (RNF-02) |
 | CP-64 — El proyecto Visual | — (RNF-03) |
@@ -3605,13 +3609,13 @@ la de CP-01 a CP-61:
 | CP-90 — PDF exportado desde la pantalla de reportes | — |
 | CP-91 — Sesión de un cliente que intenta devolver la compra de otro, con el titular del objeto cambiado a mano | RN-41 |
 | CP-92 — Sesión de un cliente que pide el historial, la suscripción y el perfil de otro | RN-41 |
-| CP-93 — Sesión de un cliente que elimina un evento | RN-34, RN-48 |
+| CP-93 — Sesión de un cliente que elimina un evento | RN-48 |
 | CP-94 — Sin sesión: 16 operaciones protegidas y CrearAdministrador; después, CrearAdministrador como cliente y… | RN-41, RN-48 |
 | CP-95 — Cambiar la contraseña con la actual incorrecta | RN-04, RN-40 |
 | CP-96 — Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | RN-04 |
 | CP-97 — Cambiar la contraseña con un correo inexistente y con la actual incorrecta | RN-40 |
 | CP-98 — Con la sesión del Administrador, cambiar la contraseña de un cliente; abrir la pantalla | RN-40 |
-| CP-99 — Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y… | RN-18, RN-34, RN-49 |
+| CP-99 — Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y… | RN-18, RN-48 |
 | CP-100 — El mismo código escaneado dos veces | RN-18 |
 | CP-101 — Entrada reembolsada | RN-18, RN-29 |
 | CP-102 — Código con formato válido que no existe | RN-18 |
@@ -3622,7 +3626,7 @@ la de CP-01 a CP-61:
 | CP-107 — Hashes con iteraciones enormes, 0, negativas o no numéricas, y con sal y hash vacíos | — |
 | CP-108 — Hash previo de 100.000 iteraciones | — |
 | CP-109 — Preparación completa de la base de pruebas | — |
-| CP-110 — Cada estado de EstadoEntrada y el estado ajeno «Usada», escritos en la tabla | RN-18, RN-29 |
+| CP-110 — Cada estado de EstadoEntrada y el estado ajeno «Usada», escritos en la tabla | RN-18 |
 | CP-111 — Compra asegurada de 2 entradas: una ya ingresó; devolver las dos, en los dos órdenes | RN-18, RN-29 |
 | CP-112 — Los siete componentes visuales en un host de diseño real | — (RNF-02) |
 | CP-113 — Contrato de la sesión: Iniciar fuera de lo público; propiedades de la sesión; perfil e identidad del… | RN-41 |
@@ -3635,9 +3639,9 @@ la de CP-01 a CP-61:
 | CP-120 — Los componentes nuevos IndicadorPasos y EtiquetaTotal en un host de diseño real | — (RNF-02) |
 | CP-121 — Suscripción contratada y vencida; consultarla y abrir su pantalla varias veces | RN-26 |
 | CP-122 — Compra confirmada sin seguro; volver a confirmarla agregándole seguro | RN-28 |
-| CP-123 — Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los… | RN-18, RN-41, RN-49 |
+| CP-123 — Eventos para el control de ingreso: de otro organizador, sin sesión, y un evento de las 00:30 en los… | RN-18, RN-48, RN-49 |
 | CP-124 — Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente | RN-04, RN-40 |
-| CP-125 — Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor… | RN-35, RN-37 |
+| CP-125 — Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor… | RN-35 |
 | CP-126 — Pedir la lista de espera de un evento como cliente y sin sesión | RN-34 |
 | CP-127 — Pedir los pagos de una compra ajena y sin sesión | RN-41 |
 | CP-128 — Pedir por su número una compra de otro cliente, y sin sesión | RN-41 |
@@ -3837,13 +3841,13 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-90 | PDF exportado desde la pantalla de reportes | El texto contiene la marca, el código, el período, quién lo pidió y la paginación | RF-11 | — |
 | CP-91 | Sesión de un cliente que intenta devolver la compra de otro, con el titular del objeto cambiado a mano | Rechazado; tampoco ve las entradas. La compra sigue Confirmada y sin reembolso | RF-08 | RN-41 |
 | CP-92 | Sesión de un cliente que pide el historial, la suscripción y el perfil de otro | Los tres, rechazados | RF-08 | RN-41 |
-| CP-93 | Sesión de un cliente que elimina un evento | Rechazado con RN-34; el evento sigue existiendo | RF-12 | RN-34, RN-48 |
+| CP-93 | Sesión de un cliente que elimina un evento | Rechazado con RN-48; el evento sigue existiendo | RF-12 | RN-48 |
 | CP-94 | Sin sesión: 16 operaciones protegidas y `CrearAdministrador`; después, `CrearAdministrador` como cliente y como Administrador | Las 17 se rechazan sin sesión, y el cliente tampoco puede. El Administrador crea la cuenta con perfil Propietario. El registro genérico no es público. La compra sigue Pendiente y sin suscripción | RF-04, RF-12, RF-13 | RN-41, RN-48 |
 | CP-95 | Cambiar la contraseña con la actual incorrecta | Rechazado; el contador de intentos sube a 1 y la contraseña anterior sigue sirviendo | RF-02 | RN-04, RN-40 |
 | CP-96 | Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | Rechazado con el mensaje genérico «Mail o contraseña actual incorrectos.», sin decir que está bloqueada; al vencer el bloqueo, la anterior sigue sirviendo | RF-02 | RN-04 |
 | CP-97 | Cambiar la contraseña con un correo inexistente y con la actual incorrecta | Las dos respuestas son iguales: misma regla y mismo mensaje | RF-02 | RN-40 |
 | CP-98 | Con la sesión del Administrador, cambiar la contraseña de un cliente; abrir la pantalla | La anterior deja de servir y la nueva sirve; la sesión sigue siendo del Administrador. Pantalla: tres campos enmascarados y vacíos, todo dentro de la ventana | RF-02 | RN-40 |
-| CP-99 | Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y una consulta del contador sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». Al cliente se le rechaza el registro por RN-34, sin alterar el ingreso; sin sesión, el contador se rechaza | RF-07 | RN-18, RN-34, RN-49 |
+| CP-99 | Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y una consulta del contador sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». Al cliente se le rechaza el registro por RN-48, sin alterar el ingreso; sin sesión, el contador se rechaza | RF-07 | RN-18, RN-48 |
 | CP-100 | El mismo código escaneado dos veces | El segundo se rechaza como ya usado, con la fecha y hora del primero | RF-07 | RN-18 |
 | CP-101 | Entrada reembolsada | Se rechaza como reembolsada; el contador queda en 0 | RF-07 | RN-18, RN-29 |
 | CP-102 | Código con formato válido que no existe | Se rechaza como inexistente; el contador queda en 0 | RF-07 | RN-18 |
@@ -3854,7 +3858,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-107 | Hashes con iteraciones enormes, 0, negativas o no numéricas, y con sal y hash vacíos | Ninguno autentica y no se propaga ninguna excepción | RF-02 | — |
 | CP-108 | Hash previo de 100.000 iteraciones | Verifica; al iniciar sesión se reescribe a 310.000 con la misma contraseña, y un segundo inicio no lo vuelve a reescribir | RF-02 | — |
 | CP-109 | Preparación completa de la base de pruebas | Carga 1.178 clientes de reporte con hashes a 310.000; la guarda `_Pruebas` sigue activa | RF-11 | — |
-| CP-110 | Cada estado de `EstadoEntrada` y el estado ajeno «Usada», escritos en la tabla | La base admite los cuatro y rechaza el ajeno por `CK_Entradas_Estado`, que está activa y confiable | RF-07 | RN-18, RN-29 |
+| CP-110 | Cada estado de `EstadoEntrada` y el estado ajeno «Usada», escritos en la tabla | La base admite los cuatro y rechaza el ajeno por `CK_Entradas_Estado`, que está activa y confiable | RF-07 | RN-18 |
 | CP-111 | Compra asegurada de 2 entradas: una ya ingresó; devolver las dos, en los dos órdenes (2 variantes) | RN-29 rechaza la devolución y no cambia nada, ni por el gestor ni por el repositorio. La entrada no usada se puede devolver sola | RF-07 | RN-18, RN-29 |
 | CP-112 | Los siete componentes visuales en un host de diseño real (7 variantes) | Ninguno guarda su estilo en el Designer | RF-05, RNF-02 | — |
 | CP-113 | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41 |
@@ -3867,9 +3871,9 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-120 | Los componentes nuevos `IndicadorPasos` y `EtiquetaTotal` en un host de diseño real (2 variantes) | Ninguno guarda su estilo en el Designer | RF-05, RNF-02 | — |
 | CP-121 | Suscripción contratada y vencida; consultarla y abrir su pantalla varias veces | No queda ninguna activa, y consultar o abrir la pantalla no crea ni renueva el registro | RF-13 | RN-26 |
 | CP-122 | Compra confirmada sin seguro; volver a confirmarla agregándole seguro | Rechazo con «La compra ya no está pendiente de pago.»; la compra queda sin seguro, sin póliza y sin segundo pago | RF-06 | RN-28 |
-| CP-123 | Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-41, RN-49 |
+| CP-123 | Eventos para el control de ingreso: de otro organizador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-48, RN-49 |
 | CP-124 | Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente (3 variantes) | El rechazo es el mismo en texto, título y comportamiento: no revela si la cuenta existe ni si está bloqueada. El bloqueo interno sigue funcionando | RF-02 | RN-04, RN-40 |
-| CP-125 | Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor inscripto en la lista de espera; compran un no suscriptor, el suscriptor inscripto, un suscriptor sin inscripción y un reintento de pago anterior, dentro y fuera de la ventana (8 variantes) | Dentro de la ventana solo compra el suscriptor inscripto; los demás reciben el rechazo RN-35 sin consumir el cupo ni dejar compra o pago nuevo. Fuera de la ventana compra cualquiera | RF-10 | RN-35, RN-37 |
+| CP-125 | Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor inscripto en la lista de espera; compran un no suscriptor, el suscriptor inscripto, un suscriptor sin inscripción y un reintento de pago anterior, dentro y fuera de la ventana (8 variantes) | Dentro de la ventana solo compra el suscriptor inscripto; los demás reciben el rechazo RN-35 sin consumir el cupo ni dejar compra o pago nuevo. Fuera de la ventana compra cualquiera | RF-10 | RN-35 |
 | CP-126 | Pedir la lista de espera de un evento como cliente y sin sesión | Rechazo RN-34 sin devolver nombres ni correos; el administrador la obtiene | RF-10 | RN-34 |
 | CP-127 | Pedir los pagos de una compra ajena y sin sesión | Rechazo RN-41 sin devolver el dato; el titular los obtiene | RF-06 | RN-41 |
 | CP-128 | Pedir por su número una compra de otro cliente, y sin sesión | Rechazo RN-41 sin devolver la compra | RF-07 | RN-41 |

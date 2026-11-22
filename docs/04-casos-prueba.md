@@ -229,13 +229,13 @@ sección 0).
 | CP-90 | PruebasGrupoAReportes | PDF exportado desde la pantalla de reportes | El texto contiene la marca, el código, el período, quién lo pidió y la paginación | RF-11 | — | PA-25 (9.12 A) |
 | CP-91 | PruebasSeguridad | Sesión de un cliente que intenta devolver la compra de otro, con el titular del objeto cambiado a mano | Rechazado; tampoco ve las entradas. La compra sigue Confirmada y sin reembolso | RF-08 | RN-41 | SEG-3 |
 | CP-92 | PruebasSeguridad | Sesión de un cliente que pide el historial, la suscripción y el perfil de otro | Los tres, rechazados | RF-08 | RN-41 | SEG-3 |
-| CP-93 | PruebasSeguridad | Sesión de un cliente que elimina un evento | Rechazado con RN-34; el evento sigue existiendo | RF-12 | RN-34, RN-48 | SEG-3 |
+| CP-93 | PruebasSeguridad | Sesión de un cliente que elimina un evento | Rechazado con RN-48; el evento sigue existiendo | RF-12 | RN-48 | SEG-3 |
 | CP-94 | PruebasSeguridad | Sin sesión: 16 operaciones protegidas y `CrearAdministrador`; después, `CrearAdministrador` como cliente y como Administrador | Las 17 se rechazan sin sesión, y el cliente tampoco puede. El Administrador crea la cuenta con perfil Propietario. El registro genérico no es público. La compra sigue Pendiente y sin suscripción | RF-04, RF-12, RF-13 | RN-41, RN-48 | SEG-3, SEG-4 |
 | CP-95 | PruebasSeguridad | Cambiar la contraseña con la actual incorrecta | Rechazado; el contador de intentos sube a 1 y la contraseña anterior sigue sirviendo | RF-02 | RN-04, RN-40 | SEG-1 |
 | CP-96 | PruebasSeguridad | Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | Rechazado con el mensaje genérico «Mail o contraseña actual incorrectos.», sin decir que está bloqueada; al vencer el bloqueo, la anterior sigue sirviendo | RF-02 | RN-04 | SEG-1, K-8 |
 | CP-97 | PruebasSeguridad | Cambiar la contraseña con un correo inexistente y con la actual incorrecta | Las dos respuestas son iguales: misma regla y mismo mensaje | RF-02 | RN-40 | SEG-1 |
 | CP-98 | PruebasSeguridad | Con la sesión del Administrador, cambiar la contraseña de un cliente; abrir la pantalla | La anterior deja de servir y la nueva sirve; la sesión sigue siendo del Administrador. Pantalla: tres campos enmascarados y vacíos, todo dentro de la ventana | RF-02 | RN-40 | SEG-1 |
-| CP-99 | PruebasIngresos | Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y una consulta del contador sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». Al cliente se le rechaza el registro por RN-34, sin alterar el ingreso; sin sesión, el contador se rechaza | RF-07 | RN-18, RN-34, RN-49 | SEG-2 |
+| CP-99 | PruebasIngresos | Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y una consulta del contador sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». Al cliente se le rechaza el registro por RN-48, sin alterar el ingreso; sin sesión, el contador se rechaza | RF-07 | RN-18, RN-48 | SEG-2 |
 | CP-100 | PruebasIngresos | El mismo código escaneado dos veces | El segundo se rechaza como ya usado, con la fecha y hora del primero | RF-07 | RN-18 | SEG-2 |
 | CP-101 | PruebasIngresos | Entrada reembolsada | Se rechaza como reembolsada; el contador queda en 0 | RF-07 | RN-18, RN-29 | SEG-2 |
 | CP-102 | PruebasIngresos | Código con formato válido que no existe | Se rechaza como inexistente; el contador queda en 0 | RF-07 | RN-18 | SEG-2 |
@@ -246,7 +246,7 @@ sección 0).
 | CP-107 | PruebasSeguridad | Hashes con iteraciones enormes, 0, negativas o no numéricas, y con sal y hash vacíos | Ninguno autentica y no se propaga ninguna excepción | RF-02 | — | SEG-8 |
 | CP-108 | PruebasSeguridad | Hash previo de 100.000 iteraciones | Verifica; al iniciar sesión se reescribe a 310.000 con la misma contraseña, y un segundo inicio no lo vuelve a reescribir | RF-02 | — | SEG-6 |
 | CP-109 | MedirLoginSeguridad | Preparación completa de la base de pruebas | Carga 1.178 clientes de reporte con hashes a 310.000; la guarda `_Pruebas` sigue activa | RF-11 | — | SEG-6 |
-| CP-110 | PruebasIntegridadEntradas | Cada estado de `EstadoEntrada` y el estado ajeno «Usada», escritos en la tabla | La base admite los cuatro y rechaza el ajeno por `CK_Entradas_Estado`, que está activa y confiable | RF-07 | RN-18, RN-29 | — |
+| CP-110 | PruebasIntegridadEntradas | Cada estado de `EstadoEntrada` y el estado ajeno «Usada», escritos en la tabla | La base admite los cuatro y rechaza el ajeno por `CK_Entradas_Estado`, que está activa y confiable | RF-07 | RN-18 | — |
 | CP-111 | PruebasReembolsoConIngreso | Compra asegurada de 2 entradas: una ya ingresó; devolver las dos, en los dos órdenes (2 variantes) | RN-29 rechaza la devolución y no cambia nada, ni por el gestor ni por el repositorio. La entrada no usada se puede devolver sola | RF-07 | RN-18, RN-29 | SEG-2 |
 | CP-112 | PruebasSerializacionComponentes | Los siete componentes visuales en un host de diseño real (7 variantes) | Ninguno guarda su estilo en el Designer | RF-05, RNF-02 | — | T-41 |
 | CP-113 | PruebasRevisionSeguridad | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41 | K-6 (R-01) |
@@ -259,9 +259,9 @@ sección 0).
 | CP-120 | PruebasExtrasVisuales | Los componentes nuevos `IndicadorPasos` y `EtiquetaTotal` en un host de diseño real (2 variantes) | Ninguno guarda su estilo en el Designer | RF-05, RNF-02 | — | Rediseño |
 | CP-121 | PruebasReglasD5 | Suscripción contratada y vencida; consultarla y abrir su pantalla varias veces | No queda ninguna activa, y consultar o abrir la pantalla no crea ni renueva el registro | RF-13 | RN-26 | D-5 |
 | CP-122 | PruebasReglasD5 | Compra confirmada sin seguro; volver a confirmarla agregándole seguro | Rechazo con «La compra ya no está pendiente de pago.»; la compra queda sin seguro, sin póliza y sin segundo pago | RF-06 | RN-28 | D-5 |
-| CP-123 | PruebasK7K8 | Eventos para el control de ingreso: de otro administrador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-41, RN-49 | K-7 |
+| CP-123 | PruebasK7K8 | Eventos para el control de ingreso: de otro organizador, sin sesión, y un evento de las 00:30 en los bordes de su ventana (6 variantes) | No se listan, registran ni cuentan eventos ajenos; sin sesión, rechazo. El evento aparece desde el segundo exacto de apertura hasta el de cierre, y no un segundo antes ni después | RF-07 | RN-18, RN-48, RN-49 | K-7 |
 | CP-124 | PruebasK7K8 | Cambiar la contraseña sin sesión, con 0, 4 y 5 fallos previos, y con un correo inexistente (3 variantes) | El rechazo es el mismo en texto, título y comportamiento: no revela si la cuenta existe ni si está bloqueada. El bloqueo interno sigue funcionando | RF-02 | RN-04, RN-40 | K-8 |
-| CP-125 | PruebasPrioridadTemporal | Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor inscripto en la lista de espera; compran un no suscriptor, el suscriptor inscripto, un suscriptor sin inscripción y un reintento de pago anterior, dentro y fuera de la ventana (8 variantes) | Dentro de la ventana solo compra el suscriptor inscripto; los demás reciben el rechazo RN-35 sin consumir el cupo ni dejar compra o pago nuevo. Fuera de la ventana compra cualquiera | RF-10 | RN-35, RN-37 | RN-35 |
+| CP-125 | PruebasPrioridadTemporal | Un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y hay un suscriptor inscripto en la lista de espera; compran un no suscriptor, el suscriptor inscripto, un suscriptor sin inscripción y un reintento de pago anterior, dentro y fuera de la ventana (8 variantes) | Dentro de la ventana solo compra el suscriptor inscripto; los demás reciben el rechazo RN-35 sin consumir el cupo ni dejar compra o pago nuevo. Fuera de la ventana compra cualquiera | RF-10 | RN-35 | RN-35 |
 | CP-126 | PruebasGuardasMutacion | Pedir la lista de espera de un evento como cliente y sin sesión | Rechazo RN-34 sin devolver nombres ni correos; el administrador la obtiene | RF-10 | RN-34 | Mutación |
 | CP-127 | PruebasGuardasMutacion | Pedir los pagos de una compra ajena y sin sesión | Rechazo RN-41 sin devolver el dato; el titular los obtiene | RF-06 | RN-41 | Mutación |
 | CP-128 | PruebasGuardasMutacion | Pedir por su número una compra de otro cliente, y sin sesión | Rechazo RN-41 sin devolver la compra | RF-07 | RN-41 | Mutación |
@@ -352,30 +352,20 @@ sección 0).
   la medición del informe de usabilidad (`docs/usabilidad/INFORME-USABILIDAD.md`, «Tiempo del
   flujo completo»).
 - **CP-149 no existe.** El número se saltó al numerar y no se reasigna, igual que RN-27.
-- **Requerimientos alineados con los comentarios el 20/11, leyendo cada prueba.** Codex cambió el
-  requerimiento de 22 comentarios en `037c6b4`. En cinco, la prueba ejercita lo que dice el
-  comentario y el catálogo ya lo sigue: CP-55 (solo RF-01), CP-85 (suma RF-22), CP-120 (suma RF-05),
-  CP-141 y CP-142 (suman RF-22). **En los otros diecisiete la prueba no coincide con el comentario,
-  y la columna RF conserva lo anterior hasta que decida JC:**
-  - CP-95 a CP-98, CP-113, CP-114 y CP-124 pasaron de RF-02 a RF-17, pero verifican RN-04, RN-40
-    y RN-41, que la tabla de reglas asigna a RF-02. RF-17 es el cierre por inactividad y la
-    fortaleza de la contraseña, y ninguna de estas siete los prueba;
-  - CP-12, CP-62, CP-63, CP-64 y CP-116 suman RF-12 o RF-05, pero comprueban algo de toda la
-    aplicación: el alto de todos los formularios, el tema, el estilo de cada pantalla, el
-    manifiesto y los botones de cada pantalla;
-  - CP-47, CP-51 y CP-53 suman RF-02, pero comprueban el cierre de la última ventana y el manejo
-    global de errores, no el inicio de sesión. El cambio de RNF-02 a RNF-04 de CP-51 y CP-53 sí
-    coincide: los dos verifican que el mensaje no muestre detalles técnicos;
-  - CP-31 pierde RF-05 y CP-61 pierde RF-13, pero los dos siguen verificando una regla de ese
-    requerimiento (RN-13 y RN-39), y la matriz pone en las dos filas el caso que prueba una regla
-    de un requerimiento desde la operación de otro.
-- **Diecinueve filas tienen en la columna Reglas algo distinto del comentario.** No se tocaron:
-  CP-39 a CP-42, CP-44, CP-50 y CP-52 son regresiones de la interfaz que muestran una regla sin
-  verificarla, y el catálogo deja la columna vacía a propósito (ver el párrafo que sigue a la
-  tabla de cobertura del documento). Las demás (CP-45, CP-74, CP-82, CP-93, CP-95, CP-99, CP-101,
-  CP-110, CP-123, CP-124, CP-125 y CP-133) nombran en el catálogo una regla más, o en un caso otra,
-  que la que cita el comentario. La cobertura de reglas no cambia con ninguna de las dos
-  versiones: 50 de 52.
+- **Requerimientos y reglas alineados con los comentarios (22/11).** Codex volvió a leer las
+  pruebas y corrigió los comentarios en `42b255e` y `e3e000d`. Desde `e3e000d`, la columna RF del
+  catálogo y la de los comentarios coinciden en todos los casos. En la columna Reglas, el catálogo
+  sigue a los comentarios en CP-93, CP-99, CP-110, CP-123 y CP-125, leyendo cada prueba:
+  - CP-93 y CP-99 esperan el rechazo con RN-48 (el perfil Organizador), no con RN-34;
+  - CP-110 restringe los estados de la entrada y no toca la devolución: sale RN-29;
+  - CP-123 rechaza el evento ajeno con RN-49 y la consulta sin sesión con RN-48, que es el control
+    de perfil de `GestorIngresos`: RN-48 reemplaza a RN-41;
+  - CP-125 verifica la ventana de prioridad de RN-35: sale RN-37 (decisión de JC, 22/11).
+
+  Quedan cuatro filas en las que el catálogo nombra una regla más, o una distinta, que el
+  comentario, a confirmar con JC: CP-44 (el comentario cita RN-05; el catálogo deja la columna
+  vacía porque es una regresión de la interfaz que muestra la regla sin verificarla), CP-95 (el catálogo suma
+  RN-40) y CP-101 y CP-133 (el catálogo suma RN-29). La cobertura de reglas no cambia: 50 de 52.
 - **CP-165, CP-187, CP-190 y CP-193 verifican RN-34.** Citaban RN-05 y RN-53 pero esperaban el
   rechazo con RN-34: el control de perfil Administrador es el mismo para toda la administración.
   Codex corrigió los comentarios en `e2d8ff6` (20/11) y el catálogo los sigue. La cobertura no

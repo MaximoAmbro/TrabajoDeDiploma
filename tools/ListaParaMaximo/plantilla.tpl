@@ -1438,6 +1438,10 @@ la de CP-01 a CP-61:
 
 **y agregar a continuación** estas filas (CP-62 a CP-206; el número CP-149 no se usó):
 
+**Cambio del 22/11:** cambiaron las reglas de CP-93, CP-99, CP-110, CP-123 y CP-125, aquí y en la
+tabla de casos de la versión 2.6 de más abajo (en CP-93, CP-99 y CP-123, también el resultado o la
+condición). Si ya pegaste esas filas, reemplazá solo esas cinco en las dos tablas.
+
 @@ generado/cobertura.md :: ^\| CP-62 — :: ^FIN-COBERTURA
 
 **El párrafo que sigue a la tabla. Reemplazar:**
