@@ -55,6 +55,7 @@ namespace Visual
             this.lblContador.Size = new System.Drawing.Size(672, 24);
             this.lblContador.Name = "lblContador";
             this.btnVolver.Location = new System.Drawing.Point(24, 444);
+            this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(144, 40);
             this.btnVolver.Text = "Volver";
             this.btnVolver.TabIndex = 3;

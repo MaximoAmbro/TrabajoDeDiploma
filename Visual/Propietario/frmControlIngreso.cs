@@ -33,7 +33,8 @@ namespace Visual
                     lblEvento.Visible = cmbEventos.Visible = lblCodigo.Visible = txtCodigo.Visible = btnRegistrar.Visible = lblResultado.Visible = lblContador.Visible = false;
                 }
                 ActualizarContador();
-                txtCodigo.Focus();
+                if (txtCodigo.Enabled) txtCodigo.Focus();
+                else btnVolver.Focus();
             }
             catch (ReglaNegocioException ex) { Avisos.Regla("Control de ingreso", ex); Close(); }
         }

@@ -21,6 +21,15 @@ namespace Visual
         public frmMisLocales()
         {
             InitializeComponent();
+            dgvLocales.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter && btnEventosLocal.Enabled)
+                {
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                    btnEventosLocal.PerformClick();
+                }
+            };
             estadoSinLocales = new Componentes.EstadoVacio { Name = "estadoSinLocales", Visible = false };
             estadoSinLocales.AjustarA(dgvLocales);
             estadoSinLocales.Cargar("Todavía no registraste un local. Cuando lo hagas, vas a poder publicar eventos desde acá.", "Registrar local");

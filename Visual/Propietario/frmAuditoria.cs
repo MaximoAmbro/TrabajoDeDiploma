@@ -91,6 +91,7 @@ namespace Visual
             tabla.SetBounds(tabla.Left, tabla.Top,
                 Math.Max(1, ClientSize.Width - tabla.Left - 12),
                 Math.Max(1, ClientSize.Height - tabla.Top - 12));
+            estadoVacio?.AjustarA(tabla);
             AjustarAnchosColumnas();
         }
     }

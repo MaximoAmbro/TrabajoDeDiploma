@@ -19,6 +19,7 @@ namespace Visual
         public frmSuscripcion()
         {
             InitializeComponent();
+            CancelButton = btnVolver;
         }
 
         private void frmSuscripcion_Load(object sender, EventArgs e)

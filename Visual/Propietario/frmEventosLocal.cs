@@ -20,6 +20,16 @@ namespace Visual.Vendedor
         public frmEventosLocal()
         {
             InitializeComponent();
+            AcceptButton = btnAgregarEvento;
+            dgvEventos.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter && AcceptButton is Button boton && boton.Enabled)
+                {
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                    boton.PerformClick();
+                }
+            };
             estadoSinEventos = new Componentes.EstadoVacio { Name = "estadoSinEventos", Visible = false };
             estadoSinEventos.AjustarA(dgvEventos);
             estadoSinEventos.Cargar("Todavía no hay eventos en este local. Creá uno para empezar a ofrecer entradas.", "Agregar evento");

@@ -27,6 +27,7 @@ namespace Visual.Vendedor
             InitializeComponent();
             Controls.Add(btnPublicar);
             btnPublicar.Click += (s, e) => PublicarEvento();
+            AcceptButton = btnAgregarSector;
             estadoSinSectores = new Visual.Componentes.EstadoVacio { Name = "estadoSinSectores", Visible = false };
             estadoSinSectores.AjustarA(dgvSectores);
             estadoSinSectores.Cargar("Este evento todavía no tiene sectores. Agregá uno para ofrecer entradas.", "Agregar sector");

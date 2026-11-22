@@ -41,6 +41,16 @@ namespace Visual
             }));
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape && CancelButton == null)
+            {
+                Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         protected void ReconfigurarTeclado()
         {
             OrdenarTabulacion(this);
@@ -62,7 +72,7 @@ namespace Visual
             if (CancelButton == null)
             {
                 var botones = DescendientesEnOrden(this).OfType<Button>().ToArray();
-                string[] nombres = { "btnCancelar", "btnVolver", "btnAtras", "btnCerrar", "btnVolverAcceso", "lblvolver" };
+                string[] nombres = { "btnCancelar", "btnVolver", "btnAtras", "btnCerrar", "btnCerrarSesion", "btnVolverAcceso", "lblvolver" };
                 foreach (string nombre in nombres)
                 {
                     Button boton = botones.FirstOrDefault(b => string.Equals(b.Name, nombre, StringComparison.OrdinalIgnoreCase) && b.Enabled && b.Visible);
@@ -116,7 +126,10 @@ namespace Visual
         {
             if (FormBorderStyle != System.Windows.Forms.FormBorderStyle.Sizable &&
                 FormBorderStyle != System.Windows.Forms.FormBorderStyle.SizableToolWindow)
+            {
+                MaximizeBox = false;
                 return;
+            }
 
             bool adaptable = DescendientesEnOrden(this).Any(c =>
                 c.Dock == DockStyle.Fill ||
