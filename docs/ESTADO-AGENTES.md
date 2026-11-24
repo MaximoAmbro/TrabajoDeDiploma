@@ -4,15 +4,15 @@
 que se los pasa a Claude Code para que los anote. JC puede corregirlo cuando quiera.
 
 Antes de empezar cualquier tarea, cada agente:
-1. lee este archivo;
-2. confirma que el turno es suyo;
+1. lee este archivo y `docs/TICKETS.md`;
+2. confirma que el ticket es suyo y que no está bloqueado;
 3. corre `git status`.
 
-Si el turno no es suyo, o si hay cambios sin commitear que no son de su sesión, no toca nada
-y avisa a JC.
+Si el ticket no es suyo, o si hay cambios sin commitear en su zona que no son de su sesión, no toca
+nada y avisa a JC.
 
-Última actualización: **10/11/2026**, por Claude Code. Cerró la planificación posterior a 6A:
-borradores de 6B y de la séptima tanda, clasificación de las 64 y cronograma re-fechado.
+Última actualización: **24/11/2026, a la tarde**, por Claude Code. Reemplaza la del 10/11, que
+había quedado vieja: decía 61 casos y que la renovación visual estaba en duda.
 
 ---
 
@@ -20,81 +20,114 @@ borradores de 6B y de la séptima tanda, clasificación de las 64 y cronograma r
 
 | | |
 |---|---|
-| **Turno actual** | **JC**: revisar `git status` de la planificación del 10/11 y mandar el mensaje a Máximo (abajo) |
-| Próximo turno | **Claude Code**: lo de después de 6A (lista al final de este archivo) |
-| Después | **Codex**: **séptima tanda** (`TANDAS-PRUEBAS-64.md`), solo cuando JC la apruebe y la pase a `TAREAS-CODEX-PRUEBAS.md` |
-| Después de eso | **Codex**: parte 6B (`ENCARGO-6B-BORRADOR.md`), solo si este archivo dice **«piloto confirmado»** |
-| Ramas | `main` local = `main` y `JC` en GitHub hasta `36a0d80` (6A). `respaldo/jc-2026-11-04` quedó en `98be355`. Los cambios de este turno están **sin commitear** |
+| **Codex** | **T-01 en curso:** la tanda visual sin commitear (gráficos con eje, estados de disponibilidad, capturas con la semilla de demostración). Después, T-02 a T-04 (respaldo de WebView2) y T-05 si JC lo aprueba. Al terminar, T-06: congelar el código |
+| **Claude Code** | Lo que no depende del congelamiento: T-07 (catálogo) y T-19; T-15 (medir el QR para JC-R10) cuando Codex no esté trabajando, porque abre la aplicación. Lo demás del cierre (T-09 a T-13) espera a T-06 y T-08 |
+| **JC** | Revisar `git status` y autorizar los commits pendientes (T-01, T-18), decidir T-05, pasar los datos de T-14 |
+| **Ramas** | Rama de trabajo: `JC`. Local en `4c200ef` (semilla de demostración); `origin/JC` en `1d05fc2`, sin la semilla: el push lo decide JC. `main` local quedó en `e2d8ff6`, 21 commits detrás de `origin/main`. `respaldo/jc-2026-11-04` no se toca |
 
-**Codex: 6A está cerrada (77/77) y no hay encargo vigente para vos.** Los dos borradores de
-`docs/` no son encargos hasta que JC los apruebe.
-
-**Estado del piloto: pendiente.** Esta línea la cambia Claude Code a «piloto confirmado» cuando
-JC lo indique.
+**Codex: tu encargo vigente es T-01 y los tickets que siguen en `docs/TICKETS.md`.** Los encargos
+viejos de `docs/TAREAS-CODEX-PRUEBAS.md` (hasta la parte 6B) están cerrados o reemplazados: no
+arranques ninguno de ahí.
 
 ---
 
 ## La foto: dónde estamos
 
-### Código: cerrado
+### Código
 
 | Qué | Estado |
 |---|---|
-| Funcionalidad del sistema (secciones 1 a 10) | Completa |
-| Correcciones de las pruebas manuales de JC (F-01 a F-03, O-01 a O-11) | Hechas, con prueba automática cada una |
-| Seguridad: alta sin elegir perfil (T-22), cierre de sesión (T-23) | Hechas |
-| Cerrar con la X termina la aplicación (T-24); base de formularios editable (T-28) | Hechas y verificadas sobre el ejecutable |
-| Compra: indicación de la cantidad, «Comprar» sin entradas, encabezado completo (T-25, T-26, T-29) | Hechas |
-| Manejador global de errores; pago con el evento eliminado (T-27) | Hechos y verificados con SQL Server detenido |
-| Pruebas automáticas | **61 casos, 73 ejecuciones, todas correctas** |
-| Cobertura de la matriz | 12 de 12 requerimientos en alcance; **33 de 38 reglas (86,8 %)**, con las 19 que rechazan operaciones |
-| Usabilidad | Criterio del 70 % cumplido (100 %); SUS 78,8; 10 hallazgos menores abiertos (12 h) |
+| Funcionalidad | RF-01 a RF-22, todos construidos salvo RF-09 (Won't have), con tres perfiles: Cliente, Organizador y Administrador de plataforma |
+| Reglas | 52 vigentes (RN-01 a RN-54; RN-27 y RN-42 dadas de baja). **50 de 52 cubiertas** por pruebas |
+| Batería | **214 casos, 360 ejecuciones, todas correctas, sobre `2db272e`** (22/11; Codex, fuera del sandbox). Después de la reforma y de WebView2, Codex informa otra vez 360 de 360 (`TestResults/diseno-visual-360.log`). Las cifras del documento se fijan recién con el código congelado (T-08) |
+| Mutación de las defensas de seguridad | 73 de 77 mutantes detectados, sobre `65225e7` |
+| Interfaz | Reforma visual de las 25 pantallas (24/11) y cuatro vistas en WebView2 (abajo) |
+| Congelamiento | **No congelado.** El cronograma del 10/11 lo ponía el 27/11; la fecha la confirma JC con T-06 |
 
-**Lo único que cambiaría el código de acá a la entrega es la renovación visual**, si JC la
-aprueba (`docs/PLAN-RENOVACION-VISUAL.md`).
+### Lo que pasó desde el 10/11, en una línea por tema
 
-### Pruebas manuales: lo que le queda a JC de verdad
+- **11 al 16/11:** séptima tanda y cierres de seguridad, publicación y pruebas de mutación.
+- **17 al 19/11:** tres perfiles, solicitudes de Organizador con CUIT y teléfono, publicación con
+  revisión del primer evento, seguridad de la cuenta y auditoría (RF-14 a RF-22, RN-43 a RN-54).
+- **20 al 22/11:** normalización de botones y teclado, correo SMTP configurable por entorno con el
+  simulado por defecto, y el código del teléfono siempre simulado (`db02dd4`). Pruebas sobre
+  ventanas reales (`2db272e`).
+- **24/11, madrugada y mañana:** reforma visual de las 25 pantallas en cuatro commits (`cfb8352`,
+  `3030f10`, `48647f0` y `24a1e6c`), los seis commits de interfaz de abajo y la semilla de
+  demostración.
 
-| ID | Qué | Tiempo |
+### Los seis commits de interfaz del 24/11 (después de `d93c4b3`)
+
+| Commit | Hora | Qué |
 |---|---|---|
-| JC-R10 | Escanear dos tickets con el celular. **Esta PC no tiene cámara** (revisado el 05/11): la lectura óptica no se pudo hacer desde acá y no se simuló. **Esperar al ticket nuevo (V-4, parte 6A)**: Claude Code avisa cuando esté | 10 min |
-| (opcional) | Shift+Tab en el login y Ctrl+Tab en una grilla, con el teclado físico | 5 min |
-| (opcional) | Mirar la compra en una notebook a 125 % o 150 % | 10 min |
+| `24da9ed` | 10:39 | Corrige las regresiones que salieron de revisar las capturas de la reforma |
+| `72cfcc6` | 10:51 | Lateral oscuro en los tres menús, catálogo en tarjetas y resumen de compra por filas |
+| `ffe5c0f` | 11:16 | Cierre visual del inicio del cliente, el catálogo y la compra |
+| `e846ef7` | 11:21 | **WebView2:** el catálogo pasa a una página web local |
+| `d9f7f08` | 11:29 | **WebView2:** reportes con gráficos y el panel del Administrador |
+| `1d05fc2` | 11:37 | **WebView2:** el comprobante de la compra |
 
-**Total: 10 minutos obligatorios.** CX-03 pasó a Máximo (ver abajo). Claude Code cerró el 05/11 JC-R01 (escala real a 125 %,
-150 % y 175 %), JC-R11 (recorrido con teclado), CX-02 (reserva vencida por reloj) y CX-04
-(base caída). Detalle en `docs/PRUEBAS-PENDIENTES.md`, «Estado al 05/11/2026».
+Reporte de Codex: `Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-24-REFORMA.md`.
 
-### Lo que depende de Máximo
+### La migración a WebView2
 
-| Qué | Para cuándo | Si no llega |
+- **Cuatro vistas:** el catálogo (`frmEventosCliente`), el resumen de la compra
+  (`FrmCompraCliente`), los reportes (`frmReportes`) y el panel del Administrador
+  (`PanelAdministrador`). El resto de cada pantalla (filtros, acciones, navegación) sigue en
+  Windows Forms.
+- **`Visual/Web/PanelWeb.cs`** carga `Visual/Web/*.html` desde la carpeta del programa. Recibe los
+  datos ya calculados como JSON y le devuelve mensajes a la pantalla. No expone objetos de la
+  aplicación, no navega fuera de `eventaura.local` y no accede a la red. Paquete:
+  `Microsoft.Web.WebView2` 1.0.2903.40.
+- **Las capas no cambian:** la página no llega al negocio ni a los datos.
+- **Respaldo:** si la vista web falla, la pantalla muestra su versión de Windows Forms con un
+  aviso. Auditado el 24/11 (`docs/AUDITORIA-RESPALDO-WEBVIEW2.md`): funciona, pero no está en la
+  batería (T-02) y no cubre la falta de las DLL (T-03).
+- **Documento:** las pp. 18 y 24 ya tienen la oración de WebView2; la p. 57 y la bibliografía van
+  con el código congelado (T-13).
+
+### La semilla de demostración (`4c200ef`)
+
+`BaseDatos/semilla-demostracion.sql`: datos para la demostración y las capturas, **no para la
+batería**. Contiene:
+- 4 locales de Rosario con direcciones reales y 20 eventos de las categorías existentes, entre seis
+  meses atrás y cuatro adelante;
+- sectores distintos por local y 337 entradas vendidas de forma despareja: 3 eventos agotados,
+  varios a medias y 2 sin ventas;
+- 14 clientes `@demo.eventaura.example` en los tres niveles, con historial coherente con RN-19 a
+  RN-23 y RN-37;
+- 3 personas en lista de espera;
+- solicitudes de Organizador pendientes, rechazada y aprobada, con CUIT válido (RN-52).
+
+Se puede correr más de una vez: la segunda no inserta nada. Se verificó en una base aparte. Codex
+la usa, sin commitear (T-01), con `BaseDePrueba.PrepararDemostracion`, que crea
+`BddEventAura_Capturas_Demostracion`, y con `CapturarReforma.ps1 -Demostracion`.
+
+### El documento
+
+El cierre está preparado para hacerse en una tarde:
+- **`docs/CIERRE-DOCUMENTO.md`:** el inventario, las secciones estables y las que dependen del
+  código;
+- **`docs/LISTA-PARA-MAXIMO.md`:** cada valor que depende del código está como un marcador
+  `[[...]]`;
+- **`tools/Cierre/Inventario.py`:** cuenta lo que falta.
+
+Las páginas de pantallas siguen en pausa hasta las capturas finales.
+
+**Decisiones de JC del 24/11, ya aplicadas:**
+- «Máximo», con tilde;
+- los años 2025 pasan a 2026;
+- en las pp. 18 y 24, la redacción (a) de WebView2;
+- el hueco CP-212 a CP-353 se deja;
+- la batería final se corre dos veces.
+
+### Pruebas manuales abiertas
+
+| ID | Qué | Ticket |
 |---|---|---|
-| El fuente editable del documento | Venció el 08/11; se le volvió a preguntar el 10/11 | Plan B2: conversión desde el 23/11 (`PLAN-RENOVACION-VISUAL.md`, sección 10) |
-| ~~Sus 64 pruebas manuales~~ | **Pasaron a nosotros el 10/11** (decisión de JC) | `PRUEBAS-64-CLASIFICACION.md` y `TANDAS-PRUEBAS-64.md` |
-| Confirmar RN-35 reescrita (prioridad de suscriptores en la lista de espera) | Antes de aplicar las correcciones del documento | Queda como está en `docs/`. La prueba PA-19 comprueba lo que el sistema hace hoy |
-| **Verificar el piloto en Visual Studio** (cierra también CX-03): abrir `FrmCompraCliente` **y `frmEventosCliente`**. Mensaje: «Mensaje para Máximo», abajo | **15/11**: desde ahí, cada día de demora corre 6B | La renovación se frena en el piloto |
-
-### Lo que depende del docente
-
-| Qué | Por qué importa |
-|---|---|
-| Si pide los anexos T01 a T08 | Completos son 100 a 144 h: no entran junto con la renovación. El subconjunto mínimo (T01, T02, T03 y T06a) son 30 a 42 h |
-| Que acepte el rótulo «(simulado)» del estudio de usabilidad | El documento ya lo declara así; mejor saberlo antes de la defensa |
-
-**El mail al docente conviene que salga esta semana**: su respuesta define cuánto tiempo
-queda para la renovación.
-
-### La última semana (26/11 al 04/12)
-
-1. **27/11: congelamiento del código.** Desde ahí, solo correcciones.
-2. Figuras definitivas (`Generar.ps1`) y, si hubo renovación, la tercera medición de
-   usabilidad cerrada.
-3. Aplicar al documento las últimas cifras de `CORRECCIONES-DOCUMENTO.md`, regenerar el
-   índice y exportar el PDF.
-4. Última batería, último push a `main`.
-5. Ensayo de la defensa con `COMO-SE-PROBO.md` y `EXCEPCIONES.md`.
-
-El cronograma semana por semana está en `docs/PLAN-RENOVACION-VISUAL.md`, sección 10.
+| JC-R10 | Escanear dos tickets con el celular (esta PC no tiene cámara) | T-15 |
+| JC-R12 | Las cuatro pantallas sin WebView2, al 100 % y al 150 % | T-16 |
+| (manual de Codex) | Enter en Suscripción, porque abre un modal | T-05 |
 
 ---
 
@@ -106,66 +139,30 @@ El cronograma semana por semana está en `docs/PLAN-RENOVACION-VISUAL.md`, secci
 | Claude Code | Revisión, documentación, matriz de trazabilidad, planificación y encargos para Codex | `docs/`, `tools/`, `CLAUDE.md`, `AGENTS.md` |
 | Codex | Implementación y pruebas automáticas | `Visual/`, `Repo/`, `Datos/`, `Pruebas/`; `BaseDatos/` y Designer solo con autorización de JC |
 
-## Decisiones de JC del 05/11
-
-**Tomadas:** V-1 a V-6, todas como se recomendaron: camino A con `Tema.cs`, DPI en la fase 0,
-tercera medición, ticket nuevo, callejones del teclado y títulos en castellano. **Autorizó a
-Codex a editar los Designer de las 19 pantallas, primero uno (el piloto).** V-4 va al
-principio.
-
-**Pendiente de JC:** aprobar `docs/SISTEMA-DISENO.md` (la sección 7 dice qué no da WinForms y
-qué se hace en cambio) y, según el docente, T01 a T08.
-
-## Mensaje para Máximo (verificación del piloto y fuente del documento), del 10/11
-
-> Máxi, te pido dos cosas cuando puedas:
->
-> **1) Una prueba rápida en Visual Studio.** Hacé pull de `main` y compilá. Antes de abrir
-> nada, poné Windows al 100 %. Si Visual Studio te ofrece «reiniciar con escala al 100 %»,
-> aceptá.
->
-> Abrí en el diseñador estas dos pantallas:
-> - `Visual/Cliente/FrmCompraCliente.cs`, la de compra, que ya tiene el diseño nuevo;
-> - `Visual/Cliente/frmEventosCliente.cs`, el listado de eventos.
->
-> Para cada una decime si se dibuja normal o si sale una página de error o de advertencias.
-> Si sale, copiame el texto que muestra. Mandame una captura de las dos.
->
-> **Cerralas sin guardar**, aunque te pregunte. Vos trabajás al 150 % y, si guarda, Visual
-> Studio reescribe todas las medidas de la pantalla y pisa el diseño nuevo. Después podés
-> volver a tu escala.
->
-> **2) ¿Conseguiste el Word editable del documento?** Necesito saberlo para organizar lo que
-> queda.
-
-Cómo se lee la respuesta: `ENCARGO-6B-BORRADOR.md`, sección 0.
+Los tickets (`docs/TICKETS.md`) los escribe solo Claude Code. Codex informa el avance en su
+reporte final (`Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>.md`).
 
 ## Observaciones de este turno
 
-- **El aviso del pago con el evento eliminado es genérico**: «La compra ya no está pendiente de
-  pago». Es correcto pero no dice que el evento se eliminó. Es un cambio de texto en `frmPago`,
-  si JC lo quiere.
-- **La escala de Windows:** el primer intento de cambiarla (con `SPI_SETLOGICALDPIOVERRIDE`)
-  dejó guardado 125 % sin aplicarlo. Se restauró a 100 % antes de seguir. Queda la clave
-  `HKCU\Control Panel\Desktop\PerMonitorSettings\<monitor>` con `DpiValue = 0`, que significa
-  «la recomendada» (100 %); antes no existía. El efecto es el mismo.
+- **`CLAUDE.md`, «Estado actual», está viejo:** dice 61 casos y 73 ejecuciones. Si JC quiere, lo
+  actualiza Claude Code junto con T-13. Mientras tanto, la cifra vigente es la de este archivo.
+- **Corrección de Claude Code:** el 24/11 había dicho que el respaldo de WebView2 no lo había mirado
+  nadie. Codex lo probó una vez a las 11:36 (`TestResults/WebView2-Respaldo/`). También habían
+  quedado fechados «25/11» el documento de cierre y la lista; se corrigió a 24/11.
 - **`Generar.ps1` necesita `pymupdf`**, instalado en `D:\jc-tools`: correr con
   `$env:PYTHONPATH = 'D:\jc-tools'`.
 
 ## Qué debería hacer el próximo agente
 
-**Codex:** nada hasta que JC apruebe la séptima tanda. 6A está terminada (reporte en
-`Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-10-6A.md`).
+**Codex:**
+1. terminar T-01 y reportar;
+2. T-02, T-03 y T-04, en ese orden;
+3. T-05 solo si JC lo aprueba;
+4. avisar cuando el código pueda congelarse (T-06).
 
-**Claude Code**, después de 6A (pendiente; el 10/11 se hizo solo la planificación y se repitió
-el host de diseño sobre la compilación de 6A: `docs/verificaciones/disenador-host-6A.txt`):
-1. mover el reporte a `docs/` y revisar el código;
-2. **adaptar sus herramientas a la compatibilidad con DPI.** `Captura.exe` (figuras y
-   `VerificarEscala`) se compila sin manifiesto y no escalaría como la aplicación: tiene que
-   declararse DPI-aware igual que `Visual.exe`;
-3. capturas del piloto a 100 %, 125 % y 150 % (`Escala.ps1`), para que JC las apruebe como
-   referencia;
-4. medir el QR del ticket nuevo (decodificación con `VerificarQrTickets.py`, más módulo y zona
-   de silencio sobre el PDF) y **avisarle a JC que ya puede escanear**;
-5. regenerar las figuras del instructivo;
-6. con el «sí» de Máximo y de JC, anotar acá «piloto confirmado».
+No toques `docs/`: lo que tengas que decir sobre los tickets, ponelo en tu reporte.
+
+**Claude Code:**
+1. T-07 y T-19 mientras Codex trabaja, sin correr la batería ni abrir pantallas; T-15 cuando Codex
+   no esté trabajando;
+2. con T-06 cerrado, T-08 (segunda corrida) y T-09 a T-13, en ese orden.

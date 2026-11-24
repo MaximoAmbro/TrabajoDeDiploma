@@ -640,3 +640,11 @@ desde el `.cs` y dibuje la pantalla. Ese paso (el «serializador» de CodeDOM de
 Studio) no existe fuera de Visual Studio. Si fallara, Visual Studio lo mostraría como una
 página de error en lugar del formulario. Es la confirmación visual que va a hacer **Máximo**:
 abrir `FrmCompraCliente` y `frmInicio` en el diseñador. Tienen que dibujarse sin errores.
+
+---
+
+## Agregada el 24/11/2026: JC-R12, las pantallas sin WebView2
+
+| ID | Qué | Resultado esperado | Estado |
+|---|---|---|---|
+| JC-R12 | Abrir el catálogo, una compra, los reportes y el inicio del Administrador con la vista web forzada a fallar: en PowerShell, `$env:WEBVIEW2_BROWSER_EXECUTABLE_FOLDER = 'C:\no-existe'` y después `& '.\Visual\bin\Debug\Visual.exe'`. Repetir con Windows al 150 % | Cada pantalla muestra su versión de Windows Forms completa, sin superposiciones, con el aviso «Vista web no disponible…» y sin ningún aviso de error | **Abierta.** Codex la hizo una vez a 96 DPI el 24/11 (`TestResults/WebView2-Respaldo/`); falta a 150 % y con el código final. Detalle: `docs/AUDITORIA-RESPALDO-WEBVIEW2.md` |

@@ -1,20 +1,22 @@
 # LA lista para el Word — de la página 1 a la 112
 
-> ## ↻ CAMBIÓ EL 24/11: el código que se entrega es `2db272e`
+> ## 🔧 DESDE EL 24/11: MARCADORES DE CIERRE `[[...]]`
 >
-> La batería pasó a **214 casos y 360 ejecuciones**, todas correctas, sobre `2db272e`; la cobertura
-> de reglas no cambia (50 de 52). **Si ya pegaste alguno de estos lugares, volvé a pegarlo:**
+> Codex sigue cambiando el código, así que las cifras que dependen de él **no se escriben todavía**.
+> En su lugar, el texto trae un marcador entre corchetes dobles, por ejemplo `[[CASOS]]` o
+> `[[COMMIT-COMPLETO]]`. **Pegalo tal cual, con los corchetes.** El día del cierre, JC te pasa el
+> valor de cada marcador (tabla «Marcadores de cierre», más abajo) y lo cambiás con
+> *Reemplazar todo* de Word (Ctrl+H), uno por uno. Al final, buscar `[[` tiene que dar cero.
 >
-> - la línea del commit en la carátula (p. 1);
-> - la fila 2.6 del historial (p. 6) y el resumen de resultados (p. 7);
-> - la nomenclatura de la matriz (p. 106) y la matriz principal entera, con el párrafo de los
->   requerimientos no funcionales (p. 107);
-> - las tablas de casos (pp. 107 a 109): nueve filas nuevas al final de cada una (CP-207 a CP-211
->   y CP-354 a CP-357), la fila de CP-116 (25 pantallas), el párrafo de cobertura y el «Origen de
->   los casos»;
-> - la sección «Metodología de verificación» (la cantidad de casos y de ejecuciones).
+> Las tablas que se rehacen enteras (la matriz y las tablas de casos) llevan arriba un renglón
+> `[[BLOQUE-...]]`: pegalo también, junto con la tabla. En el cierre se reemplaza la tabla y se
+> borra el renglón.
 >
-> Lo que describe pantallas sigue en pausa (⏸).
+> **Si ya habías pegado alguno de estos lugares con números** (214, 360, `2db272e`, o antes 205,
+> 348, `967e038`), no hace falta que vuelvas: el cierre los cubre igual (lista en
+> `docs/CIERRE-DOCUMENTO.md`).
+>
+> Lo que describe pantallas sigue en pausa (⏸) hasta el cierre.
 
 > ## ⚠ ANTES DE TODO: nueve scripts nuevos en tu base (18/11 y 19/11)
 >
@@ -138,10 +140,8 @@
 >
 > | Dónde | Qué no se pega | De qué depende |
 > |---|---|---|
-> | p. 1 y pie de todas las páginas | Comisión, turno, legajos, año, y «Maximo» o «Máximo» | Datos de JC |
+> | p. 1 y pie de todas las páginas | Comisión, turno y legajos (el año y «Máximo» ya están decididos: ver «Página 1») | Datos de JC |
 > | p. 6, historial | La fecha de las filas nuevas (una para la 2.5 y otra para la 2.6) | Datos de JC |
-> | pp. 6, 44 y 112 | Los años 2025 de las fechas del historial, de las minutas, de la bibliografía y de la consulta de las comisiones | El año que decida JC |
-> | p. 9 | El período «entre junio y diciembre de 2025» | El año que decida JC |
 > | pp. 15 a 17, cronograma de hitos | Las nueve «Fecha estimada: x» | Datos de JC |
 
 > ## ⚠ Las páginas 63 a 67 (y el código de las 102 a 105): bloques de código que Word estropea sin que se note
@@ -176,10 +176,11 @@
 - **No hay nada para decidir.** Si algo no encaja con lo que ves en el Word, no lo resuelvas:
   anotalo y avisale a JC.
 
-## Cifras del documento (definitivas, 24/11)
+## Cifras del documento
 
-Son las del código que se entrega, `2db272e`. La de mutación es la del código que se midió,
-`65225e7`, y no se vuelve a medir (decisión de JC).
+Las de esta primera tabla no dependen del código que falta y ya son definitivas. La de mutación es
+la del código que se midió, `65225e7`, y no se vuelve a medir (decisión de JC). La cobertura de
+reglas se vuelve a comprobar en el cierre: solo cambia si una prueba nueva cubre RN-07 o RN-33.
 
 | Dato | Valor | Dónde aparece en esta lista |
 |---|---|---|
@@ -188,27 +189,52 @@ Son las del código que se entrega, `2db272e`. La de mutación es la del código
 | Reglas con caso de prueba | 50 de 52 = 96,2 % | pp. 7, 8, 108, 109, 110, sección nueva después de la 109 |
 | Reglas sin caso | RN-07 y RN-33 | pp. 8, 108, 109, 110, 111 |
 | Casos de uso especificados | 21 (veintiún), CU-01 a CU-21 | pp. 6, 7, 106, 108 |
-| Casos de prueba | 214 (doscientos catorce), CP-01 a CP-211 y CP-354 a CP-357; los números CP-149 y CP-212 a CP-353 no se usaron | pp. 6, 7, 106, 107, 108, 109, sección nueva |
-| Ejecuciones | 360 (trescientas sesenta), todas correctas, sobre `2db272e`, el código que se entrega: la corrió Codex el 24/11 y Claude Code cruzó el registro con el código, caso por caso | sección nueva |
 | Mutación | 73 de 77 (94,8 %) sobre `65225e7`, el código congelado para medirla; la primera medición, 51 de 77 (66,2 %) sobre `fe04b1f`, se cita como punto de partida | p. 7, sección nueva |
-| Código que se entrega | Commit `2db272e` (completo: `2db272ecf0f31898ee617e025ba763be1be7825e`) | p. 1 |
+
+### Marcadores de cierre
+
+Dependen del código final. El valor provisorio es el de `2db272e` (24/11) y **no se pega**: sirve
+para ver la forma. El valor final lo completa Claude Code el día del cierre.
+
+| Marcador | Qué es | Provisorio (2db272e) | Final | Dónde aparece |
+|---|---|---|---|---|
+| `[[COMMIT-COMPLETO]]` | Commit del código que se entrega, los 40 caracteres | 2db272ecf0f31898ee617e025ba763be1be7825e | — | p. 1 |
+| `[[CASOS]]` | Cantidad de casos de prueba, en número | 214 | — | p. 106 |
+| `[[CASOS-LETRAS]]` | La misma cantidad, en letras | doscientos catorce | — | pp. 7, 106, 108, sección «Metodología» |
+| `[[CASOS-LETRAS-INICIAL]]` | En letras, con mayúscula inicial | Doscientos catorce | — | p. 7 |
+| `[[EJECUCIONES-LETRAS]]` | Cantidad de ejecuciones, en letras | trescientas sesenta | — | sección «Metodología» |
+| `[[ULTIMO-CASO]]` | Número del último caso | CP-357 | — | pp. 106, 108, 109 |
+| `[[CASOS-RANGO-2.6]]` | Casos que agrega la versión 2.6 | CP-62 a CP-211 y CP-354 a CP-357 | — | p. 6 |
+| `[[RANGO-CASOS-FINALES]]` | Casos del último ajuste del código | CP-207 a CP-211 y CP-354 a CP-357 | — | p. 108, «Origen de los casos» |
+| `[[NUMEROS-SIN-USO]]` | Números de caso que no se usaron, en minúscula | los números CP-149 y CP-212 a CP-353 no se usaron | — | p. 106 |
+| `[[NUMEROS-SIN-USO-ORACION]]` | Lo mismo, como oración | Los números CP-149 y CP-212 a CP-353 no se usaron. | — | p. 108, «Origen de los casos» |
+| `[[CASOS-ESCALA]]` | Casos que verifican el tamaño de pantalla y la escala de Windows | CP-12, CP-25, CP-64, CP-69 y CP-85 | — | p. 37 |
+| `[[CASOS-RNF]]` | Casos de RNF-02, RNF-03 y RNF-04, en una oración | (ver p. 107) | — | p. 107 |
+| `[[BLOQUE-MATRIZ]]` | Renglón sobre la matriz principal: se rehace la tabla | — | — | p. 107 |
+| `[[BLOQUE-CASOS-RN]]` | Renglón sobre la tabla caso → reglas: se rehacen sus filas | — | — | p. 108 |
+| `[[BLOQUE-CASOS-2.6]]` | Renglón sobre la tabla de casos de la versión 2.6: se rehacen sus filas | — | — | p. 108 |
 
 ---
 
 ## Página 1 — Carátula, y pie y encabezado de todas las páginas
 
-**⏸ ESPERA A JC** (comisión, turno, legajos, año y si es «Maximo» o «Máximo»). Cuando lleguen:
+**✅ Decidido por JC el 24/11, se hace ya:**
+- **El año es 2026.** El año debajo de «Rosario, Argentina» y el «Año: 2025» del pie de las 112
+  páginas pasan a **2026**. Los otros años 2025 del documento también cambian: ver las páginas 6,
+  9, 44 y 112.
+- **«Máximo», con tilde.** Buscá «Maximo» sin tilde en todo el documento (Ctrl+F) y corregilo
+  donde aparezca: carátula, encabezado y pie.
+
+**⏸ ESPERA A JC** (comisión, turno y legajos). Cuando lleguen:
 **Página 1.** Reemplazar:
 
 > Comisión: «completar» · Turno: «completar»
 > Legajos: «completar» – «completar»
 
-y el año debajo de «Rosario, Argentina»: «2025».
-
 **Pie de las 112 páginas.** Reemplazar en:
 
 > Materia: Trabajo de Campo I · Docente: Audoglio · Comisión: «completar» · Turno: «completar» ·
-> Localización: Rosario · Año: 2025
+> Localización: Rosario · Año: 2026
 
 **Encabezado de las páginas** (hoy dice «Alumnos: Ambrosino, Máximo (Legajo «completar») ·
 Riggio, Juan Cruz (Legajo «completar»)»): completar los dos legajos.
@@ -225,7 +251,7 @@ encabezados distintos, en cada una) y se comprueba en tres páginas al azar.
 carátula, debajo de «Rosario, Argentina» y del año, con la misma letra que el resto de la
 carátula y un punto más chica si no entra:
 
-> Código entregado: commit 2db272ecf0f31898ee617e025ba763be1be7825e
+> Código entregado: commit [[COMMIT-COMPLETO]]
 
 *Razón:* la sección «Metodología de verificación» distingue el código medido (`65225e7`) del que
 se entrega, que es posterior. La carátula fija cuál es el que se entrega: `2db272e`, el código
@@ -242,6 +268,10 @@ cambios: **⏸ ESPERA A JC** solo para la fecha; el resto se pega. Las seis prim
 2.5 (las correcciones del 4 al 11 de noviembre); la última, la 2.6, que es la que se entrega.
 El autor va como en las filas anteriores de la tabla («J. C. Riggio»).
 
+**✅ Decidido por JC el 24/11: el año es 2026.** En las filas que **ya están** en la tabla, cambiá
+el año 2025 de cada fecha por 2026 (por ejemplo, la versión 0.1: «05/06/2025» pasa a
+«05/06/2026»). No cambia ni el día ni el mes.
+
 | Fecha | Versión | Autor | Descripción del cambio |
 |---|---|---|---|
 | «fecha» | 2.5 | J. C. Riggio | Reglas de negocio alineadas con el prototipo: se incorporan RN-38 (capacidad del local) y RN-39 (preventa para suscriptores), que el sistema ya aplicaba, y se reescribe RN-35 (prioridad de los suscriptores en la lista de espera, coherente con RN-37). Se detallan RN-06, RN-18, RN-23, RN-24, RN-26, RN-29 y RN-31 (brecha G-05). |
@@ -250,7 +280,7 @@ El autor va como en las filas anteriores de la tabla («J. C. Riggio»).
 | «fecha» | 2.5 | J. C. Riggio | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
 | «fecha» | 2.5 | J. C. Riggio | Matriz de trazabilidad: casos de prueba CP-11 a CP-61. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta. |
 | «fecha» | 2.5 | J. C. Riggio | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, cuatro de ellos corregidos con prueba de regresión, y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
-| «fecha» | 2.6 | J. C. Riggio | Respecto de la 2.5: requerimientos nuevos RF-14 a RF-22 (verificación del correo, recuperación de la contraseña, registro de auditoría, protección de la sesión y de la contraseña, mapa de sectores, portadas de los eventos, solicitud para ser Organizador, publicación con revisión del primer evento y tres perfiles de usuario), con sus reglas RN-43 a RN-54 y su estimación de costos. Arquitectura e implementación descriptas sobre el prototipo, con los diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-21. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, anexo nuevo «Pantallas del sistema» y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 52 vigentes, de RN-01 a RN-54; RN-27 (versión 2.0) y RN-42 (versión 2.6) están dadas de baja y sus números no se reutilizan. Matriz de trazabilidad con los casos CP-62 a CP-211 y CP-354 a CP-357 y cobertura de 50 de las 52 reglas; brecha G-07 resuelta y brecha nueva G-08. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura, prueba de mutación de las defensas de seguridad y revisión de pertenencia. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
+| «fecha» | 2.6 | J. C. Riggio | Respecto de la 2.5: requerimientos nuevos RF-14 a RF-22 (verificación del correo, recuperación de la contraseña, registro de auditoría, protección de la sesión y de la contraseña, mapa de sectores, portadas de los eventos, solicitud para ser Organizador, publicación con revisión del primer evento y tres perfiles de usuario), con sus reglas RN-43 a RN-54 y su estimación de costos. Arquitectura e implementación descriptas sobre el prototipo, con los diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-21. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, anexo nuevo «Pantallas del sistema» y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 52 vigentes, de RN-01 a RN-54; RN-27 (versión 2.0) y RN-42 (versión 2.6) están dadas de baja y sus números no se reutilizan. Matriz de trazabilidad con los casos [[CASOS-RANGO-2.6]] y cobertura de 50 de las 52 reglas; brecha G-07 resuelta y brecha nueva G-08. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura, prueba de mutación de las defensas de seguridad y revisión de pertenencia. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 ## Página 7 — Resumen ejecutivo, «Qué contiene este informe»
 
@@ -261,7 +291,7 @@ El autor va como en las filas anteriores de la tabla («J. C. Riggio»).
 | Diseño | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, especificaciones de ocho casos de uso y modelo de dominio completo.» | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, arquitectura en cuatro capas, especificaciones de veintiún casos de uso y diagramas de dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación.» |
 | Desarrollo | «Lógica de descuento por nivel con su modelo de datos, algoritmos, implementación y diez casos de prueba ejecutables.» | «Prototipo funcional de escritorio con tres perfiles de usuario (cliente, organizador y administrador de la plataforma), y la lógica de descuento por nivel con su modelo de datos, algoritmos, implementación y diez casos de prueba ejecutables.» |
 | Validación | «Informe de pruebas de usabilidad con cinco participantes y anexo A02 con cinco reportes de gestión.» | «Informe de pruebas de usabilidad (simulado, medido sobre la aplicación) con seis perfiles, y anexo A02 con cinco reportes de gestión.» |
-| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, doscientos catorce casos de prueba automatizados y hallazgos.» |
+| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, [[CASOS-LETRAS]] casos de prueba automatizados y hallazgos.» |
 
 En «Resultados principales», **reemplazar** el punto «Usabilidad por encima del promedio»:
 
@@ -280,7 +310,7 @@ En «Resultados principales», **reemplazar** el punto «Usabilidad por encima d
 **Mismo lugar, agregar un cuarto punto** al final de «Resultados principales», con la misma
 viñeta:
 
-> Pruebas que detectan defectos, medidas. Doscientos catorce casos de prueba automatizados
+> Pruebas que detectan defectos, medidas. [[CASOS-LETRAS-INICIAL]] casos de prueba automatizados
 > verifican cincuenta de las cincuenta y dos reglas de negocio. Para comprobar que esas
 > pruebas detectarían un defecto real, se quitó a propósito cada una de las defensas de
 > seguridad del sistema, una por vez: la primera medición mostró cuáles no advertía la batería,
@@ -329,7 +359,8 @@ solución.
 > validado por al menos dos revisiones de parte del cliente ficticio, documentadas en minutas
 > simuladas.
 
-**⏸ ESPERA A JC:** «entre junio y diciembre de 2025» depende del año que decida JC.
+**✅ Decidido por JC el 24/11.** Reemplazar «entre junio y diciembre de 2025» **por** «entre junio
+y diciembre de 2026».
 
 ## Página 10
 
@@ -442,12 +473,16 @@ Poner: «aplicación del descuento por nivel de fidelidad y de los beneficios de
 **B-18 · p. 18, criterio 3 «Compatibilidad técnica» · R.** Reemplazar los tres puntos **por:**
 
 > ● El prototipo es una aplicación de escritorio para Windows 10 u 11 y no requiere otro
->   software que el motor de base de datos.
+>   software que el motor de base de datos. Las vistas web usan el componente WebView2, que
+>   viene incluido en Windows 11 y en las instalaciones actualizadas de Windows 10; si falta,
+>   la aplicación usa sus pantallas de Windows Forms.
 > ● Las pantallas entran completas en el área útil de una notebook y de un monitor de
 >   escritorio: ninguna supera los 790 píxeles de alto.
 
 *Razón:* es el mismo cambio que el ítem 4b de CORRECCIONES aplica a RNF-03; el criterio repetía
-lo de los navegadores.
+lo de los navegadores. **Cambio del 24/11:** se agregó la oración de WebView2 (decisión de JC):
+cuatro vistas se dibujan como páginas web locales, y la aplicación funciona sin el componente.
+Si ya habías pegado este punto, agregale esa oración.
 
 ## Página 20 — Criterios de aceptación
 
@@ -596,6 +631,9 @@ el escalado de pantalla de Windows.
 > 3. Compatibilidad técnica
 >    ○ El prototipo es una aplicación de escritorio para Windows (Windows Forms, .NET Framework
 >      4.8) y debe ejecutarse en Windows 10 u 11 sin otro software que el motor de base de datos.
+>      Las vistas web usan el componente WebView2, que viene incluido en Windows 11 y en las
+>      instalaciones actualizadas de Windows 10; si falta, la aplicación usa sus pantallas de
+>      Windows Forms.
 >    ○ Las pantallas deben entrar completas en el área útil de una notebook y de un monitor de
 >      escritorio: ninguna supera los 790 píxeles de alto, y la de compra mantiene siempre a la
 >      vista sus acciones principales, con desplazamiento del contenido cuando hace falta.
@@ -609,7 +647,9 @@ el escalado de pantalla de Windows.
 *Razón (para JC):* código. `Visual/app.manifest` declara `dpiAware` y `dpiAwareness` «system»
 desde `36a0d80` (10/11), y CP-64 lo verifica. El texto anterior seguía la decisión del 04/11, que
 6A dejó atrás. Las pantallas a 150 % las prueban CP-25, CP-69 y CP-85; ninguna pasa de 790 px de
-alto (CP-12; la más alta, «Mi cuenta», mide 760).
+alto (CP-12; la más alta, «Mi cuenta», mide 760). **Cambio del 24/11:** la oración de WebView2 del
+primer punto (decisión de JC; ver `docs/CIERRE-DOCUMENTO.md`, sección 4). Si ya habías pegado
+este punto, agregale esa oración.
 
 ## Página 25 — Reglas de negocio
 
@@ -987,7 +1027,7 @@ estimado», y la columna «Puntos», a «Puntos estimados». La tabla no se reca
 **Por:**
 
 > Deseable, pero la evaluación del prototipo se realiza en escritorio. Se cumple en tamaño de
-> pantalla y en escalado de Windows (casos CP-12, CP-25, CP-64, CP-69 y CP-85); con dos monitores
+> pantalla y en escalado de Windows (casos [[CASOS-ESCALA]]); con dos monitores
 > de escala distinta, el texto se ve menos nítido en el segundo (ver «Requerimientos no
 > funcionales», punto 3).
 
@@ -1037,9 +1077,10 @@ requerimientos). Esta se borra:
 2. **No borrar** lo que sigue en la p. 40: el título «Descripción funcional y alcance» y su texto
    quedan (la entrada siguiente los corrige).
 3. **Antes de borrar, copiá las dos fechas** de esta copia: la Minuta 1 dice «05/06/2025» y la
-   Minuta 2, «17/06/2025». Van en la p. 44 (ver «Página 44»).
+   Minuta 2, «17/06/2025». Van en la p. 44, con el año cambiado a 2026 (ver «Página 44»).
 
-*Razón:* la guía decide. El historial de la p. 6 ya fecha la versión 0.1 el 05/06/2025; la copia
+*Razón:* la guía decide. El historial de la p. 6 fecha la versión 0.1 el 05/06 (2026, después del
+cambio de año); la copia
 que queda dice «Fecha: x».
 
 ## Página 40 — Descripción funcional
@@ -1198,11 +1239,11 @@ existe. Las cuatro últimas son las del párrafo original, que siguen siendo cie
 
 | Lugar | Dice | Poner |
 |---|---|---|
-| Minuta Nº 1 | «Fecha: x» | «Fecha: 05/06/2025» |
-| Minuta Nº 2 | «Fecha: x» | «Fecha: 17/06/2025» |
+| Minuta Nº 1 | «Fecha: x» | «Fecha: 05/06/2026» |
+| Minuta Nº 2 | «Fecha: x» | «Fecha: 17/06/2026» |
 | Minuta Nº 2, participantes | «Máximo Ambrosino, Profesor (evaluador académico)» | «Máximo Ambrosino, Profesor de la cátedra (rol simulado)» |
 
-El año de las dos fechas sigue la decisión del año de entrega (ver «Hacé esto último»).
+El año de las dos fechas es 2026 (decisión de JC del 24/11).
 *Razón del cambio de participantes (decisión de JC, 20/11):* la minuta es simulada y el profesor
 es real. «Evaluador académico» da a entender una evaluación que no existió; «rol simulado» lo
 aclara.
@@ -1427,7 +1468,7 @@ contando. En los dos casos el nivel se conserva hasta la reevaluación mensual.�
 
 ## Páginas 57 a 61 — «Implementación» pasa a «Arquitectura e implementación»
 
-**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad. **Cambio del 19/11:** en «Patrones de diseño», el párrafo de **Strategy** cambió en su segunda mitad (el envío de los códigos). Si ya pegaste esta sección, reemplazá solo ese párrafo. **Cambio del 22/11:** ese mismo párrafo cambió otra vez: la aplicación ahora elige el correo real si se configura el servidor. Si ya lo pegaste, reemplazalo de nuevo.
+**✅ Se pega hoy (18/11).** Si ya la habías pegado antes, volvé a pegarla: cambió con los tres perfiles y las funciones de seguridad. **Cambio del 19/11:** en «Patrones de diseño», el párrafo de **Strategy** cambió en su segunda mitad (el envío de los códigos). Si ya pegaste esta sección, reemplazá solo ese párrafo. **Cambio del 22/11:** ese mismo párrafo cambió otra vez: la aplicación ahora elige el correo real si se configura el servidor. Si ya lo pegaste, reemplazalo de nuevo. **Cambio del 24/11:** el mismo párrafo suma una oración sobre el código del teléfono, que nunca va por correo real («El código que confirma el teléfono…»). Si ya lo pegaste, agregá solo esa oración.
 
 Reemplaza las páginas 57 a 61 completas, desde el título «Implementación» hasta el final de
 `class GestorReportes`. El título queda: **«Arquitectura e implementación»**.
@@ -1457,8 +1498,11 @@ Reemplaza las páginas 57 a 61 completas, desde el título «Implementación» h
 >   aplicación; la aplicación indica dónde está, pero no puede abrirlo ni leerlo. Si en la
 >   computadora están configuradas las cinco variables de entorno del servidor de correo
 >   (`EVENTAURA_SMTP_HOST`, `EVENTAURA_SMTP_PORT`, `EVENTAURA_SMTP_USER`, `EVENTAURA_SMTP_PASSWORD` y `EVENTAURA_SMTP_FROM`),
->   usa `EnviadorSmtp`, que envía los códigos por correo real con conexión cifrada. Pasar de un
->   modo al otro es una decisión de configuración: la capa de negocio no cambia.
+>   usa `EnviadorSmtp`, que envía los códigos por correo real con conexión cifrada. El código que
+>   confirma el teléfono de una solicitud para ser Organizador va siempre por `EnviadorSimulado`,
+>   aunque el correo real esté configurado: un teléfono no es una dirección de correo y el
+>   prototipo no integra un proveedor de mensajes de texto. Pasar de un modo al otro es una
+>   decisión de configuración: la capa de negocio no cambia.
 > - **Herencia en los reportes:** una clase abstracta `Reporte` con cinco especializaciones, una
 >   por reporte, creadas por `GestorReportes`.
 >
@@ -3419,7 +3463,7 @@ siguiente; no achiques ninguna imagen.
 **Por:**
 
 > Una grilla que cruce los seis objetivos con los veintidós requerimientos, las cincuenta y dos
-> reglas, los veintiún casos de uso y los doscientos catorce casos de prueba resulta ilegible en
+> reglas, los veintiún casos de uso y los [[CASOS-LETRAS]] casos de prueba resulta ilegible en
 > formato A4
 
 **Tabla «Nomenclatura de los ejes».** Reemplazar las filas de reglas y de casos de prueba, y en
@@ -3429,12 +3473,14 @@ las de requerimientos funcionales y casos de uso cambiar la cantidad:
 |---|---|---|
 | Requerimientos funcionales | la cantidad «13» | «22» |
 | Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 52 \| Reglas de negocio (RN-27 y RN-42 dadas de baja)» |
-| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 214 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-357: Matriz de trazabilidad, catálogo de casos incorporados (los números CP-149 y CP-212 a CP-353 no se usaron)» |
+| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| [[CASOS]] \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a [[ULTIMO-CASO]]: Matriz de trazabilidad, catálogo de casos incorporados ([[NUMEROS-SIN-USO]])» |
 | Casos de uso | la cantidad «8» | «21» |
 
 ## Página 107 — Matriz principal
 
-**Reemplazar la tabla completa por:**
+**Reemplazar la tabla completa por** el renglón `[[BLOQUE-MATRIZ]]` y, debajo, esta tabla. Las filas son provisorias (código de `2db272e`): en el cierre se rehace la tabla entera desde el código final.
+
+> [[BLOQUE-MATRIZ]]
 
 | RF | OE | MoSCoW | Reglas de negocio | CU | Casos de prueba | Hall. |
 |---|---|---|---|---|---|---|
@@ -3472,8 +3518,7 @@ El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debaj
 
 > La categoría Won't de RF-09 corresponde a la reclasificación de la versión 2.5 (brecha
 > G-03). RF-14 a RF-22 se incorporaron en la versión 2.6. Los requerimientos no funcionales no
-> figuran en la matriz porque no originan casos de uso; sus casos de prueba son: RNF-02,
-> CP-47, CP-51, CP-53, CP-62, CP-63, CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119, CP-120, CP-152, CP-153, CP-157, CP-159, CP-354 y CP-357; RNF-03, CP-12, CP-25, CP-64, CP-69, CP-85, CP-116, CP-163, CP-209, CP-210 y CP-357; RNF-04, CP-156, CP-164 y CP-197. RNF-01, el flujo de compra en menos de cinco
+> figuran en la matriz porque no originan casos de uso; sus casos de prueba son: [[CASOS-RNF]]. RNF-01, el flujo de compra en menos de cinco
 > minutos, no tiene caso automático: lo verifica la medición del informe de usabilidad. Un caso figura en más de una fila cuando prueba una
 > regla de una fila desde la operación de otra. RN-41 es una regla de autorización: vale para
 > todas las operaciones del sistema y no para un requerimiento solo, y se ubica en RF-02, que
@@ -3589,10 +3634,9 @@ la de CP-01 a CP-61:
 | CP-60 — Sectores que superan la capacidad del local | RN-38 |
 | CP-61 — Preventa sin suscripción | RN-39 |
 
-**y agregar a continuación** estas filas (CP-62 a CP-211 y CP-354 a CP-357; los números CP-149 y CP-212 a CP-353 no se usaron):
+**y agregar a continuación** el renglón `[[BLOQUE-CASOS-RN]]` y estas filas (provisorias, código de `2db272e`: en el cierre se rehacen desde CP-62 hasta el último caso).
 
-**Cambio del 24/11:** nueve filas nuevas al final (CP-207 a CP-211 y CP-354 a CP-357) y la de CP-116
-(25 pantallas), aquí y en la tabla de casos de la versión 2.6 de más abajo.
+> [[BLOQUE-CASOS-RN]]
 
 **Cambio del 22/11:** cambiaron las reglas de CP-93, CP-99, CP-110, CP-123 y CP-125, aquí y en la
 tabla de casos de la versión 2.6 de más abajo (en CP-93, CP-99 y CP-123, también el resultado o la
@@ -3761,7 +3805,7 @@ condición). Si ya pegaste esas filas, reemplazá solo esas cinco en las dos tab
 
 **Por:**
 
-> Los doscientos catorce casos verifican cincuenta reglas distintas sobre un total de cincuenta y
+> Los [[CASOS-LETRAS]] casos verifican cincuenta reglas distintas sobre un total de cincuenta y
 > dos vigentes, lo que arroja una cobertura del 96,2 %. Son RN-01 a RN-06, RN-08 a RN-26, RN-28 a
 > RN-32, RN-34 a RN-41 y RN-43 a RN-54. Todas las reglas que rechazan una operación tienen un
 > caso que provoca ese rechazo. Las dos restantes
@@ -3835,7 +3879,9 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-61 | En preventa, un cliente sin suscripción no inicia la compra | `CP61_RechazaPreventaSinSuscripcion` | RF-05, RF-13 | — | 1 |
 
 **y, debajo, una segunda tabla** con el título «Casos de prueba incorporados en la versión 2.6
-(CP-62 a CP-357)»:
+(CP-62 a [[ULTIMO-CASO]])», precedida por el renglón `[[BLOQUE-CASOS-2.6]]` (filas provisorias, como las de arriba):
+
+> [[BLOQUE-CASOS-2.6]]
 
 | Caso | Condición de entrada | Resultado esperado | RF | Reglas |
 |---|---|---|---|---|
@@ -4026,11 +4072,10 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 > CP-150 a CP-206 verifican la ampliación de la versión 2.6: el mapa de sectores, la identidad
 > visual de la interfaz, las portadas de los eventos, la seguridad de la cuenta, los tres
 > perfiles, las solicitudes para ser Organizador, la revisión del primer evento y el cierre del
-> registro de auditoría. CP-207 a CP-211 y CP-354 a CP-357 verifican el último ajuste de la
+> registro de auditoría. [[RANGO-CASOS-FINALES]] verifican el último ajuste de la
 > interfaz y del envío de códigos: el correo simulado y el real, el SMS simulado, el arranque
 > del ejecutable, la entrada y la salida de cada pantalla, el acceso al cambio de contraseña y el
-> teclado y la geometría de las ventanas reales. Los números CP-149 y CP-212 a CP-353 no se
-> usaron.
+> teclado y la geometría de las ventanas reales. [[NUMEROS-SIN-USO-ORACION]]
 >
 > Se prefirió convertir las pruebas en casos automáticos porque una prueba repetible deja
 > evidencia en cada ejecución. Una verificación hecha a mano solo vale el día en que se hizo.
@@ -4098,7 +4143,7 @@ p. 108.*
 | Nº | Brecha | Sev. | Estado | Acción |
 |---|---|---|---|---|
 | G-01 | Los casos de uso CU-02 (Gestionar eventos) y CU-06 (Gestionar suscripción) no contaban con un requerimiento funcional que los originara, pese a que las reglas RN-06, RN-07 y RN-11 por un lado, y RN-25, RN-26 y RN-37 por el otro, presuponen su existencia. | Alta | Resuelta | Se incorporaron los requerimientos RF-12 (Gestión de eventos) y RF-13 (Contratación de suscripciones) a la Definición de requerimientos, y se recalculó la priorización MoSCoW. |
-| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a CP-206. Los veintiún requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 96,2 % (50 de 52), con todas las reglas que rechazan operaciones; quedan dos reglas sin caso (RN-07 y RN-33). |
+| G-02 | En la versión 2.4, sólo tres de los trece requerimientos poseían casos de prueba (23,1 %) y la cobertura sobre reglas de negocio era del 22,2 %. | Alta | Resuelta en requerimientos; abierta en reglas | Se incorporaron los casos CP-11 a [[ULTIMO-CASO]]. Los veintiún requerimientos en alcance tienen pruebas. La cobertura de reglas sube al 96,2 % (50 de 52), con todas las reglas que rechazan operaciones; quedan dos reglas sin caso (RN-07 y RN-33). |
 | G-03 | RF-09 (Recomendaciones personalizadas) no responde a ningún objetivo específico ni posee caso de uso asociado. | Media | Cerrada | Se reclasificó como Won't have en la Fase 8, según la regla de repriorización (W-07). |
 | G-04 | En la versión 2.4, ninguno de los seis hallazgos del informe de usabilidad tenía caso de prueba de regresión. | Media | Resuelta | Las seis acciones del plan de mejora están implementadas en el prototipo y cada hallazgo tiene su regresión automatizada: H-01 en CP-13, H-02 en CP-39, H-03 en CP-40, H-04 en CP-41, H-05 en CP-42 y H-06 en CP-19. |
 | G-05 | El documento no reflejaba tres reglas que el prototipo aplica: el tope de capacidad del local sobre la suma de sus sectores y la preventa exclusiva para suscriptores no estaban enunciadas, y la prioridad de los suscriptores en la lista de espera contradecía RN-35, que exigía orden estricto de inscripción. Era comportamiento implementado sin una regla documentada que lo respalde. | Alta | Resuelta | Se incorporaron RN-38 (RF-12 / CU-11) y RN-39 (RF-13 / CU-01), y se reescribió RN-35 en coherencia con RN-37. Las tres tienen sus casos de prueba: RN-38 en CP-60, RN-39 en CP-61 y RN-35 en CP-83 y CP-84. |
@@ -4149,9 +4194,9 @@ corrida, con el mismo esquema y los mismos datos iniciales que se entregan, y nu
 desarrollo. Las pruebas de interfaz abren los formularios reales de la aplicación, los operan y
 leen lo que muestran.
 
-La batería tiene doscientos catorce casos de prueba. Algunos se ejecutan varias veces con datos
-distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman trescientas
-sesenta ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
+La batería tiene [[CASOS-LETRAS]] casos de prueba. Algunos se ejecutan varias veces con datos
+distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman
+[[EJECUCIONES-LETRAS]] ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
 base, los resultados no dependen de lo que haya quedado de una corrida anterior.
 
 **Cobertura de las reglas de negocio**
@@ -4472,6 +4517,10 @@ reemplazalo.
 
 ## Página 112 — Bibliografía
 
+**✅ Antes de agregar: el año.** En las entradas que **ya están** en la bibliografía con el año
+2025 (la documentación técnica y la consulta de las comisiones), cambiá 2025 por **2026**. Las
+obras publicadas en otro año (libros y artículos) no se tocan.
+
 **«Fuentes metodológicas».** Agregar estas entradas en orden alfabético entre las que ya están,
 con el mismo formato:
 
@@ -4504,14 +4553,14 @@ con el mismo formato:
 
 **«Documentación técnica».** Agregar, con el mismo formato:
 
-> Microsoft. (2025). .NET Framework 4.8 y Windows Forms — Documentación de la plataforma de
+> Microsoft. (2026). .NET Framework 4.8 y Windows Forms — Documentación de la plataforma de
 > aplicaciones de escritorio.
 >
-> Microsoft. (2025). MSTest — Documentación del marco de pruebas para .NET.
+> Microsoft. (2026). MSTest — Documentación del marco de pruebas para .NET.
 >
-> Microsoft. (2025). SQL Server Express — Documentación del motor de base de datos.
+> Microsoft. (2026). SQL Server Express — Documentación del motor de base de datos.
 >
-> PlantUML. (2025). PlantUML — Documentación de la herramienta de diagramas UML a partir de texto.
+> PlantUML. (2026). PlantUML — Documentación de la herramienta de diagramas UML a partir de texto.
 
 *Razón:* el informe de usabilidad rehecho (pp. 90 a 97) cita a Card, Moran y Newell, a Kieras, a
 Nielsen (1994) y a Wharton et al., que no estaban en la bibliografía. Las otras cinco son las
@@ -4519,13 +4568,16 @@ fuentes de lo que el documento nombra sin citar: los patrones Singleton y Strate
 y Repository (Fowler) de «Arquitectura e implementación», el diagrama de robustez de ICONIX
 (Rosenberg y Stephens) y la prueba de mutación (DeMillo et al.; Jia y Harman). La documentación
 técnica suma las herramientas que nombran los supuestos y las restricciones (pp. 21 y 41). El
-año 2025 de las entradas técnicas sigue al de las que ya están: si JC fija otro año de entrega,
-cambia junto con el de la carátula.
+año de las entradas técnicas es el de entrega, 2026 (decisión de JC del 24/11).
 
 ---
 
 ## Hacé esto último
 
+0. **Completá los marcadores de cierre.** Con la tabla de valores finales que te pasa JC, cambiá
+   cada `[[...]]` con *Reemplazar todo* (Ctrl+H), uno por uno, y reemplazá las tres tablas que
+   tienen arriba un renglón `[[BLOQUE-...]]` (después borrá el renglón). Al terminar, buscá `[[`
+   en todo el documento: **tiene que dar cero**. Recién entonces seguí con el índice.
 1. **Regenerá el índice** (pp. 2 a 5): clic derecho sobre el índice › *Actualizar campos* ›
    *Actualizar toda la tabla*. Si el índice no es automático, avisale a JC antes de rehacerlo a
    mano.
