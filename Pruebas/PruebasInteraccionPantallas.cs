@@ -59,7 +59,33 @@ namespace Pruebas
                                 ((DateTimePicker)formulario.Controls["dtpHasta"]).Value = DateTime.Today.AddMonths(3);
                                 ((Button)formulario.Controls["btnGenerar"]).PerformClick();
                             }
+                            DataGridViewCell cantidadCapturada = null;
+                            if (formulario is Visual.FrmCompraCliente &&
+                                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
+                            {
+                                var sectores = Descendientes(formulario).OfType<DataGridView>().Single(g => g.Name == "dgvSectores");
+                                var filaDisponible = sectores.Rows.Cast<DataGridViewRow>().First(f => Convert.ToInt32(f.Cells["Disponibles"].Value) >= 2);
+                                sectores.EndEdit();
+                                cantidadCapturada = filaDisponible.Cells["Cantidad"];
+                                cantidadCapturada.Value = 2;
+                                Descendientes(formulario).OfType<LinkLabel>().Single(l => l.Name == "lnkNiveles").Focus();
+                                Descendientes(formulario).OfType<Panel>().Single(p => p.Name == "pnlContenidoCompra")
+                                    .AutoScrollPosition = Point.Empty;
+                                Assert.IsTrue(Descendientes(formulario).OfType<Button>().Single(b => b.Name == "btnComprar").Enabled,
+                                    "La captura de compra requiere un paquete con entradas disponibles.");
+                                Application.DoEvents();
+                                var total = Descendientes(formulario).OfType<Label>().Single(l => l.Name == "lblTotalDestacado");
+                                Rectangle areaTotal = total.RectangleToScreen(total.ClientRectangle);
+                                for (Control padre = total.Parent; padre != null; padre = padre.Parent)
+                                    Assert.IsTrue(padre.ClientRectangle.Contains(padre.RectangleToClient(areaTotal)),
+                                        "El total debe aparecer completo en la captura inicial.");
+                            }
                             CapturarSiSeSolicito(formulario);
+                            if (cantidadCapturada != null)
+                            {
+                                cantidadCapturada.Value = 0;
+                                cantidadCapturada.DataGridView.Focus();
+                            }
                             VerificarMedidas(formulario);
                             if (formulario is Visual.frmCambiarContraseña cambio) VerificarFilaAviso(cambio);
                             string foco = VerificarFoco(formulario);
@@ -241,8 +267,20 @@ namespace Pruebas
             if (usuario == null) return;
             var locales = usuario.TipoUsuario == "Organizador" ? GestorLocales.Instance.PorPropietario(usuario.Id) : new List<Entidades.Local>();
             int idLocal = locales.FirstOrDefault()?.Id ?? 0;
+            if (formulario is Visual.Vendedor.frmEventosLocal eventosLocal)
+                eventosLocal.NombreLocal = locales.FirstOrDefault()?.Nombre ?? string.Empty;
             var eventos = idLocal > 0 ? GestorEventos.Instance.PorLocal(idLocal) : GestorEventos.Instance.Vigentes();
             int idEvento = eventos.FirstOrDefault()?.Id ?? 0;
+            if (formulario is Visual.FrmCompraCliente &&
+                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
+            {
+                var demostracion = eventos.FirstOrDefault(evento =>
+                {
+                    var sectores = GestorEventos.Instance.Sectores(evento.Id);
+                    return sectores.Count > 0 && sectores.All(sector => GestorPaquetes.Instance.DisponiblesDe(sector.Id) >= 2);
+                });
+                idEvento = (demostracion ?? Fake.EventoPublicado(20000m, 100)).Id;
+            }
             foreach (var campo in formulario.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (campo.FieldType == typeof(int))
@@ -464,6 +502,7 @@ namespace Pruebas
         }
         private static Control FocoProfundo(Control raiz)
         {
+            if (raiz is DataGridView grilla && grilla.ContainsFocus) return grilla;
             foreach (Control hijo in raiz.Controls)
             {
                 if (hijo.Focused) return hijo;

@@ -151,6 +151,8 @@ namespace Visual.Vendedor
                 .Select(s => new { ID = s.Id, s.Nombre, s.Capacidad, s.Precio })
                 .ToList();
             dgvSectores.Columns["ID"].Visible = false;
+            dgvSectores.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgvSectores.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
         }
 
         private void btnAgregarSector_Click(object sender, EventArgs e)

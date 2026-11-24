@@ -69,4 +69,30 @@ namespace Visual.Componentes
     {
         public EtiquetaAyuda() : base(Tema.Ayuda, Tema.TextoSecundario) { }
     }
+    public sealed class EnlaceTematico : LinkLabel
+    {
+        protected override bool ShowFocusCues => false;
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            if (!Focused) return;
+
+            int grosor = Disposicion.Pixeles(this, Tema.BordeFoco);
+            using (var borde = new Pen(Tema.Foco, grosor) { Alignment = System.Drawing.Drawing2D.PenAlignment.Inset })
+                e.Graphics.DrawRectangle(borde, 0, 0, Width - 1, Height - 1);
+        }
+
+        protected override void OnGotFocus(System.EventArgs e)
+        {
+            base.OnGotFocus(e);
+            Invalidate();
+        }
+
+        protected override void OnLostFocus(System.EventArgs e)
+        {
+            base.OnLostFocus(e);
+            Invalidate();
+        }
+    }
 }

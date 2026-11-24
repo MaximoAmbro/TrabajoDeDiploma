@@ -51,7 +51,15 @@ namespace Pruebas
                         int ancho = TextRenderer.MeasureText(linea.TrimEnd('\r'), resumen.Font, Size.Empty, TextFormatFlags.NoPadding).Width;
                         Assert.IsTrue(ancho <= resumen.Width - resumen.Padding.Horizontal, $"Línea recortada ({ancho} > {resumen.Width} - {resumen.Padding.Horizontal}, panel {panel.Width}): " + linea);
                     }
-                    Assert.IsTrue(resumen.Height <= panel.ClientSize.Height, "El paquete máximo oculta el total.");
+                    var total = Control<Label>(form, "lblTotalDestacado");
+                    Rectangle areaTotal = total.RectangleToScreen(total.ClientRectangle);
+                    for (Control padre = total.Parent; padre != null; padre = padre.Parent)
+                        Assert.IsTrue(padre.ClientRectangle.Contains(padre.RectangleToClient(areaTotal)),
+                            "El paquete máximo debe dejar el total visible sin desplazamiento.");
+                    var documento = (Panel)resumen.Parent;
+                    documento.AutoScrollPosition = new Point(0, resumen.Height);
+                    Assert.IsTrue(resumen.Bottom <= documento.ClientSize.Height, "Debe poder leerse el final del comprobante.");
+                    Assert.AreEqual(areaTotal, total.RectangleToScreen(total.ClientRectangle));
                     foreach (var check in Descendientes(form).OfType<CheckBox>())
                     {
                         Assert.IsTrue(check.GetPreferredSize(Size.Empty).Width <= check.Width, "Casilla recortada: " + check.Text);

@@ -95,8 +95,6 @@ namespace Visual
                 Componentes.DatoPanel.DistribuirGrilla(seccion.Item2, ancho);
                 y = seccion.Item2.Bottom + espacio;
             }
-            int sobrante = Math.Max(0, (zonaOrganizador.ClientSize.Height - (y - zonaOrganizador.AutoScrollPosition.Y)) / 2);
-            foreach (Control bloque in zonaOrganizador.Controls) bloque.Top += sobrante;
         }
 
         private void CargarTarjetas()

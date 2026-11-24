@@ -10,7 +10,7 @@ namespace Visual
     public sealed class frmRevisarSolicitudesOrganizador : FormularioEventAura
     {
         private readonly ListBox pendientes = new ListBox { Location=new Point(20,70), Size=new Size(300,500) };
-        private readonly Label detalle = new Label { Location=new Point(340,70), Size=new Size(430,210), AutoEllipsis=true };
+        private readonly Label detalle = new Label { Location=new Point(340,70), Size=new Size(430,288) };
         private readonly PictureBox documento = new PictureBox { Location=new Point(790,70), Size=new Size(360,260), SizeMode=PictureBoxSizeMode.Zoom, BorderStyle=BorderStyle.FixedSingle };
         private readonly TextBox motivo = new TextBox { Location=new Point(340,410), Size=new Size(810,80), Multiline=true, MaxLength=200 };
         private readonly Button aprobar = new Componentes.BotonPrimario { Text="Aprobar y crear local", Location=new Point(340,520), Size=new Size(230,44) };
@@ -20,7 +20,7 @@ namespace Visual
         {
             GestorSesion.Instance.RequerirAdministrador();
             Text="Solicitudes de Organizador"; StartPosition=FormStartPosition.CenterParent; ClientSize=new Size(1180,620); MinimumSize=new Size(1180,620);
-            Controls.Add(new Componentes.EtiquetaTitulo { Text="Revisión de solicitudes", Location=new Point(20,18), Size=new Size(500,40) });
+            Controls.Add(new Componentes.EtiquetaTitulo { Text="Revisión de solicitudes", Location=new Point(20,18), Size=new Size(500,48) });
             Controls.AddRange(new Control[]{pendientes,detalle,documento,motivo,aprobar,rechazar});
             Controls.Add(new Componentes.EtiquetaAyuda { Text="Escribí un motivo antes de aprobar o rechazar.", Location=new Point(340,380), Size=new Size(600,28) });
             estadoSinSolicitudes.AjustarA(pendientes);

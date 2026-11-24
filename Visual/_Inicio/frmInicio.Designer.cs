@@ -32,8 +32,8 @@ namespace Visual
             this.txtContraseñaLogin = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.checkbxShowPass = new System.Windows.Forms.CheckBox();
-            this.lblolividarcontra = new System.Windows.Forms.LinkLabel();
-            this.lblcrearcuenta = new System.Windows.Forms.LinkLabel();
+            this.lblolividarcontra = new Visual.Componentes.EnlaceTematico();
+            this.lblcrearcuenta = new Visual.Componentes.EnlaceTematico();
             this.btninicio = new Visual.Componentes.BotonPrimario();
             this.label5 = new System.Windows.Forms.Label();
             this.label2 = new Visual.Componentes.EtiquetaTitulo();

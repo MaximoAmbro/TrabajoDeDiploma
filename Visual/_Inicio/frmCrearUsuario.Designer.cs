@@ -38,7 +38,7 @@ namespace Visual
             this.label6 = new System.Windows.Forms.Label();
             this.lblmail = new System.Windows.Forms.Label();
             this.txtmail = new System.Windows.Forms.TextBox();
-            this.lblyatengocuen = new System.Windows.Forms.LinkLabel();
+            this.lblyatengocuen = new Visual.Componentes.EnlaceTematico();
             this.btnregistrarse = new Visual.Componentes.BotonPrimario();
             this.label5 = new System.Windows.Forms.Label();
             this.txtApellido = new System.Windows.Forms.TextBox();

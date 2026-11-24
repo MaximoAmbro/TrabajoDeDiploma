@@ -68,8 +68,8 @@ namespace Visual
             lblDesglose.Text = texto.ToString();
 
             lblTickets.Text = Rutas.Count == 1
-                ? "Tu entrada está lista en PDF, con su código QR:"
-                : $"Tus {Rutas.Count} entradas están listas en PDF, cada una con su QR:";
+                ? "Tu entrada en PDF con QR:"
+                : $"{Rutas.Count} entradas en PDF con QR:";
             txtCarpeta.Text = "Guardadas en Documentos.";
             lstArchivos.Items.Clear();
             for (int i = 0; i < Rutas.Count; i++)

@@ -26,7 +26,19 @@ namespace Visual.Vendedor
                 Disposicion.AlinearGrupo(btnVolver, btnEliminarEvento, btnAdministrarEvento, btnAgregarEvento);
                 int margen = Disposicion.Pixeles(this, Tema.Espacio.XXL);
                 ClientSize = new System.Drawing.Size(Math.Max(ClientSize.Width, btnAgregarEvento.Right + margen), ClientSize.Height);
-                Disposicion.ExtenderGrilla(dgvEventos, btnVolver, centrarSiEntra: true);
+                int separacion = Disposicion.Pixeles(this, Tema.Espacio.XL);
+                int finalEncabezado = label2.Bottom;
+                if (!string.IsNullOrWhiteSpace(lblNombre.Text))
+                {
+                    lblNombre.Font = Tema.Cuerpo;
+                    lblNombre.Left = label2.Left;
+                    lblNombre.Top = label2.Bottom + Disposicion.Pixeles(this, Tema.Espacio.S);
+                    lblNombre.Height = lblNombre.GetPreferredSize(new System.Drawing.Size(lblNombre.Width, 0)).Height;
+                    finalEncabezado = lblNombre.Bottom;
+                }
+                dgvEventos.Top = finalEncabezado + separacion;
+                Disposicion.ExtenderGrilla(dgvEventos, btnVolver);
+                estadoSinEventos.AjustarA(dgvEventos);
                 dgvEventos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             };
             AcceptButton = btnAgregarEvento;
@@ -137,6 +149,8 @@ namespace Visual.Vendedor
             dgvEventos.Visible = eventos.Count > 0;
             estadoSinEventos.Visible = eventos.Count == 0;
             if (dgvEventos.Columns.Contains("ID")) dgvEventos.Columns["ID"].Visible = false;
+            dgvEventos.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgvEventos.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             if (dgvEventos.Columns.Contains("MotivoDelRechazo")) dgvEventos.Columns["MotivoDelRechazo"].HeaderText = "Motivo del rechazo";
         }
     }

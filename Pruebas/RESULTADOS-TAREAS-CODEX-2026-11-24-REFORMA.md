@@ -53,3 +53,13 @@ Los tres laterales tienen glifos de 16 px y estados de puntero y presión. Las t
 El margen común cambia a 32 px. Mis locales y Eventos del local centran la tabla cuando sus filas caben y usan el espacio disponible cuando necesitan desplazamiento. Se centran los bloques de tarjetas de los inicios. El mínimo de cada ventana toma como referencia su tamaño presentado, acotado al área de trabajo de Windows. CP-357 intenta reducir las ventanas adaptables por debajo del mínimo.
 
 La verificación queda en `TestResults/acabado-final-360.log` y las figuras en `TestResults/Capturas-Reforma`. No se certificó el límite de un tercio de espacio libre en las 25 vistas. Algunas vistas con pocos registros conservan espacio libre y el armado de compra conserva sus márgenes interiores propios.
+
+## Regresiones de la revisión de capturas
+
+Los tres inicios mantienen el encabezado y las tarjetas arriba. Eventos del local muestra el nombre del local junto al título y ubica la grilla debajo. Las tarjetas reservan el alto que pide el texto. El barrido también corrigió recortes en las grillas de sectores, eventos, reportes e historial, en el estado vacío de revisión, en el detalle de solicitudes y en la leyenda de confirmación.
+
+La compra de demostración selecciona un evento vigente con disponibilidad en la base de pruebas. Las capturas muestran Duki en Rosario, dos entradas VIP y un total de $ 138.000,00. La franja del total queda debajo del comprobante y fuera de su área de desplazamiento. CP-13 y CP-119 comprueban que se lea al abrir el resumen. CP-357 también lo comprueba antes de tomar la captura.
+
+Los cinco enlaces usan EnlaceTematico. En los Designer de frmInicio, frmCrearUsuario y FrmCompraCliente se cambió solo el tipo instanciado. Se conservan los nombres, los eventos y el comportamiento del enlace. La captura de compra muestra el borde Primario en el enlace de niveles.
+
+Se revisaron las 25 vistas y se regeneraron las 50 capturas del área cliente en TestResults/Capturas-Reforma, con 96 y 144 DPI informados por Windows. Los dos recorridos de captura de CP-357 finalizaron correctamente. El caso de Enter en Suscripción conserva su verificación manual.

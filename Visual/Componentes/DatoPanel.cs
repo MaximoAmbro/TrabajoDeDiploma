@@ -71,10 +71,11 @@ namespace Visual.Componentes
                     valor.Font = fuenteAjustada ?? fuenteValor;
                     anterior?.Dispose();
                 }
-                int altoLinea = TextRenderer.MeasureText(superficie, "Mg", valor.Font, Size.Empty, linea).Height;
-                valor.SetBounds(margen, titulo.Bottom + Px(Tema.Espacio.S), ancho,
-                    altoLinea * valor.Text.Split('\n').Length);
-                valor.AutoEllipsis = true;
+                valor.UseMnemonic = false;
+                valor.AutoEllipsis = false;
+                int altoValor = TextRenderer.MeasureText(superficie, valor.Text, valor.Font,
+                    new Size(ancho, int.MaxValue), TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix).Height;
+                valor.SetBounds(margen, titulo.Bottom + Px(Tema.Espacio.S), ancho, altoValor);
             }
             if (accion != null)
                 accion.SetBounds(margen, valor.Bottom + Px(Tema.Espacio.S),

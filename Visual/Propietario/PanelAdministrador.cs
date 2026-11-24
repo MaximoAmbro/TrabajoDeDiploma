@@ -82,11 +82,6 @@ namespace Visual.Componentes
             tituloPendientes.SetBounds(0, datos.Bottom + Px(Tema.Espacio.S), ancho, Px(Tema.Espacio.XL));
             pendientes.Location = new System.Drawing.Point(0, tituloPendientes.Bottom + Px(Tema.Espacio.S));
             DatoPanel.DistribuirGrilla(pendientes, ancho);
-            int sobrante = Math.Max(0, (ClientSize.Height - (pendientes.Bottom - y)) / 2);
-            periodo.Top += sobrante;
-            datos.Top += sobrante;
-            tituloPendientes.Top += sobrante;
-            pendientes.Top += sobrante;
         }
     }
 }

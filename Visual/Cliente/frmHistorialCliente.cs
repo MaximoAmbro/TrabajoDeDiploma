@@ -75,7 +75,9 @@ namespace Visual
             dgvEntradas.Columns.Add("Estado", "Estado");
             dgvEntradas.Columns.Add("Seguro", "Seguro");
             dgvEntradas.Columns.Add("Codigo", "Código");
-            dgvEntradas.Columns["Codigo"].FillWeight = 180;
+            dgvEntradas.Columns["Codigo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dgvEntradas.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgvEntradas.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             foreach (DataGridViewColumn columna in dgvEntradas.Columns)
             {
                 columna.ReadOnly = columna.Name != "Devolver";

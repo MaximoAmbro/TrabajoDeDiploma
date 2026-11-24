@@ -18,7 +18,7 @@ namespace Visual
             this.label4 = new System.Windows.Forms.Label();
             this.label1 = new Visual.Componentes.EtiquetaTitulo();
             this.lblNivel = new Visual.Componentes.EtiquetaAyuda();
-            this.lnkNiveles = new System.Windows.Forms.LinkLabel();
+            this.lnkNiveles = new Visual.Componentes.EnlaceTematico();
             this.dgvSectores = new System.Windows.Forms.DataGridView();
             this.mapaSectores = new Visual.Componentes.MapaSectores();
             this.mapaSectores.Name = "mapaSectores";
@@ -32,7 +32,7 @@ namespace Visual
             this.chkSeguro = new System.Windows.Forms.CheckBox();
             this.pnlResumen = new System.Windows.Forms.Panel();
             this.lblResumen = new System.Windows.Forms.Label();
-            this.lnkPosicionEspera = new System.Windows.Forms.LinkLabel();
+            this.lnkPosicionEspera = new Visual.Componentes.EnlaceTematico();
             this.lnkPosicionEspera.Name = "lnkPosicionEspera";
             this.lnkPosicionEspera.Text = "Consultar mi posición";
             this.lnkPosicionEspera.Location = new System.Drawing.Point(40, 192);

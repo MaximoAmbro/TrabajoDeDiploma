@@ -48,6 +48,7 @@ namespace Visual
         private bool agotado;
         private Panel contenidoCompra;
         private Panel accionesCompra;
+        private Panel documentoResumen;
         private bool distribuyendoCompra;
 
         public FrmCompraCliente()
@@ -66,6 +67,14 @@ namespace Visual
             foreach (Control superficie in new Control[] { pnlEncabezadoCompra, pnlAccionesCompra, pnlTarjetaEntradas, pnlTarjetaServicios, pnlResumen })
                 Tema.ComoSuperficie(superficie);
             Tema.ComoDocumento(lblResumen);
+            documentoResumen = new Panel { Name = "documentoResumen", AutoScroll = true, BackColor = Tema.Superficie };
+            pnlResumen.AutoScroll = false;
+            pnlResumen.Controls.Add(documentoResumen);
+            documentoResumen.Controls.Add(lblResumen);
+            lblResumen.Location = Point.Empty;
+            lblTotalDestacado.AutoSize = false;
+            lblTotalDestacado.BackColor = Tema.PrimarioSuave;
+            lblTotalDestacado.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             Tema.ComoEnlace(lnkNiveles);
             Tema.ComoEnlace(lnkPosicionEspera);
             accionesCompra = pnlAccionesCompra;
@@ -81,7 +90,7 @@ namespace Visual
             pnlResumen.Paint += Disposicion.PintarTarjeta;
             label1.TextChanged += (sender, e) => AjustarEncabezado();
             label1.FontChanged += (sender, e) => AjustarEncabezado();
-            contenidoCompra.AutoScrollMargin = new Size(Tema.MargenFormulario, Tema.MargenFormulario);
+            contenidoCompra.AutoScrollMargin = new Size(0, Tema.MargenFormulario);
             contenidoCompra.SizeChanged += (sender, e) => AjustarEncabezado();
             lblResumen.SizeChanged += (sender, e) => AjustarEncabezado();
             AjustarEncabezado();
@@ -141,12 +150,19 @@ namespace Visual
                     casilla.Width = Math.Max(0, columna - relleno * 2);
                 int anchoResumen = Math.Max(0, ancho - margen - columna);
                 pnlResumen.Width = anchoResumen;
-                int altoVista = Math.Max(0, contenidoCompra.ClientSize.Height - margen * 2);
+                int altoVista = Math.Max(0, contenidoCompra.ClientSize.Height - altoEncabezado - margen);
                 pnlResumen.Location = new Point(margen + columna + margen + desplazamiento.X, inicio);
-                Disposicion.AjustarDocumento(pnlResumen, lblResumen, altoVista);
-                lblTotalDestacado.MaximumSize = new Size(lblResumen.Width, 0);
-                lblTotalDestacado.Location = new Point(relleno, lblResumen.Bottom + separacion);
-                pnlResumen.AutoScrollMinSize = new Size(0, lblTotalDestacado.Bottom - pnlResumen.AutoScrollPosition.Y + relleno);
+                int arribaDocumento = lblTituloResumen.Bottom + separacion;
+                int anchoInterior = Math.Max(1, anchoResumen - relleno * 2);
+                int anchoDocumento = Math.Max(1, anchoInterior - SystemInformation.VerticalScrollBarWidth);
+                lblResumen.MinimumSize = new Size(anchoDocumento, 0);
+                lblResumen.MaximumSize = new Size(anchoDocumento, 0);
+                int altoTotal = Disposicion.Pixeles(this, Tema.AltoBoton);
+                int altoFijo = arribaDocumento + separacion + altoTotal + relleno;
+                int altoDocumento = Math.Min(lblResumen.Height, Math.Max(0, altoVista - altoFijo));
+                pnlResumen.Height = altoFijo + altoDocumento;
+                documentoResumen.SetBounds(relleno, arribaDocumento, anchoInterior, altoDocumento);
+                lblTotalDestacado.SetBounds(relleno, documentoResumen.Bottom + separacion, anchoInterior, altoTotal);
             }
             finally
             {

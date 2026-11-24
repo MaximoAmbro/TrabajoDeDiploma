@@ -93,6 +93,8 @@ namespace Visual
             dgvReporte.RowHeadersVisible = false;
             dgvReporte.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvReporte.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvReporte.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgvReporte.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             Tema.EstiloTablaDeConsulta(dgvReporte);
             dgvReporte.DefaultCellStyle.NullValue = "—";
             dgvReporte.EnableHeadersVisualStyles = false;

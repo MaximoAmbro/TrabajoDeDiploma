@@ -151,21 +151,13 @@ namespace Visual
                 Math.Max(ventana.ClientSize.Height, volver.Bottom + margen));
         }
 
-        internal static void ExtenderGrilla(DataGridView grilla, Control pie, bool centrarSiEntra = false)
+        internal static void ExtenderGrilla(DataGridView grilla, Control pie)
         {
             int margen = Pixeles(grilla, Tema.Espacio.XXL);
             int separacion = Pixeles(grilla, Tema.Espacio.L);
             grilla.Left = margen;
             grilla.Width = Math.Max(1, grilla.Parent.ClientSize.Width - 2 * margen);
-            int disponible = Math.Max(1, pie.Top - grilla.Top - separacion);
-            int filas = grilla.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
-            int natural = (grilla.ColumnHeadersVisible ? grilla.ColumnHeadersHeight : 0) + filas + Pixeles(grilla, Tema.Espacio.XS);
-            if (centrarSiEntra && grilla.Rows.Count > 0 && natural < disponible)
-            {
-                grilla.Top += (disponible - natural) / 2;
-                grilla.Height = natural;
-            }
-            else grilla.Height = disponible;
+            grilla.Height = Math.Max(1, pie.Top - grilla.Top - separacion);
         }
 
         internal static void AlinearGrupo(params Button[] botones)

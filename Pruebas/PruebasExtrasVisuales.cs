@@ -26,7 +26,6 @@ namespace Pruebas {
      Assert.IsTrue(importe.Length>0);Assert.AreEqual("TOTAL "+importe,total.Text);
      Assert.AreEqual(15f,total.Font.SizeInPoints);Assert.AreEqual(Visual.Tema.Texto,total.ForeColor);
      Assert.AreEqual(2,ControlDe<IndicadorPasos>(form,"indicadorPasos").PasoActual);
-     var panel=ControlDe<Panel>(form,"pnlResumen");ControlDe<Panel>(form,"pnlContenidoCompra").ScrollControlIntoView(panel);panel.AutoScrollPosition=new Point(0,100000);Application.DoEvents();
      Rectangle lectura=total.RectangleToScreen(total.ClientRectangle);
      for(Control padre=total.Parent;padre!=null;padre=padre.Parent)
       Assert.IsTrue(padre.ClientRectangle.Contains(padre.RectangleToClient(lectura)),"El TOTAL debe poder leerse completo en "+padre.Name);
