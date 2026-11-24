@@ -4,12 +4,13 @@ Claude Code, 24/11/2026, a pedido de JC. **Lectura de código, sin editar nada d
 `1d05fc2` más los cambios sin commitear de Codex en `Visual/` (los ocho archivos del 24/11). Lo
 que sale de aplicar esto va para Codex: tickets T-02 a T-04 de `docs/TICKETS.md`.
 
-**Resumen.** El respaldo está bien diseñado y hoy funciona: las cuatro pantallas dibujan su versión
-de Windows Forms con los mismos datos que la web y un aviso. Codex lo probó **una vez**, a mano, a
-las 11:36 del 24/11 (capturas en `TestResults/WebView2-Respaldo/`). Lo que falta es que esa prueba
-quede en la batería. Además, hay una falla que el respaldo no cubre: si faltan las DLL de WebView2
-en la carpeta del programa, la pantalla no cae a la versión de Windows Forms sino a un error (H-2,
-deducido del código y sin ejecutar).
+**Resumen.** El respaldo está bien diseñado y funciona cuando lo que falta es el runtime: las cuatro
+pantallas dibujan su versión de Windows Forms con los mismos datos que la web y un aviso. Codex lo
+probó **una vez**, a mano, a las 11:36 del 24/11 (capturas en `TestResults/WebView2-Respaldo/`). Lo
+que falta es que esa prueba quede en la batería. **Lo urgente es H-2, confirmado sobre el
+ejecutable a las 14:35:** si faltan las DLL de WebView2 en la carpeta del programa, las cuatro
+pantallas muestran un aviso de error en lugar del respaldo, y el panel del Administrador queda sin
+dibujar.
 
 Corrige lo que dije el 24/11 en `docs/CIERRE-DOCUMENTO.md`: no era cierto que «nadie la miró». Codex
 la miró una vez. Lo que no hay es una prueba que la vuelva a mirar.
@@ -83,7 +84,24 @@ Codex:
 **Listo cuando** la batería tiene ese caso y pasa, y las capturas del respaldo se generan con un
 parámetro de `CapturarReforma.ps1`.
 
-### H-2 · Media · Si faltan las DLL de WebView2, no hay respaldo sino un error (deducido, sin ejecutar)
+### H-2 · **Alta, confirmado** · Si faltan las DLL de WebView2, no hay respaldo sino un error
+
+**Comprobado el 24/11 a las 14:35, sobre el ejecutable.** Se copió `Visual\bin\Debug` a otra carpeta,
+se borraron de la copia `Microsoft.Web.WebView2.*` y los tres `WebView2Loader.dll`, y se abrió el
+`Visual.exe` de la copia contra la base de desarrollo, solo para mirar. Resultado, en las cuatro
+pantallas: `System.IO.FileNotFoundException` en `PanelWeb.Cargar`, que no queda dentro de su `try`.
+
+| Pantalla | Dónde salta (`errores.log`) | Qué se ve |
+|---|---|---|
+| Panel del Administrador, la primera pantalla después de iniciar sesión como Administrador | `PanelAdministrador.cs:47`, en `Load`, mientras Windows Forms crea los controles | **El panel queda sin dibujar:** solo el título y «Pendientes de revisión»; ni indicadores, ni lateral visible (se transparenta lo que hay detrás), ni aviso de respaldo |
+| Reportes | `frmReportes.cs:77`, en `Shown` | Aviso rojo «Ocurrió un error inesperado y la operación no se completó…» encima de las fechas. La grilla y la lectura funcionan. Sin aviso de respaldo |
+| Catálogo | `frmEventosCliente.cs:54`, en `Shown` (desde `OnShown`, línea 76) | Aviso rojo y **disposición sin ajustar**: queda el título «Mi cuenta» arriba, el contenido corrido y las tarjetas cortadas abajo. La ficha abre igual |
+| Compra | `FrmCompraCliente.cs:252`, en `OnShown`, antes de `base.OnShown` | Aviso rojo sobre los pasos, título «Mi cuenta» arriba y pasos cortados. El resumen calcula bien |
+
+Evidencia: `docs/verificaciones/sin-dll-webview2-2026-11-24/`, con las cuatro capturas y el tramo
+de `errores.log`.
+
+**Lo que había deducido el 24/11 a la mañana (se mantiene como explicación):**
 
 `PanelWeb.Cargar` es `async void` y su máquina de estados guarda campos de tipos de WebView2, como
 `TaskAwaiter<CoreWebView2Environment>`. Si `Microsoft.Web.WebView2.Core.dll` no está junto al
@@ -100,12 +118,14 @@ En los cuatro casos el aviso de respaldo no aparece, porque `InicializacionTermi
 `false`.
 
 **Cuándo pasa:** si a la defensa se lleva una copia de la carpeta del programa sin las DLL. Con
-`bin\Debug` completo no pasa. **A confirmar:** renombrar las dos DLL en una copia de `bin\Debug` y
-abrir las cuatro pantallas.
+`bin\Debug` completo no pasa.
 
 **Qué hacer:**
-1. Que la carga no pueda lanzar fuera del `try`. Por ejemplo, `Cargar` no asíncrono, con
-   `try/catch` alrededor de la llamada a un método asíncrono interno.
+1. Que la carga no pueda lanzar fuera del `try`. `Cargar` tiene que ser un método **no asíncrono**
+   que no mencione ningún tipo de WebView2 y que llame, dentro de un `try/catch`, a otro método
+   asíncrono donde estén esos tipos. Si los tipos quedan en el mismo método, la excepción salta al
+   compilarlo, antes del `try`. El `catch` captura `FileNotFoundException`, `FileLoadException` y
+   `TypeLoadException` y llama a `Desactivar()`.
 2. Una lista de qué tiene que llevar la carpeta de la defensa: `Visual.exe` y su `.config`, las DLL
    del proyecto, `Microsoft.Web.WebView2.Core.dll`, `Microsoft.Web.WebView2.WinForms.dll`,
    `Newtonsoft.Json.dll`, `runtimes\` y `Web\`.

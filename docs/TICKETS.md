@@ -19,7 +19,7 @@ solo cuando el ticket es una prueba manual, un dato o el Word, que no puede hace
 | **en revisión** | Hecho; falta que JC lo revise o autorice el commit |
 | **cerrado** | Cumple el criterio de «Listo cuando» |
 
-**Orden:** T-01 a T-05 antes de congelar el código; T-06 congela; de T-08 en adelante, con el
+**Orden:** T-03 primero (urgente); T-01 a T-05 antes de congelar el código; T-06 congela; de T-08 en adelante, con el
 código congelado.
 
 ---
@@ -30,7 +30,7 @@ código congelado.
 |---|---|---|---|
 | T-01 | Codex | Terminar y commitear la tanda visual en curso (gráficos y disponibilidad) | en curso |
 | T-02 | Codex | Prueba automática del respaldo de WebView2 | abierto |
-| T-03 | Codex | Que la falta de las DLL de WebView2 caiga al respaldo, no a un error | abierto |
+| T-03 | Codex | **URGENTE, confirmado:** sin las DLL de WebView2, las cuatro pantallas dan error | abierto |
 | T-04 | Codex | Carpeta de la aplicación para la defensa, completa y comprobada | abierto |
 | T-05 | Codex | Lo que la reforma visual dejó declarado como fuera de conformidad | abierto (a decidir por JC) |
 | T-06 | Codex | Congelar el código | bloqueado por T-01 a T-05 |
@@ -45,7 +45,7 @@ código congelado.
 | T-15 | Claude Code, después JC | JC-R10: escanear dos tickets con el celular | abierto |
 | T-16 | JC | JC-R12: las cuatro pantallas sin WebView2 | bloqueado por T-03 |
 | T-17 | Máximo | La tarde en Word: marcadores, pausas e índice | bloqueado por T-09, T-11 a T-14 |
-| T-18 | Claude Code | Commitear los documentos y herramientas del 24/11 | en revisión |
+| T-18 | Claude Code | Commitear los documentos y herramientas del 24/11 | cerrado (`0ddc0c4`) |
 | T-19 | Claude Code | `tools/VerificarReglasAgentes.ps1` no corre | abierto |
 
 ---
@@ -96,19 +96,28 @@ Opcional, si sale con el mismo mecanismo: la falla después de que la web ya se 
 
 ### T-03 · Codex · Que la falta de las DLL caiga al respaldo, no a un error
 
-**Qué:** hallazgo H-2 de la auditoría. Hoy está deducido del código, sin ejecutar. Primero,
-confirmarlo:
-1. en una copia de `bin\Debug`, renombrar `Microsoft.Web.WebView2.Core.dll` y
-   `Microsoft.Web.WebView2.WinForms.dll`;
-2. abrir las cuatro pantallas.
+**URGENTE: es lo primero, antes que T-01.** Hallazgo H-2 de la auditoría, **confirmado sobre el
+ejecutable el 24/11 a las 14:35** (Claude Code). Se probó una copia de `bin\Debug` sin
+`Microsoft.Web.WebView2.*` ni `WebView2Loader.dll`, y las cuatro pantallas fallaron:
+- `FileNotFoundException` en `PanelWeb.Cargar`, fuera del `try`;
+- el panel del Administrador queda sin dibujar;
+- reportes, catálogo y compra muestran el aviso rojo de error inesperado;
+- catálogo y compra quedan además con la disposición sin ajustar.
 
-Si sale el aviso de error, que la llamada a `Cargar` no pueda lanzar fuera de su `try`.
+Evidencia: `docs/verificaciones/sin-dll-webview2-2026-11-24/`. Detalle y forma de arreglarlo: la
+auditoría, H-2. **`Cargar` no asíncrono y sin tipos de WebView2**, que llama dentro de un
+`try/catch` a un método asíncrono que sí los tiene.
 
-**Listo cuando,** sin las dos DLL, las cuatro pantallas abren en su versión de Windows Forms, con
-el aviso «Vista web no disponible…» y sin el aviso de error de `ManejadorErrores`. Si la
-confirmación muestra que ya funciona así, se cierra sin cambiar código y el reporte lo dice.
+**Listo cuando:**
+- sin las DLL (`Microsoft.Web.WebView2.Core.dll`, `Microsoft.Web.WebView2.WinForms.dll` y los
+  `WebView2Loader.dll`), las cuatro pantallas abren en su versión de Windows Forms, con el aviso
+  «Vista web no disponible…»;
+- no aparece el aviso de error ni se agrega nada a `%LOCALAPPDATA%\EventAura\errores.log`;
+- la disposición es la misma que con la web.
 
-**Estado:** abierto.
+Si se puede, que T-02 cubra también este caso.
+
+**Estado:** abierto, **urgente**.
 
 ### T-04 · Codex · Carpeta de la aplicación para la defensa
 
@@ -337,7 +346,7 @@ Es «Hacé esto último» de `docs/LISTA-PARA-MAXIMO.md`.
 
 **Listo cuando** JC revisó `git status` y autorizó el commit, con rutas explícitas.
 
-**Estado:** en revisión.
+**Estado:** cerrado: `0ddc0c4`, publicado en `origin/JC` el 24/11.
 
 ### T-19 · Claude Code · `tools/VerificarReglasAgentes.ps1` no corre
 

@@ -1,0 +1,54 @@
+﻿2026-11-24T14:35:29.8758924-03:00 System.IO.FileNotFoundException
+   en Visual.Web.PanelWeb.Cargar(String archivo)
+   en Visual.Componentes.PanelAdministrador.<.ctor>b__12_2(Object s, EventArgs e) en D:\proyectos\TrabajoDeDiploma\Visual\Propietario\PanelAdministrador.cs:lÃ­nea 47
+   en System.Windows.Forms.UserControl.OnLoad(EventArgs e)
+   en System.Windows.Forms.UserControl.OnCreateControl()
+   en System.Windows.Forms.Control.CreateControl(Boolean fIgnoreVisible)
+   en System.Windows.Forms.Control.CreateControl(Boolean fIgnoreVisible)
+   en System.Windows.Forms.Control.CreateControl()
+   en System.Windows.Forms.Control.WmShowWindow(Message& m)
+   en System.Windows.Forms.Control.WndProc(Message& m)
+   en System.Windows.Forms.ScrollableControl.WndProc(Message& m)
+   en System.Windows.Forms.Form.WmShowWindow(Message& m)
+   en System.Windows.Forms.Form.WndProc(Message& m)
+   en System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   en System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   en System.Windows.Forms.NativeWindow.Callback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+2026-11-24T14:36:30.4570581-03:00 System.IO.FileNotFoundException
+   en Visual.Web.PanelWeb.Cargar(String archivo)
+   en Visual.frmReportes.<.ctor>b__14_2(Object s, EventArgs e) en D:\proyectos\TrabajoDeDiploma\Visual\Propietario\frmReportes.cs:lÃ­nea 77
+   en System.Windows.Forms.Form.OnShown(EventArgs e)
+   en Visual.FormularioEventAura.OnShown(EventArgs e) en D:\proyectos\TrabajoDeDiploma\Visual\FormularioEventAura.cs:lÃ­nea 58
+   en System.Windows.Forms.Form.CallShownEvent()
+   en System.Windows.Forms.Control.InvokeMarshaledCallbackDo(ThreadMethodEntry tme)
+   en System.Windows.Forms.Control.InvokeMarshaledCallbackHelper(Object obj)
+   en System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   en System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   en System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   en System.Windows.Forms.Control.InvokeMarshaledCallback(ThreadMethodEntry tme)
+   en System.Windows.Forms.Control.InvokeMarshaledCallbacks()
+2026-11-24T14:37:25.0706141-03:00 System.IO.FileNotFoundException
+   en Visual.Web.PanelWeb.Cargar(String archivo)
+   en Visual.frmEventosCliente.<.ctor>b__8_5(Object s, EventArgs e) en D:\proyectos\TrabajoDeDiploma\Visual\Cliente\frmEventosCliente.cs:lÃ­nea 54
+   en System.Windows.Forms.Form.OnShown(EventArgs e)
+   en Visual.FormularioEventAura.OnShown(EventArgs e) en D:\proyectos\TrabajoDeDiploma\Visual\FormularioEventAura.cs:lÃ­nea 58
+   en Visual.frmEventosCliente.OnShown(EventArgs e) en D:\proyectos\TrabajoDeDiploma\Visual\Cliente\frmEventosCliente.cs:lÃ­nea 76
+   en System.Windows.Forms.Form.CallShownEvent()
+   en System.Windows.Forms.Control.InvokeMarshaledCallbackDo(ThreadMethodEntry tme)
+   en System.Windows.Forms.Control.InvokeMarshaledCallbackHelper(Object obj)
+   en System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   en System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   en System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   en System.Windows.Forms.Control.InvokeMarshaledCallback(ThreadMethodEntry tme)
+   en System.Windows.Forms.Control.InvokeMarshaledCallbacks()
+2026-11-24T14:38:01.6406809-03:00 System.IO.FileNotFoundException
+   en Visual.Web.PanelWeb.Cargar(String archivo)
+   en Visual.FrmCompraCliente.OnShown(EventArgs e) en D:\proyectos\TrabajoDeDiploma\Visual\Cliente\FrmCompraCliente.cs:lÃ­nea 252
+   en System.Windows.Forms.Form.CallShownEvent()
+   en System.Windows.Forms.Control.InvokeMarshaledCallbackDo(ThreadMethodEntry tme)
+   en System.Windows.Forms.Control.InvokeMarshaledCallbackHelper(Object obj)
+   en System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   en System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   en System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   en System.Windows.Forms.Control.InvokeMarshaledCallback(ThreadMethodEntry tme)
+   en System.Windows.Forms.Control.InvokeMarshaledCallbacks()
