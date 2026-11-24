@@ -19,6 +19,10 @@ namespace Visual
         private Componentes.IndicadorFortaleza _fortaleza;
         private Componentes.EtiquetaAyuda _estadoCorreo;
         private Componentes.BotonSecundario _enviarCodigo;
+        private Label _avisoValidacion;
+        private Panel _filaAviso;
+        private Control _campoConAviso;
+        private int _altoSinAviso;
         public frmCambiarContraseña() : this(false) { }
         public frmCambiarContraseña(bool recuperacion)
         {
@@ -33,10 +37,20 @@ namespace Visual
             _fortaleza = new Componentes.IndicadorFortaleza { Name = "fortalezaContrasena", Location = new Point(24, 316), Size = new Size(392, 24) };
             Controls.Add(_fortaleza);
             TxtPassword.TextChanged += (s, e) => ActualizarFortaleza();
-            txtMail.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtMail);
-            txtActual.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtActual);
-            TxtPassword.TextChanged += (s, e) => ValidacionCampo.Limpiar(TxtPassword);
-            TxtConfirmpassword.TextChanged += (s, e) => ValidacionCampo.Limpiar(TxtConfirmpassword);
+            txtMail.TextChanged += (s, e) => LimpiarAviso(txtMail);
+            txtActual.TextChanged += (s, e) => LimpiarAviso(txtActual);
+            TxtPassword.TextChanged += (s, e) => LimpiarAviso(TxtPassword);
+            TxtConfirmpassword.TextChanged += (s, e) => LimpiarAviso(TxtConfirmpassword);
+            _avisoValidacion = new Label
+            {
+                Font = Tema.Ayuda,
+                ForeColor = Tema.Error,
+                AccessibleRole = AccessibleRole.Alert,
+                Dock = DockStyle.Fill
+            };
+            _filaAviso = new Panel { Name = "filaAvisoValidacion", Height = 0, Visible = false };
+            _filaAviso.Controls.Add(_avisoValidacion);
+            Controls.Add(_filaAviso);
             Shown += AjustarVistaDpi;
             if (!_recuperacion) return;
 
@@ -52,7 +66,7 @@ namespace Visual
             {
                 if (string.IsNullOrWhiteSpace(txtMail.Text))
                 {
-                    ValidacionCampo.Mostrar(txtMail, "Escribí tu correo electrónico."); txtMail.Focus();
+                    ErrorCampo(txtMail, "Escribí tu correo electrónico.");
                     return;
                 }
                 try
@@ -78,22 +92,35 @@ namespace Visual
         }
         private void AjustarVistaDpi(object sender, EventArgs e)
         {
-            float escala; using (var g = CreateGraphics()) escala = g.DpiX / Tema.DpiDiseno * Font.SizeInPoints / Tema.Cuerpo.SizeInPoints;
+            float escala = Disposicion.Dpi(this) / Tema.DpiDiseno;
             int px(float valor) { return (int)Math.Round(valor * escala); }
             int margen = px(24);
             _fortaleza.SetBounds(margen, px(_recuperacion ? 388 : 332), Math.Max(1, ClientSize.Width - 2 * margen), px(24));
-            if (!_recuperacion) return;
-            ClientSize = new Size(px(440), px(580));
-            txtActual.SetBounds(px(24), px(220), px(184), px(28));
-            label3.Location = new Point(px(24), px(328));
-            TxtPassword.Location = new Point(px(24), px(352));
-            label4.Location = new Point(px(24), px(420));
-            TxtConfirmpassword.Location = new Point(px(24), px(444));
-            checkbxShowPass.Location = new Point(px(24), px(484));
-            btnVolver.Location = new Point(px(24), px(524));
-            btnconfirmar.Location = new Point(px(232), px(524));
-            _enviarCodigo.SetBounds(px(232), px(216), px(184), px(36));
-            _estadoCorreo.SetBounds(px(24), px(260), px(392), px(54));
+            if (_recuperacion)
+            {
+                ClientSize = new Size(px(568), px(580));
+                txtActual.SetBounds(px(24), px(220), px(184), px(28));
+                label3.Location = new Point(px(24), px(328));
+                TxtPassword.Location = new Point(px(24), px(352));
+                label4.Location = new Point(px(24), px(420));
+                TxtConfirmpassword.Location = new Point(px(24), px(444));
+                checkbxShowPass.Location = new Point(px(24), px(484));
+                btnVolver.Location = new Point(px(24), px(524));
+                btnconfirmar.Location = new Point(px(232), px(524));
+                _enviarCodigo.SetBounds(px(352), px(216), px(184), px(36));
+                _estadoCorreo.SetBounds(px(24), px(260), px(392), px(54));
+            }
+            label1.Top = px(Tema.AltoBarraSuperior + Tema.Espacio.L);
+            ColocarCampo(label5, txtMail);
+            ColocarCampo(lblActual, txtActual);
+            ColocarCampo(label3, TxtPassword);
+            ColocarCampo(label4, TxtConfirmpassword);
+            Disposicion.AlinearGrupo(btnVolver, btnconfirmar);
+            if (btnconfirmar.Right + margen > ClientSize.Width)
+                ClientSize = new Size(btnconfirmar.Right + margen, ClientSize.Height);
+            _altoSinAviso = ClientSize.Height;
+            _filaAviso.SetBounds(margen, Math.Max(btnVolver.Bottom, btnconfirmar.Bottom) + px(Tema.Espacio.S),
+                ClientSize.Width - 2 * margen, 0);
         }
         private void frmCambiarContraseña_Load(object sender, EventArgs e)
         {
@@ -136,7 +163,7 @@ namespace Visual
             catch (ReglaNegocioException ex)
             {
                 if (ex.Regla == "RN-02" || ex.Regla == "RN-47")
-                    ValidacionCampo.Mostrar(TxtPassword, ex.Message);
+                    ErrorCampo(TxtPassword, ex.Message);
                 else Avisos.Regla(this, "Cambiar contraseña", ex);
                 return;
             }
@@ -172,10 +199,29 @@ namespace Visual
 
         private bool ErrorCampo(Control campo, string mensaje)
         {
-            ValidacionCampo.Mostrar(campo, mensaje);
+            LimpiarAviso(_campoConAviso);
+            _campoConAviso = campo;
+            campo.BackColor = Tema.ErrorFondo;
+            _avisoValidacion.Name = "errorInline_" + campo.Name;
+            _avisoValidacion.Text = mensaje;
+            _filaAviso.Height = TextRenderer.MeasureText(mensaje, _avisoValidacion.Font,
+                new Size(Math.Max(1, _filaAviso.Width), int.MaxValue), TextFormatFlags.WordBreak).Height;
+            ClientSize = new Size(ClientSize.Width, Math.Max(_altoSinAviso, _filaAviso.Bottom + Padding.Bottom));
+            _filaAviso.Show();
             campo.Focus();
             return false;
         }
- // Controla que se llenen todos los campos
+
+        private void LimpiarAviso(Control campo)
+        {
+            if (campo == null) return;
+            campo.BackColor = Tema.Superficie;
+            if (campo != _campoConAviso) return;
+            _campoConAviso = null;
+            _filaAviso.Hide();
+            _filaAviso.Height = 0;
+            _avisoValidacion.Text = string.Empty;
+            if (_altoSinAviso > 0) ClientSize = new Size(ClientSize.Width, _altoSinAviso);
+        }
     }
 }

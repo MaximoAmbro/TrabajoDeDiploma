@@ -240,10 +240,10 @@ namespace Pruebas
                     Mostrar(menu);
                     var botonAlta = ControlDe<Button>(menu,"btnCrearAdministrador");
                     Assert.IsTrue(botonAlta.Visible, "El alta debe estar visible en el panel del administrador.");
-                    Assert.IsTrue(menu.RectangleToScreen(botonAlta.Bounds).IntersectsWith(menu.Bounds), "El botón de alta debe quedar dentro de la ventana.");
+                    Assert.IsTrue(botonAlta.RectangleToScreen(botonAlta.ClientRectangle).IntersectsWith(menu.Bounds), "El botón de alta debe quedar dentro de la ventana.");
                     botonAlta.PerformClick();
                     var alta=System.Windows.Forms.Application.OpenForms.OfType<Visual.frmCrearUsuario>().Single(f=>f.Visible);
-                    Assert.AreEqual("EventAura · Crear administrador",alta.Text);
+                    Assert.AreEqual("Crear administrador",alta.Text);
                     ControlDe<TextBox>(alta,"txtNombre").Text="Admin";
                     ControlDe<TextBox>(alta,"txtApellido").Text="Nuevo";
                     ControlDe<TextBox>(alta,"txtmail").Text=mail;

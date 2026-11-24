@@ -85,6 +85,12 @@ namespace Negocio
             return RepositorioListaEspera.Instance.EventosConLugar(idUsuario);
         }
 
+        public List<string> EventosEnEspera(int idUsuario)
+        {
+            GestorSesion.Instance.RequerirUsuario(idUsuario);
+            return RepositorioListaEspera.Instance.EventosEnEspera(idUsuario);
+        }
+
         // RN-35: suscriptores primero y, dentro de cada grupo, por orden de inscripción.
         public List<ListaEspera> DeEvento(int idEvento)
         {

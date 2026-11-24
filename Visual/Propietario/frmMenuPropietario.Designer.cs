@@ -28,9 +28,7 @@ namespace Visual
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblNombre = new Visual.Componentes.EtiquetaTitulo();
             this.lblvolver = new Visual.Componentes.BotonSecundario();
-            this.label1 = new Visual.Componentes.EtiquetaTitulo();
             this.btnRegistrarLocal = new Visual.Componentes.BotonPrimario();
             this.btnMisLocales = new Visual.Componentes.BotonPrimario();
             this.btnListasEspera = new Visual.Componentes.BotonPrimario();
@@ -45,16 +43,7 @@ namespace Visual
             this.Controls.Add(this.btnControlIngreso);
             this.SuspendLayout();
             // 
-            // lblNombre
             // 
-            this.lblNombre.AutoSize = true;
-            this.lblNombre.Location = new System.Drawing.Point(24, 116);
-            this.lblNombre.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(272, 32);
-            this.lblNombre.TabIndex = 38;
-            this.lblNombre.Text = "[USUARIO]";
-            this.lblNombre.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblvolver
             // 
@@ -67,16 +56,7 @@ namespace Visual
             this.lblvolver.Text = "Volver al inicio";
             this.lblvolver.Click += new System.EventHandler(this.lblvolver_Click);
             // 
-            // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 84);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(272, 32);
-            this.label1.TabIndex = 36;
-            this.label1.Text = "Organización";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnRegistrarLocal
             // 
@@ -127,9 +107,7 @@ namespace Visual
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1000, 720);
-            this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.lblvolver);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnReportes);
             this.Controls.Add(this.btnListasEspera);
             this.Controls.Add(this.btnRegistrarLocal);
@@ -151,9 +129,7 @@ namespace Visual
 
         #endregion
 
-        private Visual.Componentes.EtiquetaTitulo lblNombre;
         private Visual.Componentes.BotonSecundario lblvolver;
-        private Visual.Componentes.EtiquetaTitulo label1;
         private Visual.Componentes.BotonPrimario btnRegistrarLocal;
         private Visual.Componentes.BotonPrimario btnMisLocales;
         private Visual.Componentes.BotonPrimario btnListasEspera;

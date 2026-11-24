@@ -17,6 +17,7 @@ namespace Visual
         private Componentes.BotonSecundario btnCambiarContrasena;
         private Componentes.BotonSecundario btnCrearAdministrador;
         private Componentes.PanelAdministrador panel;
+        private readonly Panel lateral;
         private Componentes.EtiquetaRotulo seccionPlataforma;
         private Componentes.EtiquetaRotulo seccionRevision;
         private Componentes.EtiquetaRotulo seccionCuenta;
@@ -49,17 +50,36 @@ namespace Visual
             btnReportesGlobales.Click += AbrirReportes;
             btnCerrarSesion.Click += CerrarSesion;
             btnSolicitudes.Click += (s, e) => { GestorSesion.Instance.RequerirAdministrador(); using (var form = new frmRevisarSolicitudesOrganizador()) form.ShowDialog(this); panel.Cargar(); };
-            btnEventosEnRevision.Click += (s, e) => { GestorSesion.Instance.RequerirAdministrador(); using (var form = new frmRevisarEventos()) form.ShowDialog(this); };
+            btnEventosEnRevision.Click += (s, e) => { GestorSesion.Instance.RequerirAdministrador(); using (var form = new frmRevisarEventos()) form.ShowDialog(this); panel.Cargar(); };
             btnCrearAdministrador = new Componentes.BotonSecundario { Name = "btnCrearAdministrador", Text = "Crear administrador", Location = new Point(24, 200), Size = new Size(184, 40) };
             btnCrearAdministrador.Click += CrearAdministrador;
             Controls.Add(btnCrearAdministrador);
             panel.AuditoriaSolicitada += (s, e) => { using (var form = new frmAuditoria()) form.ShowDialog(this); };
+            var inicio = new Componentes.BotonSecundario { Name = "btnInicio", Text = "Inicio" };
+            inicio.Click += (s, e) => { panel.AutoScrollPosition = Point.Empty; panel.Cargar(); };
+            lateral = Disposicion.CrearLateral(this, inicio, seccionPlataforma, btnReportesGlobales, btnCrearAdministrador, panel.AccionAuditoria,
+                seccionRevision, btnSolicitudes, btnEventosEnRevision, seccionCuenta, btnCambiarContrasena, btnCerrarSesion);
+            inicio.MarcarOpcionActual(true);
+            ClientSizeChanged += (s, e) => DistribuirPanel();
             Load += (s, e) =>
             {
                 GestorSesion.Instance.RequerirAdministrador();
                 panel.Cargar();
                 barra.ActualizarSesion();
+                DistribuirPanel();
             };
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            Disposicion.AjustarAreaVisible(this);
+            DistribuirPanel();
+        }
+
+        private void DistribuirPanel()
+        {
+            if (lateral != null) Disposicion.DistribuirMenu(this, lateral, panel, titulo);
         }
 
         private static Componentes.EtiquetaRotulo Seccion(string nombre, string texto, int x, int ancho)

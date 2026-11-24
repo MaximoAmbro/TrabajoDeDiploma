@@ -65,6 +65,8 @@ namespace Pruebas
                         int altoEsperado = (int)Math.Round((boton is Visual.Componentes.BotonPrimario ? Visual.Tema.AltoBotonPrimario : Visual.Tema.AltoBoton) * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
                         int[] anchosNormalizados = { Visual.Tema.AnchoBotonCompacto, Visual.Tema.AnchoBotonNormal, Visual.Tema.AnchoBotonAmplio };
                         int relleno = (int)Math.Round(Visual.Tema.RellenoHorizontalBoton * dpiBoton / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
+                        if (boton.Parent?.Name == "navegacionLateral")
+                            altoEsperado = Visual.Disposicion.Pixeles(boton, Visual.Disposicion.AltoOpcionLateral);
                         Assert.AreEqual(altoEsperado, boton.Height, pantalla + "/" + boton.Name + " alto normalizado");
                         if (pantalla == "frmInicio" && boton.Name == "btninicio")
                             Assert.AreEqual(form.ClientSize.Width - boton.Left - Visual.Tema.MargenFormulario, boton.Width, pantalla + "/" + boton.Name + " ancho de fila");

@@ -20,6 +20,13 @@ namespace Visual.Vendedor
         public frmAgregarSector()
         {
             InitializeComponent();
+            Shown += (s, e) =>
+            {
+                ColocarTitulo(label1);
+                ColocarCampo(label6, txtNombre);
+                ColocarCampo(lblmail, txtCapacidad);
+                ColocarCampo(label5, txtPrecio);
+            };
             txtNombre.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtNombre);
             txtCapacidad.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtCapacidad);
             txtPrecio.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtPrecio);

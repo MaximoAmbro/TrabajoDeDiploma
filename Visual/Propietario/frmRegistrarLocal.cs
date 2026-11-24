@@ -19,6 +19,17 @@ namespace Visual
         public frmRegistrarLocal()
         {
             InitializeComponent();
+            Shown += (s, e) =>
+            {
+                ColocarTitulo(label1);
+                ColocarCampo(label6, txtNombre);
+                ColocarCampo(label5, txtDireccion);
+                ColocarCampo(lblmail, txtAltura);
+                ColocarCampo(label3, txtCapacidad);
+                txtAltura.Left = txtDireccion.Right + Disposicion.Pixeles(this, Tema.Espacio.S);
+                ColocarRotulo(lblmail, txtAltura);
+                ClientSize = new System.Drawing.Size(txtAltura.Right + Disposicion.Pixeles(this, Tema.Espacio.XL), ClientSize.Height);
+            };
             txtNombre.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtNombre);
             txtDireccion.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtDireccion);
             txtAltura.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtAltura);

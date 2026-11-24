@@ -35,6 +35,17 @@ namespace Visual
         public frmReportes()
         {
             InitializeComponent();
+            Shown += (s, e) =>
+            {
+                Disposicion.LimitarAncho(lblLectura);
+                int pie = Math.Min(btnExportar.Top, btnVolver.Top);
+                lblLectura.Height = Math.Min(lblLectura.Height,
+                    Math.Max(0, pie - lblLectura.Top - Disposicion.Pixeles(this, Tema.Espacio.S)));
+                ColocarRotulo(lblReporte, cmbReporte);
+                ColocarRotulo(lblFiltro, cmbFiltro);
+                ColocarRotulo(lblDesde, dtpDesde);
+                ColocarRotulo(lblHasta, dtpHasta);
+            };
             estadoSinReporte = new Componentes.EstadoVacio { Name = "estadoSinReporte", Visible = false };
             estadoSinReporte.AjustarA(dgvReporte);
             estadoSinReporte.Cargar("Elegí un reporte y un período para empezar a revisar tus datos.", "Generar reporte");

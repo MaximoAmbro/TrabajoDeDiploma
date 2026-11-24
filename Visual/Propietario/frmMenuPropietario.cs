@@ -14,9 +14,9 @@ namespace Visual
 {
     public partial class frmMenuPropietario : FormularioEventAura
     {
-        private readonly Panel zonaOrganizador;
+        private readonly FlowLayoutPanel zonaOrganizador;
+        private readonly Panel lateral;
         private readonly Componentes.EtiquetaTitulo tituloOrganizador;
-        private readonly Componentes.EtiquetaAyuda ayudaOrganizador;
         private readonly Componentes.BotonSecundario btnCambiarContrasena;
         private readonly Componentes.EtiquetaRotulo seccionLocales;
         private readonly Componentes.EtiquetaRotulo seccionOperacion;
@@ -40,12 +40,9 @@ namespace Visual
             btnReportes.Location = new Point(24, 452);
             lblvolver.Location = new Point(24, 628);
             lblvolver.Text = "Cerrar sesión";
-            zonaOrganizador = new Panel { Name = "zonaOrganizador", BackColor = Tema.Superficie, Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right };
+            zonaOrganizador = new FlowLayoutPanel { Name = "zonaOrganizador", BackColor = Tema.Fondo, AutoScroll = true, FlowDirection = FlowDirection.TopDown, WrapContents = false };
             tituloOrganizador = new Componentes.EtiquetaTitulo { Name = "tituloOrganizador", Text = "Tu espacio de organización" };
-            ayudaOrganizador = new Componentes.EtiquetaAyuda { Name = "ayudaOrganizador", Text = "Administrá tus locales y eventos, controlá el ingreso y consultá reportes de tus propias ventas." };
-            zonaOrganizador.Controls.Add(tituloOrganizador);
-            zonaOrganizador.Controls.Add(ayudaOrganizador);
-            Controls.Add(zonaOrganizador);
+            Controls.AddRange(new Control[] { tituloOrganizador, zonaOrganizador });
             btnCambiarContrasena = new Componentes.BotonSecundario { Name = "btnCambiarContrasena", Text = "Cambiar contraseña", Location = new Point(24, 576), Size = new Size(272, 40) };
             btnCambiarContrasena.Click += (s, e) =>
             {
@@ -53,12 +50,13 @@ namespace Visual
                 cambio.Show();
                 Hide();
             };
-            Controls.Add(btnCambiarContrasena);
-            btnCambiarContrasena.BringToFront();
-            zonaOrganizador.BringToFront();
-            btnCambiarContrasena.BringToFront();
-            SizeChanged+=(s,e)=>{DistribuirMenu();DistribuirPanel();};
-            ClientSizeChanged+=(s,e)=>{DistribuirMenu();DistribuirPanel();};
+            var inicio = new Componentes.BotonSecundario { Name = "btnInicio", Text = "Inicio" };
+            inicio.Click += (s, e) => zonaOrganizador.AutoScrollPosition = Point.Empty;
+            lateral = Disposicion.CrearLateral(this, inicio, seccionLocales, btnMisLocales, btnRegistrarLocal,
+                seccionOperacion, btnControlIngreso, btnListasEspera, seccionResultados, btnReportes,
+                seccionCuenta, btnCambiarContrasena, lblvolver);
+            inicio.MarcarOpcionActual(true);
+            ClientSizeChanged += (s, e) => DistribuirPanel();
         }
 
         private static Componentes.EtiquetaRotulo Seccion(string nombre, string texto, int arriba)
@@ -68,54 +66,57 @@ namespace Visual
 
         private void frmMenuVendedor_Load(object sender, EventArgs e)
         {
-            lblNombre.Text = NombreUsuario;
             GestorSesion.Instance.RequerirOrganizador();
+            CargarTarjetas();
             DistribuirPanel();
         }
-        protected override void OnShown(EventArgs e){base.OnShown(e);Disposicion.AjustarAreaVisible(this);DistribuirMenu();DistribuirPanel();}
-        private void DistribuirMenu()
+        protected override void OnShown(EventArgs e)
         {
-            if (seccionLocales == null || btnMisLocales == null) return;
-            float escala = Disposicion.Escala(this);
-            if (escala <= 1.01f) return;
-            int px(float valor) => (int)Math.Round(valor * escala);
-            int margen = px(32), ancho = px(272), altoRotulo = px(14), hueco = px(1);
-            int Alto(Button boton) => px(boton == btnCambiarContrasena || boton == lblvolver ? 28 : boton is Componentes.BotonPrimario ? 36 : 32);
-            int arriba = label1.Bottom + px(3);
-            int baseTotal = 4 * (altoRotulo + hueco) + Alto(btnMisLocales) + Alto(btnRegistrarLocal) +
-                Alto(btnControlIngreso) + Alto(btnListasEspera) + Alto(btnReportes) + Alto(btnCambiarContrasena) + Alto(lblvolver);
-            int espacio = Math.Max(0, ClientSize.Height - margen - arriba - baseTotal);
-            int huecoGrupo = Math.Max(px(1), Math.Min(px(8), espacio / 3));
-            int total = baseTotal + 3 * huecoGrupo;
-            int y = Math.Max(arriba, ClientSize.Height - margen - total);
-
-            void Rotulo(Componentes.EtiquetaRotulo control, string texto)
-            {
-                control.Text = texto;
-                control.SetBounds(margen, y, ancho, altoRotulo);
-                y += altoRotulo + hueco;
-            }
-            void Accion(Button control, int alto)
-            {
-                control.SetBounds(margen, y, ancho, alto);
-                y += alto;
-            }
-            Rotulo(seccionLocales, "LOCALES Y EVENTOS");
-            Accion(btnMisLocales, Alto(btnMisLocales)); Accion(btnRegistrarLocal, Alto(btnRegistrarLocal)); y += huecoGrupo;
-            Rotulo(seccionOperacion, "OPERACIÓN");
-            Accion(btnControlIngreso, Alto(btnControlIngreso)); Accion(btnListasEspera, Alto(btnListasEspera)); y += huecoGrupo;
-            Rotulo(seccionResultados, "RESULTADOS");
-            Accion(btnReportes, Alto(btnReportes)); y += huecoGrupo;
-            Rotulo(seccionCuenta, "CUENTA");
-            Accion(btnCambiarContrasena, Alto(btnCambiarContrasena)); Accion(lblvolver, Alto(lblvolver));
+            base.OnShown(e);
+            Disposicion.AjustarAreaVisible(this);
+            DistribuirPanel();
         }
+
         private void DistribuirPanel()
         {
-            int margen=(int)(24*Disposicion.Escala(this));
-            zonaOrganizador.SetBounds(btnMisLocales.Right+margen,label1.Top,
-                Math.Max(1,ClientSize.Width-btnMisLocales.Right-margen*2),Math.Max(1,ClientSize.Height-label1.Top-margen));
-            tituloOrganizador.SetBounds(24,24,Math.Max(1,zonaOrganizador.ClientSize.Width-48),40);
-            ayudaOrganizador.SetBounds(24,72,Math.Max(1,zonaOrganizador.ClientSize.Width-48),96);
+            Disposicion.DistribuirMenu(this, lateral, zonaOrganizador, tituloOrganizador);
+            foreach (Componentes.DatoPanel tarjeta in zonaOrganizador.Controls)
+                tarjeta.Width = Math.Max(1, zonaOrganizador.ClientSize.Width - tarjeta.Margin.Horizontal - SystemInformation.VerticalScrollBarWidth);
+        }
+
+        private void CargarTarjetas()
+        {
+            int id = GestorSesion.Instance.UsuarioActual.Id;
+            var locales = GestorLocales.Instance.PorPropietario(id);
+            var eventos = new List<Entidades.Evento>();
+            foreach (var local in locales)
+            {
+                var delLocal = GestorEventos.Instance.PorLocal(local.Id);
+                AgregarTarjeta(local.Nombre, delLocal.Count == 1 ? "1 evento" : $"{delLocal.Count} eventos");
+                eventos.AddRange(delLocal);
+            }
+
+            if (locales.Count == 0)
+                AgregarTarjeta("Mis locales", "Todavía no registraste un local.", "Registrar local", () => btnRegistrarLocal.PerformClick());
+
+            var proximos = eventos.Where(e => e.Fecha >= DateTime.Now && e.Estado != GestorEventos.EstadoSuspendido)
+                .OrderBy(e => e.Fecha).ToArray();
+            if (proximos.Length == 0)
+                AgregarTarjeta("Próximos eventos", "Todavía no tenés eventos con fecha próxima.", "Mis locales", () => btnMisLocales.PerformClick());
+            foreach (var evento in proximos)
+            {
+                int entradas = GestorEventos.Instance.EntradasVendidas(evento.Id);
+                string ventas = entradas == 1 ? "1 entrada vendida" : $"{entradas} entradas vendidas";
+                AgregarTarjeta(evento.Nombre, $"{evento.Fecha:dd/MM/yyyy HH:mm} · {ventas}");
+            }
+        }
+
+        private void AgregarTarjeta(string titulo, string valor, string textoAccion = null, Action accion = null)
+        {
+            var tarjeta = new Componentes.DatoPanel();
+            tarjeta.CargarDetalle(titulo, valor);
+            zonaOrganizador.Controls.Add(tarjeta);
+            if (accion != null) tarjeta.AgregarAccion(textoAccion, accion);
         }
 
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------

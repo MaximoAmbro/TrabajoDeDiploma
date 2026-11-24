@@ -10,6 +10,20 @@ namespace Visual.Componentes
     public abstract class BotonTematico : Button
     {
         private readonly RolBoton rol;
+        private RolBoton? rolVisual;
+        private bool opcionActual;
+
+        internal void DefinirRolVisual(bool principal)
+        {
+            rolVisual = principal ? RolBoton.Primario : rol == RolBoton.Peligro ? RolBoton.Peligro : RolBoton.Secundario;
+            Tema.EstadoBoton(this, rolVisual.Value, opcionActual);
+        }
+
+        internal void MarcarOpcionActual(bool actual)
+        {
+            opcionActual = actual;
+            DefinirRolVisual(actual);
+        }
 
         protected BotonTematico(RolBoton rol)
         {
@@ -47,22 +61,37 @@ namespace Visual.Componentes
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new FlatButtonAppearance FlatAppearance { get { return base.FlatAppearance; } }
 
+        protected override bool ShowFocusCues => false;
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            if (!Focused || (rolVisual ?? rol) != RolBoton.Primario) return;
+
+            // La separación clara mantiene visible el borde púrpura sobre el relleno púrpura.
+            int borde = FlatAppearance.BorderSize;
+            Rectangle interior = Rectangle.Inflate(ClientRectangle, -borde, -borde);
+            if (interior.Width <= 0 || interior.Height <= 0) return;
+            using (var separador = new Pen(Tema.Superficie))
+                e.Graphics.DrawRectangle(separador, interior.X, interior.Y, interior.Width - 1, interior.Height - 1);
+        }
+
         protected override void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);
-            Tema.EstadoBoton(this, rol);
+            Tema.EstadoBoton(this, rolVisual ?? rol, opcionActual);
         }
 
         protected override void OnLostFocus(EventArgs e)
         {
             base.OnLostFocus(e);
-            Tema.EstadoBoton(this, rol);
+            Tema.EstadoBoton(this, rolVisual ?? rol, opcionActual);
         }
 
         protected override void OnEnabledChanged(EventArgs e)
         {
             base.OnEnabledChanged(e);
-            Tema.EstadoBoton(this, rol);
+            Tema.EstadoBoton(this, rolVisual ?? rol, opcionActual);
         }
     }
 }

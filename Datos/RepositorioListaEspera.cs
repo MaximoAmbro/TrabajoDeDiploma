@@ -87,6 +87,24 @@ namespace Datos
             return nombres;
         }
 
+        public List<string> EventosEnEspera(int idUsuario)
+        {
+            const string consulta =
+                "SELECT e.Nombre FROM ListaEspera le JOIN Eventos e ON e.ID = le.ID_Evento " +
+                "WHERE le.ID_Usuario = @Usuario AND e.Estado = 'Publicado' AND e.Fecha >= @Ahora " +
+                "ORDER BY e.Fecha, e.ID";
+            var nombres = new List<string>();
+            using (var conexion = AbrirConexion())
+            using (var comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@Usuario", idUsuario);
+                AgregarParametro(comando, "@Ahora", DateTime.Now);
+                using (var lector = comando.ExecuteReader())
+                    while (lector.Read()) nombres.Add(LeerString(lector, "Nombre"));
+            }
+            return nombres;
+        }
+
         public bool Existe(int idEvento, int idUsuario)
         {
             const string consulta =

@@ -25,6 +25,11 @@ namespace Visual.Vendedor
         public frmAdministrarEvento()
         {
             InitializeComponent();
+            Shown += (s, e) =>
+            {
+                ColocarTitulo(label1);
+                ColocarRotulo(lblPreventa, dtpFinPreventa);
+            };
             Controls.Add(btnPublicar);
             btnPublicar.Click += (s, e) => PublicarEvento();
             AcceptButton = btnAgregarSector;

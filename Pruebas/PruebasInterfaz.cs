@@ -42,7 +42,7 @@ namespace Pruebas
                     var panel = Control<Panel>(form, "pnlResumen");
                     form.PerformLayout();
                     panel.PerformLayout();
-                    Assert.IsFalse(titulo.Bounds.IntersectsWith(panel.Bounds), "El título invade el resumen.");
+                    Assert.IsFalse(titulo.RectangleToScreen(titulo.ClientRectangle).IntersectsWith(panel.RectangleToScreen(panel.ClientRectangle)), "El título invade el resumen.");
                     Assert.IsTrue(titulo.GetPreferredSize(new Size(titulo.Width, 0)).Height <= titulo.Height, "El título largo se corta verticalmente.");
                     Assert.IsFalse(Control<Label>(form, "lblNivel").Bounds.IntersectsWith(Control<LinkLabel>(form, "lnkNiveles").Bounds));
                     Assert.IsTrue(resumen.Text.Contains("TOTAL") && resumen.Text.Contains("de las entradas."));

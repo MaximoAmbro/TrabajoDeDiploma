@@ -20,6 +20,13 @@ namespace Visual
         
         private void frmInicio_Load(object sender, EventArgs e)
         {
+            ColocarCampo(label5, txtMailLogin);
+            ColocarCampo(label3, txtContraseñaLogin);
+            int espacio = Disposicion.Pixeles(this, Tema.Espacio.S);
+            int anchoEnlace = (txtMailLogin.Width - espacio) / 2;
+            lblcrearcuenta.Left = txtMailLogin.Left;
+            lblcrearcuenta.Width = lblolividarcontra.Width = anchoEnlace;
+            lblolividarcontra.Left = lblcrearcuenta.Right + espacio;
             var faltante = VerificadorEsquema.PrimerFaltante();
             if (faltante != null)
             {

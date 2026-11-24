@@ -19,6 +19,12 @@ namespace Visual
         public frmSuscripcion()
         {
             InitializeComponent();
+            Shown += (s, e) =>
+            {
+                ColocarTitulo(label1);
+                Disposicion.LimitarAncho(lblBeneficios);
+                lblBeneficios.Height = rdbMensual.Top - lblBeneficios.Top - Disposicion.Pixeles(this, Tema.Espacio.XS);
+            };
             CancelButton = btnVolver;
         }
 
@@ -54,6 +60,12 @@ namespace Visual
                 : "No tenés una suscripción activa.";
             rdbMensual.Enabled = !tiene;
             rdbAnual.Enabled = !tiene;
+            int ancho = Math.Max(btnContratar.Width, btnCancelar.Width);
+            int espacio = Disposicion.Pixeles(this, Tema.Espacio.S);
+            int margen = Disposicion.Pixeles(this, Tema.Espacio.XL);
+            btnCancelar.SetBounds(margen, btnCancelar.Top, ancho, btnCancelar.Height);
+            btnContratar.SetBounds(btnCancelar.Right + espacio, btnCancelar.Top, ancho, btnCancelar.Height);
+            ClientSize = new System.Drawing.Size(Math.Max(ClientSize.Width, btnContratar.Right + margen), ClientSize.Height);
             btnContratar.Enabled = !tiene;
             btnCancelar.Enabled = tiene;
         }

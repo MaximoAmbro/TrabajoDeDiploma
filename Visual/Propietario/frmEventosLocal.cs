@@ -20,6 +20,7 @@ namespace Visual.Vendedor
         public frmEventosLocal()
         {
             InitializeComponent();
+            Shown += (s, e) => ColocarTitulo(label2);
             AcceptButton = btnAgregarEvento;
             dgvEventos.KeyDown += (s, e) =>
             {

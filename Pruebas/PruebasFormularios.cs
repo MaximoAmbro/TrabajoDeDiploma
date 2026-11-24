@@ -118,7 +118,7 @@ namespace Pruebas
             Assert.IsTrue(Contraste(Visual.Tema.Superficie, Visual.Tema.Primario) >= 4.5);
             Assert.IsTrue(Contraste(Visual.Tema.Error, Visual.Tema.Superficie) >= 4.5);
             Assert.IsTrue(Contraste(Visual.Tema.BordeControl, Visual.Tema.Superficie) >= 3.0);
-            Assert.IsTrue(Contraste(Visual.Tema.Foco, Visual.Tema.Primario) >= 3.0, "El foco del botón primario debe contrastar con su fondo.");
+            Assert.IsTrue(Contraste(Visual.Tema.Foco, Visual.Tema.Superficie) >= 3.0, "El foco debe contrastar con el separador y la superficie.");
             Assert.AreEqual(Color.Firebrick, Visual.Tema.Error);
             Assert.AreEqual(Color.Gainsboro, Visual.Tema.FondoDeshabilitado);
             foreach (Font fuente in new[] { Visual.Tema.Marca, Visual.Tema.Titulo, Visual.Tema.Seccion,

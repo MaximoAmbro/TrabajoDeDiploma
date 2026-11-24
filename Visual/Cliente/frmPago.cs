@@ -21,6 +21,24 @@ namespace Visual
         public frmPago()
         {
             InitializeComponent();
+            Shown += (s, e) =>
+            {
+                ColocarCampo(lblTitular, txtTitular);
+                int espacio = Disposicion.Pixeles(this, Tema.Espacio.XS);
+                lblTotal.Top = lblTitular.Top - lblTotal.Height - espacio;
+                lblSeguro.Top = lblTotal.Top - lblSeguro.Height - espacio;
+                lblTitulo.Top = lblSeguro.Top - lblTitulo.Height - espacio;
+                lblTemporizador.Top = lblTitulo.Top;
+                indicadorPasos.Top = lblTitulo.Top - indicadorPasos.Height - espacio;
+                ColocarCampo(lblNumero, txtNumero);
+                int Px(int medida) => Disposicion.Pixeles(this, medida);
+                txtCvv.Left = txtVencimiento.Left + Px(Tema.AnchoCampo + Tema.Espacio.S);
+                ClientSize = new System.Drawing.Size(txtCvv.Left + Px(Tema.AnchoCampo + Tema.Espacio.XL), ClientSize.Height);
+                ColocarCampo(lblVencimiento, txtVencimiento);
+                ColocarCampo(lblCvv, txtCvv);
+                Disposicion.AlinearGrupo(btnCancelar, btnPagar);
+                Disposicion.LimitarAncho(lblEstado);
+            };
         }
 
         private void frmPago_Load(object sender, EventArgs e)

@@ -20,6 +20,12 @@ namespace Visual
         public frmListasEspera()
         {
             InitializeComponent();
+            Shown += (s, e) =>
+            {
+                ColocarTitulo(label1);
+                ColocarRotulo(lblEvento, cmbEventos);
+                lblCantidad.Width = btnVolver.Left - lblCantidad.Left - Disposicion.Pixeles(this, Tema.Espacio.S);
+            };
             estadoVacio = new Componentes.EstadoVacio { Name = "estadoListaVacia", Visible = false };
             estadoVacio.AjustarA(dgvLista);
             estadoVacio.Accion += () => btnVolver.PerformClick();

@@ -30,7 +30,18 @@ namespace Visual
             TxtConfirmpassword.TextChanged += (s, e) => ValidacionCampo.Limpiar(TxtConfirmpassword);
             Shown += (s, e) =>
             {
-                float escala; using (var g = CreateGraphics()) escala = g.DpiX / Tema.DpiDiseno * Font.SizeInPoints / Tema.Cuerpo.SizeInPoints;
+                int Px(int medida) => Disposicion.Pixeles(this, medida);
+                const int izquierda = Tema.Espacio.XL;
+                const int derecha = izquierda + Tema.AnchoCampo + Tema.Espacio.S;
+                ClientSize = new Size(Px(derecha + Tema.AnchoCampo + Tema.Espacio.XL), ClientSize.Height);
+                txtApellido.Left = TxtConfirmpassword.Left = Px(derecha);
+                ColocarCampo(label6, txtNombre);
+                ColocarCampo(label5, txtApellido);
+                ColocarCampo(lblmail, txtmail);
+                ColocarCampo(label3, TxtPassword);
+                ColocarCampo(label4, TxtConfirmpassword);
+                btnregistrarse.Left = lblyatengocuen.Right + Px(Tema.Espacio.S);
+                float escala = Disposicion.Dpi(this) / Tema.DpiDiseno;
                 int margen = (int)Math.Round(24 * escala);
                 _fortaleza.SetBounds(margen, (int)Math.Round(364 * escala), Math.Max(1, ClientSize.Width - margen * 2), (int)Math.Round(24 * escala));
             };
@@ -128,7 +139,8 @@ namespace Visual
             var titulo = new Componentes.EtiquetaTitulo { Name = "tituloVerificacion", Text = "Verificá tu correo", Location = new Point(px(8), px(8)), Size = new Size(ancho - px(24), px(40)) };
             var contenido = new Componentes.EtiquetaAyuda { Name = "instruccionesVerificacion", Location = new Point(px(8), px(60)), Size = new Size(ancho - px(24), px(80)), Text = "Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección." };
             var etiqueta = new Componentes.EtiquetaRotulo { Text = "Código de verificación", Location = new Point(px(8), px(164)), Size = new Size(px(240), px(24)) };
-            var codigo = new TextBox { Name = "txtCodigoCorreo", Location = new Point(px(8), px(192)), Size = new Size(px(240), px(32)), MaxLength = 6 };
+            var codigo = new TextBox { Name = "txtCodigoCorreo", Location = new Point(px(8), px(192)), AutoSize = false, Size = new Size(px(Tema.AnchoCampo), px(Tema.AltoCampo)), MaxLength = 6 };
+            ColocarRotulo(etiqueta, codigo);
             var estado = new Componentes.EtiquetaAyuda { Name = "estadoVerificacion", Location = new Point(px(8), px(232)), Size = new Size(ancho - px(24), px(54)) };
             codigo.TabIndex = 0;
             var confirmar = new Componentes.BotonPrimario { Name = "btnConfirmarCorreo", Text = "Confirmar correo", Location = new Point(px(8), px(292)), Size = new Size(px(200), px(40)), TabIndex = 1 };

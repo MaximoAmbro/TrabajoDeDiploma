@@ -20,6 +20,15 @@ namespace Visual.Propietario
         public frmAgregarEvento()
         {
             InitializeComponent();
+            Shown += (s, e) =>
+            {
+                ColocarTitulo(label3);
+                ColocarCampo(label1, txtNombre);
+                ColocarRotulo(label2, dtEvento);
+                ColocarRotulo(lblCategoria, cmbCategoria);
+                ColocarRotulo(lblPreventa, dtpFinPreventa);
+                ColocarRotulo(lblPortada, btnElegirPortada);
+            };
             // Items y no DataSource: con DataSource, WinForms preselecciona el primer valor al
             // mostrarse y la categoría dejaría de ser una elección explícita.
             cmbCategoria.Items.AddRange(GestorEventos.Categorias.ToArray<object>());

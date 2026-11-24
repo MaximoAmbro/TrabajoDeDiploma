@@ -125,7 +125,7 @@ namespace Visual
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(352, 32);
             this.label2.TabIndex = 22;
-            this.label2.Text = "EventAura";
+            this.label2.Text = "Iniciar sesión";
             // 
             // btnModificar
             // 

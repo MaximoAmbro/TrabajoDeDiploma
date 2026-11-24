@@ -14,13 +14,17 @@ namespace Visual.Componentes
         }
         public void AjustarA(System.Drawing.Rectangle area)
         {
-            Location=area.Location;Size=area.Size;
-            int alto=Math.Max(140,area.Height);
-            icono.Location=new System.Drawing.Point(20,Math.Max(12,(alto-64)/2));
-            explicacion.Location=new System.Drawing.Point(104,Math.Max(12,(alto-84)/2));
-            explicacion.Size=new System.Drawing.Size(Math.Max(180,Width-124),48);
-            boton.Location=new System.Drawing.Point(104,Math.Min(alto-50,Math.Max(70,(alto-84)/2+54)));
-            boton.Size=new System.Drawing.Size(Math.Min(240,Math.Max(160,Width-128)),44);
+            Location = area.Location;
+            Size = area.Size;
+            int Px(int medida) => Disposicion.Pixeles(this, medida);
+            int espacio = Px(Tema.Espacio.L);
+            int alto = Math.Max(Px(140), area.Height);
+            icono.SetBounds(espacio, Math.Max(espacio, (alto - Px(64)) / 2), Px(64), Px(64));
+            int izquierda = icono.Right + espacio;
+            int arriba = Math.Max(espacio, (alto - Px(84)) / 2);
+            explicacion.SetBounds(izquierda, arriba, Math.Max(1, Width - izquierda - espacio), Px(48));
+            boton.SetBounds(izquierda, Math.Min(alto - Px(36), explicacion.Bottom + Px(Tema.Espacio.S)),
+                Math.Min(Px(Tema.AnchoBotonAmplio), Math.Max(Px(Tema.AnchoBotonCompacto), explicacion.Width)), Px(Tema.AltoBoton));
         }
     }
 }

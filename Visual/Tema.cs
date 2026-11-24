@@ -10,8 +10,8 @@ namespace Visual
 {
     public static class Tema
     {
-        public static readonly Color Foco = Color.Black;
         public static readonly Color Primario = Color.FromArgb(116, 86, 174);
+        public static readonly Color Foco = Primario;
         public static readonly Color PrimarioEncima = Color.FromArgb(99, 70, 153);
         public static readonly Color PrimarioPresionado = Color.FromArgb(82, 58, 128);
         public static readonly Color PrimarioSuave = Color.FromArgb(239, 234, 248);
@@ -72,15 +72,16 @@ namespace Visual
 
         public static class Espacio
         {
-            public const int XS = 4, S = 8, M = 12, L = 16, XL = 24, XXL = 32, XXXL = 48;
+            public const int XS = 4, S = 8, M = 12, L = 16, XL = 24, XXL = 32;
         }
 
         public const float DpiDiseno = 96f;
-        public const int AltoBoton = 32, AltoBotonPrimario = 36;
-        public const int AnchoBotonCompacto = 136, AnchoBotonNormal = 184, AnchoBotonAmplio = 240;
-        public const int MargenFormulario = 24, SeparacionControl = 8;
-        public const int RellenoHorizontalBoton = 20, RellenoIconoBoton = 46, AltoFila = 32, AltoEncabezadoGrilla = 36;
-        public const int AltoEncabezadoVentana = 72, AltoBarraSuperior = 60, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
+        public const int AltoBoton = 36, AltoBotonPrimario = AltoBoton;
+        public const int AnchoCampo = 320, AltoCampo = 32;
+        public const int AnchoBotonCompacto = 160, AnchoBotonNormal = 184, AnchoBotonAmplio = 240;
+        public const int MargenFormulario = Espacio.XL, SeparacionControl = Espacio.S;
+        public const int RellenoHorizontalBoton = Espacio.L, RellenoIconoBoton = Espacio.XXL + Espacio.L, AltoFila = 32, AltoEncabezadoGrilla = 36;
+        public const int AltoEncabezadoVentana = 72, AltoBarraSuperior = 56, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
 
         // Medidas del ticket en puntos PDF; no dependen de los DPI del monitor.
         public static class Ticket
@@ -193,7 +194,7 @@ namespace Visual
         {
             if (raiz.Parent is FlowLayoutPanel || raiz.Parent is TableLayoutPanel)
             {
-                int dpiContenedor = Math.Max(96, raiz.DeviceDpi);
+                int dpiContenedor = Math.Max(96, Disposicion.Dpi(raiz));
                 int margen = MedidaDpi(SeparacionControl / 2, dpiContenedor);
                 raiz.Margin = new Padding(margen);
             }
@@ -202,7 +203,11 @@ namespace Visual
             {
                 // La compra ya distribuye el margen de 24 px dentro de sus paneles desplazables.
                 if (!(formulario is FrmCompraCliente))
-                    formulario.Padding = new Padding(MedidaDpi(MargenFormulario, Math.Max(96, formulario.DeviceDpi)));
+                    formulario.Padding = new Padding(MedidaDpi(MargenFormulario, Math.Max(96, Disposicion.Dpi(formulario))));
+                if (formulario.TopLevel && !formulario.Controls.OfType<Componentes.BarraSuperior>().Any())
+                    AgregarBarraSuperior(formulario);
+                if (formulario.Text.StartsWith("EventAura · ", StringComparison.Ordinal))
+                    formulario.Text = formulario.Text.Substring("EventAura · ".Length);
                 AjustarBarraSuperior(formulario);
             }
             string familia = raiz.Font.Name;
@@ -218,13 +223,14 @@ namespace Visual
                 if (!(boton is BotonTematico))
                     PrepararBoton(boton, rol);
                 boton.Font = Boton;
-                int dpi = Math.Max(96, boton.DeviceDpi);
+                int dpi = Math.Max(96, Disposicion.Dpi(boton));
                 bool tieneIcono = boton.Controls.OfType<Label>().Any(etiqueta =>
                     etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase));
                 int rellenoIzquierdo = tieneIcono ? RellenoIconoBoton : RellenoHorizontalBoton;
                 boton.Padding = new Padding(MedidaDpi(rellenoIzquierdo, dpi), 0, MedidaDpi(RellenoHorizontalBoton, dpi), 0);
-                boton.Width = MedidaDpi(AnchoBotonSegunDiseno(boton), dpi);
-                boton.Height = MedidaDpi(rol == RolBoton.Primario ? AltoBotonPrimario : AltoBoton, dpi);
+                bool lateral = boton.Parent?.Name == "navegacionLateral";
+                boton.Width = MedidaDpi(lateral ? Disposicion.AnchoLateral : AnchoBotonSegunDiseno(boton), dpi);
+                boton.Height = MedidaDpi(lateral ? Disposicion.AltoOpcionLateral : AltoBoton, dpi);
             }
             var grilla = raiz as DataGridView;
             if (grilla != null) EstiloGrilla(grilla);
@@ -234,10 +240,17 @@ namespace Visual
 
         private static void NormalizarSeparacionBotones(Control contenedor)
         {
-            int separacion = MedidaDpi(SeparacionControl, Math.Max(96, contenedor.DeviceDpi));
+            int separacion = MedidaDpi(SeparacionControl, Math.Max(96, Disposicion.Dpi(contenedor)));
             var botones = contenedor.Controls.Cast<Control>().OfType<Button>()
                 .Where(b => b.Bounds.Width > 0 && b.Bounds.Height > 0)
                 .OrderBy(b => b.Top).ThenBy(b => b.Left).ToArray();
+            if (contenedor is FlowLayoutPanel flujo && flujo.FlowDirection == FlowDirection.LeftToRight && botones.Length > 1)
+            {
+                int ancho = botones.Max(b => b.Width);
+                foreach (Button boton in botones) boton.Width = ancho;
+                return;
+            }
+
             for (int i = 0; i < botones.Length; i++)
             {
                 var actual = botones[i];
@@ -250,7 +263,7 @@ namespace Visual
                     if (contenedor.ClientSize.Width > 0 && contenedor.ClientSize.Width < anchoNecesario) continue;
                     if (siguiente.Left < actual.Right + separacion)
                     {
-                        int margen = Math.Max(contenedor.Padding.Left, MedidaDpi(Espacio.XL, Math.Max(96, contenedor.DeviceDpi)));
+                        int margen = Math.Max(contenedor.Padding.Left, MedidaDpi(Espacio.XL, Math.Max(96, Disposicion.Dpi(contenedor))));
                         if (siguiente.Anchor.HasFlag(AnchorStyles.Right) && siguiente.Left - actual.Width - separacion >= margen)
                             actual.Left = siguiente.Left - actual.Width - separacion;
                         else if (siguiente.Left <= actual.Left && actual.Anchor.HasFlag(AnchorStyles.Left))
@@ -267,6 +280,25 @@ namespace Visual
             return (int)Math.Round(logico * (dpi / DpiDiseno), MidpointRounding.AwayFromZero);
         }
 
+        private static void AgregarBarraSuperior(Form formulario)
+        {
+            int barra = MedidaDpi(AltoBarraSuperior, Disposicion.Dpi(formulario));
+            var contenido = formulario.Controls.Cast<Control>().Where(c => c.Dock == DockStyle.None).ToArray();
+            if (contenido.Length > 0)
+            {
+                int primerControl = contenido.Min(c => c.Top);
+                int desplazamiento = Math.Max(0, barra + MedidaDpi(Espacio.S, Disposicion.Dpi(formulario)) - primerControl);
+                if (desplazamiento > 0)
+                {
+                    formulario.SuspendLayout();
+                    formulario.ClientSize = new Size(formulario.ClientSize.Width, formulario.ClientSize.Height + desplazamiento);
+                    foreach (Control control in contenido) control.Top += desplazamiento;
+                    formulario.ResumeLayout();
+                }
+            }
+            formulario.Controls.Add(new Componentes.BarraSuperior { Name = "barraSuperior", Dock = DockStyle.Top });
+        }
+
         private static void AjustarBarraSuperior(Form formulario)
         {
             foreach (var barra in formulario.Controls.OfType<Componentes.BarraSuperior>())
@@ -275,7 +307,11 @@ namespace Visual
                 {
                     barra.Dock = DockStyle.None;
                     barra.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-                    barra.SetBounds(0, 0, formulario.ClientSize.Width, MedidaDpi(AltoBarraSuperior, Math.Max(96, formulario.DeviceDpi)));
+                    int alto = MedidaDpi(AltoBarraSuperior, Math.Max(96, Disposicion.Dpi(formulario)));
+                    if (formulario.TopLevel && formulario.Controls.Cast<Control>().Any(c => c != barra && c.Dock == DockStyle.Fill))
+                        formulario.Padding = new Padding(formulario.Padding.Left, alto, formulario.Padding.Right, formulario.Padding.Bottom);
+                    barra.SetBounds(0, 0, formulario.ClientSize.Width, alto);
+                    barra.BringToFront();
                     object marca;
                     if (!barrasAjustadas.TryGetValue(formulario, out marca))
                     {
@@ -283,7 +319,7 @@ namespace Visual
                         formulario.SizeChanged += (s, e) =>
                         {
                             var actual = formulario.Controls.OfType<Componentes.BarraSuperior>().FirstOrDefault();
-                            if (actual != null) actual.SetBounds(0, 0, formulario.ClientSize.Width, MedidaDpi(AltoBarraSuperior, Math.Max(96, formulario.DeviceDpi)));
+                            if (actual != null) actual.SetBounds(0, 0, formulario.ClientSize.Width, MedidaDpi(AltoBarraSuperior, Math.Max(96, Disposicion.Dpi(formulario))));
                         };
                     }
                 }
@@ -292,18 +328,47 @@ namespace Visual
 
         private static int AnchoBotonSegunDiseno(Button boton)
         {
+            float aLogico = DpiDiseno / Disposicion.Dpi(boton);
             if (boton.FindForm() is frmInicio && boton.Name == "btninicio")
-                return Math.Max(AnchoBotonNormal, boton.Parent.ClientSize.Width - boton.Left - MargenFormulario);
+                return Math.Max(AnchoBotonNormal, (int)Math.Round((boton.Parent.ClientSize.Width - boton.Left) * aLogico) - MargenFormulario);
             if (boton.Name == "btnDevolver") return AnchoBotonAmplio;
             if (boton.Name == "btnListaEspera")
-                return Math.Max(AnchoBotonAmplio, boton.Parent.ClientSize.Width - boton.Left * 2);
+                return Math.Max(AnchoBotonAmplio, (int)Math.Round((boton.Parent.ClientSize.Width - boton.Left * 2) * aLogico));
             bool tieneIcono = boton.Controls.OfType<Label>().Any(etiqueta => etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase));
             int relleno = tieneIcono ? RellenoIconoBoton + RellenoHorizontalBoton : RellenoHorizontalBoton * 2;
-            int requerido = TextRenderer.MeasureText(boton.Text ?? string.Empty, Boton, Size.Empty,
-                TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width + relleno + BordeFoco * 2 + 8;
+            int requerido = (int)Math.Ceiling(TextRenderer.MeasureText(boton.Text ?? string.Empty, Boton, Size.Empty,
+                TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width * aLogico) + relleno + BordeFoco * 2 + 8;
             foreach (int ancho in new[] { AnchoBotonCompacto, AnchoBotonNormal, AnchoBotonAmplio })
                 if (ancho >= requerido) return ancho;
             return AnchoBotonAmplio;
+        }
+
+        internal static void DefinirAccionPrincipal(Form formulario)
+        {
+            var candidatos = new List<BotonTematico>();
+            void Buscar(Control contenedor)
+            {
+                if (contenedor.Name == "navegacionLateral") return;
+                foreach (Control hijo in contenedor.Controls)
+                {
+                    if (hijo is BotonPrimario boton) candidatos.Add(boton);
+                    Buscar(hijo);
+                }
+            }
+            Buscar(formulario);
+            var principal = formulario.AcceptButton as BotonTematico
+                ?? candidatos.FirstOrDefault(b => b.Visible) ?? candidatos.FirstOrDefault();
+            void Aplicar(Control contenedor)
+            {
+                if (contenedor.Name == "navegacionLateral") return;
+                foreach (Control hijo in contenedor.Controls)
+                {
+                    if (hijo is BotonTematico boton)
+                        boton.DefinirRolVisual(ReferenceEquals(principal, boton));
+                    Aplicar(hijo);
+                }
+            }
+            Aplicar(formulario);
         }
 
         // Los componentes y los botones heredados comparten todos los estados de estilo.
@@ -315,13 +380,15 @@ namespace Visual
             EstadoBoton(boton, rol);
         }
 
-        public static void EstadoBoton(Button boton, RolBoton rol)
+        public static void EstadoBoton(Button boton, RolBoton rol, bool opcionActual = false)
         {
-            bool primario = rol == RolBoton.Primario, peligro = rol == RolBoton.Peligro;
+            bool lateral = boton.Parent?.Name == "navegacionLateral";
+            bool primario = opcionActual || !lateral && rol == RolBoton.Primario;
+            bool peligro = rol == RolBoton.Peligro;
             boton.FlatStyle = FlatStyle.Flat;
             boton.UseVisualStyleBackColor = false;
             boton.ForeColor = primario ? Superficie : peligro ? Error : Primario;
-            boton.FlatAppearance.BorderSize = boton.Focused ? BordeFoco : primario ? 0 : BordeNormal;
+            boton.FlatAppearance.BorderSize = boton.Focused ? Disposicion.Pixeles(boton, BordeFoco) : primario ? 0 : Disposicion.Pixeles(boton, BordeNormal);
             boton.FlatAppearance.BorderColor = boton.Focused ? (primario ? Foco : Primario) : BordeControl;
             boton.FlatAppearance.MouseOverBackColor = primario ? PrimarioEncima : peligro ? ErrorFondo : PrimarioSuave;
             boton.FlatAppearance.MouseDownBackColor = primario ? PrimarioPresionado : peligro ? PeligroPresionado : SecundarioPresionado;

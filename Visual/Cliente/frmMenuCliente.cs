@@ -13,6 +13,7 @@ namespace Visual
 
         private readonly Stack<Control> historial = new Stack<Control>();
         private Panel contenido;
+        private readonly Panel lateral;
         private Control paginaActual;
         private Button navegacionActiva;
         private Componentes.BotonSecundario btnSolicitudOrganizador;
@@ -59,11 +60,12 @@ namespace Visual
             inicioCliente.Dock = DockStyle.Fill;
             paginaActual = inicioCliente;
             inicioCliente.VerEventos += () => btnEventos.PerformClick();
+            inicioCliente.VerEntradas += () => btnHistorial.PerformClick();
 
-            RegistrarIcono(btnInicio, "\uE80F");
-            RegistrarIcono(btnEventos, "\uE787");
-            RegistrarIcono(btnHistorial, "\uE8A5");
-            RegistrarIcono(btnSuscripcion, "\uE8D7");
+            lblNombre.Visible = false;
+            lateral = Disposicion.CrearLateral(this, seccionExplorar, btnInicio, btnEventos,
+                seccionCompras, btnHistorial, btnSuscripcion, btnAtras, seccionCuenta,
+                btnSolicitudOrganizador, btnCambiarContrasena, lblvolver);
             SizeChanged += (s, e) => DistribuirContenido();
             FormClosed += (s, e) => NavegacionCliente.Desregistrar(this);
             NavegacionCliente.Registrar(this);
@@ -94,41 +96,9 @@ namespace Visual
 
         private void DistribuirContenido()
         {
-            if (contenido == null) return;
-            float escala = Disposicion.Escala(this);
-            int margen = (int)Math.Round(24 * escala);
-            int izquierda = (int)Math.Round(300 * escala);
-            int arriba = (int)Math.Round(84 * escala);
-            contenido.SetBounds(izquierda, arriba,
-                Math.Max(1, ClientSize.Width - izquierda - margen),
-                Math.Max(1, ClientSize.Height - arriba - margen));
-            barraSuperior.BringToFront();
-            lblNombre.BringToFront();
-            label1.BringToFront();
-            btnAtras.BringToFront();
-            btnCambiarContrasena.BringToFront();
-            lblvolver.BringToFront();
+            if (lateral == null) return;
+            Disposicion.DistribuirMenu(this, lateral, contenido, label1);
             MarcarEstadoAtras();
-        }
-
-        private static void RegistrarIcono(Button boton, string glifo)
-        {
-            boton.TextAlign = ContentAlignment.MiddleLeft;
-            boton.Padding = new Padding(46, 0, 8, 0);
-            var icono = new Label
-            {
-                Name = "icono" + boton.Name,
-                Text = glifo,
-                Font = Tema.IconosDocumentos,
-                ForeColor = Tema.TextoSecundario,
-                TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(8, 0),
-                Size = new Size(34, boton.Height),
-                Cursor = Cursors.Hand
-            };
-            icono.Click += (s, e) => boton.PerformClick();
-            boton.Controls.Add(icono);
-            boton.Resize += (s, e) => icono.Height = boton.ClientSize.Height;
         }
 
         private void Mostrar(Control pagina, bool guardarActual)
@@ -226,9 +196,8 @@ namespace Visual
                 new { Boton = (Button)btnHistorial, Texto = "Mis entradas" },
                 new { Boton = (Button)btnSuscripcion, Texto = "Mi suscripción" } })
             {
-                par.Boton.Text = (par.Boton == boton ? "●  " : "   ") + par.Texto;
-                par.Boton.BackColor = par.Boton == boton ? Tema.PrimarioSuave : Tema.Superficie;
-                par.Boton.ForeColor = par.Boton == boton ? Tema.Primario : Tema.Texto;
+                par.Boton.Text = par.Texto;
+                ((Componentes.BotonTematico)par.Boton).MarcarOpcionActual(par.Boton == boton);
             }
             navegacionActiva = boton;
         }

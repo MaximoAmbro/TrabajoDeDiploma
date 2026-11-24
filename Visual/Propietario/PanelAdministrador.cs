@@ -2,12 +2,17 @@ using System;
 using System.Data;
 using System.Linq;
 using Negocio;
+using System.Windows.Forms;
 namespace Visual.Componentes
 {
     public partial class PanelAdministrador : SuperficieTematica
     {
         private readonly BotonSecundario btnAuditoria;
+        private readonly FlowLayoutPanel pendientes;
+        private readonly DatoPanel eventosPendientes;
+        private readonly DatoPanel solicitudesPendientes;
         public event EventHandler AuditoriaSolicitada;
+        internal Button AccionAuditoria => btnAuditoria;
 
         public PanelAdministrador()
         {
@@ -15,8 +20,16 @@ namespace Visual.Componentes
             btnAuditoria = new BotonSecundario { Name = "btnAuditoria", Text = "Registro de auditoría", Size = new System.Drawing.Size(180, 40), Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right };
             btnAuditoria.Click += (s, e) => { GestorSesion.Instance.RequerirAdministrador(); AuditoriaSolicitada?.Invoke(this, EventArgs.Empty); };
             Controls.Add(btnAuditoria);
+            pendientes = new FlowLayoutPanel
+            {
+                Name = "revisionPendiente", WrapContents = true
+            };
+            eventosPendientes = new DatoPanel { Name = "cantidadEventosPendientes" };
+            solicitudesPendientes = new DatoPanel { Name = "cantidadSolicitudesPendientes" };
+            pendientes.Controls.AddRange(new Control[] { eventosPendientes, solicitudesPendientes });
+            Controls.Add(pendientes);
+            pendientes.BringToFront();
             Tema.Normalizar(this);
-            datos.SizeChanged += (s,e)=>Distribuir();
             SizeChanged += (s,e)=>Distribuir();
         }
         public void Cargar()
@@ -40,21 +53,37 @@ namespace Visual.Componentes
                     case "RPT-04":valor=tabla.Rows.Count==0?"Todavía sin contrataciones":Convert.ToDecimal(tabla.Rows[0][3]).ToString("N1",cultura)+" % de compras con seguro";break;
                     default:valor=suma(2).ToString("N0",cultura)+" personas en espera";break;
                 }
-                var tarjeta=new DatoPanel {Name="resumen"+codigo.Replace("-","")};tarjeta.Cargar(reporte.Titulo,valor);datos.Controls.Add(tarjeta);
+                var tarjeta=new DatoPanel {Name="resumen"+codigo.Replace("-","")};tarjeta.CargarDetalle(reporte.Titulo, valor, true);datos.Controls.Add(tarjeta);
             }
+            eventosPendientes.CargarDetalle("Eventos por revisar", GestorEventos.Instance.PendientesDeRevision().Count.ToString(cultura));
+            solicitudesPendientes.CargarDetalle("Solicitudes de organizador", GestorSolicitudesOrganizador.Instance.Pendientes().Count.ToString(cultura));
             Distribuir();
         }
         private void Distribuir()
         {
-            var prefAuditoria = btnAuditoria.GetPreferredSize(System.Drawing.Size.Empty);
-            btnAuditoria.Size = new System.Drawing.Size(Math.Max(btnAuditoria.Width, prefAuditoria.Width + 8), Math.Max(btnAuditoria.Height, prefAuditoria.Height + 4));
-            periodo.SetBounds(0, 0, Math.Max(1, ClientSize.Width - btnAuditoria.Width - 16), 52);
-            btnAuditoria.Location = new System.Drawing.Point(Math.Max(0, ClientSize.Width - btnAuditoria.Width), 6);
-            foreach(System.Windows.Forms.Control dato in datos.Controls)
-            {
-                dato.Width=Math.Max(1,(datos.ClientSize.Width-System.Windows.Forms.SystemInformation.VerticalScrollBarWidth)/3-dato.Margin.Horizontal);
-                dato.Height = 128;
-            }
+            int Px(int medida) => Disposicion.Pixeles(this, medida);
+            int ancho = Math.Max(1, ClientSize.Width - SystemInformation.VerticalScrollBarWidth);
+            if (btnAuditoria.Parent == this) btnAuditoria.Left = Math.Max(0, ancho - btnAuditoria.Width);
+            int anchoPeriodo = btnAuditoria.Parent == this ? ancho - btnAuditoria.Width - Px(Tema.Espacio.L) : ancho;
+            int y = AutoScrollPosition.Y;
+            periodo.SetBounds(0, y, Math.Max(1, anchoPeriodo), Px(Tema.Espacio.XXL));
+
+            int columnas = Math.Max(1, Math.Min(3, ancho / Px(192)));
+            DistribuirTarjetas(datos, ancho, columnas, periodo.Bottom + Px(Tema.Espacio.S));
+            DistribuirTarjetas(pendientes, ancho, Math.Min(columnas, 2), datos.Bottom + Px(Tema.Espacio.L));
+        }
+
+        private static void DistribuirTarjetas(FlowLayoutPanel fila, int ancho, int columnas, int y)
+        {
+            fila.SetBounds(0, y, ancho, fila.Height);
+            var tarjetas = fila.Controls.OfType<DatoPanel>().ToArray();
+            foreach (DatoPanel tarjeta in tarjetas)
+                tarjeta.Width = Math.Max(1, ancho / columnas - tarjeta.Margin.Horizontal);
+
+            int alto = 0;
+            for (int i = 0; i < tarjetas.Length; i += columnas)
+                alto += tarjetas.Skip(i).Take(columnas).Max(t => t.Height + t.Margin.Vertical);
+            fila.Height = alto;
         }
     }
 }

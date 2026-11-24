@@ -26,6 +26,18 @@ namespace Datos
         private RepositorioEntradas() { }
 
         // RN-18: el predicado y la escritura son una única sentencia, también con dos lectores.
+        public int VendidasDeEvento(int idEvento)
+        {
+            const string consulta = "SELECT ISNULL(SUM(CantidadVendida), 0) FROM Entradas " +
+                "WHERE ID_Evento = @Evento AND Estado = 'Confirmada'";
+            using (var conexion = AbrirConexion())
+            using (var comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@Evento", idEvento);
+                return Convert.ToInt32(comando.ExecuteScalar());
+            }
+        }
+
         public bool RegistrarIngreso(string codigo, int idEvento, DateTime ahora)
         {
             const string sql = "UPDATE Entradas SET FechaIngreso = @Ahora " +

@@ -198,6 +198,7 @@ namespace Visual
         private void ActualizarBotonDevolver()
         {
             int cantidad = EntradasElegidas().Count;
+            btnDevolver.DefinirRolVisual(true);
             btnDevolver.Enabled = cantidad > 0;
             btnDevolver.Text = cantidad > 0 ? $"Devolver {cantidad} entrada(s)" : "Devolver";
         }

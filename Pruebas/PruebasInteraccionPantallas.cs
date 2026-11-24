@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -43,10 +44,12 @@ namespace Pruebas
                             Thread.Sleep(30);
                             Application.DoEvents();
 
+                            CapturarSiSeSolicito(formulario);
+                            VerificarMedidas(formulario);
+                            if (formulario is Visual.frmCambiarContraseña cambio) VerificarFilaAviso(cambio);
                             string foco = VerificarFoco(formulario);
                             string geometria = VerificarGeometria(formulario);
                             string teclado = VerificarTeclas(formulario, tipo);
-                            if (EsMenu(tipo)) geometria += "; 150% simulado: " + VerificarMenuEscala150(tipo);
                             string fila = tipo.Name + " | " + foco + " | " + teclado + " | " + geometria;
                             resultados.Add(fila);
                             Console.WriteLine(fila);
@@ -86,6 +89,11 @@ namespace Pruebas
             else if (tipo.Namespace == "Visual.Vendedor" || nombre == "frmControlIngreso" || nombre == "frmMenuPropietario" || nombre == "frmMisLocales" ||
                 nombre == "frmListasEspera" || nombre == "frmRegistrarLocal" || nombre == "frmReportes")
                 Fake.ComoOrganizador();
+            else if (nombre == "frmMenuCliente" && !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
+            {
+                var cuenta = Datos.RepositorioUsuarios.Instance.ObtenerPorMail("oro@eventaura.com");
+                Fake.ComoCliente(Datos.RepositorioFidelizacion.Instance.ObtenerCliente(cuenta.Id));
+            }
             else
                 Fake.ComoCliente(Fake.Cliente(Entidades.NivelFidelidad.Bronce));
         }
@@ -264,41 +272,129 @@ namespace Pruebas
             {
                 if (control.Dock != DockStyle.None || (control.Parent as ScrollableControl)?.AutoScroll == true) continue;
                 if (control.Left < 0 || control.Top < 0 || control.Right > control.Parent.ClientSize.Width + 2 || control.Bottom > control.Parent.ClientSize.Height + 2)
-                    throw new AssertFailedException(control.Name + " queda fuera de " + control.Parent.Name + " tras maximizar/redimensionar.");
+                    throw new AssertFailedException(control.Name + " " + control.Bounds + " queda fuera de " + control.Parent.Name + " " + control.Parent.ClientSize + ".");
             }
             foreach (var grupo in Descendientes(formulario).GroupBy(c => c.Parent))
             {
-                var interactivos = grupo.Where(EsInteractivoVisible).ToArray();
+                var interactivos = grupo.Where(c => EsInteractivoVisible(c) || EsTextoVisible(c)).ToArray();
                 for (int i = 0; i < interactivos.Length; i++)
                     for (int j = i + 1; j < interactivos.Length; j++)
                         if (interactivos[i].Bounds.IntersectsWith(interactivos[j].Bounds))
-                            throw new AssertFailedException(interactivos[i].Name + " se superpone con " + interactivos[j].Name + ".");
+                            throw new AssertFailedException(interactivos[i].Name + " " + interactivos[i].Bounds + " se superpone con " + interactivos[j].Name + " " + interactivos[j].Bounds + ".");
             }
-            return "ventana: OK (" + formulario.DeviceDpi + " DPI; " + formulario.FormBorderStyle + ")";
+            return "ventana: OK (" + Visual.Disposicion.Dpi(formulario) + " DPI; " + formulario.FormBorderStyle + ")";
         }
 
-        private static string VerificarMenuEscala150(Type tipo)
+        private static bool EsTextoVisible(Control control)
         {
-            using (var formulario = CrearVentana(tipo))
+            return control.Visible && !string.IsNullOrWhiteSpace(control.Text) &&
+                !(control is Panel) && !(control is UserControl) && !(control is GroupBox);
+        }
+
+        private static void VerificarMedidas(Form formulario)
+        {
+            int Px(int medida) => Visual.Disposicion.Pixeles(formulario, medida);
+            var barra = formulario.Controls.OfType<Visual.Componentes.BarraSuperior>().Single();
+            Assert.AreEqual(Px(56), barra.Height, "Alto de la barra superior");
+            Assert.IsTrue(barra.Visible, "La barra superior tiene que estar visible");
+            foreach (Control control in formulario.Controls)
             {
-                formulario.Show();
-                Application.DoEvents();
-                formulario.Scale(new SizeF(1.5f, 1.5f));
-                formulario.PerformLayout();
-                Application.DoEvents();
-                foreach (var grupo in Descendientes(formulario).GroupBy(c => c.Parent))
+                if (control == barra || !control.Visible) continue;
+                Assert.IsFalse(control.Bounds.IntersectsWith(barra.Bounds),
+                    "La barra superior se superpone con " + control.Name + " " + control.Bounds);
+            }
+            var lateral = formulario.Controls["navegacionLateral"];
+            if (lateral != null)
+            {
+                Assert.AreEqual(Px(240), lateral.Width, "Ancho del menú lateral");
+                foreach (Button boton in lateral.Controls.OfType<Button>())
+                    Assert.AreEqual(new Size(Px(240), Px(40)), boton.Size, boton.Name);
+            }
+
+            if (formulario is Visual.frmInicio || formulario is Visual.frmCrearUsuario ||
+                formulario is Visual.frmCambiarContraseña)
+            {
+                foreach (TextBox campo in formulario.Controls.OfType<TextBox>().Where(c => c.Visible))
                 {
-                    var interactivos = grupo.Where(EsInteractivoVisible).ToArray();
-                    for (int i = 0; i < interactivos.Length; i++)
-                        for (int j = i + 1; j < interactivos.Length; j++)
-                            if (interactivos[i].Bounds.IntersectsWith(interactivos[j].Bounds))
-                                throw new AssertFailedException("Escala 150%: " + interactivos[i].Name + " se superpone con " + interactivos[j].Name + ".");
+                    Assert.AreEqual(new Size(Px(320), Px(32)), campo.Size, campo.Name);
+                    Assert.IsTrue(formulario.Controls.OfType<Label>().Any(rotulo => rotulo.Visible &&
+                        rotulo.Left == campo.Left && campo.Top - rotulo.Bottom == Px(4)),
+                        "Falta el rótulo a 4 px de " + campo.Name);
                 }
-                return "sin superposición de controles interactivos; simulación a 96 DPI";
+            }
+
+            var acciones = formulario is Visual.frmCambiarContraseña ? new[] { "btnVolver", "btnconfirmar" }
+                : formulario is Visual.frmPago ? new[] { "btnCancelar", "btnPagar" }
+                : formulario is Visual.frmSuscripcion ? new[] { "btnCancelar", "btnContratar" }
+                : Array.Empty<string>();
+            if (acciones.Length > 0)
+            {
+                var botones = acciones.Select(nombre => formulario.Controls.Find(nombre, true).OfType<Button>().Single()).ToArray();
+                Assert.AreEqual(botones[0].Width, botones[1].Width, "Anchos del grupo de acciones");
+                Assert.IsTrue(botones.All(b => b.Height == Px(36) && b.Width >= Px(160)),
+                    "Cada botón de acción mide 36 px de alto y al menos 160 px de ancho.");
+            }
+
+            foreach (var grupo in Descendientes(formulario).OfType<FlowLayoutPanel>()
+                .Where(p => p.Visible && p.FlowDirection == FlowDirection.LeftToRight))
+            {
+                var botones = grupo.Controls.OfType<Button>().Where(b => b.Visible).ToArray();
+                if (botones.Length < 2) continue;
+                Assert.IsTrue(botones.All(b => b.Width == botones[0].Width),
+                    "Las acciones del grupo " + grupo.Name + " tienen que usar un mismo ancho.");
             }
         }
 
-        private static bool EsMenu(Type tipo) => tipo.Name == "frmMenuCliente" || tipo.Name == "frmMenuPropietario" || tipo.Name == "frmMenuAdministrador";
+        private static void VerificarFilaAviso(Visual.frmCambiarContraseña formulario)
+        {
+            var fila = (Panel)formulario.Controls["filaAvisoValidacion"];
+            var campo = (TextBox)formulario.Controls["txtMail"];
+            Assert.AreEqual(0, fila.Height);
+            Assert.IsFalse(formulario.ControlarTxt());
+            Assert.IsTrue(fila.Visible && fila.Height > 0, "La fila debe reservar espacio para el aviso.");
+            foreach (Control control in formulario.Controls)
+            {
+                if (control == fila || !control.Visible) continue;
+                Assert.IsFalse(control.Bounds.IntersectsWith(fila.Bounds), "El aviso se superpone con " + control.Name);
+            }
+            campo.Text = "prueba@eventaura.com";
+            Assert.AreEqual(0, fila.Height, "La altura se libera al corregir el campo.");
+            campo.Clear();
+        }
+
+        private static void CapturarSiSeSolicito(Form formulario)
+        {
+            string carpeta = Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI");
+            if (string.IsNullOrWhiteSpace(carpeta)) return;
+            string dpiEsperado = Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_DPI");
+            Assert.IsTrue(int.TryParse(dpiEsperado, out int dpi) && (dpi == 96 || dpi == 144),
+                "Especificá el DPI real esperado (96 o 144).");
+            int dpiReal = (int)GetDpiForWindow(formulario.Handle);
+            Assert.AreEqual(dpi, dpiReal, $"DPI informado por Windows, WinForms informa {formulario.DeviceDpi}");
+            Console.WriteLine($"{formulario.Name}: DPI Windows={dpiReal}, DPI WinForms={formulario.DeviceDpi}");
+            ActivarVentana(formulario);
+            var monitor = Screen.FromControl(formulario);
+            var area = monitor.WorkingArea;
+            if (formulario.Width > area.Width || formulario.Height > area.Height) area = monitor.Bounds;
+            Assert.IsTrue(formulario.Width <= area.Width && formulario.Height <= area.Height,
+                "La ventana tiene que caber entera en el monitor para capturarla.");
+            formulario.Location = new Point(
+                Math.Max(area.Left, Math.Min(formulario.Left, area.Right - formulario.Width)),
+                Math.Max(area.Top, Math.Min(formulario.Top, area.Bottom - formulario.Height)));
+            Application.DoEvents();
+            var bounds = formulario.Bounds;
+            Directory.CreateDirectory(carpeta);
+            using (var imagen = new Bitmap(bounds.Width, bounds.Height))
+            {
+                using (Graphics lienzo = Graphics.FromImage(imagen))
+                    lienzo.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
+                imagen.Save(Path.Combine(carpeta, formulario.GetType().Name + ".png"), System.Drawing.Imaging.ImageFormat.Png);
+            }
+        }
+
+        [DllImport("user32.dll")]
+        private static extern uint GetDpiForWindow(IntPtr hwnd);
+
 
         private static IEnumerable<Control> Descendientes(Control raiz)
         {

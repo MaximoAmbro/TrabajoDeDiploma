@@ -236,6 +236,13 @@ namespace Negocio
             return evento;
         }
 
+        public int EntradasVendidas(int idEvento)
+        {
+            GestorSesion.Instance.RequerirOrganizador();
+            RequerirEventoPropio(idEvento);
+            return RepositorioEntradas.Instance.VendidasDeEvento(idEvento);
+        }
+
         public List<Evento> PorLocal(int idLocal)
         {
             Local local = RepositorioLocales.Instance.ObtenerPorId(idLocal);

@@ -21,6 +21,14 @@ namespace Visual
         public frmConfirmacion()
         {
             InitializeComponent();
+            Shown += (s, e) =>
+            {
+                Disposicion.LimitarAncho(lblTickets);
+                int espacio = Disposicion.Pixeles(this, Tema.Espacio.XS);
+                txtCarpeta.Top = lblTickets.Bottom + espacio;
+                lstArchivos.Top = txtCarpeta.Bottom + espacio;
+                lstArchivos.Height = Math.Max(1, btnAceptar.Top - espacio - lstArchivos.Top);
+            };
             Tema.ComoDocumento(lblDesglose);
             Visual.Componentes.IconosDocumentos.Preparar(lstArchivos);
         }

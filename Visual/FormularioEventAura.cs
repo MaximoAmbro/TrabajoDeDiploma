@@ -25,8 +25,32 @@ namespace Visual
             if (!DesignMode && LicenseManager.UsageMode != LicenseUsageMode.Designtime)
             {
                 ReconfigurarTeclado();
+                Tema.DefinirAccionPrincipal(this);
                 FijarTamanoSiNoEsAdaptable();
             }
+        }
+
+        protected void ColocarTitulo(Label titulo)
+        {
+            titulo.Left = Disposicion.Pixeles(this, Tema.Espacio.XL);
+            titulo.Top = Disposicion.Pixeles(this, Tema.AltoBarraSuperior + Tema.Espacio.L);
+        }
+
+        protected void ColocarRotulo(Label rotulo, Control campo)
+        {
+            int separacion = Disposicion.Pixeles(this, Tema.Espacio.XS);
+            rotulo.Font = Tema.Rotulo;
+            rotulo.AutoSize = true;
+            rotulo.Left = campo.Left;
+            rotulo.Top = campo.Top - rotulo.Height - separacion;
+        }
+
+        protected void ColocarCampo(Label rotulo, TextBox campo)
+        {
+            campo.AutoSize = false;
+            campo.Size = new System.Drawing.Size(Disposicion.Pixeles(this, Tema.AnchoCampo),
+                Disposicion.Pixeles(this, Tema.AltoCampo));
+            ColocarRotulo(rotulo, campo);
         }
 
         protected override void OnShown(EventArgs e)
@@ -99,7 +123,7 @@ namespace Visual
         {
             var hijos = contenedor.Controls.Cast<Control>().OrderBy(c => c.Top).ThenBy(c => c.Left).ToArray();
             int indice = 0;
-            foreach (Control hijo in hijos) hijo.TabIndex = indice++;
+            foreach (Control hijo in hijos.Where(c => !(c is Componentes.BarraSuperior))) hijo.TabIndex = indice++;
             foreach (Control hijo in hijos) OrdenarTabulacion(hijo);
         }
 

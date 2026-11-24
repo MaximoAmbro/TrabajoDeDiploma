@@ -8,7 +8,16 @@ namespace Visual
     public partial class frmControlIngreso : FormularioEventAura
     {
         private Componentes.EstadoVacio estadoSinEventos;
-        public frmControlIngreso() { InitializeComponent(); }
+        public frmControlIngreso()
+        {
+            InitializeComponent();
+            Shown += (s, e) =>
+            {
+                ColocarCampo(lblCodigo, txtCodigo);
+                ColocarRotulo(lblEvento, cmbEventos);
+                btnRegistrar.Left = txtCodigo.Right + Disposicion.Pixeles(this, Tema.Espacio.S);
+            };
+        }
 
         protected override void OnLoad(EventArgs e)
         {
