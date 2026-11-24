@@ -11,6 +11,10 @@ namespace Visual
     public static class Tema
     {
         public static readonly Color Primario = Color.FromArgb(116, 86, 174);
+        public static readonly Color LateralFondo = Color.FromArgb(36, 29, 48);
+        public static readonly Color LateralTexto = Color.FromArgb(207, 201, 220);
+        public static readonly Color LateralEncima = Color.FromArgb(50, 42, 66);
+        public static readonly Color LateralSeccion = Color.FromArgb(139, 131, 158);
         public static readonly Color Foco = Primario;
         public static readonly Color PrimarioEncima = Color.FromArgb(99, 70, 153);
         public static readonly Color PrimarioPresionado = Color.FromArgb(82, 58, 128);
@@ -505,14 +509,15 @@ namespace Visual
             bool peligro = rol == RolBoton.Peligro;
             boton.FlatStyle = FlatStyle.Flat;
             boton.UseVisualStyleBackColor = false;
-            bool cursorEnOpcionActiva = opcionActual && boton.Enabled &&
-                boton.ClientRectangle.Contains(boton.PointToClient(Control.MousePosition));
-            boton.ForeColor = primario ? (cursorEnOpcionActiva ? Primario : Superficie) : peligro ? Error : Texto;
-            boton.FlatAppearance.BorderSize = boton.Focused ? Disposicion.Pixeles(boton, BordeFoco) : primario ? 0 : Disposicion.Pixeles(boton, BordeNormal);
-            boton.FlatAppearance.BorderColor = boton.Focused ? (primario ? Foco : Primario) : BordeControl;
-            boton.FlatAppearance.MouseOverBackColor = lateral ? PrimarioSuave : primario ? PrimarioEncima : peligro ? ErrorFondo : Fondo;
-            boton.FlatAppearance.MouseDownBackColor = lateral ? SecundarioPresionado : primario ? PrimarioPresionado : peligro ? PeligroPresionado : Borde;
-            boton.BackColor = boton.Enabled ? (primario ? Primario : Superficie) : FondoDeshabilitado;
+            boton.ForeColor = primario ? Color.White : lateral ? LateralTexto : peligro ? Error : Texto;
+            boton.FlatAppearance.BorderSize = boton.Focused ? Disposicion.Pixeles(boton, BordeFoco)
+                : primario || lateral ? 0 : Disposicion.Pixeles(boton, BordeNormal);
+            boton.FlatAppearance.BorderColor = boton.Focused ? Foco : BordeControl;
+            boton.FlatAppearance.MouseOverBackColor = lateral ? (primario ? Primario : LateralEncima)
+                : primario ? PrimarioEncima : peligro ? ErrorFondo : Fondo;
+            boton.FlatAppearance.MouseDownBackColor = lateral ? (primario ? PrimarioPresionado : ControlPaint.Dark(LateralEncima))
+                : primario ? PrimarioPresionado : peligro ? PeligroPresionado : Borde;
+            boton.BackColor = boton.Enabled ? (primario ? Primario : lateral ? LateralFondo : Superficie) : FondoDeshabilitado;
         }
 
         private static void EstiloBoton(Button boton, bool primario)

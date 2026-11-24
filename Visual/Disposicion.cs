@@ -32,7 +32,7 @@ namespace Visual
 
         internal static Panel CrearLateral(Form ventana, params Control[] elementos)
         {
-            var lateral = new Panel { Name = "navegacionLateral", AutoScroll = true, BackColor = Tema.Fondo };
+            var lateral = new Panel { Name = "navegacionLateral", AutoScroll = true, BackColor = Tema.LateralFondo };
             foreach (Control elemento in elementos)
             {
                 elemento.Anchor = AnchorStyles.Top | AnchorStyles.Left;
@@ -94,7 +94,8 @@ namespace Visual
                 }
                 if (elemento is Label etiqueta)
                 {
-                    etiqueta.BackColor = Tema.Fondo;
+                    etiqueta.BackColor = Tema.LateralFondo;
+                    etiqueta.ForeColor = Tema.LateralSeccion;
                     etiqueta.Padding = new Padding(Px(Tema.Espacio.L), 0, 0, 0);
                     etiqueta.TextAlign = ContentAlignment.MiddleLeft;
                 }
@@ -202,13 +203,13 @@ namespace Visual
             form.Location = new Point(area.Left + (area.Width - form.Width) / 2, area.Top + (area.Height - form.Height) / 2);
         }
 
-        internal static void ActivarTarjeta(Control tarjeta, Button accion)
+        internal static void ActivarTarjeta(Control tarjeta, Button accion, Label etiquetaConFondo = null)
         {
             void Pintar(Color fondo)
             {
                 tarjeta.BackColor = fondo;
                 foreach (Label etiqueta in tarjeta.Controls.OfType<Label>())
-                    etiqueta.BackColor = fondo;
+                    if (etiqueta != etiquetaConFondo) etiqueta.BackColor = fondo;
             }
 
             foreach (Control superficie in tarjeta.Controls.Cast<Control>().Prepend(tarjeta))

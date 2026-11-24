@@ -115,6 +115,14 @@ namespace Pruebas
                     Assert.AreEqual("Categoría", grilla.Columns["Categoria"].HeaderText);
                     Assert.AreEqual("Ubicación", grilla.Columns["Ubicacion"].HeaderText);
                     Assert.AreEqual(DataGridViewAutoSizeColumnsMode.Fill, grilla.AutoSizeColumnsMode);
+                    var tarjetas = Control<FlowLayoutPanel>(form, "tarjetasEventos");
+                    var alternarVista = Control<Button>(form, "btnVista");
+                    Assert.IsTrue(tarjetas.Visible);
+                    Assert.IsFalse(grilla.Visible);
+                    alternarVista.PerformClick();
+                    Assert.IsTrue(grilla.Visible);
+                    alternarVista.PerformClick();
+                    Assert.IsTrue(tarjetas.Visible);
                     form.GetType().GetMethod("CargarEventos", BindingFlags.Instance | BindingFlags.NonPublic)
                         .Invoke(form, new object[] { "evento-inexistente-prueba", null, null });
                     Assert.AreEqual(0, grilla.Rows.Count);

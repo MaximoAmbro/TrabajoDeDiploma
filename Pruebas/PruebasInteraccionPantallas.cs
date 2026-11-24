@@ -68,14 +68,17 @@ namespace Pruebas
                                 sectores.EndEdit();
                                 cantidadCapturada = filaDisponible.Cells["Cantidad"];
                                 cantidadCapturada.Value = 2;
-                                Descendientes(formulario).OfType<LinkLabel>().Single(l => l.Name == "lnkNiveles").Focus();
-                                Descendientes(formulario).OfType<Panel>().Single(p => p.Name == "pnlContenidoCompra")
-                                    .AutoScrollPosition = Point.Empty;
+                                Descendientes(formulario).OfType<Button>().Single(b => b.Name == "btnComprar").Focus();
+                                var contenido = Descendientes(formulario).OfType<Panel>().Single(p => p.Name == "pnlContenidoCompra");
+                                contenido.AutoScrollPosition = Point.Empty;
                                 Assert.IsTrue(Descendientes(formulario).OfType<Button>().Single(b => b.Name == "btnComprar").Enabled,
                                     "La captura de compra requiere un paquete con entradas disponibles.");
                                 Application.DoEvents();
                                 var total = Descendientes(formulario).OfType<Label>().Single(l => l.Name == "lblTotalDestacado");
                                 Rectangle areaTotal = total.RectangleToScreen(total.ClientRectangle);
+                                Rectangle areaSectores = sectores.RectangleToScreen(sectores.ClientRectangle);
+                                Assert.IsTrue(contenido.ClientRectangle.Contains(contenido.RectangleToClient(areaSectores)),
+                                    "La grilla de sectores del evento debe entrar completa en la captura inicial.");
                                 for (Control padre = total.Parent; padre != null; padre = padre.Parent)
                                     Assert.IsTrue(padre.ClientRectangle.Contains(padre.RectangleToClient(areaTotal)),
                                         "El total debe aparecer completo en la captura inicial.");

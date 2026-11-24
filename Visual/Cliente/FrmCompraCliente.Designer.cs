@@ -31,7 +31,7 @@ namespace Visual
             this.chkVIP = new System.Windows.Forms.CheckBox();
             this.chkSeguro = new System.Windows.Forms.CheckBox();
             this.pnlResumen = new System.Windows.Forms.Panel();
-            this.lblResumen = new System.Windows.Forms.Label();
+            this.lblResumen = new Visual.Componentes.ResumenPaquete();
             this.lnkPosicionEspera = new Visual.Componentes.EnlaceTematico();
             this.lnkPosicionEspera.Name = "lnkPosicionEspera";
             this.lnkPosicionEspera.Text = "Consultar mi posición";
@@ -332,7 +332,7 @@ namespace Visual
         private System.Windows.Forms.CheckBox chkVIP;
         private System.Windows.Forms.CheckBox chkSeguro;
         private System.Windows.Forms.Panel pnlResumen;
-        private System.Windows.Forms.Label lblResumen;
+        private Visual.Componentes.ResumenPaquete lblResumen;
         private Visual.Componentes.IndicadorPasos indicadorPasos;
         private Visual.Componentes.EtiquetaTotal lblTotalDestacado;
         private System.Windows.Forms.LinkLabel lnkPosicionEspera;

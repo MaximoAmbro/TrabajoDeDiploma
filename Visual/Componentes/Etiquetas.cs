@@ -80,7 +80,7 @@ namespace Visual.Componentes
 
             int grosor = Disposicion.Pixeles(this, Tema.BordeFoco);
             using (var borde = new Pen(Tema.Foco, grosor) { Alignment = System.Drawing.Drawing2D.PenAlignment.Inset })
-                e.Graphics.DrawRectangle(borde, 0, 0, Width - 1, Height - 1);
+                e.Graphics.DrawLine(borde, 0, Height - grosor, Width - 1, Height - grosor);
         }
 
         protected override void OnGotFocus(System.EventArgs e)

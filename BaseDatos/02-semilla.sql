@@ -77,7 +77,7 @@ INSERT INTO Cliente (ID) VALUES (@Bronce), (@Plata), (@Oro);
 DECLARE @Local INT, @Vigente INT, @Agotado INT, @Pasado INT;
 
 INSERT INTO Locales (Nombre, Direccion, Capacidad, PropietarioID)
-VALUES ('Sala Demostrativa EventAura', 'Dirección ficticia 123, Rosario', 5000, @Organizador);
+VALUES ('Sala Demostrativa EventAura', 'Av. Pellegrini 1234, Rosario', 5000, @Organizador);
 SET @Local = SCOPE_IDENTITY();
 
 INSERT INTO Eventos (Nombre, Fecha, LocalID, Categoria, Estado)

@@ -15,16 +15,14 @@ namespace Visual
     {
         public int IDUsuario;
         public string NombreUsuario;
+        private bool vistaTabla;
+        private bool distribuyendoTarjetas;
         public frmEventosCliente()
         {
             InitializeComponent();
             Tema.ComoFondo(tarjetas);
-            tarjetas.ClientSizeChanged += (s, e) => CentrarEstadoSinResultados();
-            btnVista.Click += (s,e) => {
-                bool tabla=tarjetas.Visible;
-                tarjetas.Visible=!tabla;dgveventos.Visible=tabla;
-                btnVista.Text=tabla?"Ver tarjetas":"Ver como tabla";
-            };
+            tarjetas.ClientSizeChanged += (s, e) => DistribuirCatalogo();
+            btnVista.Click += (s, e) => MostrarVista(!vistaTabla);
         }
         protected override void OnShown(EventArgs e){base.OnShown(e);Disposicion.AjustarAreaVisible(this);}
         private const string TodasLasCategorias = "Todas";
@@ -71,6 +69,43 @@ namespace Visual
             }
         }
 
+        private void MostrarVista(bool tabla)
+        {
+            vistaTabla = tabla;
+            tarjetas.Visible = !tabla;
+            dgveventos.Visible = tabla;
+            btnComprar.Visible = tabla || !btnVista.Enabled;
+            btnVista.Text = tabla ? "Ver tarjetas" : "Ver como tabla";
+        }
+
+        private void DistribuirCatalogo()
+        {
+            if (distribuyendoTarjetas) return;
+            distribuyendoTarjetas = true;
+            tarjetas.SuspendLayout();
+            try
+            {
+                CentrarEstadoSinResultados();
+                var catalogo = tarjetas.Controls.OfType<Componentes.TarjetaEvento>().ToArray();
+                if (catalogo.Length == 0) return;
+                int espacio = Disposicion.Pixeles(tarjetas, Tema.Espacio.S);
+                int ancho = Math.Max(1, (tarjetas.Width - tarjetas.Padding.Horizontal -
+                    SystemInformation.VerticalScrollBarWidth - 2 * espacio) / 3);
+                for (int i = 0; i < catalogo.Length; i++)
+                {
+                    catalogo[i].Margin = new Padding(0, 0, i % 3 == 2 ? 0 : espacio, espacio);
+                    catalogo[i].Distribuir(ancho);
+                }
+                int alto = catalogo.Max(tarjeta => tarjeta.Height);
+                foreach (var tarjeta in catalogo) tarjeta.IgualarAlto(alto);
+            }
+            finally
+            {
+                tarjetas.ResumeLayout(true);
+                distribuyendoTarjetas = false;
+            }
+        }
+
         private void CentrarEstadoSinResultados()
         {
             var estado = tarjetas.Controls["estadoSinResultados"] as Componentes.EstadoVacio;
@@ -94,15 +129,13 @@ namespace Visual
                 estado.Accion += () => btnLimpiar.PerformClick();
                 estado.Margin = Padding.Empty;
                 tarjetas.Controls.Add(estado);
-                tarjetas.Visible = true;
-                btnVista.Text = "Ver como tabla";
+                MostrarVista(false);
                 CentrarEstadoSinResultados();
                 dgveventos.DataSource = null;
                 dgveventos.Visible = false;
                 return;
             }
 
-            dgveventos.Visible = true;
             var locales = new Dictionary<int, Local>();
             dgveventos.DataSource = eventos
                 .Select(ev =>
@@ -136,6 +169,8 @@ namespace Visual
                 tarjeta.VerEntradas+=ElegirEvento;
                 tarjetas.Controls.Add(tarjeta);
             }
+            MostrarVista(vistaTabla);
+            DistribuirCatalogo();
         }
 
         private void ElegirEvento(Evento elegido)
@@ -146,7 +181,7 @@ namespace Visual
             ficha.Cargar(elegido);
             tarjetas.Visible=false;dgveventos.Visible=false;pnlBusqueda.Visible=false;pnlAcciones.Visible=false;
             pnlExplorar.Controls.Add(ficha);ficha.BringToFront();
-            ficha.Volver+=()=>{ficha.Dispose();pnlBusqueda.Visible=true;pnlAcciones.Visible=true;tarjetas.Visible=true;btnVista.Text="Ver como tabla";};
+            ficha.Volver+=()=>{ficha.Dispose();pnlBusqueda.Visible=true;pnlAcciones.Visible=true;MostrarVista(vistaTabla);};
             ficha.Comprar+=(ev,sector)=>AbrirCompra(ev.Id,sector);
         }
 

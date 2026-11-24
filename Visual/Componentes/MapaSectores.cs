@@ -19,6 +19,9 @@ namespace Visual.Componentes
         private int seleccionado = -1;
         private int sobre = -1;
         public event Action<int> SectorElegido;
+        internal bool Compacto { get; set; }
+
+        private int Columnas => Compacto ? Math.Min(3, Math.Max(1, sectores.Count)) : sectores.Count <= 3 ? 1 : 2;
 
         public MapaSectores()
         {
@@ -41,7 +44,7 @@ namespace Visual.Componentes
 
         public Rectangle Zona(int indice)
         {
-            int columnas = sectores.Count <= 3 ? 1 : 2;
+            int columnas = Columnas;
             int filas = Math.Max(1, (sectores.Count + columnas - 1) / columnas);
             int espacio = Math.Max(4, Font.Height / 3);
             int escenario = Font.Height * 2;
@@ -53,7 +56,7 @@ namespace Visual.Componentes
 
         public int AltoParaTodosLosSectores
         {
-            get { int columnas = sectores.Count <= 3 ? 1 : 2; return Font.Height * (3 + 4 * Math.Max(1, (sectores.Count + columnas - 1) / columnas)); }
+            get { int columnas = Columnas; return Font.Height * (3 + 4 * Math.Max(1, (sectores.Count + columnas - 1) / columnas)); }
         }
 
         protected override void OnPaint(PaintEventArgs e)

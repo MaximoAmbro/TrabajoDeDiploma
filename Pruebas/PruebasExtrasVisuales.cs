@@ -22,6 +22,10 @@ namespace Pruebas {
     using(var form=new Visual.FrmCompraCliente{IDUsuario=cliente.Id,IDEvento=evento.Id}) {
      Mostrar(form);if(cantidad>0) {var grilla=ControlDe<DataGridView>(form,"dgvSectores");grilla.Rows[0].Cells["Cantidad"].Value=cantidad;}
      var resumen=ControlDe<Label>(form,"lblResumen");var total=ControlDe<EtiquetaTotal>(form,"lblTotalDestacado");
+     Assert.AreEqual(Visual.Tema.Cuerpo, resumen.Font);
+     using (Graphics lienzo = resumen.CreateGraphics())
+      Assert.AreEqual(1, "0123456789".Select(digito => TextRenderer.MeasureText(lienzo, digito.ToString(),
+       resumen.Font, Size.Empty, TextFormatFlags.NoPadding).Width).Distinct().Count(), "Los importes requieren dígitos tabulares.");
      string importe=Regex.Match(resumen.Text,@"(?m)^TOTAL\s+([^\r\n]+)").Groups[1].Value.Trim();
      Assert.IsTrue(importe.Length>0);Assert.AreEqual("TOTAL "+importe,total.Text);
      Assert.AreEqual(15f,total.Font.SizeInPoints);Assert.AreEqual(Visual.Tema.Texto,total.ForeColor);

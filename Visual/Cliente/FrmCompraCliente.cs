@@ -66,7 +66,9 @@ namespace Visual
             Tema.ComoFondo(pnlContenidoCompra);
             foreach (Control superficie in new Control[] { pnlEncabezadoCompra, pnlAccionesCompra, pnlTarjetaEntradas, pnlTarjetaServicios, pnlResumen })
                 Tema.ComoSuperficie(superficie);
-            Tema.ComoDocumento(lblResumen);
+            lblResumen.AutoSize = false;
+            lblResumen.Padding = Padding.Empty;
+            mapaSectores.Compacto = true;
             documentoResumen = new Panel { Name = "documentoResumen", AutoScroll = true, BackColor = Tema.Superficie };
             pnlResumen.AutoScroll = false;
             pnlResumen.Controls.Add(documentoResumen);
@@ -134,7 +136,9 @@ namespace Visual
                 dgvSectores.Width = Math.Max(0, columna - relleno * 2);
                 mapaSectores.Width = dgvSectores.Width;
                 mapaSectores.Height = mapaSectores.AltoParaTodosLosSectores;
-                dgvSectores.Top = mapaSectores.Bottom + relleno;
+                dgvSectores.Top = mapaSectores.Bottom + separacion;
+                dgvSectores.Height = dgvSectores.ColumnHeadersHeight +
+                    dgvSectores.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + Disposicion.Pixeles(this, Tema.Espacio.XS);
                 lblAgotado.Top = dgvSectores.Top;
                 btnListaEspera.Top = lblAgotado.Bottom + separacion;
                 lnkPosicionEspera.Top = btnListaEspera.Bottom + separacion;
@@ -155,8 +159,7 @@ namespace Visual
                 int arribaDocumento = lblTituloResumen.Bottom + separacion;
                 int anchoInterior = Math.Max(1, anchoResumen - relleno * 2);
                 int anchoDocumento = Math.Max(1, anchoInterior - SystemInformation.VerticalScrollBarWidth);
-                lblResumen.MinimumSize = new Size(anchoDocumento, 0);
-                lblResumen.MaximumSize = new Size(anchoDocumento, 0);
+                lblResumen.Size = new Size(anchoDocumento, lblResumen.AltoPara(anchoDocumento));
                 int altoTotal = Disposicion.Pixeles(this, Tema.AltoBoton);
                 int altoFijo = arribaDocumento + separacion + altoTotal + relleno;
                 int altoDocumento = Math.Min(lblResumen.Height, Math.Max(0, altoVista - altoFijo));
@@ -606,68 +609,45 @@ namespace Visual
         {
             ResumenDescuento resumen = GestorFidelizacion.Instance.CalcularDescuento(cliente, paquete);
 
-            var texto = new StringBuilder();
-            texto.AppendLine("RESUMEN DEL PAQUETE");
-            texto.AppendLine();
-            texto.AppendLine($"Entradas ({GestorPaquetes.Instance.CantidadEntradas(paquete)})");
-            if (paquete.Entradas.Count == 0)
-            {
-                texto.AppendLine("  (ninguna)");
-            }
+            var filas = new List<(string Concepto, string Importe, bool Seccion)>();
+            void Seccion(string nombre) => filas.Add((nombre, null, true));
+            void Linea(string concepto) => filas.Add((concepto, null, false));
+            void Importe(string concepto, decimal monto) => filas.Add((concepto, monto.ToString("C2", Pesos), false));
+
+            int cantidad = GestorPaquetes.Instance.CantidadEntradas(paquete);
+            Seccion($"Entradas ({cantidad})");
+            if (paquete.Entradas.Count == 0) Linea("Sin entradas");
             foreach (Entrada entrada in paquete.Entradas)
             {
                 Sector sector = sectores[entrada.IdSector.Value];
-                texto.AppendLine(Importe($"  {entrada.CantidadVendida} x {sector.Nombre}", entrada.Precio * entrada.CantidadVendida));
+                Importe($"{entrada.CantidadVendida} x {sector.Nombre}", entrada.Precio * entrada.CantidadVendida);
             }
-            texto.AppendLine(Importe("Base entradas", resumen.BaseEntradas));
-            texto.AppendLine(Importe($"Desc. {resumen.NivelAplicado} {resumen.Porcentaje.ToString("P1", Pesos)}", -resumen.MontoDescuento));
-            texto.AppendLine(Importe("Subtotal entradas", resumen.SubtotalEntradas));
-            texto.AppendLine();
-            texto.AppendLine("Servicios (sin descuento)");
-            if (paquete.Servicios.Count == 0)
-            {
-                texto.AppendLine("  (ninguno)");
-            }
+            Importe("Base entradas", resumen.BaseEntradas);
+            Importe($"Desc. {resumen.NivelAplicado} {resumen.Porcentaje.ToString("P1", Pesos)}", -resumen.MontoDescuento);
+            Importe("Subtotal entradas", resumen.SubtotalEntradas);
+
+            Seccion("Servicios (sin descuento)");
+            if (paquete.Servicios.Count == 0) Linea("Sin servicios");
             foreach (Servicio servicio in paquete.Servicios)
-            {
-                texto.AppendLine(Importe("  " + servicio.Nombre, servicio.Precio));
-            }
-            texto.AppendLine(Importe("Subtotal servicios", resumen.Servicios));
-            texto.AppendLine();
-            texto.AppendLine(Importe("Cargo por servicio", resumen.CargoServicio));
-            int cantidad = GestorPaquetes.Instance.CantidadEntradas(paquete);
+                Importe(servicio.Nombre, servicio.Precio);
+            Importe("Subtotal servicios", resumen.Servicios);
+
+            Seccion("Cargos");
+            Importe("Cargo por servicio", resumen.CargoServicio);
             // RN-37: con suscripción activa el seguro sale sin cargo.
             string seguro = cantidad > 0 && resumen.Seguro == 0m ? "Seguro sin cargo" : "Seguro";
-            texto.AppendLine(paquete.ConSeguro
-                ? Importe($"{seguro} ({cantidad} entradas)", resumen.Seguro)
-                : "Seguro: no");
-            texto.AppendLine();
-            texto.AppendLine(Importe("TOTAL", resumen.Total));
-            // H-01: el hallazgo de usabilidad más repetido.
-            texto.AppendLine("El descuento se aplica sobre el valor");
-            texto.AppendLine("de las entradas.");
-            lblResumen.Text = texto.ToString();
-            lblTotalDestacado.Text = "TOTAL " + resumen.Total.ToString("C2", Pesos);
+            if (paquete.ConSeguro) Importe($"{seguro} ({cantidad} entradas)", resumen.Seguro);
+            else Linea("Seguro: no");
+
+            string total = resumen.Total.ToString("C2", Pesos);
+            lblResumen.Cargar(filas, total);
+            lblTotalDestacado.Text = "TOTAL " + total;
             AjustarEncabezado();
             ActualizarHabilitados();
         }
 
         // RN-33: importes en pesos argentinos.
         private static readonly System.Globalization.CultureInfo Pesos = new System.Globalization.CultureInfo("es-AR");
-
-        // Una línea de 38 columnas: concepto a la izquierda (recortado si no entra), importe a la derecha.
-        private const int AnchoLinea = 38;
-
-        private static string Importe(string concepto, decimal monto)
-        {
-            string importe = monto.ToString("C2", Pesos);
-            int ancho = AnchoLinea - importe.Length - 1;
-            if (concepto.Length > ancho)
-            {
-                concepto = concepto.Substring(0, ancho - 1) + "…";
-            }
-            return concepto.PadRight(ancho) + " " + importe;
-        }
 
         // H-06: confirma antes de descartar lo cargado.
         private bool PaqueteVacio()

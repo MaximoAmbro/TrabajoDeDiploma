@@ -84,24 +84,9 @@ namespace Visual.Componentes
             int lado = Disposicion.Pixeles(this, Tema.Espacio.L);
             int x = Disposicion.Pixeles(this, Tema.Espacio.S);
             var icono = new Rectangle(x, (Height - lado) / 2, lado * 2, lado);
-            if (opcionActual)
-                using (var fondo = new SolidBrush(Tema.PrimarioSuave))
-                    lienzo.FillRectangle(fondo, icono);
             TextRenderer.DrawText(lienzo, GlifoLateral, Tema.IconosLateral, icono,
-                opcionActual ? Tema.Primario : Tema.TextoSecundario,
+                opcionActual ? Color.White : Tema.LateralTexto,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
-        }
-
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            base.OnMouseEnter(e);
-            if (opcionActual) Tema.EstadoBoton(this, rolVisual ?? rol, opcionActual);
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-            if (opcionActual) Tema.EstadoBoton(this, rolVisual ?? rol, opcionActual);
         }
 
         protected override void OnGotFocus(EventArgs e)

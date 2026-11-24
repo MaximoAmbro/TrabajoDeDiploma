@@ -33,6 +33,7 @@ namespace Pruebas
                     using (var listado = new Visual.frmEventosCliente { IDUsuario = cliente.Id })
                     {
                         Mostrar(listado);
+                        ControlDe<Button>(listado, "btnVista").PerformClick();
                         DataGridView grilla = ControlDe<DataGridView>(listado, "dgveventos");
                         DataGridViewRow fila = grilla.Rows.Cast<DataGridViewRow>().Single(f => Convert.ToInt32(f.Cells["ID"].Value) == evento.Id);
                         grilla.CurrentCell = fila.Cells["Nombre"];

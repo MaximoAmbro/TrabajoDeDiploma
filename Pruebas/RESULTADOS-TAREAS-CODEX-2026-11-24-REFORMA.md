@@ -63,3 +63,15 @@ La compra de demostración selecciona un evento vigente con disponibilidad en la
 Los cinco enlaces usan EnlaceTematico. En los Designer de frmInicio, frmCrearUsuario y FrmCompraCliente se cambió solo el tipo instanciado. Se conservan los nombres, los eventos y el comportamiento del enlace. La captura de compra muestra el borde Primario en el enlace de niveles.
 
 Se revisaron las 25 vistas y se regeneraron las 50 capturas del área cliente en TestResults/Capturas-Reforma, con 96 y 144 DPI informados por Windows. Los dos recorridos de captura de CP-357 finalizaron correctamente. El caso de Enter en Suscripción conserva su verificación manual.
+
+## Lateral, catálogo y resumen de compra
+
+Los tres menús usan el fondo oscuro y los colores de texto, puntero y sección definidos en Tema. El ítem activo usa Primario con texto e icono blancos.
+
+Eventos abre en tarjetas de alto uniforme, en una grilla de tres columnas que se desplaza verticalmente. La semilla tiene dos eventos vigentes y el local compartido usa Av. Pellegrini 1234, Rosario. Cada tarjeta distingue el cupo disponible, bajo o agotado con un rótulo y un color. La vista de tabla sigue accesible desde Ver como tabla.
+
+El resumen de compra usa Segoe UI con encabezados de Entradas, Servicios y Cargos. Los importes tienen dos decimales y se alinean a la derecha. CP-119 verifica que los dígitos tengan ancho uniforme. El Designer de FrmCompraCliente cambia el tipo de lblResumen al control que dibuja las filas. Conserva el nombre y el texto con la línea TOTAL. La franja queda visible y el detalle puede desplazarse. El mapa compacto deja a la vista la grilla completa de los tres sectores de Duki en Rosario.
+
+El foco de los enlaces se indica con un subrayado. Los pasos completados usan TextoSecundario y una marca de verificación.
+
+Pasaron 360 de 360 pruebas. CP-357 verificó que la grilla de sectores y el total entren en la captura inicial. Se regeneraron las 50 capturas del área cliente con 96 y 144 DPI reales. Las imágenes están en TestResults/Capturas-Reforma y los registros en TestResults/diseno-visual-360.log y TestResults/diseno-visual-capturas.log. Enter en Suscripción sigue como verificación manual.
