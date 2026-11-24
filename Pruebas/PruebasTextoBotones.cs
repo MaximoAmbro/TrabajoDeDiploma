@@ -69,7 +69,7 @@ namespace Pruebas
                             altoEsperado = Visual.Disposicion.Pixeles(boton, Visual.Disposicion.AltoOpcionLateral);
                         Assert.AreEqual(altoEsperado, boton.Height, pantalla + "/" + boton.Name + " alto normalizado");
                         if (pantalla == "frmInicio" && boton.Name == "btninicio")
-                            Assert.AreEqual(form.ClientSize.Width - boton.Left - Visual.Tema.MargenFormulario, boton.Width, pantalla + "/" + boton.Name + " ancho de fila");
+                            Assert.AreEqual(Visual.Disposicion.Pixeles(boton, Visual.Tema.AnchoCampo), boton.Width, pantalla + "/" + boton.Name + " ancho de fila");
                         else if (boton.Name == "btnListaEspera")
                             Assert.AreEqual(boton.Parent.ClientSize.Width - boton.Left * 2, boton.Width, pantalla + "/" + boton.Name + " ancho de fila");
                         else

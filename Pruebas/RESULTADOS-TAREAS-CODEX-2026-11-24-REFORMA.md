@@ -18,6 +18,14 @@ Los tres inicios comparten `DatoPanel`. El cliente consulta entradas próximas, 
 - `Visual/Propietario/frmMenuPropietario.Designer.cs` elimina los dos títulos duplicados solicitados.
 - `Visual/_Inicio/frmInicio.Designer.cs` cambia el título de contenido a Iniciar sesión.
 
-## Pendientes
+## Cotejo posterior con el sistema visual
 
-La página de Claude no entregó el contenido de las tres plantillas. Falta el contraste visual contra esa referencia y completar la adaptación de selectores nativos y grupos de acciones heredados al sistema exacto. Las verificaciones intermedias encontraron regresiones que se corrigieron en conjunto. El registro de 360 corresponde al estado integrado, sin certificar 360 al cierre individual de cada fase.
+La referencia está en `docs/SISTEMA-VISUAL.md`. Se revisaron las 25 capturas al 150 %. Los tres inicios comparten una grilla de tarjetas de 208 px con separación de 16 px y altura común por fila. Los datos auxiliares de las pruebas se limpian entre capturas exclusivamente en la base de pruebas. Administración conserva los indicadores y los pendientes en columnas de igual ancho. El organizador tiene dos secciones, Mis locales y Próximos eventos. El lateral del cliente queda sin Atrás.
+
+El registro público muestra la marca sin identidad de sesión. Mail usa el ancho de las dos columnas y el medidor ocupa el ancho del campo de contraseña. El botón de acceso coincide con sus campos. También se corrigieron el título tapado en el estado vacío de Control de ingreso y las cuatro acciones de Eventos del local. Los grupos de botones juntos en una fila se igualan cuando el ancho disponible permite mantenerlos dentro de su contenedor.
+
+CP-357 verifica la altura de las tarjetas por fila y su ancho fijo. Windows dibuja solo el área cliente para las figuras, con 25 PNG por cada escala. Los resultados de esta revisión quedaron en `TestResults/sistema-visual-final-360.log` y `TestResults/reforma-captura-150.log`.
+
+## Límites del cotejo
+
+La cobertura automatizada de medidas abarca la barra, el lateral, los grupos de acciones identificados, las tarjetas y los formularios de acceso. Siguen fuera de conformidad completa los tamaños nativos de selectores de Reportes y Auditoría, y hay márgenes y acciones heredados que no se normalizaron a todas las medidas de la plantilla de formulario. La comprobación de Enter en Suscripción conserva el caso manual porque abre un modal.

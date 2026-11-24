@@ -26,8 +26,8 @@ namespace Visual.Componentes
             };
             tarjetas = new FlowLayoutPanel
             {
-                Name = "tarjetasInicioCliente", Dock = DockStyle.Fill, AutoScroll = true,
-                FlowDirection = FlowDirection.TopDown, WrapContents = false
+                Name = "tarjetasInicioCliente",
+                FlowDirection = FlowDirection.LeftToRight
             };
             tarjetaNivel = CrearTarjeta("fidelidadCliente");
             tarjetaEntradas = CrearTarjeta("entradasCliente");
@@ -35,13 +35,14 @@ namespace Visual.Componentes
             Controls.Add(tarjetas);
             tarjetaEntradas.ColocarAccion(verEventos);
             tarjetaEspera.AgregarAccion("Explorar eventos", () => VerEventos?.Invoke());
-            tarjetas.SizeChanged += (s, e) =>
-            {
-                foreach (DatoPanel tarjeta in tarjetas.Controls.OfType<DatoPanel>())
-                    tarjeta.Width = Math.Max(1, tarjetas.ClientSize.Width - tarjeta.Margin.Horizontal - SystemInformation.VerticalScrollBarWidth);
-            };
+            SizeChanged += (s, e) => DistribuirTarjetas();
             foreach (Control etiqueta in new Control[] { nivel, siguiente, tituloProximas, icono, proximas, tituloAvisos, avisos, ultimo })
                 etiqueta.Hide();
+        }
+
+        private void DistribuirTarjetas()
+        {
+            DatoPanel.DistribuirGrilla(tarjetas, ClientSize.Width - SystemInformation.VerticalScrollBarWidth);
         }
 
         private DatoPanel CrearTarjeta(string nombre)
@@ -58,8 +59,8 @@ namespace Visual.Componentes
             nivel.Text=cliente.Nivel+" · "+GestorFidelizacion.Instance.PorcentajePara(cliente.Nivel).ToString("P1",System.Globalization.CultureInfo.GetCultureInfo("es-AR"))+" de descuento";
             int compras=GestorFidelizacion.Instance.ComprasEnVentana(id,DateTime.Now);
             int umbral=GestorParametros.Instance.ObtenerEntero(cliente.Nivel==NivelFidelidad.Bronce?"FIDELIDAD_UMBRAL_PLATA":"FIDELIDAD_UMBRAL_ORO");
-            siguiente.Text=cliente.Nivel==NivelFidelidad.Oro?"Ya estás en el nivel más alto. Disfrutá tus beneficios.":
-                "Te faltan "+Math.Max(0,umbral-compras)+" compras confirmadas para llegar a "+(cliente.Nivel==NivelFidelidad.Bronce?"Plata":"Oro")+".";
+            siguiente.Text=cliente.Nivel==NivelFidelidad.Oro?"Ya estás en el nivel más alto.":
+                "Faltan "+Math.Max(0,umbral-compras)+" compras para "+(cliente.Nivel==NivelFidelidad.Bronce?"Plata":"Oro")+".";
             var agenda = new List<(int Id, DateTime Fecha, string Nombre, int Cantidad)>();
             foreach(var compra in GestorCompras.Instance.HistorialDe(id).Where(c=>c.Estado==EstadoCompra.Confirmada)) {
                 foreach(var grupo in GestorCompras.Instance.EntradasDe(compra).Where(e=>e.Estado==EstadoEntrada.Confirmada).GroupBy(e=>e.IdEvento)) {
@@ -68,15 +69,25 @@ namespace Visual.Componentes
                 }
             }
             var entradas = agenda.GroupBy(e => new { e.Id, e.Fecha, e.Nombre }).OrderBy(g => g.Key.Fecha)
-                .Select(g => $"{g.Key.Fecha:dd/MM HH:mm} · {g.Key.Nombre} · {g.Sum(e => e.Cantidad)} entradas");
+                .ToArray();
             var espera = GestorListaEspera.Instance.EventosEnEspera(id);
             tieneEntradas = agenda.Count > 0;
             verEventos.Text = tieneEntradas ? "Ver mis entradas" : "Ver eventos";
             tarjetaNivel.CargarDetalle("Fidelidad · " + nivel.Text, siguiente.Text);
-            tarjetaEntradas.CargarDetalle("Próximas entradas", agenda.Count == 0
-                ? "Todavía no tenés entradas para próximos eventos." : string.Join(Environment.NewLine, entradas));
-            tarjetaEspera.CargarDetalle("Lista de espera", espera.Count == 0
-                ? "Todavía no estás en una lista de espera." : string.Join(Environment.NewLine, espera));
+            if (entradas.Length == 1)
+            {
+                var evento = entradas[0];
+                int cantidad = evento.Sum(e => e.Cantidad);
+                tarjetaEntradas.CargarDetalle("Próximas entradas · " + evento.Key.Nombre,
+                    $"{evento.Key.Fecha:dd/MM HH:mm} · {cantidad} {(cantidad == 1 ? "entrada" : "entradas")}");
+            }
+            else
+                tarjetaEntradas.CargarDetalle("Próximas entradas", entradas.Length == 0
+                    ? "Sin entradas próximas" : $"{agenda.Sum(e => e.Cantidad)} entradas · {entradas.Length} eventos");
+            string tituloEspera = espera.Count == 0 ? "Lista de espera" : "Lista de espera" + Environment.NewLine + string.Join(Environment.NewLine, espera);
+            tarjetaEspera.CargarDetalle(tituloEspera, espera.Count == 0
+                ? "Sin inscripciones" : espera.Count == 1 ? "1 inscripción" : $"{espera.Count} inscripciones");
+            DistribuirTarjetas();
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Visual
         internal static void DistribuirMenu(Form ventana, Panel lateral, Control contenido, Label titulo)
         {
             int Px(int medida) => Pixeles(ventana, medida);
-            int margen = Px(Tema.Espacio.XL);
+            int margen = Px(Tema.Espacio.XXL);
             int arriba = Px(Tema.AltoBarraSuperior);
             int anchoLateral = Px(AnchoLateral);
             lateral.SetBounds(0, arriba, anchoLateral, Math.Max(0, ventana.ClientSize.Height - arriba));
@@ -74,7 +74,7 @@ namespace Visual
             titulo.AutoSize = false;
             titulo.TextAlign = ContentAlignment.MiddleLeft;
             titulo.SetBounds(izquierda, arriba + margen, ancho, Px(Tema.Espacio.XXL));
-            int inicio = titulo.Bottom + Px(Tema.Espacio.L);
+            int inicio = titulo.Bottom + Px(Tema.Espacio.XL);
             contenido.SetBounds(izquierda, inicio, ancho, Math.Max(1, ventana.ClientSize.Height - inicio - margen));
         }
 

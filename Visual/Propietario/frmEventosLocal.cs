@@ -20,7 +20,13 @@ namespace Visual.Vendedor
         public frmEventosLocal()
         {
             InitializeComponent();
-            Shown += (s, e) => ColocarTitulo(label2);
+            Shown += (s, e) =>
+            {
+                ColocarTitulo(label2);
+                Disposicion.AlinearGrupo(btnVolver, btnEliminarEvento, btnAdministrarEvento, btnAgregarEvento);
+                int margen = Disposicion.Pixeles(this, Tema.Espacio.XXL);
+                ClientSize = new System.Drawing.Size(Math.Max(ClientSize.Width, btnAgregarEvento.Right + margen), ClientSize.Height);
+            };
             AcceptButton = btnAgregarEvento;
             dgvEventos.KeyDown += (s, e) =>
             {

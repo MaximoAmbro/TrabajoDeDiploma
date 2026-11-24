@@ -68,22 +68,10 @@ namespace Visual.Componentes
             int y = AutoScrollPosition.Y;
             periodo.SetBounds(0, y, Math.Max(1, anchoPeriodo), Px(Tema.Espacio.XXL));
 
-            int columnas = Math.Max(1, Math.Min(3, ancho / Px(192)));
-            DistribuirTarjetas(datos, ancho, columnas, periodo.Bottom + Px(Tema.Espacio.S));
-            DistribuirTarjetas(pendientes, ancho, Math.Min(columnas, 2), datos.Bottom + Px(Tema.Espacio.L));
-        }
-
-        private static void DistribuirTarjetas(FlowLayoutPanel fila, int ancho, int columnas, int y)
-        {
-            fila.SetBounds(0, y, ancho, fila.Height);
-            var tarjetas = fila.Controls.OfType<DatoPanel>().ToArray();
-            foreach (DatoPanel tarjeta in tarjetas)
-                tarjeta.Width = Math.Max(1, ancho / columnas - tarjeta.Margin.Horizontal);
-
-            int alto = 0;
-            for (int i = 0; i < tarjetas.Length; i += columnas)
-                alto += tarjetas.Skip(i).Take(columnas).Max(t => t.Height + t.Margin.Vertical);
-            fila.Height = alto;
+            datos.Location = new System.Drawing.Point(0, periodo.Bottom + Px(Tema.Espacio.S));
+            DatoPanel.DistribuirGrilla(datos, ancho);
+            pendientes.Location = new System.Drawing.Point(0, datos.Bottom + Px(Tema.Espacio.S));
+            DatoPanel.DistribuirGrilla(pendientes, ancho);
         }
     }
 }

@@ -251,6 +251,20 @@ namespace Visual
                 return;
             }
 
+            foreach (var fila in botones.GroupBy(b => b.Top))
+            {
+                var grupo = fila.ToArray();
+                if (grupo.Length < 2 || grupo.Zip(grupo.Skip(1), (a, b) => b.Left - a.Right)
+                    .Any(hueco => hueco > Disposicion.Pixeles(contenedor, Espacio.XXL))) continue;
+                int ancho = grupo.Max(b => b.Width);
+                int total = ancho * grupo.Length + separacion * (grupo.Length - 1);
+                var area = new Rectangle(grupo[0].Left, fila.Key, total, grupo[0].Height);
+                if (area.Right > contenedor.ClientSize.Width - contenedor.Padding.Right) continue;
+                if (contenedor.Controls.Cast<Control>().Any(c => !(c is Button) && c.Dock == DockStyle.None &&
+                    c.Bounds.IntersectsWith(area) && (c is Label || c.TabStop))) continue;
+                Disposicion.AlinearGrupo(grupo);
+            }
+
             for (int i = 0; i < botones.Length; i++)
             {
                 var actual = botones[i];
@@ -329,8 +343,7 @@ namespace Visual
         private static int AnchoBotonSegunDiseno(Button boton)
         {
             float aLogico = DpiDiseno / Disposicion.Dpi(boton);
-            if (boton.FindForm() is frmInicio && boton.Name == "btninicio")
-                return Math.Max(AnchoBotonNormal, (int)Math.Round((boton.Parent.ClientSize.Width - boton.Left) * aLogico) - MargenFormulario);
+            if (boton.FindForm() is frmInicio && boton.Name == "btninicio") return AnchoCampo;
             if (boton.Name == "btnDevolver") return AnchoBotonAmplio;
             if (boton.Name == "btnListaEspera")
                 return Math.Max(AnchoBotonAmplio, (int)Math.Round((boton.Parent.ClientSize.Width - boton.Left * 2) * aLogico));

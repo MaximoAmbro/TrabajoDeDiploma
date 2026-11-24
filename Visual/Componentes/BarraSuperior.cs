@@ -18,12 +18,13 @@ namespace Visual.Componentes
             TabStop = false;
             AccessibleName = "EventAura";
         }
+        internal bool MostrarSesion { get; set; } = true;
         public void ActualizarSesion()
         {
             var usuario = GestorSesion.Instance.UsuarioActual;
             persona = beneficio = string.Empty;
             AccessibleDescription = null;
-            if (usuario == null || !GestorUsuarios.Instance.ExisteUsuarioDeSesion()) { Invalidate(); return; }
+            if (!MostrarSesion || usuario == null || !GestorUsuarios.Instance.ExisteUsuarioDeSesion()) { Invalidate(); return; }
             else
             {
                 persona = usuario.Nombre + " " + usuario.Apellido;

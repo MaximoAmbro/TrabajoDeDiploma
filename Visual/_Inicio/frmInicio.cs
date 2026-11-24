@@ -22,6 +22,8 @@ namespace Visual
         {
             ColocarCampo(label5, txtMailLogin);
             ColocarCampo(label3, txtContraseñaLogin);
+            btninicio.Left = txtMailLogin.Left;
+            btninicio.Width = txtMailLogin.Width;
             int espacio = Disposicion.Pixeles(this, Tema.Espacio.S);
             int anchoEnlace = (txtMailLogin.Width - espacio) / 2;
             lblcrearcuenta.Left = txtMailLogin.Left;

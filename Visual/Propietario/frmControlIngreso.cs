@@ -34,10 +34,12 @@ namespace Visual
                 if (!txtCodigo.Enabled)
                 {
                     estadoSinEventos = new Componentes.EstadoVacio { Name = "estadoSinIngresoAbierto" };
-                    estadoSinEventos.AjustarA(new System.Drawing.Rectangle(24, 140, 672, 272));
                     estadoSinEventos.Cargar("Todavía no hay eventos con el ingreso abierto en tus locales. Cuando empiece la ventana, vas a poder validar entradas acá.", "Volver al panel");
                     estadoSinEventos.Accion += () => Close();
                     Controls.Add(estadoSinEventos);
+                    int espacio = Disposicion.Pixeles(this, Tema.Espacio.XL);
+                    estadoSinEventos.AjustarA(new System.Drawing.Rectangle(lblEvento.Left, lblEvento.Top,
+                        ClientSize.Width - 2 * lblEvento.Left, btnVolver.Top - lblEvento.Top - espacio));
                     estadoSinEventos.BringToFront();
                     lblEvento.Visible = cmbEventos.Visible = lblCodigo.Visible = txtCodigo.Visible = btnRegistrar.Visible = lblResultado.Visible = lblContador.Visible = false;
                 }

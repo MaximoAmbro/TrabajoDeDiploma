@@ -14,7 +14,11 @@ namespace Visual
 {
     public partial class frmMenuPropietario : FormularioEventAura
     {
-        private readonly FlowLayoutPanel zonaOrganizador;
+        private readonly Panel zonaOrganizador;
+        private readonly FlowLayoutPanel tarjetasLocales = new FlowLayoutPanel { Name = "tarjetasLocales" };
+        private readonly FlowLayoutPanel tarjetasEventos = new FlowLayoutPanel { Name = "tarjetasEventosOrganizador" };
+        private readonly Componentes.EtiquetaSeccion encabezadoLocales = new Componentes.EtiquetaSeccion { Text = "Mis locales" };
+        private readonly Componentes.EtiquetaSeccion encabezadoEventos = new Componentes.EtiquetaSeccion { Text = "Próximos eventos" };
         private readonly Panel lateral;
         private readonly Componentes.EtiquetaTitulo tituloOrganizador;
         private readonly Componentes.BotonSecundario btnCambiarContrasena;
@@ -40,7 +44,8 @@ namespace Visual
             btnReportes.Location = new Point(24, 452);
             lblvolver.Location = new Point(24, 628);
             lblvolver.Text = "Cerrar sesión";
-            zonaOrganizador = new FlowLayoutPanel { Name = "zonaOrganizador", BackColor = Tema.Fondo, AutoScroll = true, FlowDirection = FlowDirection.TopDown, WrapContents = false };
+            zonaOrganizador = new Panel { Name = "zonaOrganizador", BackColor = Tema.Fondo, AutoScroll = true };
+            zonaOrganizador.Controls.AddRange(new Control[] { encabezadoLocales, tarjetasLocales, encabezadoEventos, tarjetasEventos });
             tituloOrganizador = new Componentes.EtiquetaTitulo { Name = "tituloOrganizador", Text = "Tu espacio de organización" };
             Controls.AddRange(new Control[] { tituloOrganizador, zonaOrganizador });
             btnCambiarContrasena = new Componentes.BotonSecundario { Name = "btnCambiarContrasena", Text = "Cambiar contraseña", Location = new Point(24, 576), Size = new Size(272, 40) };
@@ -80,8 +85,16 @@ namespace Visual
         private void DistribuirPanel()
         {
             Disposicion.DistribuirMenu(this, lateral, zonaOrganizador, tituloOrganizador);
-            foreach (Componentes.DatoPanel tarjeta in zonaOrganizador.Controls)
-                tarjeta.Width = Math.Max(1, zonaOrganizador.ClientSize.Width - tarjeta.Margin.Horizontal - SystemInformation.VerticalScrollBarWidth);
+            int espacio = Disposicion.Pixeles(this, Tema.Espacio.L);
+            int ancho = Math.Max(1, zonaOrganizador.ClientSize.Width - SystemInformation.VerticalScrollBarWidth);
+            int y = zonaOrganizador.AutoScrollPosition.Y;
+            foreach (var seccion in new[] { (encabezadoLocales, tarjetasLocales), (encabezadoEventos, tarjetasEventos) })
+            {
+                seccion.Item1.SetBounds(0, y, ancho, Disposicion.Pixeles(this, Tema.Espacio.XXL));
+                seccion.Item2.Location = new Point(0, seccion.Item1.Bottom + espacio);
+                Componentes.DatoPanel.DistribuirGrilla(seccion.Item2, ancho);
+                y = seccion.Item2.Bottom + espacio;
+            }
         }
 
         private void CargarTarjetas()
@@ -92,30 +105,30 @@ namespace Visual
             foreach (var local in locales)
             {
                 var delLocal = GestorEventos.Instance.PorLocal(local.Id);
-                AgregarTarjeta(local.Nombre, delLocal.Count == 1 ? "1 evento" : $"{delLocal.Count} eventos");
+                AgregarTarjeta(tarjetasLocales, local.Nombre, delLocal.Count == 1 ? "1 evento" : $"{delLocal.Count} eventos");
                 eventos.AddRange(delLocal);
             }
 
             if (locales.Count == 0)
-                AgregarTarjeta("Mis locales", "Todavía no registraste un local.", "Registrar local", () => btnRegistrarLocal.PerformClick());
+                AgregarTarjeta(tarjetasLocales, "Mis locales", "Todavía no registraste un local.", "Registrar local", () => btnRegistrarLocal.PerformClick());
 
             var proximos = eventos.Where(e => e.Fecha >= DateTime.Now && e.Estado != GestorEventos.EstadoSuspendido)
                 .OrderBy(e => e.Fecha).ToArray();
             if (proximos.Length == 0)
-                AgregarTarjeta("Próximos eventos", "Todavía no tenés eventos con fecha próxima.", "Mis locales", () => btnMisLocales.PerformClick());
+                AgregarTarjeta(tarjetasEventos, "Próximos eventos", "Todavía no tenés eventos con fecha próxima.", "Mis locales", () => btnMisLocales.PerformClick());
             foreach (var evento in proximos)
             {
                 int entradas = GestorEventos.Instance.EntradasVendidas(evento.Id);
-                string ventas = entradas == 1 ? "1 entrada vendida" : $"{entradas} entradas vendidas";
-                AgregarTarjeta(evento.Nombre, $"{evento.Fecha:dd/MM/yyyy HH:mm} · {ventas}");
+                string ventas = entradas == 1 ? "1 vendida" : $"{entradas} vendidas";
+                AgregarTarjeta(tarjetasEventos, evento.Nombre, $"{evento.Fecha:dd/MM HH:mm} · {ventas}");
             }
         }
 
-        private void AgregarTarjeta(string titulo, string valor, string textoAccion = null, Action accion = null)
+        private void AgregarTarjeta(FlowLayoutPanel grilla, string titulo, string valor, string textoAccion = null, Action accion = null)
         {
             var tarjeta = new Componentes.DatoPanel();
             tarjeta.CargarDetalle(titulo, valor);
-            zonaOrganizador.Controls.Add(tarjeta);
+            grilla.Controls.Add(tarjeta);
             if (accion != null) tarjeta.AgregarAccion(textoAccion, accion);
         }
 

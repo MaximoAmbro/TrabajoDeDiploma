@@ -33,7 +33,7 @@ namespace Visual
             btnEventos.Location = new Point(24, 232);
             btnHistorial.Location = new Point(24, 316);
             btnSuscripcion.Location = new Point(24, 360);
-            btnAtras.Location = new Point(24, 424);
+            btnAtras.Hide();
             btnSolicitudOrganizador = new Componentes.BotonSecundario { Name = "btnSolicitudOrganizador", Text = "Solicitar ser Organizador", Location = new Point(24, 512), Size = new Size(240, 40) };
             btnSolicitudOrganizador.Click += (s, e) =>
             {
@@ -64,7 +64,7 @@ namespace Visual
 
             lblNombre.Visible = false;
             lateral = Disposicion.CrearLateral(this, seccionExplorar, btnInicio, btnEventos,
-                seccionCompras, btnHistorial, btnSuscripcion, btnAtras, seccionCuenta,
+                seccionCompras, btnHistorial, btnSuscripcion, seccionCuenta,
                 btnSolicitudOrganizador, btnCambiarContrasena, lblvolver);
             SizeChanged += (s, e) => DistribuirContenido();
             FormClosed += (s, e) => NavegacionCliente.Desregistrar(this);

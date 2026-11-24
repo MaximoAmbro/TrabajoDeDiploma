@@ -36,6 +36,8 @@ namespace Pruebas
                         Form formulario = null;
                         try
                         {
+                            if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
+                                Fake.Limpiar();
                             PrepararSesion(tipo);
                             formulario = (Form)Activator.CreateInstance(tipo);
                             PrepararContextoSeleccionado(formulario);
@@ -316,11 +318,22 @@ namespace Pruebas
             {
                 foreach (TextBox campo in formulario.Controls.OfType<TextBox>().Where(c => c.Visible))
                 {
-                    Assert.AreEqual(new Size(Px(320), Px(32)), campo.Size, campo.Name);
+                    int ancho = formulario is Visual.frmCrearUsuario && campo.Name == "txtmail"
+                        ? Px(2 * Visual.Tema.AnchoCampo + Visual.Tema.Espacio.L) : Px(Visual.Tema.AnchoCampo);
+                    Assert.AreEqual(new Size(ancho, Px(32)), campo.Size, campo.Name);
                     Assert.IsTrue(formulario.Controls.OfType<Label>().Any(rotulo => rotulo.Visible &&
                         rotulo.Left == campo.Left && campo.Top - rotulo.Bottom == Px(4)),
                         "Falta el rótulo a 4 px de " + campo.Name);
                 }
+            }
+
+            foreach (var grilla in Descendientes(formulario).OfType<FlowLayoutPanel>())
+            {
+                var tarjetas = grilla.Controls.OfType<Visual.Componentes.DatoPanel>().Where(t => t.Visible).ToArray();
+                foreach (var fila in tarjetas.GroupBy(t => t.Top))
+                    Assert.AreEqual(1, fila.Select(t => t.Height).Distinct().Count(), "Altura común de la fila " + grilla.Name);
+                foreach (var tarjeta in tarjetas)
+                    Assert.AreEqual(Px(208), tarjeta.Width, "Ancho fijo de tarjeta");
             }
 
             var acciones = formulario is Visual.frmCambiarContraseña ? new[] { "btnVolver", "btnconfirmar" }
@@ -382,18 +395,28 @@ namespace Pruebas
                 Math.Max(area.Left, Math.Min(formulario.Left, area.Right - formulario.Width)),
                 Math.Max(area.Top, Math.Min(formulario.Top, area.Bottom - formulario.Height)));
             Application.DoEvents();
-            var bounds = formulario.Bounds;
+            var bounds = formulario.RectangleToScreen(formulario.ClientRectangle);
             Directory.CreateDirectory(carpeta);
             using (var imagen = new Bitmap(bounds.Width, bounds.Height))
             {
                 using (Graphics lienzo = Graphics.FromImage(imagen))
-                    lienzo.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
+                {
+                    var hdc = lienzo.GetHdc();
+                    try
+                    {
+                        Assert.IsTrue(PrintWindow(formulario.Handle, hdc, 1), "Windows debe dibujar el área cliente.");
+                    }
+                    finally { lienzo.ReleaseHdc(hdc); }
+                }
                 imagen.Save(Path.Combine(carpeta, formulario.GetType().Name + ".png"), System.Drawing.Imaging.ImageFormat.Png);
             }
         }
 
         [DllImport("user32.dll")]
         private static extern uint GetDpiForWindow(IntPtr hwnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool PrintWindow(IntPtr hwnd, IntPtr hdc, uint flags);
 
 
         private static IEnumerable<Control> Descendientes(Control raiz)

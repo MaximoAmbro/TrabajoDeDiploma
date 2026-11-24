@@ -20,6 +20,7 @@ namespace Visual
         {
             _altaAdministrador = altaAdministrador;
             InitializeComponent();
+            barraSuperior.MostrarSesion = altaAdministrador;
             _fortaleza = new Componentes.IndicadorFortaleza { Name = "fortalezaContrasena", Location = new Point(24, 348), Size = new Size(392, 24) };
             Controls.Add(_fortaleza);
             TxtPassword.TextChanged += (s, e) => ActualizarFortaleza();
@@ -31,19 +32,23 @@ namespace Visual
             Shown += (s, e) =>
             {
                 int Px(int medida) => Disposicion.Pixeles(this, medida);
-                const int izquierda = Tema.Espacio.XL;
-                const int derecha = izquierda + Tema.AnchoCampo + Tema.Espacio.S;
-                ClientSize = new Size(Px(derecha + Tema.AnchoCampo + Tema.Espacio.XL), ClientSize.Height);
+                const int izquierda = Tema.Espacio.XXL;
+                const int derecha = izquierda + Tema.AnchoCampo + Tema.Espacio.L;
+                ClientSize = new Size(Px(derecha + Tema.AnchoCampo + Tema.Espacio.XXL), ClientSize.Height);
+                txtNombre.Left = txtmail.Left = TxtPassword.Left = Px(izquierda);
                 txtApellido.Left = TxtConfirmpassword.Left = Px(derecha);
                 ColocarCampo(label6, txtNombre);
                 ColocarCampo(label5, txtApellido);
                 ColocarCampo(lblmail, txtmail);
+                txtmail.Width = Px(2 * Tema.AnchoCampo + Tema.Espacio.L);
                 ColocarCampo(label3, TxtPassword);
                 ColocarCampo(label4, TxtConfirmpassword);
-                btnregistrarse.Left = lblyatengocuen.Right + Px(Tema.Espacio.S);
-                float escala = Disposicion.Dpi(this) / Tema.DpiDiseno;
-                int margen = (int)Math.Round(24 * escala);
-                _fortaleza.SetBounds(margen, (int)Math.Round(364 * escala), Math.Max(1, ClientSize.Width - margen * 2), (int)Math.Round(24 * escala));
+                _fortaleza.SetBounds(TxtPassword.Left, TxtPassword.Bottom + Px(Tema.Espacio.S), TxtPassword.Width, Px(Tema.Espacio.XL));
+                checkbxShowPass.Location = new Point(TxtPassword.Left, _fortaleza.Bottom + Px(Tema.Espacio.L));
+                btnregistrarse.SetBounds(TxtPassword.Left, checkbxShowPass.Bottom + Px(Tema.Espacio.XL),
+                    TxtPassword.Width, Px(Tema.AltoBoton));
+                lblyatengocuen.Location = new Point(TxtConfirmpassword.Left, btnregistrarse.Top);
+                ClientSize = new Size(ClientSize.Width, btnregistrarse.Bottom + Px(Tema.Espacio.XXL));
             };
             if (_altaAdministrador)
             {
