@@ -1,0 +1,7 @@
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body { margin: 0; padding: var(--espacio-l); background: var(--superficie); color: var(--texto); font: var(--cuerpo); }
+button { font: inherit; color: inherit; }
+button:focus-visible, summary:focus-visible { outline: 2px solid var(--primario); outline-offset: 2px; }
+h2, h3, p { margin: 0; }
+.secundario { color: var(--texto-secundario); font: var(--ayuda); }

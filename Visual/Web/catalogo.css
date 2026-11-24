@@ -1,0 +1,15 @@
+#catalogo { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 225px), 1fr)); gap: var(--espacio-l); }
+.evento { display: flex; flex-direction: column; width: 100%; padding: 0; border: 1px solid var(--borde); background: var(--superficie); text-align: left; cursor: pointer; transition: background-color 160ms ease, transform 160ms ease; }
+.evento:hover { background: var(--primario-suave); transform: translateY(-2px); }
+.portada { position: relative; display: flex; align-items: end; width: 100%; height: 112px; padding: var(--espacio-l); color: white; overflow: hidden; }
+.portada img { position: absolute; inset: 0; object-fit: cover; width: 100%; height: 100%; }
+.inicial { font-size: 4em; line-height: .9; opacity: .52; }
+.estado { position: absolute; top: var(--espacio-m); right: var(--espacio-m); padding: var(--espacio-xs) var(--espacio-s); background: var(--superficie); color: var(--texto); font: var(--ayuda); }
+.estado.disponible { background: var(--exito); }
+.estado.escaso { background: var(--advertencia); }
+.estado.agotado { background: var(--agotado); }
+.detalle { display: flex; flex-direction: column; flex: 1; gap: var(--espacio-xs); padding: var(--espacio-l); }
+.nombre { font: var(--titulo-tarjeta); font-weight: 600; }
+.precio { margin-top: auto; padding-top: var(--espacio-s); font: var(--precio); font-weight: 600; }
+.accion { color: var(--primario); padding-top: var(--espacio-xs); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .evento { transition: none; } }

@@ -76,6 +76,32 @@ namespace Visual
         public static readonly Font IconosDocumentos = new Font("Segoe MDL2 Assets", 16f);
         public static readonly Font Comprobante = new Font("Consolas", 10f);
 
+        internal static Dictionary<string, string> VariablesWeb()
+        {
+            string Css(Font fuente) => fuente.SizeInPoints.ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                "pt '" + fuente.Name + "', sans-serif";
+            return new Dictionary<string, string>
+            {
+                ["primario"] = ColorTranslator.ToHtml(Primario),
+                ["primario-suave"] = ColorTranslator.ToHtml(PrimarioSuave),
+                ["superficie"] = ColorTranslator.ToHtml(Superficie),
+                ["texto"] = ColorTranslator.ToHtml(Texto),
+                ["texto-secundario"] = ColorTranslator.ToHtml(TextoSecundario),
+                ["borde"] = ColorTranslator.ToHtml(Borde),
+                ["exito"] = ColorTranslator.ToHtml(ExitoFondo),
+                ["advertencia"] = ColorTranslator.ToHtml(AdvertenciaFondo),
+                ["agotado"] = ColorTranslator.ToHtml(FondoDeshabilitado),
+                ["espacio-l"] = Espacio.L + "px",
+                ["espacio-m"] = Espacio.M + "px",
+                ["espacio-s"] = Espacio.S + "px",
+                ["espacio-xs"] = Espacio.XS + "px",
+                ["cuerpo"] = Css(Cuerpo),
+                ["ayuda"] = Css(Ayuda),
+                ["titulo-tarjeta"] = Css(TituloTarjeta),
+                ["precio"] = Css(PrecioTarjeta)
+            };
+        }
+
         public static class Espacio
         {
             public const int XS = 4, S = 8, M = 12, L = 16, XL = 24, XXL = 32;

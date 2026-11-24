@@ -46,6 +46,25 @@ namespace Visual.Componentes
             disponibilidad.ForeColor = Tema.Texto;
             AccessibleName=dato.Nombre;
         }
+        internal object ModeloWeb()
+        {
+            int tono = PortadaEvento.ColorDelNombre(evento.Nombre);
+            return new
+            {
+                id = evento.Id,
+                nombre = titulo.Text,
+                fecha = fecha.Text,
+                lugar = lugar.Text,
+                precio = precio.Text,
+                disponibilidad = disponibilidad.Text,
+                estado = disponibilidad.BackColor == Tema.ExitoFondo ? "disponible" :
+                    disponibilidad.BackColor == Tema.AdvertenciaFondo ? "escaso" : "agotado",
+                color = ColorTranslator.ToHtml(Tema.PaletaPortadas[tono]),
+                colorFinal = ColorTranslator.ToHtml(Tema.PaletaPortadas[(tono + 2) % Tema.PaletaPortadas.Length]),
+                imagen = evento.ImagenPortada == null ? null : Convert.ToBase64String(evento.ImagenPortada)
+            };
+        }
+
         private void Distribuir(int ancho, int altoPortada)
         {
             int Px(int medida) => Disposicion.Pixeles(this, medida);

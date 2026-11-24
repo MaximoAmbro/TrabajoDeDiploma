@@ -474,6 +474,14 @@ namespace Pruebas
                 Math.Max(area.Left, Math.Min(formulario.Left, area.Right - formulario.Width)),
                 Math.Max(area.Top, Math.Min(formulario.Top, area.Bottom - formulario.Height)));
             Application.DoEvents();
+            var vistasWeb = Descendientes(formulario).OfType<Visual.Web.PanelWeb>().ToArray();
+            var esperaWeb = Stopwatch.StartNew();
+            while (vistasWeb.Any(vista => !vista.InicializacionTerminada) && esperaWeb.ElapsedMilliseconds < 10000)
+            {
+                Application.DoEvents();
+                Thread.Sleep(20);
+            }
+            Application.DoEvents();
             var bounds = formulario.RectangleToScreen(formulario.ClientRectangle);
             Directory.CreateDirectory(carpeta);
             using (var imagen = new Bitmap(bounds.Width, bounds.Height))
@@ -486,6 +494,30 @@ namespace Pruebas
                         Assert.IsTrue(PrintWindow(formulario.Handle, hdc, 1), "Windows debe dibujar el área cliente.");
                     }
                     finally { lienzo.ReleaseHdc(hdc); }
+                }
+                foreach (var vista in vistasWeb.Where(v => v.Visible && v.Preparado))
+                {
+                    using (var memoria = new MemoryStream())
+                    {
+                        var captura = vista.CapturarAsync(memoria);
+                        var espera = Stopwatch.StartNew();
+                        while (!captura.IsCompleted && espera.ElapsedMilliseconds < 5000)
+                        {
+                            Application.DoEvents();
+                            Thread.Sleep(20);
+                        }
+                        Assert.IsTrue(captura.IsCompleted, "WebView2 debe devolver la captura.");
+                        captura.GetAwaiter().GetResult();
+                        memoria.Position = 0;
+                        using (var capturaWeb = Image.FromStream(memoria))
+                        using (var lienzo = Graphics.FromImage(imagen))
+                        {
+                            var destino = vista.RectangleToScreen(vista.ClientRectangle);
+                            destino.Offset(-bounds.X, -bounds.Y);
+                            lienzo.DrawImage(capturaWeb, destino);
+                        }
+                    }
+                    Console.WriteLine(formulario.GetType().Name + ": contenido WebView2 capturado.");
                 }
                 imagen.Save(Path.Combine(carpeta, formulario.GetType().Name + ".png"), System.Drawing.Imaging.ImageFormat.Png);
             }

@@ -15,7 +15,11 @@ namespace Visual
     {
         public int IDUsuario;
         public string NombreUsuario;
+        private List<Evento> eventosMostrados = new List<Evento>();
         private bool vistaTabla;
+        private bool fichaAbierta;
+        private readonly Web.PanelWeb catalogoWeb = new Web.PanelWeb { Name = "catalogoWeb", Visible = false };
+        private readonly Label avisoWeb = new Label { Name = "avisoCatalogoWeb", Dock = DockStyle.Top, Visible = false };
         private bool distribuyendoTarjetas;
         public frmEventosCliente()
         {
@@ -24,6 +28,30 @@ namespace Visual
             PrepararFiltros();
             tarjetas.ClientSizeChanged += (s, e) => DistribuirCatalogo();
             btnVista.Click += (s, e) => MostrarVista(!vistaTabla);
+            avisoWeb.Text = "Vista web no disponible. Podés seguir usando las tarjetas y la tabla.";
+            avisoWeb.ForeColor = Tema.TextoSecundario;
+            avisoWeb.Height = Tema.AltoCampo;
+            pnlExplorar.Controls.Add(catalogoWeb);
+            pnlExplorar.Controls.Add(avisoWeb);
+            catalogoWeb.VistaLista += ActualizarVistaWeb;
+            catalogoWeb.VistaNoDisponible += () =>
+            {
+                avisoWeb.Tag = true;
+                ActualizarVistaWeb();
+            };
+            catalogoWeb.Escape += () =>
+            {
+                Message mensaje = default(Message);
+                ProcessCmdKey(ref mensaje, Keys.Escape);
+            };
+            catalogoWeb.Mensaje += mensaje =>
+            {
+                if (!catalogoWeb.Visible || mensaje["tipo"]?.ToString() != "evento") return;
+                if (!int.TryParse(mensaje["id"]?.ToString(), out int id)) return;
+                var evento = eventosMostrados.FirstOrDefault(item => item.Id == id);
+                if (evento != null) ElegirEvento(evento);
+            };
+            Shown += (s, e) => catalogoWeb.Cargar("catalogo.html");
         }
         private void PrepararFiltros()
         {
@@ -97,6 +125,19 @@ namespace Visual
             dgveventos.Visible = tabla;
             btnComprar.Visible = tabla || !btnVista.Enabled;
             btnVista.Text = tabla ? "Ver tarjetas" : "Ver como tabla";
+            ActualizarVistaWeb();
+        }
+
+        private void ActualizarVistaWeb()
+        {
+            bool mostrarTarjetas = !vistaTabla && !fichaAbierta;
+            catalogoWeb.Visible = mostrarTarjetas && catalogoWeb.Preparado && eventosMostrados.Count > 0;
+            avisoWeb.Visible = mostrarTarjetas && avisoWeb.Tag != null;
+            if (catalogoWeb.Visible) catalogoWeb.BringToFront();
+            if (avisoWeb.Visible) avisoWeb.BringToFront();
+            foreach (var tarjeta in tarjetas.Controls.OfType<Componentes.TarjetaEvento>())
+                foreach (Button accion in tarjeta.Controls.OfType<Button>())
+                    accion.TabStop = !catalogoWeb.Visible;
         }
 
         private void DistribuirCatalogo()
@@ -130,6 +171,7 @@ namespace Visual
         private void CargarEventos(string texto, string categoria, DateTime? desde)
         {
             List<Evento> eventos = GestorEventos.Instance.Buscar(texto, categoria, desde);
+            eventosMostrados = eventos;
             foreach(Control anterior in tarjetas.Controls.Cast<Control>().ToArray()) anterior.Dispose();
             tarjetas.Controls.Clear();
             btnVista.Enabled = eventos.Count > 0;
@@ -180,6 +222,7 @@ namespace Visual
                 tarjeta.VerEntradas+=ElegirEvento;
                 tarjetas.Controls.Add(tarjeta);
             }
+            catalogoWeb.Actualizar(tarjetas.Controls.OfType<Componentes.TarjetaEvento>().Select(tarjeta => tarjeta.ModeloWeb()).ToArray());
             MostrarVista(vistaTabla);
             DistribuirCatalogo();
         }
@@ -191,9 +234,11 @@ namespace Visual
             dgveventos.CurrentCell=fila.Cells["Nombre"];
             var ficha=new Componentes.FichaEvento {Name="fichaEvento",Dock=DockStyle.Fill};
             ficha.Cargar(elegido);
+            fichaAbierta = true;
+            ActualizarVistaWeb();
             tarjetas.Visible=false;dgveventos.Visible=false;pnlBusqueda.Visible=false;pnlAcciones.Visible=false;
             pnlExplorar.Controls.Add(ficha);ficha.BringToFront();
-            ficha.Volver+=()=>{ficha.Dispose();pnlBusqueda.Visible=true;pnlAcciones.Visible=true;MostrarVista(vistaTabla);};
+            ficha.Volver+=()=>{ficha.Dispose();fichaAbierta=false;pnlBusqueda.Visible=true;pnlAcciones.Visible=true;MostrarVista(vistaTabla);};
             ficha.Comprar+=(ev,sector)=>AbrirCompra(ev.Id,sector);
         }
 
