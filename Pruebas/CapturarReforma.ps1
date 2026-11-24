@@ -1,7 +1,8 @@
 ﻿param(
     [Parameter(Mandatory = $true)]
     [ValidateSet(100, 150)]
-    [int]$Escala
+    [int]$Escala,
+    [switch]$Demostracion
 )
 
 $ErrorActionPreference = 'Stop'
@@ -21,7 +22,7 @@ using System.Windows.Forms;
 internal static class CapturarReforma
 {
     [STAThread]
-    private static int Main()
+    private static int Main(string[] args)
     {
         var pruebas = Assembly.LoadFrom("Pruebas.dll");
         var baseDePrueba = pruebas.GetType("Pruebas.BaseDePrueba");
@@ -29,7 +30,9 @@ internal static class CapturarReforma
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            baseDePrueba.GetMethod("Preparar").Invoke(null, new object[] { null });
+            bool demo = args.Length > 0 && args[0] == "demo";
+            if (demo) baseDePrueba.GetMethod("PrepararDemostracion").Invoke(null, null);
+            else baseDePrueba.GetMethod("Preparar").Invoke(null, new object[] { null });
             var tipo = pruebas.GetType("Pruebas.PruebasInteraccionPantallas");
             tipo.GetMethod("CP357_InteraccionRealDeLasPantallas").Invoke(Activator.CreateInstance(tipo), null);
             return 0;
@@ -56,19 +59,37 @@ $manifestCaptura = $manifestOriginal.Replace('>true</dpiAware>', '>true/pm</dpiA
 $csc = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
 & $csc /nologo /r:System.Windows.Forms.dll "/win32manifest:$manifiesto" "/out:$hostCaptura" $codigo
 if ($LASTEXITCODE -ne 0) { throw 'El host de captura no compiló.' }
-Copy-Item -LiteralPath (Join-Path $binarios 'Pruebas.dll.config') -Destination ($hostCaptura + '.config') -Force
+$configCaptura = $hostCaptura + '.config'
+Copy-Item -LiteralPath (Join-Path $binarios 'Pruebas.dll.config') -Destination $configCaptura -Force
+if ($Demostracion) {
+    $config = New-Object System.Xml.XmlDocument
+    $config.Load($configCaptura)
+    $entrada = $config.configuration.connectionStrings.add | Where-Object { $_.name -eq 'Visual.Properties.Settings.BddEventAura' }
+    $cadena = New-Object System.Data.SqlClient.SqlConnectionStringBuilder $entrada.connectionString
+    $cadena['Initial Catalog'] = 'BddEventAura_Capturas_Demostracion'
+    $entrada.connectionString = $cadena.ConnectionString
+    $config.Save($configCaptura)
+}
 
 $escalaAnterior = $env:EVENTAURA_CAPTURAS_DPI
 $salidaAnterior = $env:EVENTAURA_CAPTURAS_UI
+$demoAnterior = $env:EVENTAURA_CAPTURAS_DEMO
 Push-Location $binarios
 try {
     $env:EVENTAURA_CAPTURAS_DPI = (96 * $Escala / 100).ToString()
     $env:EVENTAURA_CAPTURAS_UI = Join-Path $raiz "TestResults/Capturas-Reforma/$Escala"
-    & $hostCaptura
+    if ($Demostracion) {
+        $env:EVENTAURA_CAPTURAS_DEMO = '1'
+        & $hostCaptura demo
+    } else {
+        $env:EVENTAURA_CAPTURAS_DEMO = $null
+        & $hostCaptura
+    }
     $resultado = $LASTEXITCODE
 } finally {
     Pop-Location
     $env:EVENTAURA_CAPTURAS_DPI = $escalaAnterior
     $env:EVENTAURA_CAPTURAS_UI = $salidaAnterior
+    $env:EVENTAURA_CAPTURAS_DEMO = $demoAnterior
 }
 exit $resultado

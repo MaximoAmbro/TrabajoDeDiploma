@@ -53,6 +53,12 @@ namespace Visual
             SizeChanged += (s, e) => ActualizarVistaWeb();
             Shown += (s, e) =>
             {
+                int altoExtra = Math.Max(0, Math.Min(Disposicion.Pixeles(this, 144),
+                    Screen.FromControl(this).WorkingArea.Height - Height));
+                ClientSize = new Size(ClientSize.Width, ClientSize.Height + altoExtra);
+                btnExportar.Top += altoExtra;
+                btnVolver.Top += altoExtra;
+                Disposicion.AjustarAreaVisible(this);
                 Disposicion.LimitarAncho(lblLectura);
                 int pie = Math.Min(btnExportar.Top, btnVolver.Top);
                 lblLectura.Height = Math.Min(lblLectura.Height,
@@ -212,8 +218,19 @@ namespace Visual
             dgvReporte.Visible = mostrarResultado && !web;
             lblLectura.Visible = mostrarResultado && !web;
             avisoWeb.Visible = vistaWeb.InicializacionTerminada && !vistaWeb.Preparado;
-            avisoWeb.SetBounds(dgvReporte.Left, dgvReporte.Top - avisoWeb.Font.Height,
-                dgvReporte.Width, avisoWeb.Font.Height);
+            int margenAviso = Disposicion.Pixeles(this, Tema.Espacio.S);
+            avisoWeb.SetBounds(0, btnGenerar.Bottom + margenAviso,
+                ClientSize.Width, avisoWeb.Font.Height);
+            if (avisoWeb.Visible)
+            {
+                int nuevoInicio = avisoWeb.Bottom + margenAviso;
+                int desplazamiento = Math.Max(0, nuevoInicio - dgvReporte.Top);
+                if (desplazamiento > 0)
+                {
+                    dgvReporte.Top += desplazamiento;
+                    dgvReporte.Height = Math.Max(1, dgvReporte.Height - desplazamiento);
+                }
+            }
             if (vistaWeb.Visible) vistaWeb.BringToFront();
             if (avisoWeb.Visible) avisoWeb.BringToFront();
         }
@@ -321,6 +338,16 @@ namespace Visual
             catch (ReglaNegocioException ex)
             {
                 Avisos.Regla("Reportes", ex);
+                return;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Avisos.Informativo(this, "Windows no permitió escribir en Documentos. Revisá los permisos de la carpeta y volvé a exportar.");
+                return;
+            }
+            catch (FileNotFoundException)
+            {
+                Avisos.Informativo(this, "Falta un archivo necesario para generar el PDF. Repará la carpeta de EventAura y volvé a exportar.");
                 return;
             }
             catch (IOException)

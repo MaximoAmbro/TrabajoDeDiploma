@@ -37,6 +37,7 @@ namespace Pruebas
             // También para los hilos STA creados por los casos: una excepción hace
             // fallar el caso, nunca abre el diálogo modal del framework.
             ConfigurarErroresDePrueba();
+            if (Environment.GetEnvironmentVariable("EVENTAURA_CP199_HIJO") == "1") return;
             EnviadorSimulado.DirectorioBandeja = Path.Combine(RaizDelRepositorio(), "TestResults", "BandejaSimulada");
             EnviadorSimulado.LimpiarBandeja();
             string cadena = CadenaDePrueba();
@@ -51,6 +52,21 @@ namespace Pruebas
                     "crea de nuevo en cada corrida. No se tocó ninguna base.");
             }
 
+            PrepararBase(cadena, nombre, false);
+        }
+
+        public static void PrepararDemostracion()
+        {
+            ConfigurarErroresDePrueba();
+            string cadena = CadenaDePrueba();
+            string nombre = new SqlConnectionStringBuilder(cadena).InitialCatalog;
+            if (nombre != "BddEventAura_Capturas_Demostracion")
+                throw new InvalidOperationException("La captura requiere su propia base de demostración.");
+            PrepararBase(cadena, nombre, true);
+        }
+
+        private static void PrepararBase(string cadena, string nombre, bool demostracion)
+        {
             RecrearBase(cadena, nombre);
             string carpeta = Path.Combine(RaizDelRepositorio(), "BaseDatos");
             EjecutarScript(cadena, Path.Combine(carpeta, "01-esquema.sql"));
@@ -65,6 +81,9 @@ namespace Pruebas
             EjecutarScript(cadena, Path.Combine(carpeta, "14-primer-evento-aprobado.sql"));
             EjecutarScript(cadena, Path.Combine(carpeta, "15-motivo-rechazo-evento.sql"));
             EjecutarScript(cadena, Path.Combine(carpeta, "16-fk-local-propietario.sql"));
+
+            if (demostracion)
+                EjecutarScript(cadena, Path.Combine(carpeta, "semilla-demostracion.sql"));
 
             // GestorParametros cachea: que lea la tabla recién poblada.
             GestorParametros.Instance.Recargar();

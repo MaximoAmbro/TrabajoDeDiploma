@@ -18,6 +18,99 @@ namespace Pruebas
     {
         public TestContext TestContext { get; set; }
 
+        // CP-200 — RF-07, RNF-02: un fallo del PDF no revierte ni oculta el pago confirmado.
+        [TestMethod("CP-200: Fallo al generar el ticket conserva el pedido y muestra recuperación")]
+        public void CP200_FalloDeTicketDejaCompraRecuperable()
+        {
+            using (var pantalla = new Visual.FrmCompraCliente())
+            {
+                pantalla.CrearTickets = _ => { throw new IOException("Documentos no permite escritura"); };
+                var confirmacion = pantalla.CrearConfirmacion(new Entidades.Compra { Id = 804, TotalPagado = 1200m });
+                using (confirmacion)
+                {
+                    Assert.IsTrue(pantalla.CompraFinalizada, "El pago ya fue confirmado y no debe ofrecerse un segundo cobro.");
+                    Assert.AreEqual(0, confirmacion.Rutas.Count);
+                    StringAssert.Contains(confirmacion.AvisoTicket, "pedido EA-000804");
+                    StringAssert.Contains(confirmacion.AvisoTicket, "Mis entradas");
+                    StringAssert.Contains(confirmacion.AvisoTicket, "Documentos");
+                }
+            }
+        }
+
+        // CP-199 — RF-03/RF-07/RF-11, RNF-02: sin DLL opcionales, la carga real termina en respaldo.
+        [TestMethod("CP-199: Quitar las DLL de WebView2 y Newtonsoft activa el respaldo de las cuatro vistas")]
+        public void CP199_RespaldoConDependenciasAusentesEnCopia()
+        {
+            if (Environment.GetEnvironmentVariable("EVENTAURA_CP199_HIJO") == "1")
+            {
+                ProbarPanelSinDependencias();
+                return;
+            }
+
+            string raiz = Path.GetDirectoryName(typeof(PruebasInteraccionPantallas).Assembly.Location);
+            string temporal = Path.Combine(Path.GetTempPath(), "EventAura-CP199-" + Guid.NewGuid().ToString("N"));
+            CopiarCarpeta(raiz, temporal);
+            try
+            {
+                var dependencias = Directory.GetFiles(temporal, "Microsoft.Web.WebView2.*.dll", SearchOption.AllDirectories)
+                    .Concat(Directory.GetFiles(temporal, "Newtonsoft.Json.dll", SearchOption.AllDirectories))
+                    .Concat(Directory.GetFiles(temporal, "WebView2Loader.dll", SearchOption.AllDirectories)).Distinct().ToArray();
+                Assert.IsTrue(dependencias.Any(ruta => Path.GetFileName(ruta) == "Microsoft.Web.WebView2.Core.dll"), "La copia debe incluir WebView2.Core antes de quitarla.");
+                Assert.IsTrue(dependencias.Any(ruta => Path.GetFileName(ruta) == "Microsoft.Web.WebView2.WinForms.dll"), "La copia debe incluir WebView2.WinForms antes de quitarla.");
+                Assert.IsTrue(dependencias.Any(ruta => Path.GetFileName(ruta) == "Newtonsoft.Json.dll"), "La copia debe incluir Newtonsoft antes de quitarla.");
+                Assert.IsTrue(dependencias.Any(ruta => Path.GetFileName(ruta) == "WebView2Loader.dll"), "La copia debe incluir los loaders antes de quitarla.");
+                foreach (string archivo in dependencias)
+                    File.Delete(archivo);
+
+                string vstest = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "Microsoft Visual Studio", "2022", "BuildTools", "Common7", "IDE", "CommonExtensions", "Microsoft", "TestWindow", "vstest.console.exe");
+                Assert.IsTrue(File.Exists(vstest), "Se requiere vstest.console.exe para ejecutar la copia aislada.");
+                var inicio = new ProcessStartInfo(vstest,
+                    "\"" + Path.Combine(temporal, "Pruebas.dll") + "\" /TestCaseFilter:\"FullyQualifiedName~CP199_RespaldoConDependenciasAusentesEnCopia\" /Logger:console;verbosity=normal")
+                { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true };
+                inicio.EnvironmentVariables["EVENTAURA_CP199_HIJO"] = "1";
+                using (var proceso = Process.Start(inicio))
+                {
+                    string salida = proceso.StandardOutput.ReadToEnd();
+                    string error = proceso.StandardError.ReadToEnd();
+                    Assert.IsTrue(proceso.WaitForExit(120000), "El proceso aislado debe terminar.");
+                    Assert.AreEqual(0, proceso.ExitCode, salida + Environment.NewLine + error);
+                    Assert.IsTrue(salida.Contains("CP-199"), salida);
+                }
+            }
+            finally
+            {
+                if (Directory.Exists(temporal)) Directory.Delete(temporal, true);
+            }
+        }
+
+        private static void ProbarPanelSinDependencias()
+        {
+            string[] paginas = { "catalogo.html", "compra.html", "datos.html", "datos.html" };
+            foreach (string pagina in paginas)
+            {
+                using (var panel = new Visual.Web.PanelWeb())
+                {
+                    bool respaldo = false;
+                    panel.VistaNoDisponible += () => respaldo = true;
+                    panel.Cargar(pagina);
+                    Assert.IsTrue(respaldo, pagina + " debe activar el evento de respaldo al faltar las DLL.");
+                    Assert.IsTrue(panel.InicializacionTerminada, pagina);
+                    Assert.IsFalse(panel.Preparado, pagina);
+                    Assert.IsFalse(panel.Visible, pagina);
+                }
+            }
+        }
+
+        private static void CopiarCarpeta(string origen, string destino)
+        {
+            Directory.CreateDirectory(destino);
+            foreach (string archivo in Directory.GetFiles(origen))
+                File.Copy(archivo, Path.Combine(destino, Path.GetFileName(archivo)), true);
+            foreach (string carpeta in Directory.GetDirectories(origen))
+                CopiarCarpeta(carpeta, Path.Combine(destino, Path.GetFileName(carpeta)));
+        }
+
         // CP-357 — RNF-02/RNF-03: interacción WinForms real, foco, teclado, y geometría en ventanas abiertas.
         [TestMethod("CP-357: Teclado y geometría de las 25 ventanas reales")]
         public void CP357_InteraccionRealDeLasPantallas()
@@ -56,7 +149,10 @@ namespace Pruebas
                             if (formulario is Visual.frmReportes &&
                                 !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
                             {
-                                ((DateTimePicker)formulario.Controls["dtpHasta"]).Value = DateTime.Today.AddMonths(3);
+                                bool demo = Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_DEMO") == "1";
+                                if (demo)
+                                    ((DateTimePicker)formulario.Controls["dtpDesde"]).Value = DateTime.Today.AddMonths(-6);
+                                ((DateTimePicker)formulario.Controls["dtpHasta"]).Value = DateTime.Today.AddMonths(demo ? 4 : 3);
                                 ((Button)formulario.Controls["btnGenerar"]).PerformClick();
                             }
                             DataGridViewCell cantidadCapturada = null;
@@ -94,6 +190,7 @@ namespace Pruebas
                             string foco = VerificarFoco(formulario);
                             string geometria = VerificarGeometria(formulario);
                             string teclado = VerificarTeclas(formulario, tipo);
+                            VerificarRespaldoPosteriorALaCarga(formulario);
                             string fila = tipo.Name + " | " + foco + " | " + teclado + " | " + geometria;
                             resultados.Add(fila);
                             Console.WriteLine(fila);
@@ -121,6 +218,27 @@ namespace Pruebas
             Assert.AreEqual(0, noAislables.Length, "Quedaron pantallas que no pudieron abrirse: " + string.Join("; ", noAislables));
             string[] defectos = resultados.Where(r => r.Contains("DEFECTO:")).ToArray();
             Assert.AreEqual(0, defectos.Length, "Interacción real defectuosa: " + string.Join("; ", defectos));
+        }
+
+        private static void VerificarRespaldoPosteriorALaCarga(Form formulario)
+        {
+            foreach (var panel in Descendientes(formulario).OfType<Visual.Web.PanelWeb>().Where(p => p.Preparado).ToArray())
+            {
+                panel.SimularFallaPosteriorALaCarga();
+                Application.DoEvents();
+                Assert.IsFalse(panel.Visible, "La vista web debe ocultarse cuando falla tras quedar visible.");
+                var aviso = Descendientes(formulario).OfType<Control>()
+                    .FirstOrDefault(c => c.Name.StartsWith("aviso", StringComparison.OrdinalIgnoreCase) && c.Name.EndsWith("Web", StringComparison.OrdinalIgnoreCase));
+                Assert.IsNotNull(aviso, "El formulario debe conservar el aviso de respaldo.");
+                Assert.IsTrue(aviso.Visible, "El aviso de respaldo debe aparecer después del fallo.");
+                if (formulario is Visual.frmMenuAdministrador)
+                {
+                    var indicadores = Descendientes(formulario).OfType<FlowLayoutPanel>().FirstOrDefault(c => c.Name == "indicadoresPanel");
+                    Assert.IsNotNull(indicadores);
+                    Assert.IsTrue(indicadores.Visible && indicadores.Controls.Count > 0,
+                        "Los indicadores WinForms del Administrador deben quedar visibles.");
+                }
+            }
         }
 
         private static void PrepararSesion(Type tipo)
@@ -277,11 +395,12 @@ namespace Pruebas
             if (formulario is Visual.FrmCompraCliente &&
                 !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
             {
-                var demostracion = eventos.FirstOrDefault(evento =>
-                {
-                    var sectores = GestorEventos.Instance.Sectores(evento.Id);
-                    return sectores.Count > 0 && sectores.All(sector => GestorPaquetes.Instance.DisponiblesDe(sector.Id) >= 2);
-                });
+                var candidatos = eventos.Select(evento => new { Evento = evento, Sectores = GestorEventos.Instance.Sectores(evento.Id) });
+                if (Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_DEMO") == "1")
+                    candidatos = candidatos.OrderByDescending(candidato => candidato.Sectores.Count)
+                        .ThenBy(candidato => candidato.Evento.Fecha);
+                var demostracion = candidatos.FirstOrDefault(candidato => candidato.Sectores.Count > 0 &&
+                    candidato.Sectores.All(sector => GestorPaquetes.Instance.DisponiblesDe(sector.Id) >= 2))?.Evento;
                 idEvento = (demostracion ?? Fake.EventoPublicado(20000m, 100)).Id;
             }
             foreach (var campo in formulario.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))

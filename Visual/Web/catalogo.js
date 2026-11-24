@@ -8,10 +8,8 @@ function elemento(tipo, clase, texto) {
 }
 window.eventAuraDibujar = eventos => {
     catalogo.replaceChildren(...(eventos || []).map(evento => {
-        const tarjeta = elemento("button", "evento");
-        tarjeta.type = "button";
+        const tarjeta = elemento("article", "evento");
         tarjeta.dataset.evento = evento.id;
-        tarjeta.addEventListener("click", () => window.chrome.webview.postMessage({ tipo: "evento", id: evento.id }));
         const portada = elemento("span", "portada");
         portada.style.backgroundImage = "linear-gradient(120deg, " + evento.color + ", " + evento.colorFinal + ")";
         if (evento.imagen) {
@@ -24,9 +22,11 @@ window.eventAuraDibujar = eventos => {
         }
         portada.append(elemento("span", "estado " + evento.estado, evento.disponibilidad));
         const detalle = elemento("span", "detalle");
+        const accion = elemento("button", "accion", "Ver entradas");
+        accion.type = "button";
+        accion.addEventListener("click", () => window.chrome.webview.postMessage({ tipo: "evento", id: evento.id }));
         detalle.append(elemento("span", "nombre", evento.nombre), elemento("span", "secundario", evento.fecha),
-            elemento("span", "secundario", evento.lugar), elemento("span", "precio", evento.precio),
-            elemento("span", "accion", "Ver entradas"));
+            elemento("span", "secundario", evento.lugar), elemento("span", "precio", evento.precio), accion);
         tarjeta.append(portada, detalle);
         return tarjeta;
     }));

@@ -20,18 +20,40 @@ function baseGrafico(alto, titulo) {
     return figura("svg", { viewBox: "0 0 720 " + alto, role: "img", "aria-label": titulo });
 }
 function barras(serie) {
-    const alto = 26;
-    const svg = baseGrafico(alto * serie.length + 4, "Entradas vendidas por evento");
-    const max = Math.max(1, ...serie.map(p => p.valor));
-    serie.forEach((p, i) => {
-        const y = 3 + alto * i, ancho = p.valor / max * 365;
-        const nombre = p.etiqueta.length > 31 ? p.etiqueta.slice(0, 30) + "…" : p.etiqueta;
-        const rotulo = figura("text", { x: 1, y: y + 15 }, nombre);
+    const bloque = nodo("div");
+    const filas = nodo("div", null, "filas-barras");
+    filas.tabIndex = 0;
+    filas.setAttribute("aria-label", "Desplazar barras de eventos");
+    const alto = 24;
+    const altoSvg = alto * serie.length;
+    const svg = baseGrafico(altoSvg, "Entradas vendidas por evento");
+    const eje = baseGrafico(22, "Escala en entradas");
+    const marcoEje = nodo("div", null, "eje-barras");
+    const mayor = Math.max(1, ...serie.map(p => p.valor));
+    const orden = 10 ** Math.floor(Math.log10(mayor / 5));
+    const paso = Math.max(1, [1, 2, 5, 10].find(multiplo => multiplo * orden >= mayor / 5) * orden);
+    const max = Math.ceil(mayor / paso) * paso;
+    const x0 = 250;
+    const anchoEscala = 413;
+    for (let marca = 0; marca <= max; marca += paso) {
+        const x = x0 + marca * anchoEscala / max;
+        eje.append(figura("text", { x, y: 16, "text-anchor": "middle" }, entero.format(marca)));
+        svg.append(figura("line", { x1: x, x2: x, y1: 0, y2: altoSvg, stroke: "var(--borde)" }));
+    }
+    eje.append(figura("line", { x1: x0, x2: x0 + anchoEscala, y1: 21, y2: 21, stroke: "var(--borde)" }));
+    serie.slice().sort((a, b) => b.valor - a.valor).forEach((p, i) => {
+        const y = 3 + alto * i;
+        const ancho = p.valor * anchoEscala / max;
+        const nombre = p.etiqueta.length > 32 ? p.etiqueta.slice(0, 31) + "…" : p.etiqueta;
+        const rotulo = figura("text", { x: 1, y: y + 14 }, nombre);
         rotulo.prepend(figura("title", {}, p.etiqueta));
-        svg.append(rotulo, figura("rect", { x: 255, y, width: ancho, height: 19, fill: "var(--primario)" }),
-            figura("text", { x: 265 + ancho, y: y + 15 }, entero.format(p.valor)));
+        svg.append(rotulo, figura("rect", { x: x0, y, width: ancho, height: 18, fill: "var(--primario)" }),
+            figura("text", { x: x0 + ancho + 9, y: y + 14 }, entero.format(p.valor)));
     });
-    return svg;
+    filas.append(svg);
+    marcoEje.append(eje);
+    bloque.append(marcoEje, filas);
+    return bloque;
 }
 function categorias(serie) {
     const total = serie.reduce((s, p) => s + p.valor, 0);
@@ -99,7 +121,7 @@ function graficos(modelo) {
     activar();
     return bloque;
 }
-function tabla(modelo, desplegable) {
+function tabla(modelo) {
     const tabla = nodo("table");
     const cabecera = tabla.createTHead().insertRow();
     modelo.columnas.forEach((titulo, i) => cabecera.append(nodo("th", titulo, modelo.numericas[i] ? "numerica" : "")));
@@ -109,10 +131,11 @@ function tabla(modelo, desplegable) {
         tr.classList.toggle("total", modelo.hayTotal && i === modelo.filas.length - 1);
         fila.forEach((valor, j) => tr.append(nodo("td", valor, modelo.numericas[j] ? "numerica" : "")));
     });
-    if (!desplegable) return tabla;
-    const detalle = nodo("details");
-    detalle.append(nodo("summary", "Ver tabla de datos"), tabla);
-    return detalle;
+    const marco = nodo("div", null, "tabla-resultados");
+    marco.tabIndex = 0;
+    marco.setAttribute("aria-label", "Tabla del reporte");
+    marco.append(tabla);
+    return marco;
 }
 function metricas(tarjetas) {
     const grilla = nodo("div", null, "metricas");
@@ -136,6 +159,6 @@ window.eventAuraDibujar = datos => {
     }
     if (!reporte) return;
     if (reporte.barras.length) destino.append(graficos(reporte));
-    destino.append(tabla(reporte, reporte.barras.length > 0));
+    destino.append(tabla(reporte));
     if (datos.lectura) destino.append(nodo("p", datos.lectura, "secundario"));
 };

@@ -1,4 +1,4 @@
-#datos { display: grid; gap: var(--espacio-l); }
+#datos { display: grid; gap: var(--espacio-s); }
 h2 { font: var(--titulo-tarjeta); font-weight: 600; }
 .metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: var(--espacio-s); }
 .metrica { border: 1px solid var(--borde); padding: var(--espacio-m); }
@@ -7,7 +7,7 @@ h2 { font: var(--titulo-tarjeta); font-weight: 600; }
 .selector { display: flex; flex-wrap: wrap; gap: var(--espacio-xs); margin-bottom: var(--espacio-s); }
 .selector button { cursor: pointer; background: var(--superficie); border: 1px solid var(--borde); padding: var(--espacio-xs) var(--espacio-s); }
 .selector button[aria-pressed=true] { border-color: var(--primario); background: var(--primario-suave); }
-.grafico { min-width: 0; border: 1px solid var(--borde); padding: var(--espacio-m); }
+.grafico { min-width: 0; border: 1px solid var(--borde); padding: var(--espacio-s); }
 svg { width: 100%; height: auto; color: var(--texto-secundario); }
 svg text { fill: currentColor; font: var(--ayuda); font-size: 13px; }
 .leyenda { display: flex; flex-wrap: wrap; gap: var(--espacio-m); margin-top: var(--espacio-xs); }
@@ -18,3 +18,11 @@ th { background: var(--primario-suave); }
 .numerica { text-align: right; }
 .total { font-weight: 600; }
 summary { cursor: pointer; padding-bottom: var(--espacio-s); }
+.filas-barras { max-height: 80px; overflow-y: auto; }
+.filas-barras svg, .grafico svg { display: block; }
+.eje-barras, .filas-barras { scrollbar-width: thin; scrollbar-gutter: stable; }
+.eje-barras { overflow-y: hidden; }
+.tabla-resultados { max-height: 104px; overflow: auto; }
+.tabla-resultados th { position: sticky; top: 0; }
+.filas-barras:focus-visible { outline: 2px solid var(--primario); }
+tbody tr:nth-child(even) { background: var(--primario-suave); }
