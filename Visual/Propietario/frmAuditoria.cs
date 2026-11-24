@@ -14,10 +14,17 @@ namespace Visual
         private readonly Componentes.EtiquetaRotulo etiquetaHasta = new Componentes.EtiquetaRotulo { Text = "Hasta", AutoSize = true };
         private readonly Componentes.EtiquetaRotulo etiquetaAccion = new Componentes.EtiquetaRotulo { Text = "Acción", AutoSize = true };
         private bool vistaLista;
+        private readonly Web.PanelWeb auditoriaWeb = new Web.PanelWeb { Name = "auditoriaWeb", Dock = DockStyle.None, Visible = false };
+        private readonly Label avisoWeb = new Label { Name = "avisoAuditoriaWeb", AutoSize = true, ForeColor = Tema.TextoSecundario, Text = "Vista web no disponible. Se muestra la tabla de Windows Forms.", Visible = false };
         public frmAuditoria()
         {
             InitializeComponent();
             Controls.AddRange(new Control[] { titulo, etiquetaDesde, etiquetaHasta, etiquetaAccion });
+            Controls.Add(auditoriaWeb);
+            Controls.Add(avisoWeb);
+            auditoriaWeb.VistaLista += ActualizarVistaAuditoria;
+            auditoriaWeb.VistaNoDisponible += ActualizarVistaAuditoria;
+            auditoriaWeb.Escape += () => { Message m = default(Message); ProcessCmdKey(ref m, Keys.Escape); };
             desde.Value = DateTime.Today.AddDays(-30);
             hasta.Value = DateTime.Today;
             accion.Items.AddRange(new object[] { "Todas", "Inicio de sesión", "Cambio de contraseña", "Compra iniciada", "Compra confirmada", "Devolución", "Control de ingreso", "Gestión de eventos: crear", "Gestión de eventos: publicar", "Gestión de eventos: eliminar", "Gestión de eventos: suspender", "Gestión de eventos: preventa", "Gestión de eventos: sector" });
@@ -31,6 +38,7 @@ namespace Visual
                 vistaLista = true;
                 AjustarGeometria();
                 Cargar();
+                auditoriaWeb.Cargar("gestion.html");
             };
             Resize += (s, e) => AjustarGeometria();
             tabla.SizeChanged += (s, e) => AjustarAnchosColumnas();
@@ -51,6 +59,10 @@ namespace Visual
             FormatearColumnas();
             tabla.Visible = filas.Count > 0;
             estadoVacio.Visible = filas.Count == 0;
+            auditoriaWeb.Actualizar(new { vista = "auditoria", filas = filas.Select(f => new
+                { fecha = f.Fecha.ToString("dd/MM/yyyy HH:mm"), correo = f.UsuarioMail, accion = f.Accion,
+                  entidad = f.Entidad, resultado = f.Resultado }).ToArray() });
+            ActualizarVistaAuditoria();
         }
 
         private void FormatearColumnas()
@@ -120,8 +132,20 @@ namespace Visual
             int inicio = buscar.Bottom + Px(Tema.Espacio.XL);
             tabla.SetBounds(margen, inicio, Math.Max(1, ClientSize.Width - 2 * margen),
                 Math.Max(1, ClientSize.Height - inicio - margen));
+            auditoriaWeb.Bounds = tabla.Bounds;
+            avisoWeb.Location = new Point(tabla.Left, Math.Max(inicio, tabla.Top - avisoWeb.Height));
             estadoVacio?.AjustarA(tabla);
             AjustarAnchosColumnas();
+        }
+
+        private void ActualizarVistaAuditoria()
+        {
+            bool web = auditoriaWeb.Preparado;
+            auditoriaWeb.Visible = web;
+            avisoWeb.Visible = auditoriaWeb.InicializacionTerminada && !web;
+            tabla.Visible = !web && tabla.Rows.Count > 0;
+            if (estadoVacio != null) estadoVacio.Visible = !web && tabla.Rows.Count == 0;
+            if (web) auditoriaWeb.BringToFront(); else avisoWeb.BringToFront();
         }
     }
 }
