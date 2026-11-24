@@ -37,6 +37,34 @@ namespace Visual.Componentes
     {
         public EtiquetaRotulo() : base(Tema.Rotulo, Tema.Texto) { }
     }
+    public sealed class EtiquetaEncabezado : EtiquetaRotulo
+    {
+        public EtiquetaEncabezado()
+        {
+            Font = Tema.Seccion;
+            ForeColor = Tema.TextoSecundario;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            string texto = Text.ToUpper(System.Globalization.CultureInfo.CurrentCulture);
+            float x = Padding.Left;
+            float y = (Height - Font.GetHeight(e.Graphics)) / 2;
+            float espacio = Font.SizeInPoints * e.Graphics.DpiX / 72f * Tema.InterletradoSeccion;
+            using (var pincel = new SolidBrush(ForeColor))
+            using (var formato = (StringFormat)StringFormat.GenericTypographic.Clone())
+            {
+                formato.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
+                foreach (char letra in texto)
+                {
+                    string glifo = letra.ToString();
+                    e.Graphics.DrawString(glifo, Font, pincel, x, y, formato);
+                    x += e.Graphics.MeasureString(glifo, Font, PointF.Empty, formato).Width + espacio;
+                }
+            }
+        }
+    }
+
     public class EtiquetaAyuda : EtiquetaTematica
     {
         public EtiquetaAyuda() : base(Tema.Ayuda, Tema.TextoSecundario) { }

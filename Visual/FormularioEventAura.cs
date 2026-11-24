@@ -32,7 +32,7 @@ namespace Visual
 
         protected void ColocarTitulo(Label titulo)
         {
-            titulo.Left = Disposicion.Pixeles(this, Tema.Espacio.XL);
+            titulo.Left = Disposicion.Pixeles(this, Tema.Espacio.XXL);
             titulo.Top = Disposicion.Pixeles(this, Tema.AltoBarraSuperior + Tema.Espacio.L);
         }
 

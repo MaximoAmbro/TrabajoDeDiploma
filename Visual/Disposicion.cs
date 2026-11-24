@@ -105,6 +105,27 @@ namespace Visual
             tarjeta.Height = Math.Min(natural, Math.Max(0, altoDisponible));
         }
 
+        internal static void AlinearAccionesFormulario(Form ventana, Control campo, Button principal, Button volver, bool apilar = false)
+        {
+            int alto = Pixeles(ventana, Tema.AltoBoton);
+            int separacion = Pixeles(ventana, Tema.Espacio.L);
+            int margen = Pixeles(ventana, Tema.Espacio.XXL);
+            int arriba = Math.Max(principal.Top, volver.Top);
+            principal.SetBounds(campo.Left, arriba, campo.Width, alto);
+            volver.SetBounds(apilar ? campo.Left : principal.Right + separacion,
+                apilar ? principal.Bottom + separacion : arriba, campo.Width, alto);
+            ventana.ClientSize = new Size(Math.Max(ventana.ClientSize.Width, volver.Right + margen),
+                Math.Max(ventana.ClientSize.Height, volver.Bottom + margen));
+        }
+
+        internal static void ExtenderGrilla(DataGridView grilla, Control pie)
+        {
+            int margen = Pixeles(grilla, Tema.Espacio.XXL);
+            int separacion = Pixeles(grilla, Tema.Espacio.L);
+            grilla.Width = Math.Max(1, grilla.Parent.ClientSize.Width - grilla.Left - margen);
+            grilla.Height = Math.Max(1, pie.Top - grilla.Top - separacion);
+        }
+
         internal static void AlinearGrupo(params Button[] botones)
         {
             int ancho = botones.Max(b => b.Width);

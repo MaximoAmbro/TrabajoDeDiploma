@@ -24,7 +24,7 @@ namespace Pruebas {
      var resumen=ControlDe<Label>(form,"lblResumen");var total=ControlDe<EtiquetaTotal>(form,"lblTotalDestacado");
      string importe=Regex.Match(resumen.Text,@"(?m)^TOTAL\s+([^\r\n]+)").Groups[1].Value.Trim();
      Assert.IsTrue(importe.Length>0);Assert.AreEqual("TOTAL "+importe,total.Text);
-     Assert.AreEqual(18f,total.Font.SizeInPoints);Assert.AreEqual(Visual.Tema.Primario,total.ForeColor);
+     Assert.AreEqual(15f,total.Font.SizeInPoints);Assert.AreEqual(Visual.Tema.Texto,total.ForeColor);
      Assert.AreEqual(2,ControlDe<IndicadorPasos>(form,"indicadorPasos").PasoActual);
      var panel=ControlDe<Panel>(form,"pnlResumen");ControlDe<Panel>(form,"pnlContenidoCompra").ScrollControlIntoView(panel);panel.AutoScrollPosition=new Point(0,100000);Application.DoEvents();
      Rectangle lectura=total.RectangleToScreen(total.ClientRectangle);

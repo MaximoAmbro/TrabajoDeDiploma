@@ -84,7 +84,7 @@ namespace Visual
 
         private static Componentes.EtiquetaRotulo Seccion(string nombre, string texto, int x, int ancho)
         {
-            return new Componentes.EtiquetaRotulo { Name = nombre, Text = texto, Location = new Point(x, 124), Size = new Size(ancho, 20) };
+            return new Componentes.EtiquetaEncabezado { Name = nombre, Text = texto, Location = new Point(x, 124), Size = new Size(ancho, 20) };
         }
 
         private void AbrirReportes(object sender, EventArgs e)

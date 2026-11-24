@@ -12,7 +12,7 @@ namespace Visual.Componentes
         {
             InitializeComponent();
             titulo.Font=Tema.TituloTarjeta;fecha.Font=Tema.DatoTarjeta;lugar.Font=Tema.DatoTarjeta;
-            precio.Font=Tema.PrecioTarjeta;precio.ForeColor=Tema.Primario;
+            precio.Font=Tema.PrecioTarjeta;precio.ForeColor=Tema.Texto;
             accion.Click+=(s,e)=>VerEntradas?.Invoke(evento);
             Paint+=Disposicion.PintarTarjeta;
         }

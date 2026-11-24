@@ -31,6 +31,7 @@ namespace Visual
             TxtConfirmpassword.TextChanged += (s, e) => ValidacionCampo.Limpiar(TxtConfirmpassword);
             Shown += (s, e) =>
             {
+                ColocarTitulo(label1);
                 int Px(int medida) => Disposicion.Pixeles(this, medida);
                 const int izquierda = Tema.Espacio.XXL;
                 const int derecha = izquierda + Tema.AnchoCampo + Tema.Espacio.L;

@@ -31,6 +31,18 @@ namespace Visual
             estadoSinCompras.Cargar("Todavía no compraste entradas. Cuando lo hagas, van a aparecer acá.", "Ver eventos");
             estadoSinCompras.Accion += AbrirEventos;
             Controls.Add(estadoSinCompras);
+            Shown += (s, e) =>
+            {
+                btnDevolver.Left = ClientSize.Width - btnDevolver.Width - Disposicion.Pixeles(this, Tema.Espacio.XXL);
+                Disposicion.LimitarAncho(lblAyuda);
+                Disposicion.LimitarAncho(lblDetalle);
+                lblAyuda.Height = Math.Max(1, btnVolver.Top - lblAyuda.Top - Disposicion.Pixeles(this, Tema.Espacio.S));
+                Disposicion.ExtenderGrilla(dgvCompras, lblDetalle);
+                dgvEntradas.Top = lblDetalle.Bottom + Disposicion.Pixeles(this, Tema.Espacio.XS);
+                Disposicion.ExtenderGrilla(dgvEntradas, lblAyuda);
+                estadoSinCompras.AjustarA(new Rectangle(dgvCompras.Left, dgvCompras.Top,
+                    dgvCompras.Width, btnVolver.Top - dgvCompras.Top));
+            };
         }
 
         private void frmHistorialCliente_Load(object sender, EventArgs e)

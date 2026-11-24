@@ -23,6 +23,7 @@ namespace Visual
             InitializeComponent();
             Shown += (s, e) =>
             {
+                lblPedido.Top = lblTitulo.Bottom + Disposicion.Pixeles(this, Tema.Espacio.XS);
                 Disposicion.LimitarAncho(lblTickets);
                 int espacio = Disposicion.Pixeles(this, Tema.Espacio.XS);
                 txtCarpeta.Top = lblTickets.Bottom + espacio;

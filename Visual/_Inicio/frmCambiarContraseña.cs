@@ -94,7 +94,7 @@ namespace Visual
         {
             float escala = Disposicion.Dpi(this) / Tema.DpiDiseno;
             int px(float valor) { return (int)Math.Round(valor * escala); }
-            int margen = px(24);
+            int margen = px(Tema.Espacio.XXL);
             _fortaleza.SetBounds(margen, px(_recuperacion ? 388 : 332), Math.Max(1, ClientSize.Width - 2 * margen), px(24));
             if (_recuperacion)
             {
@@ -107,17 +107,18 @@ namespace Visual
                 checkbxShowPass.Location = new Point(px(24), px(484));
                 btnVolver.Location = new Point(px(24), px(524));
                 btnconfirmar.Location = new Point(px(232), px(524));
-                _enviarCodigo.SetBounds(px(352), px(216), px(184), px(36));
+                _enviarCodigo.SetBounds(px(368), px(216), px(184), px(36));
                 _estadoCorreo.SetBounds(px(24), px(260), px(392), px(54));
             }
             label1.Top = px(Tema.AltoBarraSuperior + Tema.Espacio.L);
+            txtMail.Left = txtActual.Left = TxtPassword.Left = TxtConfirmpassword.Left = margen;
             ColocarCampo(label5, txtMail);
             ColocarCampo(lblActual, txtActual);
             ColocarCampo(label3, TxtPassword);
             ColocarCampo(label4, TxtConfirmpassword);
-            Disposicion.AlinearGrupo(btnVolver, btnconfirmar);
-            if (btnconfirmar.Right + margen > ClientSize.Width)
-                ClientSize = new Size(btnconfirmar.Right + margen, ClientSize.Height);
+            _fortaleza.Width = TxtPassword.Width;
+            checkbxShowPass.Left = TxtPassword.Left;
+            Disposicion.AlinearAccionesFormulario(this, TxtPassword, btnconfirmar, btnVolver, apilar: !_recuperacion);
             _altoSinAviso = ClientSize.Height;
             _filaAviso.SetBounds(margen, Math.Max(btnVolver.Bottom, btnconfirmar.Bottom) + px(Tema.Espacio.S),
                 ClientSize.Width - 2 * margen, 0);

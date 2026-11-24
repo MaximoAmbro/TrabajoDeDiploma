@@ -23,11 +23,19 @@ namespace Visual.Propietario
             Shown += (s, e) =>
             {
                 ColocarTitulo(label3);
+                int margen = Disposicion.Pixeles(this, Tema.Espacio.XXL);
+                txtNombre.Left = dtEvento.Left = cmbCategoria.Left = dtpFinPreventa.Left = margen;
+                foreach (Control campo in new Control[] { dtEvento, cmbCategoria, dtpFinPreventa })
+                {
+                    Tema.EstiloSelector(campo);
+                    campo.Width = Disposicion.Pixeles(this, Tema.AnchoCampo);
+                }
                 ColocarCampo(label1, txtNombre);
                 ColocarRotulo(label2, dtEvento);
                 ColocarRotulo(lblCategoria, cmbCategoria);
                 ColocarRotulo(lblPreventa, dtpFinPreventa);
                 ColocarRotulo(lblPortada, btnElegirPortada);
+                Disposicion.AlinearAccionesFormulario(this, txtNombre, btnRegistrar, lblVolver);
             };
             // Items y no DataSource: con DataSource, WinForms preselecciona el primer valor al
             // mostrarse y la categoría dejaría de ser una elección explícita.

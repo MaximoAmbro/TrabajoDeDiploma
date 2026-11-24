@@ -23,6 +23,7 @@ namespace Visual
             InitializeComponent();
             Shown += (s, e) =>
             {
+                txtTitular.Left = txtNumero.Left = txtVencimiento.Left = Disposicion.Pixeles(this, Tema.Espacio.XXL);
                 ColocarCampo(lblTitular, txtTitular);
                 int espacio = Disposicion.Pixeles(this, Tema.Espacio.XS);
                 lblTotal.Top = lblTitular.Top - lblTotal.Height - espacio;
@@ -32,11 +33,11 @@ namespace Visual
                 indicadorPasos.Top = lblTitulo.Top - indicadorPasos.Height - espacio;
                 ColocarCampo(lblNumero, txtNumero);
                 int Px(int medida) => Disposicion.Pixeles(this, medida);
-                txtCvv.Left = txtVencimiento.Left + Px(Tema.AnchoCampo + Tema.Espacio.S);
-                ClientSize = new System.Drawing.Size(txtCvv.Left + Px(Tema.AnchoCampo + Tema.Espacio.XL), ClientSize.Height);
+                txtCvv.Left = txtVencimiento.Left + Px(Tema.AnchoCampo + Tema.Espacio.L);
+                ClientSize = new System.Drawing.Size(txtCvv.Left + Px(Tema.AnchoCampo + Tema.Espacio.XXL), ClientSize.Height);
                 ColocarCampo(lblVencimiento, txtVencimiento);
                 ColocarCampo(lblCvv, txtCvv);
-                Disposicion.AlinearGrupo(btnCancelar, btnPagar);
+                Disposicion.AlinearAccionesFormulario(this, txtTitular, btnPagar, btnCancelar);
                 Disposicion.LimitarAncho(lblEstado);
             };
         }

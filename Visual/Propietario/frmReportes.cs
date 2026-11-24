@@ -41,10 +41,17 @@ namespace Visual
                 int pie = Math.Min(btnExportar.Top, btnVolver.Top);
                 lblLectura.Height = Math.Min(lblLectura.Height,
                     Math.Max(0, pie - lblLectura.Top - Disposicion.Pixeles(this, Tema.Espacio.S)));
+                foreach (Control selector in new Control[] { cmbReporte, cmbFiltro, dtpDesde, dtpHasta, dtpCorte })
+                    Tema.EstiloSelector(selector);
                 ColocarRotulo(lblReporte, cmbReporte);
                 ColocarRotulo(lblFiltro, cmbFiltro);
                 ColocarRotulo(lblDesde, dtpDesde);
                 ColocarRotulo(lblHasta, dtpHasta);
+                int espacio = Disposicion.Pixeles(this, Tema.Espacio.S);
+                lblLectura.Top = pie - lblLectura.Height - espacio;
+                dgvReporte.Height = Math.Max(1, lblLectura.Top - dgvReporte.Top - espacio);
+                estadoSinReporte.AjustarA(dgvReporte);
+                btnGenerar.PerformClick();
             };
             estadoSinReporte = new Componentes.EstadoVacio { Name = "estadoSinReporte", Visible = false };
             estadoSinReporte.AjustarA(dgvReporte);
@@ -86,7 +93,7 @@ namespace Visual
             dgvReporte.RowHeadersVisible = false;
             dgvReporte.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvReporte.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            Tema.EstiloGrilla(dgvReporte);
+            Tema.EstiloTablaDeConsulta(dgvReporte);
             dgvReporte.DefaultCellStyle.NullValue = "—";
             dgvReporte.EnableHeadersVisualStyles = false;
             dgvReporte.DataBindingComplete += dgvReporte_DataBindingComplete;
@@ -254,6 +261,7 @@ namespace Visual
             }
             MostrarEstadoSinReporte(false);
             FormatearColumnas(datos);
+            Tema.EstiloTablaDeConsulta(dgvReporte);
             lblLectura.Text = "Lectura. " + r.Lectura(datos);
             btnExportar.Enabled = true;
         }
@@ -295,7 +303,7 @@ namespace Visual
                 string formato = origen.ExtendedProperties[Reporte.PropiedadFormato] as string;
                 if (formato != null)
                 {
-                    columna.DefaultCellStyle.Format = formato;
+                    columna.DefaultCellStyle.Format = formato == "C0" ? "C2" : formato;
                     columna.DefaultCellStyle.FormatProvider = Reporte.Cultura;
                 }
                 if (formato != null || origen.ExtendedProperties.ContainsKey(Reporte.PropiedadDerecha))

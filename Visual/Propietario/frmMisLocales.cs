@@ -35,6 +35,12 @@ namespace Visual
             estadoSinLocales.Cargar("Todavía no registraste un local. Cuando lo hagas, vas a poder publicar eventos desde acá.", "Registrar local");
             estadoSinLocales.Accion += AbrirRegistroLocal;
             Controls.Add(estadoSinLocales);
+            Shown += (s, e) =>
+            {
+                ColocarTitulo(label2);
+                Disposicion.ExtenderGrilla(dgvLocales, btnVolver);
+                estadoSinLocales.AjustarA(dgvLocales);
+            };
         }
 
         private void frmMisLocales_Load(object sender, EventArgs e)

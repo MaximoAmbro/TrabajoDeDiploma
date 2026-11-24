@@ -9,15 +9,29 @@ namespace Visual
     public sealed partial class frmAuditoria : FormularioEventAura
     {
         private Componentes.EstadoVacio estadoVacio;
+        private readonly Componentes.EtiquetaTitulo titulo = new Componentes.EtiquetaTitulo { Text = "Registro de auditoría", AutoSize = true };
+        private readonly Componentes.EtiquetaRotulo etiquetaDesde = new Componentes.EtiquetaRotulo { Text = "Desde", AutoSize = true };
+        private readonly Componentes.EtiquetaRotulo etiquetaHasta = new Componentes.EtiquetaRotulo { Text = "Hasta", AutoSize = true };
+        private readonly Componentes.EtiquetaRotulo etiquetaAccion = new Componentes.EtiquetaRotulo { Text = "Acción", AutoSize = true };
+        private bool vistaLista;
         public frmAuditoria()
         {
             InitializeComponent();
+            Controls.AddRange(new Control[] { titulo, etiquetaDesde, etiquetaHasta, etiquetaAccion });
             desde.Value = DateTime.Today.AddDays(-30);
             hasta.Value = DateTime.Today;
             accion.Items.AddRange(new object[] { "Todas", "Inicio de sesión", "Cambio de contraseña", "Compra iniciada", "Compra confirmada", "Devolución", "Control de ingreso", "Gestión de eventos: crear", "Gestión de eventos: publicar", "Gestión de eventos: eliminar", "Gestión de eventos: suspender", "Gestión de eventos: preventa", "Gestión de eventos: sector" });
             accion.SelectedIndex = 0;
             buscar.Click += (s, e) => Cargar();
-            Shown += (s, e) => { AjustarGeometria(); Cargar(); };
+            Shown += (s, e) =>
+            {
+                Tema.EstiloSelector(desde);
+                Tema.EstiloSelector(hasta);
+                Tema.EstiloSelector(accion);
+                vistaLista = true;
+                AjustarGeometria();
+                Cargar();
+            };
             Resize += (s, e) => AjustarGeometria();
             tabla.SizeChanged += (s, e) => AjustarAnchosColumnas();
             estadoVacio = new Componentes.EstadoVacio { Name = "estadoSinAuditoria", Visible = false };
@@ -31,6 +45,7 @@ namespace Visual
         {
             var filas = GestorAuditoria.Instance.Consultar(desde.Value.Date, hasta.Value.Date.AddDays(1), accion.SelectedIndex <= 0 ? null : Convert.ToString(accion.SelectedItem));
             tabla.DataSource = filas;
+            Tema.EstiloTablaDeConsulta(tabla);
             FormatearColumnas();
             tabla.Visible = filas.Count > 0;
             estadoVacio.Visible = filas.Count == 0;
@@ -85,12 +100,24 @@ namespace Visual
 
         private void AjustarGeometria()
         {
-            buscar.Left = Math.Max(accion.Left + 160, ClientSize.Width - buscar.Width - 12);
-            accion.Width = Math.Max(160, buscar.Left - accion.Left - 16);
-            buscar.BringToFront();
-            tabla.SetBounds(tabla.Left, tabla.Top,
-                Math.Max(1, ClientSize.Width - tabla.Left - 12),
-                Math.Max(1, ClientSize.Height - tabla.Top - 12));
+            if (!vistaLista) return;
+            int Px(int medida) => Disposicion.Pixeles(this, medida);
+            int margen = Px(Tema.Espacio.XXL);
+            int separacion = Px(Tema.Espacio.L);
+            int anchoFecha = Px(160);
+            ColocarTitulo(titulo);
+            int arriba = titulo.Bottom + separacion + etiquetaDesde.Height + Px(Tema.Espacio.XS);
+            desde.SetBounds(margen, arriba, anchoFecha, Px(Tema.AltoCampo));
+            hasta.SetBounds(desde.Right + separacion, arriba, anchoFecha, Px(Tema.AltoCampo));
+            buscar.Location = new Point(ClientSize.Width - buscar.Width - margen, arriba);
+            int izquierda = hasta.Right + separacion;
+            accion.SetBounds(izquierda, arriba, Math.Max(1, buscar.Left - izquierda - separacion), Px(Tema.AltoCampo));
+            ColocarRotulo(etiquetaDesde, desde);
+            ColocarRotulo(etiquetaHasta, hasta);
+            ColocarRotulo(etiquetaAccion, accion);
+            int inicio = buscar.Bottom + Px(Tema.Espacio.XL);
+            tabla.SetBounds(margen, inicio, Math.Max(1, ClientSize.Width - 2 * margen),
+                Math.Max(1, ClientSize.Height - inicio - margen));
             estadoVacio?.AjustarA(tabla);
             AjustarAnchosColumnas();
         }

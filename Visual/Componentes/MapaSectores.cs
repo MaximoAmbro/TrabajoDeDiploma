@@ -60,7 +60,7 @@ namespace Visual.Componentes
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             e.Graphics.Clear(Tema.Superficie);
-            using (var escenario = new SolidBrush(Tema.Primario))
+            using (var escenario = new SolidBrush(Tema.Texto))
                 e.Graphics.FillRectangle(escenario, new Rectangle(0, 0, Width, Font.Height * 2));
             TextRenderer.DrawText(e.Graphics, "ESCENARIO · mapa orientativo", Font,
                 new Rectangle(0, 0, Width, Font.Height * 2), Tema.Superficie,
@@ -78,7 +78,7 @@ namespace Visual.Componentes
                 if (quedan == 0)
                     using (var patron = new HatchBrush(HatchStyle.LightDownwardDiagonal, Tema.Borde, fondo))
                         e.Graphics.FillRectangle(patron, rect);
-                using (var borde = new Pen(s.Id == seleccionado ? Tema.Primario : Tema.BordeControl,
+                using (var borde = new Pen(s.Id == seleccionado ? Tema.Texto : Tema.BordeControl,
                     s.Id == seleccionado ? Tema.BordeFoco : Tema.BordeNormal)) e.Graphics.DrawRectangle(borde, rect);
                 string estado = quedan == 0 ? "AGOTADO" : pocos ? "POCAS · " + quedan + " disponibles" : quedan + " disponibles";
                 TextRenderer.DrawText(e.Graphics, s.Nombre + " · " + s.Precio.ToString("C0", CultureInfo.GetCultureInfo("es-AR")) +

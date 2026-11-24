@@ -22,19 +22,19 @@ namespace Visual.Componentes
             for (int i = 0; i < nombres.Length; i++)
             {
                 int x = ClientSize.Width * i / 4, derecha = ClientSize.Width * (i + 1) / 4;
-                Color color = i + 1 == PasoActual ? Tema.Primario : i + 1 < PasoActual ? Tema.Exito : Tema.TextoSecundario;
+                Color color = i + 1 == PasoActual ? Tema.Texto : i + 1 < PasoActual ? Tema.Exito : Tema.TextoSecundario;
                 var rectangulo = new Rectangle(x, 0, derecha - x, ClientSize.Height);
                 TextRenderer.DrawText(e.Graphics, (i + 1) + " " + nombres[i], Font, rectangulo, color,
                     TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPrefix);
                 if (i + 1 == PasoActual)
-                    using (var lapiz = new Pen(Tema.Primario, Tema.BordeFoco))
+                    using (var lapiz = new Pen(Tema.Texto, Tema.BordeFoco))
                         e.Graphics.DrawLine(lapiz, x, ClientSize.Height - Tema.BordeFoco, derecha, ClientSize.Height - Tema.BordeFoco);
             }
         }
     }
     public class EtiquetaTotal : EtiquetaTitulo
     {
-        public EtiquetaTotal() { ForeColor = Tema.Primario; }
+        public EtiquetaTotal() { Font = Tema.PrecioTarjeta; ForeColor = Tema.Texto; }
     }
     public class IconoExito : EtiquetaAyuda
     {
@@ -54,10 +54,10 @@ namespace Visual.Componentes
             {
                 if (e.Index < 0) return;
                 bool elegido = (e.State & DrawItemState.Selected) != 0;
-                using (var fondo = new SolidBrush(elegido ? Tema.PrimarioSuave : Tema.Superficie)) e.Graphics.FillRectangle(fondo, e.Bounds);
+                using (var fondo = new SolidBrush(elegido ? Tema.EncabezadoGrilla : Tema.Superficie)) e.Graphics.FillRectangle(fondo, e.Bounds);
                 int icono = e.Bounds.Height;
                 TextRenderer.DrawText(e.Graphics, "\uE8A5", Tema.IconosDocumentos,
-                    new Rectangle(e.Bounds.Left, e.Bounds.Top, icono, icono), Tema.Primario,
+                    new Rectangle(e.Bounds.Left, e.Bounds.Top, icono, icono), Tema.Texto,
                     TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
                 TextRenderer.DrawText(e.Graphics, Convert.ToString(lista.Items[e.Index]), Tema.Cuerpo,
                     new Rectangle(e.Bounds.Left + icono, e.Bounds.Top, Math.Max(0, e.Bounds.Width - icono), e.Bounds.Height),

@@ -19,6 +19,7 @@ namespace Visual
         {
             InitializeComponent();
             Tema.ComoFondo(tarjetas);
+            tarjetas.ClientSizeChanged += (s, e) => CentrarEstadoSinResultados();
             btnVista.Click += (s,e) => {
                 bool tabla=tarjetas.Visible;
                 tarjetas.Visible=!tabla;dgveventos.Visible=tabla;
@@ -70,16 +71,32 @@ namespace Visual
             }
         }
 
+        private void CentrarEstadoSinResultados()
+        {
+            var estado = tarjetas.Controls["estadoSinResultados"] as Componentes.EstadoVacio;
+            if (estado == null) return;
+            var area = new Rectangle(tarjetas.Padding.Left, tarjetas.Padding.Top,
+                Math.Max(1, tarjetas.ClientSize.Width - tarjetas.Padding.Horizontal),
+                Math.Max(1, tarjetas.ClientSize.Height - tarjetas.Padding.Vertical));
+            estado.AjustarA(area);
+        }
+
         private void CargarEventos(string texto, string categoria, DateTime? desde)
         {
             List<Evento> eventos = GestorEventos.Instance.Buscar(texto, categoria, desde);
             foreach(Control anterior in tarjetas.Controls.Cast<Control>().ToArray()) anterior.Dispose();
             tarjetas.Controls.Clear();
+            btnVista.Enabled = eventos.Count > 0;
             if (eventos.Count == 0)
             {
                 var estado=new Componentes.EstadoVacio { Name = "estadoSinResultados" };
                 estado.Cargar("No encontramos eventos para esa búsqueda. Probá con otro nombre o quitá los filtros.","Ver todos");
-                estado.Accion+=()=>btnLimpiar.PerformClick();tarjetas.Controls.Add(estado);
+                estado.Accion += () => btnLimpiar.PerformClick();
+                estado.Margin = Padding.Empty;
+                tarjetas.Controls.Add(estado);
+                tarjetas.Visible = true;
+                btnVista.Text = "Ver como tabla";
+                CentrarEstadoSinResultados();
                 dgveventos.DataSource = null;
                 dgveventos.Visible = false;
                 return;

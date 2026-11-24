@@ -38,6 +38,13 @@ namespace Pruebas
                         {
                             if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
                                 Fake.Limpiar();
+                            if (tipo == typeof(Visual.frmAuditoria) &&
+                                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
+                            {
+                                GestorUsuarios.Instance.Autenticar("bronce@eventaura.com", "Cliente123");
+                                GestorSesion.Instance.Cerrar();
+                                GestorUsuarios.Instance.Autenticar("admin@eventaura.com", "Admin1234");
+                            }
                             PrepararSesion(tipo);
                             formulario = (Form)Activator.CreateInstance(tipo);
                             PrepararContextoSeleccionado(formulario);
@@ -46,6 +53,12 @@ namespace Pruebas
                             Thread.Sleep(30);
                             Application.DoEvents();
 
+                            if (formulario is Visual.frmReportes &&
+                                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
+                            {
+                                ((DateTimePicker)formulario.Controls["dtpHasta"]).Value = DateTime.Today.AddMonths(3);
+                                ((Button)formulario.Controls["btnGenerar"]).PerformClick();
+                            }
                             CapturarSiSeSolicito(formulario);
                             VerificarMedidas(formulario);
                             if (formulario is Visual.frmCambiarContraseña cambio) VerificarFilaAviso(cambio);
@@ -91,7 +104,7 @@ namespace Pruebas
             else if (tipo.Namespace == "Visual.Vendedor" || nombre == "frmControlIngreso" || nombre == "frmMenuPropietario" || nombre == "frmMisLocales" ||
                 nombre == "frmListasEspera" || nombre == "frmRegistrarLocal" || nombre == "frmReportes")
                 Fake.ComoOrganizador();
-            else if (nombre == "frmMenuCliente" && !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
+            else if ((nombre == "frmMenuCliente" || nombre == "frmHistorialCliente") && !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
             {
                 var cuenta = Datos.RepositorioUsuarios.Instance.ObtenerPorMail("oro@eventaura.com");
                 Fake.ComoCliente(Datos.RepositorioFidelizacion.Instance.ObtenerCliente(cuenta.Id));
@@ -334,6 +347,12 @@ namespace Pruebas
                     Assert.AreEqual(1, fila.Select(t => t.Height).Distinct().Count(), "Altura común de la fila " + grilla.Name);
                 foreach (var tarjeta in tarjetas)
                     Assert.AreEqual(Px(208), tarjeta.Width, "Ancho fijo de tarjeta");
+            }
+
+            if (formulario is Visual.frmReportes || formulario is Visual.frmAuditoria)
+            {
+                foreach (Control selector in Descendientes(formulario).Where(c => c.Visible && (c is ComboBox || c is DateTimePicker)))
+                    Assert.AreEqual(Px(Visual.Tema.AltoCampo), selector.Height, "Alto del selector " + selector.Name);
             }
 
             var acciones = formulario is Visual.frmCambiarContraseña ? new[] { "btnVolver", "btnconfirmar" }

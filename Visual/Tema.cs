@@ -38,8 +38,8 @@ namespace Visual
         // 16/12/19 píxeles lógicos a 96 DPI, expresados en puntos para escalar con Windows.
         public static readonly Font TituloTarjeta = new Font("Segoe UI Semibold",12f);
         public static readonly Font DatoTarjeta = new Font("Segoe UI",9f);
-        public static readonly Font PrecioTarjeta = new Font("Segoe UI Semibold",14.25f);
-        public static readonly Color[] PaletaPortadas = { Primario,Color.FromArgb(67,64,135),Color.FromArgb(160,86,141),Color.FromArgb(72,117,145),Color.FromArgb(105,69,143),Color.FromArgb(83,132,126) };
+        public static readonly Font PrecioTarjeta = new Font("Segoe UI Semibold",15f);
+        public static readonly Color[] PaletaPortadas = { TextoSecundario,Color.FromArgb(62,71,87),Color.FromArgb(160,86,141),Color.FromArgb(72,117,145),Color.FromArgb(105,69,143),Color.FromArgb(83,132,126) };
         public static readonly Color MarcaAguaPortada=Color.FromArgb(71,255,255,255);
         public static Font FuenteInicialPortada(int alto){return new Font("Segoe UI",Math.Max(24,alto*0.75f),FontStyle.Bold,GraphicsUnit.Pixel);}
         public static readonly Font FirmaFuerte = new Font("Segoe UI", 16f, FontStyle.Bold);
@@ -59,11 +59,12 @@ namespace Visual
                     if (familia.Name == "Segoe Fluent Icons") return familia.Name;
             return "Segoe MDL2 Assets";
         }
-        public static readonly Font Titulo = new Font("Segoe UI Semibold", 18f);
-        public static readonly Font Seccion = new Font("Segoe UI Semibold", 12f);
+        public static readonly Font Titulo = new Font("Segoe UI Semibold", 20f);
+        public static readonly Font Seccion = new Font("Segoe UI Semibold", 10.5f);
         public static readonly Font Cuerpo = new Font("Segoe UI", 10f);
         public static readonly Font Boton = new Font("Segoe UI Semibold", 10f);
         public static readonly Font Rotulo = new Font("Segoe UI Semibold", 9f);
+        public const float InterletradoSeccion = 0.1f;
         public static readonly Font Ayuda = new Font("Segoe UI", 9f);
         public static readonly Font Totales = new Font("Segoe UI", 10f, FontStyle.Bold);
         public static readonly Font IconosGrandes = new Font("Segoe MDL2 Assets", 32f);
@@ -131,14 +132,102 @@ namespace Visual
             g.DefaultCellStyle.Font = Cuerpo;
             g.DefaultCellStyle.ForeColor = Texto;
             g.DefaultCellStyle.BackColor = Superficie;
-            g.DefaultCellStyle.SelectionBackColor = PrimarioSuave;
+            g.DefaultCellStyle.SelectionBackColor = EncabezadoGrilla;
             g.DefaultCellStyle.SelectionForeColor = Texto;
             g.AlternatingRowsDefaultCellStyle.BackColor = FilaAlterna;
             g.RowTemplate.Height = AltoFila;
             foreach (DataGridViewRow fila in g.Rows) fila.Height = AltoFila;
             g.StandardTab = true;
+            if (!grillasPreparadas.TryGetValue(g, out _))
+            {
+                grillasPreparadas.Add(g, new object());
+                g.DataBindingComplete += (s, e) => AlinearNumeros(g);
+            }
+            AlinearNumeros(g);
         }
 
+        private static void AlinearNumeros(DataGridView grilla)
+        {
+            foreach (DataGridViewColumn columna in grilla.Columns)
+            {
+                var tipo = columna.ValueType;
+                if (tipo == null) continue;
+                tipo = Nullable.GetUnderlyingType(tipo) ?? tipo;
+                switch (Type.GetTypeCode(tipo))
+                {
+                    case TypeCode.Int16:
+                    case TypeCode.Int32:
+                    case TypeCode.Int64:
+                    case TypeCode.Decimal:
+                    case TypeCode.Double:
+                    case TypeCode.Single:
+                        columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                        columna.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                        if (tipo == typeof(decimal) && string.IsNullOrEmpty(columna.DefaultCellStyle.Format))
+                            columna.DefaultCellStyle.Format = "N2";
+                        break;
+                }
+            }
+        }
+
+        internal static void EstiloTablaDeConsulta(DataGridView grilla)
+        {
+            EstiloGrilla(grilla);
+            grilla.BorderStyle = BorderStyle.None;
+            DibujarMarcoDeCampo(grilla);
+            grilla.GridColor = BordeControl;
+            grilla.RowTemplate.Height = Disposicion.Pixeles(grilla, AltoCampo);
+            grilla.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grilla.ColumnHeadersHeight = grilla.RowTemplate.Height;
+            foreach (DataGridViewRow fila in grilla.Rows)
+                fila.MinimumHeight = grilla.RowTemplate.Height;
+        }
+
+        internal static void EstiloSelector(Control selector)
+        {
+            selector.Font = Cuerpo;
+            selector.ForeColor = Texto;
+            int alto = Disposicion.Pixeles(selector, AltoCampo);
+            selector.MinimumSize = new Size(0, alto);
+            selector.Height = alto;
+            if (selector is ComboBox combo && combo.DrawMode != DrawMode.OwnerDrawFixed)
+            {
+                combo.FlatStyle = FlatStyle.Flat;
+                combo.DrawMode = DrawMode.OwnerDrawFixed;
+                combo.ItemHeight = alto;
+                int bordeNativo = combo.Height - combo.ItemHeight;
+                combo.ItemHeight = Math.Max(1, alto - bordeNativo);
+                combo.DrawItem += (s, e) =>
+                {
+                    e.DrawBackground();
+                    if (e.Index < 0) return;
+                    string texto = combo.GetItemText(combo.Items[e.Index]);
+                    var area = e.Bounds;
+                    area.Inflate(-Disposicion.Pixeles(combo, Espacio.XS), 0);
+                    bool seleccionado = (e.State & DrawItemState.Selected) != 0;
+                    TextRenderer.DrawText(e.Graphics, texto, Cuerpo, area, seleccionado ? SystemColors.HighlightText : Texto,
+                        TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
+                };
+            }
+            DibujarMarcoDeCampo(selector);
+        }
+
+        private static void DibujarMarcoDeCampo(Control campo)
+        {
+            Control contenedor = campo.Parent;
+            if (contenedor == null || marcosDeCampos.TryGetValue(campo, out _)) return;
+            marcosDeCampos.Add(campo, new object());
+            contenedor.Paint += (s, e) =>
+            {
+                if (!campo.Visible) return;
+                var exterior = Rectangle.Inflate(campo.Bounds, 1, 1);
+                ControlPaint.DrawBorder(e.Graphics, exterior, BordeControl, ButtonBorderStyle.Solid);
+            };
+            contenedor.Invalidate(Rectangle.Inflate(campo.Bounds, 1, 1));
+        }
+
+        private static readonly ConditionalWeakTable<Control, object> marcosDeCampos = new ConditionalWeakTable<Control, object>();
+        private static readonly ConditionalWeakTable<DataGridView, object> grillasPreparadas = new ConditionalWeakTable<DataGridView, object>();
         private static readonly Dictionary<string, Font> fuentesNormalizadas = new Dictionary<string, Font>();
         private static readonly ConditionalWeakTable<Button, object> botonesPreparados = new ConditionalWeakTable<Button, object>();
         private static readonly ConditionalWeakTable<Form, object> barrasAjustadas = new ConditionalWeakTable<Form, object>();
@@ -169,12 +258,12 @@ namespace Visual
         public static void FilaTotal(DataGridViewRow fila)
         {
             fila.DefaultCellStyle.Font = Totales;
-            fila.DefaultCellStyle.BackColor = PrimarioSuave;
+            fila.DefaultCellStyle.BackColor = EncabezadoGrilla;
         }
 
         public static Color ColorTemporizador(TimeSpan restante)
         {
-            return restante.TotalMinutes < 1 ? Error : Primario;
+            return restante.TotalMinutes < 1 ? Error : Texto;
         }
 
         public static void ComoSuperficie(Control control) { control.BackColor = Superficie; control.ForeColor = Texto; }
@@ -184,10 +273,10 @@ namespace Visual
         {
             enlace.Font = Ayuda;
             enlace.BackColor = Superficie;
-            enlace.LinkColor = Primario;
-            enlace.ActiveLinkColor = PrimarioPresionado;
-            enlace.VisitedLinkColor = Primario;
-            enlace.LinkBehavior = LinkBehavior.HoverUnderline;
+            enlace.LinkColor = TextoSecundario;
+            enlace.ActiveLinkColor = Texto;
+            enlace.VisitedLinkColor = TextoSecundario;
+            enlace.LinkBehavior = LinkBehavior.AlwaysUnderline;
         }
 
         public static void Normalizar(Control raiz)
@@ -400,11 +489,11 @@ namespace Visual
             bool peligro = rol == RolBoton.Peligro;
             boton.FlatStyle = FlatStyle.Flat;
             boton.UseVisualStyleBackColor = false;
-            boton.ForeColor = primario ? Superficie : peligro ? Error : Primario;
+            boton.ForeColor = primario ? Superficie : peligro ? Error : Texto;
             boton.FlatAppearance.BorderSize = boton.Focused ? Disposicion.Pixeles(boton, BordeFoco) : primario ? 0 : Disposicion.Pixeles(boton, BordeNormal);
             boton.FlatAppearance.BorderColor = boton.Focused ? (primario ? Foco : Primario) : BordeControl;
-            boton.FlatAppearance.MouseOverBackColor = primario ? PrimarioEncima : peligro ? ErrorFondo : PrimarioSuave;
-            boton.FlatAppearance.MouseDownBackColor = primario ? PrimarioPresionado : peligro ? PeligroPresionado : SecundarioPresionado;
+            boton.FlatAppearance.MouseOverBackColor = primario ? PrimarioEncima : peligro ? ErrorFondo : Fondo;
+            boton.FlatAppearance.MouseDownBackColor = primario ? PrimarioPresionado : peligro ? PeligroPresionado : Borde;
             boton.BackColor = boton.Enabled ? (primario ? Primario : Superficie) : FondoDeshabilitado;
         }
 

@@ -450,7 +450,7 @@ namespace Visual
             {
                 dgvSectores.Columns[nombre].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
-            dgvSectores.Columns["Cantidad"].DefaultCellStyle.BackColor = Tema.PrimarioSuave;
+            dgvSectores.Columns["Cantidad"].DefaultCellStyle.BackColor = Tema.EncabezadoGrilla;
 
             sectores.Clear();
             int max = GestorParametros.Instance.ObtenerEntero("COMPRA_ENTRADAS_MAX");

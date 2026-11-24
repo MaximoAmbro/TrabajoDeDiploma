@@ -22,13 +22,15 @@ namespace Visual
             Shown += (s, e) =>
             {
                 ColocarTitulo(label1);
+                txtNombre.Left = txtDireccion.Left = txtCapacidad.Left = Disposicion.Pixeles(this, Tema.Espacio.XXL);
                 ColocarCampo(label6, txtNombre);
                 ColocarCampo(label5, txtDireccion);
                 ColocarCampo(lblmail, txtAltura);
                 ColocarCampo(label3, txtCapacidad);
-                txtAltura.Left = txtDireccion.Right + Disposicion.Pixeles(this, Tema.Espacio.S);
+                txtAltura.Left = txtDireccion.Right + Disposicion.Pixeles(this, Tema.Espacio.L);
                 ColocarRotulo(lblmail, txtAltura);
-                ClientSize = new System.Drawing.Size(txtAltura.Right + Disposicion.Pixeles(this, Tema.Espacio.XL), ClientSize.Height);
+                ClientSize = new System.Drawing.Size(txtAltura.Right + Disposicion.Pixeles(this, Tema.Espacio.XXL), ClientSize.Height);
+                Disposicion.AlinearAccionesFormulario(this, txtDireccion, btnregistrarse, lblyatengocuen);
             };
             txtNombre.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtNombre);
             txtDireccion.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtDireccion);

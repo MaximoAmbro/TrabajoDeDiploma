@@ -23,9 +23,11 @@ namespace Visual.Vendedor
             Shown += (s, e) =>
             {
                 ColocarTitulo(label1);
+                txtNombre.Left = txtCapacidad.Left = txtPrecio.Left = Disposicion.Pixeles(this, Tema.Espacio.XXL);
                 ColocarCampo(label6, txtNombre);
                 ColocarCampo(lblmail, txtCapacidad);
                 ColocarCampo(label5, txtPrecio);
+                Disposicion.AlinearAccionesFormulario(this, txtPrecio, btnregistrarse, lblVolver, apilar: true);
             };
             txtNombre.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtNombre);
             txtCapacidad.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtCapacidad);

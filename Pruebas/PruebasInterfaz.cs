@@ -445,7 +445,7 @@ namespace Pruebas
                     Match formato = Regex.Match(temporizador.Text, @"^Reserva: (\d{2}):(\d{2})$");
                     Assert.IsTrue(formato.Success, "Formato de cuenta regresiva incorrecto: " + temporizador.Text);
                     Assert.IsTrue(int.Parse(formato.Groups[1].Value) <= minutos);
-                    Assert.AreEqual(Color.FromArgb(116, 86, 174), temporizador.ForeColor);
+                    Assert.AreEqual(Visual.Tema.Texto, temporizador.ForeColor);
                     Assert.IsTrue(temporizador.Visible);
                     form.Close();
                 }

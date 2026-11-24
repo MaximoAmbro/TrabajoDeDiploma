@@ -20,6 +20,8 @@ namespace Visual
         
         private void frmInicio_Load(object sender, EventArgs e)
         {
+            ColocarTitulo(label2);
+            txtMailLogin.Left = txtContraseñaLogin.Left = checkbxShowPass.Left = Disposicion.Pixeles(this, Tema.Espacio.XXL);
             ColocarCampo(label5, txtMailLogin);
             ColocarCampo(label3, txtContraseñaLogin);
             btninicio.Left = txtMailLogin.Left;

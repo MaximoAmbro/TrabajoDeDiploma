@@ -17,7 +17,7 @@ namespace Visual.Componentes
         {
             InitializeComponent();
             valor.Font = Tema.PrecioTarjeta;
-            valor.ForeColor = Tema.Primario;
+            valor.ForeColor = Tema.Texto;
             Paint += Disposicion.PintarTarjeta;
             ClientSizeChanged += (s, e) => AjustarDetalle();
             Disposed += (s, e) => fuenteAjustada?.Dispose();
@@ -30,11 +30,11 @@ namespace Visual.Componentes
             AccessibleName = nombre + ": " + dato;
         }
 
-        internal void CargarDetalle(string nombre, string dato, bool resaltar = false)
+        internal void CargarDetalle(string nombre, string dato)
         {
             detalle = true;
-            fuenteValor = resaltar ? Tema.PrecioTarjeta : Tema.Cuerpo;
-            valor.ForeColor = resaltar ? Tema.Primario : Tema.Texto;
+            fuenteValor = Tema.PrecioTarjeta;
+            valor.ForeColor = Tema.Texto;
             Cargar(nombre, dato);
             AjustarDetalle();
         }

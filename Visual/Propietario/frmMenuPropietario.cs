@@ -17,8 +17,8 @@ namespace Visual
         private readonly Panel zonaOrganizador;
         private readonly FlowLayoutPanel tarjetasLocales = new FlowLayoutPanel { Name = "tarjetasLocales" };
         private readonly FlowLayoutPanel tarjetasEventos = new FlowLayoutPanel { Name = "tarjetasEventosOrganizador" };
-        private readonly Componentes.EtiquetaSeccion encabezadoLocales = new Componentes.EtiquetaSeccion { Text = "Mis locales" };
-        private readonly Componentes.EtiquetaSeccion encabezadoEventos = new Componentes.EtiquetaSeccion { Text = "Próximos eventos" };
+        private readonly Componentes.EtiquetaEncabezado encabezadoLocales = new Componentes.EtiquetaEncabezado { Text = "Mis locales" };
+        private readonly Componentes.EtiquetaEncabezado encabezadoEventos = new Componentes.EtiquetaEncabezado { Text = "Próximos eventos" };
         private readonly Panel lateral;
         private readonly Componentes.EtiquetaTitulo tituloOrganizador;
         private readonly Componentes.BotonSecundario btnCambiarContrasena;
@@ -66,7 +66,7 @@ namespace Visual
 
         private static Componentes.EtiquetaRotulo Seccion(string nombre, string texto, int arriba)
         {
-            return new Componentes.EtiquetaRotulo { Name = nombre, Text = texto, Location = new Point(24, arriba), Size = new Size(272, 20) };
+            return new Componentes.EtiquetaEncabezado { Name = nombre, Text = texto, Location = new Point(24, arriba), Size = new Size(272, 20) };
         }
 
         private void frmMenuVendedor_Load(object sender, EventArgs e)
