@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Entidades;
 using Negocio;
@@ -16,6 +17,8 @@ namespace Visual
         private readonly Button rechazar = new Componentes.BotonPeligro { Name = "btnRechazarPrimerEvento", Text = "Rechazar y devolver", Location = new Point(670, 366), Size = new Size(300, 44) };
         private readonly Button cerrar = new Componentes.BotonSecundario { Name = "btnCerrarRevision", Text = "Cerrar", Location = new Point(24, 510), Size = new Size(140, 40) };
         private readonly Componentes.EstadoVacio estadoSinEventos = new Componentes.EstadoVacio { Name = "estadoSinEventosRevision", Visible = false };
+        private readonly Web.PanelWeb revisionWeb = new Web.PanelWeb { Name = "revisionEventosWeb", Dock = DockStyle.None, Visible = false };
+        private readonly Label avisoWeb = new Label { Name = "avisoRevisionEventosWeb", AutoSize = true, ForeColor = Tema.TextoSecundario, Text = "Vista web no disponible. Se muestra la revisión de Windows Forms.", Visible = false };
 
         public frmRevisarEventos()
         {
@@ -25,6 +28,13 @@ namespace Visual
             ClientSize = new Size(1060, 570);
             Controls.Add(new Componentes.EtiquetaTitulo { Text = "Primer evento de cada organizador", Location = new Point(24, 24), Size = new Size(700, 44) });
             Controls.AddRange(new Control[] { pendientes, detalle, etiquetaMotivo, motivo, aprobar, rechazar, cerrar });
+            CancelButton = cerrar;
+            Controls.Add(revisionWeb);
+            Controls.Add(avisoWeb);
+            revisionWeb.VistaLista += ActualizarVistaRevision;
+            revisionWeb.VistaNoDisponible += ActualizarVistaRevision;
+            revisionWeb.Escape += () => { Message m = default(Message); ProcessCmdKey(ref m, Keys.Escape); };
+            revisionWeb.Mensaje += RecibirMensajeRevision;
             estadoSinEventos.AjustarA(pendientes);
             estadoSinEventos.Cargar("Todavía no hay eventos pendientes de revisión. Cuando un Organizador publique su primer evento, va a aparecer acá.", "Actualizar");
             estadoSinEventos.Accion += Cargar;
@@ -34,6 +44,18 @@ namespace Visual
             rechazar.Click += (s, e) => Rechazar();
             cerrar.Click += (s, e) => Close();
             Load += (s, e) => Cargar();
+            Shown += (s, e) => { AjustarWebRevision(); revisionWeb.Cargar("gestion.html"); };
+            SizeChanged += (s, e) => AjustarWebRevision();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                cerrar.PerformClick();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void Cargar()
@@ -44,6 +66,7 @@ namespace Visual
             pendientes.Visible = hayPendientes;
             estadoSinEventos.Visible = !hayPendientes;
             MostrarSeleccion();
+            ActualizarModeloRevision();
         }
 
         private void MostrarSeleccion()
@@ -54,6 +77,53 @@ namespace Visual
             aprobar.Enabled = evento != null;
             rechazar.Enabled = evento != null;
             motivo.Clear();
+            if (revisionWeb != null) ActualizarModeloRevision();
+        }
+
+        private void AjustarWebRevision()
+        {
+            if (revisionWeb == null || IsDisposed) return;
+            int top = pendientes.Top;
+            int bottom = Math.Min(aprobar.Top - 8, ClientSize.Height - 64);
+            revisionWeb.SetBounds(pendientes.Left, top, Math.Max(1, ClientSize.Width - pendientes.Left * 2), Math.Max(1, bottom - top));
+            avisoWeb.Location = new Point(revisionWeb.Left, Math.Max(0, revisionWeb.Top - avisoWeb.Height));
+        }
+
+        private void ActualizarVistaRevision()
+        {
+            bool web = revisionWeb.Preparado;
+            revisionWeb.Visible = web;
+            avisoWeb.Visible = revisionWeb.InicializacionTerminada && !web;
+            pendientes.Visible = !web && pendientes.Items.Count > 0;
+            detalle.Visible = etiquetaMotivo.Visible = motivo.Visible = !web;
+            estadoSinEventos.Visible = !web && pendientes.Items.Count == 0;
+            if (web) revisionWeb.BringToFront(); else avisoWeb.BringToFront();
+        }
+
+        private void ActualizarModeloRevision()
+        {
+            var eventos = pendientes.Items.Cast<Evento>().Select(e => new
+                { id = e.Id, nombre = e.Nombre, fecha = e.Fecha.ToString("dd/MM/yyyy HH:mm") }).ToArray();
+            Evento seleccionado = pendientes.SelectedItem as Evento;
+            revisionWeb.Actualizar(new { vista = "revisionEventos", eventos, seleccionado = seleccionado?.Id,
+                nombre = seleccionado?.Nombre, detalle = detalle.Text, motivo = motivo.Text });
+        }
+
+        private void RecibirMensajeRevision(string texto)
+        {
+            var tipo = System.Text.RegularExpressions.Regex.Match(texto ?? "", "\\\"tipo\\\"\\s*:\\s*\\\"([^\\\"]*)\\\"");
+            if (!tipo.Success) return;
+            if (tipo.Groups[1].Value == "actualizar") { Cargar(); return; }
+            if (tipo.Groups[1].Value == "motivoRevision")
+            {
+                var valor = System.Text.RegularExpressions.Regex.Match(texto, "\\\"texto\\\"\\s*:\\s*\"((?:\\\\.|[^\"])*)\"");
+                if (valor.Success) motivo.Text = Newtonsoft.Json.JsonConvert.DeserializeObject<string>("\"" + valor.Groups[1].Value + "\"");
+                return;
+            }
+            var id = System.Text.RegularExpressions.Regex.Match(texto, "\\\"id\\\"\\s*:\\s*(\\d+)");
+            if (tipo.Groups[1].Value != "revision" || !id.Success || !int.TryParse(id.Groups[1].Value, out int eventoId)) return;
+            for (int i = 0; i < pendientes.Items.Count; i++)
+                if (((Evento)pendientes.Items[i]).Id == eventoId) { pendientes.SelectedIndex = i; break; }
         }
 
         private void Aprobar()
