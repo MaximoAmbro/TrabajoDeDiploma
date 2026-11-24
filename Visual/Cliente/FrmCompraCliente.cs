@@ -45,6 +45,8 @@ namespace Visual
         private bool cargandoGrilla;
         private bool compraEnCurso;
         private bool compraFinalizada;
+        internal Func<Compra, List<string>> CrearTickets = null;
+        internal bool CompraFinalizada => compraFinalizada;
         private bool agotado;
         private Panel contenidoCompra;
         private Panel accionesCompra;
@@ -418,9 +420,7 @@ namespace Visual
                 return;
             }
 
-            List<string> rutas = GenerarTicket(compra);
-            compraFinalizada = true;
-            var confirmacion = new frmConfirmacion { Compra = compra, Rutas = rutas, Carpeta = CarpetaTickets() };
+            var confirmacion = CrearConfirmacion(compra);
             if (NavegacionCliente.Activa)
             {
                 NavegacionCliente.Navegar(confirmacion);
@@ -434,6 +434,27 @@ namespace Visual
 
             // U-09: el pedido ya terminó; vuelve al listado, sin un armado vacío.
             VolverAlListado();
+        }
+
+        internal frmConfirmacion CrearConfirmacion(Compra compra)
+        {
+            List<string> rutas;
+            string avisoTicket = null;
+            try
+            {
+                rutas = CrearTickets == null ? GenerarTicket(compra) : CrearTickets(compra);
+            }
+            catch (Exception error)
+            {
+                System.Diagnostics.Trace.WriteLine(error);
+                rutas = new List<string>();
+                avisoTicket = "El pago quedó confirmado como pedido " + frmConfirmacion.NumeroPedido(compra) +
+                    ", pero no pudimos crear el PDF. Tus entradas y sus códigos se conservan en Mis entradas; " +
+                    "podés consultar allí los códigos QR y recuperar el ticket. Revisá el acceso a Documentos y las dependencias del programa.";
+            }
+            compraFinalizada = true;
+            compraEnCurso = false;
+            return new frmConfirmacion { Compra = compra, Rutas = rutas, Carpeta = CarpetaTickets(), AvisoTicket = avisoTicket };
         }
 
         // --------------------------------------        FUNCIONES          --------------------------------------

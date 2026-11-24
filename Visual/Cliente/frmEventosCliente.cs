@@ -44,10 +44,13 @@ namespace Visual
                 Message mensaje = default(Message);
                 ProcessCmdKey(ref mensaje, Keys.Escape);
             };
-            catalogoWeb.Mensaje += mensaje =>
+            catalogoWeb.Mensaje += texto =>
             {
-                if (!catalogoWeb.Visible || mensaje["tipo"]?.ToString() != "evento") return;
-                if (!int.TryParse(mensaje["id"]?.ToString(), out int id)) return;
+                if (!catalogoWeb.Visible) return;
+                var tipo = System.Text.RegularExpressions.Regex.Match(texto ?? "", "\\\"tipo\\\"\\s*:\\s*\\\"([^\\\"]*)\\\"");
+                var identificador = System.Text.RegularExpressions.Regex.Match(texto ?? "", "\\\"id\\\"\\s*:\\s*(\\d+)");
+                if (!tipo.Success || tipo.Groups[1].Value != "evento" || !identificador.Success ||
+                    !int.TryParse(identificador.Groups[1].Value, out int id)) return;
                 var evento = eventosMostrados.FirstOrDefault(item => item.Id == id);
                 if (evento != null) ElegirEvento(evento);
             };

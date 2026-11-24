@@ -34,6 +34,19 @@ namespace Datos
 
         public static RequisitoEsquemaFaltante PrimerFaltante()
         {
+            using (var conexion = Conexion.Instance.Crear())
+            {
+                conexion.Open();
+                using (var comando = new SqlCommand("SELECT CASE WHEN OBJECT_ID('dbo.Parametros','U') IS NOT NULL AND OBJECT_ID('dbo.Usuario','U') IS NOT NULL AND OBJECT_ID('dbo.Administrador','U') IS NOT NULL THEN 1 ELSE 0 END", conexion))
+                {
+                    if (Convert.ToInt32(comando.ExecuteScalar()) == 1)
+                    {
+                        comando.CommandText = @"SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM dbo.Parametros) OR NOT EXISTS (SELECT 1 FROM dbo.Usuario u JOIN dbo.Administrador a ON a.ID=u.ID) THEN N'la semilla inicial con los parámetros y la cuenta Administrador' ELSE NULL END";
+                        var descripcion = comando.ExecuteScalar() as string;
+                        if (descripcion != null) return new RequisitoEsquemaFaltante { Descripcion = descripcion, Script = "02-semilla.sql" };
+                    }
+                }
+            }
             const string consulta = @"
 WITH requisitos(Orden, Descripcion, Script) AS
 (

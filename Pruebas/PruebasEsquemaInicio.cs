@@ -11,6 +11,23 @@ namespace Pruebas
     [TestClass]
     public class PruebasEsquemaInicio
     {
+        // CP-198 — RF-02, RNF-02: fallo de conexión visible y máscara aplicada por el Designer.
+        [TestMethod("CP-198: Sin conexión, inicio avisa dentro de la ventana y mantiene oculta la contraseña")]
+        public void CP198_ErrorDeConexionNoExponeContrasenaNiDejaInicioMudo()
+        {
+            using (var formulario = new Visual.frmInicio())
+            {
+                formulario.VerificarEsquema = () => { throw new InvalidOperationException("instancia inexistente"); };
+                Mostrar(formulario);
+                var campo = ControlDe<System.Windows.Forms.TextBox>(formulario, "txtContraseñaLogin");
+                var aviso = formulario.Controls.Find("avisoBaseNoDisponible", true).Single();
+                Assert.AreEqual('*', campo.PasswordChar);
+                Assert.IsTrue(aviso.Visible);
+                Assert.IsTrue(aviso.Text.Contains("BddEventAura"));
+                Assert.IsFalse(ControlDe<System.Windows.Forms.Button>(formulario, "btninicio").Enabled);
+            }
+        }
+
         // CP-164 — RF-12, RNF-04: detectar el primer script de esquema faltante y explicarlo al abrir.
         [TestMethod("CP-164: Inicio nombra el primer script faltante y lo muestra dentro de la ventana")]
         public void CP164_PrimerScriptYAvisoEnVentana()

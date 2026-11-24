@@ -15,6 +15,7 @@ namespace Visual
         public Compra Compra;
         public List<string> Rutas = new List<string>();
         public string Carpeta;
+        public string AvisoTicket;
 
         private static readonly System.Globalization.CultureInfo Pesos = new System.Globalization.CultureInfo("es-AR");
 
@@ -67,14 +68,19 @@ namespace Visual
             lblDesglose.UseMnemonic = false;
             lblDesglose.Text = texto.ToString();
 
-            lblTickets.Text = Rutas.Count == 1
+            lblTickets.Text = AvisoTicket ?? (Rutas.Count == 1
                 ? "Tu entrada en PDF con QR:"
-                : $"{Rutas.Count} entradas en PDF con QR:";
-            txtCarpeta.Text = "Guardadas en Documentos.";
+                : $"{Rutas.Count} entradas en PDF con QR:");
+            txtCarpeta.Text = AvisoTicket == null ? "Guardadas en Documentos." : "Recuperación: Mis entradas · Pedido " + NumeroPedido(Compra);
             lstArchivos.Items.Clear();
             for (int i = 0; i < Rutas.Count; i++)
             {
                 lstArchivos.Items.Add("Entrada " + (i + 1));
+            }
+            if (AvisoTicket != null)
+            {
+                foreach (var entrada in GestorCompras.Instance.EntradasDe(Compra).Where(item => item.Estado == EstadoEntrada.Confirmada))
+                    lstArchivos.Items.Add("Código recuperable: " + entrada.CodigoQR);
             }
             ActiveControl = btnAceptar;
         }

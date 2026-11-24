@@ -230,6 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Web\PanelWeb.cs" />
+    <Compile Include="Web\PanelWebMotor.cs" />
     <Compile Include="Web\DatosWebReportes.cs" />
     <Content Include="Web\*.html;Web\*.css;Web\*.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

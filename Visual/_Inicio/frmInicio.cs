@@ -1,13 +1,15 @@
 using Entidades;
 using Negocio;
-using Datos;
 using System;
+using System.Configuration;
+using System.Data.Common;
 using System.Windows.Forms;
 
 namespace Visual
 {
     public partial class frmInicio : FormularioEventAura
     {
+        internal Func<Tuple<string, string>> VerificarEsquema = VerificarConDatos;
         // La cadena de conexión la lee Datos/Conexion.cs de App.config: Visual no abre conexiones.
         public frmInicio()
         {
@@ -31,10 +33,19 @@ namespace Visual
             lblcrearcuenta.Left = txtMailLogin.Left;
             lblcrearcuenta.Width = lblolividarcontra.Width = anchoEnlace;
             lblolividarcontra.Left = lblcrearcuenta.Right + espacio;
-            var faltante = VerificadorEsquema.PrimerFaltante();
-            if (faltante != null)
+            try
             {
-                MostrarEsquemaDesactualizado(faltante);
+                var faltante = VerificarEsquema();
+                if (faltante != null)
+                {
+                    MostrarEsquemaDesactualizado(faltante.Item1, faltante.Item2);
+                    return;
+                }
+            }
+            catch (Exception error)
+            {
+                System.Diagnostics.Trace.WriteLine(error);
+                MostrarErrorDeBase();
                 return;
             }
             
@@ -44,7 +55,53 @@ namespace Visual
             txtMailLogin.Select();   // no depende del orden de TabIndex
         }
 
-        private void MostrarEsquemaDesactualizado(RequisitoEsquemaFaltante faltante)
+        private void MostrarErrorDeBase()
+        {
+            txtMailLogin.Visible = label5.Visible = txtContraseñaLogin.Visible = label3.Visible = false;
+            checkbxShowPass.Visible = lblolividarcontra.Visible = lblcrearcuenta.Visible = btninicio.Visible = false;
+            btninicio.Enabled = false;
+            string destino = "No se pudo leer Visual.exe.config.";
+            try
+            {
+                var cadena = ConfigurationManager.ConnectionStrings["Visual.Properties.Settings.BddEventAura"];
+                if (cadena != null)
+                {
+                    var valores = new DbConnectionStringBuilder { ConnectionString = cadena.ConnectionString };
+                    object instancia, baseDatos;
+                    valores.TryGetValue("Data Source", out instancia);
+                    valores.TryGetValue("Initial Catalog", out baseDatos);
+                    destino = "Instancia: " + (instancia ?? "no indicada") + " · Base: " + (baseDatos ?? "no indicada");
+                }
+            }
+            catch (Exception error)
+            {
+                System.Diagnostics.Trace.WriteLine(error);
+            }
+            var aviso = new Visual.Componentes.EtiquetaAyuda
+            {
+                Name = "avisoBaseNoDisponible",
+                Text = "EventAura no pudo comprobar la base de datos. " + destino +
+                       ". Revisá SQL Server y la configuración, y volvé a abrir la aplicación.",
+                Location = new System.Drawing.Point(24, 148),
+                Size = new System.Drawing.Size(352, 128),
+                AccessibleRole = System.Windows.Forms.AccessibleRole.Alert
+            };
+            Controls.Add(aviso);
+            aviso.BringToFront();
+        }
+
+        private static Tuple<string, string> VerificarConDatos()
+        {
+            var tipo = Type.GetType("Datos.VerificadorEsquema, Datos", true);
+            var resultado = tipo.GetMethod("PrimerFaltante").Invoke(null, null);
+            if (resultado == null) return null;
+            var resultadoTipo = resultado.GetType();
+            return Tuple.Create(
+                Convert.ToString(resultadoTipo.GetProperty("Descripcion").GetValue(resultado, null)),
+                Convert.ToString(resultadoTipo.GetProperty("Script").GetValue(resultado, null)));
+        }
+
+        private void MostrarEsquemaDesactualizado(string descripcion, string script)
         {
             txtMailLogin.Visible = label5.Visible = txtContraseñaLogin.Visible = label3.Visible = false;
             checkbxShowPass.Visible = lblolividarcontra.Visible = lblcrearcuenta.Visible = btninicio.Visible = false;
@@ -52,8 +109,8 @@ namespace Visual
             var aviso = new Visual.Componentes.EtiquetaAyuda
             {
                 Name = "avisoEsquemaDesactualizado",
-                Text = "Tu base de datos está desactualizada: falta " + faltante.Descripcion + ".\r\n\r\n" +
-                       "Corré BaseDatos/" + faltante.Script + " y volvé a abrir EventAura.",
+                Text = "Tu base de datos está desactualizada: falta " + descripcion + ".\r\n\r\n" +
+                       "Corré BaseDatos/" + script + " y volvé a abrir EventAura.",
                 Location = new System.Drawing.Point(24, 148),
                 Size = new System.Drawing.Size(352, 128),
                 AccessibleRole = System.Windows.Forms.AccessibleRole.Alert

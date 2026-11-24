@@ -1,4 +1,5 @@
 using System.Configuration;
+using System.Data.Common;
 using Microsoft.Data.SqlClient;
 
 namespace Datos
@@ -37,7 +38,9 @@ namespace Datos
 
         public SqlConnection Crear()
         {
-            return new SqlConnection(Cadena);
+            var parametros = new DbConnectionStringBuilder { ConnectionString = Cadena };
+            parametros["Connect Timeout"] = 3;
+            return new SqlConnection(parametros.ConnectionString);
         }
     }
 }

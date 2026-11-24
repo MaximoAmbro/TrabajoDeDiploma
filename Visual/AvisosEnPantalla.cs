@@ -21,7 +21,7 @@ namespace Visual
                 Math.Min(72,Math.Max(0,formulario.ClientSize.Height-aviso.Height)));
             aviso.Anchor=AnchorStyles.Top|AnchorStyles.Right;
             formulario.Controls.Add(aviso);aviso.BringToFront();
-            var reloj=new Timer { Interval=duracionMs > 0 ? duracionMs : error ? 12000 : 6000 };
+            var reloj=new Timer { Interval=duracionMs > 0 ? duracionMs : error ? 3000 : 6000 };
             reloj.Tick+=(s,e)=>aviso.Dispose();
             aviso.Disposed+=(s,e)=>{reloj.Stop();reloj.Dispose();};
             reloj.Start();

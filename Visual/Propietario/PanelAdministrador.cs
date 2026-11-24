@@ -110,7 +110,7 @@ namespace Visual.Componentes
             if (btnAuditoria.Parent == this) btnAuditoria.Left = Math.Max(0, ancho - btnAuditoria.Width);
             int anchoPeriodo = btnAuditoria.Parent == this ? ancho - btnAuditoria.Width - Px(Tema.Espacio.L) : ancho;
             int y = AutoScrollPosition.Y;
-            if (vistaWeb.Visible) return;
+            if (vistaWeb.Preparado) return;
             avisoWeb.SetBounds(0, y, ancho, Px(Tema.Espacio.XL));
             periodo.SetBounds(0, y + (avisoWeb.Visible ? avisoWeb.Height : 0),
                 Math.Max(1, anchoPeriodo), Px(Tema.Espacio.XXL));

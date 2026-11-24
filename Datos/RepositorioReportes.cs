@@ -74,10 +74,10 @@ namespace Datos
                 "    SELECT c.ID, c.BaseEntradas, c.MontoServicios, " +
                 "           (SELECT COUNT(*) FROM Entradas en " +
                 "            WHERE en.ID_Compra = c.ID AND en.Estado = 'Confirmada') AS Unidades, " +
-                "           ISNULL((SELECT STRING_AGG(t.Tipo, '|') WITHIN GROUP (ORDER BY t.Tipo) " +
-                "                   FROM (SELECT DISTINCT sv.Tipo FROM CompraServicios cs " +
+                "           ISNULL(STUFF((SELECT '|' + t.Tipo FROM (SELECT DISTINCT sv.Tipo FROM CompraServicios cs " +
                 "                         JOIN Servicios sv ON sv.ID = cs.ID_Servicio " +
-                "                         WHERE cs.ID_Compra = c.ID) t), '') AS Tipos " +
+                "                         WHERE cs.ID_Compra = c.ID) t ORDER BY t.Tipo " +
+                "                         FOR XML PATH(''), TYPE).value('.', 'nvarchar(max)'), 1, 1, ''), '') AS Tipos " +
                 "    FROM Compras c " +
                 "    WHERE c.Estado = 'Confirmada' " +
                 "      AND EXISTS (SELECT 1 FROM Entradas en JOIN Eventos e ON e.ID = en.ID_Evento " +
@@ -90,8 +90,8 @@ namespace Datos
                 "    JOIN Servicios sv ON sv.ID = cs.ID_Servicio " +
                 ") " +
                 "SELECT g.Tipos, g.Compras, g.Unidades, g.Ingreso, g.MontoServicios, " +
-                "       (SELECT STRING_AGG(n.Nombre, ', ') WITHIN GROUP (ORDER BY n.Nombre) " +
-                "        FROM Nombres n WHERE n.Tipos = g.Tipos) AS Servicios " +
+                "       (SELECT STUFF((SELECT ', ' + n.Nombre FROM Nombres n WHERE n.Tipos = g.Tipos " +
+                "                       ORDER BY n.Nombre FOR XML PATH(''), TYPE).value('.', 'nvarchar(max)'), 1, 2, '')) AS Servicios " +
                 "FROM (SELECT Tipos, COUNT(*) AS Compras, SUM(Unidades) AS Unidades, " +
                 "             SUM(BaseEntradas + MontoServicios) AS Ingreso, " +
                 "             SUM(MontoServicios) AS MontoServicios " +
