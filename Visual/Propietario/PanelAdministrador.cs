@@ -96,6 +96,7 @@ namespace Visual.Componentes
         private void ActualizarVistaWeb()
         {
             vistaWeb.Visible = vistaWeb.Preparado;
+            if (vistaWeb.Preparado) AutoScroll = false;
             periodo.Visible = datos.Visible = tituloPendientes.Visible = pendientes.Visible = !vistaWeb.Visible;
             avisoWeb.Visible = vistaWeb.InicializacionTerminada && !vistaWeb.Preparado;
             if (vistaWeb.Visible) vistaWeb.BringToFront();

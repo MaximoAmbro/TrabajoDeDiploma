@@ -24,7 +24,7 @@ function barras(serie) {
     const filas = nodo("div", null, "filas-barras");
     filas.tabIndex = 0;
     filas.setAttribute("aria-label", "Desplazar barras de eventos");
-    const alto = 24;
+    const alto = 12;
     const altoSvg = alto * serie.length;
     const svg = baseGrafico(altoSvg, "Entradas vendidas por evento");
     const eje = baseGrafico(22, "Escala en entradas");
@@ -45,10 +45,10 @@ function barras(serie) {
         const y = 3 + alto * i;
         const ancho = p.valor * anchoEscala / max;
         const nombre = p.etiqueta.length > 32 ? p.etiqueta.slice(0, 31) + "…" : p.etiqueta;
-        const rotulo = figura("text", { x: 1, y: y + 14 }, nombre);
+        const rotulo = figura("text", { x: 1, y: y + 10 }, nombre);
         rotulo.prepend(figura("title", {}, p.etiqueta));
-        svg.append(rotulo, figura("rect", { x: x0, y, width: ancho, height: 18, fill: "var(--primario)" }),
-            figura("text", { x: x0 + ancho + 9, y: y + 14 }, entero.format(p.valor)));
+        svg.append(rotulo, figura("rect", { x: x0, y: y + 2, width: ancho, height: 8, fill: "var(--primario)" }),
+            figura("text", { x: x0 + ancho + 9, y: y + 10 }, entero.format(p.valor)));
     });
     filas.append(svg);
     marcoEje.append(eje);
@@ -151,12 +151,13 @@ window.eventAuraDibujar = datos => {
     if (!datos) return;
     const reporte = datos.reporte;
     if (datos.metricas) {
-        destino.append(nodo("p", datos.periodo, "secundario"), metricas(datos.metricas),
-            nodo("h2", "Pendientes de revisión"), metricas(datos.pendientes),
-            nodo("h2", "Ventas por evento"));
-        if (reporte) destino.append(graficos(reporte));
+        destino.classList.add("panel-administrador");
+        destino.append(nodo("p", datos.periodo, "secundario"));
+        if (reporte) destino.append(nodo("h2", "Ventas por evento"), graficos(reporte));
+        destino.append(metricas(datos.metricas), nodo("h2", "Pendientes de revisión"), metricas(datos.pendientes));
         return;
     }
+    destino.classList.remove("panel-administrador");
     if (!reporte) return;
     if (reporte.barras.length) destino.append(graficos(reporte));
     destino.append(tabla(reporte));

@@ -53,11 +53,9 @@ namespace Visual
             SizeChanged += (s, e) => ActualizarVistaWeb();
             Shown += (s, e) =>
             {
-                int altoExtra = Math.Max(0, Math.Min(Disposicion.Pixeles(this, 144),
+                int altoExtra = Math.Max(0, Math.Min(Disposicion.Pixeles(this, 240),
                     Screen.FromControl(this).WorkingArea.Height - Height));
                 ClientSize = new Size(ClientSize.Width, ClientSize.Height + altoExtra);
-                btnExportar.Top += altoExtra;
-                btnVolver.Top += altoExtra;
                 Disposicion.AjustarAreaVisible(this);
                 Disposicion.LimitarAncho(lblLectura);
                 int pie = Math.Min(btnExportar.Top, btnVolver.Top);
@@ -211,8 +209,10 @@ namespace Visual
         private void ActualizarVistaWeb()
         {
             if (estadoSinReporte == null) return;
+            int margen = Disposicion.Pixeles(this, Tema.Espacio.S);
+            int pie = Math.Min(btnExportar.Top, btnVolver.Top);
             vistaWeb.Bounds = Rectangle.FromLTRB(dgvReporte.Left, dgvReporte.Top, dgvReporte.Right,
-                Math.Max(dgvReporte.Bottom, lblLectura.Bottom));
+                Math.Max(dgvReporte.Top + 1, pie - margen));
             bool web = mostrarResultado && vistaWeb.Preparado;
             vistaWeb.Visible = web;
             dgvReporte.Visible = mostrarResultado && !web;

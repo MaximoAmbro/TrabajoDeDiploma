@@ -167,6 +167,7 @@ namespace Visual
             //
             this.btnExportar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnExportar.Enabled = false;
+            this.btnExportar.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             this.btnExportar.Location = new System.Drawing.Point(680, 508);
             this.btnExportar.Name = "btnExportar";
             this.btnExportar.Size = new System.Drawing.Size(196, 40);
@@ -177,6 +178,7 @@ namespace Visual
             // dgvReporte
             //
             this.dgvReporte.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvReporte.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             this.dgvReporte.Location = new System.Drawing.Point(24, 292);
             this.dgvReporte.Name = "dgvReporte";
             this.dgvReporte.RowHeadersWidth = 62;
@@ -185,6 +187,7 @@ namespace Visual
             //
             // lblLectura
             //
+            this.lblLectura.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             this.lblLectura.Location = new System.Drawing.Point(24, 428);
             this.lblLectura.Name = "lblLectura";
             this.lblLectura.Size = new System.Drawing.Size(852, 64);
@@ -193,6 +196,7 @@ namespace Visual
             // btnVolver
             //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnVolver.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             this.btnVolver.Location = new System.Drawing.Point(24, 508);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(144, 40);
@@ -221,7 +225,7 @@ namespace Visual
             this.Controls.Add(this.cmbReporte);
             this.Controls.Add(this.lblReporte);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             this.Name = "frmReportes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventAura · Reportes";
