@@ -49,6 +49,10 @@ namespace Visual
         private Panel contenidoCompra;
         private Panel accionesCompra;
         private Panel documentoResumen;
+        private readonly Web.PanelWeb resumenWeb = new Web.PanelWeb
+            { Name = "resumenCompraWeb", Dock = DockStyle.None, Visible = false };
+        private readonly Label avisoResumenWeb = new Label
+            { Name = "avisoCompraWeb", AutoSize = true, ForeColor = Tema.TextoSecundario, Visible = false };
         private readonly Visual.Componentes.BotonSecundario abrirServicios = new Visual.Componentes.BotonSecundario
             { Name = "btnAbrirServicios", Text = "Ver servicios" };
         private readonly Visual.Componentes.BotonSecundario volverASectores = new Visual.Componentes.BotonSecundario
@@ -77,6 +81,17 @@ namespace Visual
             pnlResumen.AutoScroll = false;
             pnlResumen.Controls.Add(documentoResumen);
             documentoResumen.Controls.Add(lblResumen);
+            pnlResumen.Controls.Add(resumenWeb);
+            pnlResumen.Controls.Add(avisoResumenWeb);
+            avisoResumenWeb.Text = "Vista web no disponible";
+            avisoResumenWeb.AccessibleDescription = "La vista web no está disponible.";
+            resumenWeb.VistaLista += ActualizarVistaResumen;
+            resumenWeb.VistaNoDisponible += ActualizarVistaResumen;
+            resumenWeb.Escape += () =>
+            {
+                Message mensaje = default(Message);
+                ProcessCmdKey(ref mensaje, Keys.Escape);
+            };
             lblResumen.LocationChanged += (s, e) => lblResumen.Invalidate();
             pnlTarjetaEntradas.Controls.Add(abrirServicios);
             pnlTarjetaServicios.Controls.Add(volverASectores);
@@ -197,11 +212,27 @@ namespace Visual
                 pnlResumen.Height = altoFijo + altoDocumento;
                 documentoResumen.SetBounds(relleno, arribaDocumento, anchoInterior, altoDocumento);
                 lblTotalDestacado.SetBounds(relleno, documentoResumen.Bottom + separacion, anchoInterior, altoTotal);
+                resumenWeb.Bounds = RectangleResumenWeb();
+                avisoResumenWeb.Location = new Point(Math.Max(lblTituloResumen.Right + separacion,
+                    pnlResumen.Width - relleno - avisoResumenWeb.Width), lblTituloResumen.Top);
             }
             finally
             {
                 contenidoCompra.ResumeLayout(true);
             }
+        }
+
+        private System.Drawing.Rectangle RectangleResumenWeb() =>
+            System.Drawing.Rectangle.FromLTRB(documentoResumen.Left, documentoResumen.Top,
+                lblTotalDestacado.Right, lblTotalDestacado.Bottom);
+
+        private void ActualizarVistaResumen()
+        {
+            resumenWeb.Visible = resumenWeb.Preparado;
+            avisoResumenWeb.Visible = resumenWeb.InicializacionTerminada && !resumenWeb.Preparado;
+            if (resumenWeb.Visible) resumenWeb.BringToFront();
+            if (avisoResumenWeb.Visible) avisoResumenWeb.BringToFront();
+            AjustarEncabezado();
         }
 
         private void AlinearAcciones()
@@ -218,6 +249,7 @@ namespace Visual
 
         protected override void OnShown(EventArgs e)
         {
+            if (!accesoRechazado) resumenWeb.Cargar("compra.html");
             if (accesoRechazado) return;
             base.OnShown(e);
             AjustarAreaVisible(Screen.FromControl(this).WorkingArea);
@@ -672,6 +704,7 @@ namespace Visual
 
             string total = resumen.Total.ToString("C2", Pesos);
             lblResumen.Cargar(filas, total);
+            resumenWeb.Actualizar(lblResumen.ModeloWeb());
             lblTotalDestacado.Text = "TOTAL " + total;
             AjustarEncabezado();
             ActualizarHabilitados();

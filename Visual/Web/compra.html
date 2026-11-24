@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+<title>Resumen del paquete</title>
+<link rel="stylesheet" href="tema.css"><link rel="stylesheet" href="compra.css">
+<script defer src="tema.js"></script><script defer src="compra.js"></script>
+</head>
+<body>
+<main>
+  <section class="comprobante" aria-label="Comprobante">
+    <details id="desglose" open>
+      <summary>Desglose del paquete</summary>
+      <div id="lineas"></div>
+      <p id="ayuda" class="secundario"></p>
+    </details>
+  </section>
+  <footer class="total"><span>TOTAL</span><strong id="total" aria-live="polite"></strong></footer>
+</main>
+</body>
+</html>

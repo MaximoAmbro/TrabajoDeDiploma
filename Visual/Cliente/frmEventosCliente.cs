@@ -134,7 +134,7 @@ namespace Visual
             catalogoWeb.Visible = mostrarTarjetas && catalogoWeb.Preparado && eventosMostrados.Count > 0;
             avisoWeb.Visible = mostrarTarjetas && avisoWeb.Tag != null;
             if (catalogoWeb.Visible) catalogoWeb.BringToFront();
-            if (avisoWeb.Visible) avisoWeb.BringToFront();
+            if (avisoWeb.Visible) avisoWeb.SendToBack();
             foreach (var tarjeta in tarjetas.Controls.OfType<Componentes.TarjetaEvento>())
                 foreach (Button accion in tarjeta.Controls.OfType<Button>())
                     accion.TabStop = !catalogoWeb.Visible;

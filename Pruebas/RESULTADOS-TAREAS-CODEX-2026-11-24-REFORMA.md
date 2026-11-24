@@ -83,3 +83,17 @@ El inicio usa tarjetas de resumen de 264 px lógicos y rótulos más cortos. Deb
 En compra, Ver servicios alterna Entradas y Servicios y seguro en la misma columna. El total queda a la vista en ambas vistas. El resumen pinta cada fila completa dentro de su área visible, incluida la ayuda cuando entra. CP-119 recorre ambos paneles y comprueba el total. CP-160 abre la ficha desde el inicio y desde el catálogo.
 
 Los tres filtros del catálogo usan la tipografía de cuerpo, 32 px lógicos y el marco del tema. El selector de fecha conserva el calendario nativo. El fondo del catálogo coincide con el de la pantalla. CP-357 controla las medidas de los filtros y se ejecuta al tomar las 50 capturas de las 25 ventanas, a 96 y 144 DPI reales de Windows.
+
+## Migración a WebView2
+
+| Área | WebView2 | WinForms |
+|---|---|---|
+| Eventos | Tarjetas fluidas con portada, disponibilidad y selección por ID | Filtros, ficha, conmutador, DataGridView y tarjetas de respaldo |
+| Reportes y plataforma | Tabla de lectura, barras de entradas por evento, distribución por categoría, línea por fecha de evento e indicadores de plataforma | Filtros y acción Exportar PDF, navegación lateral, grilla e indicadores de respaldo |
+| Compra | Comprobante y detalle plegable con total fijo | Sectores, servicios, acciones de compra y lblResumen con su línea TOTAL como fuente |
+
+PanelWeb carga archivos de Visual/Web desde la salida de compilación. Inyecta los valores de Tema.cs como variables CSS y recibe mensajes del documento local. La vista restringe navegación y recursos al host virtual local. Probamos el respaldo con una ubicación de runtime inválida en el proceso de capturas. Los formularios conservan los controles WinForms y muestran un aviso si la vista web no está disponible.
+
+La línea usa ventas agrupadas por fecha del evento, junto con el listado de fechas que ya expone GestorReportes. Omite coincidencias ambiguas por nombre. Los indicadores del panel excluyen la fila de total que ya viene en cada resultado, para contar cada valor una vez. Las consultas, las reglas y el exportador PDF se conservan.
+
+No se reescribió ninguna prueba funcional. CP-16, CP-17 y CP-18 conservan sus aserciones. Se amplió la captura de CP-357 para combinar el área cliente WinForms y la imagen de WebView2. Se comprobó aparte el clic HTML a la ficha, la alternancia a tabla, la actualización de filtros, los tres selectores de gráfico y la coincidencia del total web con lblResumen. Se revisaron las capturas a 96 y 144 DPI. Enter en Suscripción conserva su verificación manual.

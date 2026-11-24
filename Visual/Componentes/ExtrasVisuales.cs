@@ -35,6 +35,8 @@ namespace Visual.Componentes
     }
     public sealed class ResumenPaquete : Label
     {
+        private const string AyudaDescuento = "El descuento se aplica sobre el valor de las entradas.";
+        private string importeTotal = string.Empty;
         private System.Collections.Generic.IReadOnlyList<(string Concepto, string Importe, bool Seccion)> filas =
             Array.Empty<(string, string, bool)>();
 
@@ -49,13 +51,22 @@ namespace Visual.Componentes
             string total)
         {
             filas = detalle;
+            importeTotal = total;
             var texto = new System.Text.StringBuilder();
             foreach (var fila in filas)
                 texto.AppendLine(fila.Importe == null ? fila.Concepto : fila.Concepto + " " + fila.Importe);
             texto.AppendLine("TOTAL " + total);
-            texto.Append("El descuento se aplica sobre el valor de las entradas.");
+            texto.Append(AyudaDescuento);
             Text = texto.ToString();
             Invalidate();
+        }
+
+        internal object ModeloWeb()
+        {
+            var lineas = new System.Collections.Generic.List<object>(filas.Count);
+            foreach (var fila in filas)
+                lineas.Add(new { concepto = fila.Concepto, importe = fila.Importe, seccion = fila.Seccion });
+            return new { filas = lineas, total = importeTotal, ayuda = AyudaDescuento };
         }
 
         internal int AltoPara(int ancho)
@@ -99,7 +110,7 @@ namespace Visual.Componentes
                 }
                 arriba += alto;
             }
-            const string ayuda = "El descuento se aplica sobre el valor de las entradas.";
+            const string ayuda = AyudaDescuento;
             int anchoAyuda = Math.Max(1, ancho - 2 * margen);
             int altoAyuda = TextRenderer.MeasureText(lienzo, ayuda, Tema.Ayuda, new Size(anchoAyuda, int.MaxValue), formato).Height;
             if (pintar && EnVista(arriba + separacion, altoAyuda))
