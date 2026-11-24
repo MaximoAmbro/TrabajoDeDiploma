@@ -17,6 +17,8 @@ namespace Visual.Vendedor
         public int IDUsuario; public int IDlocal;
         public string NombreLocal { get; set; } public string NombreUsuario { get; set; }
         private Componentes.EstadoVacio estadoSinEventos;
+        private readonly Web.PanelWeb eventosWeb = new Web.PanelWeb { Name = "eventosLocalWeb", Dock = DockStyle.None, Visible = false };
+        private readonly Label avisoWeb = new Label { Name = "avisoEventosLocalWeb", AutoSize = true, ForeColor = Tema.TextoSecundario, Text = "Vista web no disponible. Se muestra la lista de Windows Forms.", Visible = false };
         public frmEventosLocal()
         {
             InitializeComponent();
@@ -40,7 +42,16 @@ namespace Visual.Vendedor
                 Disposicion.ExtenderGrilla(dgvEventos, btnVolver);
                 estadoSinEventos.AjustarA(dgvEventos);
                 dgvEventos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                AjustarWebEventos();
+                eventosWeb.Cargar("gestion.html");
             };
+            Controls.Add(eventosWeb);
+            Controls.Add(avisoWeb);
+            eventosWeb.VistaLista += ActualizarVistaEventos;
+            eventosWeb.VistaNoDisponible += ActualizarVistaEventos;
+            eventosWeb.Escape += () => { Message m = default(Message); ProcessCmdKey(ref m, Keys.Escape); };
+            eventosWeb.Mensaje += RecibirMensajeEventos;
+            SizeChanged += (s, e) => AjustarWebEventos();
             AcceptButton = btnAgregarEvento;
             dgvEventos.KeyDown += (s, e) =>
             {
@@ -152,6 +163,48 @@ namespace Visual.Vendedor
             dgvEventos.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dgvEventos.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             if (dgvEventos.Columns.Contains("MotivoDelRechazo")) dgvEventos.Columns["MotivoDelRechazo"].HeaderText = "Motivo del rechazo";
+            ActualizarModeloEventos(eventos);
+        }
+
+        private void AjustarWebEventos()
+        {
+            if (eventosWeb == null || IsDisposed) return;
+            eventosWeb.Bounds = dgvEventos.Bounds;
+            avisoWeb.Location = new Point(dgvEventos.Left, Math.Max(0, dgvEventos.Top - avisoWeb.Height));
+        }
+
+        private void ActualizarVistaEventos()
+        {
+            bool web = eventosWeb.Preparado;
+            eventosWeb.Visible = web;
+            avisoWeb.Visible = eventosWeb.InicializacionTerminada && !web;
+            // La grilla conserva su ruta de teclado y queda cubierta por el panel web.
+            dgvEventos.Visible = dgvEventos.Rows.Count > 0;
+            estadoSinEventos.Visible = !web && dgvEventos.Rows.Count == 0;
+            if (web) eventosWeb.BringToFront(); else avisoWeb.BringToFront();
+        }
+
+        private void ActualizarModeloEventos(System.Collections.Generic.IEnumerable<Entidades.Evento> origen = null)
+        {
+            var eventos = origen?.ToArray() ?? GestorEventos.Instance.PorLocal(IDlocal).ToArray();
+            int? seleccionado = dgvEventos.CurrentRow == null || !dgvEventos.Columns.Contains("ID")
+                ? (int?)null : Convert.ToInt32(dgvEventos.CurrentRow.Cells["ID"].Value);
+            eventosWeb.Actualizar(new { vista = "eventosLocal", local = NombreLocal, seleccionado,
+                eventos = eventos.Select(e => new { id = e.Id, nombre = e.Nombre,
+                    fecha = e.Fecha.ToString("dd/MM/yyyy HH:mm"), estado = e.Estado,
+                    motivo = e.MotivoRechazo }).ToArray() });
+        }
+
+        private void RecibirMensajeEventos(string texto)
+        {
+            var tipo = System.Text.RegularExpressions.Regex.Match(texto ?? "", "\\\"tipo\\\"\\s*:\\s*\\\"([^\\\"]*)\\\"");
+            if (!tipo.Success) return;
+            if (tipo.Groups[1].Value == "agregar") { btnAgregarEvento.PerformClick(); return; }
+            var id = System.Text.RegularExpressions.Regex.Match(texto, "\\\"id\\\"\\s*:\\s*(\\d+)");
+            if (tipo.Groups[1].Value != "eventoLocal" || !id.Success || !int.TryParse(id.Groups[1].Value, out int eventoId)) return;
+            var fila = dgvEventos.Rows.Cast<DataGridViewRow>().FirstOrDefault(r => Convert.ToInt32(r.Cells["ID"].Value) == eventoId);
+            if (fila != null) { fila.Selected = true; dgvEventos.CurrentCell = fila.Cells["Nombre"]; }
+            ActualizarModeloEventos();
         }
     }
 }
