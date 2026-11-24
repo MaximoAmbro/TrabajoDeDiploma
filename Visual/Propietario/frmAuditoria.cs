@@ -120,7 +120,7 @@ namespace Visual
             int separacion = Px(Tema.Espacio.L);
             int anchoFecha = Px(160);
             ColocarTitulo(titulo);
-            int arriba = titulo.Bottom + separacion + etiquetaDesde.Height + Px(Tema.Espacio.XS);
+            int arriba = titulo.Bottom + separacion + etiquetaDesde.Height + Px(Tema.Espacio.XS) + avisoWeb.Height + Px(Tema.Espacio.S);
             desde.SetBounds(margen, arriba, anchoFecha, Px(Tema.AltoCampo));
             hasta.SetBounds(desde.Right + separacion, arriba, anchoFecha, Px(Tema.AltoCampo));
             buscar.Location = new Point(ClientSize.Width - buscar.Width - margen, arriba);
@@ -133,7 +133,7 @@ namespace Visual
             tabla.SetBounds(margen, inicio, Math.Max(1, ClientSize.Width - 2 * margen),
                 Math.Max(1, ClientSize.Height - inicio - margen));
             auditoriaWeb.Bounds = tabla.Bounds;
-            avisoWeb.Location = new Point(tabla.Left, Math.Max(inicio, tabla.Top - avisoWeb.Height));
+            avisoWeb.Location = new Point(margen, titulo.Bottom + Px(Tema.Espacio.S));
             estadoVacio?.AjustarA(tabla);
             AjustarAnchosColumnas();
         }

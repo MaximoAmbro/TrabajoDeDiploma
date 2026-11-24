@@ -26,7 +26,7 @@ namespace Visual
             Text = "Eventos en revisión";
             StartPosition = FormStartPosition.CenterParent;
             ClientSize = new Size(1060, 570);
-            Controls.Add(new Componentes.EtiquetaTitulo { Text = "Primer evento de cada organizador", Location = new Point(24, 24), Size = new Size(700, 44) });
+            Controls.Add(new Componentes.EtiquetaTitulo { Text = "Primer evento de cada organizador", Location = new Point(24, 12), Size = new Size(700, 44) });
             Controls.AddRange(new Control[] { pendientes, detalle, etiquetaMotivo, motivo, aprobar, rechazar, cerrar });
             CancelButton = cerrar;
             Controls.Add(revisionWeb);

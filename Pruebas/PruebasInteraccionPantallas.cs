@@ -86,7 +86,7 @@ namespace Pruebas
 
         private static void ProbarPanelSinDependencias()
         {
-            string[] paginas = { "catalogo.html", "compra.html", "datos.html", "datos.html" };
+            string[] paginas = { "catalogo.html", "compra.html", "datos.html", "datos.html", "gestion.html" };
             foreach (string pagina in paginas)
             {
                 using (var panel = new Visual.Web.PanelWeb())
@@ -109,6 +109,38 @@ namespace Pruebas
                 File.Copy(archivo, Path.Combine(destino, Path.GetFileName(archivo)), true);
             foreach (string carpeta in Directory.GetDirectories(origen))
                 CopiarCarpeta(carpeta, Path.Combine(destino, Path.GetFileName(carpeta)));
+        }
+
+        private static void VerificarMigracionWeb(Form formulario)
+        {
+            string nombre = formulario.GetType().Name;
+            if (!new[] { "frmHistorialCliente", "frmMisLocales", "frmEventosLocal", "frmControlIngreso", "frmAuditoria", "frmRevisarEventos" }.Contains(nombre)) return;
+            var panel = Descendientes(formulario).OfType<Visual.Web.PanelWeb>().Single();
+            var reloj = System.Diagnostics.Stopwatch.StartNew();
+            while (!panel.InicializacionTerminada && reloj.ElapsedMilliseconds < 5000)
+            {
+                Application.DoEvents();
+                Thread.Sleep(10);
+            }
+            Assert.IsTrue(panel.InicializacionTerminada, nombre + " debe finalizar en vista web o respaldo.");
+            if (panel.Preparado)
+            {
+                Assert.IsTrue(panel.Visible, nombre + " dejó oculta una vista web preparada.");
+                return;
+            }
+            Assert.IsFalse(panel.Visible, nombre + " debe ocultar un motor web no disponible.");
+            bool respaldo = nombre == "frmHistorialCliente"
+                ? formulario.Controls.Find("dgvCompras", true).Any(c => c.Visible) || formulario.Controls.Find("estadoSinCompras", true).Any(c => c.Visible)
+                : nombre == "frmMisLocales"
+                    ? formulario.Controls.Find("dgvLocales", true).Any(c => c.Visible) || formulario.Controls.Find("estadoSinLocales", true).Any(c => c.Visible)
+                    : nombre == "frmEventosLocal"
+                        ? formulario.Controls.Find("dgvEventos", true).Any(c => c.Visible) || formulario.Controls.Find("estadoSinEventos", true).Any(c => c.Visible)
+                        : nombre == "frmControlIngreso"
+                            ? formulario.Controls.Find("txtCodigo", true).Any(c => c.Visible) || formulario.Controls.Find("estadoSinIngresoAbierto", true).Any(c => c.Visible)
+                            : nombre == "frmAuditoria"
+                                ? formulario.Controls.Find("tablaAuditoria", true).Any(c => c.Visible) || formulario.Controls.Find("estadoSinAuditoria", true).Any(c => c.Visible)
+                                : formulario.Controls.Find("lstEventosEnRevision", true).Any(c => c.Visible) || formulario.Controls.Find("estadoSinEventosRevision", true).Any(c => c.Visible);
+            Assert.IsTrue(respaldo, nombre + " no dejó visible su contenido WinForms de respaldo.");
         }
 
         // CP-357 — RNF-02/RNF-03: interacción WinForms real, foco, teclado, y geometría en ventanas abiertas.
@@ -145,6 +177,7 @@ namespace Pruebas
                             Application.DoEvents();
                             Thread.Sleep(30);
                             Application.DoEvents();
+                            VerificarMigracionWeb(formulario);
 
                             if (formulario is Visual.frmReportes &&
                                 !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
@@ -189,8 +222,8 @@ namespace Pruebas
                             if (formulario is Visual.frmCambiarContraseña cambio) VerificarFilaAviso(cambio);
                             string foco = VerificarFoco(formulario);
                             string geometria = VerificarGeometria(formulario);
-                            string teclado = VerificarTeclas(formulario, tipo);
                             VerificarRespaldoPosteriorALaCarga(formulario);
+                            string teclado = VerificarTeclas(formulario, tipo);
                             string fila = tipo.Name + " | " + foco + " | " + teclado + " | " + geometria;
                             resultados.Add(fila);
                             Console.WriteLine(fila);
@@ -230,7 +263,7 @@ namespace Pruebas
                 var aviso = Descendientes(formulario).OfType<Control>()
                     .FirstOrDefault(c => c.Name.StartsWith("aviso", StringComparison.OrdinalIgnoreCase) && c.Name.EndsWith("Web", StringComparison.OrdinalIgnoreCase));
                 Assert.IsNotNull(aviso, "El formulario debe conservar el aviso de respaldo.");
-                Assert.IsTrue(aviso.Visible, "El aviso de respaldo debe aparecer después del fallo.");
+                Assert.IsTrue(aviso.Visible, "El aviso de respaldo debe aparecer después del fallo. " + formulario.Name + ": aviso=" + aviso.Name + ", panel terminado=" + panel.InicializacionTerminada + ", preparado=" + panel.Preparado + ", visible=" + panel.Visible + ".");
                 if (formulario is Visual.frmMenuAdministrador)
                 {
                     var indicadores = Descendientes(formulario).OfType<FlowLayoutPanel>().FirstOrDefault(c => c.Name == "indicadoresPanel");
