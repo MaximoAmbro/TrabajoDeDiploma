@@ -38,7 +38,8 @@ namespace Pruebas
             }) { IsBackground = true };
             hilo.SetApartmentState(ApartmentState.STA);
             hilo.Start();
-            Assert.IsTrue(hilo.Join(TimeSpan.FromSeconds(30)), "La interfaz no terminó en 30 segundos.");
+            int segundosMaximos = string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")) ? 30 : 180;
+            Assert.IsTrue(hilo.Join(TimeSpan.FromSeconds(segundosMaximos)), "La interfaz no terminó en " + segundosMaximos + " segundos.");
             Fake.Limpiar();
             if (error != null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(error).Throw();
         }
