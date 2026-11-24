@@ -1,18 +1,33 @@
 * { box-sizing: border-box; }
-body { margin: 0; padding: 12px; background: var(--fondo); color: var(--texto); font: 10pt "Segoe UI", sans-serif; }
+body { margin: 0; padding: 12px; background: var(--superficie); color: var(--texto); font: 10pt "Segoe UI", sans-serif; }
 #app { min-height: 100%; display: grid; gap: 12px; align-content: start; }
 .seccion { display: grid; gap: 8px; min-width: 0; }
-.encabezado { margin: 0; color: var(--textoSecundario); font-size: 9pt; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.encabezado { margin: 0; color: var(--texto-secundario); font-size: 9pt; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
 .grilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; align-content: start; }
-.tarjeta { min-width: 0; padding: 12px; border: 1px solid var(--bordeControl); background: var(--superficie); display: grid; gap: 6px; transition: background-color .12s ease; }
-.tarjeta:hover, .tarjeta.activa { background: var(--primarioSuave); }
+.tarjeta { min-width: 0; padding: 12px; border: 1px solid var(--borde); background: var(--superficie); display: grid; gap: 6px; transition: background-color .12s ease; }
+.tarjeta:hover, .tarjeta.activa { background: var(--primario-suave); }
 .tarjeta:active { background: var(--primario); color: #fff; }
 .principal { border: 0; color: var(--texto); font: 600 11pt "Segoe UI", sans-serif; text-align: left; padding: 0; background: transparent; cursor: pointer; }
-.secundario { color: var(--textoSecundario); font-size: 9pt; }
+.secundario { color: var(--texto-secundario); font-size: 9pt; }
 .dato { font-variant-numeric: tabular-nums; }
 .entradas { display: grid; gap: 4px; }
 .entrada { display: grid; grid-template-columns: 22px minmax(100px, 1fr) auto; gap: 8px; align-items: center; padding: 8px; border-top: 1px solid var(--borde); }
 .entrada input { width: 16px; height: 16px; accent-color: var(--primario); }
-.codigo { font: 9pt "Segoe UI", sans-serif; color: var(--textoSecundario); overflow-wrap: anywhere; }
+.codigo { font: 9pt "Segoe UI", sans-serif; color: var(--texto-secundario); overflow-wrap: anywhere; }
 .vacio { border: 1px solid var(--borde); background: var(--superficie); padding: 24px; display: grid; gap: 8px; }
+.accion { min-height: 36px; min-width: 160px; width: max-content; padding: 0 16px; border: 1px solid var(--primario); background: var(--primario); color: #fff; cursor: pointer; }
+.seleccionable { width: 100%; color: var(--texto); text-align: left; cursor: pointer; }
+.etiqueta { width: max-content; padding: 4px 8px; border: 1px solid var(--borde); color: var(--texto-secundario); }
+.formulario { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr) auto; gap: 12px; align-items: end; }
+.campo { display: grid; gap: 4px; color: var(--texto-secundario); }
+.campo input, .campo select, .campo textarea { min-width: 0; min-height: 32px; padding: 4px 8px; border: 1px solid var(--borde); background: var(--superficie); color: var(--texto); font: 10pt "Segoe UI", sans-serif; }
+.campo textarea { min-height: 88px; resize: vertical; }
+.resultado { margin-top: 12px; padding: 12px; border-left: 3px solid var(--primario); background: var(--superficie); }
+.tabla { width: 100%; border-collapse: collapse; background: var(--superficie); }
+.tabla th, .tabla td { padding: 8px; border: 1px solid var(--borde); text-align: left; vertical-align: top; }
+.tabla th { color: var(--texto-secundario); font-size: 9pt; font-weight: 600; }
+.tabla tbody tr:nth-child(even) { background: var(--primario-suave); }
+.revision { display: grid; grid-template-columns: minmax(240px, .9fr) minmax(260px, 1.1fr); gap: 12px; }
+.detalleRevision textarea { width: 100%; min-height: 88px; padding: 8px; border: 1px solid var(--borde); background: var(--superficie); color: var(--texto); font: 10pt "Segoe UI", sans-serif; }
 @media (max-width: 680px) { .grilla { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { .formulario, .revision { grid-template-columns: 1fr; } }

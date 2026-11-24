@@ -254,8 +254,10 @@ namespace Visual
         private void RecibirMensajeHistorial(string texto)
         {
             var tipo = System.Text.RegularExpressions.Regex.Match(texto ?? "", "\\\"tipo\\\"\\s*:\\s*\\\"([^\\\"]*)\\\"");
+            if (!tipo.Success) return;
+            if (tipo.Groups[1].Value == "eventos") { AbrirEventos(); return; }
             var idMatch = System.Text.RegularExpressions.Regex.Match(texto ?? "", "\\\"id\\\"\\s*:\\s*(\\d+)");
-            if (!tipo.Success || !idMatch.Success || !int.TryParse(idMatch.Groups[1].Value, out int id)) return;
+            if (!idMatch.Success || !int.TryParse(idMatch.Groups[1].Value, out int id)) return;
             if (tipo.Groups[1].Value == "compra")
             {
                 var fila = dgvCompras.Rows.Cast<DataGridViewRow>().FirstOrDefault(r => ((Compra)r.Tag).Id == id);
@@ -265,7 +267,7 @@ namespace Visual
             {
                 var fila = dgvEntradas.Rows.Cast<DataGridViewRow>().FirstOrDefault(r => ((Entrada)r.Tag).Id == id);
                 if (fila != null && !fila.Cells["Devolver"].ReadOnly)
-                    fila.Cells["Devolver"].Value = texto.Contains("\"devolver\":true");
+                    fila.Cells["Devolver"].Value = System.Text.RegularExpressions.Regex.IsMatch(texto, "\\\"devolver\\\"\\s*:\\s*true");
             }
             ActualizarModeloHistorialWeb();
         }
