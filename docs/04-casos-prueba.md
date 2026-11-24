@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 205 casos, de CP-01 a CP-206 (el número CP-149 no se usó), que suman **348 ejecuciones**, las 348 correctas sobre el código que se entrega, `967e038` (`967e038a79ce94ace3469f75843f01ec44310cfb`). **Verificado por dos agentes, por separado:** la corrida de Codex del 19/11, al cerrar la capa `Datos`, y la de Claude Code del 20/11 en el árbol principal, que compiló sin advertencias y corrió la batería completa con `tools/Proyecto.ps1 -Accion Probar` (`TestResults/Claude-967e038/bateria.log`: 348 correctas, 0 fallidas, 205 casos distintos). Antes: sobre `dba674c`, el código que se iba a entregar el 16/11, 148 casos y 276 ejecuciones; sobre el código congelado de la medición de mutación, `65225e7`, 145 casos y 271 ejecuciones. Los dos agentes verificaron las dos cifras.
-CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-206 se
-agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-206» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 214 casos, de CP-01 a CP-211 y de CP-354 a CP-357 (los números CP-149 y CP-212 a CP-353 no se usaron), que suman **360 ejecuciones**, las 360 correctas sobre el código que se entrega, `2db272e` (`2db272ecf0f31898ee617e025ba763be1be7825e`). La corrió Codex el 24/11, fuera del sandbox, con `tools/Proyecto.ps1 -Accion Probar`; Claude Code cruzó el registro (`TestResults/post-reinicio.log`: 360 correctas) con el código, caso por caso: están los 214 y no sobra ninguno. Antes: sobre `967e038`, 205 casos y 348 ejecuciones (corrida de Codex del 19/11 y de Claude Code del 20/11, `TestResults/Claude-967e038/bateria.log`); sobre `dba674c`, 148 casos y 276 ejecuciones; sobre el código congelado de la medición de mutación, `65225e7`, 145 casos y 271 ejecuciones.
+CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-357 se
+agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-357» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -138,9 +138,9 @@ documentado, no todas sus variantes: CP-56 prueba eliminar el último sector, no
 sectores; CP-60 prueba agregar un sector, no modificarlo. En la matriz, RN-05 está en la fila
 de RF-02 y RN-39 en la de RF-13: por eso CP-55 y CP-61 llevan dos requerimientos.
 
-## Casos CP-62 a CP-206
+## Casos CP-62 a CP-357
 
-Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11; CP-146 a CP-148, en el cierre de Codex (`dba674c`); CP-150 a CP-206, el 19/11, sobre `c4ab61e`, junto con la corrección de las columnas RF y Reglas de CP-197 a CP-199, que había cambiado Codex en los comentarios. El número CP-149 no se usó. Salen del comentario `// CP-xx — RF, RN` y del nombre
+Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11; CP-146 a CP-148, en el cierre de Codex (`dba674c`); CP-150 a CP-206, el 19/11, sobre `c4ab61e`, junto con la corrección de las columnas RF y Reglas de CP-197 a CP-199, que había cambiado Codex en los comentarios; CP-207 a CP-211 y CP-354 a CP-357, el 24/11, sobre `2db272e`. Los números CP-149 y CP-212 a CP-353 no se usaron: Codex saltó de CP-211 a CP-354 al numerar, y los números no se reasignan. Salen del comentario `// CP-xx — RF, RN` y del nombre
 visible de cada prueba en `Pruebas/`, leídos uno por uno. **Ninguno se volvió a correr para
 este registro:** el resultado es el de la última batería de Codex
 (`Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-12-T47-T48.md`).
@@ -157,7 +157,7 @@ escritorio abierta.
 
 | Ejecuciones | Casos |
 |---|---|
-| 22 | CP-116 |
+| 25 | CP-116 |
 | 21 | CP-63 |
 | 8 | CP-88 y CP-125 |
 | 7 | CP-112 |
@@ -168,8 +168,10 @@ escritorio abierta.
 | 2 | CP-66, CP-68, CP-69, CP-70, CP-71, CP-73, CP-74, CP-75, CP-77, CP-79, CP-80, CP-83, CP-89, CP-105, CP-111, CP-119, CP-120, CP-146 y CP-147 |
 | 1 | El resto |
 
-CP-62 a CP-148 suman **206 ejecuciones**, y CP-150 a CP-206, **69**. Con las 73 de CP-01 a CP-61,
-la batería da **348** (corrida de Claude Code del 20/11 sobre `967e038`). Sobre `dba674c` eran 203
+CP-62 a CP-148 suman **209 ejecuciones**; CP-150 a CP-206, **69**, y CP-207 a CP-211 y CP-354 a CP-357, **9**
+(una cada uno). Con las 73 de CP-01 a CP-61, la batería da **360** (corrida de Codex del 24/11 sobre
+`2db272e`). Sobre `967e038` eran 206 de CP-62 a CP-148: desde entonces CP-116 sumó tres pantallas
+(de 22 a 25: `frmAuditoria`, `frmRevisarSolicitudesOrganizador` y `frmSolicitudOrganizador`). Sobre `dba674c` eran 203
 de CP-62 a CP-148: desde entonces CP-63 sumó una pantalla (de 20 a 21) y CP-116, dos (de 20 a 22).
 En el cierre de Codex (`dba674c`) se sumaron dos de CP-146, dos de CP-147 y una de CP-148 a las 271
 de `65225e7`; la limpieza de las ocho filas de CP-125 no agregó ninguna.
@@ -252,7 +254,7 @@ sección 0).
 | CP-113 | PruebasRevisionSeguridad | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41 | K-6 (R-01) |
 | CP-114 | PruebasRevisionSeguridad | Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada (3 variantes) | El rechazo es idéntico en texto y título, sin revelar si la cuenta existe ni si está bloqueada; el bloqueo se registra igual | RF-02 | RN-04 | K-3 |
 | CP-115 | PruebasRevisionSeguridad | Descuento configurado de Plata y de Oro por debajo, igual y por encima de `DESCUENTO_MAX_ADMISIBLE` (6 variantes) | Por debajo o igual se aplica; por encima se rechaza con RN-20, sin recortarlo en silencio | RF-08 | RN-20 | K-4 |
-| CP-116 | PruebasTextoBotones | El texto de cada botón de 22 pantallas, dibujado por Windows, también con el borde de foco (22 variantes) | Ningún botón recorta su texto | RNF-02, RNF-03 | — | Rediseño |
+| CP-116 | PruebasTextoBotones | El texto de cada botón de 25 pantallas, dibujado por Windows, también con el borde de foco (25 variantes) | Ningún botón recorta su texto | RNF-02, RNF-03 | — | Rediseño |
 | CP-117 | PruebasListaEsperaCliente | Consultar la posición en la lista de espera: la propia, con suscriptores adelante, la de otro cliente y sin sesión (4 variantes) | El cliente ve su posición, que respeta la prioridad de los suscriptores; la de otro y sin sesión se rechazan | RF-10 | RN-35, RN-41 | D-6 |
 | CP-118 | PruebasListaEsperaCliente | Aviso de disponibilidad: evento agotado, entrada liberada, avisos de otra cuenta, sin sesión, reserva que ocupa el último cupo, evento suspendido (6 variantes) | Solo hay aviso al iniciar sesión cuando de verdad se puede comprar; no se leen avisos ajenos ni sin sesión | RF-10 | RN-41 | D-6 |
 | CP-119 | PruebasExtrasVisuales | Resumen de compra vacío y con dos entradas (2 variantes) | El TOTAL destacado coincide con el resumen, y el indicador marca el paso correcto | RF-05, RNF-02 | — | Rediseño |
@@ -343,6 +345,15 @@ sección 0).
 | CP-204 | PruebasPublicacionEventos | Organizador nuevo publica su primer evento, primero sin sectores; un cliente intenta comprar; el Administrador lo aprueba; después publica un segundo | Sin sectores no se publica. Con un sector pasa a revisión, no aparece en el catálogo y la venta se rechaza (RN-09); el Organizador no puede aprobarlo. Aprobado, se publica, y el segundo se publica directo | RF-21 | RN-54 | Revisión de eventos |
 | CP-205 | PruebasPublicacionEventos | Publicar un evento sin sectores | Rechazo RN-06; el evento sigue en Borrador | RF-21 | RN-06 | Revisión de eventos |
 | CP-206 | PruebasVistasVisibles | Métodos de escritura de la auditoría y de revisión de solicitudes en `Datos`, y el código fuente de `Visual` | `Registrar`, `Aprobar` y `Rechazar` son `internal` y solo `Repositorio` los ve; ningún archivo de `Visual` nombra esos repositorios ni escribe en la auditoría | RF-16 | RN-45 | Cierre de la auditoría |
+| CP-207 | PruebasSeguridadCuenta | El archivo del correo simulado que lleva un código | Es un mensaje MIME legible, con el código en el cuerpo | RF-14, RF-15 | RN-43, RN-44 | Correo y SMS |
+| CP-208 | PruebasSeguridadCuenta | Las cinco variables de entorno de SMTP, completas o con alguna faltante | El emisor SMTP se elige solo cuando están las cinco | RF-14, RF-15 | RN-43, RN-44 | Correo y SMS |
+| CP-209 | PruebasArranqueYAlcance | El ejecutable real, `Visual.exe` | Completa el arranque y la ventana permanece abierta | RF-01, RNF-03 | — | Arranque y navegación |
+| CP-210 | PruebasArranqueYAlcance | Las referencias de navegación entre los formularios | Cada pantalla tiene una ruta de entrada y una salida visible | RF-01, RF-22, RNF-03 | — | Arranque y navegación |
+| CP-211 | PruebasVistasVisibles | Usuario con sesión iniciada, menú «Mi cuenta» (interfaz) | Abre el cambio de contraseña, que pide la contraseña actual | RF-17, RF-22 | RN-02 | Cambio de contraseña |
+| CP-354 | PruebasFormularios | Las ventanas sin diseño adaptable (interfaz) | Enter, Esc, el orden de tabulación y el foco inicial responden como se espera, y la ventana no cambia de tamaño | RF-05, RNF-02 | — | Teclado |
+| CP-355 | PruebasSolicitudesOrganizador | Solicitud para ser Organizador con SMTP configurado | El código del teléfono llega por el SMS simulado y la solicitud se completa | RF-20 | RN-51 | Correo y SMS |
+| CP-356 | PruebasSolicitudesOrganizador | El envío de un código con un proveedor que falla | No queda un código activo en la base | RF-14, RF-15 | RN-43, RN-44 | Correo y SMS |
+| CP-357 | PruebasInteraccionPantallas | Las 25 ventanas reales, abiertas y operadas (interfaz) | El foco, el teclado y la geometría responden en cada una | RNF-02, RNF-03 | — | Teclado y escala |
 
 **Notas de lectura:**
 - **CP-112 no verifica RNF-01** (revisado el 19/11). RNF-01 pide que el flujo de compra se
@@ -351,7 +362,9 @@ sección 0).
   comentario, y RF-05 se agregó como en el comentario. RNF-01 no tiene caso automático: lo verifica
   la medición del informe de usabilidad (`docs/usabilidad/INFORME-USABILIDAD.md`, «Tiempo del
   flujo completo»).
-- **CP-149 no existe.** El número se saltó al numerar y no se reasigna, igual que RN-27.
+- **CP-149 no existe**, ni CP-212 a CP-353. Los números se saltaron al numerar y no se reasignan, igual que RN-27.
+- **CP-207 a CP-211 y CP-354 a CP-357 (24/11, `2db272e`).** Requerimientos y reglas tomados de sus comentarios con
+  `tools/Matriz/Extraer.py`. No suman reglas nuevas: la cobertura sigue en 50 de 52.
 - **Requerimientos y reglas alineados con los comentarios (22/11).** Codex volvió a leer las
   pruebas y corrigió los comentarios en `42b255e` y `e3e000d`. Desde `e3e000d`, la columna RF del
   catálogo y la de los comentarios coinciden en todos los casos. En la columna Reglas, el catálogo

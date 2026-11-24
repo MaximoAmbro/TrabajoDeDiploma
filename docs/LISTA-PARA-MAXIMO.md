@@ -1,5 +1,21 @@
 # LA lista para el Word — de la página 1 a la 112
 
+> ## ↻ CAMBIÓ EL 24/11: el código que se entrega es `2db272e`
+>
+> La batería pasó a **214 casos y 360 ejecuciones**, todas correctas, sobre `2db272e`; la cobertura
+> de reglas no cambia (50 de 52). **Si ya pegaste alguno de estos lugares, volvé a pegarlo:**
+>
+> - la línea del commit en la carátula (p. 1);
+> - la fila 2.6 del historial (p. 6) y el resumen de resultados (p. 7);
+> - la nomenclatura de la matriz (p. 106) y la matriz principal entera, con el párrafo de los
+>   requerimientos no funcionales (p. 107);
+> - las tablas de casos (pp. 107 a 109): nueve filas nuevas al final de cada una (CP-207 a CP-211
+>   y CP-354 a CP-357), la fila de CP-116 (25 pantallas), el párrafo de cobertura y el «Origen de
+>   los casos»;
+> - la sección «Metodología de verificación» (la cantidad de casos y de ejecuciones).
+>
+> Lo que describe pantallas sigue en pausa (⏸).
+
 > ## ⚠ ANTES DE TODO: nueve scripts nuevos en tu base (18/11 y 19/11)
 >
 > **El ejecutable de hoy no anda sin ellos.** Si ya corriste del `08` al `15` siguiendo una versión
@@ -103,8 +119,9 @@
 > cambio. Las páginas marcadas ✅ que pegaste después no cambiaron, salvo las que lo dicen en su
 > lugar.
 >
-> **Las cifras de la batería son otras:** eran 148 casos y 276 ejecuciones, y son 205 casos y
-> 348 ejecuciones. La cobertura de reglas pasa de 39 de 41 a 50 de 52.
+> **Las cifras de la batería son otras:** eran 148 casos y 276 ejecuciones; el 20/11 pasaron a 205
+> y 348, y desde el 24/11 son 214 casos y 360 ejecuciones (ver el aviso del principio). La
+> cobertura de reglas pasa de 39 de 41 a 50 de 52.
 
 > ## ⏸ LO QUE TODAVÍA NO SE PEGA (20/11)
 >
@@ -159,9 +176,9 @@
 - **No hay nada para decidir.** Si algo no encaja con lo que ves en el Word, no lo resuelvas:
   anotalo y avisale a JC.
 
-## Cifras del documento (definitivas, 20/11)
+## Cifras del documento (definitivas, 24/11)
 
-Son las del código que se entrega, `967e038`. La de mutación es la del código que se midió,
+Son las del código que se entrega, `2db272e`. La de mutación es la del código que se midió,
 `65225e7`, y no se vuelve a medir (decisión de JC).
 
 | Dato | Valor | Dónde aparece en esta lista |
@@ -171,10 +188,10 @@ Son las del código que se entrega, `967e038`. La de mutación es la del código
 | Reglas con caso de prueba | 50 de 52 = 96,2 % | pp. 7, 8, 108, 109, 110, sección nueva después de la 109 |
 | Reglas sin caso | RN-07 y RN-33 | pp. 8, 108, 109, 110, 111 |
 | Casos de uso especificados | 21 (veintiún), CU-01 a CU-21 | pp. 6, 7, 106, 108 |
-| Casos de prueba | 205 (doscientos cinco), CP-01 a CP-206; el número CP-149 no se usó | pp. 6, 7, 106, 107, 108, 109, sección nueva |
-| Ejecuciones | 348, todas correctas, sobre `967e038`, el código que se entrega: la corrió Codex y la repitió Claude Code por separado, con el mismo resultado | sección nueva |
+| Casos de prueba | 214 (doscientos catorce), CP-01 a CP-211 y CP-354 a CP-357; los números CP-149 y CP-212 a CP-353 no se usaron | pp. 6, 7, 106, 107, 108, 109, sección nueva |
+| Ejecuciones | 360 (trescientas sesenta), todas correctas, sobre `2db272e`, el código que se entrega: la corrió Codex el 24/11 y Claude Code cruzó el registro con el código, caso por caso | sección nueva |
 | Mutación | 73 de 77 (94,8 %) sobre `65225e7`, el código congelado para medirla; la primera medición, 51 de 77 (66,2 %) sobre `fe04b1f`, se cita como punto de partida | p. 7, sección nueva |
-| Código que se entrega | Commit `967e038` (completo: `967e038a79ce94ace3469f75843f01ec44310cfb`) | p. 1 |
+| Código que se entrega | Commit `2db272e` (completo: `2db272ecf0f31898ee617e025ba763be1be7825e`) | p. 1 |
 
 ---
 
@@ -208,11 +225,11 @@ encabezados distintos, en cada una) y se comprueba en tres páginas al azar.
 carátula, debajo de «Rosario, Argentina» y del año, con la misma letra que el resto de la
 carátula y un punto más chica si no entra:
 
-> Código entregado: commit 967e038a79ce94ace3469f75843f01ec44310cfb
+> Código entregado: commit 2db272ecf0f31898ee617e025ba763be1be7825e
 
 *Razón:* la sección «Metodología de verificación» distingue el código medido (`65225e7`) del que
-se entrega, que es posterior. La carátula fija cuál es el que se entrega: `967e038`, el código
-congelado el 19/11, sobre el que corren las 348 ejecuciones de la batería.
+se entrega, que es posterior. La carátula fija cuál es el que se entrega: `2db272e`, el código
+del 22/11, sobre el que corren las 360 ejecuciones de la batería.
 
 ## Páginas 2 a 5 — Índice
 
@@ -233,7 +250,7 @@ El autor va como en las filas anteriores de la tabla («J. C. Riggio»).
 | «fecha» | 2.5 | J. C. Riggio | Anexo A02: consulta de RPT-01 corregida, catálogo, indicadores, diseño técnico y ejemplos ajustados a la implementación. |
 | «fecha» | 2.5 | J. C. Riggio | Matriz de trazabilidad: casos de prueba CP-11 a CP-61. RF-09 se reclasifica de Could a Won't have según la regla de repriorización (brecha G-03). Brecha G-04 resuelta. |
 | «fecha» | 2.5 | J. C. Riggio | Informe de pruebas de usabilidad rehecho como estudio simulado medido sobre la aplicación real: medición instrumentada de la interfaz, evaluación heurística, recorrido cognitivo y Keystroke-Level Model con seis perfiles, en dos mediciones: antes y después de corregir los tres hallazgos de mayor peso (U-01, U-04 y U-05). Hallazgos U-01 a U-14, cuatro de ellos corregidos con prueba de regresión, y nuevo plan de mejora (brecha G-06). RNF-03 alineado con la plataforma Windows Forms, con su limitación de escalado declarada. |
-| «fecha» | 2.6 | J. C. Riggio | Respecto de la 2.5: requerimientos nuevos RF-14 a RF-22 (verificación del correo, recuperación de la contraseña, registro de auditoría, protección de la sesión y de la contraseña, mapa de sectores, portadas de los eventos, solicitud para ser Organizador, publicación con revisión del primer evento y tres perfiles de usuario), con sus reglas RN-43 a RN-54 y su estimación de costos. Arquitectura e implementación descriptas sobre el prototipo, con los diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-21. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, anexo nuevo «Pantallas del sistema» y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 52 vigentes, de RN-01 a RN-54; RN-27 (versión 2.0) y RN-42 (versión 2.6) están dadas de baja y sus números no se reutilizan. Matriz de trazabilidad con los casos CP-62 a CP-206 y cobertura de 50 de las 52 reglas; brecha G-07 resuelta y brecha nueva G-08. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura, prueba de mutación de las defensas de seguridad y revisión de pertenencia. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
+| «fecha» | 2.6 | J. C. Riggio | Respecto de la 2.5: requerimientos nuevos RF-14 a RF-22 (verificación del correo, recuperación de la contraseña, registro de auditoría, protección de la sesión y de la contraseña, mapa de sectores, portadas de los eventos, solicitud para ser Organizador, publicación con revisión del primer evento y tres perfiles de usuario), con sus reglas RN-43 a RN-54 y su estimación de costos. Arquitectura e implementación descriptas sobre el prototipo, con los diagramas regenerados desde el código (casos de uso, dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación); especificaciones CU-01 a CU-08 alineadas con el prototipo y especificaciones nuevas CU-09 a CU-21. Interfaz rediseñada, figuras 1 a 4 del instructivo tomadas sobre ella, anexo nuevo «Pantallas del sistema» y relación entre los hallazgos de usabilidad y el rediseño. RN-35 con ventana de prioridad para los suscriptores. Numeración de las reglas: 52 vigentes, de RN-01 a RN-54; RN-27 (versión 2.0) y RN-42 (versión 2.6) están dadas de baja y sus números no se reutilizan. Matriz de trazabilidad con los casos CP-62 a CP-211 y CP-354 a CP-357 y cobertura de 50 de las 52 reglas; brecha G-07 resuelta y brecha nueva G-08. Sección nueva «Metodología de verificación»: batería de pruebas, criterio de cobertura, prueba de mutación de las defensas de seguridad y revisión de pertenencia. Minutas y prototipos en una sola copia, dentro de «Definición de requerimientos». Carátula y pie: comisión, turno, legajos y año de entrega. |
 
 ## Página 7 — Resumen ejecutivo, «Qué contiene este informe»
 
@@ -244,7 +261,7 @@ El autor va como en las filas anteriores de la tabla («J. C. Riggio»).
 | Diseño | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, especificaciones de ocho casos de uso y modelo de dominio completo.» | «Requerimiento core con su instructivo de ocho pasos, guion de interfaz, arquitectura en cuatro capas, especificaciones de veintiún casos de uso y diagramas de dominio, clases, patrones, secuencia, estados, robustez, actividad y entidad-relación.» |
 | Desarrollo | «Lógica de descuento por nivel con su modelo de datos, algoritmos, implementación y diez casos de prueba ejecutables.» | «Prototipo funcional de escritorio con tres perfiles de usuario (cliente, organizador y administrador de la plataforma), y la lógica de descuento por nivel con su modelo de datos, algoritmos, implementación y diez casos de prueba ejecutables.» |
 | Validación | «Informe de pruebas de usabilidad con cinco participantes y anexo A02 con cinco reportes de gestión.» | «Informe de pruebas de usabilidad (simulado, medido sobre la aplicación) con seis perfiles, y anexo A02 con cinco reportes de gestión.» |
-| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, doscientos cinco casos de prueba automatizados y hallazgos.» |
+| Verificación | «…casos de uso, pruebas y hallazgos.» | «…casos de uso, doscientos catorce casos de prueba automatizados y hallazgos.» |
 
 En «Resultados principales», **reemplazar** el punto «Usabilidad por encima del promedio»:
 
@@ -263,7 +280,7 @@ En «Resultados principales», **reemplazar** el punto «Usabilidad por encima d
 **Mismo lugar, agregar un cuarto punto** al final de «Resultados principales», con la misma
 viñeta:
 
-> Pruebas que detectan defectos, medidas. Doscientos cinco casos de prueba automatizados
+> Pruebas que detectan defectos, medidas. Doscientos catorce casos de prueba automatizados
 > verifican cincuenta de las cincuenta y dos reglas de negocio. Para comprobar que esas
 > pruebas detectarían un defecto real, se quitó a propósito cada una de las defensas de
 > seguridad del sistema, una por vez: la primera medición mostró cuáles no advertía la batería,
@@ -3402,7 +3419,7 @@ siguiente; no achiques ninguna imagen.
 **Por:**
 
 > Una grilla que cruce los seis objetivos con los veintidós requerimientos, las cincuenta y dos
-> reglas, los veintiún casos de uso y los doscientos cinco casos de prueba resulta ilegible en
+> reglas, los veintiún casos de uso y los doscientos catorce casos de prueba resulta ilegible en
 > formato A4
 
 **Tabla «Nomenclatura de los ejes».** Reemplazar las filas de reglas y de casos de prueba, y en
@@ -3412,7 +3429,7 @@ las de requerimientos funcionales y casos de uso cambiar la cantidad:
 |---|---|---|
 | Requerimientos funcionales | la cantidad «13» | «22» |
 | Reglas de negocio | «RN-xx \| 36 \| Reglas de negocio (RN-27 dada de baja)» | «RN-xx \| 52 \| Reglas de negocio (RN-27 y RN-42 dadas de baja)» |
-| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 205 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-206: Matriz de trazabilidad, catálogo de casos incorporados (el número CP-149 no se usó)» |
+| Casos de prueba | «CP-xx \| 10 \| Desarrollo de la lógica de descuento por nivel» | «CP-xx \| 214 \| CP-01 a CP-10: Desarrollo de la lógica de descuento por nivel. CP-11 a CP-357: Matriz de trazabilidad, catálogo de casos incorporados (los números CP-149 y CP-212 a CP-353 no se usaron)» |
 | Casos de uso | la cantidad «8» | «21» |
 
 ## Página 107 — Matriz principal
@@ -3421,31 +3438,31 @@ las de requerimientos funcionales y casos de uso cambiar la cantidad:
 
 | RF | OE | MoSCoW | Reglas de negocio | CU | Casos de prueba | Hall. |
 |---|---|---|---|---|---|---|
-| RF-01 | OE-2 | Must | RN-01, RN-02, RN-03 | CU-04 | CP-14, CP-15, CP-26, CP-44, CP-45, CP-55 | — |
-| RF-02 | OE-2 | Must | RN-04, RN-40, RN-41 | CU-05, CU-09 | CP-27 a CP-29, CP-46, CP-47, CP-51, CP-53, CP-66 a CP-68, CP-105, CP-107, CP-108, CP-130, CP-154 a CP-157 | — |
+| RF-01 | OE-2 | Must | RN-01, RN-02, RN-03 | CU-04 | CP-14, CP-15, CP-26, CP-44, CP-45, CP-55, CP-209, CP-210 | — |
+| RF-02 | OE-2 | Must | RN-04, RN-40, RN-41 | CU-05, CU-09 | CP-27 a CP-29, CP-46, CP-66 a CP-68, CP-95 a CP-98, CP-105, CP-107, CP-108, CP-113, CP-114, CP-124, CP-130, CP-154 a CP-157 | — |
 | RF-03 | OE-2 | Must | RN-09 | CU-01 | CP-16 a CP-18, CP-30, CP-81, CP-106, CP-160, CP-199 | — |
 | RF-04 | OE-2 | Must | RN-08, RN-12, RN-33 | CU-01 | CP-20, CP-31, CP-40, CP-49, CP-54, CP-94, CP-151 | H-03 |
-| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-05, CP-11, CP-13, CP-19, CP-22 a CP-25, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61 a CP-64, CP-79, CP-81, CP-112, CP-116, CP-119, CP-120, CP-140, CP-152, CP-153, CP-159, CP-163 | H-04 |
+| RF-05 | OE-2 | Must | RN-13, RN-14, RN-28, RN-29 | CU-01, CU-13 | CP-05, CP-11, CP-13, CP-19, CP-22 a CP-25, CP-31, CP-41, CP-48, CP-50, CP-57, CP-59, CP-61, CP-79, CP-81, CP-112, CP-119, CP-120, CP-140, CP-152, CP-153, CP-159, CP-163, CP-354 | H-04 |
 | RF-06 | OE-5 | Must | RN-15, RN-16, RN-30, RN-31, RN-32 | CU-01 | CP-07, CP-32 a CP-34, CP-39, CP-43, CP-52, CP-80, CP-122, CP-127, CP-129, CP-147, CP-148, CP-181 | H-02 |
 | RF-07 | OE-2 | Must | RN-17, RN-18 | CU-01, CU-12 | CP-32, CP-33, CP-65, CP-80, CP-99 a CP-104, CP-110, CP-111, CP-123, CP-128, CP-131 a CP-136, CP-142, CP-145, CP-146, CP-161 | — |
 | RF-08 | OE-3 | Should | RN-19 a RN-24 | CU-01, CU-03 | CP-01 a CP-06, CP-08 a CP-11, CP-42, CP-91, CP-92, CP-115, CP-138, CP-139 | H-01, H-05 |
 | RF-09 | — | Won't | — | — | — | — |
 | RF-10 | OE-6 ind. | Could | RN-10, RN-35, RN-36 | CU-07 | CP-24, CP-37, CP-83, CP-84, CP-117, CP-118, CP-125, CP-126, CP-137 | — |
 | RF-11 | OE-6 | Should | RN-34 | CU-08 | CP-35 a CP-38, CP-85 a CP-90, CP-109, CP-143, CP-144, CP-162, CP-182 | — |
-| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38 | CU-02, CU-10, CU-11 | CP-12, CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94, CP-141, CP-164, CP-197 | — |
-| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-76 a CP-78, CP-94, CP-121 | — |
-| RF-14 | OE-2 | Must | RN-43, RN-44 | CU-04, CU-14 | CP-167, CP-168, CP-171, CP-203 | — |
-| RF-15 | OE-2 | Must | RN-44 | CU-15 | CP-169 a CP-171, CP-173, CP-176, CP-200, CP-201 | — |
+| RF-12 | OE-2 | Must | RN-06, RN-07, RN-11, RN-38 | CU-02, CU-10, CU-11 | CP-21, CP-56, CP-60, CP-69 a CP-75, CP-82, CP-85, CP-93, CP-94, CP-141, CP-164, CP-197 | — |
+| RF-13 | OE-3 | Should | RN-25, RN-26, RN-37, RN-39 | CU-06 | CP-10, CP-58, CP-61, CP-76 a CP-78, CP-94, CP-121 | — |
+| RF-14 | OE-2 | Must | RN-43, RN-44 | CU-04, CU-14 | CP-167, CP-168, CP-171, CP-203, CP-207, CP-208, CP-356 | — |
+| RF-15 | OE-2 | Must | RN-44 | CU-15 | CP-169 a CP-171, CP-173, CP-176, CP-200, CP-201, CP-207, CP-208, CP-356 | — |
 | RF-16 | OE-2 | Must | RN-45 | CU-20 | CP-174, CP-175, CP-189, CP-196, CP-206 | — |
-| RF-17 | OE-2 | Must | RN-46, RN-47 | CU-04, CU-05, CU-09, CU-15 | CP-95 a CP-98, CP-113, CP-114, CP-124, CP-170, CP-172, CP-174 | — |
+| RF-17 | OE-2 | Must | RN-46, RN-47 | CU-04, CU-05, CU-09, CU-15 | CP-170, CP-172, CP-174, CP-211 | — |
 | RF-18 | OE-2 | Should | — | CU-01 | CP-150, CP-151, CP-160 | — |
 | RF-19 | OE-2 | Should | — | CU-02 | CP-158, CP-160, CP-177 a CP-180 | — |
-| RF-20 | OE-2 | Must | RN-50 a RN-53 | CU-16, CU-18 | CP-184 a CP-196, CP-202 | — |
+| RF-20 | OE-2 | Must | RN-50 a RN-53 | CU-16, CU-18 | CP-184 a CP-196, CP-202, CP-355 | — |
 | RF-21 | OE-2 | Must | RN-06, RN-54 | CU-17, CU-19 | CP-198, CP-199, CP-204, CP-205 | — |
-| RF-22 | OE-2 | Must | RN-05, RN-48, RN-49 | CU-02, CU-07, CU-10 a CU-12, CU-21 | CP-85, CP-141, CP-142, CP-161, CP-162, CP-165, CP-166, CP-182 a CP-184, CP-187, CP-189, CP-190, CP-193, CP-198 | — |
+| RF-22 | OE-2 | Must | RN-05, RN-48, RN-49 | CU-02, CU-07, CU-10 a CU-12, CU-21 | CP-85, CP-141, CP-142, CP-161, CP-162, CP-165, CP-166, CP-182 a CP-184, CP-187, CP-189, CP-190, CP-193, CP-198, CP-210, CP-211 | — |
 
 *Cómo se armó:* la columna «Casos de prueba» sale de los comentarios de trazabilidad de las
-pruebas en `967e038`, el código que se entrega (`py -3 -X utf8 tools/Matriz/Extraer.py`); las reglas y los casos de uso, de
+pruebas en `2db272e`, el código que se entrega (`py -3 -X utf8 tools/Matriz/Extraer.py 2db272e`); las reglas y los casos de uso, de
 la columna «RF / CU» de la tabla de reglas (pp. 25 a 27). RF-14 a RF-22 van con OE-2, como los
 demás requerimientos de la operación de la plataforma (RF-01 a RF-05, RF-07 y RF-12): ninguno
 responde a la fidelización (OE-3), al pago (OE-5) ni a la información de gestión (OE-6).
@@ -3456,7 +3473,7 @@ El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debaj
 > La categoría Won't de RF-09 corresponde a la reclasificación de la versión 2.5 (brecha
 > G-03). RF-14 a RF-22 se incorporaron en la versión 2.6. Los requerimientos no funcionales no
 > figuran en la matriz porque no originan casos de uso; sus casos de prueba son: RNF-02,
-> CP-47, CP-62, CP-63, CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119, CP-120, CP-152, CP-153, CP-157 y CP-159; RNF-03, CP-12, CP-25, CP-64, CP-69, CP-85, CP-116 y CP-163; RNF-04, CP-51, CP-53, CP-156, CP-164 y CP-197. RNF-01, el flujo de compra en menos de cinco
+> CP-47, CP-51, CP-53, CP-62, CP-63, CP-71, CP-76, CP-85, CP-88, CP-112, CP-116, CP-119, CP-120, CP-152, CP-153, CP-157, CP-159, CP-354 y CP-357; RNF-03, CP-12, CP-25, CP-64, CP-69, CP-85, CP-116, CP-163, CP-209, CP-210 y CP-357; RNF-04, CP-156, CP-164 y CP-197. RNF-01, el flujo de compra en menos de cinco
 > minutos, no tiene caso automático: lo verifica la medición del informe de usabilidad. Un caso figura en más de una fila cuando prueba una
 > regla de una fila desde la operación de otra. RN-41 es una regla de autorización: vale para
 > todas las operaciones del sistema y no para un requerimiento solo, y se ubica en RF-02, que
@@ -3474,7 +3491,7 @@ El párrafo «La indicación "ind." en RF-10…» queda igual. **Agregar** debaj
 
 *Razón:* matriz de coherencia, comprobación 1 («Cada RF core tiene CU, robustez, secuencia y
 código»; se comprueba con una tabla RF → CU → diagramas → archivos). La matriz principal no
-llegaba a diagramas ni a archivos. Los archivos existen en el commit que se entrega, `967e038`.
+llegaba a diagramas ni a archivos. Los archivos existen en el commit que se entrega, `2db272e`.
 
 **Tabla «Trazabilidad inversa de los objetivos específicos», fila OE-4. Reemplazar** la
 evidencia «Informe de pruebas de usabilidad: SUS 74,5 y 80 % de satisfacción» **por** «Informe de
@@ -3572,7 +3589,10 @@ la de CP-01 a CP-61:
 | CP-60 — Sectores que superan la capacidad del local | RN-38 |
 | CP-61 — Preventa sin suscripción | RN-39 |
 
-**y agregar a continuación** estas filas (CP-62 a CP-206; el número CP-149 no se usó):
+**y agregar a continuación** estas filas (CP-62 a CP-211 y CP-354 a CP-357; los números CP-149 y CP-212 a CP-353 no se usaron):
+
+**Cambio del 24/11:** nueve filas nuevas al final (CP-207 a CP-211 y CP-354 a CP-357) y la de CP-116
+(25 pantallas), aquí y en la tabla de casos de la versión 2.6 de más abajo.
 
 **Cambio del 22/11:** cambiaron las reglas de CP-93, CP-99, CP-110, CP-123 y CP-125, aquí y en la
 tabla de casos de la versión 2.6 de más abajo (en CP-93, CP-99 y CP-123, también el resultado o la
@@ -3632,7 +3652,7 @@ condición). Si ya pegaste esas filas, reemplazá solo esas cinco en las dos tab
 | CP-113 — Contrato de la sesión: Iniciar fuera de lo público; propiedades de la sesión; perfil e identidad del… | RN-41 |
 | CP-114 — Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada | RN-04 |
 | CP-115 — Descuento configurado de Plata y de Oro por debajo, igual y por encima de DESCUENTO_MAX_ADMISIBLE | RN-20 |
-| CP-116 — El texto de cada botón de 22 pantallas, dibujado por Windows, también con el borde de foco | — (RNF-02, RNF-03) |
+| CP-116 — El texto de cada botón de 25 pantallas, dibujado por Windows, también con el borde de foco | — (RNF-02, RNF-03) |
 | CP-117 — Consultar la posición en la lista de espera: la propia, con suscriptores adelante, la de otro cliente y… | RN-35, RN-41 |
 | CP-118 — Aviso de disponibilidad: evento agotado, entrada liberada, avisos de otra cuenta, sin sesión, reserva que… | RN-41 |
 | CP-119 — Resumen de compra vacío y con dos entradas | — (RNF-02) |
@@ -3723,6 +3743,15 @@ condición). Si ya pegaste esas filas, reemplazá solo esas cinco en las dos tab
 | CP-204 — Organizador nuevo publica su primer evento, primero sin sectores; un cliente intenta comprar; el… | RN-54 |
 | CP-205 — Publicar un evento sin sectores | RN-06 |
 | CP-206 — Métodos de escritura de la auditoría y de revisión de solicitudes en Datos, y el código fuente de Visual | RN-45 |
+| CP-207 — El archivo del correo simulado que lleva un código | RN-43, RN-44 |
+| CP-208 — El emisor de correo según las cinco variables de SMTP | RN-43, RN-44 |
+| CP-209 — El ejecutable real arranca y permanece abierto | — (RNF-03) |
+| CP-210 — Cada pantalla tiene una ruta de entrada y una salida visible | — (RNF-03) |
+| CP-211 — El menú «Mi cuenta» abre el cambio de contraseña (interfaz) | RN-02 |
+| CP-354 — Enter, Esc, orden de tabulación, foco inicial y tamaño de las ventanas (interfaz) | — (RNF-02) |
+| CP-355 — Solicitud para ser Organizador con SMTP configurado | RN-51 |
+| CP-356 — Envío de un código con un proveedor que falla | RN-43, RN-44 |
+| CP-357 — Teclado y geometría de las 25 ventanas reales (interfaz) | — (RNF-02, RNF-03) |
 
 **El párrafo que sigue a la tabla. Reemplazar:**
 
@@ -3732,7 +3761,7 @@ condición). Si ya pegaste esas filas, reemplazá solo esas cinco en las dos tab
 
 **Por:**
 
-> Los doscientos cinco casos verifican cincuenta reglas distintas sobre un total de cincuenta y
+> Los doscientos catorce casos verifican cincuenta reglas distintas sobre un total de cincuenta y
 > dos vigentes, lo que arroja una cobertura del 96,2 %. Son RN-01 a RN-06, RN-08 a RN-26, RN-28 a
 > RN-32, RN-34 a RN-41 y RN-43 a RN-54. Todas las reglas que rechazan una operación tienen un
 > caso que provoca ese rechazo. Las dos restantes
@@ -3806,7 +3835,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-61 | En preventa, un cliente sin suscripción no inicia la compra | `CP61_RechazaPreventaSinSuscripcion` | RF-05, RF-13 | — | 1 |
 
 **y, debajo, una segunda tabla** con el título «Casos de prueba incorporados en la versión 2.6
-(CP-62 a CP-206)»:
+(CP-62 a CP-357)»:
 
 | Caso | Condición de entrada | Resultado esperado | RF | Reglas |
 |---|---|---|---|---|
@@ -3864,7 +3893,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-113 | Contrato de la sesión: `Iniciar` fuera de lo público; propiedades de la sesión; perfil e identidad del usuario modificados después de iniciar (4 variantes) | `Iniciar` es `internal`; la sesión solo se lee; cambiar el objeto `Usuario` no eleva el perfil ni suplanta otra cuenta | RF-02 | RN-41 |
 | CP-114 | Inicio de sesión con correo existente e inexistente; quinto fallo; cuenta bloqueada (3 variantes) | El rechazo es idéntico en texto y título, sin revelar si la cuenta existe ni si está bloqueada; el bloqueo se registra igual | RF-02 | RN-04 |
 | CP-115 | Descuento configurado de Plata y de Oro por debajo, igual y por encima de `DESCUENTO_MAX_ADMISIBLE` (6 variantes) | Por debajo o igual se aplica; por encima se rechaza con RN-20, sin recortarlo en silencio | RF-08 | RN-20 |
-| CP-116 | El texto de cada botón de 22 pantallas, dibujado por Windows, también con el borde de foco (22 variantes) | Ningún botón recorta su texto | RNF-02, RNF-03 | — |
+| CP-116 | El texto de cada botón de 25 pantallas, dibujado por Windows, también con el borde de foco (25 variantes) | Ningún botón recorta su texto | RNF-02, RNF-03 | — |
 | CP-117 | Consultar la posición en la lista de espera: la propia, con suscriptores adelante, la de otro cliente y sin sesión (4 variantes) | El cliente ve su posición, que respeta la prioridad de los suscriptores; la de otro y sin sesión se rechazan | RF-10 | RN-35, RN-41 |
 | CP-118 | Aviso de disponibilidad: evento agotado, entrada liberada, avisos de otra cuenta, sin sesión, reserva que ocupa el último cupo, evento suspendido (6 variantes) | Solo hay aviso al iniciar sesión cuando de verdad se puede comprar; no se leen avisos ajenos ni sin sesión | RF-10 | RN-41 |
 | CP-119 | Resumen de compra vacío y con dos entradas (2 variantes) | El TOTAL destacado coincide con el resumen, y el indicador marca el paso correcto | RF-05, RNF-02 | — |
@@ -3955,6 +3984,15 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-204 | Organizador nuevo publica su primer evento, primero sin sectores; un cliente intenta comprar; el Administrador lo aprueba; después publica un segundo | Sin sectores no se publica. Con un sector pasa a revisión, no aparece en el catálogo y la venta se rechaza (RN-09); el Organizador no puede aprobarlo. Aprobado, se publica, y el segundo se publica directo | RF-21 | RN-54 |
 | CP-205 | Publicar un evento sin sectores | Rechazo RN-06; el evento sigue en Borrador | RF-21 | RN-06 |
 | CP-206 | Métodos de escritura de la auditoría y de revisión de solicitudes en `Datos`, y el código fuente de `Visual` | `Registrar`, `Aprobar` y `Rechazar` son `internal` y solo `Repositorio` los ve; ningún archivo de `Visual` nombra esos repositorios ni escribe en la auditoría | RF-16 | RN-45 |
+| CP-207 | El archivo del correo simulado que lleva un código | Es un mensaje MIME legible, con el código en el cuerpo | RF-14, RF-15 | RN-43, RN-44 |
+| CP-208 | Las cinco variables de entorno de SMTP, completas o con alguna faltante | El emisor SMTP se elige solo cuando están las cinco | RF-14, RF-15 | RN-43, RN-44 |
+| CP-209 | El ejecutable real, `Visual.exe` | Completa el arranque y la ventana permanece abierta | RF-01, RNF-03 | — |
+| CP-210 | Las referencias de navegación entre los formularios | Cada pantalla tiene una ruta de entrada y una salida visible | RF-01, RF-22, RNF-03 | — |
+| CP-211 | Usuario con sesión iniciada, menú «Mi cuenta» (interfaz) | Abre el cambio de contraseña, que pide la contraseña actual | RF-17, RF-22 | RN-02 |
+| CP-354 | Las ventanas sin diseño adaptable (interfaz) | Enter, Esc, el orden de tabulación y el foco inicial responden como se espera, y la ventana no cambia de tamaño | RF-05, RNF-02 | — |
+| CP-355 | Solicitud para ser Organizador con SMTP configurado | El código del teléfono llega por el SMS simulado y la solicitud se completa | RF-20 | RN-51 |
+| CP-356 | El envío de un código con un proveedor que falla | No queda un código activo en la base | RF-14, RF-15 | RN-43, RN-44 |
+| CP-357 | Las 25 ventanas reales, abiertas y operadas (interfaz) | El foco, el teclado y la geometría responden en cada una | RNF-02, RNF-03 | — |
 
 **Después de las dos tablas, agregar:**
 
@@ -3988,7 +4026,11 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 > CP-150 a CP-206 verifican la ampliación de la versión 2.6: el mapa de sectores, la identidad
 > visual de la interfaz, las portadas de los eventos, la seguridad de la cuenta, los tres
 > perfiles, las solicitudes para ser Organizador, la revisión del primer evento y el cierre del
-> registro de auditoría. El número CP-149 no se usó.
+> registro de auditoría. CP-207 a CP-211 y CP-354 a CP-357 verifican el último ajuste de la
+> interfaz y del envío de códigos: el correo simulado y el real, el SMS simulado, el arranque
+> del ejecutable, la entrada y la salida de cada pantalla, el acceso al cambio de contraseña y el
+> teclado y la geometría de las ventanas reales. Los números CP-149 y CP-212 a CP-353 no se
+> usaron.
 >
 > Se prefirió convertir las pruebas en casos automáticos porque una prueba repetible deja
 > evidencia en cada ejecución. Una verificación hecha a mano solo vale el día en que se hizo.
@@ -4107,9 +4149,9 @@ corrida, con el mismo esquema y los mismos datos iniciales que se entregan, y nu
 desarrollo. Las pruebas de interfaz abren los formularios reales de la aplicación, los operan y
 leen lo que muestran.
 
-La batería tiene doscientos cinco casos de prueba. Algunos se ejecutan varias veces con datos
+La batería tiene doscientos catorce casos de prueba. Algunos se ejecutan varias veces con datos
 distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman trescientas
-cuarenta y ocho ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
+sesenta ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
 base, los resultados no dependen de lo que haya quedado de una corrida anterior.
 
 **Cobertura de las reglas de negocio**

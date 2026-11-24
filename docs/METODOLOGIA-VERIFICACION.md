@@ -4,16 +4,16 @@ Claude Code, 16/11/2026, a pedido de JC. Es texto para el documento entregable: 
 desde `docs/LISTA-PARA-MAXIMO.md`, entre el final de «Matriz de trazabilidad» (p. 109) y
 «Conclusiones» (p. 110).
 
-**Cifras definitivas.** La mutación se midió sobre el código congelado, `65225e7`. El código que se entrega es posterior, `967e038` (`967e038a79ce94ace3469f75843f01ec44310cfb`): después de la medición se corrigió M-22, se pasó a tres perfiles y se agregaron RF-14 a RF-22. La cifra de mutación corresponde al commit medido y no se vuelve a medir (decisión de JC del 17/11). La batería y la cobertura son las del código que se entrega.
+**Cifras definitivas.** La mutación se midió sobre el código congelado, `65225e7`. El código que se entrega es posterior, `2db272e` (`2db272ecf0f31898ee617e025ba763be1be7825e`): después de la medición se corrigió M-22, se pasó a tres perfiles, se agregaron RF-14 a RF-22 y se ajustó la interfaz. La cifra de mutación corresponde al commit medido y no se vuelve a medir (decisión de JC del 17/11). La batería y la cobertura son las del código que se entrega.
 
 | Cifra en el texto | Valor | Fuente |
 |---|---|---|
-| Casos y ejecuciones | 205 casos (CP-01 a CP-206; CP-149 no se usó), 348 ejecuciones, todas correctas, sobre `967e038` | La corrió Codex el 19/11 y la repitió Claude Code el 20/11 en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-967e038/bateria.log`). Sobre `dba674c` eran 148 y 276; sobre `65225e7`, 145 y 271 |
-| Cobertura de reglas | 50 de 52 (96,2 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` y los comentarios de las pruebas en `967e038` (`tools/Matriz/Extraer.py`): dan lo mismo |
+| Casos y ejecuciones | 214 casos (CP-01 a CP-211 y CP-354 a CP-357; CP-149 y CP-212 a CP-353 no se usaron), 360 ejecuciones, todas correctas, sobre `2db272e` | La corrió Codex el 24/11, fuera del sandbox; Claude Code cruzó el registro con el código, caso por caso (`TestResults/post-reinicio.log`). Sobre `967e038` eran 205 y 348 (Codex el 19/11 y Claude Code el 20/11, por separado); sobre `dba674c`, 148 y 276; sobre `65225e7`, 145 y 271 |
+| Cobertura de reglas | 50 de 52 (96,2 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` y los comentarios de las pruebas en `2db272e` (`tools/Matriz/Extraer.py`): dan lo mismo |
 | Mutación, primera medición | 51 de 77 (66,2 %), sobre `fe04b1f` | `docs/INFORME-MUTACION-SEGURIDAD.md`, secciones 1 a 9 |
 | Mutación, medición final | **73 de 77 (94,8 %), sobre `65225e7`**; dos equivalentes descubiertas después, adentro (sin ellas, 97,3 %) | `docs/INFORME-MUTACION-SEGURIDAD.md`, sección 0 |
 
-El texto nombra solo el commit medido, `65225e7`: en el párrafo «Resultado» y otra vez después del de las cuatro no detectadas, donde dice que después se reescribió la autorización (RN-34 pasó a RN-48) y que no se volvió a medir (JC, 18/11). No nombra la versión que se entrega, para que no quede vieja cuando cambie. **Cifras definitivas desde el 20/11**, con el código congelado en `967e038`.
+El texto nombra solo el commit medido, `65225e7`: en el párrafo «Resultado» y otra vez después del de las cuatro no detectadas, donde dice que después se reescribió la autorización (RN-34 pasó a RN-48) y que no se volvió a medir (JC, 18/11). No nombra la versión que se entrega, para que no quede vieja cuando cambie. **Cifras definitivas desde el 24/11**, con el código que se entrega en `2db272e`.
 
 ---
 
@@ -35,9 +35,9 @@ corrida, con el mismo esquema y los mismos datos iniciales que se entregan, y nu
 desarrollo. Las pruebas de interfaz abren los formularios reales de la aplicación, los operan y
 leen lo que muestran.
 
-La batería tiene doscientos cinco casos de prueba. Algunos se ejecutan varias veces con datos
+La batería tiene doscientos catorce casos de prueba. Algunos se ejecutan varias veces con datos
 distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman trescientas
-cuarenta y ocho ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
+sesenta ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
 base, los resultados no dependen de lo que haya quedado de una corrida anterior.
 
 **Cobertura de las reglas de negocio**
