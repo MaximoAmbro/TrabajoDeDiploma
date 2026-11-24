@@ -12,6 +12,7 @@ namespace Visual.Componentes
         private readonly RolBoton rol;
         private RolBoton? rolVisual;
         private bool opcionActual;
+        internal string GlifoLateral { get; set; }
 
         internal void DefinirRolVisual(bool principal)
         {
@@ -66,6 +67,7 @@ namespace Visual.Componentes
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            PintarGlifoLateral(e.Graphics);
             if (!Focused || (rolVisual ?? rol) != RolBoton.Primario) return;
 
             // La separación clara mantiene visible el borde púrpura sobre el relleno púrpura.
@@ -74,6 +76,32 @@ namespace Visual.Componentes
             if (interior.Width <= 0 || interior.Height <= 0) return;
             using (var separador = new Pen(Tema.Superficie))
                 e.Graphics.DrawRectangle(separador, interior.X, interior.Y, interior.Width - 1, interior.Height - 1);
+        }
+
+        private void PintarGlifoLateral(Graphics lienzo)
+        {
+            if (string.IsNullOrEmpty(GlifoLateral)) return;
+            int lado = Disposicion.Pixeles(this, Tema.Espacio.L);
+            int x = Disposicion.Pixeles(this, Tema.Espacio.S);
+            var icono = new Rectangle(x, (Height - lado) / 2, lado * 2, lado);
+            if (opcionActual)
+                using (var fondo = new SolidBrush(Tema.PrimarioSuave))
+                    lienzo.FillRectangle(fondo, icono);
+            TextRenderer.DrawText(lienzo, GlifoLateral, Tema.IconosLateral, icono,
+                opcionActual ? Tema.Primario : Tema.TextoSecundario,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
+        }
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            base.OnMouseEnter(e);
+            if (opcionActual) Tema.EstadoBoton(this, rolVisual ?? rol, opcionActual);
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            if (opcionActual) Tema.EstadoBoton(this, rolVisual ?? rol, opcionActual);
         }
 
         protected override void OnGotFocus(EventArgs e)

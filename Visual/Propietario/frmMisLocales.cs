@@ -38,7 +38,7 @@ namespace Visual
             Shown += (s, e) =>
             {
                 ColocarTitulo(label2);
-                Disposicion.ExtenderGrilla(dgvLocales, btnVolver);
+                Disposicion.ExtenderGrilla(dgvLocales, btnVolver, centrarSiEntra: true);
                 estadoSinLocales.AjustarA(dgvLocales);
             };
         }

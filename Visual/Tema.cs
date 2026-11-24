@@ -43,6 +43,7 @@ namespace Visual
         public static readonly Color MarcaAguaPortada=Color.FromArgb(71,255,255,255);
         public static Font FuenteInicialPortada(int alto){return new Font("Segoe UI",Math.Max(24,alto*0.75f),FontStyle.Bold,GraphicsUnit.Pixel);}
         public static readonly Font FirmaFuerte = new Font("Segoe UI", 16f, FontStyle.Bold);
+        public static readonly Font IconosLateral = new Font(FamiliaIconos(), 12f);
         public static readonly Font IconosInterfaz = new Font(FamiliaIconos(), 24f);
 
         public static void EstiloAviso(Control aviso, bool error)
@@ -80,7 +81,7 @@ namespace Visual
         public const int AltoBoton = 36, AltoBotonPrimario = AltoBoton;
         public const int AnchoCampo = 320, AltoCampo = 32;
         public const int AnchoBotonCompacto = 160, AnchoBotonNormal = 184, AnchoBotonAmplio = 240;
-        public const int MargenFormulario = Espacio.XL, SeparacionControl = Espacio.S;
+        public const int MargenFormulario = Espacio.XXL, SeparacionControl = Espacio.S;
         public const int RellenoHorizontalBoton = Espacio.L, RellenoIconoBoton = Espacio.XXL + Espacio.L, AltoFila = 32, AltoEncabezadoGrilla = 36;
         public const int AltoEncabezadoVentana = 72, AltoBarraSuperior = 56, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
 
@@ -132,8 +133,8 @@ namespace Visual
             g.DefaultCellStyle.Font = Cuerpo;
             g.DefaultCellStyle.ForeColor = Texto;
             g.DefaultCellStyle.BackColor = Superficie;
-            g.DefaultCellStyle.SelectionBackColor = EncabezadoGrilla;
-            g.DefaultCellStyle.SelectionForeColor = Texto;
+            g.DefaultCellStyle.SelectionBackColor = Primario;
+            g.DefaultCellStyle.SelectionForeColor = Superficie;
             g.AlternatingRowsDefaultCellStyle.BackColor = FilaAlterna;
             g.RowTemplate.Height = AltoFila;
             foreach (DataGridViewRow fila in g.Rows) fila.Height = AltoFila;
@@ -190,26 +191,34 @@ namespace Visual
             int alto = Disposicion.Pixeles(selector, AltoCampo);
             selector.MinimumSize = new Size(0, alto);
             selector.Height = alto;
-            if (selector is ComboBox combo && combo.DrawMode != DrawMode.OwnerDrawFixed)
+            if (selector is ComboBox combo)
+                PrepararCombo(combo, alto);
+            DibujarMarcoDeCampo(selector);
+        }
+
+        private static void PrepararCombo(ComboBox combo, int alto)
+        {
+            if (combo.DrawMode == DrawMode.OwnerDrawVariable) return;
+            if (combo.DrawMode != DrawMode.OwnerDrawFixed)
             {
                 combo.FlatStyle = FlatStyle.Flat;
                 combo.DrawMode = DrawMode.OwnerDrawFixed;
-                combo.ItemHeight = alto;
-                int bordeNativo = combo.Height - combo.ItemHeight;
-                combo.ItemHeight = Math.Max(1, alto - bordeNativo);
                 combo.DrawItem += (s, e) =>
                 {
-                    e.DrawBackground();
+                    bool seleccionado = (e.State & DrawItemState.Selected) != 0;
+                    using (var fondo = new SolidBrush(seleccionado ? Primario : Superficie))
+                        e.Graphics.FillRectangle(fondo, e.Bounds);
                     if (e.Index < 0) return;
                     string texto = combo.GetItemText(combo.Items[e.Index]);
                     var area = e.Bounds;
                     area.Inflate(-Disposicion.Pixeles(combo, Espacio.XS), 0);
-                    bool seleccionado = (e.State & DrawItemState.Selected) != 0;
-                    TextRenderer.DrawText(e.Graphics, texto, Cuerpo, area, seleccionado ? SystemColors.HighlightText : Texto,
+                    TextRenderer.DrawText(e.Graphics, texto, Cuerpo, area, seleccionado ? Superficie : Texto,
                         TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
                 };
             }
-            DibujarMarcoDeCampo(selector);
+            combo.ItemHeight = Math.Max(1, alto);
+            int bordeNativo = combo.Height - combo.ItemHeight;
+            combo.ItemHeight = Math.Max(1, alto - bordeNativo);
         }
 
         private static void DibujarMarcoDeCampo(Control campo)
@@ -320,6 +329,13 @@ namespace Visual
                 bool lateral = boton.Parent?.Name == "navegacionLateral";
                 boton.Width = MedidaDpi(lateral ? Disposicion.AnchoLateral : AnchoBotonSegunDiseno(boton), dpi);
                 boton.Height = MedidaDpi(lateral ? Disposicion.AltoOpcionLateral : AltoBoton, dpi);
+            }
+            if (raiz is ComboBox lista && lista.DropDownStyle == ComboBoxStyle.DropDownList)
+                PrepararCombo(lista, lista.Height);
+            if (raiz is DateTimePicker fecha)
+            {
+                fecha.CalendarTitleBackColor = Primario;
+                fecha.CalendarTitleForeColor = Superficie;
             }
             var grilla = raiz as DataGridView;
             if (grilla != null) EstiloGrilla(grilla);
@@ -489,11 +505,13 @@ namespace Visual
             bool peligro = rol == RolBoton.Peligro;
             boton.FlatStyle = FlatStyle.Flat;
             boton.UseVisualStyleBackColor = false;
-            boton.ForeColor = primario ? Superficie : peligro ? Error : Texto;
+            bool cursorEnOpcionActiva = opcionActual && boton.Enabled &&
+                boton.ClientRectangle.Contains(boton.PointToClient(Control.MousePosition));
+            boton.ForeColor = primario ? (cursorEnOpcionActiva ? Primario : Superficie) : peligro ? Error : Texto;
             boton.FlatAppearance.BorderSize = boton.Focused ? Disposicion.Pixeles(boton, BordeFoco) : primario ? 0 : Disposicion.Pixeles(boton, BordeNormal);
             boton.FlatAppearance.BorderColor = boton.Focused ? (primario ? Foco : Primario) : BordeControl;
-            boton.FlatAppearance.MouseOverBackColor = primario ? PrimarioEncima : peligro ? ErrorFondo : Fondo;
-            boton.FlatAppearance.MouseDownBackColor = primario ? PrimarioPresionado : peligro ? PeligroPresionado : Borde;
+            boton.FlatAppearance.MouseOverBackColor = lateral ? PrimarioSuave : primario ? PrimarioEncima : peligro ? ErrorFondo : Fondo;
+            boton.FlatAppearance.MouseDownBackColor = lateral ? SecundarioPresionado : primario ? PrimarioPresionado : peligro ? PeligroPresionado : Borde;
             boton.BackColor = boton.Enabled ? (primario ? Primario : Superficie) : FondoDeshabilitado;
         }
 

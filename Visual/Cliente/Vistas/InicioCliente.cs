@@ -42,7 +42,8 @@ namespace Visual.Componentes
 
         private void DistribuirTarjetas()
         {
-            DatoPanel.DistribuirGrilla(tarjetas, ClientSize.Width - SystemInformation.VerticalScrollBarWidth);
+            int alto = DatoPanel.DistribuirGrilla(tarjetas, ClientSize.Width - SystemInformation.VerticalScrollBarWidth);
+            tarjetas.Top = Math.Max(0, (ClientSize.Height - alto) / 2) + AutoScrollPosition.Y;
         }
 
         private DatoPanel CrearTarjeta(string nombre)

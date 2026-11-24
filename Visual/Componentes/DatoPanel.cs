@@ -43,6 +43,7 @@ namespace Visual.Componentes
         {
             accion = boton;
             Controls.Add(boton);
+            Disposicion.ActivarTarjeta(this, boton);
             AjustarDetalle();
         }
 
@@ -87,8 +88,9 @@ namespace Visual.Componentes
         {
             int ancho = Disposicion.Pixeles(grilla, 208);
             int espacio = Disposicion.Pixeles(grilla, Tema.Espacio.L);
-            int columnas = Math.Max(1, Math.Min(3, (anchoDisponible + espacio) / (ancho + espacio)));
             var tarjetas = grilla.Controls.OfType<DatoPanel>().ToArray();
+            int maxColumnas = Math.Min(3, tarjetas.Length);
+            int columnas = Math.Max(1, Math.Min(maxColumnas, (anchoDisponible + espacio) / (ancho + espacio)));
             grilla.SuspendLayout();
             grilla.FlowDirection = FlowDirection.LeftToRight;
             grilla.WrapContents = true;

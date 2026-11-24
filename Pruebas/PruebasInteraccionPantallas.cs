@@ -274,6 +274,13 @@ namespace Pruebas
         {
             if (formulario.FormBorderStyle == FormBorderStyle.Sizable || formulario.FormBorderStyle == FormBorderStyle.SizableToolWindow)
             {
+                var original = formulario.Size;
+                var minimo = formulario.MinimumSize;
+                formulario.Size = new Size(Math.Max(1, minimo.Width - 32), Math.Max(1, minimo.Height - 32));
+                Application.DoEvents();
+                Assert.IsTrue(formulario.Width >= minimo.Width && formulario.Height >= minimo.Height,
+                    "El tamaño mínimo debe impedir que colapse el contenido.");
+                formulario.Size = original;
                 formulario.WindowState = FormWindowState.Maximized;
                 Application.DoEvents();
                 formulario.WindowState = FormWindowState.Normal;
@@ -309,6 +316,7 @@ namespace Pruebas
         private static void VerificarMedidas(Form formulario)
         {
             int Px(int medida) => Visual.Disposicion.Pixeles(formulario, medida);
+            Assert.IsTrue(formulario.MinimumSize.Width > 0 && formulario.MinimumSize.Height > 0, "La ventana requiere un tamaño mínimo.");
             var barra = formulario.Controls.OfType<Visual.Componentes.BarraSuperior>().Single();
             Assert.AreEqual(Px(56), barra.Height, "Alto de la barra superior");
             Assert.IsTrue(barra.Visible, "La barra superior tiene que estar visible");

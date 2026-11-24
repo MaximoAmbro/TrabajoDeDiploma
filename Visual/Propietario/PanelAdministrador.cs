@@ -9,6 +9,7 @@ namespace Visual.Componentes
     {
         private readonly BotonSecundario btnAuditoria;
         private readonly FlowLayoutPanel pendientes;
+        private readonly EtiquetaEncabezado tituloPendientes = new EtiquetaEncabezado { Text = "Pendientes de revisión" };
         private readonly DatoPanel eventosPendientes;
         private readonly DatoPanel solicitudesPendientes;
         public event EventHandler AuditoriaSolicitada;
@@ -28,6 +29,7 @@ namespace Visual.Componentes
             solicitudesPendientes = new DatoPanel { Name = "cantidadSolicitudesPendientes" };
             pendientes.Controls.AddRange(new Control[] { eventosPendientes, solicitudesPendientes });
             Controls.Add(pendientes);
+            Controls.Add(tituloPendientes);
             pendientes.BringToFront();
             Tema.Normalizar(this);
             SizeChanged += (s,e)=>Distribuir();
@@ -48,7 +50,13 @@ namespace Visual.Componentes
                 string titulo = reporte.Titulo;
                 string valor;
                 switch(codigo) {
-                    case "RPT-01":titulo = "Ventas · entradas e ingreso"; valor=suma(2).ToString("N0",cultura)+" · "+suma(3).ToString("C0",cultura);break;
+                    case "RPT-01":
+                        var entradas = new DatoPanel { Name = "entradasVendidasPanel" };
+                        entradas.CargarDetalle("Entradas vendidas", suma(2).ToString("N0", cultura));
+                        datos.Controls.Add(entradas);
+                        titulo = "Ingreso bruto";
+                        valor = suma(3).ToString("C0", cultura);
+                        break;
                     case "RPT-02":titulo = "Paquete líder"; valor=filas.Length==0?"Sin compras":Convert.ToString(filas[0][2])+" entradas";break;
                     case "RPT-03":valor=suma(2).ToString("N0",cultura)+" clientes activos";break;
                     case "RPT-04":titulo = "Compras con seguro"; valor=tabla.Rows.Count==0?"Sin contrataciones":Convert.ToDecimal(tabla.Rows[0][3]).ToString("N1",cultura)+" %";break;
@@ -71,8 +79,14 @@ namespace Visual.Componentes
 
             datos.Location = new System.Drawing.Point(0, periodo.Bottom + Px(Tema.Espacio.S));
             DatoPanel.DistribuirGrilla(datos, ancho);
-            pendientes.Location = new System.Drawing.Point(0, datos.Bottom + Px(Tema.Espacio.S));
+            tituloPendientes.SetBounds(0, datos.Bottom + Px(Tema.Espacio.S), ancho, Px(Tema.Espacio.XL));
+            pendientes.Location = new System.Drawing.Point(0, tituloPendientes.Bottom + Px(Tema.Espacio.S));
             DatoPanel.DistribuirGrilla(pendientes, ancho);
+            int sobrante = Math.Max(0, (ClientSize.Height - (pendientes.Bottom - y)) / 2);
+            periodo.Top += sobrante;
+            datos.Top += sobrante;
+            tituloPendientes.Top += sobrante;
+            pendientes.Top += sobrante;
         }
     }
 }

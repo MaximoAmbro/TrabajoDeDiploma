@@ -199,12 +199,12 @@ namespace Pruebas
                 using(var inicio=new InicioCliente())Assert.AreEqual("RN-41",Assert.ThrowsException<ReglaNegocioException>(()=>inicio.Cargar(b.Id)).Regla);
             });
         }
-        // CP-162 — RF-11/RF-22, RN-34: cinco reportes reales; el cliente no obtiene el panel.
-        [TestMethod("CP-162: Panel contiene cinco indicadores y exige administrador")]
+        // CP-162 — RF-11/RF-22, RN-34: seis indicadores de cinco reportes reales; el cliente no obtiene el panel.
+        [TestMethod("CP-162: Panel contiene seis indicadores y exige administrador")]
         public void CP162_Panel()
         {
             EnSta(()=>{var cliente=Fake.Cliente(NivelFidelidad.Bronce);Fake.ComoAdministrador();using(var panel=new PanelAdministrador()) {
-                panel.Cargar();Assert.AreEqual(5,ControlDe<FlowLayoutPanel>(panel,"indicadoresPanel").Controls.Count);
+                panel.Cargar();Assert.AreEqual(6,ControlDe<FlowLayoutPanel>(panel,"indicadoresPanel").Controls.Count);
                 Fake.ComoCliente(cliente);Assert.AreEqual("RN-34",Assert.ThrowsException<ReglaNegocioException>(()=>panel.Cargar()).Regla);
             }});
         }

@@ -26,7 +26,7 @@ namespace Visual.Vendedor
                 Disposicion.AlinearGrupo(btnVolver, btnEliminarEvento, btnAdministrarEvento, btnAgregarEvento);
                 int margen = Disposicion.Pixeles(this, Tema.Espacio.XXL);
                 ClientSize = new System.Drawing.Size(Math.Max(ClientSize.Width, btnAgregarEvento.Right + margen), ClientSize.Height);
-                Disposicion.ExtenderGrilla(dgvEventos, btnVolver);
+                Disposicion.ExtenderGrilla(dgvEventos, btnVolver, centrarSiEntra: true);
                 dgvEventos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             };
             AcceptButton = btnAgregarEvento;

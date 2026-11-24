@@ -59,6 +59,11 @@ namespace Visual
             if (DesignMode || LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
             BeginInvoke((MethodInvoker)(() =>
             {
+                if (TopLevel)
+                {
+                    var area = Screen.FromControl(this).WorkingArea;
+                    MinimumSize = new System.Drawing.Size(Math.Min(area.Width, Width), Math.Min(area.Height, Height));
+                }
                 Control primerCampo = DescendientesEnOrden(this)
                     .FirstOrDefault(c => EsCampoInicial(c) && c.Visible && c.Enabled && c.CanFocus);
                 if (primerCampo != null) primerCampo.Focus();

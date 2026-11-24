@@ -118,6 +118,7 @@ namespace Visual
             ColocarCampo(label4, TxtConfirmpassword);
             _fortaleza.Width = TxtPassword.Width;
             checkbxShowPass.Left = TxtPassword.Left;
+            btnconfirmar.Top = Math.Max(btnconfirmar.Top, checkbxShowPass.Bottom + px(Tema.Espacio.S));
             Disposicion.AlinearAccionesFormulario(this, TxtPassword, btnconfirmar, btnVolver, apilar: !_recuperacion);
             _altoSinAviso = ClientSize.Height;
             _filaAviso.SetBounds(margen, Math.Max(btnVolver.Bottom, btnconfirmar.Bottom) + px(Tema.Espacio.S),

@@ -38,10 +38,40 @@ namespace Visual
                 elemento.Anchor = AnchorStyles.Top | AnchorStyles.Left;
                 elemento.Margin = Padding.Empty;
                 lateral.Controls.Add(elemento);
-                if (elemento is Componentes.BotonTematico boton) boton.MarcarOpcionActual(false);
+                if (elemento is Componentes.BotonTematico boton)
+                {
+                    boton.GlifoLateral = GlifoDeOpcion(boton.Name);
+                    boton.MarcarOpcionActual(false);
+                }
             }
             ventana.Controls.Add(lateral);
             return lateral;
+        }
+
+        private static string GlifoDeOpcion(string nombre)
+        {
+            switch (nombre)
+            {
+                case "btnInicio": return "\uE80F";
+                case "btnEventos":
+                case "btnEventosEnRevision": return "\uE787";
+                case "btnHistorial": return "\uE8A5";
+                case "btnSuscripcion": return "\uE734";
+                case "btnMisLocales": return "\uE707";
+                case "btnRegistrarLocal": return "\uE710";
+                case "btnControlIngreso": return "\uE8B3";
+                case "btnListasEspera": return "\uE823";
+                case "btnReportes":
+                case "btnReportesGlobales": return "\uE9D9";
+                case "btnAuditoria": return "\uE81C";
+                case "btnCambiarContrasena": return "\uE72E";
+                case "btnSolicitudOrganizador":
+                case "btnSolicitudesOrganizador":
+                case "btnCrearAdministrador": return "\uE8FA";
+                case "lblvolver":
+                case "btnCerrarSesion": return "\uF3B1";
+                default: return "\uE8A7";
+            }
         }
 
         internal static void DistribuirMenu(Form ventana, Panel lateral, Control contenido, Label titulo)
@@ -58,7 +88,10 @@ namespace Visual
                 if (elemento is Label && y > Px(Tema.Espacio.S)) y += Px(Tema.Espacio.S);
                 int alto = elemento is Button ? Px(AltoOpcionLateral) : Px(Tema.Espacio.XL);
                 if (elemento is Button boton)
+                {
                     boton.TextAlign = ContentAlignment.MiddleLeft;
+                    boton.Padding = new Padding(Px(Tema.Espacio.XXL + Tema.Espacio.S), 0, Px(Tema.Espacio.S), 0);
+                }
                 if (elemento is Label etiqueta)
                 {
                     etiqueta.BackColor = Tema.Fondo;
@@ -118,12 +151,21 @@ namespace Visual
                 Math.Max(ventana.ClientSize.Height, volver.Bottom + margen));
         }
 
-        internal static void ExtenderGrilla(DataGridView grilla, Control pie)
+        internal static void ExtenderGrilla(DataGridView grilla, Control pie, bool centrarSiEntra = false)
         {
             int margen = Pixeles(grilla, Tema.Espacio.XXL);
             int separacion = Pixeles(grilla, Tema.Espacio.L);
-            grilla.Width = Math.Max(1, grilla.Parent.ClientSize.Width - grilla.Left - margen);
-            grilla.Height = Math.Max(1, pie.Top - grilla.Top - separacion);
+            grilla.Left = margen;
+            grilla.Width = Math.Max(1, grilla.Parent.ClientSize.Width - 2 * margen);
+            int disponible = Math.Max(1, pie.Top - grilla.Top - separacion);
+            int filas = grilla.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            int natural = (grilla.ColumnHeadersVisible ? grilla.ColumnHeadersHeight : 0) + filas + Pixeles(grilla, Tema.Espacio.XS);
+            if (centrarSiEntra && grilla.Rows.Count > 0 && natural < disponible)
+            {
+                grilla.Top += (disponible - natural) / 2;
+                grilla.Height = natural;
+            }
+            else grilla.Height = disponible;
         }
 
         internal static void AlinearGrupo(params Button[] botones)
@@ -161,8 +203,40 @@ namespace Visual
 
         public static void AjustarAreaVisible(Form form, Rectangle area)
         {
+            if (form.MinimumSize.Width > area.Width || form.MinimumSize.Height > area.Height)
+                form.MinimumSize = new Size(Math.Min(form.MinimumSize.Width, area.Width),
+                    Math.Min(form.MinimumSize.Height, area.Height));
             form.Size = new Size(Math.Min(form.Width, area.Width), Math.Min(form.Height, area.Height));
             form.Location = new Point(area.Left + (area.Width - form.Width) / 2, area.Top + (area.Height - form.Height) / 2);
+        }
+
+        internal static void ActivarTarjeta(Control tarjeta, Button accion)
+        {
+            void Pintar(Color fondo)
+            {
+                tarjeta.BackColor = fondo;
+                foreach (Label etiqueta in tarjeta.Controls.OfType<Label>())
+                    etiqueta.BackColor = fondo;
+            }
+
+            foreach (Control superficie in tarjeta.Controls.Cast<Control>().Prepend(tarjeta))
+            {
+                superficie.Cursor = Cursors.Hand;
+                superficie.MouseEnter += (s, e) => Pintar(Tema.PrimarioSuave);
+                superficie.MouseLeave += (s, e) =>
+                {
+                    if (!tarjeta.ClientRectangle.Contains(tarjeta.PointToClient(Control.MousePosition)))
+                        Pintar(Tema.Superficie);
+                };
+                superficie.MouseDown += (s, e) =>
+                {
+                    if (e.Button == MouseButtons.Left) Pintar(Tema.SecundarioPresionado);
+                };
+                superficie.MouseUp += (s, e) => Pintar(tarjeta.ClientRectangle.Contains(tarjeta.PointToClient(Control.MousePosition))
+                    ? Tema.PrimarioSuave : Tema.Superficie);
+                if (superficie != accion)
+                    superficie.Click += (s, e) => accion.PerformClick();
+            }
         }
 
         public static void PintarTarjeta(object sender, PaintEventArgs e)

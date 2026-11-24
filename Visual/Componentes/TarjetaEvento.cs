@@ -15,6 +15,7 @@ namespace Visual.Componentes
             precio.Font=Tema.PrecioTarjeta;precio.ForeColor=Tema.Texto;
             accion.Click+=(s,e)=>VerEntradas?.Invoke(evento);
             Paint+=Disposicion.PintarTarjeta;
+            Disposicion.ActivarTarjeta(this, accion);
         }
         public void Cargar(Evento dato,Local local,System.Collections.Generic.IEnumerable<Sector> sectores)
         {

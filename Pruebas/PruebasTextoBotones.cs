@@ -53,7 +53,7 @@ namespace Pruebas
                     int margen = (int)Math.Round(Visual.Tema.MargenFormulario * Math.Max(96, form.DeviceDpi) / Visual.Tema.DpiDiseno, MidpointRounding.AwayFromZero);
                     if (pantalla == "FrmCompraCliente")
                     {
-                        Assert.AreEqual(24, Descendientes(form).OfType<Panel>().Single(p => p.Name == "pnlContenidoCompra").AutoScrollMargin.Width, "margen interior del contenido de compra");
+                        Assert.AreEqual(Visual.Tema.MargenFormulario, Descendientes(form).OfType<Panel>().Single(p => p.Name == "pnlContenidoCompra").AutoScrollMargin.Width, "margen interior del contenido de compra");
                         Assert.AreEqual(24, Descendientes(form).OfType<Panel>().Single(p => p.Name == "pnlAccionesCompra").Padding.Left, "margen del pie de compra");
                     }
                     else Assert.AreEqual(margen, form.Padding.Left, pantalla + " margen común de ventana");

@@ -42,3 +42,14 @@ En Agregar evento, Agregar sector, Registrar local, Cambiar contraseña y Pago, 
 La batería se registra en `TestResults/jerarquia-final-360.log`. Las figuras bajo `TestResults/Capturas-Reforma` se capturaron con el host de DPI y el área cliente de Windows. La altura de títulos y el color se revisaron visualmente en las hojas de contacto de ambas escalas. El porcentaje de área ocupada varía con la cantidad de datos y no se ha certificado un umbral uniforme para todas las ventanas. Algunos márgenes heredados fuera de los formularios intervenidos conservan su disposición anterior.
 
 Las columnas numéricas quedan alineadas a la derecha. La medición de glifos GDI mostró ancho uniforme para los dígitos en Segoe UI de 10 pt y ancho variable para Segoe UI Semibold de 15 pt. Los valores destacados en Semibold conservan esa característica fuera de las columnas.
+
+
+## Acabado
+
+La selección dibujada de los ComboBox y las celdas seleccionadas de las grillas usan Primario y texto blanco. El DateTimePicker recibe el tema del calendario que WinForms expone. Windows sigue dibujando la selección del segmento editable de la fecha.
+
+Los tres laterales tienen glifos de 16 px y estados de puntero y presión. Las tarjetas accionables comparten los mismos fondos y el clic sobre la tarjeta invoca su acción. Administración presenta seis métricas en dos filas de tres cuando hay ancho disponible. Entradas vendidas e ingreso bruto salen del mismo reporte y ocupan tarjetas separadas. Los recuentos de revisión están bajo su propio encabezado. El glifo de Cerrar sesión sigue la referencia de Microsoft. [Segoe Fluent Icons](https://learn.microsoft.com/en-us/windows/apps/design/iconography/segoe-fluent-icons-font)
+
+El margen común cambia a 32 px. Mis locales y Eventos del local centran la tabla cuando sus filas caben y usan el espacio disponible cuando necesitan desplazamiento. Se centran los bloques de tarjetas de los inicios. El mínimo de cada ventana toma como referencia su tamaño presentado, acotado al área de trabajo de Windows. CP-357 intenta reducir las ventanas adaptables por debajo del mínimo.
+
+La verificación queda en `TestResults/acabado-final-360.log` y las figuras en `TestResults/Capturas-Reforma`. No se certificó el límite de un tercio de espacio libre en las 25 vistas. Algunas vistas con pocos registros conservan espacio libre y el armado de compra conserva sus márgenes interiores propios.
