@@ -20,7 +20,7 @@ había quedado vieja: decía 61 casos y que la renovación visual estaba en duda
 
 | | |
 |---|---|
-| **Codex** | **Primero T-03, urgente:** sin las DLL de WebView2, las cuatro pantallas dan error (confirmado el 24/11 a las 14:35). **Después, T-01:** la tanda visual sin commitear (gráficos con eje, estados de disponibilidad, capturas con la semilla de demostración). Después, T-02 a T-04 (respaldo de WebView2) y T-05 si JC lo aprueba. Al terminar, T-06: congelar el código |
+| **Codex** | **Primero T-03 y T-20, urgentes** (auditoría de riesgos de la defensa, `docs/AUDITORIA-RIESGOS-DEFENSA.md`). T-03: sin las DLL de WebView2, las cuatro pantallas dan error (confirmado el 24/11 a las 14:35). **Después, T-01:** la tanda visual sin commitear (gráficos con eje, estados de disponibilidad, capturas con la semilla de demostración). Después, T-02 a T-04 (respaldo de WebView2) y T-05 si JC lo aprueba. Al terminar, T-06: congelar el código |
 | **Claude Code** | Lo que no depende del congelamiento: T-07 (catálogo) y T-19; T-15 (medir el QR para JC-R10) cuando Codex no esté trabajando, porque abre la aplicación. Lo demás del cierre (T-09 a T-13) espera a T-06 y T-08 |
 | **JC** | Revisar `git status` y autorizar los commits pendientes (T-01, T-18), decidir T-05, pasar los datos de T-14 |
 | **Ramas** | Rama de trabajo: `JC`. Local en `4c200ef` (semilla de demostración); `origin/JC` en `1d05fc2`, sin la semilla: el push lo decide JC. `main` local quedó en `e2d8ff6`, 21 commits detrás de `origin/main`. `respaldo/jc-2026-11-04` no se toca |
@@ -155,7 +155,7 @@ reporte final (`Pruebas/RESULTADOS-TAREAS-CODEX-<fecha>.md`).
 ## Qué debería hacer el próximo agente
 
 **Codex:**
-1. **T-03, urgente**;
+1. **T-03 y T-20, urgentes**; después T-21 y T-22;
 2. terminar T-01 y reportar;
 3. T-02 y T-04;
 4. T-05 solo si JC lo aprueba;

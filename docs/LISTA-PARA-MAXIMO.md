@@ -3615,7 +3615,7 @@ la de CP-01 a CP-61:
 | CP-41 — Confirmación al comprar sin seguro | — |
 | CP-42 — Explicación de los niveles | — |
 | CP-43 — El plazo lo fija la reserva | RN-15 |
-| CP-44 — Alta sin selector de perfil | — |
+| CP-44 — Alta sin selector de perfil | RN-05 |
 | CP-45 — El alta pública crea clientes | RN-03 |
 | CP-46 — Volver al inicio cierra la sesión | — |
 | CP-47 — La aplicación termina al cerrar la última ventana | — (RNF-02) |
@@ -3870,7 +3870,7 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-52 | Si el evento se elimina mientras el cliente paga, el pago se rechaza con aviso y no se cobra | `CP52_PagoDeEventoEliminado` | RF-06 | — | 1 |
 | CP-53 | La aplicación instala el manejador de errores antes de abrir su primera pantalla | `CP53_ProgramInstalaManejadorGlobal` | RNF-02 | — | 1 |
 | CP-54 | Los encabezados de la grilla de sectores se leen completos | `CP54_EncabezadosDeSectoresCompletos` | RF-04 | H-03 | 1 |
-| CP-55 | Un perfil de usuario inexistente se rechaza sin crear la cuenta | `CP55_RegistroRechazaPerfilInvalido` | RF-01, RF-02 | — | 1 |
+| CP-55 | Un perfil de usuario inexistente se rechaza sin crear la cuenta | `CP55_RegistroRechazaPerfilInvalido` | RF-01 | — | 1 |
 | CP-56 | No se elimina el último sector de un evento publicado | `CP56_RechazaEliminarUltimoSectorPublicado` | RF-12 | — | 1 |
 | CP-57 | Un servicio de otro evento no entra al paquete | `CP57_RechazaServicioDeOtroEvento` | RF-05 | — | 1 |
 | CP-58 | Un cliente con suscripción activa no contrata otra | `CP58_RechazaSegundaSuscripcionActiva` | RF-13 | — | 1 |

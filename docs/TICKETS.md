@@ -19,7 +19,7 @@ solo cuando el ticket es una prueba manual, un dato o el Word, que no puede hace
 | **en revisión** | Hecho; falta que JC lo revise o autorice el commit |
 | **cerrado** | Cumple el criterio de «Listo cuando» |
 
-**Orden:** T-03 primero (urgente); T-01 a T-05 antes de congelar el código; T-06 congela; de T-08 en adelante, con el
+**Orden:** T-03 y T-20 primero (urgentes); T-01 a T-05 antes de congelar el código; T-06 congela; de T-08 en adelante, con el
 código congelado.
 
 ---
@@ -30,11 +30,11 @@ código congelado.
 |---|---|---|---|
 | T-01 | Codex | Terminar y commitear la tanda visual en curso (gráficos y disponibilidad) | en curso |
 | T-02 | Codex | Prueba automática del respaldo de WebView2 | abierto |
-| T-03 | Codex | **URGENTE, confirmado:** sin las DLL de WebView2, las cuatro pantallas dan error | abierto |
+| T-03 | Codex | **URGENTE, confirmado:** sin las DLL de WebView2 o sin `Newtonsoft.Json.dll`, error en lugar del respaldo | abierto |
 | T-04 | Codex | Carpeta de la aplicación para la defensa, completa y comprobada | abierto |
 | T-05 | Codex | Lo que la reforma visual dejó declarado como fuera de conformidad | abierto (a decidir por JC) |
 | T-06 | Codex | Congelar el código | bloqueado por T-01 a T-05 |
-| T-07 | Claude Code | Las dos filas del catálogo con reglas distintas de su prueba | abierto |
+| T-07 | Claude Code | Las dos filas del catálogo con reglas distintas de su prueba | cerrado (24/11) |
 | T-08 | Codex y Claude Code | Batería final, dos corridas | bloqueado por T-06 |
 | T-09 | Claude Code | Valores de los marcadores `[[...]]` y las tres tablas | bloqueado por T-08 |
 | T-10 | Claude Code o Codex | Capturas finales | bloqueado por T-06 |
@@ -47,6 +47,9 @@ código congelado.
 | T-17 | Máximo | La tarde en Word: marcadores, pausas e índice | bloqueado por T-09, T-11 a T-14 |
 | T-18 | Claude Code | Commitear los documentos y herramientas del 24/11 | cerrado (`0ddc0c4`) |
 | T-19 | Claude Code | `tools/VerificarReglasAgentes.ps1` no corre | abierto |
+| T-20 | Codex | **URGENTE:** sin base, la pantalla de inicio muestra la contraseña y no avisa nada | abierto |
+| T-21 | Codex | El cartel de esquema sin `02-semilla.sql` pide correr `04` | abierto |
+| T-22 | Codex | El ticket se genera sin `try` después del pago confirmado; mensajes de PDF que no corresponden | abierto |
 
 ---
 
@@ -117,6 +120,12 @@ auditoría, H-2. **`Cargar` no asíncrono y sin tipos de WebView2**, que llama d
 
 Si se puede, que T-02 cubra también este caso.
 
+**Ampliado el 24/11 (auditoría de riesgos, sección 4):** sin `Newtonsoft.Json.dll` pasa lo mismo.
+Hay un `FileNotFoundException` en `PanelWeb.<Renderizar>`, fuera de su `try`, y el panel del
+Administrador muestra el aviso rojo de error. Mismo arreglo: los tipos de Newtonsoft fuera del método
+que tiene el `try`. **Listo cuando** también sin `Newtonsoft.Json.dll` las cuatro pantallas caen al
+respaldo con su aviso.
+
 **Estado:** abierto, **urgente**.
 
 ### T-04 · Codex · Carpeta de la aplicación para la defensa
@@ -173,8 +182,12 @@ comparación (ver `docs/CIERRE-DOCUMENTO.md`, sección 5, punto 5).
 **Listo cuando** el script de comparación, corrido contra el commit congelado, no da diferencias
 entre el catálogo, las tablas de la p. 108 y los comentarios `// CP-xx`.
 
-**Estado:** abierto. Las dos tablas de la p. 108 se rehacen en T-09, así que lo único que queda
-aparte es la fila de CP-44 del catálogo.
+**Estado:** cerrado el 24/11.
+- CP-44: «RN-05» en `docs/04-casos-prueba.md` y en la tabla caso → reglas de la p. 108.
+- CP-55: «RF-01» en la tabla de la versión 2.6 de la p. 108.
+
+El script de comparación no encuentra ninguna otra diferencia entre el catálogo y los comentarios.
+La cobertura no cambia.
 
 ---
 
@@ -275,6 +288,67 @@ decisión de JC del 24/11. Agregar WebView2 a la tabla «Stack» de `CLAUDE.md`.
 `PanelWeb` del código congelado.
 
 **Estado:** bloqueado por T-06.
+
+### T-20 · Codex · URGENTE · Sin base, la pantalla de inicio muestra la contraseña
+
+**Qué:** `docs/AUDITORIA-RIESGOS-DEFENSA.md`, R-01 y secciones 1 y 4. **Ejecutado.**
+
+Si la aplicación no llega a la base, `frmInicio_Load` se corta en `VerificadorEsquema.PrimerFaltante()`
+(línea 34). Las causas pueden ser:
+- una instancia o base inexistente o vacía;
+- falta de permisos;
+- que falten `Visual.exe.config`, `Datos.dll`, `Microsoft.Data.SqlClient.dll` o los SNI.
+
+Lo que ve el usuario:
+- `txtContraseñaLogin.PasswordChar` nunca se pone, así que **la contraseña se escribe a la vista**
+  (`docs/verificaciones/defensa-2026-11-24/1-sin-sql-contrasena-visible.png`);
+- no aparece ningún mensaje, porque la ventana todavía no es visible cuando `ManejadorErrores`
+  busca dónde mostrarlo;
+- con la instancia inexistente, la ventana tarda 15 s.
+
+**Qué hacer:**
+1. `PasswordChar` en el Designer, o al principio de `Load`.
+2. La verificación dentro de un `try` que, ante un error de base o de configuración, muestre en la
+   pantalla de inicio un aviso fijo que diga qué instancia y qué base se intentaron (de la cadena,
+   sin credenciales) y deshabilite «Iniciar sesión».
+
+**Listo cuando,** con `Data Source=.\NOEXISTE`, la contraseña sale oculta, el aviso fijo está visible
+desde que se abre la ventana y hay una prueba automática que lo comprueba.
+
+**Estado:** abierto, **urgente**.
+
+### T-21 · Codex · El cartel de esquema sin `02` pide la migración equivocada
+
+**Qué:** auditoría de riesgos, 2.4. **Ejecutado.** Con `01-esquema.sql` y sin `02-semilla.sql`, el cartel
+dice «falta el parámetro INGRESO_HORAS_ANTES. Corré 04-seguridad-ingreso.sql», pero lo que falta es
+`02`. `VerificadorEsquema` debería comprobar primero que existan los parámetros base y un
+Administrador, y pedir `02-semilla.sql`.
+
+**Listo cuando,** sobre una base con solo `01`, el cartel pide `02-semilla.sql`, y hay una prueba en
+`PruebasEsquemaInicio`.
+
+**Estado:** abierto.
+
+### T-22 · Codex · El ticket después del pago y los mensajes del PDF
+
+**Qué:** auditoría de riesgos, secciones 4 y 6.2. Leído en el código, **sin ejecutar**:
+- **El ticket.** `FrmCompraCliente` llama a `GenerarTicket(compra)` (línea 421) sin `try`, después
+  de que el pago quedó confirmado. Si falla la escritura en `Documentos` (Acceso controlado a
+  carpetas, OneDrive) o falta iText o QRCoder, el usuario ve el aviso de error general con la compra
+  ya pagada y sin ticket.
+- **El PDF del reporte.** En `frmReportes.btnExportar_Click`, una DLL faltante
+  (`FileNotFoundException`, que es una `IOException`) muestra «Cerrá el archivo si está abierto», y
+  `UnauthorizedAccessException` no se captura.
+
+**Qué hacer:**
+1. Capturar la falla del ticket con un mensaje que diga que la compra está confirmada y dónde
+   recuperar el ticket, si existe ese camino.
+2. Distinguir esos casos en la exportación del reporte.
+
+**Listo cuando** hay una prueba para cada caso (carpeta sin permiso de escritura) y el mensaje
+corresponde a la causa.
+
+**Estado:** abierto.
 
 ---
 

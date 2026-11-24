@@ -110,7 +110,7 @@ la batería suma **73 ejecuciones**.
 | CP-41 | PruebasInterfaz | Comprar sin tildar el seguro y responder No | Aviso «Seguro de entrada» con No por defecto; no se reserva nada | RF-05 | — | H-04 |
 | CP-42 | PruebasInterfaz | Clic en «¿Cómo funcionan los niveles?» | Aviso con los umbrales vigentes de `Parametros` | RF-08 | — | H-05 |
 | CP-43 | PruebasCompra | Compra iniciada cuya reserva registrada ya venció, aunque `FechaCompra` + `RESERVA_MINUTOS` todavía no | RN-15; compra Vencida; cupo devuelto; ningún pago. El plazo lo fija la reserva, no el parámetro vigente | RF-06 | RN-15 | — |
-| CP-44 | PruebasInterfaz | Abrir el alta de usuario y registrarse con datos válidos | No hay selector de perfil; el usuario creado es Cliente | RF-01 | — | — |
+| CP-44 | PruebasInterfaz | Abrir el alta de usuario y registrarse con datos válidos | No hay selector de perfil; el usuario creado es Cliente | RF-01 | RN-05 | — |
 | CP-45 | PruebasCuentas | `RegistrarCliente` con un correo nuevo | Crea un Cliente de nivel Bronce | RF-01 | RN-03 | — |
 | CP-46 | PruebasInterfaz | «Volver al inicio» desde el menú del cliente y desde el del administrador (2 variantes) | La sesión queda cerrada y se ve el login | RF-02 | — | — |
 | CP-47 | PruebasInterfaz | Decidir si la aplicación termina al cerrar una ventana (4 variantes) | Termina solo si el usuario cerró la última ventana visible | RNF-02 | — | — |
