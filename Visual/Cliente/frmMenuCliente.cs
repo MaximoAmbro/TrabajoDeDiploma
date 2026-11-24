@@ -117,7 +117,12 @@ namespace Visual
             pagina.Visible = true;
             pagina.BringToFront();
             paginaActual = pagina;
-            if (pagina is Componentes.HostFormularioCliente host) host.Activar();
+            if (pagina is Componentes.HostFormularioCliente host)
+            {
+                host.Activar();
+                label1.Text = host.Pantalla.Text.Replace("EventAura · ", "");
+            }
+            else label1.Text = "Mi cuenta";
             ActualizarActivo(pagina);
             MarcarEstadoAtras();
         }

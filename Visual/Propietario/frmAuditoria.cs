@@ -44,6 +44,8 @@ namespace Visual
         private void Cargar()
         {
             var filas = GestorAuditoria.Instance.Consultar(desde.Value.Date, hasta.Value.Date.AddDays(1), accion.SelectedIndex <= 0 ? null : Convert.ToString(accion.SelectedItem));
+            foreach (var fila in filas)
+                fila.Fecha = DateTime.SpecifyKind(fila.Fecha, DateTimeKind.Utc).ToLocalTime();
             tabla.DataSource = filas;
             Tema.EstiloTablaDeConsulta(tabla);
             FormatearColumnas();

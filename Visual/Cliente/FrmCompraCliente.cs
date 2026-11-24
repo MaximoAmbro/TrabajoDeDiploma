@@ -66,6 +66,11 @@ namespace Visual
             InitializeComponent();
             ConfigurarAreaDeCompra();
             mapaSectores.SectorElegido += ElegirSectorEnMapa;
+            mapaSectores.CantidadSolicitada += (id, cantidad) =>
+            {
+                var fila = dgvSectores.Rows.Cast<DataGridViewRow>().Single(r => Convert.ToInt32(r.Cells["IdSector"].Value) == id);
+                fila.Cells["Cantidad"].Value = cantidad;
+            };
         }
 
         // RNF-02/RNF-03: las acciones quedan visibles aun si el contenido necesita
@@ -181,12 +186,15 @@ namespace Visual
                 mapaSectores.Top = abrirServicios.Bottom + separacion;
                 mapaSectores.Height = mapaSectores.AltoParaTodosLosSectores;
                 dgvSectores.Top = mapaSectores.Bottom + separacion;
-                dgvSectores.Height = dgvSectores.ColumnHeadersHeight +
-                    dgvSectores.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + Disposicion.Pixeles(this, Tema.Espacio.XS);
-                lblAgotado.Top = dgvSectores.Top;
+                dgvSectores.SetBounds(mapaSectores.Left, mapaSectores.Top, mapaSectores.Width, mapaSectores.Height);
+                dgvSectores.Enabled = false;
+                dgvSectores.TabStop = false;
+                dgvSectores.SendToBack();
+                mapaSectores.BringToFront(); // El mapa integra cantidad, sector, precio y disponibilidad en una sola tarjeta.
+                lblAgotado.Top = mapaSectores.Bottom + separacion;
                 btnListaEspera.Top = lblAgotado.Bottom + separacion;
                 lnkPosicionEspera.Top = btnListaEspera.Bottom + separacion;
-                pnlTarjetaEntradas.Height = Math.Max(dgvSectores.Bottom,
+                pnlTarjetaEntradas.Height = Math.Max(mapaSectores.Bottom,
                     agotado ? lnkPosicionEspera.Bottom : 0) + relleno;
                 lblAgotado.Width = dgvSectores.Width;
                 btnListaEspera.Left = (columna - btnListaEspera.Width) / 2;
@@ -444,6 +452,12 @@ namespace Visual
             {
                 rutas = CrearTickets == null ? GenerarTicket(compra) : CrearTickets(compra);
             }
+            catch (ReglaNegocioException regla)
+            {
+                System.Diagnostics.Trace.WriteLine(regla);
+                rutas = new List<string>();
+                avisoTicket = "El pago quedó confirmado como pedido " + frmConfirmacion.NumeroPedido(compra) + ", pero la regla impidió generar el PDF: " + regla.Message + " Tus entradas y sus códigos se conservan en Mis entradas.";
+            }
             catch (Exception error)
             {
                 System.Diagnostics.Trace.WriteLine(error);
@@ -474,9 +488,11 @@ namespace Visual
 
         private void ActualizarMapa()
         {
-            mapaSectores.Cargar(sectores.Values, id =>
-                Convert.ToInt32(dgvSectores.Rows.Cast<DataGridViewRow>().Single(f =>
-                    Convert.ToInt32(f.Cells["IdSector"].Value) == id).Cells["Disponibles"].Value));
+            mapaSectores.Cargar(sectores.Values,
+                id => Convert.ToInt32(dgvSectores.Rows.Cast<DataGridViewRow>().Single(f =>
+                    Convert.ToInt32(f.Cells["IdSector"].Value) == id).Cells["Disponibles"].Value),
+                id => Convert.ToInt32(dgvSectores.Rows.Cast<DataGridViewRow>().Single(f =>
+                    Convert.ToInt32(f.Cells["IdSector"].Value) == id).Cells["Cantidad"].Value));
         }
 
         private void ElegirSectorEnMapa(int id)
@@ -484,8 +500,8 @@ namespace Visual
             var fila = dgvSectores.Rows.Cast<DataGridViewRow>().Single(f => Convert.ToInt32(f.Cells["IdSector"].Value) == id);
             dgvSectores.CurrentCell = fila.Cells["Cantidad"];
             if (Convert.ToInt32(fila.Cells["Cantidad"].Value) == 0) fila.Cells["Cantidad"].Value = 1;
-            contenidoCompra.ScrollControlIntoView(dgvSectores);
-            dgvSectores.Focus();
+            contenidoCompra.ScrollControlIntoView(mapaSectores);
+            mapaSectores.Focus();
         }
 
         private void CargarNivel()
@@ -615,6 +631,7 @@ namespace Visual
                 RestaurarCantidad(fila, anterior);
                 return;
             }
+            ActualizarMapa();
             ActualizarResumen();
         }
 

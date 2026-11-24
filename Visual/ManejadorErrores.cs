@@ -33,6 +33,7 @@ namespace Visual
 
         public static string MensajeParaUsuario(Exception ex)
         {
+            if (ex is Negocio.ReglaNegocioException regla) return regla.Message;
             if (ex is System.Data.Common.DbException) return MensajeBaseDeDatos;
             if (ex is InvalidOperationException && ex.Message != null)
             {

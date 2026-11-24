@@ -22,6 +22,8 @@ namespace Visual
 
         private bool cargando;
         private Componentes.EstadoVacio estadoSinCompras;
+        private readonly Web.PanelWeb historialWeb = new Web.PanelWeb { Name = "historialWeb", Dock = DockStyle.None, Visible = false };
+        private readonly Label avisoWeb = new Label { Name = "avisoHistorialWeb", AutoSize = true, ForeColor = Tema.TextoSecundario, Text = "Vista web no disponible. Se muestra la lista de Windows Forms.", Visible = false };
 
         public frmHistorialCliente()
         {
@@ -31,6 +33,16 @@ namespace Visual
             estadoSinCompras.Cargar("Todavía no compraste entradas. Cuando lo hagas, van a aparecer acá.", "Ver eventos");
             estadoSinCompras.Accion += AbrirEventos;
             Controls.Add(estadoSinCompras);
+            Controls.Add(historialWeb);
+            Controls.Add(avisoWeb);
+            historialWeb.VistaLista += ActualizarVistaHistorial;
+            historialWeb.VistaNoDisponible += ActualizarVistaHistorial;
+            historialWeb.Escape += () =>
+            {
+                Message mensaje = default(Message);
+                ProcessCmdKey(ref mensaje, Keys.Escape);
+            };
+            historialWeb.Mensaje += RecibirMensajeHistorial;
             Shown += (s, e) =>
             {
                 btnDevolver.Left = ClientSize.Width - btnDevolver.Width - Disposicion.Pixeles(this, Tema.Espacio.XXL);
@@ -42,7 +54,10 @@ namespace Visual
                 Disposicion.ExtenderGrilla(dgvEntradas, lblAyuda);
                 estadoSinCompras.AjustarA(new Rectangle(dgvCompras.Left, dgvCompras.Top,
                     dgvCompras.Width, btnVolver.Top - dgvCompras.Top));
+                AjustarHistorialWeb();
+                historialWeb.Cargar("gestion.html");
             };
+            SizeChanged += (s, e) => AjustarHistorialWeb();
         }
 
         private void frmHistorialCliente_Load(object sender, EventArgs e)
@@ -120,6 +135,7 @@ namespace Visual
                 dgvCompras.Visible = dgvEntradas.Visible = lblDetalle.Visible = lblAyuda.Visible = btnDevolver.Visible = false;
                 estadoSinCompras.Visible = true;
                 ActualizarBotonDevolver();
+                ActualizarModeloHistorialWeb();
                 return;
             }
             estadoSinCompras.Visible = false;
@@ -129,6 +145,7 @@ namespace Visual
             elegida.Selected = true;
             dgvCompras.CurrentCell = elegida.Cells["Pedido"];
             CargarEntradas((Compra)elegida.Tag);
+            ActualizarModeloHistorialWeb();
         }
 
         private void AbrirEventos()
@@ -185,6 +202,72 @@ namespace Visual
             }
             dgvEntradas.ClearSelection();
             ActualizarBotonDevolver();
+            ActualizarModeloHistorialWeb();
+        }
+
+        private void AjustarHistorialWeb()
+        {
+            if (historialWeb == null || IsDisposed) return;
+            int abajo = lblAyuda.Top;
+            historialWeb.SetBounds(dgvCompras.Left, dgvCompras.Top,
+                Math.Max(1, ClientSize.Width - dgvCompras.Left * 2), Math.Max(1, abajo - dgvCompras.Top));
+            avisoWeb.Location = new Point(historialWeb.Left, Math.Max(0, historialWeb.Top - avisoWeb.Height));
+        }
+
+        private void ActualizarVistaHistorial()
+        {
+            bool web = historialWeb.Preparado;
+            historialWeb.Visible = web;
+            avisoWeb.Visible = historialWeb.InicializacionTerminada && !web;
+            dgvCompras.Visible = !web && dgvCompras.Rows.Count > 0;
+            dgvEntradas.Visible = !web && dgvCompras.Rows.Count > 0;
+            lblDetalle.Visible = !web && dgvCompras.Rows.Count > 0;
+            lblAyuda.Visible = !web && dgvCompras.Rows.Count > 0;
+            estadoSinCompras.Visible = !web && dgvCompras.Rows.Count == 0;
+            if (web) historialWeb.BringToFront();
+            else avisoWeb.BringToFront();
+        }
+
+        private void ActualizarModeloHistorialWeb()
+        {
+            var compras = dgvCompras.Rows.Cast<DataGridViewRow>().Select(r =>
+            {
+                var c = (Compra)r.Tag;
+                return new { id = c.Id, pedido = Convert.ToString(r.Cells["Pedido"].Value), evento = Convert.ToString(r.Cells["Evento"].Value),
+                    fecha = Convert.ToString(r.Cells["Fecha"].Value), estado = Convert.ToString(r.Cells["Estado"].Value),
+                    entradas = Convert.ToString(r.Cells["Entradas"].Value), total = Convert.ToDecimal(r.Cells["Total"].Value).ToString("C2", Pesos),
+                    devuelto = Convert.ToDecimal(r.Cells["Devuelto"].Value).ToString("C2", Pesos) };
+            }).ToArray();
+            int? seleccionada = dgvCompras.SelectedRows.Count == 0 ? (int?)null : ((Compra)dgvCompras.SelectedRows[0].Tag).Id;
+            var entradas = dgvEntradas.Rows.Cast<DataGridViewRow>().Select(r => new
+            {
+                id = ((Entrada)r.Tag).Id,
+                sector = Convert.ToString(r.Cells["Sector"].Value),
+                precio = Convert.ToDecimal(r.Cells["Precio"].Value).ToString("C2", Pesos),
+                estado = Convert.ToString(r.Cells["Estado"].Value), seguro = Convert.ToString(r.Cells["Seguro"].Value),
+                codigo = Convert.ToString(r.Cells["Codigo"].Value), puedeDevolver = !r.Cells["Devolver"].ReadOnly,
+                devolver = Convert.ToBoolean(r.Cells["Devolver"].Value)
+            }).ToArray();
+            historialWeb.Actualizar(new { vista = "historial", compras, seleccionada, detalle = lblDetalle.Text, entradas });
+        }
+
+        private void RecibirMensajeHistorial(string texto)
+        {
+            var tipo = System.Text.RegularExpressions.Regex.Match(texto ?? "", "\\\"tipo\\\"\\s*:\\s*\\\"([^\\\"]*)\\\"");
+            var idMatch = System.Text.RegularExpressions.Regex.Match(texto ?? "", "\\\"id\\\"\\s*:\\s*(\\d+)");
+            if (!tipo.Success || !idMatch.Success || !int.TryParse(idMatch.Groups[1].Value, out int id)) return;
+            if (tipo.Groups[1].Value == "compra")
+            {
+                var fila = dgvCompras.Rows.Cast<DataGridViewRow>().FirstOrDefault(r => ((Compra)r.Tag).Id == id);
+                if (fila != null) { fila.Selected = true; dgvCompras.CurrentCell = fila.Cells["Pedido"]; CargarEntradas((Compra)fila.Tag); }
+            }
+            else if (tipo.Groups[1].Value == "entrada")
+            {
+                var fila = dgvEntradas.Rows.Cast<DataGridViewRow>().FirstOrDefault(r => ((Entrada)r.Tag).Id == id);
+                if (fila != null && !fila.Cells["Devolver"].ReadOnly)
+                    fila.Cells["Devolver"].Value = texto.Contains("\"devolver\":true");
+            }
+            ActualizarModeloHistorialWeb();
         }
 
         // El tilde se confirma en el acto, así CellValueChanged habilita el botón sin salir de la celda.

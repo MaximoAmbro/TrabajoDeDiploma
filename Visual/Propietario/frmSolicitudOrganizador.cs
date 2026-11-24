@@ -80,7 +80,7 @@ namespace Visual
                 estadoEnvioTelefono.Text = "Si el teléfono es válido, guardamos un SMS simulado fuera de EventAura. Abrí el archivo del mensaje para continuar.";
             }
             catch (ReglaNegocioException ex) { estadoEnvioTelefono.Text = ex.Message; }
-            catch (Exception) { estadoEnvioTelefono.Text = "No pudimos enviar el código. Revisá la conexión o la configuración de correo y volvé a intentarlo."; }
+            catch (Exception ex) { estadoEnvioTelefono.Text = ManejadorErrores.MensajeParaUsuario(ex); }
         }
 
         private static TextBox Campo() => new TextBox { AutoSize = false };

@@ -75,6 +75,7 @@ namespace Visual
                         GestorCodigosCorreo.Instance.SolicitarRecuperacion(txtMail.Text);
                     _estadoCorreo.Text = "Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.";
                 }
+                catch (ReglaNegocioException ex) { _estadoCorreo.Text = ex.Message; }
                 catch (Exception)
                 {
                     _estadoCorreo.Text = "No pudimos enviar el código. Revisá la conexión o la configuración de correo y volvé a intentarlo.";

@@ -16,9 +16,11 @@ namespace Visual.Componentes
         private readonly ToolTip ayuda = new ToolTip();
         private readonly List<Sector> sectores = new List<Sector>();
         private readonly Dictionary<int, int> disponibles = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> cantidades = new Dictionary<int, int>();
         private int seleccionado = -1;
         private int sobre = -1;
         public event Action<int> SectorElegido;
+        public event Action<int, int> CantidadSolicitada;
         internal bool Compacto { get; set; }
 
         private int Columnas => Compacto ? Math.Min(3, Math.Max(1, sectores.Count)) : sectores.Count <= 3 ? 1 : 2;
@@ -32,12 +34,17 @@ namespace Visual.Componentes
             AccessibleDescription = "Ordenados por precio, del escenario hacia atrás. Usá las flechas y Enter para elegir; también podés usar la tabla de cantidades.";
         }
 
-        public void Cargar(IEnumerable<Sector> origen, Func<int, int> cupo)
+        public void Cargar(IEnumerable<Sector> origen, Func<int, int> cupo, Func<int, int> cantidad = null)
         {
             sectores.Clear();
             sectores.AddRange(origen.OrderByDescending(s => s.Precio).ThenBy(s => s.Id));
             disponibles.Clear();
-            foreach (var sector in sectores) disponibles[sector.Id] = Math.Max(0, cupo(sector.Id));
+            cantidades.Clear();
+            foreach (var sector in sectores)
+            {
+                disponibles[sector.Id] = Math.Max(0, cupo(sector.Id));
+                cantidades[sector.Id] = Math.Max(0, cantidad == null ? 0 : cantidad(sector.Id));
+            }
             if (!sectores.Any(s => s.Id == seleccionado)) seleccionado = -1;
             Invalidate();
         }
@@ -56,7 +63,7 @@ namespace Visual.Componentes
 
         public int AltoParaTodosLosSectores
         {
-            get { int columnas = Columnas; return Font.Height * (3 + 4 * Math.Max(1, (sectores.Count + columnas - 1) / columnas)); }
+            get { int columnas = Columnas; return Font.Height * (4 + 5 * Math.Max(1, (sectores.Count + columnas - 1) / columnas)); }
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -84,9 +91,24 @@ namespace Visual.Componentes
                 using (var borde = new Pen(s.Id == seleccionado ? Tema.Texto : Tema.BordeControl,
                     s.Id == seleccionado ? Tema.BordeFoco : Tema.BordeNormal)) e.Graphics.DrawRectangle(borde, rect);
                 string estado = quedan == 0 ? "AGOTADO" : pocos ? "POCAS · " + quedan + " disponibles" : quedan + " disponibles";
+                var contenido = Rectangle.Inflate(rect, -4, -2);
+                contenido.Height = Math.Max(1, contenido.Height - Font.Height - 4);
                 TextRenderer.DrawText(e.Graphics, s.Nombre + " · " + s.Precio.ToString("C0", CultureInfo.GetCultureInfo("es-AR")) +
-                    Environment.NewLine + estado, Font, Rectangle.Inflate(rect, -4, -2), Tema.Texto,
+                    Environment.NewLine + estado, Font, contenido, Tema.Texto,
                     TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix);
+                if (Compacto)
+                {
+                    Rectangle control = ZonaCantidad(rect);
+                    using (var fondoControl = new SolidBrush(Tema.Fondo)) e.Graphics.FillRectangle(fondoControl, control);
+                    using (var bordeControl = new Pen(Tema.BordeControl)) e.Graphics.DrawRectangle(bordeControl, control);
+                    Rectangle menos = new Rectangle(control.Left, control.Top, control.Height, control.Height);
+                    Rectangle mas = new Rectangle(control.Right - control.Height, control.Top, control.Height, control.Height);
+                    TextRenderer.DrawText(e.Graphics, "−", Font, menos, Tema.Texto, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                    TextRenderer.DrawText(e.Graphics, cantidades[s.Id].ToString(CultureInfo.InvariantCulture), Font,
+                        Rectangle.FromLTRB(menos.Right, control.Top, mas.Left, control.Bottom), Tema.Texto,
+                        TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                    TextRenderer.DrawText(e.Graphics, "+", Font, mas, Tema.Texto, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                }
             }
             if (Focused) ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(ClientRectangle, -1, -1));
         }
@@ -105,7 +127,25 @@ namespace Visual.Componentes
         protected override void OnMouseClick(MouseEventArgs e)
         {
             base.OnMouseClick(e); Focus();
-            for (int i = 0; i < sectores.Count; i++) if (Zona(i).Contains(e.Location)) Elegir(i);
+            for (int i = 0; i < sectores.Count; i++)
+            {
+                Rectangle zona = Zona(i);
+                if (!zona.Contains(e.Location)) continue;
+                Sector sector = sectores[i];
+                if (Compacto && ZonaCantidad(zona).Contains(e.Location))
+                {
+                    Rectangle control = ZonaCantidad(zona);
+                    bool sumar = e.X >= control.Right - control.Height;
+                    int siguiente = cantidades[sector.Id] + (sumar ? 1 : -1);
+                    if (siguiente >= 0 && disponibles[sector.Id] > 0)
+                    {
+                        SectorElegido?.Invoke(sector.Id);
+                        CantidadSolicitada?.Invoke(sector.Id, siguiente);
+                    }
+                    return;
+                }
+                Elegir(i);
+            }
         }
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -122,6 +162,12 @@ namespace Visual.Componentes
             var s = sectores[indice];
             if (disponibles[s.Id] == 0) return;
             seleccionado = s.Id; Invalidate(); SectorElegido?.Invoke(s.Id);
+        }
+
+        private Rectangle ZonaCantidad(Rectangle zona)
+        {
+            int alto = Math.Min(Math.Max(20, Font.Height + 6), Math.Max(1, zona.Height - 4));
+            return new Rectangle(zona.Left + 3, zona.Bottom - alto - 3, Math.Max(1, zona.Width - 6), alto);
         }
         protected override void Dispose(bool disposing)
         {

@@ -22,6 +22,10 @@ namespace Visual.Propietario
             InitializeComponent();
             Shown += (s, e) =>
             {
+                dtEvento.Format = DateTimePickerFormat.Custom;
+                dtEvento.CustomFormat = "dd/MM/yyyy HH:mm";
+                DateTime ahora = DateTime.Now;
+                dtEvento.Value = new DateTime(ahora.Year, ahora.Month, ahora.Day, ahora.Hour, 0, 0).AddHours(1);
                 ColocarTitulo(label3);
                 int margen = Disposicion.Pixeles(this, Tema.Espacio.XXL);
                 txtNombre.Left = dtEvento.Left = cmbCategoria.Left = dtpFinPreventa.Left = margen;

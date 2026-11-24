@@ -179,8 +179,13 @@ namespace Pruebas
                 using (var form = new Visual.Propietario.frmAgregarEvento { IDlocal = local.Id, IDUsuario = local.IdPropietario })
                 {
                     Mostrar(form);
+                    var selectorFecha = ControlDe<DateTimePicker>(form, "dtEvento");
+                    Assert.AreEqual(DateTimePickerFormat.Custom, selectorFecha.Format);
+                    Assert.AreEqual("dd/MM/yyyy HH:mm", selectorFecha.CustomFormat);
+                    Assert.AreEqual(0, selectorFecha.Value.Minute);
+                    Assert.IsTrue(selectorFecha.Value > DateTime.Now, "El horario sugerido debe ser la próxima hora completa.");
                     ControlDe<TextBox>(form, "txtNombre").Text = nombre;
-                    ControlDe<DateTimePicker>(form, "dtEvento").Value = DateTime.Today.AddDays(30);
+                    selectorFecha.Value = DateTime.Today.AddDays(30).AddHours(21).AddMinutes(17);
                     if (categoria) ControlDe<ComboBox>(form, "cmbCategoria").SelectedIndex = 0;
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnRegistrar").PerformClick(),
                         new DialogoEsperado { Texto = categoria ? "Evento guardado como borrador." : "Seleccioná la categoría del evento." });
@@ -192,6 +197,7 @@ namespace Pruebas
                     }
                     Evento creado = GestorEventos.Instance.PorLocal(local.Id).Single(e => e.Nombre == nombre);
                     Assert.AreEqual(GestorEventos.EstadoBorrador, creado.Estado);
+                    Assert.AreEqual(selectorFecha.Value, creado.Fecha, "Se debe conservar la hora elegida al guardar el evento.");
                     Visual.Vendedor.frmEventosLocal listado = Application.OpenForms.OfType<Visual.Vendedor.frmEventosLocal>().Single(f => f.Visible);
                     DataGridViewRow fila = ControlDe<DataGridView>(listado, "dgvEventos").Rows.Cast<DataGridViewRow>()
                         .Single(f => Convert.ToInt32(f.Cells["ID"].Value) == creado.Id);

@@ -412,12 +412,18 @@ namespace Pruebas
             EnSta(() =>
             {
                 Fake.ComoAdministrador();
+                GestorAuditoria.Instance.Registrar("Prueba hora local", "Prueba", null, "Correcto");
                 using (var form = new Visual.frmAuditoria())
                 {
                     Mostrar(form);
                     Assert.IsTrue(form.Visible);
                     var tabla = ControlDe<DataGridView>(form, "tablaAuditoria");
                     Assert.IsNotNull(tabla.DataSource);
+                    var filaHora = tabla.Rows.Cast<DataGridViewRow>().SingleOrDefault(f => Convert.ToString(f.Cells["Accion"].Value) == "Prueba hora local");
+                    Assert.IsNotNull(filaHora, "El movimiento de prueba debe aparecer en el registro.");
+                    var fechaVisible = Convert.ToDateTime(filaHora.Cells["Fecha"].Value);
+                    Assert.IsTrue(Math.Abs((fechaVisible - DateTime.Now).TotalMinutes) < 1,
+                        "La auditoría debe mostrar el instante UTC convertido a la hora local.");
                     Assert.AreEqual(8, tabla.Columns.Count, "Se conservan las ocho columnas de auditoría en los datos.");
                     CollectionAssert.AreEqual(
                         new[] { "Id", "UsuarioId", "Correo", "Acción", "Qué se modificó", "EntidadId", "Fecha y hora", "Resultado" },

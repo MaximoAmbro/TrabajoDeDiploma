@@ -187,8 +187,35 @@ namespace Pruebas
                     ControlDe<Button>(ficha,"comprarFicha").PerformClick();
                     var compra=Application.OpenForms.OfType<Visual.FrmCompraCliente>().Single(f=>f.Visible);
                     Assert.AreEqual(evento.Id,compra.IDEvento);Assert.AreEqual(cliente.Id,compra.IDUsuario);
-                    Assert.AreEqual(1,Convert.ToInt32(ControlDe<DataGridView>(compra,"dgvSectores").Rows[0].Cells["Cantidad"].Value));
+                    var sectoresCompra = ControlDe<DataGridView>(compra,"dgvSectores");
+                    Assert.AreEqual(1,Convert.ToInt32(sectoresCompra.Rows[0].Cells["Cantidad"].Value));
+                    var mapaCompra = ControlDe<MapaSectores>(compra, "mapaSectores");
+                    Assert.AreEqual(mapaCompra.Bounds, sectoresCompra.Bounds, "La grilla de compatibilidad queda exactamente bajo las tarjetas, fuera de la vista.");
+                    Assert.IsFalse(sectoresCompra.Enabled || sectoresCompra.TabStop, "El adaptador no debe mostrarse ni recibir foco.");
+                    var zonaCantidad = (Rectangle)typeof(MapaSectores).GetMethod("ZonaCantidad", BindingFlags.NonPublic | BindingFlags.Instance)
+                        .Invoke(mapaCompra, new object[] { mapaCompra.Zona(0) });
+                    typeof(MapaSectores).GetMethod("OnMouseClick", BindingFlags.NonPublic | BindingFlags.Instance)
+                        .Invoke(mapaCompra, new object[] { new MouseEventArgs(MouseButtons.Left, 1, zonaCantidad.Right - zonaCantidad.Height / 2, zonaCantidad.Top + zonaCantidad.Height / 2, 0) });
+                    Assert.AreEqual(2, Convert.ToInt32(sectoresCompra.Rows[0].Cells["Cantidad"].Value), "La cantidad se modifica dentro de la tarjeta del sector.");
                     compra.Dispose();
+                }
+                using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id })
+                {
+                    Mostrar(menu);
+                    ControlDe<Button>(menu, "btnEventos").PerformClick();
+                    Assert.AreEqual("Eventos disponibles", menu.Controls.OfType<Label>().Single(c => c.Name == "label1").Text,
+                        "El título del menú debe seguir la vista actual al navegar al catálogo.");
+                    var listado = ControlDe<Visual.frmEventosCliente>(menu, "frmEventosCliente");
+                    var tarjetaCatalogo = ControlDe<FlowLayoutPanel>(listado, "tarjetasEventos").Controls
+                        .OfType<TarjetaEvento>().Single(t => t.AccessibleName == evento.Nombre);
+                    var botonEntradas = ControlDe<Button>(tarjetaCatalogo, "verEntradas");
+                    Assert.IsTrue(botonEntradas.Visible && botonEntradas.Bottom <= tarjetaCatalogo.ClientSize.Height,
+                        "La acción de la primera fila del catálogo debe entrar completa dentro de la tarjeta.");
+                    ControlDe<Button>(tarjetaCatalogo, "verEntradas").PerformClick();
+                    var fichaCliente = ControlDe<FichaEvento>(listado, "fichaEvento");
+                    ControlDe<Button>(fichaCliente, "comprarFicha").PerformClick();
+                    Assert.AreEqual("Armar paquete", menu.Controls.OfType<Label>().Single(c => c.Name == "label1").Text,
+                        "El título debe cambiar a la pantalla de compra.");
                 }
                 using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id })
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using Entidades;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -52,6 +53,18 @@ namespace Pruebas
             var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Solicitar(solicitud));
             Assert.AreEqual("RN-52", error.Regla);
             Assert.AreEqual("El CUIT no es válido. Revisá sus 11 dígitos y el dígito verificador.", error.Message);
+            Assert.AreEqual(error.Message, Visual.ManejadorErrores.MensajeParaUsuario(error), "La pantalla no debe tapar una regla válida con un error genérico.");
+            InterfazGrupoA.EnSta(() =>
+            {
+                Fake.ComoCliente(cliente);
+                using (var form = new Visual.frmSolicitudOrganizador())
+                {
+                    InterfazGrupoA.Mostrar(form);
+                    CargarCamposSolicitud(form, "20-12345678-5");
+                    form.Controls.OfType<Button>().Single(b => b.Text == "Enviar solicitud").PerformClick();
+                    Assert.AreEqual(error.Message, InterfazGrupoA.ControlDe<Label>(form, "avisoSistema").Text);
+                }
+            });
         }
 
         // CP-186 — RF-20, RN-52: rechazar CBU con digito verificador incorrecto.
@@ -81,6 +94,21 @@ namespace Pruebas
             var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Rechazar(1, "  "));
             Assert.AreEqual("RN-53", error.Regla);
             Assert.AreEqual("Escribí el motivo del rechazo.", error.Message);
+            Assert.AreEqual(error.Message, Visual.ManejadorErrores.MensajeParaUsuario(error));
+            InterfazGrupoA.EnSta(() =>
+            {
+                var solicitante = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(solicitante);
+                VerificarTelefono();
+                GestorSolicitudesOrganizador.Instance.Solicitar(SolicitudValida());
+                Fake.ComoAdministrador();
+                using (var form = new Visual.frmRevisarSolicitudesOrganizador())
+                {
+                    InterfazGrupoA.Mostrar(form);
+                    form.Controls.OfType<Button>().Single(b => b.Text == "Rechazar").PerformClick();
+                    Assert.AreEqual(error.Message, InterfazGrupoA.ControlDe<Label>(form, "avisoSistema").Text);
+                }
+            });
         }
 
         // CP-190 — RF-20/RF-22, RN-34: el acceso a rechazar solicitudes se deniega a Organizador.
@@ -100,6 +128,18 @@ namespace Pruebas
             var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorSolicitudesOrganizador.Instance.Solicitar(SolicitudValida()));
             Assert.AreEqual("RN-51", error.Regla);
             Assert.AreEqual("Verificá este teléfono con el código enviado antes de presentar la solicitud.", error.Message);
+            Assert.AreEqual(error.Message, Visual.ManejadorErrores.MensajeParaUsuario(error));
+            InterfazGrupoA.EnSta(() =>
+            {
+                Fake.ComoCliente(cliente);
+                using (var form = new Visual.frmSolicitudOrganizador())
+                {
+                    InterfazGrupoA.Mostrar(form);
+                    CargarCamposSolicitud(form, "20-12345678-6");
+                    form.Controls.OfType<Button>().Single(b => b.Text == "Enviar solicitud").PerformClick();
+                    Assert.AreEqual(error.Message, InterfazGrupoA.ControlDe<Label>(form, "avisoSistema").Text);
+                }
+            });
         }
 
         // CP-192 — RF-20, RN-52: rechazar documentacion que no sea imagen valida.
@@ -208,6 +248,12 @@ namespace Pruebas
                     Assert.IsNotNull(mensaje, InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
                     Assert.AreEqual("Si el teléfono es válido, guardamos un SMS simulado fuera de EventAura. Abrí el archivo del mensaje para continuar.",
                         InterfazGrupoA.ControlDe<Label>(form, "estadoEnvioTelefono").Text);
+                    var confirmacion = form.Controls.OfType<Button>().Single(b => b.Text == "Confirmar teléfono");
+                    InterfazGrupoA.ControlDe<TextBox>(form, "codigo").Text = mensaje.Codigo == "000000" ? "000001" : "000000";
+                    confirmacion.PerformClick();
+                    var avisoRegla = InterfazGrupoA.ControlDe<Label>(form, "avisoSistema");
+                    Assert.AreEqual("El código no es válido o venció. Solicitá uno nuevo.", avisoRegla.Text,
+                        "El código incorrecto debe conservar el mensaje de RN-44.");
                     string archivo = EnviadorSimulado.ArchivoDeBandejaParaPruebas(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
                     Assert.IsTrue(System.IO.File.Exists(archivo));
                     Assert.IsTrue(System.IO.File.ReadAllText(archivo).Contains(mensaje.Codigo));
@@ -286,6 +332,19 @@ namespace Pruebas
             GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(Telefono);
             var mensaje = EnviadorSimulado.Ultimo(Telefono, GestorCodigosCorreo.PropositoTelefonoOrganizador);
             GestorSolicitudesOrganizador.Instance.ConfirmarCodigoTelefono(Telefono, mensaje.Codigo);
+        }
+
+        private static void CargarCamposSolicitud(Visual.frmSolicitudOrganizador form, string valorCuit)
+        {
+            InterfazGrupoA.ControlDe<TextBox>(form, "responsable").Text = "Responsable de prueba";
+            InterfazGrupoA.ControlDe<TextBox>(form, "cuit").Text = valorCuit;
+            InterfazGrupoA.ControlDe<TextBox>(form, "telefono").Text = Telefono;
+            InterfazGrupoA.ControlDe<TextBox>(form, "local").Text = "Sala de prueba";
+            InterfazGrupoA.ControlDe<TextBox>(form, "direccion").Text = "Calle de prueba 123";
+            InterfazGrupoA.ControlDe<NumericUpDown>(form, "capacidad").Value = 200;
+            InterfazGrupoA.ControlDe<TextBox>(form, "cbu").Text = new string('0', 22);
+            typeof(Visual.frmSolicitudOrganizador).GetField("imagen", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(form, Png);
+            typeof(Visual.frmSolicitudOrganizador).GetField("nombreArchivo", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(form, "documentacion.png");
         }
     }
 }
