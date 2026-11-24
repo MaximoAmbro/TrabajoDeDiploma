@@ -11,6 +11,9 @@ Antes de empezar cualquier tarea, cada agente:
 Si el ticket no es suyo, o si hay cambios sin commitear en su zona que no son de su sesión, no toca
 nada y avisa a JC.
 
+**Documento operativo:** `Pruebas/GUION-DEMOSTRACION.md` queda a cargo de Claude Code. Es
+documentación y Claude Code está ejecutando el guion; Codex no lo modifica.
+
 Última actualización: **24/11/2026, a la tarde**, por Claude Code. Reemplaza la del 10/11, que
 había quedado vieja: decía 61 casos y que la renovación visual estaba en duda.
 

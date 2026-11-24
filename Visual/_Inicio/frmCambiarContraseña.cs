@@ -57,7 +57,7 @@ namespace Visual
             Text = "EventAura · Recuperar contraseña";
             label1.Text = "Recuperar contraseña";
             lblActual.Text = "Código de recuperación";
-            txtActual.PasswordChar = '\0';
+            txtActual.UseSystemPasswordChar = false;
             checkbxShowPass.Text = "Mostrar contraseña nueva";
             btnconfirmar.Text = "Restablecer contraseña";
             _enviarCodigo = new Componentes.BotonSecundario { Name = "btnEnviarCodigo", Text = "Enviar código", Location = new Point(232, 216), Size = new Size(184, 36) };
@@ -130,17 +130,16 @@ namespace Visual
             txtActual.BackColor = TxtPassword.BackColor;
             txtActual.BorderStyle = TxtPassword.BorderStyle;
             txtActual.Font = TxtPassword.Font;
-            txtActual.PasswordChar = _recuperacion ? '\0' : '*';
-            TxtPassword.PasswordChar = '*';
-            TxtConfirmpassword.PasswordChar = '*';
+            txtActual.UseSystemPasswordChar = !_recuperacion;
+            TxtPassword.UseSystemPasswordChar = true;
+            TxtConfirmpassword.UseSystemPasswordChar = true;
             ActualizarFortaleza();
         } // el load 
         private void checkbxShowPass_CheckedChanged(object sender, EventArgs e)
         {
-            char mascara = checkbxShowPass.Checked ? '\0' : '*';
-            txtActual.PasswordChar = _recuperacion ? '\0' : mascara;
-            TxtPassword.PasswordChar = mascara;
-            TxtConfirmpassword.PasswordChar = mascara;
+            txtActual.UseSystemPasswordChar = !_recuperacion && !checkbxShowPass.Checked;
+            TxtPassword.UseSystemPasswordChar = !checkbxShowPass.Checked;
+            TxtConfirmpassword.UseSystemPasswordChar = !checkbxShowPass.Checked;
         }
 
         private void btnconfirmar_Click(object sender, EventArgs e)

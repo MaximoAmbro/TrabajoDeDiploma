@@ -62,6 +62,7 @@ namespace Visual
             this.TxtConfirmpassword.Location = new System.Drawing.Point(232, 316);
             this.TxtConfirmpassword.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.TxtConfirmpassword.Name = "TxtConfirmpassword";
+            this.TxtConfirmpassword.UseSystemPasswordChar = true;
             this.TxtConfirmpassword.Size = new System.Drawing.Size(184, 28);
             this.TxtConfirmpassword.TabIndex = 22;
             // 
@@ -81,7 +82,7 @@ namespace Visual
             this.TxtPassword.Location = new System.Drawing.Point(24, 316);
             this.TxtPassword.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.TxtPassword.Name = "TxtPassword";
-            this.TxtPassword.PasswordChar = '*';
+            this.TxtPassword.UseSystemPasswordChar = true;
             this.TxtPassword.Size = new System.Drawing.Size(184, 28);
             this.TxtPassword.TabIndex = 20;
             // 

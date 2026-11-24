@@ -154,7 +154,7 @@ namespace Visual
             this.txtCvv.Location = new System.Drawing.Point(232, 372);
             this.txtCvv.MaxLength = 4;
             this.txtCvv.Name = "txtCvv";
-            this.txtCvv.PasswordChar = '•';
+            this.txtCvv.UseSystemPasswordChar = true;
             this.txtCvv.Size = new System.Drawing.Size(184, 28);
             this.txtCvv.TabIndex = 3;
             //

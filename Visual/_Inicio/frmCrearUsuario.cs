@@ -67,8 +67,8 @@ namespace Visual
             txtNombre.Clear();
             TxtPassword.Clear();
             TxtConfirmpassword.Clear();
-            TxtPassword.PasswordChar = '*';
-            TxtConfirmpassword.PasswordChar='*';
+            TxtPassword.UseSystemPasswordChar = true;
+            TxtConfirmpassword.UseSystemPasswordChar = true;
             ActualizarFortaleza();
         }  // El Load del formulario
         private void ActualizarFortaleza()
@@ -82,13 +82,13 @@ namespace Visual
         {
             if(checkbxShowPass.Checked == true)
             {
-                TxtPassword.PasswordChar = '\0';
-                TxtConfirmpassword.PasswordChar = '\0';
+                TxtPassword.UseSystemPasswordChar = false;
+                TxtConfirmpassword.UseSystemPasswordChar = false;
             }
             else
             {
-                TxtPassword.PasswordChar = '*';
-                TxtConfirmpassword.PasswordChar = '*';
+                TxtPassword.UseSystemPasswordChar = true;
+                TxtConfirmpassword.UseSystemPasswordChar = true;
             }
         } // El de la contraseña
 

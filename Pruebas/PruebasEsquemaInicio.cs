@@ -21,7 +21,7 @@ namespace Pruebas
                 Mostrar(formulario);
                 var campo = ControlDe<System.Windows.Forms.TextBox>(formulario, "txtContraseñaLogin");
                 var aviso = formulario.Controls.Find("avisoBaseNoDisponible", true).Single();
-                Assert.AreEqual('*', campo.PasswordChar);
+                Assert.IsTrue(campo.UseSystemPasswordChar, "La contraseña debe identificarse como campo secreto para UI Automation.");
                 Assert.IsTrue(aviso.Visible);
                 Assert.IsTrue(aviso.Text.Contains("BddEventAura"));
                 Assert.IsFalse(ControlDe<System.Windows.Forms.Button>(formulario, "btninicio").Enabled);

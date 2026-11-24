@@ -176,7 +176,7 @@ namespace Pruebas
                         var campo = (System.Windows.Forms.TextBox)form.Controls.Find(nombre, true).Single();
                         Assert.AreEqual("", campo.Text);
                         Assert.IsTrue(campo.Visible);
-                        if (nombre != "txtMail") Assert.AreEqual('*', campo.PasswordChar);
+                        if (nombre != "txtMail") Assert.IsTrue(campo.UseSystemPasswordChar, nombre + " debe identificarse como campo secreto para UI Automation.");
                     }
                     string carpeta = System.IO.Path.Combine(BaseDePrueba.RaizDelRepositorio(), "TestResults", "Seguridad");
                     System.IO.Directory.CreateDirectory(carpeta);

@@ -23,6 +23,11 @@ La documentación completa está en `Documentacion/EventAura_v2.pdf` (112 págin
 
 ---
 
+## Documento de demostración
+
+`Pruebas/GUION-DEMOSTRACION.md` es documentación operativa y queda a cargo de Claude Code,
+que está ejecutando el guion. Codex no lo modifica; coordina cualquier cambio con Claude Code.
+
 <!-- compartido:arquitectura (igual en AGENTS.md; verificar con tools/VerificarReglasAgentes.ps1) -->
 ## Arquitectura — 4 capas, obligatorio
 

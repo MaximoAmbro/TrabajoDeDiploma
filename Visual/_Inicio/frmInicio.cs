@@ -51,7 +51,7 @@ namespace Visual
             
             txtMailLogin.Text = "";
             txtContraseñaLogin.Text = "";
-            txtContraseñaLogin.PasswordChar = '*';
+            txtContraseñaLogin.UseSystemPasswordChar = true;
             txtMailLogin.Select();   // no depende del orden de TabIndex
         }
 
@@ -60,7 +60,7 @@ namespace Visual
             txtMailLogin.Visible = label5.Visible = txtContraseñaLogin.Visible = label3.Visible = false;
             checkbxShowPass.Visible = lblolividarcontra.Visible = lblcrearcuenta.Visible = btninicio.Visible = false;
             btninicio.Enabled = false;
-            string destino = "No se pudo leer Visual.exe.config.";
+            string destino = "No se pudo leer Visual.exe.config";
             try
             {
                 var cadena = ConfigurationManager.ConnectionStrings["Visual.Properties.Settings.BddEventAura"];
@@ -122,11 +122,11 @@ namespace Visual
         {
             if (checkbxShowPass.Checked == true)
             {
-                txtContraseñaLogin.PasswordChar = '\0';
+                txtContraseñaLogin.UseSystemPasswordChar = false;
             }
             else
             {
-                txtContraseñaLogin.PasswordChar = '*';
+                txtContraseñaLogin.UseSystemPasswordChar = true;
             }
         } //Le pone el asterisco a la contraseña
 

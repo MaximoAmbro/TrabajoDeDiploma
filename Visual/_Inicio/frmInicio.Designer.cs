@@ -53,7 +53,7 @@ namespace Visual
             this.txtContraseñaLogin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtContraseñaLogin.Location = new System.Drawing.Point(64, 244);
             this.txtContraseñaLogin.Name = "txtContraseñaLogin";
-            this.txtContraseñaLogin.PasswordChar = '*';
+            this.txtContraseñaLogin.UseSystemPasswordChar = true;
             this.txtContraseñaLogin.Size = new System.Drawing.Size(352, 28);
             this.txtContraseñaLogin.TabIndex = 1;
             // 

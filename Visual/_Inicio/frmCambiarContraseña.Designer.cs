@@ -43,6 +43,7 @@ namespace Visual
             this.txtActual.Location = new System.Drawing.Point(24, 220);
             this.txtActual.Size = new System.Drawing.Size(392, 28);
             this.txtActual.Name = "txtActual";
+            this.txtActual.UseSystemPasswordChar = true;
             this.txtActual.TabIndex = 1;
             this.lblActual.AutoSize = true;
             this.lblActual.Name = "lblActual";
@@ -83,6 +84,7 @@ namespace Visual
             this.TxtConfirmpassword.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.TxtConfirmpassword.Multiline = true;
             this.TxtConfirmpassword.Name = "TxtConfirmpassword";
+            this.TxtConfirmpassword.UseSystemPasswordChar = true;
             this.TxtConfirmpassword.Size = new System.Drawing.Size(392, 28);
             this.TxtConfirmpassword.TabIndex = 3;
             // 
@@ -103,6 +105,7 @@ namespace Visual
             this.TxtPassword.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.TxtPassword.Multiline = true;
             this.TxtPassword.Name = "TxtPassword";
+            this.TxtPassword.UseSystemPasswordChar = true;
             this.TxtPassword.Size = new System.Drawing.Size(392, 28);
             this.TxtPassword.TabIndex = 2;
             // 

@@ -173,6 +173,11 @@ namespace Pruebas
                 using (var cambio = new Visual.frmCambiarContraseña())
                 {
                     Mostrar(registro); Mostrar(cambio);
+                    Assert.IsTrue(ControlDe<TextBox>(registro, "TxtPassword").UseSystemPasswordChar);
+                    Assert.IsTrue(ControlDe<TextBox>(registro, "TxtConfirmpassword").UseSystemPasswordChar);
+                    Assert.IsTrue(ControlDe<TextBox>(cambio, "txtActual").UseSystemPasswordChar);
+                    Assert.IsTrue(ControlDe<TextBox>(cambio, "TxtPassword").UseSystemPasswordChar);
+                    Assert.IsTrue(ControlDe<TextBox>(cambio, "TxtConfirmpassword").UseSystemPasswordChar);
                     ControlDe<TextBox>(registro, "TxtPassword").Text = "abcdefgh1";
                     ControlDe<TextBox>(cambio, "TxtPassword").Text = "abcdefgh1";
                     Assert.AreEqual(3, ControlDe<Visual.Componentes.IndicadorFortaleza>(registro, "fortalezaContrasena").Puntaje);
@@ -193,6 +198,10 @@ namespace Pruebas
                 using (var form = new Visual.frmCambiarContraseña(true))
                 {
                     Mostrar(form);
+                    Assert.IsFalse(ControlDe<TextBox>(form, "txtActual").UseSystemPasswordChar,
+                        "El código de recuperación se puede leer para ingresarlo desde el correo simulado.");
+                    Assert.IsTrue(ControlDe<TextBox>(form, "TxtPassword").UseSystemPasswordChar);
+                    Assert.IsTrue(ControlDe<TextBox>(form, "TxtConfirmpassword").UseSystemPasswordChar);
                     ControlDe<TextBox>(form, "txtMail").Text = cliente.Mail;
                     ControlDe<Button>(form, "btnEnviarCodigo").PerformClick();
                     var mensaje = EnviadorSimulado.Ultimo(cliente.Mail, "Recuperacion");

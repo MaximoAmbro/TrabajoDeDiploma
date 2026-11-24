@@ -457,6 +457,8 @@ namespace Pruebas
                 using (var form = new Visual.frmPago { Compra = compra })
                 {
                     Cargar(form);
+                    Assert.IsTrue(Control<TextBox>(form, "txtCvv").UseSystemPasswordChar,
+                        "El código de seguridad de la tarjeta debe ser un campo secreto para UI Automation.");
                     Label temporizador = Control<Label>(form, "lblTemporizador");
                     Match formato = Regex.Match(temporizador.Text, @"^Reserva: (\d{2}):(\d{2})$");
                     Assert.IsTrue(formato.Success, "Formato de cuenta regresiva incorrecto: " + temporizador.Text);
