@@ -23,6 +23,8 @@ namespace Visual.Componentes
             Disposed += (s, e) => fuenteAjustada?.Dispose();
         }
 
+        internal object ModeloWeb() => new { titulo = titulo.Text, valor = valor.Text };
+
         public void Cargar(string nombre, string dato)
         {
             titulo.Text = nombre;

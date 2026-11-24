@@ -22,8 +22,13 @@ namespace Visual
 
         private Reporte reporte;
         private bool cargando;
+        private bool mostrarResultado;
         private string carpetaExportacion;
         private Componentes.EstadoVacio estadoSinReporte;
+        private readonly Web.PanelWeb vistaWeb = new Web.PanelWeb
+            { Name = "reporteWeb", Dock = DockStyle.None, Visible = false };
+        private readonly Label avisoWeb = new Label
+            { Name = "avisoReporteWeb", ForeColor = Tema.TextoSecundario, Visible = false };
 
         // El valor por omisión conserva la ruta del usuario; las pruebas pueden aislar la salida.
         internal string CarpetaExportacion
@@ -35,6 +40,17 @@ namespace Visual
         public frmReportes()
         {
             InitializeComponent();
+            Controls.Add(vistaWeb);
+            Controls.Add(avisoWeb);
+            vistaWeb.VistaLista += ActualizarVistaWeb;
+            vistaWeb.VistaNoDisponible += ActualizarVistaWeb;
+            vistaWeb.Escape += () =>
+            {
+                Message mensaje = default(Message);
+                ProcessCmdKey(ref mensaje, Keys.Escape);
+            };
+            avisoWeb.Text = "Vista web no disponible. El reporte se muestra en la tabla.";
+            SizeChanged += (s, e) => ActualizarVistaWeb();
             Shown += (s, e) =>
             {
                 Disposicion.LimitarAncho(lblLectura);
@@ -52,6 +68,7 @@ namespace Visual
                 dgvReporte.Height = Math.Max(1, lblLectura.Top - dgvReporte.Top - espacio);
                 estadoSinReporte.AjustarA(dgvReporte);
                 btnGenerar.PerformClick();
+                vistaWeb.Cargar("datos.html");
             };
             estadoSinReporte = new Componentes.EstadoVacio { Name = "estadoSinReporte", Visible = false };
             estadoSinReporte.AjustarA(dgvReporte);
@@ -181,7 +198,24 @@ namespace Visual
         {
             if (estadoSinReporte == null) return;
             estadoSinReporte.Visible = visible;
-            dgvReporte.Visible = !visible;
+            mostrarResultado = !visible;
+            ActualizarVistaWeb();
+        }
+
+        private void ActualizarVistaWeb()
+        {
+            if (estadoSinReporte == null) return;
+            vistaWeb.Bounds = Rectangle.FromLTRB(dgvReporte.Left, dgvReporte.Top, dgvReporte.Right,
+                Math.Max(dgvReporte.Bottom, lblLectura.Bottom));
+            bool web = mostrarResultado && vistaWeb.Preparado;
+            vistaWeb.Visible = web;
+            dgvReporte.Visible = mostrarResultado && !web;
+            lblLectura.Visible = mostrarResultado && !web;
+            avisoWeb.Visible = vistaWeb.InicializacionTerminada && !vistaWeb.Preparado;
+            avisoWeb.SetBounds(dgvReporte.Left, dgvReporte.Top - avisoWeb.Font.Height,
+                dgvReporte.Width, avisoWeb.Font.Height);
+            if (vistaWeb.Visible) vistaWeb.BringToFront();
+            if (avisoWeb.Visible) avisoWeb.BringToFront();
         }
 
         // Crea el reporte con los filtros de la pantalla. null si GestorReportes lo rechaza.
@@ -265,6 +299,8 @@ namespace Visual
             FormatearColumnas(datos);
             Tema.EstiloTablaDeConsulta(dgvReporte);
             lblLectura.Text = "Lectura. " + r.Lectura(datos);
+            vistaWeb.Actualizar(new { reporte = Web.DatosWebReportes.Crear(r, datos), lectura = lblLectura.Text });
+            ActualizarVistaWeb();
             btnExportar.Enabled = true;
         }
 

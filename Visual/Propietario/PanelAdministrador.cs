@@ -8,6 +8,9 @@ namespace Visual.Componentes
     public partial class PanelAdministrador : SuperficieTematica
     {
         private readonly BotonSecundario btnAuditoria;
+        private readonly Web.PanelWeb vistaWeb = new Web.PanelWeb { Name = "panelAdministradorWeb", Visible = false };
+        private readonly Label avisoWeb = new Label
+            { Name = "avisoAdministradorWeb", ForeColor = Tema.TextoSecundario, Visible = false };
         private readonly FlowLayoutPanel pendientes;
         private readonly EtiquetaEncabezado tituloPendientes = new EtiquetaEncabezado { Text = "Pendientes de revisión" };
         private readonly DatoPanel eventosPendientes;
@@ -32,6 +35,16 @@ namespace Visual.Componentes
             Controls.Add(tituloPendientes);
             pendientes.BringToFront();
             Tema.Normalizar(this);
+            Controls.Add(vistaWeb);
+            Controls.Add(avisoWeb);
+            avisoWeb.Text = "Vista web no disponible. Se muestran los indicadores de Windows.";
+            vistaWeb.VistaLista += ActualizarVistaWeb;
+            vistaWeb.VistaNoDisponible += ActualizarVistaWeb;
+            vistaWeb.Escape += () =>
+            {
+                if (FindForm()?.CancelButton is Button boton) boton.PerformClick();
+            };
+            Load += (s, e) => vistaWeb.Cargar("datos.html");
             SizeChanged += (s,e)=>Distribuir();
         }
         public void Cargar()
@@ -41,16 +54,20 @@ namespace Visual.Componentes
             var cultura=System.Globalization.CultureInfo.GetCultureInfo("es-AR");
             DateTime desde=DateTime.Today.AddMonths(-12),hasta=DateTime.Today.AddMonths(12);
             periodo.Text="Eventos: "+desde.ToString("dd/MM/yyyy")+" a "+hasta.ToString("dd/MM/yyyy")+". Niveles: al día de hoy.";
+            object ventas = null;
             foreach(string codigo in GestorReportes.Codigos) {
                 var reporte=GestorReportes.Instance.Crear(codigo,desde,hasta);
                 if(reporte is ReporteUsuariosPorNivel)((ReporteUsuariosPorNivel)reporte).FechaCorte=DateTime.Today;
                 var tabla=GestorReportes.Instance.Ejecutar(reporte);
-                var filas=tabla.Rows.Cast<DataRow>().Where(f=>Convert.ToString(f[0])!="TOTAL").ToArray();
+                var filas = tabla.Rows.Cast<DataRow>().ToArray();
+                if (Equals(tabla.ExtendedProperties[Reporte.PropiedadFilaTotales], true))
+                    filas = filas.Take(filas.Length - 1).ToArray();
                 Func<int,decimal> suma=col=>filas.Sum(f=>f[col]==DBNull.Value?0m:Convert.ToDecimal(f[col]));
                 string titulo = reporte.Titulo;
                 string valor;
                 switch(codigo) {
                     case "RPT-01":
+                        ventas = Web.DatosWebReportes.Crear(reporte, tabla);
                         var entradas = new DatoPanel { Name = "entradasVendidasPanel" };
                         entradas.CargarDetalle("Entradas vendidas", suma(2).ToString("N0", cultura));
                         datos.Controls.Add(entradas);
@@ -66,8 +83,26 @@ namespace Visual.Componentes
             }
             eventosPendientes.CargarDetalle("Eventos por revisar", GestorEventos.Instance.PendientesDeRevision().Count.ToString(cultura));
             solicitudesPendientes.CargarDetalle("Solicitudes de organizador", GestorSolicitudesOrganizador.Instance.Pendientes().Count.ToString(cultura));
+            vistaWeb.Actualizar(new
+            {
+                periodo = periodo.Text,
+                metricas = datos.Controls.OfType<DatoPanel>().Select(tarjeta => tarjeta.ModeloWeb()).ToArray(),
+                pendientes = pendientes.Controls.OfType<DatoPanel>().Select(tarjeta => tarjeta.ModeloWeb()).ToArray(),
+                reporte = ventas
+            });
             Distribuir();
         }
+
+        private void ActualizarVistaWeb()
+        {
+            vistaWeb.Visible = vistaWeb.Preparado;
+            periodo.Visible = datos.Visible = tituloPendientes.Visible = pendientes.Visible = !vistaWeb.Visible;
+            avisoWeb.Visible = vistaWeb.InicializacionTerminada && !vistaWeb.Preparado;
+            if (vistaWeb.Visible) vistaWeb.BringToFront();
+            if (avisoWeb.Visible) avisoWeb.BringToFront();
+            Distribuir();
+        }
+
         private void Distribuir()
         {
             int Px(int medida) => Disposicion.Pixeles(this, medida);
@@ -75,7 +110,10 @@ namespace Visual.Componentes
             if (btnAuditoria.Parent == this) btnAuditoria.Left = Math.Max(0, ancho - btnAuditoria.Width);
             int anchoPeriodo = btnAuditoria.Parent == this ? ancho - btnAuditoria.Width - Px(Tema.Espacio.L) : ancho;
             int y = AutoScrollPosition.Y;
-            periodo.SetBounds(0, y, Math.Max(1, anchoPeriodo), Px(Tema.Espacio.XXL));
+            if (vistaWeb.Visible) return;
+            avisoWeb.SetBounds(0, y, ancho, Px(Tema.Espacio.XL));
+            periodo.SetBounds(0, y + (avisoWeb.Visible ? avisoWeb.Height : 0),
+                Math.Max(1, anchoPeriodo), Px(Tema.Espacio.XXL));
 
             datos.Location = new System.Drawing.Point(0, periodo.Bottom + Px(Tema.Espacio.S));
             DatoPanel.DistribuirGrilla(datos, ancho);

@@ -80,7 +80,7 @@ namespace Visual
         {
             string Css(Font fuente) => fuente.SizeInPoints.ToString(System.Globalization.CultureInfo.InvariantCulture) +
                 "pt '" + fuente.Name + "', sans-serif";
-            return new Dictionary<string, string>
+            var variables = new Dictionary<string, string>
             {
                 ["primario"] = ColorTranslator.ToHtml(Primario),
                 ["primario-suave"] = ColorTranslator.ToHtml(PrimarioSuave),
@@ -100,6 +100,9 @@ namespace Visual
                 ["titulo-tarjeta"] = Css(TituloTarjeta),
                 ["precio"] = Css(PrecioTarjeta)
             };
+            for (int i = 0; i < PaletaPortadas.Length; i++)
+                variables["grafico-" + i] = ColorTranslator.ToHtml(PaletaPortadas[i]);
+            return variables;
         }
 
         public static class Espacio
