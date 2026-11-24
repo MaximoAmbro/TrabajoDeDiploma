@@ -75,3 +75,11 @@ El resumen de compra usa Segoe UI con encabezados de Entradas, Servicios y Cargo
 El foco de los enlaces se indica con un subrayado. Los pasos completados usan TextoSecundario y una marca de verificación.
 
 Pasaron 360 de 360 pruebas. CP-357 verificó que la grilla de sectores y el total entren en la captura inicial. Se regeneraron las 50 capturas del área cliente con 96 y 144 DPI reales. Las imágenes están en TestResults/Capturas-Reforma y los registros en TestResults/diseno-visual-360.log y TestResults/diseno-visual-capturas.log. Enter en Suscripción sigue como verificación manual.
+
+## Cierre de la interfaz del cliente
+
+El inicio usa tarjetas de resumen de 264 px lógicos y rótulos más cortos. Debajo, Eventos disponibles reutiliza las tarjetas del catálogo y abre la ficha del evento seleccionado. Usa solo eventos vigentes con cupo. La captura de la semilla muestra Duki en Rosario, el único con stock en ese escenario.
+
+En compra, Ver servicios alterna Entradas y Servicios y seguro en la misma columna. El total queda a la vista en ambas vistas. El resumen pinta cada fila completa dentro de su área visible, incluida la ayuda cuando entra. CP-119 recorre ambos paneles y comprueba el total. CP-160 abre la ficha desde el inicio y desde el catálogo.
+
+Los tres filtros del catálogo usan la tipografía de cuerpo, 32 px lógicos y el marco del tema. El selector de fecha conserva el calendario nativo. El fondo del catálogo coincide con el de la pantalla. CP-357 controla las medidas de los filtros y se ejecuta al tomar las 50 capturas de las 25 ventanas, a 96 y 144 DPI reales de Windows.

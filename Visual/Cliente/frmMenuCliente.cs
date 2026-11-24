@@ -61,6 +61,7 @@ namespace Visual
             paginaActual = inicioCliente;
             inicioCliente.VerEventos += () => btnEventos.PerformClick();
             inicioCliente.VerEntradas += () => btnHistorial.PerformClick();
+            inicioCliente.VerEvento += evento => AbrirCatalogo(evento);
 
             lblNombre.Visible = false;
             lateral = Disposicion.CrearLateral(this, seccionExplorar, btnInicio, btnEventos,
@@ -156,7 +157,11 @@ namespace Visual
         internal void MostrarInicio()
         {
             while (historial.Count > 0) DiferirDescarte(historial.Pop());
-            if (paginaActual != inicioCliente) Mostrar(inicioCliente, false);
+            if (paginaActual != inicioCliente)
+            {
+                inicioCliente.Cargar(IDUsuario);
+                Mostrar(inicioCliente, false);
+            }
             else { ActualizarActivo(inicioCliente); MarcarEstadoAtras(); }
         }
 
@@ -209,11 +214,14 @@ namespace Visual
 
         private void btnInicio_Click(object sender, EventArgs e) { MostrarInicio(); }
 
-        private void btnEventos_Click(object sender, EventArgs e)
+        private void btnEventos_Click(object sender, EventArgs e) => AbrirCatalogo();
+
+        private void AbrirCatalogo(Entidades.Evento evento = null)
         {
             var pantalla = new frmEventosCliente { IDUsuario = IDUsuario, NombreUsuario = NombreUsuario };
             if (NavegacionCliente.Activa) AbrirDesdeMenu(pantalla);
             else { pantalla.Show(); Hide(); }
+            if (evento != null) pantalla.ElegirEvento(evento);
         }
 
         private void btnHistorial_Click(object sender, EventArgs e)

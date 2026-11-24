@@ -188,6 +188,16 @@ namespace Pruebas
                     var compra=Application.OpenForms.OfType<Visual.FrmCompraCliente>().Single(f=>f.Visible);
                     Assert.AreEqual(evento.Id,compra.IDEvento);Assert.AreEqual(cliente.Id,compra.IDUsuario);
                     Assert.AreEqual(1,Convert.ToInt32(ControlDe<DataGridView>(compra,"dgvSectores").Rows[0].Cells["Cantidad"].Value));
+                    compra.Dispose();
+                }
+                using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id })
+                {
+                    Mostrar(menu);
+                    var recomendado = ControlDe<FlowLayoutPanel>(menu, "eventosInicioCliente").Controls
+                        .OfType<TarjetaEvento>().Single(t => t.AccessibleName == evento.Nombre);
+                    ControlDe<Button>(recomendado, "verEntradas").PerformClick();
+                    var ficha = ControlDe<FichaEvento>(menu, "fichaEvento");
+                    Assert.AreEqual(evento.Nombre, ControlDe<Label>(ficha, "tituloFicha").Text);
                 }
             });
         }

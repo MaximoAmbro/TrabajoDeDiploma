@@ -46,14 +46,14 @@ namespace Visual.Componentes
             disponibilidad.ForeColor = Tema.Texto;
             AccessibleName=dato.Nombre;
         }
-        internal void Distribuir(int ancho)
+        private void Distribuir(int ancho, int altoPortada)
         {
             int Px(int medida) => Disposicion.Pixeles(this, medida);
             int margen = Px(Tema.Espacio.L);
             int separacion = Px(Tema.Espacio.XS);
             int interior = Math.Max(1, ancho - margen * 2);
             Width = ancho;
-            portada.SetBounds(0, 0, ancho, Px(96));
+            portada.SetBounds(0, 0, ancho, Px(altoPortada));
             int y = portada.Bottom + margen;
             foreach (Label etiqueta in new Label[] { titulo, fecha, lugar, precio })
             {
@@ -69,7 +69,28 @@ namespace Visual.Componentes
             Height = accion.Bottom + rellenoEtiqueta;
         }
 
-        internal void IgualarAlto(int alto)
+        internal static int DistribuirGrilla(FlowLayoutPanel grilla, int anchoDisponible, int altoPortada = 96)
+        {
+            var tarjetas = grilla.Controls.OfType<TarjetaEvento>().ToArray();
+            if (tarjetas.Length == 0) return 0;
+            int espacio = Disposicion.Pixeles(grilla, Tema.Espacio.S);
+            int ancho = Math.Max(1, (anchoDisponible - grilla.Padding.Horizontal - 2 * espacio) / 3);
+            grilla.SuspendLayout();
+            try
+            {
+                for (int i = 0; i < tarjetas.Length; i++)
+                {
+                    tarjetas[i].Margin = new Padding(0, 0, i % 3 == 2 ? 0 : espacio, espacio);
+                    tarjetas[i].Distribuir(ancho, altoPortada);
+                }
+                int alto = tarjetas.Max(tarjeta => tarjeta.Height);
+                foreach (TarjetaEvento tarjeta in tarjetas) tarjeta.IgualarAlto(alto);
+                return ((tarjetas.Length + 2) / 3) * (alto + espacio);
+            }
+            finally { grilla.ResumeLayout(true); }
+        }
+
+        private void IgualarAlto(int alto)
         {
             accion.Top += alto - Height;
             Height = alto;

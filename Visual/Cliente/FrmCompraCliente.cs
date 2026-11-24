@@ -49,6 +49,10 @@ namespace Visual
         private Panel contenidoCompra;
         private Panel accionesCompra;
         private Panel documentoResumen;
+        private readonly Visual.Componentes.BotonSecundario abrirServicios = new Visual.Componentes.BotonSecundario
+            { Name = "btnAbrirServicios", Text = "Ver servicios" };
+        private readonly Visual.Componentes.BotonSecundario volverASectores = new Visual.Componentes.BotonSecundario
+            { Name = "btnVolverASectores", Text = "Ver entradas" };
         private bool distribuyendoCompra;
 
         public FrmCompraCliente()
@@ -73,6 +77,22 @@ namespace Visual
             pnlResumen.AutoScroll = false;
             pnlResumen.Controls.Add(documentoResumen);
             documentoResumen.Controls.Add(lblResumen);
+            lblResumen.LocationChanged += (s, e) => lblResumen.Invalidate();
+            pnlTarjetaEntradas.Controls.Add(abrirServicios);
+            pnlTarjetaServicios.Controls.Add(volverASectores);
+            pnlTarjetaServicios.Hide();
+            abrirServicios.Click += (s, e) =>
+            {
+                pnlTarjetaServicios.Show();
+                pnlTarjetaEntradas.Hide();
+                volverASectores.Focus();
+            };
+            volverASectores.Click += (s, e) =>
+            {
+                pnlTarjetaEntradas.Show();
+                pnlTarjetaServicios.Hide();
+                abrirServicios.Focus();
+            };
             lblResumen.Location = Point.Empty;
             lblTotalDestacado.AutoSize = false;
             lblTotalDestacado.BackColor = Tema.PrimarioSuave;
@@ -130,11 +150,18 @@ namespace Visual
                 int altoEncabezado = Math.Max((int)(Tema.AltoEncabezadoVentana * escala),
                     Math.Max(lblNivel.Bottom, lnkNiveles.Bottom) + separacion);
                 pnlEncabezadoCompra.SetBounds(desplazamiento.X, desplazamiento.Y, anchoUsado, altoEncabezado);
-                int inicio = altoEncabezado + margen + desplazamiento.Y;
+                int huecoEncabezado = Disposicion.Pixeles(this, Tema.Espacio.M);
+                int inicio = altoEncabezado + huecoEncabezado + desplazamiento.Y;
                 int columna = Math.Max(0, (ancho - margen) / 2);
                 pnlTarjetaEntradas.SetBounds(margen + desplazamiento.X, inicio, columna, pnlTarjetaEntradas.Height);
                 dgvSectores.Width = Math.Max(0, columna - relleno * 2);
                 mapaSectores.Width = dgvSectores.Width;
+                int anchoAccion = Disposicion.Pixeles(this, Tema.AnchoBotonCompacto);
+                int altoAccion = Disposicion.Pixeles(this, Tema.AltoBoton);
+                int xAccion = columna - relleno - anchoAccion;
+                abrirServicios.SetBounds(xAccion, relleno, anchoAccion, altoAccion);
+                volverASectores.SetBounds(xAccion, relleno, anchoAccion, altoAccion);
+                mapaSectores.Top = abrirServicios.Bottom + separacion;
                 mapaSectores.Height = mapaSectores.AltoParaTodosLosSectores;
                 dgvSectores.Top = mapaSectores.Bottom + separacion;
                 dgvSectores.Height = dgvSectores.ColumnHeadersHeight +
@@ -148,13 +175,17 @@ namespace Visual
                 btnListaEspera.Left = (columna - btnListaEspera.Width) / 2;
                 lnkPosicionEspera.Left = btnListaEspera.Left;
                 lnkPosicionEspera.Width = Math.Max(0,columna-relleno*2);
-                pnlTarjetaServicios.SetBounds(margen + desplazamiento.X, pnlTarjetaEntradas.Bottom + margen,
-                    columna, pnlTarjetaServicios.Height);
+                pnlTarjetaServicios.SetBounds(margen + desplazamiento.X, inicio, columna, pnlTarjetaServicios.Height);
+                int yServicio = volverASectores.Bottom + separacion;
                 foreach (CheckBox casilla in ChecksDeServicio().Concat(new[] { chkSeguro }))
-                    casilla.Width = Math.Max(0, columna - relleno * 2);
+                {
+                    casilla.SetBounds(relleno, yServicio, Math.Max(1, columna - relleno * 2), altoAccion);
+                    yServicio = casilla.Bottom + Disposicion.Pixeles(this, Tema.Espacio.XS);
+                }
+                pnlTarjetaServicios.Height = chkSeguro.Bottom + relleno;
                 int anchoResumen = Math.Max(0, ancho - margen - columna);
                 pnlResumen.Width = anchoResumen;
-                int altoVista = Math.Max(0, contenidoCompra.ClientSize.Height - altoEncabezado - margen);
+                int altoVista = Math.Max(0, contenidoCompra.ClientSize.Height - altoEncabezado - huecoEncabezado);
                 pnlResumen.Location = new Point(margen + columna + margen + desplazamiento.X, inicio);
                 int arribaDocumento = lblTituloResumen.Bottom + separacion;
                 int anchoInterior = Math.Max(1, anchoResumen - relleno * 2);

@@ -30,6 +30,11 @@ namespace Pruebas {
      Assert.IsTrue(importe.Length>0);Assert.AreEqual("TOTAL "+importe,total.Text);
      Assert.AreEqual(15f,total.Font.SizeInPoints);Assert.AreEqual(Visual.Tema.Texto,total.ForeColor);
      Assert.AreEqual(2,ControlDe<IndicadorPasos>(form,"indicadorPasos").PasoActual);
+     ControlDe<Button>(form,"btnAbrirServicios").PerformClick();
+     Assert.IsTrue(ControlDe<CheckBox>(form,"chkSeguro").Visible);
+     Assert.IsFalse(ControlDe<DataGridView>(form,"dgvSectores").Visible);
+     ControlDe<Button>(form,"btnVolverASectores").PerformClick();
+     Assert.IsTrue(ControlDe<DataGridView>(form,"dgvSectores").Visible);
      Rectangle lectura=total.RectangleToScreen(total.ClientRectangle);
      for(Control padre=total.Parent;padre!=null;padre=padre.Parent)
       Assert.IsTrue(padre.ClientRectangle.Contains(padre.RectangleToClient(lectura)),"El TOTAL debe poder leerse completo en "+padre.Name);

@@ -85,9 +85,9 @@ namespace Visual.Componentes
             altoNatural = alto;
         }
 
-        internal static int DistribuirGrilla(FlowLayoutPanel grilla, int anchoDisponible)
+        internal static int DistribuirGrilla(FlowLayoutPanel grilla, int anchoDisponible, int anchoLogico = 208)
         {
-            int ancho = Disposicion.Pixeles(grilla, 208);
+            int ancho = Disposicion.Pixeles(grilla, anchoLogico);
             int espacio = Disposicion.Pixeles(grilla, Tema.Espacio.L);
             var tarjetas = grilla.Controls.OfType<DatoPanel>().ToArray();
             int maxColumnas = Math.Min(3, tarjetas.Length);

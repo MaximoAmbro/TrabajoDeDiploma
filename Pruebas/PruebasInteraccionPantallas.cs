@@ -395,7 +395,18 @@ namespace Pruebas
                 foreach (var fila in tarjetas.GroupBy(t => t.Top))
                     Assert.AreEqual(1, fila.Select(t => t.Height).Distinct().Count(), "Altura común de la fila " + grilla.Name);
                 foreach (var tarjeta in tarjetas)
-                    Assert.AreEqual(Px(208), tarjeta.Width, "Ancho fijo de tarjeta");
+                    Assert.AreEqual(Px(grilla.Name == "tarjetasInicioCliente" ? 264 : 208), tarjeta.Width,
+                        "Ancho fijo de tarjeta");
+            }
+
+            if (formulario is Visual.frmEventosCliente)
+            {
+                foreach (string nombre in new[] { "marcoBusqueda", "cmbCategoria", "dtpDesde" })
+                {
+                    var filtro = Descendientes(formulario).Single(control => control.Name == nombre);
+                    Assert.AreEqual(Px(Visual.Tema.AltoCampo), filtro.Height, nombre);
+                    Assert.AreEqual(Visual.Tema.Cuerpo, filtro.Font, nombre);
+                }
             }
 
             if (formulario is Visual.frmReportes || formulario is Visual.frmAuditoria)

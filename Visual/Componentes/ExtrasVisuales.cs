@@ -79,6 +79,8 @@ namespace Visual.Componentes
                     anchoImporte = Math.Max(anchoImporte, TextRenderer.MeasureText(lienzo, fila.Importe, Font,
                         Size.Empty, TextFormatFlags.NoPrefix | TextFormatFlags.SingleLine).Width);
             int arriba = margen;
+            bool EnVista(int y, int alto) =>
+                Parent == null || (y + Top >= 0 && y + Top + alto <= Parent.ClientSize.Height);
             foreach (var fila in filas)
             {
                 Font fuente = fila.Seccion ? Tema.Seccion : Font;
@@ -87,7 +89,7 @@ namespace Visual.Componentes
                 string concepto = fila.Seccion ? fila.Concepto.ToUpperInvariant() : fila.Concepto;
                 int anchoFila = Math.Max(1, ancho - 2 * margen - (fila.Importe == null ? 0 : anchoImporte + separacion));
                 int alto = TextRenderer.MeasureText(lienzo, concepto, fuente, new Size(anchoFila, int.MaxValue), formato).Height;
-                if (pintar)
+                if (pintar && EnVista(arriba, alto))
                 {
                     TextRenderer.DrawText(lienzo, concepto, fuente, new Rectangle(margen, arriba, anchoFila, alto), color, formato);
                     if (fila.Importe != null)
@@ -100,7 +102,7 @@ namespace Visual.Componentes
             const string ayuda = "El descuento se aplica sobre el valor de las entradas.";
             int anchoAyuda = Math.Max(1, ancho - 2 * margen);
             int altoAyuda = TextRenderer.MeasureText(lienzo, ayuda, Tema.Ayuda, new Size(anchoAyuda, int.MaxValue), formato).Height;
-            if (pintar)
+            if (pintar && EnVista(arriba + separacion, altoAyuda))
                 TextRenderer.DrawText(lienzo, ayuda, Tema.Ayuda,
                     new Rectangle(margen, arriba + separacion, anchoAyuda, altoAyuda), Tema.TextoSecundario, formato);
             return arriba + separacion + altoAyuda + margen;

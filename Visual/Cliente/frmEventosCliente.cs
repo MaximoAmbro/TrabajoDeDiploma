@@ -20,10 +20,31 @@ namespace Visual
         public frmEventosCliente()
         {
             InitializeComponent();
-            Tema.ComoFondo(tarjetas);
+            tarjetas.BackColor = BackColor;
+            PrepararFiltros();
             tarjetas.ClientSizeChanged += (s, e) => DistribuirCatalogo();
             btnVista.Click += (s, e) => MostrarVista(!vistaTabla);
         }
+        private void PrepararFiltros()
+        {
+            var marco = new Panel { Name = "marcoBusqueda", Bounds = txtBuscar.Bounds, BackColor = Tema.Superficie };
+            pnlBusqueda.Controls.Add(marco);
+            marco.Controls.Add(txtBuscar);
+            txtBuscar.BorderStyle = BorderStyle.None;
+            txtBuscar.Font = Tema.Cuerpo;
+            marco.Click += (s, e) => txtBuscar.Focus();
+            void Distribuir()
+            {
+                Tema.EstiloSelector(marco);
+                Tema.EstiloSelector(cmbCategoria);
+                Tema.EstiloSelector(dtpDesde);
+                int margen = Disposicion.Pixeles(this, Tema.Espacio.S);
+                txtBuscar.SetBounds(margen, Math.Max(0, (marco.Height - txtBuscar.Height) / 2),
+                    Math.Max(1, marco.Width - 2 * margen), txtBuscar.Height);
+            }
+            Load += (s, e) => Distribuir();
+        }
+
         protected override void OnShown(EventArgs e){base.OnShown(e);Disposicion.AjustarAreaVisible(this);}
         private const string TodasLasCategorias = "Todas";
 
@@ -86,18 +107,8 @@ namespace Visual
             try
             {
                 CentrarEstadoSinResultados();
-                var catalogo = tarjetas.Controls.OfType<Componentes.TarjetaEvento>().ToArray();
-                if (catalogo.Length == 0) return;
-                int espacio = Disposicion.Pixeles(tarjetas, Tema.Espacio.S);
-                int ancho = Math.Max(1, (tarjetas.Width - tarjetas.Padding.Horizontal -
-                    SystemInformation.VerticalScrollBarWidth - 2 * espacio) / 3);
-                for (int i = 0; i < catalogo.Length; i++)
-                {
-                    catalogo[i].Margin = new Padding(0, 0, i % 3 == 2 ? 0 : espacio, espacio);
-                    catalogo[i].Distribuir(ancho);
-                }
-                int alto = catalogo.Max(tarjeta => tarjeta.Height);
-                foreach (var tarjeta in catalogo) tarjeta.IgualarAlto(alto);
+                Componentes.TarjetaEvento.DistribuirGrilla(tarjetas,
+                    tarjetas.Width - SystemInformation.VerticalScrollBarWidth);
             }
             finally
             {
@@ -173,9 +184,10 @@ namespace Visual
             DistribuirCatalogo();
         }
 
-        private void ElegirEvento(Evento elegido)
+        internal void ElegirEvento(Evento elegido)
         {
-            var fila=dgveventos.Rows.Cast<DataGridViewRow>().Single(f=>Convert.ToInt32(f.Cells["ID"].Value)==elegido.Id);
+            var fila=dgveventos.Rows.Cast<DataGridViewRow>().FirstOrDefault(f=>Convert.ToInt32(f.Cells["ID"].Value)==elegido.Id);
+            if (fila == null) return;
             dgveventos.CurrentCell=fila.Cells["Nombre"];
             var ficha=new Componentes.FichaEvento {Name="fichaEvento",Dock=DockStyle.Fill};
             ficha.Cargar(elegido);
