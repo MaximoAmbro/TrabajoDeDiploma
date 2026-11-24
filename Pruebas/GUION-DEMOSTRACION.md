@@ -1,26 +1,70 @@
 # Guion de demostración de EventAura
 
-Guion para recorrer el sistema sin ayuda. Fue actualizado el 18/11/2026 y verificado contra los recorridos de recuperación, revisión de eventos, los formularios y la semilla. Los códigos, números de pedido y fechas concretas se generan durante el recorrido. El pago y las bandejas de correo y teléfono son simulados: no uses una tarjeta real ni esperes un correo externo.
+Guion para recorrer el sistema sin ayuda. Es el documento del operador: dice qué preparar, qué tocar y qué tiene que aparecer en pantalla. Los códigos, números de pedido y fechas concretas se generan durante el recorrido. El pago y las bandejas de correo y teléfono son simulados: no uses una tarjeta real ni esperes un correo externo.
+
+**Estado de la verificación.** Desde el 24/11/2026 lo mantiene Claude Code; Codex ya no lo modifica.
+- **Secciones 1 y 2:** reescritas y recorridas el 24/11/2026 sobre el ejecutable compilado con `5b6fd5a`, contra una base nueva armada con este procedimiento.
+- **Secciones 3 a 8:** son las del 18/11 y todavía no se volvieron a recorrer después de la reforma visual ni de la migración a WebView2. Están pendientes y se anotan acá cuando se recorran.
 
 ## 1. Preparar y abrir
 
-### Preparar una base de demostración
+### Compilar
 
-En PowerShell, desde `D:\proyectos\TrabajoDeDiploma`, compilá:
+En PowerShell, desde `D:\proyectos\TrabajoDeDiploma`:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\Proyecto.ps1 -Accion Compilar
 if ($LASTEXITCODE -ne 0) { throw 'Falló la compilación; no sigas con la demo.' }
 ```
 
-Para una **base nueva y vacía**, en SQL Server Management Studio ejecutá `BaseDatos/01-esquema.sql` y después `BaseDatos/02-semilla.sql`. Luego, en orden numérico, ejecutá `04-seguridad-ingreso.sql`, `05-check-estado-entradas.sql`, `06-prioridad-temporal.sql`, `07-indice-unico-seguros.sql`, `08-seguridad-cuenta-auditoria.sql`, `09-imagenes-eventos.sql`, `10-restringir-cantidad-vendida.sql`, `11-perfiles-administrador-organizador.sql`, `12-solicitudes-organizador.sql`, `13-revision-primer-evento.sql`, `14-primer-evento-aprobado.sql` y `15-motivo-rechazo-evento.sql`. `03-datos-reporte.sql` es una carga grande para mediciones y no hace falta para esta presentación. Antes de cada ejecución confirmá en SSMS que el selector apunta a la base de demostración. No ejecutes `01` ni `02` sobre una base que ya tiene datos.
+El programa queda en `Visual\bin\Debug`. Para llevarlo a otra PC, copiá esa carpeta **entera**, con `Web\`, `runtimes\` y todas las DLL. Si falta un archivo, la aplicación falla o pierde las vistas web: ver `docs/AUDITORIA-RIESGOS-DEFENSA.md`, sección 4.
 
-En una base existente, no vuelvas a ejecutar `01` ni `02`: aplicá solo los scripts numerados que falten, en orden, sobre esa misma base. El script `15-motivo-rechazo-evento.sql` agrega el motivo de rechazo y debe aplicarse si falta.
+### Armar la base de demostración
 
+Hace falta SQL Server 2017 o posterior. Todo esto se verificó el 24/11/2026 sobre SQL Server 2022 Express.
 
-Si usás la copia de demostración aislada que ya preparó el equipo, ejecutá `Pruebas/EjecutarBateriaSegura.ps1` solo antes de la demo: crea y siembra `BddEventAura_Pruebas`. **No lo vuelvas a correr en medio del recorrido**, porque recrea esa base y borra las compras de la demostración. Cerrá todas las ventanas de EventAura antes de preparar o reiniciar la base.
+1. **Creá una base nueva y vacía cuyo nombre termine en `_Demostracion`**, por ejemplo `BddEventAura_Demostracion`. El sufijo es obligatorio: `semilla-demostracion.sql` se detiene con el error 51000 («Esta semilla se ejecuta solo en una base _Demostracion.») si la base se llama de otra forma. Es una protección para no cargar datos inventados en una base de trabajo.
+2. **En esa base, en SQL Server Management Studio, ejecutá en este orden:**
+   1. `BaseDatos/01-esquema.sql`
+   2. `BaseDatos/02-semilla.sql`
+   3. `BaseDatos/semilla-demostracion.sql`
 
-Abrí `Visual/bin/Debug/Visual.exe` (o la copia aislada que te haya indicado el equipo). Si aparece que la base está desactualizada, leé el primer requisito que falta, ejecutá el script nombrado en esa misma base y volvé a abrir. No edites `Visual/App.config` ni `Pruebas/App.config`.
+   Antes de cada uno, confirmá que el selector de base de SSMS apunta a la base de demostración y no a `master`: `01-esquema.sql` no elige base y crea las tablas donde esté parado.
+3. **No hace falta ningún script del 04 al 16.** `01-esquema.sql` ya trae el esquema completo, con todo lo que esos scripts agregan. Esos scripts son para actualizar una base vieja. Si los corrés igual sobre la base nueva, terminan sin error y no cambian nada que importe.
+4. **`03-datos-reporte.sql` no hace falta.** Es una carga grande para mediciones: suma unos 1.200 usuarios y 4.500 entradas, y llena los indicadores del Administrador con cifras que no son las de la demostración. Si se corre, la semilla de demostración carga igual encima.
+
+**Lo que deja la base:**
+- la semilla base: 5 cuentas, el local «Sala Demostrativa EventAura» y los eventos Duki en Rosario, Clásico Rosarino (agotado) y Noche de Teatro Independiente (pasado);
+- la demostración: 4 locales de Rosario, 20 eventos más, 337 entradas vendidas, 14 clientes `@demo.eventaura.example`, 3 personas en lista de espera y solicitudes de Organizador en varios estados.
+
+**Las fechas son relativas al día en que se corre cada semilla.** Duki queda 60 días adelante, Clásico Rosarino 30, y los eventos de la demostración entre seis meses atrás y cuatro adelante. Corré las semillas en la semana de la presentación, no un mes antes.
+
+**Verificado el 24/11/2026:**
+- con `01` y `02`, el inicio no muestra el aviso de base desactualizada, y entran Ana y Paula;
+- `semilla-demostracion.sql` corrida dos veces deja lo mismo que una sola: 23 eventos y 343 entradas;
+- sobre una base con `03` también carga;
+- sobre una base que no termina en `_Demostracion` se detiene con el error 51000 sin modificar nada.
+
+### Una base que ya existe
+
+No vuelvas a ejecutar `01` ni `02` sobre una base con datos. Si al abrir aparece que la base está desactualizada, el aviso nombra el primer script que falta: ejecutalo en esa misma base, volvé a abrir y repetí hasta que el aviso no aparezca.
+
+No apuntes la demostración a `BddEventAura_Pruebas`: la batería de pruebas la borra y la recrea en cada corrida.
+
+### Apuntar la aplicación a la base
+
+La cadena de conexión está en `Visual.exe.config`, junto al ejecutable. En la copia que vas a usar, abrilo con el Bloc de notas y, en `connectionString`, poné:
+- en `Data Source`, la instancia: `.\SQLEXPRESS`, `.` o `(localdb)\MSSQLLocalDB`;
+- en `Initial Catalog`, la base del paso 1.
+
+No edites `Visual/App.config` ni `Pruebas/App.config` del repositorio: guardan la configuración de cada máquina y no se publican.
+
+### Abrir
+
+Abrí `Visual.exe`. Hay tres resultados posibles:
+- **Aparece el acceso con «Mail» y «Contraseña»:** la base está bien.
+- **Aparece «EventAura no pudo comprobar la base de datos.»,** con la instancia y la base que intentó y sin los campos de acceso: SQL Server no está en marcha, la cadena apunta a algo que no existe o falta `Visual.exe.config`. Corregilo y volvé a abrir. Verificado el 24/11/2026 con la instancia inexistente (el aviso aparece en unos 3 s) y sin `Visual.exe.config`.
+- **Aparece que la base está desactualizada:** ver «Una base que ya existe».
 
 ### Cuentas de la semilla
 
@@ -31,14 +75,53 @@ Abrí `Visual/bin/Debug/Visual.exe` (o la copia aislada que te haya indicado el 
 | Cliente Plata | `plata@eventaura.com` | `Cliente123` | Compra y suscripción. |
 | Cliente Oro | `oro@eventaura.com` | `Cliente123` | Segunda cuenta para privacidad entre clientes. |
 | Cliente Bronce | `bronce@eventaura.com` | `Cliente123` | Cuenta con una solicitud de Organizador ficticia pendiente ya sembrada. |
+| Clientes de la demostración | `…@demo.eventaura.example` | `Cliente123` | Catorce clientes con historial de compras en los tres niveles. |
+
+Ingresos verificados el 24/11/2026: Ana y Paula. El resto de las contraseñas sale de las semillas: los clientes de la demostración copian la de `bronce@`.
 
 Los dos accesos de gestión son distintos a propósito. El Administrador gobierna la plataforma; el Organizador administra únicamente sus locales. Los clientes compran, se suscriben y pueden presentar solicitudes, pero una solicitud pendiente no cambia su perfil ni concede permisos. Las cuentas y contraseñas son de la semilla local, no de producción.
+
+**Cuidado en vivo:**
+- cinco contraseñas incorrectas seguidas bloquean la cuenta 15 minutos (RN-04);
+- quince minutos sin usar la aplicación cierran la sesión, con aviso 60 segundos antes (RN-46).
+
 ## 2. Crear una cuenta, verificarla y recuperar el acceso
 
-1. En el acceso, pulsá **Crear Cuenta**. Completá Nombre, Apellido, Mail, Contraseña y Confirmar Contraseña con datos propios de demostración. Usá una dirección nueva y una contraseña que supere el medidor; pulsá **Registrarse**. **Vas a ver** el campo **Código de verificación** y la instrucción para abrir fuera de EventAura el archivo de correo en `%LOCALAPPDATA%\EventAura\BandejaSimulada`. Abrí esa carpeta en el Explorador de archivos de Windows y el `.eml` cuyo destinatario coincide con tu dirección; copiá el código desde allí. EventAura no tiene una bandeja ni una pantalla que muestre el código. **Importa** porque el alta solo puede confirmarse con el código recibido por el canal externo simulado.
-2. Copiá ese código en **Código de verificación** y pulsá **Confirmar correo**. **Vas a ver** `Correo verificado. Ya podés iniciar sesión y comprar.` y el botón **Volver al acceso**. Pulsalo e iniciá sesión con la cuenta recién creada. **Vas a ver** el inicio del cliente y la nueva cuenta en su nivel inicial.
-3. Cerrá sesión. En el acceso pulsá **Recuperar contraseña**. Escribí el correo de la cuenta y pulsá **Enviar código**. **Vas a ver** `Si la cuenta existe, enviamos un código. Abrí fuera de EventAura el archivo de correo en %LOCALAPPDATA%\EventAura\BandejaSimulada para continuar.`. El mismo texto aparece con un correo inexistente y ambas respuestas tardan al menos un segundo. No hay un botón **Abrir bandeja**.
-4. Abrí la carpeta indicada en el Explorador de archivos de Windows. Abrí el `.eml` dirigido a esa cuenta y copiá el código. Volvé a EventAura, ingresalo como **Código de recuperación**, escribí y confirmá la contraseña nueva, y pulsá **Restablecer contraseña**. **Vas a ver** `La contraseña se actualizó. Ya podés iniciar sesión.`. Volvé al acceso e iniciá sesión con la contraseña nueva. Cada código vence, se consume una sola vez y pedir otro invalida el anterior. **Importa** porque leer el código requiere acceso al archivo fuera de la interfaz de EventAura.
+### La bandeja simulada: dónde están los códigos
+
+Los códigos de verificación y de recuperación se escriben en archivos de correo, en:
+
+```
+%LOCALAPPDATA%\EventAura\BandejaSimulada
+```
+
+Abrí esa carpeta en el Explorador de archivos (pegá la ruta en la barra de direcciones) **antes** de empezar esta sección.
+
+**La pantalla no muestra la ruta, a propósito.** El código prueba que quien lo usa tiene acceso al correo de la cuenta. Si EventAura mostrara dónde leerlo, cualquiera frente a la aplicación podría pedir la recuperación de una cuenta ajena e ir a buscar el código: es el agujero de recuperación que se cerró. La ruta es información del operador y por eso va en este guion, no en la interfaz.
+
+**Qué archivo abrir.** Cada archivo `.eml` tiene por nombre un código largo (un hash) y no la dirección de correo, para que la carpeta no muestre las cuentas. **Tomá el archivo más reciente:** ordená por «Fecha de modificación». Al abrirlo con el Bloc de notas, verificá que la línea `To:` sea la dirección que estás usando. Copiá el número de la línea `Código:`. La línea `Vence:` dice hasta cuándo sirve: 10 minutos.
+
+### El recorrido
+
+1. **Crear la cuenta.** En el acceso, pulsá **Crear cuenta**. Completá Nombre, Apellido, Mail, Contraseña y Confirmar Contraseña con datos propios de demostración. Usá una dirección nueva y una contraseña que supere el medidor, por ejemplo `Rosario#Demo2026`, y pulsá **Registrarse**. **Vas a ver** «Verificá tu correo», el texto «Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.» y el campo **Código de verificación**. **Importa** porque el alta solo puede confirmarse con el código recibido por el canal externo simulado.
+2. **Verificar el correo.** Abrí el `.eml` más reciente de la bandeja y copiá el código en **Código de verificación**. Pulsá **Confirmar correo**. **Vas a ver** «Correo verificado. Ya podés iniciar sesión y comprar.» y el botón **Volver al acceso**. Si el código está vacío o es incorrecto, aparece «El código no es válido o venció. Solicitá uno nuevo.».
+3. **Entrar.** Pulsá **Volver al acceso** e iniciá sesión con la cuenta nueva. La contraseña se ve con asteriscos. **Vas a ver** «Mi cuenta» con el nivel Bronce («Bronce · 0,0 % de descuento», «3 compras para Plata»), «Sin entradas próximas», «Sin inscripciones» y, debajo, «Eventos disponibles».
+4. **Pedir la recuperación.** Cerrá sesión y, en el acceso, pulsá **Recuperar contraseña**. Escribí el correo de la cuenta y pulsá **Enviar código**. **Vas a ver** el mismo texto que en el alta: «Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.». Con un correo inexistente la respuesta es idéntica y tarda lo mismo, así que la pantalla no revela qué cuentas existen.
+5. **Restablecer la contraseña.** Abrí el `.eml` más reciente: su asunto es «Recuperacion de contrasena». Copiá el código en **Código de recuperación**, escribí y confirmá la contraseña nueva y pulsá **Restablecer contraseña**. **Vas a ver** «La contraseña se actualizó. Ya podés iniciar sesión.». Pulsá **Volver** e iniciá sesión con la contraseña nueva. Cada código vence, se consume una sola vez y pedir otro invalida el anterior.
+
+**Verificado el 24/11/2026:**
+- los cinco pasos, con la cuenta `lucia.guion@demo.eventaura.example`, sobre una base armada con la sección 1. Los mensajes son exactamente los que figuran arriba;
+- el alta y la recuperación generaron cada una un `.eml` nuevo, el más reciente de la carpeta, con `To:` igual a la cuenta;
+- el código vacío dio el mensaje de código no válido;
+- después de restablecer, la cuenta entró con la contraseña nueva;
+- `errores.log` no registró ningún error durante el recorrido.
+
+**Sin verificar en esta pasada:**
+- la respuesta con un correo inexistente;
+- el tiempo mínimo de respuesta;
+- que pedir un código nuevo invalide el anterior.
+
+Esos tres casos los cubren las pruebas automáticas de la batería.
 
 ## 3. Comprar de punta a punta
 
