@@ -4,7 +4,8 @@ Guion para recorrer el sistema sin ayuda. Es el documento del operador: dice qu�
 
 **Estado de la verificación.** Desde el 24/11/2026 lo mantiene Claude Code; Codex ya no lo modifica.
 - **Secciones 1 y 2:** reescritas y recorridas el 24/11/2026 sobre el ejecutable compilado con `5b6fd5a`, contra una base nueva armada con este procedimiento.
-- **Secciones 3 a 8:** son las del 18/11 y todavía no se volvieron a recorrer después de la reforma visual ni de la migración a WebView2. Están pendientes y se anotan acá cuando se recorran.
+- **Secciones 3 a 8:** reescritas y recorridas el 24/11/2026 sobre el ejecutable compilado a las 16:29 (`942b451`), contra la misma base. Cada sección termina con lo verificado y lo que quedó sin verificar. La tabla de la sección 8 dice, fila por fila, qué rechazos se vieron en pantalla.
+- Durante el recorrido (sección 2 a las 16:00; secciones 3 a 8 entre las 16:33 y las 16:59) no se bloqueó ninguna cuenta, no se cerró ninguna sesión por inactividad y `errores.log` no registró ningún error.
 
 ## 1. Preparar y abrir
 
@@ -125,105 +126,228 @@ Esos tres casos los cubren las pruebas automáticas de la batería.
 
 ## 3. Comprar de punta a punta
 
-1. Iniciá sesión como Paula (`plata@eventaura.com` / `Cliente123`). En el menú lateral pulsá **Eventos disponibles**. En la tarjeta **Duki en Rosario**, pulsá **Ver entradas**. **Vas a ver** la ficha con portada generada, fecha, local y el mapa; el escenario aparece sobre las zonas de sectores. Al pasar el puntero por una zona se muestra su nombre, precio y disponibilidad.
-2. Pulsá la zona **Campo** y después **Armar paquete**. **Vas a ver** el indicador `2 Armá`, la categoría Plata y el descuento de 5 %. En el armado elegí **2** entradas de Campo; marcá **Hospedaje** y **Traslado**; marcá **Seguro de entrada**. Dejá Merchandising y Experiencia VIP sin seleccionar para que el total sea fácil de seguir.
-3. Comprobá el resumen. Con la semilla limpia, el total esperado es **$ 121.625,00**: entradas $50.000 menos $2.500 de descuento Plata, más Hospedaje $45.000, Traslado $12.000, cargo de servicio $7.125 y seguro $10.000. Pulsá **Comprar**.
-4. En pago, completá los datos de prueba que acepta la simulación: titular `Paula Plata`, número `4111111111111111`, vencimiento futuro (por ejemplo `12/28`) y código `123`. Pulsá **Pagar**. **Vas a ver** el paso `3 Pagá`, el total a pagar y luego `4 Listo`, `¡Compra confirmada!`, el total y un pedido `EA-…`. **Importa** porque la aplicación muestra todo el importe antes de confirmar y entrega comprobantes por entrada. La tarjeta es de prueba; no se procesa ningún cargo bancario.
-5. Pulsá **Abrir carpeta** y abrí los PDF de ese pedido. **Vas a ver** Duki, Campo, los datos de la entrada y un QR distinto para cada entrada. Cerrá el comprobante y la confirmación; la aplicación vuelve a **Eventos disponibles**.
+1. **Abrir Duki.** Iniciá sesión como Paula (`plata@eventaura.com` / `Cliente123`) y, en el menú lateral, pulsá **Eventos disponibles**. Con la semilla de demostración hay más de veinte eventos: escribí `Duki` en el buscador y pulsá **Buscar**. En la tarjeta **Duki en Rosario**, pulsá **Ver entradas**. **Vas a ver** la ficha con la portada generada, «sábado 23 de enero · 21:00», el local («Galpón 17 · Estévez Boero 600, Rosario») y el mapa con el escenario sobre las zonas de los sectores.
+2. **Armar el paquete.** Pulsá la zona **Campo** y después **Armar paquete**. **Vas a ver** el indicador `2 Armá`, «Tu nivel: Plata · 5,0 % de descuento» y la grilla con VIP, Platea y Campo. En la columna **Cantidad (escribí aquí)** de la fila **Campo** escribí `2` y pulsá Enter. Elegir la zona en el mapa no carga la cantidad: hay que escribirla. Pulsá **Ver servicios** y marcá **Hospedaje · $ 45.000**, **Traslado · $ 12.000** y **Seguro de entrada (devolución hasta 48 h antes)**. Dejá **Merchandising** y **VIP** sin marcar.
+3. **Comprobar el resumen.** Con la base de la sección 1, el desglose es:
 
-## 4. Servicios opcionales, seguro y devolución
+   | Línea | Importe |
+   |---|---:|
+   | 2 x Campo | $ 50.000,00 |
+   | Desc. Plata 5,0 % | -$ 2.500,00 |
+   | Subtotal entradas | $ 47.500,00 |
+   | Hotel Ríos 1 noche | $ 45.000,00 |
+   | Traslado ida y vuelta | $ 12.000,00 |
+   | Cargo por servicio | $ 7.125,00 |
+   | Seguro (2 entradas) | $ 10.000,00 |
+   | **TOTAL** | **$ 121.625,00** |
 
-El recorrido anterior ya compra dos servicios y el seguro. Para mostrar la regla de que el seguro solo se contrata antes del pago, iniciá otra compra y dejá **Seguro de entrada** desmarcado. Al pulsar **Comprar**, el sistema pregunta:
+   El cargo por servicio es el 15 % de las entradas con descuento: los servicios no lo generan. Pulsá **Comprar**.
+4. **Pagar.** Se abre **Pago seguro** con «Total a pagar: $ 121.625,00» y la cuenta regresiva de la reserva (10 minutos). Completá titular `Paula Plata`, número `4111111111111111`, vencimiento `12/28` y código `123`, y pulsá **Pagar**. **Vas a ver** `4 Listo`, «¡Compra confirmada!», «Pedido EA-…», el comprobante con «TOTAL PAGADO $ 121.625,00» y «Tarjeta •••• 1111», y «2 entradas en PDF con QR: Guardadas en Documentos.». La tarjeta es de prueba: no se procesa ningún cargo.
+5. **Los PDF.** Pulsá **Abrir carpeta**: los tickets están en `Documentos\A1.Tickets EVENTAURA`, uno por entrada (`Ticket_EA-…_Campo_1.PDF`, `…_2.PDF`), cada uno con un QR distinto. Pulsá **Aceptar**: la aplicación vuelve a **Eventos disponibles**.
+
+**Verificado el 24/11/2026:**
+- los cinco pasos, con el total exacto de $ 121.625,00 y el pedido EA-000121;
+- los dos PDF se decodificaron con `tools/VerificarQrTickets.py`: dos códigos distintos, cada uno igual al texto de su PDF.
+
+**No verificado:**
+- **Abrir carpeta**, que abre el Explorador de Windows: se comprobaron los archivos directamente;
+- la ficha al pasar el puntero por una zona.
+
+**Atención en pantalla:** dentro de la navegación del cliente, el catálogo y la compra quedan debajo del título «Mi cuenta», corridos hacia abajo. En el catálogo, los botones **Ver entradas** de la primera fila quedan cortados por el borde inferior. Por eso conviene usar el buscador. Está anotado para Codex.
+
+## 4. Seguro y devolución
+
+**Comprar sin seguro.** Iniciá otra compra de Duki (1 Campo) y dejá **Seguro de entrada** sin marcar. Al pulsar **Comprar** se abre el cuadro **Seguro de entrada**:
 
 > No agregaste el seguro de entrada. Solo se puede contratar ahora: después de pagar no se puede incorporar.
+>
+> ¿Continuar sin seguro?
 
-El título del cuadro es **Seguro de entrada**; elegí **Sí** para continuar sin seguro. No afirmes que el seguro se puede sumar después: no se puede.
+Elegí **Sí** y pagá. Con 1 Campo, Paula paga $ 27.312,50: $ 25.000 menos el 5 %, más el 15 % de cargo. No afirmes que el seguro se puede sumar después: no se puede.
 
-Para mostrar la devolución completa necesitás una compra con seguro, aún confirmada y a más de 48 horas del evento. En **Mis entradas**, seleccioná esa compra, marcá **Devolver** en la entrada y pulsá **Devolver 1 entrada(s)**. Revisá el resumen y confirmá con **Sí**. **Vas a ver** `Devolución registrada. Se reintegran …`. La entrada queda reembolsada y ya no sirve para ingresar. En una base limpia, el evento Duki de la semilla está a 60 días; completá la compra de prueba y devolvela sin usar el QR.
+**Devolver una entrada.** Hace falta una compra con seguro, confirmada y a más de 48 horas del evento: la del paso 3 sirve.
+1. En **Mis entradas**, elegí el pedido en **Historial Compras**. Abajo aparece «Entradas del pedido EA-…» con la columna **Devolver**.
+2. Marcá **Devolver** en una entrada. El botón pasa a **Devolver 1 entrada(s)**: pulsalo.
+3. El cuadro **Devolver entradas** dice: «¿Devolver 1 entrada(s)? Se reintegra el precio de cada entrada con su descuento. Si devolvés todas las que quedan, también los servicios. El cargo por servicio y el seguro no se reintegran. La devolución no se puede deshacer.».
+4. Elegí **Sí**. **Vas a ver** «Devolución registrada. Se reintegran $ 23.750,00.» y la entrada pasa a **Reembolsada**.
+
+En un pedido sin seguro, la interfaz no deja devolver: aunque marques la casilla, el botón **Devolver** queda deshabilitado.
+
+**Verificado el 24/11/2026:**
+- el aviso del seguro y la compra sin seguro (pedido EA-000122, $ 27.312,50);
+- la devolución de una entrada del pedido EA-000121, con el reintegro de $ 23.750,00 y el estado Reembolsada;
+- el botón deshabilitado en el pedido sin seguro.
 
 ## 5. QR de ingreso y privacidad entre clientes
 
-Usá el perfil **Organizador de la semilla** (`organizador@eventaura.com` / `Cliente123`), que es dueño de los locales y eventos de demostración. En su menú pulsá **Control de ingreso**. Elegí uno de sus eventos con una entrada confirmada y todavía no usada; copiá el código del QR/PDF en **Código del ticket (lector USB o texto del PDF)** y pulsá **Registrar ingreso**. **Vas a ver** `Ingreso válido. Bienvenido.`. Volvé a registrar el mismo código: **vas a ver** `La entrada ya ingresó el {fecha y hora del primer ingreso}.` El administrador de plataforma no tiene locales y no hace el control de ingreso.
+**El ingreso solo se acepta desde 6 horas antes hasta 12 horas después del evento** (parámetros `INGRESO_HORAS_ANTES` e `INGRESO_HORAS_DESPUES`). Con las semillas, ningún evento cae en esa ventana el día de la presentación, así que hay que preparar uno.
 
-La privacidad entre clientes se demuestra con Oscar: iniciá como `oro@eventaura.com`, abrí **Mis entradas** y comprobá que solo aparecen sus compras. La aplicación no ofrece una acción para seleccionar a Paula. Si una operación intenta leer datos de otra cuenta, la regla responde `Solo podés operar sobre los datos de tu propia cuenta.`; ese intento forzado se verifica en la batería, no es un botón de la interfaz.
+**Preparación, antes de la presentación.** El formulario **Agregar evento** pide solo la fecha: la hora del evento queda en la hora en que se abrió el formulario (anotado para Codex). Hay dos caminos:
+1. **El evento de la sección 7.** Paula, ya Organizadora, crea su evento y Ana lo aprueba. Hay que crearlo el día de la presentación unas horas antes, o crearlo y después ajustar su hora en la base de demostración (nunca en otra base):
+
+   ```sql
+   UPDATE Eventos SET Fecha = DATEADD(MINUTE, 180, CAST(GETDATE() AS smalldatetime))
+   WHERE Nombre = 'Noche de prueba de ingreso';
+   ```
+
+2. **Una entrada para ese evento.** Un cliente (por ejemplo, la cuenta creada en la sección 2) compra una entrada. El código para el control de ingreso está en **Mis entradas**, en la columna **Código**, y en el texto del PDF: empieza con `EA-`.
+
+**El control de ingreso.** Iniciá sesión con el Organizador dueño del evento y pulsá **Control de ingreso**.
+1. En **Evento con ingreso abierto** aparecen solo sus eventos dentro de la ventana.
+2. Pegá el código en **Código del ticket (lector USB o texto del PDF)** y pulsá **Registrar ingreso**. **Vas a ver** «Ingreso válido. Bienvenido.» y «Ingresos registrados: 1».
+3. Repetí el mismo código. **Vas a ver** «La entrada ya ingresó el {dd/MM/aaaa HH:mm:ss}.».
+
+El Administrador de plataforma no tiene locales y no hace el control de ingreso.
+
+**Privacidad entre clientes.** Iniciá como `oro@eventaura.com` y abrí **Mis entradas**: aparecen solo los pedidos de Oscar, y ninguno de los de Paula. La aplicación no ofrece ninguna acción para elegir a otro cliente. Si una operación intenta leer datos de otra cuenta, la regla responde «Solo podés operar sobre los datos de tu propia cuenta.». Ese intento forzado se verifica en la batería; no es un botón de la interfaz.
+
+**Verificado el 24/11/2026**, con el evento «Noche de prueba de ingreso» de Paula, con la hora ajustada por SQL a tres horas después, y la entrada comprada por la cuenta de la sección 2:
+- «Ingreso válido. Bienvenido.»;
+- el segundo intento: «La entrada ya ingresó el 24/11/2026 16:56:41.»;
+- el QR de otro evento: «La entrada corresponde a otro evento.»;
+- un código inventado: «El código no existe.»;
+- Oscar no ve los pedidos EA-000121 ni EA-000122 de Paula.
+
+**No verificado:**
+- el QR reembolsado del mismo evento: el reembolsado disponible era de otro evento y dio «La entrada corresponde a otro evento.», porque ese control va primero;
+- una entrada pendiente o vencida;
+- el ingreso fuera de la ventana horaria.
+
 ## 6. Suscripción, beneficios y lista de espera
 
-1. Como Paula, abrí **Mi suscripción**. Si no tiene una activa, elegí **Mensual** y pulsá **Contratar**; confirmá **Sí**. **Vas a ver** el precio de $9.000, el aviso de que no se renueva automáticamente y la fecha de vencimiento. Los planes disponibles son Mensual ($9.000) y Anual ($90.000). La suscripción muestra sus beneficios: seguro bonificado, acceso a preventa exclusiva y prioridad temporal si la persona además está anotada en la lista de espera. El descuento por nivel sigue siendo el que muestra la barra superior.
-2. **Seguro bonificado:** volvé a comprar una entrada y mirá el selector del seguro. Para un cliente con suscripción activa el seguro figura bonificado; el resumen de la compra permite comprobarlo antes de pagar.
-3. **Preventa:** El Organizador puede fijar el fin de preventa al administrar uno de sus eventos. Antes de ese momento el evento se vende solo a suscriptores; la prueba de rechazo exacta está al final del guion. Después de la fecha, la venta queda disponible normalmente.
-4. **Lista de espera:** abrí **Eventos disponibles**, elegí **Clásico Rosarino** cuando figure agotado y pulsá **Anotarme en la lista de espera**. **Vas a ver** `Te anotaste en la lista de espera de «Clásico Rosarino». Podés consultar tu posición. Si vuelve a haber entradas, te lo mostramos al iniciar sesión.`. Usá **Consultar mi posición** para ver `Tu posición actual en la lista es {N}.` y abrí **Inicio** para ver el aviso de lista de espera.
-5. **Prioridad temporal:** cuando se devuelve una entrada de un sector agotado, durante 15 minutos el cupo liberado se reserva para suscriptores anotados en la lista de ese evento. La batería de pruebas verifica el rechazo de un no suscriptor durante esa ventana y su aceptación al vencer. No hay un botón para adelantar el reloj de la demostración; para observar las dos ramas en vivo hace falta que un administrador libere un cupo y esperar 15 minutos. No digas que la posición garantiza ser el único comprador ni que se manda un correo externo.
+1. **Contratar.** Como Paula, abrí **Mi suscripción**. Sin suscripción activa dice «No tenés una suscripción activa.» y muestra los beneficios: seguro de entrada sin cargo, preventa exclusiva y prioridad en las listas de espera, «Sin descuento extra: rige el de tu nivel.». Elegí **Mensual: $ 9.000 por mes** y pulsá **Contratar**. El cuadro dice «¿Contratar el plan Mensual por $ 9.000,00? La suscripción no se renueva automáticamente al vencer.». Elegí **Sí**. **Vas a ver** «Suscripción Mensual contratada. Vence el {fecha}. No se renueva automáticamente.» y «Plan Mensual activo». Con una suscripción activa, **Contratar** queda deshabilitado: no se puede contratar una segunda.
+2. **Seguro bonificado.** Armá una compra y marcá **Seguro de entrada**: el resumen muestra «Seguro sin cargo (1 entradas)» y el total no cambia. Para salir sin pagar, pulsá **Volver al listado**: el cuadro pregunta «Si volvés al listado se descarta el paquete que armaste. ¿Querés volver?».
+3. **Preventa.** El Organizador puede fijar el fin de la preventa en **Administrar evento** (**Preventa para suscriptores hasta**, **Guardar preventa**). Hasta ese momento, el evento se vende solo a suscriptores.
+4. **Lista de espera.** Buscá **Clásico Rosarino** (agotado: la ficha muestra los tres sectores «AGOTADO») y pulsá **Armar paquete**.
+   1. **Vas a ver** «Entradas agotadas. Anotate en la lista de espera. Los avisos de disponibilidad se muestran al iniciar sesión.».
+   2. Pulsá **Anotarme en la lista de espera**. **Vas a ver** «Te anotaste en la lista de espera de «Clásico Rosarino». Podés consultar tu posición. Si vuelve a haber entradas, te lo mostramos al iniciar sesión.», y el botón pasa a **Ya estás en la lista de espera**.
+   3. Pulsá el enlace **Consultar mi posición**, sobre el texto subrayado. **Vas a ver** «Tu posición actual en la lista es {N}.».
+   4. En **Inicio**, la tarjeta **Lista de espera** muestra los eventos y la cantidad de inscripciones. Con la semilla de demostración, Paula ya estaba en la de Guitarras del litoral.
+5. **Prioridad temporal.** Cuando se devuelve una entrada de un sector agotado, durante 15 minutos el cupo liberado se reserva para los suscriptores anotados en la lista de ese evento. No hay forma de adelantar el reloj: para mostrarlo en vivo hay que esperar 15 minutos. Si no, explicá la regla y mostrá el caso de la batería. No digas que la posición garantiza ser el único comprador, ni que se manda un correo externo.
+
+**Verificado el 24/11/2026:**
+- la contratación del plan mensual (vence el 24/12/2026) y **Contratar** deshabilitado después;
+- «Seguro sin cargo» en el resumen;
+- el cuadro de «Volver al listado»;
+- anotarse en Clásico Rosarino, la posición 1 y la tarjeta del inicio con «2 inscripciones».
+
+**No verificado:**
+- la preventa (paso 3);
+- la prioridad temporal (paso 5), que necesita 15 minutos de espera real.
 
 ## 7. Tres perfiles y administración
 
 ### Solicitar ser Organizador
 
-1. Iniciá sesión como una cuenta Cliente sin una solicitud pendiente, por ejemplo Paula (`plata@eventaura.com` / `Cliente123`). En el menú del cliente pulsá **Solicitar ser Organizador**.
-2. Para reproducir el recorrido que probé, completá: responsable `Persona Ficticia de Demostración`, CUIT `30000000007`, teléfono `+5493410000000`, local `Local Ficticio de Demostración`, dirección `Dirección inventada 000, Rosario`, capacidad `500` y CBU `0000000000000000000000`. Son valores de demostración con dígitos verificadores válidos; no representan una identidad ni una cuenta bancaria. En **Adjuntar habilitación / constancia**, elegí el PNG de prueba `Pruebas/Capturas-Fase8b/despues-100/frmMenuCliente.png` (26 KB); se usa solo como imagen ficticia para probar el selector, no como documentación legal. El sistema valida el contenido y la comprime. No ingreses datos personales, CUIT ni datos bancarios reales.
-3. Pulsá **Enviar código**. **Vas a ver** el código y el vencimiento en la bandeja telefónica simulada dentro del formulario. Copialo en **Código de verificación** y pulsá **Confirmar teléfono**. **Vas a ver** `Teléfono verificado.`
-4. Pulsá **Enviar solicitud**. **Vas a ver** `Recibimos tu solicitud (N.º {id}). Tu cuenta sigue siendo Cliente mientras esté pendiente.` La solicitud no cambia el perfil ni abre las funciones de Organizador. En la prueba recorrí también la solicitud de Paula desde la pantalla del administrador y la aprobé; en la demo real, cada cuenta puede presentar una sola solicitud pendiente. La semilla trae además una solicitud ficticia pre-cargada para `bronce@eventaura.com` si querés mostrar la revisión sin crear otra.
+1. Iniciá sesión con una cuenta Cliente sin solicitud pendiente, por ejemplo Paula, y pulsá **Solicitar ser Organizador**. Se abre la ventana **Solicitar perfil de Organizador**.
+2. Completá:
+   - responsable: `Persona Ficticia de Demostración`;
+   - CUIT: `30000000007`;
+   - teléfono: `+5493410000000`;
+   - nombre del local: `Local Ficticio de Demostración`;
+   - dirección: `Dirección inventada 000, Rosario`;
+   - capacidad: `500`;
+   - CBU: `0000000000000000000000`.
+
+   Son valores de demostración con dígitos verificadores válidos: no ingreses datos reales.
+3. Pulsá **Enviar código**. **Vas a ver** «Si el teléfono es válido, guardamos un SMS simulado fuera de EventAura. Abrí el archivo del mensaje para continuar.». El código **no** aparece en el formulario: está en un archivo `.sms.txt` de la misma carpeta de la bandeja simulada (sección 2), el más reciente, con las líneas «SMS simulado para +54…», «Código:» y «Vence:». Copialo en **Código de verificación** y pulsá **Confirmar teléfono**. **Vas a ver** «Teléfono verificado.».
+4. Pulsá **Adjuntar documentación** y, en el cuadro **Elegí la documentación**, elegí `Pruebas/Capturas-Fase8b/despues-100/frmMenuCliente.png` (26 KB). **Vas a ver** «Documentación adjunta y validada.».
+5. Pulsá **Enviar solicitud**. **Vas a ver** «Recibimos tu solicitud. Tu cuenta sigue siendo Cliente mientras esté pendiente.», sin número de solicitud. La semilla de demostración trae además solicitudes pendientes, por ejemplo la de Bruno para «Espacio Ribera», si querés mostrar la revisión sin crear otra.
+
+**No muestres en vivo un rechazo de este formulario.** Hoy, un CUIT inválido, el teléfono sin confirmar o un código de teléfono incorrecto muestran «Ocurrió un error inesperado y la operación no se completó…», en lugar del mensaje de la regla (anotado para Codex). La solicitud no se guarda, pero el mensaje es engañoso.
 
 ### Revisar solicitudes — Administrador de plataforma
 
-Cerrá la sesión del cliente e iniciá como Ana (`admin@eventaura.com` / `Admin1234`). En **Solicitudes de organizador**, seleccioná la solicitud. **Vas a ver** los datos del responsable y del local, el archivo adjunto y los datos de cobro. Escribí un motivo en el cuadro de revisión y pulsá **Aprobar y crear local**. **Vas a ver** `Solicitud aprobada y local creado.`. Al volver a iniciar sesión, esa cuenta pasa a Organizador y puede administrar el local creado. El rechazo requiere también un motivo escrito.
+Iniciá como Ana (`admin@eventaura.com` / `Admin1234`) y pulsá **Solicitudes de organizador**.
+1. Se abre **Revisión de solicitudes**: a la izquierda, la lista de locales pedidos; en el centro, el responsable, el CUIT, el teléfono, el local, la dirección, la capacidad, el CBU o alias y la documentación; a la derecha, la imagen adjunta.
+2. Elegí la solicitud y escribí un motivo en el cuadro, debajo de «Escribí un motivo antes de aprobar o rechazar.».
+3. Pulsá **Aprobar y crear local**. **Vas a ver** «Solicitud aprobada y local creado.».
 
-### Locales, eventos e ingreso — Organizador
+Al volver a iniciar sesión, la cuenta entra como Organizador: «Tu espacio de organización», con su local.
 
-Iniciá como el Organizador de la semilla. Pulsá **Registrar local** para crear un local propio, o **Mis locales** para elegir uno existente y abrir sus eventos. En **Agregar evento**, completá nombre, fecha futura y categoría; **Registrar** lo guarda como **Borrador**. Administralo, agregá al menos un sector con capacidad positiva y luego pulsá **Publicar**. Agregar el sector no publica el evento.
+**No pulses Rechazar con el motivo vacío:** hoy muestra «Ocurrió un error inesperado…» en lugar de «Escribí el motivo del rechazo.». La solicitud no se rechaza, pero el mensaje es engañoso (anotado para Codex).
 
-El Organizador de la semilla ya tiene una publicación aprobada, así que sus siguientes eventos pasan directamente a **Publicado** y aparecen en el catálogo. Para mostrar la revisión inicial, usá una cuenta que haya sido promovida desde una solicitud nueva: su primer evento queda **EnRevision**. No aparece en el catálogo ni acepta ventas. El Administrador lo encuentra en **Eventos en revisión**, selecciona el evento y puede pulsar **Aprobar y publicar** o escribir un motivo y pulsar **Rechazar y devolver**. Tras rechazarlo, el Organizador lo ve en **Mis eventos** como **Borrador**, con el motivo en la columna **Motivo del rechazo**. Puede corregirlo y volver a pulsar **Publicar**; como todavía no tuvo un evento aprobado, vuelve a **EnRevision**.
+### Locales, eventos y revisión del primer evento — Organizador
 
-El Organizador también puede controlar ingresos, administrar su lista de espera y abrir **Reportes**. Sus cifras se limitan a sus propios eventos. Cambiar de perfil a Administrador no concede propiedad sobre esos locales.
+1. Como el Organizador nuevo, pulsá **Mis locales**, elegí el local y pulsá **Ver eventos**. Sin eventos dice «Todavía no hay eventos en este local. Creá uno para empezar a ofrecer entradas.».
+2. Pulsá **Agregar Evento**. Completá **Nombre evento**, la **Fecha** (solo el día: ver la sección 5) y la **Categoría**, y pulsá **Registrar**. **Vas a ver** «Evento guardado como borrador. Agregale un sector para publicarlo.» y el evento en estado **Borrador**.
+3. Elegilo y pulsá **Administrar Evento**. Si pulsás **Publicar** sin sectores: «No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.». Pulsá **Agregar sector**, completá **Nombre**, **Capacidad** y **Precio**, en ese orden en pantalla, y pulsá **Agregar sector**. **Vas a ver** «Sector agregado correctamente. Ya podés asignarle entradas.». Pulsá **Volver**.
+4. Pulsá **Publicar**. Como es el primer evento de un Organizador nuevo: «El primer evento se envió a revisión del Administrador.». El evento queda **EnRevision**: no aparece en el catálogo; al buscarlo, un cliente ve «No encontramos eventos para esa búsqueda…».
+5. **Rechazo.** Ana pulsa **Eventos en revisión**: se abre **Primer evento de cada organizador**, con el nombre, la fecha y «Al aprobarlo, aparece en el catálogo. Si se rechaza, vuelve a Borrador con el motivo.». Si pulsa **Rechazar y devolver** sin motivo: «Escribí el motivo del rechazo.», y el evento no cambia. Con el motivo escrito en **Motivo del rechazo (obligatorio)**, el evento vuelve a **Borrador** y la lista dice «No hay eventos pendientes.».
+6. El Organizador ve el evento en **Borrador**, con el motivo en la columna **Motivo del rechazo**. Lo corrige y vuelve a pulsar **Publicar**: como todavía no tuvo un evento aprobado, vuelve a **EnRevision**.
+7. **Aprobación.** Ana pulsa **Aprobar y publicar**: el evento queda **Publicado** y aparece en el catálogo.
+
+El Organizador de la semilla (`organizador@eventaura.com`) ya tiene una publicación aprobada: sus eventos nuevos pasan directo a **Publicado**.
 
 ### Administración de plataforma
 
-En el panel de Ana se muestran los cinco indicadores globales. **Reportes globales** consulta todos los eventos; **Registro de auditoría** muestra quién hizo qué, sobre qué entidad, cuándo y con qué resultado; **Crear administrador** crea otra cuenta privilegiada. El administrador de plataforma puede revisar solicitudes y aprobar primeros eventos, pero no administra locales ni controla ingresos como si fuera su dueño.
+En el panel de Ana se ven los indicadores globales y los pendientes de revisión.
+- **Reportes globales** consulta todos los eventos.
+- **Registro de auditoría** muestra quién hizo qué, sobre qué entidad, cuándo y con qué resultado. **Atención:** hoy la columna **Fecha y hora** muestra la hora UTC, tres horas más que la de la PC (anotado para Codex). Si el jurado lo nota, explicalo así.
+- **Crear administrador** crea otra cuenta privilegiada.
+
+El Administrador revisa solicitudes y aprueba primeros eventos, pero no administra locales ni controla ingresos.
+
+**Verificado el 24/11/2026:**
+- el recorrido de la solicitud de Paula, con el código del `.sms.txt`, el adjunto y el envío;
+- la aprobación por Ana y el ingreso de Paula como Organizador;
+- la creación del evento, publicar sin sectores, el sector y el envío a revisión;
+- que el evento no está en el catálogo mientras está en revisión;
+- el rechazo sin motivo y con motivo;
+- el evento en Borrador con el motivo, la republicación a revisión y la aprobación hasta Publicado;
+- el registro de auditoría, con las acciones de los tres perfiles en orden («Gestión de eventos: aprobar primer evento», «enviar a revisión», «rechazar primer evento», «Inicio de sesión»);
+- el mensaje genérico en los rechazos del formulario de solicitud y en el rechazo de solicitud sin motivo.
+
+**No verificado:**
+- el aviso de éxito de **Aprobar y publicar** y el de **Rechazar y devolver**: no se llegó a leer, pero el estado del evento se confirmó en la base;
+- **Reportes globales**, **Crear administrador** y los reportes del Organizador;
+- **Registrar local** desde el Organizador.
+
 ## 8. Lo que tiene que fallar
 
-Probá estos rechazos solo con datos de demostración. Los textos entre comillas son el mensaje esperado; algunos agregan una fecha, nombre o cantidad dinámica indicada entre llaves.
+Probá estos rechazos solo con datos de demostración. Los textos entre comillas son el mensaje esperado; algunos agregan una fecha, nombre o cantidad dinámica indicada entre llaves. La columna «24/11» dice si se vio en pantalla el 24/11/2026.
 
-| Qué intentar | Respuesta que tiene que aparecer |
-|---|---|
-| Iniciar sesión con un correo existente y contraseña incorrecta; repetir con uno inexistente | En ambos casos, exactamente `Mail o contraseña incorrectos.`. No se muestra el número de intentos restantes. |
-| Comprar desde una cuenta sin correo verificado | `Verificá tu correo antes de iniciar una compra.` |
-| Registrar dos veces el mismo QR | `La entrada ya ingresó el {dd/MM/aaaa HH:mm:ss}.` |
-| Devolver una entrada ya ingresada | `No podés devolver una entrada que ya se usó para ingresar.` |
-| Devolver sin seguro | `Solo se pueden devolver entradas con seguro, y el seguro se contrata únicamente durante la compra.` |
-| Intentar agregar seguro después de pagar | No se ofrece esa operación; el seguro solo se decide durante el armado. |
-| Un cliente leer/operar datos de otra cuenta | `Solo podés operar sobre los datos de tu propia cuenta.` |
-| Controlar ingreso de un evento ajeno | `Solo podés controlar el ingreso de eventos de tus locales.` |
-| Comprar durante la preventa con una cuenta no suscriptora | `«{evento}» está en preventa exclusiva para suscriptores hasta el {dd/MM/aaaa a las HH:mm}. Contratá una suscripción desde «Mi suscripción» o volvé cuando termine la preventa.` |
-| No suscriptor intenta comprar un cupo liberado dentro de los 15 minutos de prioridad | `El lugar liberado está reservado temporalmente para suscriptores inscriptos en la lista de espera. Intentá al finalizar la ventana de prioridad.` |
-| Suscriptor intenta anotarse cuando aún quedan entradas | `El evento todavía tiene entradas: la lista de espera se habilita cuando se agota.` |
-| Anotarse en lista de espera para evento pasado o no publicado | `El evento ya pasó o no está publicado: no admite inscripciones en la lista de espera.` |
-| Ingresar un código de recuperación incorrecto, vencido o ya consumido | `El código no es válido o venció. Solicitá uno nuevo.` |
-| Registrar correo que ya pertenece a una cuenta | `Ya existe una cuenta registrada con ese mail.` |
-| Usar contraseña por debajo del mínimo de fortaleza | `La contraseña no alcanza la fortaleza mínima. Sumá variedad de mayúsculas, minúsculas, números o símbolos.` |
-| Intentar contratar una segunda suscripción activa | `Ya tenés una suscripción activa: no se pueden tener dos al mismo tiempo.` La interfaz puede agregar el plan y vencimiento actuales. |
-| Comprar más entradas que las disponibles | `En el sector {sector} quedan {N} entrada(s).` |
-| Comprar más de seis entradas en una operación | `Se pueden comprar como máximo 6 entradas por operación.` |
-| Pagar servicios sin entradas | `El paquete debe tener al menos una entrada: los servicios no se venden solos.` |
-| Cliente intenta abrir funciones de Organizador con una solicitud pendiente | `Esta operación es solo para el Organizador.` La cuenta conserva el perfil Cliente hasta la aprobación. |
-| Organizador intenta revisar una solicitud de plataforma o aprobar un evento | `Esta operación es solo para el Administrador` |
-| Administrador intenta realizar una operación exclusiva del Organizador | `Esta operación es solo para el Organizador.` |
-| Publicar un evento sin sectores con capacidad positiva | `No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.` El evento queda en Borrador. |
-| CUIT con dígito verificador incorrecto | `El CUIT no es válido. Revisá sus 11 dígitos y el dígito verificador.` |
-| CBU con dígitos verificadores incorrectos | `Ingresá un CBU válido de 22 dígitos o un alias bancario de 6 a 20 caracteres.` |
-| Enviar la solicitud sin confirmar el teléfono | `Verificá este teléfono con el código enviado antes de presentar la solicitud.` |
-| Adjuntar un archivo que no sea PNG/JPEG o que supere 512 KB | `Adjuntá una imagen PNG o JPEG válida, comprimida y de hasta 512 KB.` |
-| Cliente con solicitud pendiente intenta abrir locales | `Esta operación es solo para el Organizador.` |
-| Organizador intenta aprobar su solicitud o su evento | `Esta operación es solo para el Administrador` |
-| Rechazar una solicitud con el motivo vacío | `Escribí el motivo del rechazo.` |
-| Vender un evento en revisión o no publicado | `El evento no está disponible para la venta: ya pasó o no está publicado.` |
-| Aprobar otra vez un evento que ya no está en revisión | `El evento ya no está pendiente de revisión.` |
-| Rechazar un evento en revisión sin escribir un motivo | `Escribí el motivo del rechazo.` El evento no cambia de estado. |
-| Un Organizador intenta rechazar su propio evento o el de otro | `Esta operación es solo para el Administrador` |
-| Comprar en evento pasado o no publicado | `El evento no está disponible para la venta: ya pasó o no está publicado.` |
-| Usar QR inexistente | `El código no existe.` |
-| Usar QR de otro evento | `La entrada corresponde a otro evento.` |
-| Usar QR reembolsado | `La entrada está reembolsada.` |
-| Usar entrada pendiente o vencida | `La entrada está pendiente o vencida.` |
-| Registrar ingreso fuera de ventana | `Fuera del horario de ingreso o evento no disponible.` |
+| Qué intentar | Respuesta que tiene que aparecer | 24/11 |
+|---|---|---|
+| Iniciar sesión con un correo existente y contraseña incorrecta; repetir con uno inexistente | En ambos casos, exactamente `Mail o contraseña incorrectos.`, en el mismo tiempo. No se muestra el número de intentos restantes. | Sí, los dos casos, 1,2 s cada uno |
+| Registrar un correo que ya pertenece a una cuenta | La pantalla responde igual que con un correo nuevo («Verificá tu correo», «Si la cuenta existe, enviamos un código…»), para no revelar qué cuentas existen. No se crea una segunda cuenta. | Sí. El guion anterior decía `Ya existe una cuenta registrada con ese mail.`: ese mensaje ya no se muestra en el alta |
+| Comprar desde una cuenta sin correo verificado | `Verificá tu correo antes de iniciar una compra.` | No |
+| Registrar dos veces el mismo QR | `La entrada ya ingresó el {dd/MM/aaaa HH:mm:ss}.` | Sí |
+| Devolver una entrada ya ingresada | `No podés devolver una entrada que ya se usó para ingresar.` | No |
+| Devolver sin seguro | La interfaz no lo permite: el botón **Devolver** queda deshabilitado. La regla responde `Solo se pueden devolver entradas con seguro, y el seguro se contrata únicamente durante la compra.` (batería). | Sí, el botón deshabilitado |
+| Intentar agregar seguro después de pagar | No se ofrece esa operación; el seguro solo se decide durante el armado. | Sí, el aviso del armado |
+| Un cliente leer u operar datos de otra cuenta | `Solo podés operar sobre los datos de tu propia cuenta.` | No; solo se vio que Oscar no ve los pedidos de Paula |
+| Controlar el ingreso de un evento ajeno | `Solo podés controlar el ingreso de eventos de tus locales.` | No |
+| Comprar durante la preventa con una cuenta no suscriptora | `«{evento}» está en preventa exclusiva para suscriptores hasta el {dd/MM/aaaa a las HH:mm}. Contratá una suscripción desde «Mi suscripción» o volvé cuando termine la preventa.` | No |
+| No suscriptor intenta comprar un cupo liberado dentro de los 15 minutos de prioridad | `El lugar liberado está reservado temporalmente para suscriptores inscriptos en la lista de espera. Intentá al finalizar la ventana de prioridad.` | No |
+| Suscriptor intenta anotarse cuando aún quedan entradas | `El evento todavía tiene entradas: la lista de espera se habilita cuando se agota.` | No |
+| Anotarse en la lista de espera de un evento pasado o no publicado | `El evento ya pasó o no está publicado: no admite inscripciones en la lista de espera.` | No |
+| Ingresar un código de verificación o recuperación incorrecto, vencido o ya consumido | `El código no es válido o venció. Solicitá uno nuevo.` | Sí, con el código vacío |
+| Usar una contraseña por debajo del mínimo de fortaleza | `La contraseña no alcanza la fortaleza mínima. Sumá variedad de mayúsculas, minúsculas, números o símbolos.` | No |
+| Intentar contratar una segunda suscripción activa | La interfaz no lo permite: **Contratar** queda deshabilitado. La regla responde `Ya tenés una suscripción activa: no se pueden tener dos al mismo tiempo.` (batería). | Sí, el botón deshabilitado |
+| Comprar más entradas que las disponibles | `En el sector {sector} quedan {N} entradas.` | Sí: «En el sector General quedan 2 entradas.» (Taller de fotografía urbana) |
+| Comprar más de seis entradas en una operación | `Se pueden comprar como máximo 6 entradas por operación.` | Sí |
+| Pagar servicios sin entradas | **Comprar** queda deshabilitado sin entradas. La regla responde `El paquete debe tener al menos una entrada: los servicios no se venden solos.` (batería). | Sí, el botón deshabilitado |
+| Cliente con una solicitud pendiente intenta abrir funciones de Organizador | `Esta operación es solo para el Organizador.` La cuenta conserva el perfil Cliente hasta la aprobación; el menú del cliente no ofrece esas funciones. | No |
+| Organizador intenta revisar una solicitud o aprobar un evento | `Esta operación es solo para el Administrador` | No |
+| Administrador intenta una operación exclusiva del Organizador | `Esta operación es solo para el Organizador.` | No |
+| Publicar un evento sin sectores con capacidad positiva | `No se puede publicar el evento: necesita al menos un sector con capacidad mayor que cero.` El evento queda en Borrador. | Sí |
+| CUIT con dígito verificador incorrecto | Debería ser `El CUIT no es válido. Revisá sus 11 dígitos y el dígito verificador.`. **Hoy se ve** «Ocurrió un error inesperado y la operación no se completó…». | Sí: mensaje genérico. No mostrar hasta que Codex lo corrija |
+| CBU con dígitos verificadores incorrectos | Debería ser `Ingresá un CBU válido de 22 dígitos o un alias bancario de 6 a 20 caracteres.`. Usa el mismo camino que el CUIT. | No; por el mismo código, probablemente da el mensaje genérico |
+| Enviar la solicitud sin confirmar el teléfono | Debería ser `Verificá este teléfono con el código enviado antes de presentar la solicitud.`. **Hoy se ve** el mensaje genérico. | Sí: mensaje genérico |
+| Código de teléfono incorrecto | **Hoy se ve** el mensaje genérico en lugar del de la regla. | Sí: mensaje genérico |
+| Adjuntar un archivo que no sea PNG o JPEG, o que supere 512 KB | Debería ser `Adjuntá una imagen PNG o JPEG válida, comprimida y de hasta 512 KB.`. Usa el mismo camino que el CUIT. | No; probablemente da el mensaje genérico |
+| Rechazar una solicitud con el motivo vacío | Debería ser `Escribí el motivo del rechazo.`. **Hoy se ve** el mensaje genérico. | Sí: mensaje genérico |
+| Vender un evento en revisión o no publicado | No aparece en el catálogo. La regla responde `El evento no está disponible para la venta: ya pasó o no está publicado.` (batería). | Sí, que no aparece |
+| Aprobar otra vez un evento que ya no está en revisión | `El evento ya no está pendiente de revisión.` | No |
+| Rechazar un evento en revisión sin escribir un motivo | `Escribí el motivo del rechazo.` El evento no cambia de estado. | Sí |
+| Un Organizador intenta rechazar su propio evento o el de otro | `Esta operación es solo para el Administrador` | No |
+| Comprar en un evento pasado o no publicado | `El evento no está disponible para la venta: ya pasó o no está publicado.` | No |
+| Usar un QR inexistente | `El código no existe.` | Sí |
+| Usar un QR de otro evento | `La entrada corresponde a otro evento.` | Sí |
+| Usar un QR reembolsado del mismo evento | `La entrada está reembolsada.` | No |
+| Usar una entrada pendiente o vencida | `La entrada está pendiente o vencida.` | No |
+| Registrar un ingreso fuera de la ventana | `Fuera del horario de ingreso o evento no disponible.` | No |
 
 ## 9. Duración y límites de la demostración
 
@@ -248,4 +372,5 @@ El recorrido completo dura unos **42–65 minutos**, sin contar preparación de 
 - La prioridad funciona con una ventana real de 15 minutos. Si no querés esperar, explicá la regla y mostrale los casos de la batería; no cambies la hora de la base y digas que transcurrieron 15 minutos.
 - El rediseño de navegación de una sola ventana cubre el recorrido del cliente. Las pantallas de administración todavía se abren como formularios separados.
 - Las portadas de la semilla son generadas. La carga de imagen propia se demuestra desde administración con un archivo de imagen válido.
-- No fuerces errores editando la base durante la presentación ni uses una compra ya reembolsada para probar ingreso. Para el QR, prepará una entrada confirmada y no usada.
+- No fuerces errores editando la base durante la presentación ni uses una compra ya reembolsada para probar ingreso. Para el QR, prepará antes un evento dentro de la ventana de ingreso y una entrada confirmada y no usada (sección 5).
+- Hasta que Codex lo corrija, no muestres los rechazos del formulario de solicitud de Organizador ni el rechazo de solicitud sin motivo: hoy muestran «Ocurrió un error inesperado…» (sección 8).

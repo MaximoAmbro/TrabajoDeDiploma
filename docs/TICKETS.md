@@ -30,7 +30,7 @@ código congelado.
 |---|---|---|---|
 | T-01 | Codex | Terminar y commitear la tanda visual en curso (gráficos y disponibilidad) | en curso |
 | T-02 | Codex | Prueba automática del respaldo de WebView2 | abierto |
-| T-03 | Codex | **URGENTE, confirmado:** sin las DLL de WebView2 o sin `Newtonsoft.Json.dll`, error en lugar del respaldo | abierto |
+| T-03 | Codex | **URGENTE, confirmado:** sin las DLL de WebView2 o sin `Newtonsoft.Json.dll`, error en lugar del respaldo | en revisión: Codex lo informa hecho en `5b6fd5a` (CP-199); falta verificarlo sobre el ejecutable |
 | T-04 | Codex | Carpeta de la aplicación para la defensa, completa y comprobada | abierto |
 | T-05 | Codex | Lo que la reforma visual dejó declarado como fuera de conformidad | abierto (a decidir por JC) |
 | T-06 | Codex | Congelar el código | bloqueado por T-01 a T-05 |
@@ -47,9 +47,13 @@ código congelado.
 | T-17 | Máximo | La tarde en Word: marcadores, pausas e índice | bloqueado por T-09, T-11 a T-14 |
 | T-18 | Claude Code | Commitear los documentos y herramientas del 24/11 | cerrado (`0ddc0c4`) |
 | T-19 | Claude Code | `tools/VerificarReglasAgentes.ps1` no corre | abierto |
-| T-20 | Codex | **URGENTE:** sin base, la pantalla de inicio muestra la contraseña y no avisa nada | abierto |
-| T-21 | Codex | El cartel de esquema sin `02-semilla.sql` pide correr `04` | abierto |
-| T-22 | Codex | El ticket se genera sin `try` después del pago confirmado; mensajes de PDF que no corresponden | abierto |
+| T-20 | Codex | **URGENTE:** sin base, la pantalla de inicio muestra la contraseña y no avisa nada | cerrado: verificado el 24/11 sobre el ejecutable (sin config y con la instancia inexistente) |
+| T-21 | Codex | El cartel de esquema sin `02-semilla.sql` pide correr `04` | en revisión: Codex lo informa hecho en `5b6fd5a` |
+| T-22 | Codex | El ticket se genera sin `try` después del pago confirmado; mensajes de PDF que no corresponden | en revisión: Codex lo informa hecho en `5b6fd5a` (CP-200) |
+| T-23 | Codex | **Para la defensa:** los rechazos de la solicitud de Organizador dicen «error inesperado» | abierto |
+| T-24 | Codex | «Agregar evento» no deja elegir la hora | abierto |
+| T-25 | Codex | El registro de auditoría muestra la hora UTC | abierto |
+| T-26 | Codex | El catálogo y la compra quedan corridos dentro de «Mi cuenta» | abierto |
 
 ---
 
@@ -347,6 +351,78 @@ Administrador, y pedir `02-semilla.sql`.
 
 **Listo cuando** hay una prueba para cada caso (carpeta sin permiso de escritura) y el mensaje
 corresponde a la causa.
+
+**Estado:** abierto.
+
+### T-23 · Codex · Los rechazos de la solicitud de Organizador muestran «error inesperado»
+
+**Qué:** encontrado al recorrer el guion el 24/11 (`Pruebas/GUION-DEMOSTRACION.md`, secciones 7 y 8). **Ejecutado.**
+`frmSolicitudOrganizador` (líneas 101, 113 y 118) y `frmRevisarSolicitudesOrganizador` (línea 62) capturan
+`Exception` y muestran `ManejadorErrores.MensajeParaUsuario(ex)`, que para una `ReglaNegocioException`
+devuelve el mensaje genérico. El usuario ve «Ocurrió un error inesperado y la operación no se completó…» en
+lugar del mensaje de la regla. Comprobado con:
+- CUIT inválido;
+- teléfono sin confirmar;
+- código de teléfono incorrecto;
+- rechazo de una solicitud con el motivo vacío («Escribí el motivo del rechazo.»).
+
+Por el mismo código, también el CBU inválido y el adjunto inválido. `frmRevisarEventos` sí muestra el
+mensaje de la regla.
+
+**Qué hacer:** capturar `ReglaNegocioException` antes del `catch` general y mostrar su mensaje, como en las
+demás pantallas.
+
+**Listo cuando** los cuatro casos muestran el mensaje de la regla (los textos están en la sección 8 del
+guion) y hay una prueba que lo comprueba.
+
+**Estado:** abierto. Importa para la defensa: si el jurado pide un CUIT inválido, hoy el sistema dice
+«error inesperado».
+
+### T-24 · Codex · «Agregar evento» no deja elegir la hora
+
+**Qué:** ejecutado el 24/11. `frmAgregarEvento` usa `dtEvento.Value`, un selector con formato de fecha
+larga y sin hora. El evento queda con la hora en que se abrió el formulario. Consecuencias:
+- no se puede crear un evento a las 21:00;
+- un evento creado para hoy queda en el pasado a los pocos minutos y no se puede vender;
+- sin un evento a pocas horas, el control de ingreso (que abre 6 horas antes) no se puede mostrar en la
+  defensa sin tocar la base.
+
+**Qué hacer:** que el selector tome fecha y hora (por ejemplo, `CustomFormat = "dd/MM/yyyy HH:mm"`, como
+`dtpFinPreventa`), con la hora inicial en una hora redonda futura.
+
+**Listo cuando** el Organizador puede elegir día y hora, y hay una prueba que registra un evento a una hora
+elegida.
+
+**Estado:** abierto.
+
+### T-25 · Codex · El registro de auditoría muestra la hora UTC
+
+**Qué:** ejecutado el 24/11. La tabla `Auditoria` guarda la fecha en UTC: 19:52:24 cuando la PC marcaba
+16:52. `frmAuditoria` la muestra sin convertirla a la hora local. El jurado ve tres horas de diferencia
+con el reloj de Windows.
+
+**Qué hacer:** convertir a hora local al mostrar (los filtros ya convierten de local a UTC desde `cfdad75`).
+
+**Listo cuando** una acción hecha a las HH:mm locales figura a las HH:mm, y hay una prueba que lo comprueba.
+
+**Estado:** abierto.
+
+### T-26 · Codex · El catálogo y la compra quedan corridos dentro de «Mi cuenta»
+
+**Qué:** ejecutado el 24/11, a 96 DPI con la ventana a 1216 × 799. En la navegación del cliente (de
+**Eventos disponibles** a la compra):
+- el título «Mi cuenta» del inicio sigue arriba;
+- el contenido del catálogo queda corrido hacia abajo y a la derecha;
+- en el catálogo, los botones **Ver entradas** de la primera fila de tarjetas quedan cortados por el
+  borde inferior del área visible.
+
+La compra funciona, pero se ve como dos pantallas encimadas.
+
+Evidencia: las capturas `g3-01-catalogo.png` y `g3-06-dos-campo.png` del recorrido (descriptas en el
+guion, sección 3).
+
+**Listo cuando,** dentro de la navegación, el título corresponde a la pantalla abierta y la primera fila
+de tarjetas se ve completa, a 96 y a 144 DPI.
 
 **Estado:** abierto.
 
