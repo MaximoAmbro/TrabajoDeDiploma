@@ -38,7 +38,7 @@ Familias:
 
 - **Cifras:** todo importe y toda cantidad usan `font-variant-numeric: tabular-nums`, alineados a la
   derecha.
-- **Ancho de línea:** el texto corrido no pasa de 60 caracteres (`max-width: 60ch`).
+- **Ancho de línea:** el texto corrido no pasa de 60 caracteres (`max-width: 60ch`), dentro del tope de 65ch de §10.4.
 
 ## 2. Color: casi todo neutro, el acento cuenta
 
@@ -149,7 +149,7 @@ deshabilitado.
 | Tarjeta elegible | Borde `--texto-secundario` | Fondo `--fondo` |
 | Enlace | Subrayado más grueso | Color `--primario-presionado` |
 
-- **Transición:** solo color, fondo y borde, 120 ms `ease-out`.
+- **Transición:** solo color, fondo y borde, 120 ms. La curva y el resto de las reglas de movimiento están en §10.
 - **Movimiento:** en todo el proyecto hay **dos movimientos, y los dos están en el armador** (§8). Ninguna
   otra cosa se desplaza ni cuenta. Con `prefers-reduced-motion: reduce`, ni esos dos ni ninguna transición.
 - **Deshabilitado:** fondo `--fondo`, texto `--texto-secundario`, cursor `not-allowed`. Nunca solo opacidad.
@@ -195,3 +195,82 @@ lector de pantalla, cuando termina de contar, no en cada cuadro. Todo lo demás 
 - Ningún estado se comunica solo con color: siempre va con texto o con un ícono.
 - Las validaciones y el total se anuncian con `aria-live="polite"`.
 - Todo se puede hacer con el teclado. Escape vuelve, como en el resto de la aplicación.
+
+## 10. Movimiento, interacción y lectura
+
+Sale del método de Emil Kowalski en «Agents with Taste» (emilkowal.ski/ui/agents-with-taste, leído el
+25/11/2026). **La idea del método es escribir el porqué de cada regla**: con el porqué, quien construye una
+pantalla nueva puede decidir bien un caso que la regla no prevé.
+
+**De dónde sale cada porqué:**
+- **(EK)** Lo dice el artículo.
+- **(nuestro)** El artículo da el valor sin razón, o la regla no está en el artículo. La razón es nuestra.
+
+La columna **«Hoy»** dice si `sistema.css` y las maquetas ya cumplen la regla.
+
+### 10.1 Curvas
+
+El artículo resuelve la curva con un árbol de decisión, para que nadie tenga que inventarla: «This is strict so
+the agent doesn't have to guess or make up its own rules» (EK).
+
+| Qué se mueve | Curva | Por qué | Hoy |
+|---|---|---|---|
+| Algo que **entra o sale** de la vista | `ease-out` | (nuestro) Arranca rápido y frena al llegar. La respuesta se ve en el primer cuadro, que es cuando la persona mira, y el final suave le dice al ojo dónde quedó. Un `ease-in` haría lo contrario: un arranque lento, que se percibe como demora. Es también la curva por omisión del árbol (EK) | Cumple: el renglón nuevo del desglose |
+| Algo que **se mueve o cambia de forma** dentro de la pantalla | `ease-in-out` | (nuestro) El objeto ya está a la vista antes y después. Acelerar y frenar de forma simétrica imita cómo se mueve una cosa física que se desplaza de un lugar a otro, sin saltos en los extremos | Cumple: la perilla usa `--desplazamiento` (120 ms `ease-in-out`) |
+| Un cambio **al pasar el mouse** | `ease` | (nuestro) Es un cambio de color o de fondo, sin recorrido. `ease` arranca un poco más suave que `ease-out`, y un efecto que se dispara con solo cruzar el mouse no salta a la vista | Cumple: `--transicion` es 120 ms `ease` |
+| Algo **continuo** (una barra de progreso, un indicador que gira) | `linear` | (nuestro) No tiene principio ni fin que marcar. Cualquier aceleración se leería como un tirón en cada vuelta | No hay movimiento continuo |
+| **El total que cuenta** en el armador | `ease-out` (curva `1 − (1 − t)³`) | (nuestro) El valor llega a un número nuevo: es una entrada, no un movimiento continuo. Los primeros cuadros cubren casi toda la diferencia, y los centavos se asientan al final, donde la vista los lee | Cumple |
+
+### 10.2 Duraciones
+
+| Tipo | Duración | Por qué | Hoy |
+|---|---|---|---|
+| Microinteracción (estados de un botón, un interruptor, el borde de un campo) | 100 a 150 ms | (nuestro) Por debajo de unos 100 ms un cambio se percibe como instantáneo y la transición no aporta nada. Por encima de 150 ms, en algo que se toca decenas de veces, se empieza a sentir como espera | Cumple: 120 ms |
+| Interfaz (un renglón que entra, un desplegable, un aviso) | 150 a 250 ms | (nuestro) El objeto recorre una distancia y hay que poder seguirlo con la vista, sin que demore la tarea | Cumple: 200 ms el renglón, 200 ms el total |
+| Modal o panel lateral | 200 a 300 ms | (nuestro) Es el elemento más grande y el que más recorre. El artículo pide que «Larger elements animate slower than smaller ones» y «Match duration to distance» (EK) | No hay modales en las vistas web |
+| Tope | **Nunca más de 300 ms** | «UI animations should stay under 300ms» (EK). (nuestro) Pasado ese punto, la animación deja de acompañar la acción y pasa a ser algo que hay que esperar | Cumple |
+| Salidas | **Alrededor de un 20 % más rápidas** que su entrada | «Exit animations can be ~20% faster than entrance» (EK). (nuestro) Cuando algo se va, la persona ya decidió y la atención está en lo que sigue | Cumple: el renglón que sale del desglose se desvanece en 160 ms (`--salida`), contra los 200 de la entrada (`--entrada`), y sin desplazarse, porque ya no es lo que se mira |
+
+### 10.3 Detalles
+
+| Regla | Valor | Por qué | Hoy |
+|---|---|---|---|
+| Botón presionado | `transform: scale(0.97)` en `:active` | (nuestro) El botón cede un poco bajo el puntero, como un botón físico, y confirma el toque antes de que la aplicación responda. Con 3 % se siente sin que el texto se deforme | Cumple en `.boton` y en los botones de cantidad. **No se aplica a las tarjetas elegibles** (`.eleccion`, `.opcion`, `.interruptor`): en una tarjeta de 480 px, el 3 % mueve los bordes 7 px y se lee como un salto, no como una pulsación. Esas tarjetas marcan la presión con el fondo |
+| Lo que entra | Arranca en `scale(0.95)`, **no en 0** | «A higher initial value resembles the real world more. Just like a balloon, even when deflated it has a visible shape, it never disappears completely» (EK). Un elemento que nace de 0 parece salir de la nada | No aplica todavía: nada entra escalando. El renglón del desglose entra con desplazamiento |
+| Efecto al pasar el mouse | Se anima un **hijo**, no el elemento que recibe el mouse | (nuestro) Si el elemento que detecta el mouse se mueve o se achica, el puntero puede quedar afuera. Entonces el efecto se apaga, el elemento vuelve, el puntero queda adentro otra vez, y así: parpadea. Animando un hijo, el área que detecta el mouse queda quieta | Cumple: los efectos al pasar el mouse solo cambian color y borde, no tamaño |
+| Área de clic | El artículo pide **44 px como mínimo**. **Nos apartamos a propósito: 40 px** | **Por qué no seguimos esta regla.** Los 44 px son una guía de Apple para pantallas táctiles, pensada para dedos. EventAura es una aplicación de escritorio que se usa con mouse o touchpad, y el criterio para puntero es WCAG 2.2, 2.5.8 «Target Size (Minimum)», que pide 24 × 24 px como mínimo. Los 40 px de campos, botones y controles de cantidad lo superan de sobra. Subirlos a 44 empujaría varios formularios por encima del tope de 790 px de alto (`CLAUDE.md`), que es un problema real y ya ocurrió una vez. Conocer la regla y apartarse con un motivo escrito es parte del método | Desvío deliberado (decisión de JC, 25/11/2026). **Lo que sí se cuida:** ningún control queda por debajo de 24 px. Los enlaces de texto y la casilla «Mostrar contraseña» tienen el alto de su renglón; cuando estén al lado de otro control, que haya 24 px de separación entre sus áreas |
+
+### 10.4 Lectura
+
+| Regla | Valor | Por qué | Hoy |
+|---|---|---|---|
+| Largo de línea | Alrededor de **65ch** como máximo | «Cap body text at about 65ch instead of stretching full width so line length stays comfortable to read» (EK). (nuestro) Con líneas más largas, al terminar una el ojo pierde el comienzo de la siguiente | Cumple: `.medida` usa 60ch |
+| Cifras en columnas de precios | `font-variant-numeric: tabular-nums` | «Apply tabular-nums to price columns so digits align and the column reads cleanly» (EK). (nuestro) En el armador, además, el total cambia de valor: con dígitos de ancho fijo el número no baila mientras cuenta | Cumple: `.cifra`, el desglose y el total |
+| Subrayado | **Solo en enlaces.** Para destacar texto que no es enlace, peso o color | «Reserve underlines for links… so underline stays a reliable affordance and people are not tempted to click inert copy» (EK) | Cumple: solo `.enlace` subraya |
+
+### 10.5 Movimiento reducido
+
+Con `prefers-reduced-motion: reduce` no hay transiciones, conteo ni deslizamiento: todo cambia de inmediato.
+Esta regla no está en el artículo; es nuestra. Para quien activa esa opción, el movimiento no es un detalle de
+calidad sino algo que puede marear o distraer, y la información tiene que llegar igual sin él. Hoy se cumple:
+`sistema.css` anula toda transición y animación, y el armador no cuenta.
+
+### 10.6 Estado
+
+Aplicado en `sistema.css`, `armador-paquete.css` y `armador-paquete.js` el 25/11/2026, en las cinco pantallas:
+- **Hover:** con `ease`.
+- **Perilla del interruptor:** con `ease-in-out`.
+- **Presión:** `scale(0.97)` en los botones.
+- **Desglose:** el renglón que sale se desvanece un 20 % más rápido que lo que entra.
+
+El área de clic de 44 px **no** se aplica, por la razón de §10.3.
+
+**Robustez de los dos movimientos del armador.** No se confía en que la animación llegue a correr. Una vista web
+oculta, la pestaña en segundo plano o el movimiento reducido pueden impedir que se dispare `animationend` o
+que avance `requestAnimationFrame`. Por eso:
+- el renglón que sale se quita a los 220 ms aunque no haya terminado de desvanecerse;
+- la marca de «nuevo» se limpia a los 260 ms;
+- el total escribe su valor exacto a los 260 ms si el conteo no llegó.
+
+Se encontró al probarlo con Edge sin ventana el 25/11. Sin estos respaldos, los renglones que salían quedaban
+en la lista duplicados y el total se quedaba en $ 0,00.
