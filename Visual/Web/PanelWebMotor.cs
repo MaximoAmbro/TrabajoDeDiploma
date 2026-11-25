@@ -75,7 +75,11 @@ namespace Visual.Web
                 core.NavigationCompleted += async (s, e) =>
                 {
                     if (IsDisposed || fallida) return;
-                    if (!e.IsSuccess) { Desactivar(); return; }
+                    if (!e.IsSuccess)
+                    {
+                        System.Diagnostics.Trace.WriteLine("WebView2 navigation failed: " + e.WebErrorStatus);
+                        Desactivar(); return;
+                    }
                     cargada = true;
                     await Renderizar();
                 };
@@ -102,9 +106,13 @@ namespace Visual.Web
             try
             {
                 string json = JsonConvert.SerializeObject(new { tema = Tema.VariablesWeb(), datos });
-                string respuesta = await navegador.ExecuteScriptAsync("window.eventAuraActualizar(" + json + ")");
+                string respuesta = await navegador.ExecuteScriptAsync("(()=>{try{return window.eventAuraActualizar(" + json + ");}catch(e){return 'EVENTAURA_ERROR:'+String(e&&e.message||e);}})()");
                 if (IsDisposed || fallida || actual != version) return;
-                if (respuesta != "true") { Desactivar(); return; }
+                if (respuesta != "true")
+                {
+                    System.Diagnostics.Trace.WriteLine("WebView2 did not render data: " + (respuesta ?? "<null>"));
+                    Desactivar(); return;
+                }
                 VistaLista?.Invoke(null);
             }
             catch (Exception error)

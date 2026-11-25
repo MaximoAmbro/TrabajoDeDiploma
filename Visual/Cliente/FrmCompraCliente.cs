@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 using Negocio;
 using Entidades;
 
@@ -60,6 +61,9 @@ namespace Visual
         private readonly Visual.Componentes.BotonSecundario volverASectores = new Visual.Componentes.BotonSecundario
             { Name = "btnVolverASectores", Text = "Ver entradas" };
         private bool distribuyendoCompra;
+        private bool sincronizandoWeb;
+        private bool operacionWeb;
+        private int versionArmador;
 
         public FrmCompraCliente()
         {
@@ -100,9 +104,11 @@ namespace Visual
             pnlResumen.AutoScroll = false;
             pnlResumen.Controls.Add(documentoResumen);
             documentoResumen.Controls.Add(lblResumen);
-            pnlResumen.Controls.Add(resumenWeb);
+            pnlContenidoCompra.Controls.Add(resumenWeb);
+            resumenWeb.Dock = DockStyle.Fill;
+            resumenWeb.Mensaje += RecibirMensajeArmador;
             pnlResumen.Controls.Add(avisoResumenWeb);
-            avisoResumenWeb.Text = "Vista web no disponible";
+            avisoResumenWeb.Text = "Vista web no disponible. Se muestra la compra de Windows Forms.";
             avisoResumenWeb.AccessibleDescription = "La vista web no está disponible.";
             resumenWeb.VistaLista += ActualizarVistaResumen;
             resumenWeb.VistaNoDisponible += ActualizarVistaResumen;
@@ -234,9 +240,8 @@ namespace Visual
                 pnlResumen.Height = altoFijo + altoDocumento;
                 documentoResumen.SetBounds(relleno, arribaDocumento, anchoInterior, altoDocumento);
                 lblTotalDestacado.SetBounds(relleno, documentoResumen.Bottom + separacion, anchoInterior, altoTotal);
-                resumenWeb.Bounds = RectangleResumenWeb();
-                avisoResumenWeb.Location = new Point(Math.Max(lblTituloResumen.Right + separacion,
-                    pnlResumen.Width - relleno - avisoResumenWeb.Width), lblTituloResumen.Top);
+                avisoResumenWeb.MaximumSize = new Size(Math.Max(1, pnlResumen.ClientSize.Width - relleno * 2), 0);
+                avisoResumenWeb.Location = new Point(relleno, lblTituloResumen.Bottom + separacion);
             }
             finally
             {
@@ -244,14 +249,13 @@ namespace Visual
             }
         }
 
-        private System.Drawing.Rectangle RectangleResumenWeb() =>
-            System.Drawing.Rectangle.FromLTRB(documentoResumen.Left, documentoResumen.Top,
-                lblTotalDestacado.Right, lblTotalDestacado.Bottom);
-
         private void ActualizarVistaResumen()
         {
             resumenWeb.Visible = resumenWeb.Preparado;
             avisoResumenWeb.Visible = resumenWeb.InicializacionTerminada && !resumenWeb.Preparado;
+            pnlAccionesCompra.Visible = !resumenWeb.Visible;
+            pnlContenidoCompra.AutoScroll = !resumenWeb.Visible;
+            lblResumen.Visible = lblTotalDestacado.Visible = !resumenWeb.Visible;
             if (resumenWeb.Visible) resumenWeb.BringToFront();
             if (avisoResumenWeb.Visible) avisoResumenWeb.BringToFront();
             AjustarEncabezado();
@@ -271,7 +275,10 @@ namespace Visual
 
         protected override void OnShown(EventArgs e)
         {
-            if (!accesoRechazado) resumenWeb.Cargar("compra.html");
+            if (!accesoRechazado)
+            {
+                resumenWeb.Cargar("armador-paquete.html");
+            }
             if (accesoRechazado) return;
             base.OnShown(e);
             AjustarAreaVisible(Screen.FromControl(this).WorkingArea);
@@ -365,7 +372,8 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                Avisos.Regla("No se puede armar el paquete", ex);
+                if (operacionWeb) EnviarDatosArmador(null, ex.Message);
+                else Avisos.Regla("No se puede armar el paquete", ex);
                 if (ex.Regla == "RN-36")
                 {
                     MarcarInscripto(true);
@@ -386,7 +394,7 @@ namespace Visual
         {
             if (compraEnCurso || compraFinalizada) return;
             // H-04: el seguro solo se contrata durante la compra (RN-28).
-            if (!paquete.ConSeguro && GestorPaquetes.Instance.CantidadEntradas(paquete) > 0)
+            if (!operacionWeb && !paquete.ConSeguro && GestorPaquetes.Instance.CantidadEntradas(paquete) > 0)
             {
                 DialogResult sinSeguro = MessageBox.Show(
                     "No agregaste el seguro de entrada. Solo se puede contratar ahora: después de " +
@@ -411,7 +419,8 @@ namespace Visual
             {
                 compraEnCurso = false;
                 ActualizarHabilitados();
-                Avisos.Regla("No se puede completar la compra", ex);
+                if (operacionWeb) ActualizarResumen(ex.Message);
+                else Avisos.Regla("No se puede completar la compra", ex);
                 RecargarDisponibles();
                 return;
             }
@@ -686,6 +695,7 @@ namespace Visual
 
         private void chkServicio_CheckedChanged(object sender, EventArgs e)
         {
+            if (sincronizandoWeb) return;
             CheckBox chk = (CheckBox)sender;
             Servicio servicio = chk.Tag as Servicio;
             if (servicio == null)
@@ -713,12 +723,13 @@ namespace Visual
 
         private void chkSeguro_CheckedChanged(object sender, EventArgs e)
         {
+            if (sincronizandoWeb) return;
             paquete.ConSeguro = chkSeguro.Checked;
             ActualizarResumen();
         }
 
         // RF-05 + RF-08: desglose del paquete con el orden de cálculo de docs/02-reglas-negocio.md.
-        private void ActualizarResumen()
+        private void ActualizarResumen(string error = null)
         {
             ResumenDescuento resumen = GestorFidelizacion.Instance.CalcularDescuento(cliente, paquete);
 
@@ -754,10 +765,151 @@ namespace Visual
 
             string total = resumen.Total.ToString("C2", Pesos);
             lblResumen.Cargar(filas, total);
-            resumenWeb.Actualizar(lblResumen.ModeloWeb());
             lblTotalDestacado.Text = "TOTAL " + total;
+            EnviarDatosArmador(resumen, error);
             AjustarEncabezado();
             ActualizarHabilitados();
+        }
+
+        private void EnviarDatosArmador(ResumenDescuento resumen, string error = null)
+        {
+            if (evento == null || cliente == null || paquete == null) return;
+            var local = Negocio.GestorLocales.Instance.PorId(evento.IdLocal);
+            var servicios = GestorPaquetes.Instance.ServiciosDe(IDEvento);
+            bool suscripcion = Negocio.GestorSuscripciones.Instance.TieneActiva(IDUsuario);
+            object resumenWebModelo = resumen == null ? null : (object)new
+            {
+                version = versionArmador,
+                baseEntradas = resumen.BaseEntradas,
+                porcentaje = resumen.Porcentaje,
+                montoDescuento = resumen.MontoDescuento,
+                subtotalEntradas = resumen.SubtotalEntradas,
+                servicios = resumen.Servicios,
+                cargoServicio = resumen.CargoServicio,
+                seguro = resumen.Seguro,
+                total = resumen.Total
+            };
+            var modelo = new
+            {
+                evento = new
+                {
+                    nombre = evento.Nombre,
+                    categoria = evento.Categoria,
+                    lugar = local?.Nombre ?? "Local",
+                    direccion = local?.Direccion ?? string.Empty,
+                    fecha = evento.Fecha.Date.Add(evento.Hora).ToString("dddd d 'de' MMMM · HH:mm", Pesos),
+                    colorIndice = Componentes.PortadaEvento.ColorDelNombre(evento.Nombre)
+                },
+                cliente = new
+                {
+                    nombre = ((cliente.Nombre ?? string.Empty) + " " + (cliente.Apellido ?? string.Empty)).Trim(),
+                    nivel = cliente.Nivel.ToString(),
+                    porcentaje = GestorFidelizacion.Instance.PorcentajePara(cliente.Nivel),
+                    suscripcionActiva = suscripcion
+                },
+                parametros = new
+                {
+                    cargoServicio = GestorParametros.Instance.ObtenerDecimal("CARGO_SERVICIO"),
+                    seguroPrecio = GestorParametros.Instance.ObtenerDecimal("SEGURO_PRECIO"),
+                    maxEntradas = GestorParametros.Instance.ObtenerEntero("COMPRA_ENTRADAS_MAX"),
+                    bonificacionSeguro = GestorParametros.Instance.ObtenerDecimal("SUSCRIPCION_SEGURO_DESCUENTO")
+                },
+                sectores = sectores.Values.Select(s => new
+                {
+                    id = s.Id, nombre = s.Nombre, precio = s.Precio,
+                    disponibles = GestorPaquetes.Instance.DisponiblesDe(s.Id), capacidad = s.Capacidad
+                }).ToArray(),
+                servicios = servicios.Select(s => new { id = s.Id, nombre = s.Nombre, tipo = s.Tipo, precio = s.Precio }).ToArray(),
+                seleccion = new
+                {
+                    entradas = paquete.Entradas.Where(e => e.IdSector.HasValue)
+                        .Select(e => new { sectorId = e.IdSector.Value, cantidad = e.CantidadVendida }).ToArray(),
+                    servicios = paquete.Servicios.Select(s => s.Id).ToArray(),
+                    seguro = paquete.ConSeguro
+                },
+                resumen = resumenWebModelo,
+                error = string.IsNullOrWhiteSpace(error) ? null : new { mensaje = error }
+            };
+            resumenWeb.Actualizar(modelo);
+        }
+
+        private void RecibirMensajeArmador(string json)
+        {
+            JObject mensaje;
+            try { mensaje = JObject.Parse(json ?? string.Empty); }
+            catch (Newtonsoft.Json.JsonException) { return; }
+            string tipo = (string)mensaje["tipo"];
+            if (tipo == "seleccion" || tipo == "comprar")
+            {
+                try
+                {
+                    versionArmador = (int?)mensaje["version"] ?? versionArmador;
+                    SincronizarPaqueteDesdeWeb(mensaje);
+                    if (tipo == "seleccion")
+                    {
+                        ActualizarResumen();
+                        return;
+                    }
+                    operacionWeb = true;
+                    try { btnComprar_Click(this, EventArgs.Empty); }
+                    finally { operacionWeb = false; }
+                }
+                catch (ReglaNegocioException ex)
+                {
+                    ActualizarResumen(ex.Message);
+                }
+                catch (ArgumentException ex)
+                {
+                    ActualizarResumen(ex.Message);
+                }
+                return;
+            }
+            if (tipo == "listaEspera")
+            {
+                operacionWeb = true;
+                try { btnListaEspera_Click(this, EventArgs.Empty); }
+                finally { operacionWeb = false; }
+            }
+            else if (tipo == "niveles") lnkNiveles_LinkClicked(this, null);
+            else if (tipo == "navegar" && (string)mensaje["destino"] == "eventos") btnVolver_Click(this, EventArgs.Empty);
+        }
+
+        private void SincronizarPaqueteDesdeWeb(JObject mensaje)
+        {
+            var nuevo = GestorPaquetes.Instance.Nuevo(IDEvento, IDUsuario);
+            var cantidades = mensaje["entradas"]?.ToObject<List<JObject>>() ?? new List<JObject>();
+            var porSector = cantidades.ToDictionary(x => (int)x["sectorId"], x => (int)x["cantidad"]);
+            foreach (Sector sector in sectores.Values)
+                GestorPaquetes.Instance.AgregarEntradas(nuevo, sector.Id,
+                    porSector.TryGetValue(sector.Id, out int cantidad) ? cantidad : 0);
+            var servicios = mensaje["servicios"]?.ToObject<List<int>>() ?? new List<int>();
+            foreach (int id in servicios) GestorPaquetes.Instance.AgregarServicio(nuevo, id);
+            nuevo.ConSeguro = (bool?)mensaje["seguro"] ?? false;
+            paquete = nuevo;
+            SincronizarRespaldoWinForms();
+        }
+
+        private void SincronizarRespaldoWinForms()
+        {
+            cargandoGrilla = true;
+            foreach (DataGridViewRow fila in dgvSectores.Rows)
+            {
+                int id = Convert.ToInt32(fila.Cells["IdSector"].Value);
+                fila.Cells["Cantidad"].Value = paquete.Entradas.Where(x => x.IdSector == id).Sum(x => x.CantidadVendida);
+            }
+            cargandoGrilla = false;
+            sincronizandoWeb = true;
+            try
+            {
+                foreach (CheckBox chk in ChecksDeServicio())
+                {
+                    Servicio servicio = chk.Tag as Servicio;
+                    chk.Checked = servicio != null && paquete.Servicios.Any(s => s.Id == servicio.Id);
+                }
+                chkSeguro.Checked = paquete.ConSeguro;
+            }
+            finally { sincronizandoWeb = false; }
+            ActualizarMapa();
         }
 
         // RN-33: importes en pesos argentinos.

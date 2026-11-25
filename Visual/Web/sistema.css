@@ -30,7 +30,12 @@
     --alto-control: 40px; --radio-control: 3px; --radio-tarjeta: 4px;
     --ancho-lateral: 240px; --alto-barra: 56px; --ancho-panel: 440px;
     --ancho-columna: 480px; --ancho-columna-amplia: 608px; --ancho-resumen: 360px;
-    --transicion: 120ms ease-out;
+    /* Movimiento (PRINCIPIOS-DISENO.md §10): estados y hover con ease; lo que se mueve dentro de la
+       pantalla con ease-in-out; lo que entra o sale con ease-out, y la salida un 20 % más rápida. */
+    --transicion: 120ms ease;
+    --desplazamiento: 120ms ease-in-out;
+    --entrada: 200ms ease-out;
+    --salida: 160ms ease-out;
 }
 
 /* ---------- Base ---------- */
@@ -79,7 +84,8 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
 .boton { display: inline-flex; align-items: center; justify-content: center; gap: var(--e2);
     height: var(--alto-control); padding: 0 var(--e5); border-radius: var(--radio-control); border: 1px solid transparent;
     font-weight: 600; cursor: pointer; white-space: nowrap;
-    transition: background-color var(--transicion), border-color var(--transicion), color var(--transicion); }
+    transition: background-color var(--transicion), border-color var(--transicion), color var(--transicion), transform var(--transicion); }
+.boton:active:not(:disabled) { transform: scale(0.97); }
 .boton-primario { background: var(--primario); color: #fff; }
 .boton-primario:hover { background: var(--primario-encima); }
 .boton-primario:active { background: var(--primario-presionado); }

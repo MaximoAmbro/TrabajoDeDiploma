@@ -1,0 +1,149 @@
+/* Armador de paquete. Solo composición: medidas y colores de sistema.css.
+   Usos del acento en el área web: botón «Continuar al pago», paso actual y lo seleccionado (tarjetas con
+   entradas, servicios y seguro encendidos comparten un solo trazo). El resto es neutro. */
+
+/* ---------- Contexto de la aplicación (Windows Forms en la realidad) ---------- */
+.aplicacion { display: grid; grid-template-columns: var(--ancho-lateral) 1fr; grid-template-rows: var(--alto-barra) 1fr; min-height: 100vh; }
+.barra { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--e5);
+    background: var(--lateral-fondo); color: #fff; border-bottom: 1px solid var(--lateral-encima); }
+.usuario { display: flex; flex-direction: column; align-items: flex-end; gap: 0; }
+.usuario .n5 { color: var(--lateral-texto); }
+.lateral { background: var(--lateral-fondo); padding: var(--e5) var(--e3); display: flex; flex-direction: column; gap: var(--e1); }
+.lateral .n6 { color: var(--lateral-seccion); padding: var(--e4) var(--e3) var(--e2); }
+.lateral .n6:first-child { padding-top: 0; }
+.lateral a { display: block; padding: var(--e2) var(--e3); border-radius: var(--radio-control); color: var(--lateral-texto); cursor: default;
+    transition: background-color var(--transicion), color var(--transicion); }
+.lateral a:hover { background: var(--lateral-encima); color: #fff; }
+.lateral a.activo { background: var(--lateral-encima); color: #fff; font-weight: 600; box-shadow: inset 2px 0 0 #fff; }
+
+/* ---------- Área web ---------- */
+.area-web { padding: var(--e6); background: var(--fondo); min-width: 0; }
+.encabezado { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--e6);
+    padding-bottom: var(--e5); border-bottom: 1px solid var(--borde); }
+.evento { display: flex; align-items: center; gap: var(--e4); min-width: 0; }
+.portada-chica { position: relative; flex: none; width: 96px; height: 64px; overflow: hidden; border-radius: var(--radio-tarjeta); }
+.portada-chica span { position: absolute; left: 8px; bottom: -4px; font: 700 48px/1 var(--familia); color: rgba(255, 255, 255, 0.28); }
+
+.pasos-compra { display: flex; gap: var(--e5); counter-reset: paso; }
+.pasos-compra li { counter-increment: paso; display: flex; align-items: center; gap: var(--e2); font: var(--n5); color: var(--texto-secundario); }
+.pasos-compra li::before { content: counter(paso); width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%;
+    border: 1px solid var(--borde-control); font: var(--n5); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pasos-compra li.hecho::before { content: "✓"; border-color: var(--borde); background: var(--borde); color: var(--texto); }
+.pasos-compra li.actual { color: var(--texto); font-weight: 600; }
+.pasos-compra li.actual::before { border-color: var(--primario); background: var(--primario); color: #fff; }
+
+.armado { display: grid; grid-template-columns: minmax(0, 1fr) var(--ancho-resumen); gap: var(--e6); align-items: start; }
+
+/* ---------- Sectores ---------- */
+.escenario { text-align: center; padding: var(--e2); background: var(--borde); color: var(--texto-secundario); border-radius: var(--radio-control); }
+.sectores { display: grid; grid-template-columns: repeat(auto-fit, minmax(176px, 1fr)); gap: var(--e4); }
+.sector { position: relative; display: flex; flex-direction: column; gap: var(--e5); padding: var(--e5) var(--e4) var(--e4);
+    background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); overflow: hidden;
+    transition: border-color var(--transicion), box-shadow var(--transicion); }
+.sector::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--color-sector); }
+.sector:hover { border-color: var(--texto-secundario); }
+.sector.elegido { border-color: var(--primario); box-shadow: inset 0 0 0 1px var(--primario); }
+.sector.agotado { background: var(--fondo); }
+.sector.agotado::before { background: var(--borde); }
+.sector .precio { font: var(--n3); letter-spacing: var(--n3-ls); font-variant-numeric: tabular-nums; }
+.disponibilidad { display: flex; flex-direction: column; gap: var(--e1); }
+.ocupacion { height: 4px; background: var(--borde); }
+.ocupacion span { display: block; height: 100%; background: var(--texto-secundario); }
+
+.cantidad { display: grid; grid-template-columns: var(--alto-control) 1fr var(--alto-control); height: var(--alto-control);
+    border: 1px solid var(--borde-control); border-radius: var(--radio-control); overflow: hidden; }
+.cantidad button { border: 0; background: var(--superficie); cursor: pointer; display: grid; place-items: center;
+    transition: background-color var(--transicion), color var(--transicion), transform var(--transicion); }
+.cantidad button:hover { background: var(--fondo); }
+.cantidad button:active:not(:disabled) { background: var(--borde); transform: scale(0.97); }
+.cantidad button:disabled { color: var(--borde-control); background: var(--superficie); cursor: not-allowed; }
+.cantidad button svg { width: 12px; height: 12px; }
+.cantidad output { display: grid; place-items: center; font: var(--n3); font-variant-numeric: tabular-nums;
+    border-left: 1px solid var(--borde); border-right: 1px solid var(--borde); }
+.sector.agotado .cantidad { display: none; }
+
+/* ---------- Servicios y seguro: interruptores ---------- */
+.servicios { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e4); }
+.interruptor { position: relative; display: grid; grid-template-columns: 1fr auto 32px; align-items: center; column-gap: var(--e4);
+    padding: var(--e4); cursor: pointer; background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio-tarjeta);
+    transition: border-color var(--transicion), box-shadow var(--transicion), background-color var(--transicion); }
+.interruptor:hover { border-color: var(--texto-secundario); }
+.interruptor:active { background: var(--fondo); }
+.interruptor input { position: absolute; opacity: 0; pointer-events: none; }
+.interruptor:has(input:focus-visible) { outline: 2px solid var(--primario); outline-offset: 2px; }
+.interruptor:has(input:checked) { border-color: var(--primario); box-shadow: inset 0 0 0 1px var(--primario); }
+.interruptor .fuerte { font-weight: 600; }
+.interruptor .precio { font-variant-numeric: tabular-nums; color: var(--texto-secundario); }
+.interruptor:has(input:checked) .precio { color: var(--texto); font-weight: 600; }
+.llave { position: relative; width: 32px; height: 18px; border-radius: 9px; background: var(--borde-control);
+    transition: background-color var(--transicion); }
+.llave::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff;
+    transition: transform var(--desplazamiento); }
+.interruptor:has(input:checked) .llave { background: var(--texto); }
+.interruptor:has(input:checked) .llave::after { transform: translateX(14px); }
+
+/* ---------- El resumen ---------- */
+.resumen { position: sticky; top: var(--e6); padding: var(--e5); background: var(--superficie);
+    border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); }
+.nivel { padding: var(--e1) var(--e2); border-radius: var(--radio-control); background: var(--fondo); color: var(--texto-secundario); }
+.desglose { display: flex; flex-direction: column; }
+.desglose .grupo { font: var(--n6); letter-spacing: var(--n6-ls); text-transform: uppercase; color: var(--texto-secundario);
+    padding: var(--e4) 0 var(--e2); }
+.desglose .grupo:first-child { padding-top: 0; }
+.desglose .linea { display: grid; grid-template-columns: 1fr auto; column-gap: var(--e4); padding: var(--e1) 0;
+    font: var(--n4); }
+.desglose .linea .importe { font-variant-numeric: tabular-nums; text-align: right; }
+.desglose .linea.descuento { color: var(--exito-texto); }
+.desglose .linea.bonificado .importe { color: var(--exito-texto); }
+.desglose .linea.secundaria { color: var(--texto-secundario); font: var(--n5); }
+/* El renglón nuevo entra deslizándose desde arriba, 8 px en 200 ms. Es el único desplazamiento del
+   proyecto (PRINCIPIOS-DISENO.md §8). Con prefers-reduced-motion, sistema.css lo anula. */
+.desglose .nueva { animation: entrar var(--entrada) both; }
+.desglose .saliendo { animation: salir var(--salida) both; pointer-events: none; }
+@keyframes entrar { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+/* La salida no se desplaza: solo se desvanece. Ya no es lo que se mira. */
+@keyframes salir { from { opacity: 1; } to { opacity: 0; } }
+.vacio { padding: var(--e4) 0; }
+.total { display: flex; flex-direction: column; gap: var(--e1); padding-top: var(--e5); border-top: 1px solid var(--texto); }
+.total .n1 { font-variant-numeric: tabular-nums; }
+.total .decimales { font: var(--n3); letter-spacing: 0; color: var(--texto-secundario); }
+#ahorro { color: var(--exito-texto); min-height: 18px; }
+
+@media (max-width: 760px) {
+    .armado { grid-template-columns: 1fr; }
+    .resumen { position: static; }
+}
+@media (max-width: 880px) {
+    .aplicacion { grid-template-columns: 1fr; }
+    .lateral { display: none; }
+    .servicios { grid-template-columns: 1fr; }
+    .encabezado { flex-direction: column; align-items: flex-start; }
+}
+
+/* WebView2 ocupa solo el área de contenido que le entrega FrmCompraCliente. */
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { padding: 0; }
+.area-web { height: 100%; min-height: 0; overflow: auto; }
+.encabezado { padding-bottom: var(--e4); }
+.armado { min-height: calc(100vh - 196px); align-items: stretch; }
+.resumen { position: sticky; top: 0; height: calc(100vh - 216px); min-height: 400px; display: flex; flex-direction: column; }
+.resumen > .pila { height: 100%; min-height: 0; display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto auto; gap: var(--e4); }
+.desglose { grid-row: 2; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.vacio { grid-row: 3; }
+.total { grid-row: 4; margin-top: 0; }
+.resumen #confirmar-seguro, .resumen #error { grid-row: 5; }
+.resumen .pila-3 { grid-row: 6; }
+@media (max-height: 760px) and (min-width: 761px) {
+    .resumen { height: calc(100vh - 180px); min-height: 0; padding: var(--e4); }
+    .resumen > .pila { gap: var(--e3); }
+    .desglose .grupo { padding-top: var(--e2); }
+    .desglose .linea { padding: 2px 0; }
+    .total { padding-top: var(--e3); }
+}
+@media (max-width: 760px) {
+    .armado { height: auto; min-height: 0; }
+    .resumen { height: auto; min-height: 0; position: static; }
+    .resumen > .pila { height: auto; min-height: 0; display: flex; }
+    .desglose { overflow: visible; }
+}

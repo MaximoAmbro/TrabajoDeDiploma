@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+<title>EventAura · Armá tu paquete</title>
+<link rel="stylesheet" href="sistema.css">
+<link rel="stylesheet" href="armador-paquete.css">
+<script defer src="entrada-puente.js"></script>
+<script defer src="armador-paquete.js"></script>
+</head>
+<body>
+<main class="area-web" aria-labelledby="evento-nombre">
+    <div class="pila pila-7">
+
+      <!-- Encabezado: el evento y los pasos -->
+      <header class="encabezado">
+        <div class="evento">
+          <span class="portada-chica" id="evento-portada" aria-hidden="true"><span id="evento-inicial">D</span></span>
+          <div class="pila pila-1">
+            <p class="n6 secundario" id="evento-categoria">Concierto · Galpón 17</p>
+            <h1 class="n2" id="evento-nombre">Duki en Rosario</h1>
+            <p class="n5 secundario" id="evento-detalle">Sábado 23 de enero · 21:00 · Estévez Boero 600, Rosario</p>
+          </div>
+        </div>
+        <ol class="pasos-compra" aria-label="Pasos de la compra">
+          <li class="hecho">Elegí</li>
+          <li class="actual" aria-current="step">Armá</li>
+          <li>Pagá</li>
+          <li>Listo</li>
+        </ol>
+      </header>
+
+      <div class="armado">
+        <!-- Columna de elecciones -->
+        <div class="pila pila-8">
+
+          <section class="pila pila-5" aria-labelledby="titulo-entradas">
+            <div class="fila-extremos">
+              <div class="pila pila-1">
+                <h2 class="n3" id="titulo-entradas">Entradas</h2>
+                <p class="n5 secundario">Elegí cuántas en cada sector. Hasta <span id="max-entradas">6</span> por compra.</p>
+              </div>
+              <p class="n5 secundario cifra al-final" id="cupo" aria-live="polite">0 de 6</p>
+            </div>
+            <div class="pila pila-2">
+              <p class="escenario n6">Escenario</p>
+              <div class="sectores" id="sectores"></div>
+            </div>
+          </section>
+
+          <section class="pila pila-5" aria-labelledby="titulo-servicios">
+            <div class="pila pila-1">
+              <h2 class="n3" id="titulo-servicios">Servicios y seguro</h2>
+              <p class="n5 secundario">Uno de cada servicio por compra, sin descuento por nivel. El seguro cubre todas las entradas.</p>
+            </div>
+            <div class="servicios" id="servicios"></div>
+            <label class="interruptor seguro" id="seguro-tarjeta">
+              <input type="checkbox" id="seguro">
+              <span class="pila pila-1">
+                <span class="n4 fuerte">Seguro de entrada</span>
+                <span class="n5 secundario" id="seguro-detalle">Devolución hasta 48 h antes del evento. $ 5.000 por entrada.</span>
+              </span>
+              <span class="n4 cifra precio" id="seguro-precio">$ 0</span>
+              <span class="llave" aria-hidden="true"></span>
+            </label>
+          </section>
+        </div>
+
+        <!-- El resumen: el momento de autor -->
+        <aside class="resumen" aria-labelledby="titulo-resumen">
+          <div class="pila pila-5">
+            <div class="fila-extremos">
+              <h2 class="n3" id="titulo-resumen">Tu paquete</h2>
+              <span class="nivel n6" id="nivel-chip">Plata · 5 %</span>
+            </div>
+
+            <ol class="desglose" id="desglose" aria-live="polite" aria-label="Desglose del paquete"></ol>
+            <p class="n5 secundario vacio" id="vacio">Elegí al menos una entrada para armar tu paquete. Los servicios no se venden solos.</p>
+
+            <div class="total">
+              <p class="n6 secundario">Total</p>
+              <p class="n1 cifra" id="total">$ 0</p>
+              <p class="solo-lector" id="total-anuncio" aria-live="polite"></p>
+              <p class="n5 secundario" id="ahorro"></p>
+            </div>
+
+            <div class="aviso aviso-atencion oculto" id="confirmar-seguro" role="alertdialog" aria-labelledby="confirmar-seguro-texto">
+              <p id="confirmar-seguro-texto">No agregaste el seguro de entrada. Solo se puede contratar ahora: después de pagar no se puede incorporar.</p>
+              <div class="fila">
+                <button type="button" class="boton boton-secundario" id="agregar-seguro">Agregar seguro</button>
+                <button type="button" class="enlace" id="seguir-sin-seguro">Seguir sin seguro</button>
+              </div>
+            </div>
+            <div class="aviso aviso-error oculto" id="error" role="alert"></div>
+
+            <div class="pila pila-3">
+              <button type="button" class="boton boton-primario boton-ancho" id="continuar" disabled>Continuar al pago</button>
+              <div class="fila-extremos">
+                <button type="button" class="enlace n5" id="volver">Volver a eventos</button>
+                <button type="button" class="enlace n5" id="niveles">¿Cómo funcionan los niveles?</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+</main>
+</body>
+</html>

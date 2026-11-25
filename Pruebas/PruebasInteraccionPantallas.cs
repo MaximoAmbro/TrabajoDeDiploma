@@ -86,7 +86,7 @@ namespace Pruebas
 
         private static void ProbarPanelSinDependencias()
         {
-            string[] paginas = { "catalogo.html", "compra.html", "datos.html", "datos.html", "gestion.html", "bienvenida.html", "acceso.html" };
+            string[] paginas = { "catalogo.html", "compra.html", "armador-paquete.html", "datos.html", "datos.html", "gestion.html", "bienvenida.html", "acceso.html" };
             foreach (string pagina in paginas)
             {
                 using (var panel = new Visual.Web.PanelWeb())
@@ -160,10 +160,14 @@ namespace Pruebas
         [TestMethod("CP-357: Teclado y geometría de las 26 ventanas reales")]
         public void CP357_InteraccionRealDeLasPantallas()
         {
-            var tipos = typeof(Visual.FormularioEventAura).Assembly.GetTypes()
+            var todosLosTipos = typeof(Visual.FormularioEventAura).Assembly.GetTypes()
                 .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Visual.FormularioEventAura))
                 .OrderBy(t => t.Name).ToArray();
-            Assert.AreEqual(26, tipos.Length);
+            Assert.AreEqual(26, todosLosTipos.Length);
+            string filtro = Environment.GetEnvironmentVariable("EVENTAURA_CP357_FILTRO");
+            var tipos = string.IsNullOrWhiteSpace(filtro) ? todosLosTipos :
+                todosLosTipos.Where(t => t.Name.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0).ToArray();
+            Assert.IsTrue(tipos.Length > 0, "EVENTAURA_CP357_FILTRO no coincide con una ventana.");
             var resultados = new List<string>();
             InterfazGrupoA.EnSta(() =>
             {
@@ -187,6 +191,16 @@ namespace Pruebas
                             formulario = (Form)Activator.CreateInstance(tipo);
                             PrepararContextoSeleccionado(formulario);
                             formulario.Show();
+                            if (formulario is Visual.FrmCompraCliente &&
+                                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CP357_TAMANO")))
+                            {
+                                var dimensiones = Environment.GetEnvironmentVariable("EVENTAURA_CP357_TAMANO").Split('x');
+                                if (dimensiones.Length == 2 && int.TryParse(dimensiones[0], out int ancho) && int.TryParse(dimensiones[1], out int alto))
+                                {
+                                    formulario.Size = new Size(ancho, alto);
+                                    Application.DoEvents();
+                                }
+                            }
                             Application.DoEvents();
                             Thread.Sleep(30);
                             Application.DoEvents();
@@ -277,6 +291,13 @@ namespace Pruebas
                 {
                     Assert.IsTrue(Application.OpenForms.OfType<Visual.frmInicio>().Any(f => f.Visible),
                         "El fallo de la bienvenida debe conducir al acceso WinForms.");
+                    continue;
+                }
+                if (formulario is Visual.frmCrearUsuario)
+                {
+                    Assert.IsTrue(formulario.Controls.Find("txtmail", true).Any(c => c.Visible) &&
+                        formulario.Controls.Find("btnregistrarse", true).Any(c => c.Visible),
+                        "El alta WinForms debe recuperar sus campos y acción al fallar WebView2.");
                     continue;
                 }
                 var aviso = Descendientes(formulario).OfType<Control>()
@@ -704,6 +725,30 @@ namespace Pruebas
             {
                 Application.DoEvents();
                 Thread.Sleep(20);
+            }
+            foreach (var vista in vistasWeb)
+                Console.WriteLine(formulario.GetType().Name + ": " + vista.Name + " preparado=" + vista.Preparado +
+                    " inicializado=" + vista.InicializacionTerminada + " visible=" + vista.Visible + " bounds=" + vista.Bounds);
+            if (formulario is Visual.FrmCompraCliente)
+            {
+                var compraWeb = vistasWeb.Single();
+                if (compraWeb.Preparado)
+                {
+                    var totalVisible = compraWeb.EjecutarScriptAsync(
+                        "document.querySelector('.total').getBoundingClientRect().bottom <= window.innerHeight");
+                    var totalAnclado = compraWeb.EjecutarScriptAsync(
+                        "getComputedStyle(document.querySelector('.resumen')).position === 'sticky' && getComputedStyle(document.querySelector('.total')).gridRowStart === '4'");
+                    var esperaCompra = Stopwatch.StartNew();
+                    while ((!totalVisible.IsCompleted || !totalAnclado.IsCompleted) && esperaCompra.ElapsedMilliseconds < 3000)
+                    {
+                        Application.DoEvents();
+                        Thread.Sleep(10);
+                    }
+                    Assert.AreEqual("true", totalVisible.GetAwaiter().GetResult(),
+                        "El TOTAL del armador debe quedar visible en la ventana capturada.");
+                    Assert.AreEqual("true", totalAnclado.GetAwaiter().GetResult(),
+                        "El resumen debe conservar el panel fijo y el TOTAL anclado al pie.");
+                }
             }
             Application.DoEvents();
             var bounds = formulario.RectangleToScreen(formulario.ClientRectangle);
