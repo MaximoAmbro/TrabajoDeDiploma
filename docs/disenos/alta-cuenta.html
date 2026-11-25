@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+<title>EventAura · Crear cuenta</title>
+<link rel="stylesheet" href="entrada.css">
+<link rel="stylesheet" href="alta-cuenta.css">
+<script defer src="entrada-puente.js"></script>
+<script defer src="validaciones.js"></script>
+<script defer src="alta-cuenta.js"></script>
+</head>
+<body>
+<div class="entrada">
+  <section class="marca" aria-label="EventAura">
+    <a class="logo" aria-label="EventAura">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 33 L20 7 L33 33" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12.5" cy="33" r="2.6" fill="#7456AE"/></svg>
+      <span>Event<b>Aura</b></span>
+    </a>
+    <p class="lema">Creá tu cuenta en unos minutos.</p>
+
+    <div>
+      <p class="seccion-marca">Cómo sigue</p>
+      <ol class="pasos" id="pasos" aria-label="Pasos del alta">
+        <li data-paso="elegir">Elegí para qué la querés</li>
+        <li data-paso="datos">Completá tus datos</li>
+        <li data-paso="correo">Verificá tu correo</li>
+        <li data-paso="telefono" class="solo-organizador">Verificá tu teléfono</li>
+        <li data-paso="listo">Listo</li>
+      </ol>
+    </div>
+
+    <p class="pie-marca">Los códigos de verificación llegan por un canal simulado, fuera de EventAura.</p>
+  </section>
+
+  <main class="contenido contenido-ancho" aria-labelledby="titulo">
+    <div class="contenido-interno">
+
+      <!-- ========== Paso 1: elegir ========== -->
+      <section data-vista="elegir" class="vista">
+        <div>
+          <h1 class="titulo" id="titulo">Crear cuenta</h1>
+          <p class="bajada">Contanos para qué vas a usar EventAura.</p>
+        </div>
+        <fieldset class="opciones" id="perfil">
+          <legend class="solo-lector">Para qué querés la cuenta</legend>
+          <label class="opcion">
+            <input type="radio" name="perfil" value="cliente" checked>
+            <span class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3z"/><path d="M14 6v12" stroke-dasharray="2 2"/></svg></span>
+            <strong>Quiero comprar entradas</strong>
+            <p>Comprá entradas y paquetes, sumá nivel de fidelidad y anotate en listas de espera. La cuenta queda lista al verificar tu correo.</p>
+          </label>
+          <label class="opcion">
+            <input type="radio" name="perfil" value="organizador">
+            <span class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6M3 21h18"/></svg></span>
+            <strong>Quiero organizar eventos</strong>
+            <p>Además de tu cuenta, presentás una solicitud con los datos de tu local. Una persona administradora la revisa antes de habilitarte.</p>
+          </label>
+        </fieldset>
+        <div class="botonera">
+          <button type="button" class="enlace" data-destino="acceso">Ya tengo cuenta</button>
+          <button type="button" class="boton boton-primario" id="continuar">Continuar</button>
+        </div>
+      </section>
+
+      <!-- ========== Paso 2: datos ========== -->
+      <form data-vista="datos" class="vista oculto" id="formulario" novalidate>
+        <div>
+          <p class="seccion-marca-claro" id="perfil-elegido">Cuenta para comprar entradas</p>
+          <h1 class="titulo">Tus datos</h1>
+        </div>
+
+        <fieldset class="bloque">
+          <legend>Tu cuenta</legend>
+          <div class="campos campos-dos">
+            <div class="campo"><label for="nombre">Nombre</label><input id="nombre" maxlength="50" autocomplete="given-name"><p class="estado" id="estado-nombre" aria-live="polite"></p></div>
+            <div class="campo"><label for="apellido">Apellido</label><input id="apellido" maxlength="50" autocomplete="family-name"><p class="estado" id="estado-apellido" aria-live="polite"></p></div>
+            <div class="campo campo-ancho"><label for="mail">Mail</label><input id="mail" type="email" maxlength="100" autocomplete="email"><p class="estado" id="estado-mail" aria-live="polite"></p></div>
+            <div class="campo">
+              <label for="contrasena">Contraseña</label>
+              <input id="contrasena" type="password" autocomplete="new-password" aria-describedby="fortaleza-texto">
+              <div class="fortaleza" id="fortaleza" data-nivel="bajo" aria-live="polite">
+                <div class="barras" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+                <p id="fortaleza-texto">Fortaleza: Insuficiente (0/5; mínimo 4)</p>
+              </div>
+            </div>
+            <div class="campo"><label for="confirmar">Confirmar contraseña</label><input id="confirmar" type="password" autocomplete="new-password"><p class="estado" id="estado-confirmar" aria-live="polite"></p></div>
+            <label class="mostrar campo-ancho"><input type="checkbox" id="mostrar"> Mostrar contraseñas</label>
+          </div>
+        </fieldset>
+
+        <!-- Solo para «Quiero organizar eventos» -->
+        <fieldset class="bloque solo-organizador" id="bloque-solicitud">
+          <legend>Tu solicitud para organizar eventos</legend>
+
+          <div class="aviso aviso-info formato-vs-identidad">
+            <strong>Qué comprobamos acá y qué no</strong>
+            <p>Las marcas <span class="marca-formato">✓ Formato válido</span> solo dicen que el dato está bien escrito: que el CUIT y el CBU tienen sus dígitos verificadores correctos y que la documentación es una imagen que se puede leer. <b>No comprueban que la persona, el CUIT, el local o la cuenta bancaria existan ni que sean tuyos.</b> Eso lo revisa una persona administradora antes de habilitarte (RN-52, RN-53).</p>
+          </div>
+
+          <div class="campos campos-dos">
+            <div class="campo campo-ancho"><label for="responsable">Responsable (nombre completo)</label><input id="responsable" maxlength="160" autocomplete="name"><p class="estado" id="estado-responsable" aria-live="polite"></p></div>
+            <div class="campo"><label for="cuit">CUIT</label><input id="cuit" inputmode="numeric" maxlength="13" placeholder="30-00000000-7"><p class="estado" id="estado-cuit" aria-live="polite"></p></div>
+            <div class="campo"><label for="telefono">Teléfono argentino</label><input id="telefono" type="tel" maxlength="20" placeholder="341 555-1234" autocomplete="tel"><p class="estado" id="estado-telefono" aria-live="polite"></p></div>
+            <div class="campo"><label for="local">Nombre del local</label><input id="local" maxlength="100"><p class="estado" id="estado-local" aria-live="polite"></p></div>
+            <div class="campo"><label for="capacidad">Capacidad</label><input id="capacidad" type="number" min="1" step="1" value="500"><p class="estado" id="estado-capacidad" aria-live="polite"></p></div>
+            <div class="campo campo-ancho"><label for="direccion">Dirección</label><input id="direccion" maxlength="160" placeholder="Calle y número, Rosario"><p class="estado" id="estado-direccion" aria-live="polite"></p></div>
+            <div class="campo campo-ancho"><label for="cbu">CBU de 22 dígitos o alias</label><input id="cbu" maxlength="22" autocomplete="off"><p class="estado" id="estado-cbu" aria-live="polite"></p></div>
+
+            <div class="campo campo-ancho">
+              <span class="rotulo" id="rotulo-documento">Documentación (habilitación o constancia)</span>
+              <label class="documento" id="zona-documento" for="documento">
+                <input id="documento" type="file" accept="image/png,image/jpeg" aria-labelledby="rotulo-documento">
+                <img id="vista-documento" alt="" class="oculto">
+                <span class="documento-texto"><strong id="documento-nombre">Elegí una imagen PNG o JPEG</strong><span id="documento-detalle">o arrastrala hasta acá. Hasta 10 MB: la aplicación la reduce a 512 KB o menos.</span></span>
+              </label>
+              <p class="estado" id="estado-documento" aria-live="polite"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="aviso aviso-atencion solo-organizador" id="que-pasa">
+          <strong>Qué pasa cuando enviás</strong>
+          <ol>
+            <li><b>Tu cuenta se crea como Cliente.</b> Desde el primer día podés comprar entradas.</li>
+            <li>Verificás tu correo y tu teléfono con un código de un solo uso.</li>
+            <li><b>Tu solicitud queda pendiente.</b> La revisa una persona administradora de EventAura; la aprobación no es automática.</li>
+            <li>Mientras esté pendiente, tu cuenta sigue siendo Cliente y no tiene funciones de Organizador. Si se aprueba, al volver a iniciar sesión entrás como Organizador, con tu local creado.</li>
+          </ol>
+        </div>
+
+        <div class="aviso aviso-error oculto" id="error-datos" role="alert"></div>
+
+        <div class="botonera">
+          <button type="button" class="boton boton-secundario" id="volver-elegir">Volver</button>
+          <button type="submit" class="boton boton-primario" id="crear">Crear cuenta</button>
+        </div>
+      </form>
+
+      <!-- ========== Paso 3: verificar el correo ========== -->
+      <section data-vista="correo" class="vista oculto">
+        <div>
+          <h1 class="titulo">Verificá tu correo</h1>
+          <p class="bajada">Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.</p>
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <label for="codigo-correo">Código de verificación</label>
+            <input id="codigo-correo" inputmode="numeric" maxlength="8" autocomplete="one-time-code">
+            <p class="estado" id="estado-codigo-correo" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="botonera">
+          <button type="button" class="enlace" data-destino="acceso">Volver al acceso</button>
+          <button type="button" class="boton boton-primario" id="confirmar-correo">Confirmar correo</button>
+        </div>
+      </section>
+
+      <!-- ========== Paso 4: verificar el teléfono (solo organizador) ========== -->
+      <section data-vista="telefono" class="vista oculto">
+        <div>
+          <h1 class="titulo">Verificá tu teléfono</h1>
+          <p class="bajada">Tu cuenta ya está creada como Cliente. Para presentar la solicitud falta confirmar el teléfono del responsable (RN-51).</p>
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <span class="rotulo">Teléfono</span>
+            <p class="dato" id="telefono-normalizado"></p>
+          </div>
+          <div>
+            <button type="button" class="boton boton-secundario" id="enviar-codigo-telefono">Enviar código</button>
+            <p class="estado info" id="estado-envio-telefono" aria-live="polite"></p>
+          </div>
+          <div class="campo">
+            <label for="codigo-telefono">Código de verificación</label>
+            <div class="con-boton">
+              <input id="codigo-telefono" inputmode="numeric" maxlength="8" autocomplete="one-time-code">
+              <button type="button" class="boton boton-secundario" id="confirmar-telefono">Confirmar teléfono</button>
+            </div>
+            <p class="estado" id="estado-codigo-telefono" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="aviso aviso-error oculto" id="error-telefono" role="alert"></div>
+        <div class="botonera">
+          <span></span>
+          <button type="button" class="boton boton-primario" id="presentar" disabled>Enviar solicitud</button>
+        </div>
+      </section>
+
+      <!-- ========== Listo ========== -->
+      <section data-vista="listo" class="vista oculto">
+        <div>
+          <h1 class="titulo" id="titulo-listo">Tu cuenta está lista</h1>
+          <p class="bajada" id="bajada-listo">Ya podés iniciar sesión y comprar entradas.</p>
+        </div>
+        <ul class="resumen" id="resumen"></ul>
+        <div class="aviso aviso-atencion solo-organizador">
+          <strong>La habilitación como Organizador no es automática</strong>
+          <p>Una persona administradora revisa tu solicitud: los datos, el local y la documentación. Las marcas de formato que viste al completar el formulario no reemplazan esa revisión. Hasta que la apruebe, tu cuenta es de Cliente.</p>
+        </div>
+        <div class="botonera">
+          <span></span>
+          <button type="button" class="boton boton-primario" data-destino="acceso">Ir a iniciar sesión</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

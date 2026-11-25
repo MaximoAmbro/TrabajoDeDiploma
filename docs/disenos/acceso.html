@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+<title>EventAura · Iniciar sesión</title>
+<link rel="stylesheet" href="entrada.css">
+<script defer src="entrada-puente.js"></script>
+<script defer src="acceso.js"></script>
+</head>
+<body>
+<div class="entrada">
+  <section class="marca" aria-label="EventAura">
+    <a class="logo" aria-label="EventAura">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 33 L20 7 L33 33" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12.5" cy="33" r="2.6" fill="#7456AE"/></svg>
+      <span>Event<b>Aura</b></span>
+    </a>
+    <p class="lema">Entradas para los espectáculos de Rosario, con todo lo que va alrededor.</p>
+    <ul class="rasgos">
+      <li>
+        <span class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></span>
+        <div><strong>Para clientes</strong><p>Tus entradas, tu nivel de fidelidad, tu suscripción y tus listas de espera.</p></div>
+      </li>
+      <li>
+        <span class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6M3 21h18"/></svg></span>
+        <div><strong>Para organizadores</strong><p>Tus locales, tus eventos, el control de ingreso y tus reportes.</p></div>
+      </li>
+      <li>
+        <span class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <div><strong>Para la administración</strong><p>Solicitudes, eventos en revisión, auditoría y reportes de la plataforma.</p></div>
+      </li>
+    </ul>
+    <p class="pie-marca">Con la misma cuenta entrás a lo que corresponde a tu perfil.</p>
+  </section>
+
+  <main class="contenido" aria-labelledby="titulo">
+    <div class="contenido-interno">
+      <div>
+        <h1 class="titulo" id="titulo">Iniciar sesión</h1>
+        <p class="bajada">Usá el correo y la contraseña de tu cuenta.</p>
+      </div>
+
+      <div class="aviso aviso-error oculto" id="sin-base" role="alert"></div>
+
+      <form id="formulario" class="campos" novalidate>
+        <div class="campo">
+          <label for="mail">Mail</label>
+          <input id="mail" name="mail" type="email" autocomplete="username" maxlength="100" aria-describedby="estado-mail">
+          <p class="estado" id="estado-mail" aria-live="polite"></p>
+        </div>
+        <div class="campo">
+          <label for="contrasena">Contraseña</label>
+          <input id="contrasena" name="contrasena" type="password" autocomplete="current-password" aria-describedby="estado-contrasena">
+          <label class="mostrar"><input type="checkbox" id="mostrar"> Mostrar contraseña</label>
+          <p class="estado" id="estado-contrasena" aria-live="polite"></p>
+        </div>
+
+        <div class="aviso aviso-error oculto" id="error" role="alert"></div>
+
+        <button type="submit" class="boton boton-primario boton-ancho" id="entrar">Iniciar sesión</button>
+
+        <div class="acciones-secundarias">
+          <button type="button" class="enlace" data-destino="recuperar">Recuperar contraseña</button>
+          <button type="button" class="enlace" data-destino="alta">Crear cuenta</button>
+        </div>
+      </form>
+
+      <button type="button" class="enlace" data-destino="bienvenida">← Volver a la bienvenida</button>
+    </div>
+  </main>
+</div>
+</body>
+</html>
