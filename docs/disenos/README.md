@@ -1,19 +1,25 @@
-# Diseños de entrada: bienvenida, acceso y alta de cuenta
+# Diseños de las vistas web: entrada y armador de paquete
 
-Claude Code, 24/11/2026, a pedido de JC. Son **maquetas funcionales** en HTML, CSS y JavaScript, sin red
-ni recursos externos, para que Codex las integre con WebView2 como hizo con el catálogo. No tocan
-`Visual/`, `Repo/` ni `Datos/`.
+Claude Code, 24/11/2026, a pedido de JC. Son **maquetas funcionales** en HTML, CSS y JavaScript, sin red, sin
+CDN, sin fuentes externas y sin archivos de imagen, para que Codex las integre con WebView2 como hizo con el
+catálogo. No tocan `Visual/`, `Repo/` ni `Datos/`.
+
+**Las cinco pantallas usan el mismo sistema.** Los valores están en `docs/PRINCIPIOS-DISENO.md` y su única
+implementación es `sistema.css`. Una medida o un color que no esté ahí no se usa.
 
 ## Archivos
 
 | Archivo | Qué es |
 |---|---|
-| `bienvenida.html` + `bienvenida.js` | Pantalla de entrada: qué es EventAura y los dos caminos |
-| `acceso.html` + `acceso.js` | Inicio de sesión |
-| `alta-cuenta.html` + `alta-cuenta.js` + `alta-cuenta.css` | Alta con la elección «comprar» u «organizar» |
-| `entrada.css` | Estilos comunes. La paleta y las medidas salen de `Visual/Tema.cs` |
-| `entrada-puente.js` | El puente con la pantalla de Windows Forms (mismo contrato que `Visual/Web/tema.js`) |
+| `sistema.css` | El sistema: colores de `Visual/Tema.cs`, seis niveles tipográficos, escala de espacio, controles, estados y estructura de las pantallas de entrada |
+| `muro.js` | El muro de portadas del panel oscuro, generado como `PortadaEvento` (PRINCIPIOS, §7) |
+| `entrada-puente.js` | El puente con la pantalla de Windows Forms (mismo contrato que `Visual/Web/tema.js`) y el panel de la maqueta |
 | `validaciones.js` | Validaciones de formato, copia exacta de las del negocio (tabla de abajo) |
+| `bienvenida.html` + `.js` | Qué es EventAura y los dos caminos |
+| `acceso.html` + `.js` | Inicio de sesión |
+| `recuperar-clave.html` + `.js` | **Nueva.** Recuperación de la contraseña con código |
+| `alta-cuenta.html` + `.js` + `.css` | Alta con la elección «comprar» u «organizar» |
+| `armador-paquete.html` + `.js` + `.css` | **Nueva.** El armador de paquete: sectores, servicios, seguro y el total en vivo |
 
 ## Cómo verlas
 
@@ -21,22 +27,30 @@ Abrí cualquier `.html` con doble clic: funciona sin servidor. Abajo a la derech
 **«Maqueta · aplicación simulada»**. Ese panel:
 - muestra cada mensaje que la página le mandaría a la aplicación, con las contraseñas y los códigos tapados;
 - responde como lo haría la aplicación;
-- muestra lo que en la realidad pasa **fuera** de EventAura, por ejemplo los códigos de la bandeja simulada,
-  para poder completar el recorrido;
-- tiene botones para previsualizar estados (error del negocio, base no disponible, etc.).
+- muestra lo que en la realidad pasa **fuera** de EventAura, por ejemplo los códigos de la bandeja simulada;
+- tiene botones para previsualizar estados (error del negocio, base no disponible, nivel Bronce, Plata u Oro,
+  suscripción, sector agotado…).
 
 Dentro de WebView2 el panel no existe: `entrada-puente.js` lo crea solo si no hay `window.chrome.webview`.
 
-Para revisar el alta sin hacer clics, hay tres anclas (solo en la maqueta):
-- `alta-cuenta.html#datos-organizador`: el formulario del organizador vacío;
-- `alta-cuenta.html#demo-organizador`: el mismo formulario, completo y válido;
-- `alta-cuenta.html#listo-organizador`: la pantalla final.
+Anclas para revisar un estado sin hacer clics (solo en la maqueta):
+
+| Ancla | Qué muestra |
+|---|---|
+| `alta-cuenta.html#datos-organizador` | El formulario del organizador, vacío |
+| `alta-cuenta.html#demo-organizador` | El mismo formulario, completo y válido |
+| `alta-cuenta.html#listo-organizador` | La pantalla final del organizador |
+| `recuperar-clave.html#codigo` | El paso del código y la contraseña nueva |
+| `recuperar-clave.html#listo` | El paso final |
+| `armador-paquete.html#guion` | El paquete del guion: 2 Campo, hospedaje, traslado y seguro. Total: $ 121.625,00, el mismo que da la aplicación |
 
 **Verificado el 24/11/2026:**
-- `validaciones.js` contra 18 casos con Node, entre ellos los CUIT de la semilla de demostración
-  (30000000007, 20000000044, 27000000022, 20000000095 y 30000000031), el CBU y el teléfono del guion, y un
-  CUIT con el dígito verificador mal;
-- las tres pantallas, dibujadas con Edge sin ventana a 1100 × 720 y a 600 de ancho.
+- `validaciones.js` contra 18 casos con Node, entre ellos los CUIT de la semilla de demostración;
+- el armador calcula el total del guion ($ 121.625,00), igual que `GestorFidelizacion.CalcularDescuento` en
+  el recorrido de la sección 3;
+- las cinco pantallas dibujadas con Edge sin ventana:
+  - las de entrada a 1100 × 720 y a 600 de ancho;
+  - el armador a 1366 × 768.
 
 **No probado todavía:** dentro de WebView2 y a 144 DPI. Eso lo hace Codex al integrarlas.
 
@@ -47,21 +61,27 @@ Para revisar el alta sin hacer clics, hay tres anclas (solo en la maqueta):
 ### Dónde van y cómo se cargan
 
 - Copiar los archivos a `Visual/Web/`, junto a `catalogo.html`. Los nombres no chocan con los existentes.
-- Cada `.html` ya trae la misma política de contenido que el catálogo: `script-src 'self'`, sin scripts en
-  línea, e imágenes solo `self` y `data:`. No hay fuentes externas: todo usa Segoe UI del sistema.
+  `sistema.css` reemplaza, para estas pantallas, a `tema.css`.
+- Cada `.html` trae la misma política de contenido que el catálogo: `script-src 'self'`, sin scripts en línea,
+  e imágenes solo `self` y `data:`. No se carga nada de afuera: Segoe UI es del sistema; los íconos y las
+  portadas son SVG y CSS.
 - El tema llega por `eventAuraActualizar({ tema, datos })`, igual que en el catálogo. **`Tema.VariablesWeb()`
-  tiene que sumar** las variables marcadas «extra» en `entrada.css`:
-  - `primario-presionado`;
-  - `lateral-fondo`, `lateral-encima`, `lateral-texto` y `lateral-seccion`;
-  - `fondo`, `borde-control`, `error` y `error-texto`;
-  - `espacio-xl` y `espacio-xxl`;
-  - `rotulo`, `titulo`, `seccion` y `marca`.
+  tiene que mandar todos los colores del bloque `:root` de `sistema.css` con esos mismos nombres:**
+  - `primario`, `primario-encima`, `primario-presionado` y `primario-suave`;
+  - `texto`, `texto-secundario`, `borde-control`, `borde`, `fondo` y `superficie`;
+  - los cuatro `lateral-*`;
+  - los seis de estado;
+  - `portada-0` a `portada-5`.
 
-  Mientras no lleguen, la página usa los valores por omisión, que son los de `Tema.cs`.
-- **Ventana:** las tres pantallas están pensadas para unos 1100 × 720 lógicos. Con menos de 820 px de ancho
-  pasan a una columna. El alta del organizador es más larga que la ventana: el contenido se desplaza y la
-  columna de la marca queda fija. Ningún formulario pasa de 790 px de alto (`CLAUDE.md`); acá eso se cumple
-  porque el desplazamiento es interno.
+  Hoy manda solo una parte. Las medidas y la tipografía no viajan: son del sistema. Mientras un color no
+  llegue, la página usa el valor por omisión, que es el de `Tema.cs`.
+- **Ventana:**
+  - las pantallas de entrada están pensadas para unos 1100 × 720 lógicos; con menos de 880 px de ancho
+    pasan a una columna;
+  - el armador, para el área de contenido de la navegación del cliente.
+
+  Si el contenido no entra, se desplaza dentro de la página y la ventana no pasa de 790 px de alto
+  (`CLAUDE.md`).
 
 ### El respaldo de Windows Forms no se pierde
 
@@ -120,7 +140,7 @@ mostrar el aviso de `frmInicio`, como hoy.
 | Mensaje | Qué hace la aplicación |
 |---|---|
 | `{ "tipo": "iniciarSesion", "mail": "…", "contrasena": "…" }` | `GestorUsuarios.Autenticar`. Si entra, abre el menú del perfil como hoy. Si no, devuelve `estado: "error"` con `GestorUsuarios.MensajeAccesoRechazado` |
-| `{ "tipo": "navegar", "destino": "recuperar", "mail": "…" }` | Abre la recuperación de contraseña actual (no está rediseñada) |
+| `{ "tipo": "navegar", "destino": "recuperar", "mail": "…" }` | Abre `recuperar-clave.html` con el correo precargado |
 | `{ "tipo": "navegar", "destino": "alta" }` / `"bienvenida"` | Cambia de pantalla |
 
 Los campos vacíos los marca la página, con los textos de hoy («Escribí tu correo electrónico para continuar.»,
@@ -191,6 +211,95 @@ Administrador, en `frmRevisarSolicitudesOrganizador`, y no cambia: RN-53.
 
 ---
 
+### `recuperar-clave.html` (nueva)
+
+Reemplaza la pantalla de recuperación de `frmCambiarContraseña`. Mantiene las tres garantías de hoy:
+- la respuesta al pedir el código es la misma exista o no la cuenta;
+- cada código vence y se usa una vez;
+- pedir otro código invalida el anterior.
+
+| `datos` | Para qué |
+|---|---|
+| `{ "paso": "mail", "parametros": { "longitudMinima": 8, "fortalezaMinima": 4 }, "mail": "…" }` | Al abrir. `mail` es opcional y sirve para precargar el correo escrito en el acceso |
+| `{ "paso": "codigo" }` | Después de pedir el código. La bajada pasa a ser el texto de siempre: «Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.» |
+| `{ "paso": "codigo", "error": { "campo": "codigo", "mensaje": "El código no es válido o venció. Solicitá uno nuevo." } }` | Código rechazado. `campo` puede ser `codigo` o `mail`; sin `campo`, el mensaje va arriba del botón |
+| `{ "paso": "listo" }` | Contraseña cambiada |
+
+| Mensaje | Qué hace la aplicación |
+|---|---|
+| `{ "tipo": "enviarCodigoRecuperacion", "mail": "…" }` | `GestorCodigosCorreo.SolicitarRecuperacion(mail)` y responde `paso: "codigo"`, siempre. Sirve también para «Pedir otro código» |
+| `{ "tipo": "restablecer", "mail", "codigo", "contrasena" }` | `GestorCodigosCorreo.RecuperarContrasena(mail, codigo, contrasena)`. Responde `paso: "listo"` o el error de la regla |
+| `{ "tipo": "navegar", "destino": "acceso" }` | Vuelve al acceso |
+
+La fortaleza de la contraseña nueva se muestra con el mismo medidor que el alta, alimentado por los
+`parametros`.
+
+### `armador-paquete.html` (nueva): el momento de autor
+
+Reemplaza el armado de `FrmCompraCliente`:
+- **cada sector es una tarjeta** con su precio, su disponibilidad y el control de cantidad adentro;
+- **los servicios y el seguro** son interruptores;
+- **el total se recalcula a la vista** mientras el desglose se arma línea por línea;
+- **el descuento por nivel** aparece solo cuando hay entradas y el nivel lo da.
+
+**Qué es web y qué no.** La barra superior y el lateral de la maqueta son contexto: en la aplicación los dibuja
+la navegación del cliente en Windows Forms. **WebView2 aloja solo `<main class="area-web">`.** La maqueta
+muestra la barra oscura: hoy es violeta, y en esta pantalla sumaría un quinto uso del acento. Si JC quiere esa
+coherencia, es un cambio de `Tema`/`frmMenuCliente` (decisión aparte).
+
+**La aplicación es la que calcula.** La página muestra una vista previa con la misma fórmula que
+`GestorFidelizacion.CalcularDescuento` (el comentario del `.js` la transcribe). Con cada cambio manda
+`seleccion` con un número de `version`. La aplicación responde con el `resumen` del negocio para esa versión, y
+ese resumen reemplaza la vista previa. Si llega un `resumen` de una versión vieja, la página lo ignora.
+
+**Datos que manda la aplicación al abrir** (y de nuevo si cambia la disponibilidad):
+
+```json
+{
+  "evento": { "nombre": "Duki en Rosario", "categoria": "Concierto", "lugar": "Galpón 17",
+              "direccion": "Estévez Boero 600, Rosario", "fecha": "Sábado 23 de enero · 21:00", "colorIndice": 1 },
+  "cliente": { "nombre": "Paula Plata", "nivel": "Plata", "porcentaje": 0.05, "suscripcionActiva": false },
+  "parametros": { "cargoServicio": 0.15, "seguroPrecio": 5000, "maxEntradas": 6, "bonificacionSeguro": 1 },
+  "sectores": [ { "id": 1, "nombre": "Campo", "precio": 25000, "disponibles": 2000, "capacidad": 2000 } ],
+  "servicios": [ { "id": 1, "nombre": "Hotel Ríos 1 noche", "tipo": "Hospedaje", "precio": 45000 } ]
+}
+```
+
+- **`colorIndice`:** `PortadaEvento.ColorDelNombre(nombre)`, para que la portada chica sea la misma del
+  catálogo.
+- **`porcentaje`:** sale de `GestorFidelizacion.PorcentajePara(nivel)`, igual que el nivel persistido del
+  cliente (RN-22).
+- **`parametros`:** salen de la tabla `Parametros`: `CARGO_SERVICIO`, `SEGURO_PRECIO`, `COMPRA_ENTRADAS_MAX` y
+  `SUSCRIPCION_SEGURO_DESCUENTO`. La página no tiene ningún número escrito.
+- **Al liberar reservas vencidas** (RN-15, `LiberarVencidas`), la aplicación vuelve a mandar `sectores`. Si
+  cambió la disponibilidad, la página recorta lo elegido.
+
+**Después:**
+- `{ "resumen": { "version", "baseEntradas", "porcentaje", "montoDescuento", "subtotalEntradas", "servicios", "cargoServicio", "seguro", "total" } }`
+  es el `ResumenDescuento` tal cual, más la `version` recibida;
+- `{ "error": { "mensaje": "…" } }` es un rechazo del negocio, por ejemplo «En el sector Campo quedan 1
+  entradas.» al reservar. Se muestra arriba del botón con el texto de la regla, nunca como «error inesperado»
+  (T-23).
+
+**Mensajes que manda la página:**
+
+| Mensaje | Qué hace la aplicación |
+|---|---|
+| `{ "tipo": "seleccion", "version", "entradas": [ { "sectorId", "cantidad" } ], "servicios": [ id ], "seguro" }` | Arma el `Paquete`, llama a `CalcularDescuento` y responde `resumen` con esa `version` |
+| `{ "tipo": "comprar", …misma selección }` | Lo que hoy hace «Comprar»: valida (RN-12, cupo, preventa, prioridad), reserva y abre el pago. Si el negocio rechaza, responde `error` |
+| `{ "tipo": "listaEspera", "sectorId" }` | Desde un sector agotado: anota en la lista de espera, como hoy |
+| `{ "tipo": "niveles" }` | Abre la explicación de los niveles («¿Cómo funcionan los niveles?») |
+| `{ "tipo": "navegar", "destino": "eventos" }` | Vuelve a «Eventos disponibles» (hoy pide confirmar si hay un paquete armado) |
+
+**Lo que ya resuelve la página, para no repetirlo en Windows Forms:**
+- el aviso del seguro, con el texto de hoy («No agregaste el seguro de entrada. Solo se puede contratar ahora:
+  después de pagar no se puede incorporar.»), como bloque dentro del resumen y no como cuadro de diálogo;
+- el límite de 6 entradas y el de la disponibilidad de cada sector, con los botones deshabilitados;
+- «Continuar al pago» deshabilitado sin entradas (los servicios no se venden solos).
+
+**Respaldo:** sin WebView2, la compra sigue siendo la de hoy: la grilla de sectores, las casillas de servicios
+y `lblResumen`.
+
 ## Las validaciones en vivo son de formato, no de identidad (RN-52)
 
 La maqueta lo dice dos veces:
@@ -217,5 +326,5 @@ diga el negocio al recibir el mensaje.
 ## Lo que no está decidido
 
 - Si la bienvenida aparece en cada arranque o solo en el primero. La maqueta supone que en cada arranque.
-- La recuperación de contraseña no está rediseñada: el acceso la abre como hoy.
+- La barra superior de la navegación del cliente: violeta (hoy) u oscura (maqueta del armador).
 - La secuencia del organizador: opción (a) o (b), arriba.

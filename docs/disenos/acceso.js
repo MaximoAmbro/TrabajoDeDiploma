@@ -67,9 +67,8 @@
                 puente.responder({ estado: "error", mensaje: "Mail o contraseña incorrectos." });
             }
         } else if (m.tipo === "navegar") {
-            const destino = { alta: "alta-cuenta.html", bienvenida: "bienvenida.html" }[m.destino];
-            if (destino) setTimeout(() => { window.location.href = destino; }, 700);
-            else puente.anotarFuera("La aplicación abriría la recuperación de contraseña (frmRecuperarContraseña).");
+            const destino = { alta: "alta-cuenta.html", bienvenida: "bienvenida.html", recuperar: "recuperar-clave.html" }[m.destino];
+            if (destino) setTimeout(() => { window.location.href = destino; }, 500);
         }
     }, {
         "Listo": { estado: "listo" },

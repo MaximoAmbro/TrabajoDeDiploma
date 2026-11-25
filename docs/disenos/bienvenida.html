@@ -5,64 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
 <title>EventAura · Bienvenida</title>
-<link rel="stylesheet" href="entrada.css">
+<link rel="stylesheet" href="sistema.css">
 <script defer src="entrada-puente.js"></script>
+<script defer src="muro.js"></script>
 <script defer src="bienvenida.js"></script>
 </head>
 <body>
 <div class="entrada">
-  <section class="marca" aria-labelledby="lema">
-    <a class="logo" aria-label="EventAura">
-      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 33 L20 7 L33 33" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12.5" cy="33" r="2.6" fill="#7456AE"/></svg>
-      <span>Event<b>Aura</b></span>
-    </a>
-    <p class="lema" id="lema">Entradas para los espectáculos de Rosario, con todo lo que va alrededor.</p>
+  <aside class="panel" aria-label="Qué es EventAura">
+    <div class="muro"></div>
+    <div class="panel-contenido">
+      <span class="logo" aria-label="EventAura">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26 L16 6 L26 26" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.5" cy="26" r="2.2" fill="var(--primario)"/></svg>
+        <span>Event<b>Aura</b></span>
+      </span>
 
-    <ul class="rasgos">
-      <li>
-        <span class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></span>
-        <div><strong>Tu paquete en una sola compra</strong>
-        <p>La entrada con hospedaje, traslado, merchandising o experiencia VIP. Ves el total, con el descuento y los cargos, antes de pagar.</p></div>
-      </li>
-      <li>
-        <span class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span>
-        <div><strong>Tus compras suman</strong>
-        <p>Bronce, Plata y Oro según tus compras del último año, con descuento sobre las entradas desde el nivel Plata.</p></div>
-      </li>
-      <li>
-        <span class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 17h4v4h-4"/></svg></span>
-        <div><strong>Ingreso con QR</strong>
-        <p>Cada entrada tiene su propio código. En la puerta se valida una sola vez: una entrada copiada no vuelve a entrar.</p></div>
-      </li>
-      <li>
-        <span class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6M3 21h18"/></svg></span>
-        <div><strong>Para quienes organizan</strong>
-        <p>Locales, eventos y sectores, control de ingreso y reportes de lo que vendiste.</p></div>
-      </li>
-    </ul>
-
-    <p class="pie-marca">Prototipo académico. Los pagos y los correos son simulados.</p>
-  </section>
-
-  <main class="contenido" aria-labelledby="titulo">
-    <div class="contenido-interno">
-      <div>
-        <h1 class="titulo" id="titulo">Te damos la bienvenida</h1>
-        <p class="bajada">Entrá con tu cuenta o creá una nueva para comprar entradas u organizar eventos.</p>
+      <div class="pila pila-7">
+        <div class="pila pila-4">
+          <p class="n6">Espectáculos de Rosario</p>
+          <h1 class="n1 lema" id="lema">Tu entrada, y todo lo que va alrededor.</h1>
+        </div>
+        <ul class="rasgos">
+          <li class="rasgo">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5 10 2.5l7.5 4v7L10 17.5l-7.5-4z"/><path d="M2.5 6.5 10 10.5l7.5-4M10 10.5v7"/></svg>
+            <strong>Un paquete, una sola compra</strong>
+            <p>Entrada, hospedaje, traslado y experiencia VIP, con el total a la vista antes de pagar.</p>
+          </li>
+          <li class="rasgo">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.5l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L2.8 7.8l5-.7z"/></svg>
+            <strong>Tus compras suman nivel</strong>
+            <p>Bronce, Plata y Oro, con descuento sobre las entradas desde Plata.</p>
+          </li>
+          <li class="rasgo">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2.5" y="2.5" width="6" height="6"/><rect x="11.5" y="2.5" width="6" height="6"/><rect x="2.5" y="11.5" width="6" height="6"/><path d="M11.5 11.5h2.5v2.5h-2.5zM15 15h2.5v2.5H15"/></svg>
+            <strong>Ingreso con QR</strong>
+            <p>Cada entrada tiene su código y se valida una sola vez en la puerta.</p>
+          </li>
+          <li class="rasgo">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 17.5v-10L10 3l6.5 4.5v10M1.5 17.5h17M8 17.5v-5h4v5"/></svg>
+            <strong>Para quienes organizan</strong>
+            <p>Locales, eventos, control de ingreso y reportes de lo vendido.</p>
+          </li>
+        </ul>
       </div>
 
-      <div class="caminos">
-        <button type="button" class="camino camino-principal" data-destino="acceso">
-          <span class="camino-texto"><strong>Iniciar sesión</strong><span>Ya tengo una cuenta en EventAura.</span></span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <p class="panel-pie">Prototipo académico. Los pagos y los correos son simulados.</p>
+    </div>
+  </aside>
+
+  <main class="contenido">
+    <div class="columna pila pila-7">
+      <div class="pila pila-2">
+        <h2 class="n2" id="titulo" tabindex="-1">Te damos la bienvenida</h2>
+        <p class="n4 secundario medida">Entrá con tu cuenta, o creá una para comprar entradas u organizar eventos.</p>
+      </div>
+
+      <div class="pila pila-3">
+        <button type="button" class="eleccion eleccion-destacada" data-destino="acceso">
+          <span class="pila pila-1"><span class="n3">Iniciar sesión</span><span class="n5 secundario">Ya tengo una cuenta.</span></span>
+          <svg class="flecha" viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button type="button" class="camino" data-destino="alta">
-          <span class="camino-texto"><strong>Crear cuenta</strong><span>Para comprar entradas, o para organizar eventos en tus locales.</span></span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <button type="button" class="eleccion" data-destino="alta">
+          <span class="pila pila-1"><span class="n3">Crear cuenta</span><span class="n5 secundario">Para comprar entradas, o para organizar eventos en tu local.</span></span>
+          <svg class="flecha" viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
 
       <div class="aviso aviso-error oculto" id="aviso" role="alert"></div>
+
+      <p class="n5 secundario">¿Olvidaste tu contraseña? <button type="button" class="enlace" data-destino="recuperar">Recuperarla</button></p>
     </div>
   </main>
 </div>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+<title>EventAura · Recuperar contraseña</title>
+<link rel="stylesheet" href="sistema.css">
+<script defer src="entrada-puente.js"></script>
+<script defer src="muro.js"></script>
+<script defer src="validaciones.js"></script>
+<script defer src="recuperar-clave.js"></script>
+</head>
+<body>
+<div class="entrada">
+  <aside class="panel" aria-label="EventAura">
+    <div class="muro"></div>
+    <div class="panel-contenido">
+      <span class="logo" aria-label="EventAura">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26 L16 6 L26 26" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.5" cy="26" r="2.2" fill="var(--primario)"/></svg>
+        <span>Event<b>Aura</b></span>
+      </span>
+
+      <div class="pila pila-7">
+        <div class="pila pila-4">
+          <p class="n6">Recuperar el acceso</p>
+          <p class="lema-chico">Un código de un solo uso, y elegís una contraseña nueva.</p>
+        </div>
+        <ul class="rasgos">
+          <li class="rasgo">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11"/><path d="m2.5 5 7.5 6 7.5-6"/></svg>
+            <strong>El código llega por correo</strong>
+            <p>Por un canal simulado, fuera de EventAura. Vence a los 10 minutos.</p>
+          </li>
+          <li class="rasgo">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.5 16 5v4.5c0 4-2.8 6.8-6 8-3.2-1.2-6-4-6-8V5z"/></svg>
+            <strong>La pantalla no dice si la cuenta existe</strong>
+            <p>La respuesta es la misma para cualquier correo: así nadie puede averiguar quién tiene cuenta.</p>
+          </li>
+        </ul>
+      </div>
+
+      <p class="panel-pie">Prototipo académico. Los pagos y los correos son simulados.</p>
+    </div>
+  </aside>
+
+  <main class="contenido">
+    <div class="columna pila pila-7">
+      <div class="pila pila-5">
+        <button type="button" class="enlace n5 secundario al-inicio" data-destino="acceso">← Iniciar sesión</button>
+        <div class="pila pila-2">
+          <h1 class="n2" id="titulo" tabindex="-1">Recuperar contraseña</h1>
+          <p class="n4 secundario medida" id="bajada">Escribí el correo de tu cuenta y te enviamos un código.</p>
+        </div>
+      </div>
+
+      <!-- Paso 1: el correo -->
+      <form class="pila pila-6" data-paso="mail" id="form-mail" novalidate>
+        <div class="campo">
+          <label for="mail">Mail</label>
+          <input class="entrada-texto" id="mail" type="email" autocomplete="email" maxlength="100">
+          <p class="estado" id="estado-mail" aria-live="polite"></p>
+        </div>
+        <button type="submit" class="boton boton-primario boton-ancho" id="enviar">Enviar código</button>
+      </form>
+
+      <!-- Paso 2: el código y la contraseña nueva -->
+      <form class="pila pila-6 oculto" data-paso="codigo" id="form-codigo" novalidate>
+        <div class="pila pila-5">
+          <div class="campo">
+            <label for="codigo">Código de recuperación</label>
+            <input class="entrada-texto cifra" id="codigo" inputmode="numeric" maxlength="8" autocomplete="one-time-code">
+            <p class="estado" id="estado-codigo" aria-live="polite"></p>
+          </div>
+          <div class="campo">
+            <label for="contrasena">Contraseña nueva</label>
+            <input class="entrada-texto" id="contrasena" type="password" autocomplete="new-password" aria-describedby="fortaleza-texto">
+            <div class="fortaleza" id="fortaleza" data-nivel="bajo" aria-live="polite">
+              <div class="barras" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+              <p id="fortaleza-texto">Fortaleza: Insuficiente (0/5; mínimo 4)</p>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="confirmar">Confirmar contraseña</label>
+            <input class="entrada-texto" id="confirmar" type="password" autocomplete="new-password">
+            <p class="estado" id="estado-confirmar" aria-live="polite"></p>
+            <label class="marca-ver"><input type="checkbox" id="mostrar"> Mostrar contraseñas</label>
+          </div>
+        </div>
+        <div class="aviso aviso-error oculto" id="error" role="alert"></div>
+        <div class="pila pila-4">
+          <button type="submit" class="boton boton-primario boton-ancho" id="restablecer">Restablecer contraseña</button>
+          <p class="n5 secundario">¿No llegó o venció? <button type="button" class="enlace" id="otro-codigo">Pedir otro código</button></p>
+        </div>
+      </form>
+
+      <!-- Paso 3: listo -->
+      <div class="pila pila-6 oculto" data-paso="listo">
+        <div class="aviso aviso-neutro" role="status"><strong>La contraseña se actualizó.</strong><p>Ya podés iniciar sesión con la contraseña nueva.</p></div>
+        <button type="button" class="boton boton-primario boton-ancho" data-destino="acceso">Iniciar sesión</button>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

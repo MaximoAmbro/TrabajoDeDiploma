@@ -29,8 +29,8 @@
             if (i === actual) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
         });
         const vista = document.querySelector('[data-vista="' + paso + '"]');
-        const foco = vista.querySelector("input:not([type=radio]):not([type=checkbox]), .titulo");
-        if (foco) { if (foco.classList.contains("titulo")) foco.tabIndex = -1; foco.focus(); }
+        const foco = vista.querySelector("input:not([type=radio]):not([type=checkbox]), h1");
+        if (foco) foco.focus({ preventScroll: true });
     }
 
     function elegirPerfil(perfil) {
@@ -39,6 +39,8 @@
         document.body.classList.toggle("organizador", org);
         $("#perfil-elegido").textContent = org ? "Cuenta para organizar eventos" : "Cuenta para comprar entradas";
         $("#crear").textContent = org ? "Crear cuenta y enviar solicitud" : "Crear cuenta";
+        $("#crear").dataset.rotulo = $("#crear").textContent;
+        document.querySelector("[data-numero-final]").textContent = org ? "5" : "4";
     }
     document.querySelectorAll('input[name="perfil"]').forEach(r => r.addEventListener("change", () => elegirPerfil(r.value)));
     $("#continuar").addEventListener("click", () => mostrarPaso("datos"));
@@ -280,8 +282,8 @@
             const t = document.createElement("strong"); t.textContent = titulo;
             const d = document.createElement("span"); d.textContent = detalle;
             cuerpo.append(t, d);
-            if (etiqueta) { const e = document.createElement("span"); e.className = "etiqueta"; e.textContent = etiqueta; cuerpo.append(document.createElement("br"), e); }
             li.append(cuerpo);
+            if (etiqueta) { const e = document.createElement("span"); e.className = "etiqueta"; e.textContent = etiqueta; li.append(e); }
             return li;
         }));
     }
