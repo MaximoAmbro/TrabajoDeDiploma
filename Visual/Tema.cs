@@ -83,16 +83,26 @@ namespace Visual
             var variables = new Dictionary<string, string>
             {
                 ["primario"] = ColorTranslator.ToHtml(Primario),
+                ["primario-encima"] = ColorTranslator.ToHtml(PrimarioEncima),
+                ["primario-presionado"] = ColorTranslator.ToHtml(PrimarioPresionado),
                 ["primario-suave"] = ColorTranslator.ToHtml(PrimarioSuave),
                 ["superficie"] = ColorTranslator.ToHtml(Superficie),
+                ["fondo"] = ColorTranslator.ToHtml(Fondo),
                 ["texto"] = ColorTranslator.ToHtml(Texto),
                 ["texto-secundario"] = ColorTranslator.ToHtml(TextoSecundario),
                 ["borde"] = ColorTranslator.ToHtml(Borde),
+                ["borde-control"] = ColorTranslator.ToHtml(BordeControl),
+                ["lateral-fondo"] = ColorTranslator.ToHtml(LateralFondo),
+                ["lateral-encima"] = ColorTranslator.ToHtml(LateralEncima),
+                ["lateral-texto"] = ColorTranslator.ToHtml(LateralTexto),
+                ["lateral-seccion"] = ColorTranslator.ToHtml(LateralSeccion),
                 ["exito"] = ColorTranslator.ToHtml(ExitoFondo),
                 ["exito-texto"] = ColorTranslator.ToHtml(Exito),
+                ["error"] = ColorTranslator.ToHtml(ErrorFondo),
+                ["error-texto"] = ColorTranslator.ToHtml(Error),
                 ["advertencia-texto"] = ColorTranslator.ToHtml(Advertencia),
-                ["primario-encima"] = ColorTranslator.ToHtml(PrimarioEncima),
                 ["advertencia"] = ColorTranslator.ToHtml(AdvertenciaFondo),
+                // Alias de compatibilidad para las hojas actuales de catálogo y gráficos.
                 ["agotado"] = ColorTranslator.ToHtml(FondoDeshabilitado),
                 ["espacio-l"] = Espacio.L + "px",
                 ["espacio-m"] = Espacio.M + "px",
@@ -104,7 +114,10 @@ namespace Visual
                 ["precio"] = Css(PrecioTarjeta)
             };
             for (int i = 0; i < PaletaPortadas.Length; i++)
+            {
+                variables["portada-" + i] = ColorTranslator.ToHtml(PaletaPortadas[i]);
                 variables["grafico-" + i] = ColorTranslator.ToHtml(PaletaPortadas[i]);
+            }
             return variables;
         }
 

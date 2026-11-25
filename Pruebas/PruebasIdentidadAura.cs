@@ -33,8 +33,12 @@ namespace Pruebas
                 using(var barra=new BarraSuperior()) {
                     barra.ActualizarSesion();
                     Assert.IsTrue(string.IsNullOrEmpty(barra.AccessibleDescription));
+                    Assert.AreEqual(Visual.Tema.LateralFondo, barra.BackColor, "La barra superior comparte el fondo oscuro del lateral.");
                     using(var imagen=new System.Drawing.Bitmap(barra.Width,barra.Height))
+                    {
                         barra.DrawToBitmap(imagen,barra.ClientRectangle);
+                        Assert.AreEqual(Visual.Tema.LateralFondo.ToArgb(), imagen.GetPixel(1,1).ToArgb());
+                    }
                 }
             });
         }

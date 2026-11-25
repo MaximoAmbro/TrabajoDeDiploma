@@ -119,6 +119,14 @@ namespace Pruebas
             Assert.IsTrue(Contraste(Visual.Tema.Error, Visual.Tema.Superficie) >= 4.5);
             Assert.IsTrue(Contraste(Visual.Tema.BordeControl, Visual.Tema.Superficie) >= 3.0);
             Assert.IsTrue(Contraste(Visual.Tema.Foco, Visual.Tema.Superficie) >= 3.0, "El foco debe contrastar con el separador y la superficie.");
+            Assert.IsTrue(Contraste(Visual.Tema.LateralTexto, Visual.Tema.LateralFondo) >= 4.5, "El texto de la cabecera oscura debe mantener contraste AA.");
+            var variablesWeb = Visual.Tema.VariablesWeb();
+            foreach (string token in new[] { "primario", "primario-encima", "primario-presionado", "primario-suave",
+                "texto", "texto-secundario", "borde-control", "borde", "fondo", "superficie",
+                "lateral-fondo", "lateral-encima", "lateral-texto", "lateral-seccion",
+                "exito-texto", "exito", "error-texto", "error", "advertencia-texto", "advertencia" })
+                Assert.IsTrue(variablesWeb.ContainsKey(token), "Falta el token CSS " + token + ".");
+            for (int i = 0; i < 6; i++) Assert.IsTrue(variablesWeb.ContainsKey("portada-" + i));
             Assert.AreEqual(Color.Firebrick, Visual.Tema.Error);
             Assert.AreEqual(Color.Gainsboro, Visual.Tema.FondoDeshabilitado);
             foreach (Font fuente in new[] { Visual.Tema.Marca, Visual.Tema.Titulo, Visual.Tema.Seccion,

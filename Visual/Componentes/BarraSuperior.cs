@@ -14,7 +14,7 @@ namespace Visual.Componentes
         {
             InitializeComponent();
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
-            Font = Tema.Ayuda; BackColor = Tema.Primario; ForeColor = Tema.Superficie;
+            Font = Tema.Ayuda; BackColor = Tema.LateralFondo; ForeColor = Tema.LateralTexto;
             TabStop = false;
             AccessibleName = "EventAura";
         }
@@ -48,17 +48,17 @@ namespace Visual.Componentes
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.Clear(Tema.Primario);
+            e.Graphics.Clear(Tema.LateralFondo);
             float escala = e.Graphics.DpiX / 96f;
             int lado = (int)(48 * escala), margen = (int)(8 * escala);
-            MarcaAura.Dibujar(e.Graphics, new Rectangle(margen,(Height-lado)/2,lado,lado), Tema.Superficie);
+            MarcaAura.Dibujar(e.Graphics, new Rectangle(margen,(Height-lado)/2,lado,lado), Tema.LateralTexto);
             var firma = new Point(margen+lado, Math.Max(0,(Height-Tema.FirmaNormal.Height)/2));
-            TextRenderer.DrawText(e.Graphics,"Event",Tema.FirmaNormal,firma,Tema.Superficie,TextFormatFlags.NoPadding);
+            TextRenderer.DrawText(e.Graphics,"Event",Tema.FirmaNormal,firma,Tema.LateralTexto,TextFormatFlags.NoPadding);
             int eventAncho = TextRenderer.MeasureText(e.Graphics,"Event",Tema.FirmaNormal,Size.Empty,TextFormatFlags.NoPadding).Width;
-            TextRenderer.DrawText(e.Graphics,"Aura",Tema.FirmaFuerte,new Point(firma.X+eventAncho,firma.Y),Tema.Superficie,TextFormatFlags.NoPadding);
+            TextRenderer.DrawText(e.Graphics,"Aura",Tema.FirmaFuerte,new Point(firma.X+eventAncho,firma.Y),Tema.LateralTexto,TextFormatFlags.NoPadding);
             int inicio = firma.X+eventAncho+TextRenderer.MeasureText(e.Graphics,"Aura",Tema.FirmaFuerte,Size.Empty,TextFormatFlags.NoPadding).Width+margen;
             var identidad = new Rectangle(inicio,margen,Math.Max(0,Width-inicio-margen),Math.Max(0,Height-margen*2));
-            TextRenderer.DrawText(e.Graphics,persona+Environment.NewLine+beneficio,Tema.Ayuda,identidad,Tema.Superficie,
+            TextRenderer.DrawText(e.Graphics,persona+Environment.NewLine+beneficio,Tema.Ayuda,identidad,Tema.LateralTexto,
                 TextFormatFlags.Right | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix);
         }
         protected bool ShouldSerializeFont() { return false; }

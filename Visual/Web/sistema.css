@@ -1,0 +1,223 @@
+/* Sistema visual de las vistas web de EventAura. Fuente de verdad: docs/PRINCIPIOS-DISENO.md.
+   Una medida que no esté en este bloque :root no se usa en ninguna pantalla. */
+:root {
+    /* Color — Visual/Tema.cs. Dentro de la aplicación, Tema.VariablesWeb() reemplaza estos valores. */
+    --primario: #7456AE;            --primario-encima: #634699;     --primario-presionado: #523A80;
+    --primario-suave: #EFEAF8;
+    --texto: #1F1F24;               --texto-secundario: #5C5F66;    --borde-control: #8E8A9C;
+    --borde: #DCDAE3;               --fondo: #F6F5FA;               --superficie: #FFFFFF;
+    --lateral-fondo: #241D30;       --lateral-encima: #322A42;      --lateral-texto: #CFC9DC;
+    --lateral-seccion: #8B839E;
+    --exito-texto: #1E7B4A;         --exito: #E7F4EC;
+    --error-texto: #B22222;         --error: #FCE8E6;
+    --advertencia-texto: #8A5A00;   --advertencia: #FFF4D6;
+    --portada-0: #5C5F66; --portada-1: #3E4757; --portada-2: #A0568D;
+    --portada-3: #487591; --portada-4: #69458F; --portada-5: #53847E;
+
+    /* Espacio: 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 */
+    --e1: 4px; --e2: 8px; --e3: 12px; --e4: 16px; --e5: 24px; --e6: 32px; --e7: 48px; --e8: 64px;
+
+    /* Tipografía: seis niveles */
+    --familia: 'Segoe UI', 'Segoe UI Variable Text', system-ui, sans-serif;
+    --n1: 600 44px/1.05 var(--familia);    --n1-ls: -0.03em;
+    --n2: 600 28px/1.12 var(--familia);    --n2-ls: -0.02em;
+    --n3: 600 18px/1.3 var(--familia);     --n3-ls: -0.01em;
+    --n4: 400 13.33px/1.5 var(--familia);  --n4-ls: 0;
+    --n5: 400 12px/1.5 var(--familia);     --n5-ls: 0.01em;
+    --n6: 600 11px/1.55 var(--familia);    --n6-ls: 0.1em;
+
+    /* Formas */
+    --alto-control: 40px; --radio-control: 3px; --radio-tarjeta: 4px;
+    --ancho-lateral: 240px; --alto-barra: 56px; --ancho-panel: 440px;
+    --ancho-columna: 480px; --ancho-columna-amplia: 608px; --ancho-resumen: 360px;
+    --transicion: 120ms ease-out;
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { color-scheme: light; height: 100%; -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100%; background: var(--fondo); color: var(--texto); font: var(--n4);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+h1, h2, h3, p, ol, ul, figure, fieldset, legend { margin: 0; padding: 0; }
+ol, ul { list-style: none; }
+fieldset { border: 0; min-width: 0; }
+button, input, select { font: inherit; color: inherit; letter-spacing: inherit; }
+:focus-visible { outline: 2px solid var(--primario); outline-offset: 2px; }
+[tabindex="-1"]:focus { outline: none; }
+.oculto { display: none !important; }
+.solo-lector { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.cifra { font-variant-numeric: tabular-nums; }
+
+/* ---------- Tipografía ---------- */
+.n1 { font: var(--n1); letter-spacing: var(--n1-ls); }
+.n2 { font: var(--n2); letter-spacing: var(--n2-ls); }
+.n3 { font: var(--n3); letter-spacing: var(--n3-ls); }
+.n4 { font: var(--n4); letter-spacing: var(--n4-ls); }
+.n5 { font: var(--n5); letter-spacing: var(--n5-ls); }
+.n6 { font: var(--n6); letter-spacing: var(--n6-ls); text-transform: uppercase; }
+.rotulo { font: var(--n5); font-weight: 600; letter-spacing: var(--n5-ls); }
+.secundario { color: var(--texto-secundario); }
+.fuerte { font-weight: 600; }
+.medida { max-width: 60ch; }
+
+/* ---------- Pilas: el contenedor pone la separación ---------- */
+.pila { display: flex; flex-direction: column; }
+.pila-1 { gap: var(--e1); } .pila-2 { gap: var(--e2); } .pila-3 { gap: var(--e3); } .pila-4 { gap: var(--e4); }
+.pila-5 { gap: var(--e5); } .pila-6 { gap: var(--e6); } .pila-7 { gap: var(--e7); } .pila-8 { gap: var(--e8); }
+.al-inicio { align-self: flex-start; }
+.al-final { align-self: flex-end; }
+.fila { display: flex; align-items: center; gap: var(--e4); }
+.fila-extremos { display: flex; align-items: center; justify-content: space-between; gap: var(--e4); }
+
+/* ---------- Logo ---------- */
+.logo { display: inline-flex; align-items: center; gap: var(--e3); color: #fff; }
+.logo svg { width: 32px; height: 32px; flex: none; }
+.logo span { font: 400 22px/1 var(--familia); letter-spacing: -0.02em; }
+.logo b { font-weight: 600; }
+
+/* ---------- Botones ---------- */
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: var(--e2);
+    height: var(--alto-control); padding: 0 var(--e5); border-radius: var(--radio-control); border: 1px solid transparent;
+    font-weight: 600; cursor: pointer; white-space: nowrap;
+    transition: background-color var(--transicion), border-color var(--transicion), color var(--transicion); }
+.boton-primario { background: var(--primario); color: #fff; }
+.boton-primario:hover { background: var(--primario-encima); }
+.boton-primario:active { background: var(--primario-presionado); }
+.boton-secundario { background: var(--superficie); color: var(--texto); border-color: var(--borde-control); }
+.boton-secundario:hover { border-color: var(--texto-secundario); background: var(--fondo); }
+.boton-secundario:active { background: var(--borde); }
+.boton:disabled, .boton[aria-disabled="true"] { background: var(--fondo); border-color: var(--borde); color: var(--texto-secundario); cursor: not-allowed; }
+.boton-ancho { width: 100%; }
+.enlace { display: inline; padding: 0; border: 0; background: none; cursor: pointer; font: inherit;
+    color: var(--texto); text-decoration: underline; text-decoration-color: var(--borde-control);
+    text-underline-offset: 3px; text-decoration-thickness: 1px; transition: text-decoration-color var(--transicion), color var(--transicion); }
+.enlace:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
+.enlace:active { color: var(--primario-presionado); }
+.enlace-acento { color: var(--primario); text-decoration-color: currentColor; }
+
+/* ---------- Campos ---------- */
+.campo { display: flex; flex-direction: column; gap: var(--e2); min-width: 0; }
+.campo > label, .campo > .rotulo { font: var(--n5); font-weight: 600; letter-spacing: var(--n5-ls); }
+.entrada-texto { height: var(--alto-control); width: 100%; padding: 0 var(--e3); background: var(--superficie);
+    border: 1px solid var(--borde-control); border-radius: var(--radio-control);
+    transition: border-color var(--transicion), background-color var(--transicion); }
+.entrada-texto::placeholder { color: var(--borde-control); }
+.entrada-texto:hover { border-color: var(--texto-secundario); }
+.entrada-texto:focus { outline: 2px solid var(--primario); outline-offset: 0; border-color: var(--primario); }
+.entrada-texto[aria-invalid="true"] { border-color: var(--error-texto); }
+.entrada-texto:disabled { background: var(--fondo); color: var(--texto-secundario); cursor: not-allowed; }
+.marca-ver { display: inline-flex; align-items: center; gap: var(--e2); font: var(--n5); letter-spacing: var(--n5-ls);
+    color: var(--texto-secundario); cursor: pointer; width: fit-content; }
+.marca-ver input { width: 16px; height: 16px; margin: 0; accent-color: var(--texto); }
+.rejilla-2 { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--e4); row-gap: var(--e5); }
+.rejilla-2 > .ancho { grid-column: 1 / -1; }
+
+/* Estado de validación: siempre texto + signo, nunca solo color. Reserva su alto para no saltar. */
+.estado { display: flex; gap: var(--e2); min-height: 18px; font: var(--n5); letter-spacing: var(--n5-ls); color: var(--texto-secundario); }
+.estado:empty { min-height: 0; }
+.estado::before { flex: none; width: 12px; font-weight: 600; }
+.estado.ok { color: var(--exito-texto); }  .estado.ok::before { content: "✓"; }
+.estado.mal { color: var(--error-texto); } .estado.mal::before { content: "!"; }
+.estado.info::before { content: "–"; }
+
+/* Medidor de fortaleza (mismo dibujo que Componentes/IndicadorFortaleza: cinco barras) */
+.fortaleza { display: flex; flex-direction: column; gap: var(--e2); }
+.fortaleza .barras { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--e1); }
+.fortaleza .barras span { height: 4px; background: var(--borde); transition: background-color var(--transicion); }
+.fortaleza[data-nivel="bajo"] .barras span.lleno { background: var(--error-texto); }
+.fortaleza[data-nivel="ok"] .barras span.lleno { background: var(--exito-texto); }
+.fortaleza p { font: var(--n5); letter-spacing: var(--n5-ls); color: var(--texto-secundario); }
+
+/* ---------- Avisos ---------- */
+.aviso { display: flex; flex-direction: column; gap: var(--e1); padding: var(--e3) var(--e4); border-radius: var(--radio-control);
+    font: var(--n5); letter-spacing: var(--n5-ls); }
+.aviso strong { font-weight: 600; font-size: 13.33px; letter-spacing: 0; }
+.aviso-error { background: var(--error); color: var(--error-texto); }
+.aviso-neutro { background: var(--fondo); color: var(--texto); border-left: 2px solid var(--texto-secundario); }
+.aviso-atencion { background: var(--advertencia); color: var(--texto); border-left: 2px solid var(--advertencia-texto); }
+.aviso ol { list-style: decimal; padding-left: 16px; display: flex; flex-direction: column; gap: var(--e1); }
+
+/* ---------- Tarjetas elegibles (caminos, opciones) ---------- */
+.eleccion { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--e4); width: 100%;
+    padding: var(--e5); text-align: left; cursor: pointer; background: var(--superficie);
+    border: 1px solid var(--borde); border-radius: var(--radio-tarjeta);
+    transition: border-color var(--transicion), background-color var(--transicion); }
+.eleccion:hover { border-color: var(--texto-secundario); }
+.eleccion:active { background: var(--fondo); }
+.eleccion .flecha { width: 20px; height: 20px; color: var(--texto-secundario); transition: color var(--transicion); }
+.eleccion:hover .flecha { color: var(--texto); }
+.eleccion-destacada { background: var(--primario); border-color: var(--primario); color: #fff; }
+.eleccion-destacada .secundario, .eleccion-destacada .flecha { color: #E4DCF3; }
+.eleccion-destacada:hover { background: var(--primario-encima); border-color: var(--primario-encima); }
+.eleccion-destacada:hover .flecha { color: #fff; }
+.eleccion-destacada:active { background: var(--primario-presionado); }
+.eleccion:disabled { background: var(--fondo); border-color: var(--borde); color: var(--texto-secundario); cursor: not-allowed; }
+.eleccion:disabled .secundario, .eleccion:disabled .flecha { color: var(--texto-secundario); }
+
+/* ---------- Pantallas de entrada: panel oscuro + columna centrada ---------- */
+.entrada { display: grid; grid-template-columns: var(--ancho-panel) 1fr; min-height: 100vh; }
+.panel { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--lateral-fondo); color: var(--lateral-texto); isolation: isolate; }
+.panel-contenido { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column;
+    justify-content: space-between; gap: var(--e7); padding: var(--e7); }
+.panel .lema { color: #fff; max-width: 13ch; }
+.panel .lema-chico { font: var(--n2); letter-spacing: var(--n2-ls); color: #fff; max-width: 16ch; }
+.panel .n6 { color: var(--lateral-seccion); }
+.rasgos { display: flex; flex-direction: column; gap: var(--e5); }
+.rasgo { display: grid; grid-template-columns: 20px 1fr; column-gap: var(--e4); row-gap: var(--e1); }
+.rasgo svg { width: 20px; height: 20px; color: var(--lateral-seccion); grid-row: span 2; margin-top: 1px; }
+.rasgo strong { font: var(--n4); font-weight: 600; color: #fff; }
+.rasgo p { font: var(--n5); letter-spacing: var(--n5-ls); color: var(--lateral-texto); max-width: 40ch; }
+.panel-pie { font: var(--n5); letter-spacing: var(--n5-ls); color: var(--lateral-seccion); }
+
+/* El muro de portadas (motivo): ver muro.js y PRINCIPIOS-DISENO.md §7 */
+/* Portadas grandes (528 × 336): por el panel asoman dos o tres, como un muro, y no una fila de iniciales. */
+.muro { position: absolute; inset: -120px -360px -120px -200px; z-index: 0; display: grid;
+    grid-template-columns: repeat(3, 528px); grid-auto-rows: 336px; gap: var(--e5); align-content: start; }
+.muro::after { content: ""; position: absolute; inset: 0; background: rgba(36, 29, 48, 0.88); }
+/* Más cerrado donde está el texto (izquierda), más abierto hacia el borde. */
+.muro::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(36, 29, 48, 0.5), rgba(36, 29, 48, 0) 70%); }
+.portada { position: relative; overflow: hidden; border-radius: var(--radio-tarjeta); }
+.portada:nth-child(3n+2) { transform: translateY(168px); }
+.portada .inicial { position: absolute; left: var(--e6); bottom: -40px; font: 700 252px/1 var(--familia); color: rgba(255, 255, 255, 0.28); }
+
+/* Centrado vertical seguro: si la columna no entra, se desplaza desde arriba en vez de recortarse.
+   Es el único margin del sistema, y es de maquetación (auto), no una separación. */
+.contenido { min-height: 100vh; display: flex; flex-direction: column; padding: var(--e8) var(--e7); background: var(--superficie); }
+.columna { width: 100%; max-width: var(--ancho-columna); margin: auto; }
+.columna-amplia { max-width: var(--ancho-columna-amplia); }
+
+/* ---------- Panel de la maqueta (solo en el navegador) ---------- */
+.maqueta { position: fixed; right: 16px; bottom: 16px; width: min(400px, calc(100vw - 32px)); z-index: 50;
+    background: #16131C; color: #E8E6EE; border: 1px solid #2E2939; border-radius: var(--radio-tarjeta); font: 12px/1.5 Consolas, monospace; }
+.maqueta summary { cursor: pointer; padding: var(--e2) var(--e3); font: var(--n6); letter-spacing: var(--n6-ls); text-transform: uppercase; color: #A9A4B8; }
+.maqueta details[open] { padding-bottom: var(--e3); }
+.maqueta-nota, .maqueta-titulo { padding: 0 var(--e3) var(--e2); font: var(--n5); color: #A9A4B8; }
+.maqueta-estados { display: flex; flex-wrap: wrap; gap: var(--e2); padding: 0 var(--e3) var(--e3); }
+.maqueta-estados button { font: var(--n5); background: #2A2536; color: #fff; border: 1px solid #3F3851; border-radius: var(--radio-control);
+    padding: var(--e1) var(--e2); cursor: pointer; }
+.maqueta-estados button:hover { background: #3A3349; }
+.maqueta-mensajes { padding: 0 var(--e3); max-height: 168px; overflow: auto; display: flex; flex-direction: column; gap: var(--e2); }
+.maqueta-mensajes li { display: flex; flex-direction: column; gap: 2px; }
+.maqueta-direccion { color: #A9A4B8; }
+.maqueta-mensajes code { white-space: pre-wrap; word-break: break-word; color: #F0EAFF; }
+
+/* ---------- Ventana angosta ---------- */
+@media (max-width: 880px) {
+    .entrada { grid-template-columns: 1fr; }
+    .panel { position: relative; height: auto; }
+    .panel-contenido { padding: var(--e6); gap: var(--e5); }
+    .rasgos, .panel-pie { display: none; }
+    .contenido { min-height: 0; padding: var(--e6) var(--e5); }
+    .rejilla-2 { grid-template-columns: 1fr; }
+}
+
+/* Ventana baja (720 px): el panel usa el escalón anterior de la escala para que entre el pie. */
+@media (max-height: 760px) and (min-width: 881px) {
+    .panel-contenido { padding: var(--e6) var(--e7); gap: var(--e5); }
+    .panel .pila-7 { gap: var(--e6); }
+    .rasgos { gap: var(--e4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+}
