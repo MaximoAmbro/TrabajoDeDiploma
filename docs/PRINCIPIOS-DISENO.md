@@ -98,7 +98,7 @@ Ningún elemento lleva `margin` propio. Así no hay elementos corridos 2 px de s
 - **Un eje vertical por columna.** Todo cuelga del borde izquierdo de su columna: títulos, rótulos, campos,
   botones y avisos. El único elemento alineado a la derecha es la columna de importes.
 - **La columna de contenido tiene un ancho fijo:**
-  - 400 px en acceso, recuperación y bienvenida;
+  - 480 px en acceso, recuperación y bienvenida;
   - 608 px en el alta.
 - **Equilibrio vertical:** en las pantallas de entrada, el contenido se centra en vertical en el espacio
   disponible. Si no entra, se desplaza desde arriba, con 64 px de margen.
@@ -131,7 +131,7 @@ separar cosas.
 | Interruptor | 32 × 18 px, botón de 14 px |
 | Barras (fortaleza, ocupación) | 4 px de alto |
 | Número de paso | Círculo de 24 px en el panel, de 20 px en el encabezado del armador |
-| Portadas | 176 × 112 px en el muro (inicial de 84 px); 96 × 64 px en el armador (inicial de 48 px) |
+| Portadas | 528 × 336 px en el muro (inicial de 252 px, separación de 24); 96 × 64 px en el armador (inicial de 48 px) |
 | Tarjeta de sector | Mínimo de 176 px de ancho; franja de color de 4 px |
 | Línea de estado | Alto reservado de 18 px; signo de 12 px |
 | Panel oscuro | 440 px de ancho |
@@ -150,8 +150,8 @@ deshabilitado.
 | Enlace | Subrayado más grueso | Color `--primario-presionado` |
 
 - **Transición:** solo color, fondo y borde, 120 ms `ease-out`.
-- **Movimiento:** nada se mueve más de 4 px. Con `prefers-reduced-motion: reduce`, ninguna transición ni
-  animación.
+- **Movimiento:** en todo el proyecto hay **dos movimientos, y los dos están en el armador** (§8). Ninguna
+  otra cosa se desplaza ni cuenta. Con `prefers-reduced-motion: reduce`, ni esos dos ni ninguna transición.
 - **Deshabilitado:** fondo `--fondo`, texto `--texto-secundario`, cursor `not-allowed`. Nunca solo opacidad.
 
 ## 7. El motivo: el muro de portadas
@@ -167,6 +167,10 @@ más claro de cada portada y compite con el texto del panel.
 
 Los nombres son los de la semilla de demostración, con sus índices calculados de antemano en `muro.js`.
 
+**Las portadas del muro son grandes** (528 × 336 px, tres veces las del catálogo): por el panel asoman dos o
+tres, cortadas por el borde. Con portadas chicas el muro se leía como una fila de iniciales sueltas. Se probó
+también bajar la opacidad al 6 %, y las letras seguían leyéndose (24/11/2026).
+
 El muro queda **atenuado al 12 %** bajo una capa de `--lateral-fondo` al 88 %, con un refuerzo del 50 % hacia
 la izquierda, donde está el texto. Así el texto en blanco y en `--lateral-texto` mantiene un contraste mayor
 que 7:1. El muro no se mueve.
@@ -174,9 +178,15 @@ que 7:1. El muro no se mueve.
 ## 8. El momento de autor: el armador de paquete
 
 Es la única pantalla con un elemento grande y vivo: **el total, en N1, que se recalcula a la vista mientras se
-elige**. El desglose se arma línea por línea al costado: cada línea entra con una transición de opacidad de
-120 ms y sin desplazamiento. El descuento por nivel aparece solo cuando hay entradas y el nivel lo da. Todo lo
-demás de la pantalla queda quieto.
+elige**. Tiene los dos únicos movimientos del proyecto:
+
+| Movimiento | Cómo es | Con `prefers-reduced-motion` |
+|---|---|---|
+| **El total cuenta** | Cuando cambia, sube o baja hasta el valor nuevo en 200 ms, con desaceleración (`1 − (1 − t)³`). Cada cuadro muestra un importe redondeado a centavos, y el último es exactamente el del negocio | Salta al valor nuevo |
+| **El renglón nuevo entra** | Solo el renglón que se agrega al desglose: de 8 px más arriba a su lugar, con opacidad de 0 a 1, en 200 ms `ease-out`. Los que ya estaban no se mueven | Aparece sin movimiento |
+
+El descuento por nivel aparece solo cuando hay entradas y el nivel lo da. El total se anuncia una sola vez al
+lector de pantalla, cuando termina de contar, no en cada cuadro. Todo lo demás de la pantalla queda quieto.
 
 ## 9. Accesibilidad
 

@@ -19,6 +19,33 @@
     const eleccion = { cantidades: {}, servicios: new Set(), seguro: false };
     let version = 0;
 
+    // ---------- El único movimiento del proyecto (PRINCIPIOS-DISENO.md §8) ----------
+    // El total cuenta hasta el valor nuevo en 200 ms, con desaceleración. Con prefers-reduced-motion, salta.
+    const sinMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let totalMostrado = 0, cuadro = 0;
+    function escribirTotal(valor) {
+        const [entero, decimales] = plata(valor).split(",");
+        const total = $("#total");
+        total.textContent = entero;
+        const dec = document.createElement("span");
+        dec.className = "decimales"; dec.textContent = "," + decimales;
+        total.append(dec);
+    }
+    function animarTotal(destino) {
+        cancelAnimationFrame(cuadro);
+        const desde = totalMostrado;
+        if (desde === destino || sinMovimiento.matches) { totalMostrado = destino; escribirTotal(destino); return; }
+        const inicio = performance.now(), duracion = 200;
+        const paso = ahora => {
+            const t = Math.min(1, (ahora - inicio) / duracion);
+            const suave = 1 - Math.pow(1 - t, 3);
+            totalMostrado = t < 1 ? Math.round((desde + (destino - desde) * suave) * 100) / 100 : destino;
+            escribirTotal(totalMostrado);
+            if (t < 1) cuadro = requestAnimationFrame(paso);
+        };
+        cuadro = requestAnimationFrame(paso);
+    }
+
     // ---------- Dibujo del evento y de las opciones (una vez por carga de datos) ----------
     function dibujarEvento(e) {
         $("#evento-nombre").textContent = e.nombre;
@@ -166,29 +193,31 @@
         const existentes = new Map([...lista.children].map(li => [li.dataset.clave, li]));
         const nuevas = lineas(r).map(f => {
             let li = existentes.get(f.clave);
-            if (!li) {
+            const recien = !li;
+            if (recien) {
                 li = document.createElement("li");
                 li.dataset.clave = f.clave;
-                if (f.grupo) { li.className = "grupo"; li.textContent = f.grupo; }
+                if (f.grupo) li.textContent = f.grupo;
                 else li.innerHTML = '<span class="texto"></span><span class="importe"></span>';
             }
+            li.className = (f.grupo ? "grupo" : "linea" + (f.clase ? " " + f.clase : "")) + (recien || li.classList.contains("nueva") ? " nueva" : "");
             if (!f.grupo) {
-                li.className = "linea" + (f.clase ? " " + f.clase : "");
                 li.querySelector(".texto").textContent = f.texto;
                 li.querySelector(".importe").textContent = f.importe;
             }
+            if (recien) li.addEventListener("animationend", () => li.classList.remove("nueva"), { once: true });
             return li;
         });
-        lista.replaceChildren(...nuevas);   // las que ya estaban no se vuelven a animar
+        // Reconciliación en el lugar: las líneas que ya estaban no se sacan ni se reinsertan (reinsertarlas
+        // reiniciaría su animación). Solo entra lo nuevo y sale lo que ya no corresponde.
+        const deseadas = new Set(nuevas);
+        [...lista.children].forEach(li => { if (!deseadas.has(li)) li.remove(); });
+        nuevas.forEach((li, i) => { if (lista.children[i] !== li) lista.insertBefore(li, lista.children[i] || null); });
         $("#vacio").classList.toggle("oculto", nuevas.length > 0);
 
-        const [entero, decimales] = plata(r.total).split(",");
-        const total = $("#total");
-        total.textContent = entero;
-        const dec = document.createElement("span");
-        dec.className = "decimales"; dec.textContent = "," + decimales;
-        total.append(dec);
-        total.setAttribute("aria-label", "Total " + plata(r.total));
+        animarTotal(r.total);
+        $("#total").setAttribute("aria-label", "Total " + plata(r.total));
+        $("#total-anuncio").textContent = "Total " + plata(r.total);   // se anuncia una vez, no cada cuadro del conteo
         const ahorros = [];
         if (r.montoDescuento > 0) ahorros.push("Ahorrás " + plata(r.montoDescuento) + " por tu nivel " + datos.cliente.nivel + ".");
         if (eleccion.seguro && datos.cliente.suscripcionActiva) ahorros.push("El seguro va sin cargo por tu suscripción.");

@@ -29,7 +29,7 @@
     /* Formas */
     --alto-control: 40px; --radio-control: 3px; --radio-tarjeta: 4px;
     --ancho-lateral: 240px; --alto-barra: 56px; --ancho-panel: 440px;
-    --ancho-columna: 400px; --ancho-columna-amplia: 608px; --ancho-resumen: 360px;
+    --ancho-columna: 480px; --ancho-columna-amplia: 608px; --ancho-resumen: 360px;
     --transicion: 120ms ease-out;
 }
 
@@ -170,14 +170,15 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
 .panel-pie { font: var(--n5); letter-spacing: var(--n5-ls); color: var(--lateral-seccion); }
 
 /* El muro de portadas (motivo): ver muro.js y PRINCIPIOS-DISENO.md §7 */
-.muro { position: absolute; inset: -24px -96px -24px -24px; z-index: 0; display: grid;
-    grid-template-columns: repeat(3, 176px); grid-auto-rows: 112px; gap: var(--e2); align-content: start; }
+/* Portadas grandes (528 × 336): por el panel asoman dos o tres, como un muro, y no una fila de iniciales. */
+.muro { position: absolute; inset: -120px -360px -120px -200px; z-index: 0; display: grid;
+    grid-template-columns: repeat(3, 528px); grid-auto-rows: 336px; gap: var(--e5); align-content: start; }
 .muro::after { content: ""; position: absolute; inset: 0; background: rgba(36, 29, 48, 0.88); }
 /* Más cerrado donde está el texto (izquierda), más abierto hacia el borde. */
 .muro::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(36, 29, 48, 0.5), rgba(36, 29, 48, 0) 70%); }
 .portada { position: relative; overflow: hidden; border-radius: var(--radio-tarjeta); }
-.portada:nth-child(3n+2) { transform: translateY(56px); }
-.portada .inicial { position: absolute; left: 12px; bottom: -6px; font: 700 84px/1 var(--familia); color: rgba(255, 255, 255, 0.28); }
+.portada:nth-child(3n+2) { transform: translateY(168px); }
+.portada .inicial { position: absolute; left: var(--e6); bottom: -40px; font: 700 252px/1 var(--familia); color: rgba(255, 255, 255, 0.28); }
 
 /* Centrado vertical seguro: si la columna no entra, se desplaza desde arriba en vez de recortarse.
    Es el único margin del sistema, y es de maquetación (auto), no una separación. */

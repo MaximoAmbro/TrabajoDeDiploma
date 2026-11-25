@@ -91,12 +91,15 @@
     padding: var(--e4) 0 var(--e2); }
 .desglose .grupo:first-child { padding-top: 0; }
 .desglose .linea { display: grid; grid-template-columns: 1fr auto; column-gap: var(--e4); padding: var(--e1) 0;
-    font: var(--n4); animation: aparecer var(--transicion) both; }
+    font: var(--n4); }
 .desglose .linea .importe { font-variant-numeric: tabular-nums; text-align: right; }
 .desglose .linea.descuento { color: var(--exito-texto); }
 .desglose .linea.bonificado .importe { color: var(--exito-texto); }
 .desglose .linea.secundaria { color: var(--texto-secundario); font: var(--n5); }
-@keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }
+/* El renglón nuevo entra deslizándose desde arriba, 8 px en 200 ms. Es el único desplazamiento del
+   proyecto (PRINCIPIOS-DISENO.md §8). Con prefers-reduced-motion, sistema.css lo anula. */
+.desglose .nueva { animation: entrar 200ms ease-out both; }
+@keyframes entrar { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
 .vacio { padding: var(--e4) 0; }
 .total { display: flex; flex-direction: column; gap: var(--e1); padding-top: var(--e5); border-top: 1px solid var(--texto); }
 .total .n1 { font-variant-numeric: tabular-nums; }

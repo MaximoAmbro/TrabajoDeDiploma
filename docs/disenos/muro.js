@@ -16,7 +16,7 @@
         ["Encuentro de vóley mixto", "Deportivo", 1], ["Fiesta de fin de temporada", "Concierto", 5]
     ];
     document.querySelectorAll(".muro").forEach(muro => {
-        const cantidad = Number(muro.dataset.cantidad || 27);
+        const cantidad = Number(muro.dataset.cantidad || 9);
         for (let n = 0; n < cantidad; n++) {
             const [nombre, categoria, i] = eventos[(n * 7) % eventos.length];
             const portada = document.createElement("div");
