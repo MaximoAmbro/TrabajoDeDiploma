@@ -33,6 +33,10 @@ namespace Visual.Web
         public Task CapturarAsync(Stream imagen) =>
             navegador.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, imagen);
 
+        public void EnfocarVista() => navegador?.Focus();
+
+        public Task<string> EjecutarScriptAsync(string script) => navegador.ExecuteScriptAsync(script);
+
         public async void Cargar(string archivo)
         {
             if (pagina != null || fallida) return;

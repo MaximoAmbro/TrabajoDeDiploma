@@ -30,6 +30,26 @@ namespace Visual.Web
             try { return (Task)motor?.GetType().GetMethod("CapturarAsync").Invoke(motor, new object[] { imagen }); }
             catch (Exception error) { Desactivar(error); return Task.CompletedTask; }
         }
+
+        internal void EnfocarVista()
+        {
+            try { motor?.GetType().GetMethod("EnfocarVista")?.Invoke(motor, null); }
+            catch (Exception error) { System.Diagnostics.Trace.WriteLine(error); }
+        }
+
+        internal Task<string> EjecutarScriptAsync(string script)
+        {
+            try
+            {
+                var tarea = motor?.GetType().GetMethod("EjecutarScriptAsync")?.Invoke(motor, new object[] { script });
+                return tarea as Task<string> ?? Task.FromResult<string>(null);
+            }
+            catch (Exception error)
+            {
+                System.Diagnostics.Trace.WriteLine(error);
+                return Task.FromResult<string>(null);
+            }
+        }
         public event Action VistaLista;
         public event Action VistaNoDisponible;
         public event Action<string> Mensaje;

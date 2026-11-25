@@ -56,6 +56,9 @@ namespace Pruebas
                 .Where(p => !p.EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase))
                 .ToArray();
             string codigo = string.Join("\n", fuentes.Select(File.ReadAllText));
+            StringAssert.Contains(codigo, "Application.Run(new frmBienvenida())");
+            StringAssert.Contains(codigo, "Cargar(\"bienvenida.html\")");
+            StringAssert.Contains(codigo, "Cargar(\"acceso.html\")");
             var pantallas = Regex.Matches(codigo, @"\bclass\s+(\w+)\s*:\s*FormularioEventAura\b")
                 .Cast<Match>().Select(m => m.Groups[1].Value).Distinct().ToArray();
             Assert.IsTrue(pantallas.Length >= 25, "El inventario esperaba al menos 25 formularios y encontró " + pantallas.Length + ".");

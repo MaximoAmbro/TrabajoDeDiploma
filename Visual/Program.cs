@@ -22,7 +22,7 @@ namespace Visual
             ManejadorErrores.Instalar();
             ControlSesionInactiva.Instalar();
             SeleccionEnviadorCodigos.Actual = EnviadorSmtp.Seleccionar();
-            Application.Run(new frmInicio());
+            Application.Run(new frmBienvenida());
         }
     }
 }

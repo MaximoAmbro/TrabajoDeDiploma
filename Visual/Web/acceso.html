@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+<title>EventAura · Iniciar sesión</title>
+<link rel="stylesheet" href="sistema.css">
+<script defer src="entrada-puente.js"></script>
+<script defer src="muro.js"></script>
+<script defer src="acceso.js"></script>
+</head>
+<body>
+<div class="entrada">
+  <aside class="panel" aria-label="EventAura">
+    <div class="muro"></div>
+    <div class="panel-contenido">
+      <span class="logo" aria-label="EventAura">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26 L16 6 L26 26" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.5" cy="26" r="2.2" fill="var(--primario)"/></svg>
+        <span>Event<b>Aura</b></span>
+      </span>
+
+      <div class="pila pila-7">
+        <div class="pila pila-4">
+          <p class="n6">Una sola cuenta</p>
+          <p class="lema-chico">Entrás y ves lo que corresponde a tu perfil.</p>
+        </div>
+        <ul class="rasgos">
+          <li class="rasgo">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7.5a2 2 0 0 0 0 5v3h15v-3a2 2 0 0 1 0-5v-3h-15z"/><path d="M12.5 4.5v11" stroke-dasharray="1.5 2"/></svg>
+            <strong>Clientes</strong>
+            <p>Entradas, nivel de fidelidad, suscripción y listas de espera.</p>
+          </li>
+          <li class="rasgo">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 17.5v-10L10 3l6.5 4.5v10M1.5 17.5h17M8 17.5v-5h4v5"/></svg>
+            <strong>Organizadores</strong>
+            <p>Sus locales y eventos, el control de ingreso y sus reportes.</p>
+          </li>
+          <li class="rasgo">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.5 16 5v4.5c0 4-2.8 6.8-6 8-3.2-1.2-6-4-6-8V5z"/><path d="m7.5 10 1.8 1.8L12.8 8"/></svg>
+            <strong>Administración</strong>
+            <p>Solicitudes, eventos en revisión, auditoría y reportes globales.</p>
+          </li>
+        </ul>
+      </div>
+
+      <p class="panel-pie">Prototipo académico. Los pagos y los correos son simulados.</p>
+    </div>
+  </aside>
+
+  <main class="contenido">
+    <div class="columna pila pila-7">
+      <div class="pila pila-5">
+        <button type="button" class="enlace n5 secundario al-inicio" data-destino="bienvenida">← Bienvenida</button>
+        <div class="pila pila-2">
+          <h1 class="n2" id="titulo" tabindex="-1">Iniciar sesión</h1>
+          <p class="n4 secundario">Con el correo y la contraseña de tu cuenta.</p>
+        </div>
+      </div>
+
+      <div class="aviso aviso-error oculto" id="sin-base" role="alert"></div>
+
+      <form id="formulario" class="pila pila-6" novalidate>
+        <div class="pila pila-5">
+          <div class="campo">
+            <label for="mail">Mail</label>
+            <input class="entrada-texto" id="mail" name="mail" type="email" autocomplete="username" maxlength="100" aria-describedby="estado-mail">
+            <p class="estado" id="estado-mail" aria-live="polite"></p>
+          </div>
+          <div class="campo">
+            <div class="fila-extremos">
+              <label class="rotulo" for="contrasena">Contraseña</label>
+              <button type="button" class="enlace n5" data-destino="recuperar">¿La olvidaste?</button>
+            </div>
+            <input class="entrada-texto" id="contrasena" name="contrasena" type="password" autocomplete="current-password" aria-describedby="estado-contrasena">
+            <p class="estado" id="estado-contrasena" aria-live="polite"></p>
+            <label class="marca-ver"><input type="checkbox" id="mostrar"> Mostrar contraseña</label>
+          </div>
+        </div>
+
+        <div class="aviso aviso-error oculto" id="error" role="alert"></div>
+
+        <button type="submit" class="boton boton-primario boton-ancho" id="entrar">Iniciar sesión</button>
+      </form>
+
+      <p class="n5 secundario">¿No tenés cuenta? <button type="button" class="enlace enlace-acento" data-destino="alta">Crear una</button></p>
+    </div>
+  </main>
+</div>
+</body>
+</html>

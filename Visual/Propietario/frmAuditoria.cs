@@ -14,6 +14,7 @@ namespace Visual
         private readonly Componentes.EtiquetaRotulo etiquetaHasta = new Componentes.EtiquetaRotulo { Text = "Hasta", AutoSize = true };
         private readonly Componentes.EtiquetaRotulo etiquetaAccion = new Componentes.EtiquetaRotulo { Text = "Acción", AutoSize = true };
         private bool vistaLista;
+        private bool focoInicializado;
         private readonly Web.PanelWeb auditoriaWeb = new Web.PanelWeb { Name = "auditoriaWeb", Dock = DockStyle.None, Visible = false };
         private readonly Label avisoWeb = new Label { Name = "avisoAuditoriaWeb", AutoSize = true, ForeColor = Tema.TextoSecundario, Text = "Vista web no disponible. Se muestra la tabla de Windows Forms.", Visible = false };
         public frmAuditoria()
@@ -23,6 +24,12 @@ namespace Visual
             Controls.Add(auditoriaWeb);
             Controls.Add(avisoWeb);
             auditoriaWeb.VistaLista += ActualizarVistaAuditoria;
+            auditoriaWeb.VistaLista += () =>
+            {
+                if (focoInicializado) return;
+                focoInicializado = true;
+                desde.Focus();
+            };
             auditoriaWeb.VistaNoDisponible += ActualizarVistaAuditoria;
             auditoriaWeb.Escape += () => { Message m = default(Message); ProcessCmdKey(ref m, Keys.Escape); };
             desde.Value = DateTime.Today.AddDays(-30);

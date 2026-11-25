@@ -91,9 +91,8 @@ namespace Pruebas
                 }
             }
 
-            // SEG-2 incorpora control de ingreso y la fase de seguridad incorpora auditoría.
-            // Las vistas de solicitudes y revisión del primer evento elevan el inventario a 25.
-            Assert.AreEqual(25, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
+            // La bienvenida es la pantalla inicial web nueva; conserva acceso WinForms como respaldo.
+            Assert.AreEqual(26, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
         // CP-53 — RNF-02: instalar el manejo global de errores antes de abrir formularios.
@@ -103,7 +102,12 @@ namespace Pruebas
             string ruta = Path.Combine(BaseDePrueba.RaizDelRepositorio(), "Visual", "Program.cs");
             string fuente = File.ReadAllText(ruta);
             int instalacion = fuente.IndexOf("ManejadorErrores.Instalar();", StringComparison.Ordinal);
+            int estilos = fuente.IndexOf("Application.EnableVisualStyles();", StringComparison.Ordinal);
+            int renderizado = fuente.IndexOf("Application.SetCompatibleTextRenderingDefault(false);", StringComparison.Ordinal);
+            int primeraVentana = fuente.IndexOf("new frmBienvenida()", StringComparison.Ordinal);
             int ejecucion = fuente.IndexOf("Application.Run", StringComparison.Ordinal);
+            Assert.IsTrue(estilos >= 0 && renderizado > estilos && primeraVentana > renderizado,
+                "Visual Styles y SetCompatibleTextRenderingDefault deben configurarse antes de crear la primera ventana.");
             Assert.IsTrue(instalacion >= 0, "Falta instalar el manejador en Program.Main.");
             Assert.IsTrue(ejecucion > instalacion, "El manejador debe instalarse antes de Application.Run.");
         }
@@ -233,7 +237,7 @@ namespace Pruebas
             var formulariosProducto = typeof(Visual.FormularioEventAura).Assembly.GetTypes()
                 .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Visual.FormularioEventAura))
                 .ToArray();
-            Assert.AreEqual(25, formulariosProducto.Length);
+            Assert.AreEqual(26, formulariosProducto.Length);
             Assert.IsTrue(formulariosProducto.All(t => typeof(Visual.FormularioEventAura).IsAssignableFrom(t)),
                 "Todas las pantallas deben heredar la política común de teclado y redimensionamiento.");
 

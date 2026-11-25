@@ -38,7 +38,7 @@ namespace Pruebas
         }
 
         // CP-199 — RF-03/RF-07/RF-11, RNF-02: sin DLL opcionales, la carga real termina en respaldo.
-        [TestMethod("CP-199: Quitar las DLL de WebView2 y Newtonsoft activa el respaldo de las cuatro vistas")]
+        [TestMethod("CP-199: Quitar las DLL de WebView2 y Newtonsoft activa el respaldo de las vistas")]
         public void CP199_RespaldoConDependenciasAusentesEnCopia()
         {
             if (Environment.GetEnvironmentVariable("EVENTAURA_CP199_HIJO") == "1")
@@ -86,7 +86,7 @@ namespace Pruebas
 
         private static void ProbarPanelSinDependencias()
         {
-            string[] paginas = { "catalogo.html", "compra.html", "datos.html", "datos.html", "gestion.html" };
+            string[] paginas = { "catalogo.html", "compra.html", "datos.html", "datos.html", "gestion.html", "bienvenida.html", "acceso.html" };
             foreach (string pagina in paginas)
             {
                 using (var panel = new Visual.Web.PanelWeb())
@@ -114,7 +114,7 @@ namespace Pruebas
         private static void VerificarMigracionWeb(Form formulario)
         {
             string nombre = formulario.GetType().Name;
-            if (!new[] { "frmHistorialCliente", "frmMisLocales", "frmEventosLocal", "frmControlIngreso", "frmAuditoria", "frmRevisarEventos" }.Contains(nombre)) return;
+            if (!new[] { "frmHistorialCliente", "frmMisLocales", "frmEventosLocal", "frmControlIngreso", "frmAuditoria", "frmRevisarEventos", "frmInicio", "frmBienvenida" }.Contains(nombre)) return;
             var panel = Descendientes(formulario).OfType<Visual.Web.PanelWeb>().Single();
             var reloj = System.Diagnostics.Stopwatch.StartNew();
             while (!panel.InicializacionTerminada && reloj.ElapsedMilliseconds < 5000)
@@ -129,6 +129,19 @@ namespace Pruebas
                 return;
             }
             Assert.IsFalse(panel.Visible, nombre + " debe ocultar un motor web no disponible.");
+            if (formulario is Visual.frmBienvenida)
+            {
+                Assert.IsTrue(Application.OpenForms.OfType<Visual.frmInicio>().Any(f => f.Visible),
+                    "Si la bienvenida web falla, debe abrir directamente el acceso WinForms.");
+                return;
+            }
+            if (formulario is Visual.frmInicio)
+            {
+                bool respaldoAcceso = formulario.Controls.Find("txtMailLogin", true).Any(c => c.Visible) ||
+                    formulario.Controls.Find("avisoBaseNoDisponible", true).Any(c => c.Visible);
+                Assert.IsTrue(respaldoAcceso, "El acceso WinForms debe seguir visible si falla WebView2.");
+                return;
+            }
             bool respaldo = nombre == "frmHistorialCliente"
                 ? formulario.Controls.Find("dgvCompras", true).Any(c => c.Visible) || formulario.Controls.Find("estadoSinCompras", true).Any(c => c.Visible)
                 : nombre == "frmMisLocales"
@@ -144,13 +157,13 @@ namespace Pruebas
         }
 
         // CP-357 — RNF-02/RNF-03: interacción WinForms real, foco, teclado, y geometría en ventanas abiertas.
-        [TestMethod("CP-357: Teclado y geometría de las 25 ventanas reales")]
+        [TestMethod("CP-357: Teclado y geometría de las 26 ventanas reales")]
         public void CP357_InteraccionRealDeLasPantallas()
         {
             var tipos = typeof(Visual.FormularioEventAura).Assembly.GetTypes()
                 .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Visual.FormularioEventAura))
                 .OrderBy(t => t.Name).ToArray();
-            Assert.AreEqual(25, tipos.Length);
+            Assert.AreEqual(26, tipos.Length);
             var resultados = new List<string>();
             InterfazGrupoA.EnSta(() =>
             {
@@ -260,6 +273,12 @@ namespace Pruebas
                 panel.SimularFallaPosteriorALaCarga();
                 Application.DoEvents();
                 Assert.IsFalse(panel.Visible, "La vista web debe ocultarse cuando falla tras quedar visible.");
+                if (formulario is Visual.frmBienvenida)
+                {
+                    Assert.IsTrue(Application.OpenForms.OfType<Visual.frmInicio>().Any(f => f.Visible),
+                        "El fallo de la bienvenida debe conducir al acceso WinForms.");
+                    continue;
+                }
                 var aviso = Descendientes(formulario).OfType<Control>()
                     .FirstOrDefault(c => c.Name.StartsWith("aviso", StringComparison.OrdinalIgnoreCase) && c.Name.EndsWith("Web", StringComparison.OrdinalIgnoreCase));
                 Assert.IsNotNull(aviso, "El formulario debe conservar el aviso de respaldo.");
@@ -295,8 +314,34 @@ namespace Pruebas
 
         private static string VerificarFoco(Form formulario)
         {
-            Control esperado = DescendientesEnOrden(formulario).FirstOrDefault(EsCampoInicial);
-            Control actual = FocoProfundo(formulario);
+            Control esperadoNativo = DescendientesEnOrden(formulario).FirstOrDefault(EsCampoInicial);
+            Control actualNativo = FocoProfundo(formulario);
+            if (esperadoNativo != null && actualNativo == esperadoNativo)
+                return VerificarFocoNativo(formulario, esperadoNativo);
+            var vistaWeb = Descendientes(formulario).OfType<Visual.Web.PanelWeb>()
+                .FirstOrDefault(panel => panel.Visible && panel.Preparado);
+            if (vistaWeb != null)
+            {
+                vistaWeb.EnfocarVista();
+                var tareaFoco = vistaWeb.EjecutarScriptAsync(
+                    "(function(){var a=Array.from(document.querySelectorAll('a[href],button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex]')).filter(function(e){return e.tabIndex>=0&&e.getClientRects().length>0&&getComputedStyle(e).visibility!=='hidden'});if(!a.length)return 'sin-control|0';a.sort(function(x,y){return x.tabIndex-y.tabIndex});a[0].focus();var e=document.activeElement;return e.tagName+'|'+(e.id||'')+'|'+(e.disabled?'deshabilitado':'habilitado')+'|'+a.length})()");
+                var reloj = System.Diagnostics.Stopwatch.StartNew();
+                while (!tareaFoco.IsCompleted && reloj.ElapsedMilliseconds < 3000)
+                {
+                    Application.DoEvents();
+                    Thread.Sleep(10);
+                }
+                Assert.IsTrue(tareaFoco.IsCompleted && !tareaFoco.IsFaulted, "La vista web debe responder a Tab y permitir consultar el foco DOM.");
+                string focoDom = (tareaFoco.Result ?? string.Empty).Trim().Trim('"');
+                string[] partes = focoDom.Split('|');
+                int cantidadFoco = 0;
+                Assert.IsTrue(partes.Length == 4 && int.TryParse(partes[3], out cantidadFoco) && cantidadFoco > 0,
+                    "La vista web debe exponer elementos interactivos en orden de tabulación: " + focoDom);
+                Assert.IsTrue(partes[2] == "habilitado", "El foco DOM debe quedar en un control habilitado: " + focoDom);
+                return "foco DOM: OK (" + partes[0] + "#" + partes[1] + "; " + cantidadFoco + " controles tabulables)";
+            }
+            Control esperado = esperadoNativo;
+            Control actual = actualNativo;
             if (esperado == null) return actual == null ? "foco: sin campo" : "foco: " + actual.Name;
             if (actual == null || actual != esperado)
                 throw new AssertFailedException("Foco inicial real: " + (actual?.Name ?? "ninguno") + "; esperado: " + esperado.Name);
@@ -313,6 +358,25 @@ namespace Pruebas
                 if (!visitados.Add(siguiente)) throw new AssertFailedException("El recorrido de Tab repitió " + siguiente.Name + " antes de cerrar el ciclo.");
             }
             return "foco/tab: OK (" + visitados.Count + " controles)";
+        }
+
+        private static string VerificarFocoNativo(Form formulario, Control esperado)
+        {
+            Control actual = FocoProfundo(formulario);
+            if (actual != esperado)
+                throw new AssertFailedException("El foco nativo debe quedar en " + esperado.Name + ".");
+            var visitados = new HashSet<Control>();
+            for (int i = 0; i < 40; i++)
+            {
+                SendKeys.SendWait("{TAB}");
+                Application.DoEvents();
+                Control siguiente = FocoProfundo(formulario);
+                if (siguiente == null || !siguiente.TabStop || !siguiente.Enabled || !siguiente.Visible)
+                    throw new AssertFailedException("Tab dejó el foco nativo en un control no navegable.");
+                if (siguiente == esperado && visitados.Count > 0) break;
+                if (!visitados.Add(siguiente)) throw new AssertFailedException("Tab repitió el control " + siguiente.Name + ".");
+            }
+            return "foco/tab nativo: OK (" + visitados.Count + " controles)";
         }
 
         private static string VerificarTeclas(Form formulario, Type tipo)
@@ -510,6 +574,14 @@ namespace Pruebas
         {
             int Px(int medida) => Visual.Disposicion.Pixeles(formulario, medida);
             Assert.IsTrue(formulario.MinimumSize.Width > 0 && formulario.MinimumSize.Height > 0, "La ventana requiere un tamaño mínimo.");
+            if (formulario is Visual.frmBienvenida ||
+                (formulario is Visual.frmInicio && formulario.Controls["accesoWeb"]?.Visible == true))
+            {
+                var web = formulario.Controls.OfType<Visual.Web.PanelWeb>().Single();
+                Assert.AreEqual(DockStyle.Fill, web.Dock, "La vista web de entrada debe ocupar el área de la ventana.");
+                Assert.AreEqual(formulario.ClientSize, web.Size, "La vista web de entrada debe cubrir toda la ventana.");
+                return;
+            }
             var barra = formulario.Controls.OfType<Visual.Componentes.BarraSuperior>().Single();
             Assert.AreEqual(Px(56), barra.Height, "Alto de la barra superior");
             Assert.IsTrue(barra.Visible, "La barra superior tiene que estar visible");
