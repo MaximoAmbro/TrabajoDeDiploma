@@ -64,6 +64,7 @@ namespace Visual
         public FrmCompraCliente()
         {
             InitializeComponent();
+            AplicarEscalaVisualSistema();
             ConfigurarAreaDeCompra();
             mapaSectores.SectorElegido += ElegirSectorEnMapa;
             mapaSectores.CantidadSolicitada += (id, cantidad) =>
@@ -71,6 +72,17 @@ namespace Visual
                 var fila = dgvSectores.Rows.Cast<DataGridViewRow>().Single(r => Convert.ToInt32(r.Cells["IdSector"].Value) == id);
                 fila.Cells["Cantidad"].Value = cantidad;
             };
+        }
+
+        private void AplicarEscalaVisualSistema()
+        {
+            label1.Font = Tema.N2;
+            lblTituloEntradas.Font = lblTituloServicios.Font = lblTituloResumen.Font = Tema.N3;
+            lblTotalDestacado.Font = Tema.PrecioTarjeta;
+            lblNivel.Font = Tema.N5;
+            lnkNiveles.Font = lnkPosicionEspera.Font = Tema.N5;
+            btnComprar.Font = btnVolver.Font = Tema.N4Fuerte;
+            chkHospedaje.Font = chkTraslado.Font = chkMerch.Font = chkVIP.Font = chkSeguro.Font = Tema.N4;
         }
 
         // RNF-02/RNF-03: las acciones quedan visibles aun si el contenido necesita
@@ -926,3 +938,4 @@ namespace Visual
 
     }
 }
+

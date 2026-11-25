@@ -1,17 +1,27 @@
-#catalogo { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 225px), 1fr)); gap: var(--espacio-l); }
-.evento { display: flex; flex-direction: column; width: 100%; padding: 0; border: 1px solid var(--borde); background: var(--superficie); text-align: left; transition: background-color 160ms ease, transform 160ms ease; }
-.evento:hover { background: var(--superficie); transform: translateY(-2px); }
-.portada { position: relative; display: flex; align-items: end; width: 100%; height: 112px; padding: var(--espacio-l); color: white; overflow: hidden; }
+﻿#catalogo { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ancho-lateral)), 1fr)); gap: var(--e4); }
+.evento { display: flex; flex-direction: column; width: 100%; padding: 0; overflow: hidden; border: 1px solid var(--borde);
+    border-radius: var(--radio-tarjeta); background: var(--superficie); text-align: left;
+    transition: background-color var(--transicion), border-color var(--transicion); }
+.evento:hover { border-color: var(--texto-secundario); }
+.portada { position: relative; display: flex; align-items: end; width: 100%; height: calc(var(--alto-control) + var(--e8) + var(--e2)); flex: none; padding: var(--e4);
+    color: var(--superficie); overflow: hidden; border-radius: 0; }
 .portada img { position: absolute; inset: 0; object-fit: cover; width: 100%; height: 100%; }
-.inicial { font-size: 4em; line-height: .9; opacity: .52; }
-.estado { position: absolute; top: var(--espacio-m); right: var(--espacio-m); padding: var(--espacio-xs) var(--espacio-s); background: var(--superficie); color: var(--texto); font: var(--ayuda); }
-.estado.disponible { background: var(--exito); color: var(--exito-texto); border: 1px solid currentColor; }
-.estado.escaso { background: var(--advertencia); color: var(--advertencia-texto); border: 1px solid currentColor; }
-.estado.agotado { background: var(--agotado); color: var(--texto-secundario); border: 1px solid var(--texto-secundario); }
-.detalle { display: flex; flex-direction: column; flex: 1; gap: var(--espacio-xs); padding: var(--espacio-l); }
-.nombre { font: var(--titulo-tarjeta); font-weight: 600; }
-.precio { margin-top: auto; padding-top: var(--espacio-s); font: var(--precio); font-weight: 600; }
-.accion { align-self: flex-start; margin-top: var(--espacio-xs); padding: var(--espacio-s) var(--espacio-l); border: 0; cursor: pointer;
-    background: var(--primario); color: var(--superficie); font-weight: 600; text-align: center; }
-.evento:hover .accion { background: var(--primario-encima); }
-@media (prefers-reduced-motion: reduce) { .evento { transition: none; } }
+#catalogo .portada .inicial { position: relative; left: auto; bottom: auto; font: var(--n1); letter-spacing: var(--n1-ls);
+    color: var(--superficie); opacity: .52; }
+#catalogo .portada .estado { position: absolute; top: var(--e3); right: var(--e3); display: inline-flex; align-items: center;
+    width: auto; min-height: 0; padding: var(--e1) var(--e2); border: 1px solid var(--borde);
+    border-radius: var(--radio-control); background: var(--superficie); color: var(--texto); font: var(--n5); }
+#catalogo .portada .estado.disponible { background: var(--exito); color: var(--exito-texto); border-color: currentColor; }
+#catalogo .portada .estado.escaso { background: var(--advertencia); color: var(--advertencia-texto); border-color: currentColor; }
+#catalogo .portada .estado.agotado { background: var(--fondo); color: var(--texto-secundario); border-color: var(--texto-secundario); }
+.detalle { display: flex; flex-direction: column; flex: 1; gap: var(--e1); padding: var(--e4); }
+.nombre { font: var(--n3); letter-spacing: var(--n3-ls); }
+.precio { margin-top: auto; padding-top: var(--e2); font: var(--n3); letter-spacing: var(--n3-ls); font-weight: 600;
+    font-variant-numeric: tabular-nums; }
+.accion { align-self: flex-start; margin-top: var(--e1); height: var(--alto-control); padding: 0 var(--e5); border: 1px solid transparent;
+    border-radius: var(--radio-control); background: var(--primario); color: var(--superficie); font: var(--n4); font-weight: 600;
+    cursor: pointer; text-align: center; transition: background-color var(--transicion); }
+.accion:hover { background: var(--primario-encima); }
+.accion:active { background: var(--primario-presionado); }
+
+

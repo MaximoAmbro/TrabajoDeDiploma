@@ -14,6 +14,11 @@ namespace Visual
         public frmInicio()
         {
             InitializeComponent();
+            label2.Font = Tema.N2;
+            label5.Font = label3.Font = Tema.N5Fuerte;
+            txtMailLogin.Font = txtContraseñaLogin.Font = Tema.N4;
+            checkbxShowPass.Font = lblolividarcontra.Font = lblcrearcuenta.Font = Tema.N5;
+            btninicio.Font = Tema.N4Fuerte;
             Tema.ComoEnlace(lblolividarcontra);
             Tema.ComoEnlace(lblcrearcuenta);
             txtMailLogin.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtMailLogin);

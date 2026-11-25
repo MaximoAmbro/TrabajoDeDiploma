@@ -127,6 +127,14 @@ namespace Pruebas
                 "exito-texto", "exito", "error-texto", "error", "advertencia-texto", "advertencia" })
                 Assert.IsTrue(variablesWeb.ContainsKey(token), "Falta el token CSS " + token + ".");
             for (int i = 0; i < 6; i++) Assert.IsTrue(variablesWeb.ContainsKey("portada-" + i));
+            Assert.AreEqual(33f, Visual.Tema.N1.SizeInPoints);
+            Assert.AreEqual(21f, Visual.Tema.N2.SizeInPoints);
+            Assert.AreEqual(13.5f, Visual.Tema.N3.SizeInPoints);
+            Assert.AreEqual(10f, Visual.Tema.N4.SizeInPoints);
+            Assert.AreEqual(9f, Visual.Tema.N5.SizeInPoints);
+            Assert.AreEqual(8.25f, Visual.Tema.N6.SizeInPoints);
+            Assert.AreEqual(48, Visual.Tema.Espacio.XXXL);
+            Assert.AreEqual(64, Visual.Tema.Espacio.XXXXL);
             Assert.AreEqual(Color.Firebrick, Visual.Tema.Error);
             Assert.AreEqual(Color.Gainsboro, Visual.Tema.FondoDeshabilitado);
             foreach (Font fuente in new[] { Visual.Tema.Marca, Visual.Tema.Titulo, Visual.Tema.Seccion,

@@ -71,6 +71,15 @@ namespace Visual
         public static readonly Font Rotulo = new Font("Segoe UI Semibold", 9f);
         public const float InterletradoSeccion = 0.1f;
         public static readonly Font Ayuda = new Font("Segoe UI", 9f);
+        // Escala tipográfica del sistema web expresada en puntos para WinForms (96 dpi).
+        public static readonly Font N1 = new Font("Segoe UI Semibold", 33f);
+        public static readonly Font N2 = new Font("Segoe UI Semibold", 21f);
+        public static readonly Font N3 = new Font("Segoe UI Semibold", 13.5f);
+        public static readonly Font N4 = new Font("Segoe UI", 10f);
+        public static readonly Font N4Fuerte = new Font("Segoe UI Semibold", 10f);
+        public static readonly Font N5 = new Font("Segoe UI", 9f);
+        public static readonly Font N5Fuerte = new Font("Segoe UI Semibold", 9f);
+        public static readonly Font N6 = new Font("Segoe UI Semibold", 8.25f);
         public static readonly Font Totales = new Font("Segoe UI", 10f, FontStyle.Bold);
         public static readonly Font IconosGrandes = new Font("Segoe MDL2 Assets", 32f);
         public static readonly Font IconosDocumentos = new Font("Segoe MDL2 Assets", 16f);
@@ -123,7 +132,7 @@ namespace Visual
 
         public static class Espacio
         {
-            public const int XS = 4, S = 8, M = 12, L = 16, XL = 24, XXL = 32;
+            public const int XS = 4, S = 8, M = 12, L = 16, XL = 24, XXL = 32, XXXL = 48, XXXXL = 64;
         }
 
         public const float DpiDiseno = 96f;

@@ -1,8 +1,8 @@
-"use strict";
+﻿"use strict";
 const destino = document.querySelector("#datos");
 const entero = new Intl.NumberFormat("es-AR");
 const svgNS = "http://www.w3.org/2000/svg";
-const color = i => "var(--grafico-" + i % 6 + ")";
+const color = i => "var(--portada-" + i % 6 + ")";
 let vista = 0;
 function nodo(tipo, texto, clase) {
     const el = document.createElement(tipo);
@@ -163,3 +163,4 @@ window.eventAuraDibujar = datos => {
     destino.append(tabla(reporte));
     if (datos.lectura) destino.append(nodo("p", datos.lectura, "secundario"));
 };
+
