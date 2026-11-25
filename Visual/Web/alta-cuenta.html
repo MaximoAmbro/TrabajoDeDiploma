@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+<title>EventAura · Crear cuenta</title>
+<link rel="stylesheet" href="sistema.css">
+<link rel="stylesheet" href="alta-cuenta.css">
+<script defer src="entrada-puente.js"></script>
+<script defer src="muro.js"></script>
+<script defer src="validaciones.js"></script>
+<script defer src="alta-cuenta.js"></script>
+</head>
+<body>
+<div class="entrada">
+  <aside class="panel" aria-label="Pasos del alta">
+    <div class="muro"></div>
+    <div class="panel-contenido">
+      <span class="logo" aria-label="EventAura">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26 L16 6 L26 26" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.5" cy="26" r="2.2" fill="var(--primario)"/></svg>
+        <span>Event<b>Aura</b></span>
+      </span>
+
+      <div class="pila pila-7">
+        <div class="pila pila-4">
+          <p class="n6">Crear cuenta</p>
+          <p class="lema-chico">Unos minutos, y un código para confirmar que el correo es tuyo.</p>
+        </div>
+        <ol class="pasos" id="pasos">
+          <li data-paso="elegir"><span class="numero">1</span><span>Para qué la querés</span></li>
+          <li data-paso="datos"><span class="numero">2</span><span>Tus datos</span></li>
+          <li data-paso="correo"><span class="numero">3</span><span>Verificar el correo</span></li>
+          <li data-paso="telefono" class="solo-organizador"><span class="numero">4</span><span>Verificar el teléfono</span></li>
+          <li data-paso="listo"><span class="numero" data-numero-final>4</span><span>Listo</span></li>
+        </ol>
+      </div>
+
+      <p class="panel-pie">Los códigos llegan por un canal simulado, fuera de EventAura.</p>
+    </div>
+  </aside>
+
+  <main class="contenido">
+    <div class="columna columna-amplia">
+
+      <!-- ================= Paso 1: elegir ================= -->
+      <section data-vista="elegir" class="pila pila-7">
+        <div class="pila pila-2">
+          <h1 class="n2" tabindex="-1">Crear cuenta</h1>
+          <p class="n4 secundario">¿Para qué vas a usar EventAura?</p>
+        </div>
+        <fieldset class="opciones">
+          <legend class="solo-lector">Para qué querés la cuenta</legend>
+          <label class="opcion">
+            <input type="radio" name="perfil" value="cliente" checked>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7.5a2 2 0 0 0 0 5v3h15v-3a2 2 0 0 1 0-5v-3h-15z"/><path d="M12.5 4.5v11" stroke-dasharray="1.5 2"/></svg>
+            <span class="pila pila-2">
+              <span class="n3">Quiero comprar entradas</span>
+              <span class="n5 secundario">Entradas y paquetes, nivel de fidelidad y listas de espera. La cuenta queda lista al verificar el correo.</span>
+            </span>
+          </label>
+          <label class="opcion">
+            <input type="radio" name="perfil" value="organizador">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 17.5v-10L10 3l6.5 4.5v10M1.5 17.5h17M8 17.5v-5h4v5"/></svg>
+            <span class="pila pila-2">
+              <span class="n3">Quiero organizar eventos</span>
+              <span class="n5 secundario">Además de la cuenta, presentás una solicitud con los datos de tu local. Una persona administradora la revisa.</span>
+            </span>
+          </label>
+        </fieldset>
+        <div class="fila-extremos">
+          <button type="button" class="enlace n5" data-destino="acceso">Ya tengo cuenta</button>
+          <button type="button" class="boton boton-primario" id="continuar">Continuar</button>
+        </div>
+      </section>
+
+      <!-- ================= Paso 2: datos ================= -->
+      <form data-vista="datos" class="pila pila-8 oculto" id="formulario" novalidate>
+        <div class="pila pila-2">
+          <p class="n6 secundario" id="perfil-elegido">Cuenta para comprar entradas</p>
+          <h1 class="n2" tabindex="-1">Tus datos</h1>
+        </div>
+
+        <fieldset class="pila pila-5">
+          <legend class="n3 leyenda">Tu cuenta</legend>
+          <div class="rejilla-2">
+            <div class="campo"><label for="nombre">Nombre</label><input class="entrada-texto" id="nombre" maxlength="50" autocomplete="given-name"><p class="estado" id="estado-nombre" aria-live="polite"></p></div>
+            <div class="campo"><label for="apellido">Apellido</label><input class="entrada-texto" id="apellido" maxlength="50" autocomplete="family-name"><p class="estado" id="estado-apellido" aria-live="polite"></p></div>
+            <div class="campo ancho"><label for="mail">Mail</label><input class="entrada-texto" id="mail" type="email" maxlength="100" autocomplete="email"><p class="estado" id="estado-mail" aria-live="polite"></p></div>
+            <div class="campo">
+              <label for="contrasena">Contraseña</label>
+              <input class="entrada-texto" id="contrasena" type="password" autocomplete="new-password" aria-describedby="fortaleza-texto">
+              <div class="fortaleza" id="fortaleza" data-nivel="bajo" aria-live="polite">
+                <div class="barras" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+                <p id="fortaleza-texto">Fortaleza: Insuficiente (0/5; mínimo 4)</p>
+              </div>
+            </div>
+            <div class="campo"><label for="confirmar">Confirmar contraseña</label><input class="entrada-texto" id="confirmar" type="password" autocomplete="new-password"><p class="estado" id="estado-confirmar" aria-live="polite"></p></div>
+            <label class="marca-ver ancho"><input type="checkbox" id="mostrar"> Mostrar contraseñas</label>
+          </div>
+        </fieldset>
+
+        <!-- Solo para «Quiero organizar eventos» -->
+        <fieldset class="pila pila-5 solo-organizador" id="bloque-solicitud">
+          <legend class="n3 leyenda">Tu solicitud para organizar eventos</legend>
+
+          <div class="aviso aviso-neutro formato">
+            <strong>Comprobamos el formato, no la identidad</strong>
+            <p>Una marca <span class="marca-formato">✓ Formato válido</span> dice que el dato está bien escrito: que el CUIT y el CBU tienen sus dígitos verificadores correctos y que la documentación es una imagen legible. No dice que la persona, el CUIT, el local o la cuenta existan ni que sean tuyos. Eso lo revisa una persona administradora (RN-52, RN-53).</p>
+          </div>
+
+          <div class="rejilla-2">
+            <div class="campo ancho"><label for="responsable">Responsable · nombre completo</label><input class="entrada-texto" id="responsable" maxlength="160" autocomplete="name"><p class="estado" id="estado-responsable" aria-live="polite"></p></div>
+            <div class="campo"><label for="cuit">CUIT</label><input class="entrada-texto cifra" id="cuit" inputmode="numeric" maxlength="13" placeholder="30-00000000-7"><p class="estado" id="estado-cuit" aria-live="polite"></p></div>
+            <div class="campo"><label for="telefono">Teléfono argentino</label><input class="entrada-texto cifra" id="telefono" type="tel" maxlength="20" placeholder="341 555-1234" autocomplete="tel"><p class="estado" id="estado-telefono" aria-live="polite"></p></div>
+            <div class="campo"><label for="local">Nombre del local</label><input class="entrada-texto" id="local" maxlength="100"><p class="estado" id="estado-local" aria-live="polite"></p></div>
+            <div class="campo"><label for="capacidad">Capacidad</label><input class="entrada-texto cifra" id="capacidad" type="number" min="1" step="1" value="500"><p class="estado" id="estado-capacidad" aria-live="polite"></p></div>
+            <div class="campo ancho"><label for="direccion">Dirección</label><input class="entrada-texto" id="direccion" maxlength="160" placeholder="Calle y número, Rosario"><p class="estado" id="estado-direccion" aria-live="polite"></p></div>
+            <div class="campo ancho"><label for="cbu">CBU de 22 dígitos o alias</label><input class="entrada-texto cifra" id="cbu" maxlength="22" autocomplete="off"><p class="estado" id="estado-cbu" aria-live="polite"></p></div>
+            <div class="campo ancho">
+              <span class="rotulo" id="rotulo-documento">Documentación · habilitación o constancia</span>
+              <label class="documento" id="zona-documento" for="documento">
+                <input id="documento" type="file" accept="image/png,image/jpeg" aria-labelledby="rotulo-documento">
+                <span class="miniatura" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M11.5 2.5h-6v15h9V5.5z"/><path d="M11.5 2.5v3h3M10 14V9.5M8 11.5l2-2 2 2"/></svg>
+                  <img id="vista-documento" alt="" class="oculto">
+                </span>
+                <span class="pila pila-1"><span class="n4" id="documento-nombre">Elegí una imagen PNG o JPEG</span><span class="n5 secundario" id="documento-detalle">O arrastrala hasta acá. Hasta 10 MB: la aplicación la reduce a 512 KB o menos.</span></span>
+              </label>
+              <p class="estado" id="estado-documento" aria-live="polite"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="pila pila-5">
+          <div class="aviso aviso-atencion solo-organizador" id="que-pasa">
+            <strong>Qué pasa cuando enviás</strong>
+            <ol>
+              <li><b>Tu cuenta se crea como Cliente.</b> Desde el primer día podés comprar entradas.</li>
+              <li>Verificás tu correo y tu teléfono con un código de un solo uso.</li>
+              <li><b>Tu solicitud queda pendiente.</b> La revisa una persona administradora: la aprobación no es automática.</li>
+              <li>Mientras tanto, tu cuenta sigue siendo Cliente. Si se aprueba, al volver a entrar sos Organizador, con tu local creado.</li>
+            </ol>
+          </div>
+          <div class="aviso aviso-error oculto" id="error-datos" role="alert"></div>
+          <div class="fila-extremos">
+            <button type="button" class="boton boton-secundario" id="volver-elegir">Volver</button>
+            <button type="submit" class="boton boton-primario" id="crear">Crear cuenta</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- ================= Paso 3: correo ================= -->
+      <section data-vista="correo" class="pila pila-7 oculto angosta">
+        <div class="pila pila-2">
+          <h1 class="n2" tabindex="-1">Verificá tu correo</h1>
+          <p class="n4 secundario medida">Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.</p>
+        </div>
+        <div class="campo">
+          <label for="codigo-correo">Código de verificación</label>
+          <input class="entrada-texto cifra" id="codigo-correo" inputmode="numeric" maxlength="8" autocomplete="one-time-code">
+          <p class="estado" id="estado-codigo-correo" aria-live="polite"></p>
+        </div>
+        <div class="fila-extremos">
+          <button type="button" class="enlace n5" data-destino="acceso">Volver al acceso</button>
+          <button type="button" class="boton boton-primario" id="confirmar-correo">Confirmar correo</button>
+        </div>
+      </section>
+
+      <!-- ================= Paso 4: teléfono (organizador) ================= -->
+      <section data-vista="telefono" class="pila pila-7 oculto angosta">
+        <div class="pila pila-2">
+          <h1 class="n2" tabindex="-1">Verificá tu teléfono</h1>
+          <p class="n4 secundario medida">Tu cuenta ya existe, como Cliente. Para presentar la solicitud falta confirmar el teléfono del responsable (RN-51).</p>
+        </div>
+        <div class="pila pila-5">
+          <div class="fila-extremos telefono">
+            <span class="pila pila-1"><span class="rotulo">Teléfono</span><span class="n3 cifra" id="telefono-normalizado"></span></span>
+            <button type="button" class="boton boton-secundario" id="enviar-codigo-telefono">Enviar código</button>
+          </div>
+          <p class="estado info" id="estado-envio-telefono" aria-live="polite"></p>
+          <div class="campo">
+            <label for="codigo-telefono">Código de verificación</label>
+            <div class="con-boton">
+              <input class="entrada-texto cifra" id="codigo-telefono" inputmode="numeric" maxlength="8" autocomplete="one-time-code">
+              <button type="button" class="boton boton-secundario" id="confirmar-telefono">Confirmar</button>
+            </div>
+            <p class="estado" id="estado-codigo-telefono" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="aviso aviso-error oculto" id="error-telefono" role="alert"></div>
+        <button type="button" class="boton boton-primario boton-ancho" id="presentar" disabled>Enviar solicitud</button>
+      </section>
+
+      <!-- ================= Listo ================= -->
+      <section data-vista="listo" class="pila pila-7 oculto">
+        <div class="pila pila-2">
+          <h1 class="n2" id="titulo-listo" tabindex="-1">Tu cuenta está lista</h1>
+          <p class="n4 secundario medida" id="bajada-listo">Ya podés iniciar sesión y comprar entradas.</p>
+        </div>
+        <ul class="resumen" id="resumen"></ul>
+        <div class="aviso aviso-atencion solo-organizador">
+          <strong>La habilitación como Organizador no es automática</strong>
+          <p>Una persona administradora revisa tu solicitud: los datos, el local y la documentación. Las marcas de formato que viste no reemplazan esa revisión. Hasta que la apruebe, tu cuenta es de Cliente.</p>
+        </div>
+        <div class="fila-extremos">
+          <span></span>
+          <button type="button" class="boton boton-primario" data-destino="acceso">Ir a iniciar sesión</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

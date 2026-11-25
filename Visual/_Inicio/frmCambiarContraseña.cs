@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Negocio;
+using Newtonsoft.Json.Linq;
 
 namespace Visual
 {
@@ -23,12 +24,90 @@ namespace Visual
         private Panel _filaAviso;
         private Control _campoConAviso;
         private int _altoSinAviso;
+        private readonly Web.PanelWeb _recuperacionWeb = new Web.PanelWeb { Name = "recuperacionWeb", Visible = false };
+        private bool _recuperacionInicializada;
         public frmCambiarContraseña() : this(false) { }
         public frmCambiarContraseña(bool recuperacion)
         {
             _recuperacion = recuperacion;
             InitializeComponent();
             ConfigurarVista();
+            if (_recuperacion)
+            {
+                Controls.Add(_recuperacionWeb);
+                _recuperacionWeb.SetBounds(0, barraSuperior.Bottom, ClientSize.Width, ClientSize.Height - barraSuperior.Bottom);
+                _recuperacionWeb.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+                barraSuperior.BringToFront();
+                _recuperacionWeb.VistaLista += MostrarRecuperacionWeb;
+                _recuperacionWeb.VistaNoDisponible += () => { _recuperacionWeb.Visible = false; MostrarRespaldoRecuperacion(); };
+                _recuperacionWeb.Mensaje += ProcesarMensajeRecuperacion;
+                _recuperacionWeb.Escape += () => btnVolver_Click(this, EventArgs.Empty);
+                Shown += (s, e) => _recuperacionWeb.Cargar("recuperar-clave.html");
+            }
+        }
+
+        private void MostrarRecuperacionWeb()
+        {
+            foreach (Control control in Controls)
+                if (control != barraSuperior && control != _recuperacionWeb) control.Visible = false;
+            _recuperacionWeb.Visible = true;
+            _recuperacionWeb.BringToFront();
+            barraSuperior.BringToFront();
+            if (_recuperacionInicializada) return;
+            _recuperacionInicializada = true;
+            _recuperacionWeb.Actualizar(new
+            {
+                paso = "mail",
+                mail = CorreoInicial,
+                parametros = new
+                {
+                    longitudMinima = GestorParametros.Instance.ObtenerEntero("PWD_LONGITUD_MIN"),
+                    fortalezaMinima = GestorParametros.Instance.ObtenerEntero("PWD_FORTALEZA_MIN")
+                }
+            });
+        }
+
+        private void MostrarRespaldoRecuperacion()
+        {
+            foreach (Control control in Controls)
+                if (control != barraSuperior && control != _recuperacionWeb) control.Visible = true;
+            barraSuperior.BringToFront();
+        }
+
+        private void ProcesarMensajeRecuperacion(string json)
+        {
+            JObject mensaje;
+            try { mensaje = JObject.Parse(json); }
+            catch { return; }
+            string tipo = (string)mensaje["tipo"];
+            try
+            {
+                if (tipo == "navegar") { btnVolver_Click(this, EventArgs.Empty); return; }
+                if (tipo == "enviarCodigoRecuperacion")
+                {
+                    GestorCodigosCorreo.Instance.SolicitarRecuperacion((string)mensaje["mail"]);
+                    _recuperacionWeb.Actualizar(new { paso = "codigo", mail = (string)mensaje["mail"] });
+                    return;
+                }
+                if (tipo == "restablecer")
+                {
+                    GestorCodigosCorreo.Instance.RecuperarContrasena((string)mensaje["mail"], (string)mensaje["codigo"], (string)mensaje["contrasena"]);
+                    _recuperacionWeb.Actualizar(new { paso = "listo", mail = (string)mensaje["mail"] });
+                }
+            }
+            catch (ReglaNegocioException ex)
+            {
+                string campo = ex.Regla == "RN-02" || ex.Regla == "RN-47" ? "contrasena" : "codigo";
+                _recuperacionWeb.Actualizar(new { paso = "codigo", mail = (string)mensaje["mail"], error = new { campo, mensaje = ex.Message } });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex);
+                string aviso = tipo == "enviarCodigoRecuperacion"
+                    ? "No pudimos enviar el código. Revisá la conexión y volvé a intentarlo."
+                    : ManejadorErrores.MensajeParaUsuario(ex);
+                _recuperacionWeb.Actualizar(new { paso = tipo == "enviarCodigoRecuperacion" ? "mail" : "codigo", mail = (string)mensaje["mail"], error = new { mensaje = aviso } });
+            }
         }
 
 

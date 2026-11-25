@@ -8,6 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using Entidades;
 
 namespace Visual
 {
@@ -15,11 +18,36 @@ namespace Visual
     {
         private readonly bool _altaAdministrador;
         private Componentes.IndicadorFortaleza _fortaleza;
+        private readonly Web.PanelWeb _altaWeb = new Web.PanelWeb { Name = "altaCuentaWeb", Visible = false };
+        private string _mailPendiente;
+        private string _contrasenaPendiente;
+        private string _perfilPendiente;
+        private string _telefonoOrganizador;
         public frmCrearUsuario() : this(false) { }
         public frmCrearUsuario(bool altaAdministrador)
         {
             _altaAdministrador = altaAdministrador;
             InitializeComponent();
+            if (!_altaAdministrador)
+            {
+                Controls.Add(_altaWeb);
+                _altaWeb.SetBounds(0, barraSuperior.Bottom, ClientSize.Width, ClientSize.Height - barraSuperior.Bottom);
+                _altaWeb.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+                barraSuperior.BringToFront();
+                _altaWeb.VistaLista += MostrarAltaWeb;
+                _altaWeb.VistaNoDisponible += () => { _altaWeb.Visible = false; MostrarRespaldoAlta(); };
+                _altaWeb.Mensaje += ProcesarMensajeAlta;
+                _altaWeb.Escape += VolverAlAcceso;
+                _altaWeb.VistaLista += () =>
+                {
+                    if (string.IsNullOrEmpty(_perfilPendiente))
+                    {
+                        _perfilPendiente = "cliente";
+                        _altaWeb.Actualizar(new { paso = "elegir", parametros = new { longitudMinima = GestorParametros.Instance.ObtenerEntero("PWD_LONGITUD_MIN"), fortalezaMinima = GestorParametros.Instance.ObtenerEntero("PWD_FORTALEZA_MIN") } });
+                    }
+                };
+                Shown += (s, e) => _altaWeb.Cargar("alta-cuenta.html");
+            }
             barraSuperior.MostrarSesion = altaAdministrador;
             _fortaleza = new Componentes.IndicadorFortaleza { Name = "fortalezaContrasena", Location = new Point(24, 348), Size = new Size(392, 24) };
             Controls.Add(_fortaleza);
@@ -59,6 +87,114 @@ namespace Visual
                 lblyatengocuen.Text = "Volver a administración";
             }
             Tema.ComoEnlace(lblyatengocuen);
+        }
+        private void MostrarAltaWeb()
+        {
+            foreach (Control control in Controls)
+                if (control != barraSuperior && control != _altaWeb) control.Visible = false;
+            _altaWeb.Visible = true;
+            _altaWeb.BringToFront();
+            barraSuperior.BringToFront();
+        }
+
+        private void MostrarRespaldoAlta()
+        {
+            foreach (Control control in Controls)
+                if (control != barraSuperior && control != _altaWeb) control.Visible = true;
+            barraSuperior.BringToFront();
+        }
+
+        private void VolverAlAcceso()
+        {
+            _contrasenaPendiente = null;
+            GestorSesion.Instance.Cerrar();
+            var acceso = Cerrar();
+            if (acceso != null) acceso.Show();
+        }
+
+        private void ProcesarMensajeAlta(string json)
+        {
+            JObject mensaje;
+            try { mensaje = JObject.Parse(json); }
+            catch { return; }
+            string tipo = (string)mensaje["tipo"];
+            try
+            {
+                if (tipo == "navegar") { VolverAlAcceso(); return; }
+                if (tipo == "registrar")
+                {
+                    var cuenta = mensaje["cuenta"];
+                    _mailPendiente = ((string)cuenta["mail"] ?? string.Empty).Trim();
+                    _contrasenaPendiente = (string)cuenta["contrasena"];
+                    _perfilPendiente = (string)mensaje["perfil"] ?? "cliente";
+                    GestorUsuarios.Instance.RegistrarCliente(_mailPendiente, _contrasenaPendiente,
+                        (string)cuenta["nombre"], (string)cuenta["apellido"]);
+                    _altaWeb.Actualizar(new { paso = "correo", perfil = _perfilPendiente });
+                    return;
+                }
+                if (tipo == "confirmarCorreo")
+                {
+                    GestorCodigosCorreo.Instance.ConfirmarVerificacion(_mailPendiente, (string)mensaje["codigo"]);
+                    if (_perfilPendiente != "organizador")
+                    {
+                        _contrasenaPendiente = null;
+                        _altaWeb.Actualizar(new { paso = "listo", perfil = "cliente", resultado = new { perfil = "cliente" } });
+                        return;
+                    }
+                    Usuario usuario;
+                    try { usuario = GestorUsuarios.Instance.Autenticar(_mailPendiente, _contrasenaPendiente ?? string.Empty); }
+                    catch (ReglaNegocioException) { usuario = null; }
+                    _contrasenaPendiente = null;
+                    if (usuario == null)
+                    {
+                        _altaWeb.Actualizar(new { paso = "listo", perfil = "cliente", resultado = new { perfil = "cliente" } });
+                        return;
+                    }
+                    _altaWeb.Actualizar(new { paso = "telefono", perfil = "organizador" });
+                    return;
+                }
+                if (tipo == "enviarCodigoTelefono")
+                {
+                    _telefonoOrganizador = GestorSolicitudesOrganizador.NormalizarTelefonoArgentino((string)mensaje["telefono"]);
+                    GestorSolicitudesOrganizador.Instance.EnviarCodigoTelefono(_telefonoOrganizador);
+                    _altaWeb.Actualizar(new { paso = "telefono", perfil = "organizador", envioTelefono = "Si el teléfono es válido, guardamos un SMS simulado fuera de EventAura. Abrí el archivo del mensaje para continuar." });
+                    return;
+                }
+                if (tipo == "confirmarTelefono")
+                {
+                    _telefonoOrganizador = GestorSolicitudesOrganizador.NormalizarTelefonoArgentino((string)mensaje["telefono"]);
+                    GestorSolicitudesOrganizador.Instance.ConfirmarCodigoTelefono(_telefonoOrganizador, (string)mensaje["codigo"]);
+                    _altaWeb.Actualizar(new { paso = "telefono", perfil = "organizador", telefonoVerificado = true });
+                    return;
+                }
+                if (tipo == "presentarSolicitud")
+                {
+                    var datos = mensaje["solicitud"];
+                    byte[] original = Convert.FromBase64String((string)datos["documentacion"]["base64"]);
+                    byte[] comprimida;
+                    using (var stream = new MemoryStream(original)) comprimida = ImagenEventoCodec.Preparar(stream);
+                    GestorSolicitudesOrganizador.Instance.Solicitar(new SolicitudOrganizador
+                    {
+                        Responsable = (string)datos["responsable"], Cuit = (string)datos["cuit"],
+                        Telefono = _telefonoOrganizador, NombreLocal = (string)datos["nombreLocal"],
+                        Direccion = (string)datos["direccion"], Capacidad = (int?)datos["capacidad"] ?? 0,
+                        CbuAlias = (string)datos["cbuAlias"], NombreArchivo = (string)datos["documentacion"]["nombreArchivo"],
+                        Documentacion = comprimida
+                    });
+                    GestorSesion.Instance.Cerrar();
+                    _altaWeb.Actualizar(new { paso = "listo", perfil = "organizador", resultado = new { perfil = "organizador" } });
+                    return;
+                }
+            }
+            catch (ReglaNegocioException ex)
+            {
+                _altaWeb.Actualizar(new { paso = tipo == "registrar" ? "datos" : tipo == "confirmarCorreo" ? "correo" : "telefono", perfil = _perfilPendiente ?? "cliente", error = new { mensaje = ex.Message } });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex);
+                _altaWeb.Actualizar(new { paso = tipo == "registrar" ? "datos" : tipo == "confirmarCorreo" ? "correo" : "telefono", perfil = _perfilPendiente ?? "cliente", error = new { mensaje = ManejadorErrores.MensajeParaUsuario(ex) } });
+            }
         }
         private void frmCrearUsuario_Load(object sender, EventArgs e)
         {
