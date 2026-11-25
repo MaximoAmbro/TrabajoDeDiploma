@@ -22,7 +22,8 @@ CREATE TABLE Usuario (
     Apellido    VARCHAR(100) NULL,
     Mail        VARCHAR(150) NULL,
     Contraseña  VARCHAR(100) NULL,
-    TipoUsuario VARCHAR(20)  NULL      -- Cliente|Propietario (RN-05)
+    TipoUsuario VARCHAR(20)  NULL CONSTRAINT CK_Usuario_TipoUsuario
+        CHECK (TipoUsuario IN ('Cliente','Organizador','Administrador')) -- RN-05
 );
 
 IF OBJECT_ID('dbo.Cliente', 'U') IS NULL
@@ -34,7 +35,14 @@ CREATE TABLE Cliente (
 IF OBJECT_ID('dbo.Propietario', 'U') IS NULL
 CREATE TABLE Propietario (
     ID INT PRIMARY KEY,
+    PrimerEventoAprobado BIT NOT NULL CONSTRAINT DF_Propietario_PrimerEventoAprobado DEFAULT (0),
     FOREIGN KEY (ID) REFERENCES Usuario(ID)
+);
+
+IF OBJECT_ID('dbo.Administrador', 'U') IS NULL
+CREATE TABLE Administrador (
+    ID INT NOT NULL CONSTRAINT PK_Administrador PRIMARY KEY,
+    CONSTRAINT FK_Administrador_Usuario FOREIGN KEY (ID) REFERENCES Usuario(ID)
 );
 
 IF OBJECT_ID('dbo.Locales', 'U') IS NULL
@@ -43,7 +51,8 @@ CREATE TABLE Locales (
     Nombre        VARCHAR(100) NULL,
     Direccion     VARCHAR(100) NULL,
     Capacidad     INT          NULL,
-    PropietarioID INT          NULL
+    PropietarioID INT          NULL,
+    CONSTRAINT FK_Locales_Propietario FOREIGN KEY (PropietarioID) REFERENCES Usuario(ID)
 );
 
 IF OBJECT_ID('dbo.Eventos', 'U') IS NULL
@@ -71,7 +80,7 @@ CREATE TABLE Entradas (
     ID_Evento       INT      NULL,
     ID_Usuario      INT      NULL,
     Precio          INT      NULL,
-    CantidadVendida INT      NULL,
+    CantidadVendida INT      NOT NULL,
     FechaVenta      DATETIME NULL,
     FOREIGN KEY (ID_Evento) REFERENCES Eventos(ID)
 );
@@ -84,10 +93,13 @@ ALTER TABLE Usuario  ADD Nivel VARCHAR(8) NOT NULL DEFAULT 'Bronce';
 ALTER TABLE Usuario  ADD FechaUltimaEvaluacion DATE NULL;
 ALTER TABLE Usuario  ADD IntentosFallidos INT NOT NULL DEFAULT 0;
 ALTER TABLE Usuario  ADD BloqueadoHasta DATETIME NULL;
+ALTER TABLE Usuario  ADD CorreoVerificado BIT NOT NULL CONSTRAINT DF_Usuario_CorreoVerificado DEFAULT (1);
 
 ALTER TABLE Eventos  ADD Categoria VARCHAR(20) NULL;   -- Concierto|Deportivo|Teatro|Cultural
 ALTER TABLE Eventos  ADD Estado VARCHAR(12) NOT NULL DEFAULT 'Publicado';
 ALTER TABLE Eventos  ADD FinPreventa DATETIME NULL;    -- RN-39; NULL = sin preventa
+ALTER TABLE Eventos  ADD ImagenPortada VARBINARY(MAX) NULL;
+ALTER TABLE Eventos  ADD MotivoRechazo NVARCHAR(500) NULL; -- RN-54: fundamento de rechazo del primer evento
 
 ALTER TABLE Sectores ADD CantidadReservada INT NOT NULL DEFAULT 0;  -- RN-08 + RN-15
 ALTER TABLE Sectores ADD CupoLiberadoEl DATETIME NULL;  -- RN-35: ?ltima liberaci?n efectiva, sin historia inventada
@@ -128,6 +140,14 @@ GO
 ALTER TABLE Entradas WITH CHECK ADD CONSTRAINT CK_Entradas_Estado
     CHECK (Estado IN ('Pendiente','Confirmada','Reembolsada','Vencida'));
 
+UPDATE Entradas SET CantidadVendida = 1
+WHERE CantidadVendida IS NULL OR CantidadVendida <> 1;
+DECLARE @EntradasCorregidas INT = @@ROWCOUNT;
+PRINT CONCAT('CantidadVendida corregidas antes de restringir: ', @EntradasCorregidas);
+ALTER TABLE Entradas ALTER COLUMN CantidadVendida INT NOT NULL;
+ALTER TABLE Entradas WITH CHECK ADD CONSTRAINT CK_Entradas_CantidadVendida
+    CHECK (CantidadVendida = 1);
+
 ALTER TABLE Entradas ADD CONSTRAINT FK_Entradas_Sectores
       FOREIGN KEY (ID_Sector) REFERENCES Sectores(ID);
 
@@ -139,7 +159,7 @@ ALTER TABLE Usuario ADD CONSTRAINT UQ_Usuario_Mail UNIQUE (Mail);
 
 -- Estados de un evento (docs/03-esquema-datos.md).
 ALTER TABLE Eventos ADD CONSTRAINT CK_Eventos_Estado
-      CHECK (Estado IN ('Borrador','Publicado','Suspendido'));
+      CHECK (Estado IN ('Borrador','EnRevision','Publicado','Suspendido'));
 GO
 
 -- ═══════════════ Operación de compra ═══════════════
@@ -224,6 +244,8 @@ CREATE TABLE Seguros (                    -- RN-28, RN-29
     FOREIGN KEY (ID_Entrada) REFERENCES Entradas(ID)
 );
 
+CREATE UNIQUE INDEX UX_Seguros_ID_Entrada ON Seguros (ID_Entrada); -- RN-28: una póliza por entrada
+
 CREATE TABLE Suscripciones (              -- RN-25, RN-26, RN-37
     ID          INT IDENTITY(1,1) PRIMARY KEY,
     ID_Usuario  INT           NOT NULL,
@@ -256,4 +278,62 @@ CREATE TABLE Parametros (
     Descripcion VARCHAR(160) NULL,
     Regla       VARCHAR(10)  NULL
 );
+GO
+
+-- ═══════════════ Verificación de correo y auditoría ═══════════════
+CREATE TABLE CodigosCorreo (
+    ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    UsuarioID INT NOT NULL,
+    Proposito VARCHAR(16) NOT NULL,
+    Sal VARBINARY(16) NOT NULL,
+    CodigoHash VARBINARY(32) NOT NULL,
+    Destinatario VARCHAR(180) NULL,
+    CreadoEl DATETIME2(0) NOT NULL CONSTRAINT DF_CodigosCorreo_Creado DEFAULT SYSUTCDATETIME(),
+    VenceEl DATETIME2(0) NOT NULL,
+    Usado BIT NOT NULL CONSTRAINT DF_CodigosCorreo_Usado DEFAULT (0),
+    Intentos INT NOT NULL CONSTRAINT DF_CodigosCorreo_Intentos DEFAULT (0),
+    CONSTRAINT CK_CodigosCorreo_Proposito CHECK (Proposito IN ('Verificacion','Recuperacion','TelefonoOrg')),
+    CONSTRAINT FK_CodigosCorreo_Usuario FOREIGN KEY (UsuarioID) REFERENCES Usuario(ID) ON DELETE CASCADE
+);
+CREATE INDEX IX_CodigosCorreo_Usuario_Proposito ON CodigosCorreo(UsuarioID, Proposito, VenceEl DESC);
+
+CREATE TABLE Auditoria (
+    ID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    UsuarioID INT NULL,
+    UsuarioMail VARCHAR(150) NULL,
+    Accion VARCHAR(80) NOT NULL,
+    Entidad VARCHAR(80) NULL,
+    EntidadID INT NULL,
+    Fecha DATETIME2(0) NOT NULL CONSTRAINT DF_Auditoria_Fecha DEFAULT SYSUTCDATETIME(),
+    Resultado VARCHAR(200) NOT NULL
+);
+CREATE INDEX IX_Auditoria_Fecha_Accion ON Auditoria(Fecha DESC, Accion);
+
+IF OBJECT_ID('dbo.SolicitudesOrganizador','U') IS NULL
+CREATE TABLE dbo.SolicitudesOrganizador (
+    ID INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_SolicitudesOrganizador PRIMARY KEY,
+    UsuarioID INT NOT NULL,
+    Responsable NVARCHAR(160) NOT NULL,
+    CUIT CHAR(11) NOT NULL,
+    Telefono VARCHAR(20) NOT NULL,
+    TelefonoVerificado BIT NOT NULL,
+    NombreLocal NVARCHAR(100) NOT NULL,
+    Direccion NVARCHAR(160) NOT NULL,
+    Capacidad INT NOT NULL,
+    Documentacion VARBINARY(MAX) NOT NULL,
+    NombreArchivo NVARCHAR(180) NOT NULL,
+    CBUAlias VARCHAR(30) NOT NULL,
+    Estado VARCHAR(12) NOT NULL CONSTRAINT DF_SolicitudesOrganizador_Estado DEFAULT('Pendiente'),
+    MotivoRevision NVARCHAR(500) NULL,
+    RevisadaPor INT NULL,
+    RevisadaEl DATETIME2 NULL,
+    CreadaEl DATETIME2 NOT NULL CONSTRAINT DF_SolicitudesOrganizador_CreadaEl DEFAULT(SYSUTCDATETIME()),
+    CONSTRAINT FK_SolicitudesOrganizador_Usuario FOREIGN KEY (UsuarioID) REFERENCES dbo.Usuario(ID),
+    CONSTRAINT FK_SolicitudesOrganizador_Revisor FOREIGN KEY (RevisadaPor) REFERENCES dbo.Usuario(ID),
+    CONSTRAINT CK_SolicitudesOrganizador_Capacidad CHECK (Capacidad > 0),
+    CONSTRAINT CK_SolicitudesOrganizador_Estado CHECK (Estado IN ('Pendiente','Aprobada','Rechazada')),
+    CONSTRAINT CK_SolicitudesOrganizador_TelefonoVerificado CHECK (TelefonoVerificado=1)
+);
+CREATE UNIQUE INDEX UX_SolicitudesOrganizador_Pendiente
+    ON dbo.SolicitudesOrganizador(UsuarioID) WHERE Estado='Pendiente';
 GO

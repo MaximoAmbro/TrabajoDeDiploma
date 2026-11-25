@@ -19,10 +19,12 @@ namespace Visual
         public frmSuscripcion()
         {
             InitializeComponent();
+            CancelButton = btnVolver;
         }
 
         private void frmSuscripcion_Load(object sender, EventArgs e)
         {
+            label1.Location = new System.Drawing.Point(Tema.MargenFormulario, Tema.AltoBarraSuperior + Tema.MargenFormulario);
             rdbMensual.Tag = GestorSuscripciones.PlanMensual;
             rdbAnual.Tag = GestorSuscripciones.PlanAnual;
             rdbMensual.Text = Opcion(GestorSuscripciones.PlanMensual, "por mes");
@@ -64,19 +66,15 @@ namespace Visual
                 $"¿Contratar el plan {plan} por {precio.ToString("C2", Pesos)}?\n\n" +
                 "La suscripción no se renueva automáticamente al vencer.",
                 "Contratar suscripción", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (respuesta != DialogResult.Yes)
-            {
-                return;
-            }
+            if (respuesta != DialogResult.Yes) return;
             try
             {
                 Suscripcion nueva = GestorSuscripciones.Instance.Contratar(IDUsuario, plan);
-                MessageBox.Show($"Suscripción {nueva.Plan} contratada. Vence el {nueva.FechaFin:dd/MM/yyyy}.",
-                    "Suscripción", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Avisos.Informativo(this, $"Suscripción {nueva.Plan} contratada. Vence el {nueva.FechaFin:dd/MM/yyyy}. No se renueva automáticamente.");
             }
             catch (ReglaNegocioException ex)
             {
-                Avisos.Regla("Suscripción", ex);
+                Avisos.Regla(this, "Suscripción", ex);
             }
             MostrarEstado();
         }
@@ -97,7 +95,7 @@ namespace Visual
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(ex.Message, "Suscripción", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, ex.Message);
             }
             MostrarEstado();
         }
@@ -105,6 +103,7 @@ namespace Visual
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void btnVolver_Click(object sender, EventArgs e)
         {
+            if (NavegacionCliente.Volver()) return;
             frmMenuCliente frm = new frmMenuCliente();
             frm.NombreUsuario = NombreUsuario;
             frm.IDUsuario = IDUsuario;

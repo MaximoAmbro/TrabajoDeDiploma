@@ -20,6 +20,7 @@ control GestorFidelizacion
 control GestorListaEspera
 control GestorCompras
 control GestorSesion
+control GestorUsuarios
 control PasarelaSimulada
 control GeneradorQR
 
@@ -47,11 +48,13 @@ FrmPago -- GestorCompras
 FrmConfirmacion -- GestorCompras
 
 GestorCompras -- GestorSesion
+GestorCompras -- GestorUsuarios
 GestorCompras -- PasarelaSimulada
 GestorCompras -- GeneradorQR
 GestorCompras -- GestorPaquetes
 GestorCompras -- GestorFidelizacion
 GestorSesion -- ClienteEnt
+GestorUsuarios -- ClienteEnt
 
 GestorEventos -- Evento
 GestorEventos -- Sector

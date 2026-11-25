@@ -88,7 +88,16 @@ namespace Negocio
         // RN-35: suscriptores primero y, dentro de cada grupo, por orden de inscripción.
         public List<ListaEspera> DeEvento(int idEvento)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            var usuario = GestorSesion.Instance.UsuarioActual;
+            if (usuario == null || (usuario.TipoUsuario != "Administrador" && usuario.TipoUsuario != "Organizador"))
+                throw new ReglaNegocioException("RN-48", "La lista de espera requiere perfil de Organizador o Administrador.");
+            if (usuario.TipoUsuario == "Organizador")
+            {
+                Evento evento = RepositorioEventos.Instance.ObtenerPorId(idEvento);
+                Local local = evento == null ? null : RepositorioLocales.Instance.ObtenerPorId(evento.IdLocal);
+                if (local == null || local.IdPropietario != usuario.Id)
+                    throw new ReglaNegocioException("RN-49", "Solo podés consultar listas de espera de tus propios eventos.");
+            }
             return RepositorioListaEspera.Instance.ObtenerPorEvento(idEvento);
         }
 

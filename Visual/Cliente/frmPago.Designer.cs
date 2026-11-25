@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmPago
     {
@@ -48,7 +48,7 @@
             this.indicadorPasos = new Visual.Componentes.IndicadorPasos();
             this.indicadorPasos.Name = "indicadorPasos";
             this.indicadorPasos.PasoActual = 3;
-            this.indicadorPasos.Location = new System.Drawing.Point(24, 8);
+            this.indicadorPasos.Location = new System.Drawing.Point(24, 68);
             this.indicadorPasos.Size = new System.Drawing.Size(392, 24);
             this.Controls.Add(this.indicadorPasos);
             this.SuspendLayout();
@@ -56,7 +56,7 @@
             // lblTitulo
             //
             this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Location = new System.Drawing.Point(24, 48);
+            this.lblTitulo.Location = new System.Drawing.Point(24, 108);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(184, 32);
             this.lblTitulo.TabIndex = 20;
@@ -64,7 +64,7 @@
             //
             // lblTemporizador
             //
-            this.lblTemporizador.Location = new System.Drawing.Point(232, 48);
+            this.lblTemporizador.Location = new System.Drawing.Point(232, 108);
             this.lblTemporizador.Name = "lblTemporizador";
             this.lblTemporizador.Size = new System.Drawing.Size(184, 32);
             this.lblTemporizador.TabIndex = 21;
@@ -74,7 +74,7 @@
             // lblSeguro
             //
             this.lblSeguro.AutoSize = true;
-            this.lblSeguro.Location = new System.Drawing.Point(24, 88);
+            this.lblSeguro.Location = new System.Drawing.Point(24, 148);
             this.lblSeguro.Name = "lblSeguro";
             this.lblSeguro.Size = new System.Drawing.Size(392, 32);
             this.lblSeguro.TabIndex = 22;
@@ -83,7 +83,7 @@
             // lblTotal
             //
             this.lblTotal.AutoSize = true;
-            this.lblTotal.Location = new System.Drawing.Point(24, 128);
+            this.lblTotal.Location = new System.Drawing.Point(24, 188);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(392, 24);
             this.lblTotal.TabIndex = 23;
@@ -92,7 +92,7 @@
             // lblTitular
             //
             this.lblTitular.AutoSize = true;
-            this.lblTitular.Location = new System.Drawing.Point(24, 160);
+            this.lblTitular.Location = new System.Drawing.Point(24, 220);
             this.lblTitular.Name = "lblTitular";
             this.lblTitular.Size = new System.Drawing.Size(392, 20);
             this.lblTitular.TabIndex = 24;
@@ -100,7 +100,7 @@
             //
             // txtTitular
             //
-            this.txtTitular.Location = new System.Drawing.Point(24, 184);
+            this.txtTitular.Location = new System.Drawing.Point(24, 244);
             this.txtTitular.MaxLength = 60;
             this.txtTitular.Name = "txtTitular";
             this.txtTitular.Size = new System.Drawing.Size(392, 28);
@@ -109,7 +109,7 @@
             // lblNumero
             //
             this.lblNumero.AutoSize = true;
-            this.lblNumero.Location = new System.Drawing.Point(24, 224);
+            this.lblNumero.Location = new System.Drawing.Point(24, 284);
             this.lblNumero.Name = "lblNumero";
             this.lblNumero.Size = new System.Drawing.Size(392, 20);
             this.lblNumero.TabIndex = 25;
@@ -117,7 +117,7 @@
             //
             // txtNumero
             //
-            this.txtNumero.Location = new System.Drawing.Point(24, 248);
+            this.txtNumero.Location = new System.Drawing.Point(24, 308);
             this.txtNumero.MaxLength = 23;
             this.txtNumero.Name = "txtNumero";
             this.txtNumero.Size = new System.Drawing.Size(392, 28);
@@ -126,7 +126,7 @@
             // lblVencimiento
             //
             this.lblVencimiento.AutoSize = true;
-            this.lblVencimiento.Location = new System.Drawing.Point(24, 288);
+            this.lblVencimiento.Location = new System.Drawing.Point(24, 348);
             this.lblVencimiento.Name = "lblVencimiento";
             this.lblVencimiento.Size = new System.Drawing.Size(184, 20);
             this.lblVencimiento.TabIndex = 26;
@@ -134,7 +134,7 @@
             //
             // txtVencimiento
             //
-            this.txtVencimiento.Location = new System.Drawing.Point(24, 312);
+            this.txtVencimiento.Location = new System.Drawing.Point(24, 372);
             this.txtVencimiento.MaxLength = 5;
             this.txtVencimiento.Name = "txtVencimiento";
             this.txtVencimiento.Size = new System.Drawing.Size(184, 28);
@@ -143,7 +143,7 @@
             // lblCvv
             //
             this.lblCvv.AutoSize = true;
-            this.lblCvv.Location = new System.Drawing.Point(232, 288);
+            this.lblCvv.Location = new System.Drawing.Point(232, 348);
             this.lblCvv.Name = "lblCvv";
             this.lblCvv.Size = new System.Drawing.Size(184, 20);
             this.lblCvv.TabIndex = 27;
@@ -151,7 +151,7 @@
             //
             // txtCvv
             //
-            this.txtCvv.Location = new System.Drawing.Point(232, 312);
+            this.txtCvv.Location = new System.Drawing.Point(232, 372);
             this.txtCvv.MaxLength = 4;
             this.txtCvv.Name = "txtCvv";
             this.txtCvv.PasswordChar = '•';
@@ -160,7 +160,7 @@
             //
             // lblEstado
             //
-            this.lblEstado.Location = new System.Drawing.Point(24, 344);
+            this.lblEstado.Location = new System.Drawing.Point(24, 404);
             this.lblEstado.Name = "lblEstado";
             this.lblEstado.Size = new System.Drawing.Size(392, 40);
             this.lblEstado.TabIndex = 28;
@@ -168,7 +168,7 @@
             // btnPagar
             //
             this.btnPagar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPagar.Location = new System.Drawing.Point(232, 392);
+            this.btnPagar.Location = new System.Drawing.Point(232, 452);
             this.btnPagar.Name = "btnPagar";
             this.btnPagar.Size = new System.Drawing.Size(184, 40);
             this.btnPagar.TabIndex = 4;
@@ -178,7 +178,7 @@
             // btnCancelar
             //
             this.btnCancelar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancelar.Location = new System.Drawing.Point(24, 392);
+            this.btnCancelar.Location = new System.Drawing.Point(24, 452);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(184, 40);
             this.btnCancelar.TabIndex = 5;
@@ -195,7 +195,7 @@
             this.AcceptButton = this.btnPagar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(440, 456);
+            this.ClientSize = new System.Drawing.Size(440, 516);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnPagar);
             this.Controls.Add(this.lblEstado);
@@ -220,6 +220,11 @@
             this.Text = "Pago seguro";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmPago_FormClosing);
             this.Load += new System.EventHandler(this.frmPago_Load);
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(440, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,5 +249,6 @@
         private Visual.Componentes.BotonPrimario btnPagar;
         private Visual.Componentes.BotonSecundario btnCancelar;
         private System.Windows.Forms.Timer tmrReserva;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

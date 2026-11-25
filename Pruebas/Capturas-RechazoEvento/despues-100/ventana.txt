@@ -1,0 +1,1 @@
+DPI=96 cliente={Width=1060, Height=570} ventana={Width=1076, Height=609}

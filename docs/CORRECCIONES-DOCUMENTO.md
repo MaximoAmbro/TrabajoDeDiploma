@@ -489,14 +489,17 @@ En la lectura, **reemplazar:**
 **Reemplazar** las cinco firmas **por:**
 
 ```
-class RepositorioReportes {                     // Capa de acceso a datos
-    DataTable VentasPorEvento(DateTime desde, DateTime hasta, string categoria)
-    DataTable RankingPaquetes(DateTime desde, DateTime hasta, int? idEvento)
-    DataTable UsuariosPorNivel(DateTime desdeVentana, DateTime corte, int umbralPlata, int umbralOro)
-    DataTable AdopcionBeneficios(DateTime desde, DateTime hasta, string planMensual, string planAnual)
-    DataTable DemandaInsatisfecha(DateTime desde, DateTime hasta, int? idEvento, bool soloAgotados)
+class RepositorioReportes {                     // Capa de acceso a datos, interna
+    DataTable VentasPorEvento(DateTime desde, DateTime hasta, string categoria, int? idOrganizador)
+    DataTable RankingPaquetes(DateTime desde, DateTime hasta, int? idEvento, int? idOrganizador)
+    DataTable UsuariosPorNivel(DateTime desdeVentana, DateTime corte, int umbralPlata, int umbralOro, int? idOrganizador)
+    DataTable AdopcionBeneficios(DateTime desde, DateTime hasta, string planMensual, string planAnual, int? idOrganizador)
+    DataTable DemandaInsatisfecha(DateTime desde, DateTime hasta, int? idEvento, bool soloAgotados, int? idOrganizador)
 }
 ```
+
+Sin organizador (`null`), el reporte abarca todos los eventos: es el del Administrador. Con un
+organizador, solo los eventos de sus locales (RN-34).
 
 ### Página 103 — clase `ExportadorPDF`
 
@@ -532,11 +535,15 @@ SELECT e.Nombre AS Evento,
          / NULLIF(SUM(en.CantidadVendida), 0) AS TicketPromedio,
        CAST(100.0 * ISNULL(SUM(en.CantidadVendida), 0)
          / NULLIF((SELECT SUM(s.Capacidad) FROM Sectores s WHERE s.EventoID = e.ID), 0)
-         AS DECIMAL(5,1)) AS PorcOcupacion
+         AS DECIMAL(5,1)) AS PorcOcupacion,
+       ISNULL((SELECT SUM(s.Capacidad) FROM Sectores s WHERE s.EventoID = e.ID), 0) AS Capacidad
 FROM   Eventos e
 LEFT JOIN Entradas en ON en.ID_Evento = e.ID AND en.Estado = 'Confirmada'
 WHERE  e.Fecha BETWEEN @Desde AND @Hasta
   AND  (@Categoria IS NULL OR e.Categoria = @Categoria)
+  AND  (@OrganizadorID IS NULL OR EXISTS (SELECT 1 FROM Locales l
+                                          WHERE l.ID = e.LocalID
+                                            AND l.PropietarioID = @OrganizadorID))
 GROUP BY e.ID, e.Nombre, e.Categoria
 ORDER BY IngresoBruto DESC;
 ```
@@ -545,7 +552,9 @@ ORDER BY IngresoBruto DESC;
 
 > La capacidad se obtiene en una subconsulta y no en un JOIN, para no multiplicar las
 > filas. El LEFT JOIN conserva los eventos sin ventas, que son los que interesa detectar.
-> Se agrupa por el ID del evento: dos eventos con el mismo nombre no se suman.
+> Se agrupa por el ID del evento: dos eventos con el mismo nombre no se suman. Cuando lo pide un
+> organizador, la última condición deja solo los eventos de sus locales; para el Administrador
+> de la plataforma, `@OrganizadorID` es nulo y la consulta abarca todos.
 
 ### Página 104 — código de exportación
 
@@ -562,22 +571,26 @@ ORDER BY IngresoBruto DESC;
 **Reemplazar** desde `int total = pdf.GetNumberOfPages();` hasta el cierre del `for`, **por:**
 
 ```csharp
-    int total = pdf.GetNumberOfPages();
     string verificacion = $"EVAU|{r.Codigo}|{r.Desde:yyyyMMdd}-{r.Hasta:yyyyMMdd}|" +
-                          $"{DateTime.Now:yyyyMMddHHmmss}|{r.Solicitante}";
+                          $"{emision:yyyyMMddHHmmss}|{r.Solicitante}";
     byte[] qr = GeneradorQR.Instance.Imagen(verificacion);
+    int total = pdf.GetNumberOfPages();
     for (int i = 1; i <= total; i++)
     {
+        float ancho = pdf.GetPage(i).GetPageSize().GetWidth();
         doc.ShowTextAligned(
-            new Paragraph($"Emitido {DateTime.Now:dd/MM/yyyy HH:mm}  –  Página {i} de {total}")
-                .SetFont(normal).SetFontSize(7),
-            40, 28, i, TextAlignment.LEFT, VerticalAlignment.BOTTOM, 0);
+            new Paragraph($"Emitido el {emision:dd/MM/yyyy HH:mm}   ·   Página {i} de {total}   ·   {r.NombreArchivo}.pdf")
+                .SetFont(normal).SetFontSize(7.5f).SetFontColor(Gris),
+            Margen, 30, i, TextAlignment.LEFT, VerticalAlignment.BOTTOM, 0);
         // Una imagen nueva por página: la misma instancia de Image no se repite en todas.
-        Image img = new Image(ImageDataFactory.Create(qr)).ScaleAbsolute(46, 46);
-        img.SetFixedPosition(i, 505, 20);
-        doc.Add(img);
+        Image imagen = new Image(ImageDataFactory.Create(qr)).ScaleAbsolute(LadoQR, LadoQR);
+        imagen.SetFixedPosition(i, ancho - Margen - LadoQR, 18);
+        doc.Add(imagen);
     }
 ```
+
+`emision` es la fecha y hora de la exportación, la misma en todas las páginas; `Margen` vale 40 y
+`LadoQR`, 46 puntos.
 
 `GeneradorQR.Crear(...)` no existe: la API es `GeneradorQR.Instance.Imagen(string)`.
 
@@ -1274,11 +1287,12 @@ esfuerzo total estimado».
 - Es una minuta simulada con una persona real.
 - El rótulo «(simuladas)» la cubre, pero conviene que el docente no la lea como una reunión
   que se le atribuye.
-- **Propuesta:** «Profesor de la cátedra (rol simulado)». Lo decide JC.
+- **Decidido (JC, 20/11):** «Profesor de la cátedra (rol simulado)». En la copia que queda
+  (p. 44) el texto es «Profesor (evaluador académico)»; se reemplaza por ese.
 
 ### Página 45 — Prototipos
 
-**⚠ A CONFIRMAR CON JC Y MÁXIMO.** El texto dice:
+**Decidido (JC, 20/11): va la frase de bocetos.** No hay archivo de Figma. El texto dice:
 
 > Los siguientes prototipos fueron desarrollados en Figma y entregados como archivo
 > complementario en formato PDF y versión interactiva.

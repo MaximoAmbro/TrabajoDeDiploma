@@ -1,0 +1,60 @@
+@startuml clases-8d-patron-strategy-cuenta
+!include _estilo.iuml
+skinparam nodesep 30
+skinparam ranksep 45
+hide empty members
+' Diagrama de clases, vista 8d: patrón Strategy en el envío de códigos de un solo uso y en la
+' verificación de identidad de un Organizador. Fuente: Repo/IEnviadorCodigos.cs,
+' Repo/GestorCodigosCorreo.cs, Repo/GestorSolicitudesOrganizador.cs, Visual/EnviadorSmtp.cs y
+' Visual/Program.cs (fija la estrategia: new EnviadorSimulado()).
+
+class GestorCodigosCorreo <<Singleton, Context>>
+interface IEnviadorCodigos <<Strategy>> {
+  + Enviar(string, string, string, DateTime)
+}
+class EnviadorSimulado <<ConcreteStrategy>> {
+  + Enviar(string, string, string, DateTime)
+  ~ {static} Ultimo(string, string) : MensajeCorreoSimulado
+}
+class EnviadorSmtp <<ConcreteStrategy>> {
+  + Enviar(string, string, string, DateTime)
+}
+class SeleccionEnviadorCodigos {
+  + {static} Actual : IEnviadorCodigos
+}
+
+class GestorSolicitudesOrganizador <<Singleton, Context>>
+interface IVerificadorIdentidad <<Strategy>> {
+  + Verificar(string, string) : bool
+}
+class VerificadorIdentidadSimulado <<ConcreteStrategy>> {
+  + Verificar(string, string) : bool
+}
+class VerificadorIdentidadExterno <<ConcreteStrategy>> {
+  + Verificar(string, string) : bool
+}
+class SeleccionVerificadorIdentidad {
+  + {static} Actual : IVerificadorIdentidad
+}
+
+GestorCodigosCorreo ..> SeleccionEnviadorCodigos : Actual
+SeleccionEnviadorCodigos --> "1$_" IEnviadorCodigos
+IEnviadorCodigos <|.. EnviadorSimulado
+IEnviadorCodigos <|.. EnviadorSmtp
+EnviadorSimulado -[hidden]down- GestorSolicitudesOrganizador
+EnviadorSmtp -[hidden]down- GestorSolicitudesOrganizador
+
+GestorSolicitudesOrganizador ..> SeleccionVerificadorIdentidad : Actual
+SeleccionVerificadorIdentidad --> "1$_" IVerificadorIdentidad
+IVerificadorIdentidad <|.. VerificadorIdentidadSimulado
+IVerificadorIdentidad <|.. VerificadorIdentidadExterno
+
+note bottom of EnviadorSmtp
+  Capa Visual. Existe y compila;
+  la versión entregada no la elige.
+end note
+note bottom of VerificadorIdentidadExterno
+  Existe y compila; la versión
+  entregada no la elige.
+end note
+@enduml

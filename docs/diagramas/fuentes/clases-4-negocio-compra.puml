@@ -41,6 +41,7 @@ class GestorPaquetes <<Singleton>> {
   + SubtotalServicios(Paquete) : decimal
 }
 class GestorFidelizacion <<Singleton>> {
+  + ClienteActualParaEncabezado() : Cliente
   + ObtenerCliente(int) : Cliente
   + ComprasEnVentana(int, DateTime) : int
   + DeterminarNivel(int, DateTime) : NivelFidelidad

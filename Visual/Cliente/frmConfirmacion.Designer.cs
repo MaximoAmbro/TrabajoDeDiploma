@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmConfirmacion
     {
@@ -36,7 +36,7 @@
             this.lstArchivos = new System.Windows.Forms.ListBox();
             this.pnlArchivos = new System.Windows.Forms.Panel();
             this.pnlArchivos.Name = "pnlArchivos";
-            this.pnlArchivos.Location = new System.Drawing.Point(400, 288);
+            this.pnlArchivos.Location = new System.Drawing.Point(400, 348);
             this.pnlArchivos.Size = new System.Drawing.Size(336, 120);
             this.pnlArchivos.Controls.Add(this.lstArchivos);
             this.lstArchivos.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -45,19 +45,19 @@
             this.indicadorPasos = new Visual.Componentes.IndicadorPasos();
             this.indicadorPasos.Name = "indicadorPasos";
             this.indicadorPasos.PasoActual = 4;
-            this.indicadorPasos.Location = new System.Drawing.Point(24, 16);
+            this.indicadorPasos.Location = new System.Drawing.Point(24, 76);
             this.indicadorPasos.Size = new System.Drawing.Size(712, 32);
             this.iconoExito = new Visual.Componentes.IconoExito();
             this.iconoExito.Name = "iconoExito";
-            this.iconoExito.Location = new System.Drawing.Point(24, 64);
+            this.iconoExito.Location = new System.Drawing.Point(24, 124);
             this.iconoExito.Size = new System.Drawing.Size(48, 48);
             this.lblTotalConfirmado = new Visual.Componentes.EtiquetaTotal();
             this.lblTotalConfirmado.Name = "lblTotalConfirmado";
-            this.lblTotalConfirmado.Location = new System.Drawing.Point(400, 152);
+            this.lblTotalConfirmado.Location = new System.Drawing.Point(400, 212);
             this.lblTotalConfirmado.Size = new System.Drawing.Size(336, 48);
             this.pnlDetalle = new System.Windows.Forms.Panel();
             this.pnlDetalle.Name = "pnlDetalle";
-            this.pnlDetalle.Location = new System.Drawing.Point(24, 152);
+            this.pnlDetalle.Location = new System.Drawing.Point(24, 212);
             this.pnlDetalle.Size = new System.Drawing.Size(352, 256);
             this.pnlDetalle.AutoScroll = true;
             this.pnlDetalle.Controls.Add(this.lblDesglose);
@@ -73,7 +73,7 @@
             // lblTitulo
             //
             this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Location = new System.Drawing.Point(80, 64);
+            this.lblTitulo.Location = new System.Drawing.Point(80, 124);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(656, 32);
             this.lblTitulo.TabIndex = 10;
@@ -82,7 +82,7 @@
             // lblPedido
             //
             this.lblPedido.AutoSize = true;
-            this.lblPedido.Location = new System.Drawing.Point(80, 104);
+            this.lblPedido.Location = new System.Drawing.Point(80, 164);
             this.lblPedido.Name = "lblPedido";
             this.lblPedido.Size = new System.Drawing.Size(400, 24);
             this.lblPedido.TabIndex = 11;
@@ -99,7 +99,7 @@
             //
             // lblTickets
             //
-            this.lblTickets.Location = new System.Drawing.Point(400, 216);
+            this.lblTickets.Location = new System.Drawing.Point(400, 276);
             this.lblTickets.Name = "lblTickets";
             this.lblTickets.Size = new System.Drawing.Size(336, 24);
             this.lblTickets.TabIndex = 13;
@@ -107,7 +107,7 @@
             //
             // txtCarpeta
             //
-            this.txtCarpeta.Location = new System.Drawing.Point(400, 248);
+            this.txtCarpeta.Location = new System.Drawing.Point(400, 308);
             this.txtCarpeta.Name = "txtCarpeta";
             this.txtCarpeta.ReadOnly = true;
             this.txtCarpeta.Size = new System.Drawing.Size(336, 28);
@@ -126,7 +126,7 @@
             // btnAbrirCarpeta
             //
             this.btnAbrirCarpeta.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAbrirCarpeta.Location = new System.Drawing.Point(24, 432);
+            this.btnAbrirCarpeta.Location = new System.Drawing.Point(24, 492);
             this.btnAbrirCarpeta.Name = "btnAbrirCarpeta";
             this.btnAbrirCarpeta.Size = new System.Drawing.Size(176, 40);
             this.btnAbrirCarpeta.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
@@ -137,7 +137,7 @@
             // btnAceptar
             //
             this.btnAceptar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAceptar.Location = new System.Drawing.Point(568, 432);
+            this.btnAceptar.Location = new System.Drawing.Point(568, 492);
             this.btnAceptar.Name = "btnAceptar";
             this.btnAceptar.Size = new System.Drawing.Size(168, 40);
             this.btnAceptar.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
@@ -150,7 +150,7 @@
             this.AcceptButton = this.btnAceptar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(760, 488);
+            this.ClientSize = new System.Drawing.Size(760, 548);
             this.Controls.Add(this.btnAceptar);
             this.Controls.Add(this.btnAbrirCarpeta);
             this.Controls.Add(this.pnlArchivos);
@@ -167,6 +167,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Compra confirmada";
             this.Load += new System.EventHandler(this.frmConfirmacion_Load);
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(760, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -187,5 +192,6 @@
         private System.Windows.Forms.Panel pnlArchivos;
         private Visual.Componentes.BotonSecundario btnAbrirCarpeta;
         private Visual.Componentes.BotonPrimario btnAceptar;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

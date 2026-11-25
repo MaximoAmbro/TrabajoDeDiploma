@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using Entidades;
 using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class RepositorioEventos : RepositorioBase
+    internal sealed class RepositorioEventos : RepositorioBase
     {
         private const string Columnas =
-            "SELECT ID, Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa FROM Eventos ";
+            "SELECT ID, Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa, ImagenPortada, MotivoRechazo FROM Eventos ";
 
         private static RepositorioEventos _instance;
 
@@ -26,14 +27,14 @@ namespace Datos
 
         private RepositorioEventos() { }
 
-        // Inserta el evento y sus sectores en una misma transacción: o se publica completo o no se publica.
-        // Asigna el Id generado al evento y a cada sector.
+        // Inserta el evento y los sectores incluidos en una misma transacción, sin cambiar su estado.
+        // Asigna los Id generados al evento y a cada sector.
         public int Insertar(Evento evento)
         {
             const string consulta =
-                "INSERT INTO Eventos (Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa) " +
+                "INSERT INTO Eventos (Nombre, Fecha, LocalID, Categoria, Estado, FinPreventa, ImagenPortada) " +
                 "OUTPUT INSERTED.ID " +
-                "VALUES (@Nombre, @Fecha, @LocalID, @Categoria, @Estado, @FinPreventa)";
+                "VALUES (@Nombre, @Fecha, @LocalID, @Categoria, @Estado, @FinPreventa, @ImagenPortada)";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlTransaction transaccion = conexion.BeginTransaction())
@@ -48,6 +49,7 @@ namespace Datos
                         AgregarParametro(comando, "@Categoria", evento.Categoria);
                         AgregarParametro(comando, "@Estado", evento.Estado);
                         AgregarParametro(comando, "@FinPreventa", evento.FinPreventa);
+                        comando.Parameters.Add("@ImagenPortada", SqlDbType.VarBinary, -1).Value = (object)evento.ImagenPortada ?? DBNull.Value;
                         evento.Id = Convert.ToInt32(comando.ExecuteScalar());
                     }
 
@@ -80,6 +82,62 @@ namespace Datos
             return Consultar(Columnas + "WHERE LocalID = @Valor ORDER BY Fecha", idLocal);
         }
 
+        public List<Evento> ObtenerPorEstado(string estado)
+        {
+            return Consultar(Columnas + "WHERE Estado = @Valor ORDER BY Fecha,ID", estado);
+        }
+
+        public bool OrganizadorYaTuvoEventoAprobado(int idOrganizador)
+        {
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion,
+                "SELECT CASE WHEN EXISTS(SELECT 1 FROM Propietario WHERE ID=@ID AND PrimerEventoAprobado=1) THEN 1 ELSE 0 END"))
+            {
+                AgregarParametro(comando, "@ID", idOrganizador);
+                return Convert.ToInt32(comando.ExecuteScalar()) == 1;
+            }
+        }
+
+        public bool AprobarPrimerEvento(int idEvento)
+        {
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlTransaction transaccion = conexion.BeginTransaction())
+            {
+                try
+                {
+                    int cambiado;
+                    using (SqlCommand comando = CrearComando(conexion,
+                        "UPDATE dbo.Eventos SET Estado='Publicado' WHERE ID=@ID AND Estado='EnRevision'", transaccion))
+                    {
+                        AgregarParametro(comando, "@ID", idEvento);
+                        cambiado = comando.ExecuteNonQuery();
+                    }
+                    if (cambiado != 1) { transaccion.Rollback(); return false; }
+                    using (SqlCommand comando = CrearComando(conexion,
+                        "UPDATE dbo.Propietario SET PrimerEventoAprobado=1 WHERE ID=(SELECT l.PropietarioID FROM dbo.Eventos e JOIN dbo.Locales l ON l.ID=e.LocalID WHERE e.ID=@ID)", transaccion))
+                    {
+                        AgregarParametro(comando, "@ID", idEvento);
+                        if (comando.ExecuteNonQuery() != 1) throw new InvalidOperationException("El evento no tiene un organizador válido.");
+                    }
+                    transaccion.Commit();
+                    return true;
+                }
+                catch { transaccion.Rollback(); throw; }
+            }
+        }
+
+        public bool RechazarPrimerEvento(int idEvento, string motivo)
+        {
+            const string sql = "UPDATE dbo.Eventos SET Estado='Borrador', MotivoRechazo=@Motivo WHERE ID=@ID AND Estado='EnRevision'";
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, sql))
+            {
+                AgregarParametro(comando, "@Motivo", motivo);
+                AgregarParametro(comando, "@ID", idEvento);
+                return comando.ExecuteNonQuery() == 1;
+            }
+        }
+
         public List<Evento> ConIngresoAbierto(int idPropietario, DateTime desde, DateTime hasta)
         {
             return Consultar(Columnas + "WHERE Estado='Publicado' AND Fecha>=@Valor AND Fecha<=@Hasta " +
@@ -105,7 +163,7 @@ namespace Datos
         public List<Evento> Buscar(string estado, DateTime ahora, string texto, string categoria, DateTime? desde)
         {
             const string consulta =
-                "SELECT e.ID, e.Nombre, e.Fecha, e.LocalID, e.Categoria, e.Estado, e.FinPreventa " +
+                "SELECT e.ID, e.Nombre, e.Fecha, e.LocalID, e.Categoria, e.Estado, e.FinPreventa, e.ImagenPortada, e.MotivoRechazo " +
                 "FROM Eventos e JOIN Locales l ON l.ID = e.LocalID " +
                 "WHERE e.Estado = @Estado AND e.Fecha > @Valor " +
                 "  AND (@Texto IS NULL OR e.Nombre LIKE '%' + @Texto + '%' " +
@@ -222,6 +280,18 @@ namespace Datos
             }
         }
 
+        public bool ActualizarImagenPortada(int idEvento, byte[] imagen)
+        {
+            const string consulta = "UPDATE dbo.Eventos SET ImagenPortada=@Imagen WHERE ID=@ID";
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, consulta))
+            {
+                comando.Parameters.Add("@Imagen", SqlDbType.VarBinary, -1).Value = (object)imagen ?? DBNull.Value;
+                AgregarParametro(comando, "@ID", idEvento);
+                return comando.ExecuteNonQuery() == 1;
+            }
+        }
+
         // Devuelve false si no existe el evento.
         public bool ActualizarEstado(int idEvento, string estado)
         {
@@ -233,6 +303,19 @@ namespace Datos
                 AgregarParametro(comando, "@Estado", estado);
                 AgregarParametro(comando, "@ID", idEvento);
                 return comando.ExecuteNonQuery() > 0;
+            }
+        }
+
+        public bool ActualizarEstadoSiEs(int idEvento, string estadoActual, string estadoNuevo)
+        {
+            const string sql = "UPDATE Eventos SET Estado=@Nuevo WHERE ID=@ID AND Estado=@Actual";
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, sql))
+            {
+                AgregarParametro(comando, "@Nuevo", estadoNuevo);
+                AgregarParametro(comando, "@ID", idEvento);
+                AgregarParametro(comando, "@Actual", estadoActual);
+                return comando.ExecuteNonQuery() == 1;
             }
         }
 
@@ -259,7 +342,9 @@ namespace Datos
                             IdLocal = Convert.ToInt32(lector["LocalID"]),
                             Categoria = LeerString(lector, "Categoria"),
                             Estado = LeerString(lector, "Estado"),
-                            FinPreventa = LeerFechaNula(lector, "FinPreventa")
+                            FinPreventa = LeerFechaNula(lector, "FinPreventa"),
+                            ImagenPortada = lector.IsDBNull(7) ? null : (byte[])lector["ImagenPortada"],
+                            MotivoRechazo = LeerString(lector, "MotivoRechazo")
                         });
                     }
                 }

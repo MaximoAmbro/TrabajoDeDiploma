@@ -1,0 +1,11 @@
+Versión 17.14.0 (x64) de VSTest
+
+Iniciando la ejecución de pruebas, espere...
+1 archivos de prueba en total coincidieron con el patrón especificado.
+  Correctas CP-146: Cliente recibe NoAutorizado y RN-34 sin excepción al registrar ingreso [128 ms]
+  Correctas CP-146: Sin sesión recibe NoAutorizado y RN-34 sin excepción al registrar ingreso [12 ms]
+
+La serie de pruebas se ejecutó correctamente.
+Pruebas totales: 2
+     Correcto: 2
+ Tiempo total: 1,1736 Segundos

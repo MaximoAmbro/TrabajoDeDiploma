@@ -1,0 +1,21 @@
+Versión 17.14.0 (x64) de VSTest
+
+Iniciando la ejecución de pruebas, espere...
+1 archivos de prueba en total coincidieron con el patrón especificado.
+  Con error CP-146: Cliente recibe NoAutorizado y RN-34 sin excepción al registrar ingreso [133 ms]
+  Mensaje de error:
+   Error de Assert.Fail. El rechazo debe ser un resultado, no una excepción: ReglaNegocioException
+  Seguimiento de la pila:
+     en Pruebas.PruebasRechazoIngreso.CP146_Rechazo(Boolean sinSesion) en D:\proyectos\TrabajoDeDiploma\Pruebas\PruebasRechazoIngreso.cs:línea 20
+
+  Con error CP-146: Sin sesión recibe NoAutorizado y RN-34 sin excepción al registrar ingreso [13 ms]
+  Mensaje de error:
+   Error de Assert.Fail. El rechazo debe ser un resultado, no una excepción: NullReferenceException
+  Seguimiento de la pila:
+     en Pruebas.PruebasRechazoIngreso.CP146_Rechazo(Boolean sinSesion) en D:\proyectos\TrabajoDeDiploma\Pruebas\PruebasRechazoIngreso.cs:línea 20
+
+
+No se pudo ejecutar la serie de pruebas.
+Pruebas totales: 2
+     Incorrecto: 2
+ Tiempo total: 1,1840 Segundos

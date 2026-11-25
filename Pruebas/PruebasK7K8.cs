@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Forms;
 using Entidades;
@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Pruebas.InterfazGrupoA;
 namespace Pruebas {
  [TestClass] public class PruebasK7K8 {
-  // CP-123 — RN-18/RN-41/RN-42: propietario y ventana temporal inclusiva, no día calendario.
+        // CP-123 — RF-07, RN-18/RN-48/RN-49: ventana temporal y pertenencia de los eventos de ingreso.
   [DataTestMethod]
   [DataRow("ajeno",0,false,DisplayName="CP-123: Administrador no lista, registra ni cuenta eventos ajenos")]
   [DataRow("sin-sesion",0,false,DisplayName="CP-123: Sin sesión no se listan eventos para ingreso")]
@@ -18,12 +18,12 @@ namespace Pruebas {
   [DataRow("borde",64801,false,DisplayName="CP-123: Evento desaparece después del cierre de su ventana")]
   public void CP123_VentanaPrivada(string caso,int segundos,bool aparece) {
    EnSta(()=> {
-    var evento=Fake.EventoPublicado(1000m,5);Fake.CambiarFechaDeEvento(evento.Id,DateTime.Now.AddMinutes(10));Fake.ComoAdministrador();
+    var evento=Fake.EventoPublicado(1000m,5);Fake.CambiarFechaDeEvento(evento.Id,DateTime.Now.AddMinutes(10));Fake.ComoOrganizador();
     if(caso=="ajeno") {
      Assert.IsTrue(GestorIngresos.Instance.EventosConIngresoAbierto().Any(e=>e.Id==evento.Id));
      var otro=Fake.PropietarioSinLocales();GestorSesion.Instance.Iniciar(otro);
      Assert.IsFalse(GestorIngresos.Instance.EventosConIngresoAbierto().Any(e=>e.Id==evento.Id));
-     Assert.AreEqual("RN-42",Assert.ThrowsException<ReglaNegocioException>(()=>GestorIngresos.Instance.Registrar("inexistente",evento.Id)).Regla);
+     Assert.AreEqual("RN-49",Assert.ThrowsException<ReglaNegocioException>(()=>GestorIngresos.Instance.Registrar("inexistente",evento.Id)).Regla);
      Assert.ThrowsException<ReglaNegocioException>(()=>GestorIngresos.Instance.Contar(evento.Id));return;
     }
     if(caso=="sin-sesion") {GestorSesion.Instance.Cerrar();Assert.ThrowsException<ReglaNegocioException>(()=>GestorIngresos.Instance.EventosConIngresoAbierto());return;}
@@ -32,7 +32,7 @@ namespace Pruebas {
     Assert.AreEqual(aparece,GestorIngresos.Instance.EventosConIngresoAbierto(ahora).Any(e=>e.Id==evento.Id));
    });
   }
-  // CP-124 — RN-04/RN-40: cambio accesible sin sesión; no informa existencia ni bloqueo.
+        // CP-124 — RF-02, RN-04/RN-40: unificar el rechazo de cambio de contraseña sin enumerar cuentas.
   [DataTestMethod]
   [DataRow(0,DisplayName="CP-124: Cambio sin sesión rechaza igual cuenta existente e inexistente")]
   [DataRow(4,DisplayName="CP-124: Quinto fallo al cambiar no revela bloqueo")]

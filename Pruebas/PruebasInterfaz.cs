@@ -109,10 +109,11 @@ namespace Pruebas
                     Assert.AreEqual(DataGridViewAutoSizeColumnsMode.Fill, grilla.AutoSizeColumnsMode);
                     form.GetType().GetMethod("CargarEventos", BindingFlags.Instance | BindingFlags.NonPublic)
                         .Invoke(form, new object[] { "evento-inexistente-prueba", null, null });
-                    Assert.AreEqual(1, grilla.Rows.Count);
+                    Assert.AreEqual(0, grilla.Rows.Count);
                     Assert.IsFalse(grilla.AllowUserToAddRows);
                     Assert.IsTrue(grilla.ReadOnly);
-                    Assert.IsTrue(grilla.Rows[0].Cells[0].Value.ToString().Contains("No hay eventos"));
+                    var estado = Control<Visual.Componentes.EstadoVacio>(form, "estadoSinResultados");
+                    Assert.IsTrue(estado.Controls.Find("explicacionVacio", true).Single().Text.Contains("No encontramos eventos"));
                 }
             });
         }
@@ -147,7 +148,7 @@ namespace Pruebas
                     Control<TextBox>(form, "txtBuscar").Text = "evento-inexistente-prueba";
                     Control<Button>(form, "btnBuscar").PerformClick();
                     DialogosPrueba.Comprobar(() => Control<Button>(form, "btnComprar").PerformClick(),
-                        new DialogoEsperado { Titulo = "Seleccionar evento", Texto = "Tenés que seleccionar un evento para comprar" });
+                        new DialogoEsperado { Texto = "Elegí un evento de la lista para ver sus entradas." });
                     Assert.IsTrue(form.Visible);
                     Assert.IsFalse(Application.OpenForms.Cast<Form>().Any(f => f is Visual.FrmCompraCliente));
                 }
@@ -197,8 +198,9 @@ namespace Pruebas
                     var celda = Control<DataGridView>(form, "dgvSectores").Rows[0].Cells["Cantidad"];
                     celda.Value = 2;
                     string resumen = Control<Label>(form, "lblResumen").Text;
-                    DialogosPrueba.Comprobar(() => celda.Value = cantidad,
-                        new DialogoEsperado { Titulo = "Revisá los datos", Texto = "La cantidad debe ser un número entero de 0 en adelante." });
+                    celda.Value = cantidad;
+                    Assert.AreEqual("Usá un número entero desde cero.", celda.ErrorText,
+                        "La validación debe quedar asociada a la celda que necesita corrección.");
                     Assert.AreEqual(2, celda.Value);
                     Assert.AreEqual(resumen, Control<Label>(form, "lblResumen").Text);
                 }
@@ -207,9 +209,9 @@ namespace Pruebas
 
         // CP-15 — RF-01, RN-02: registro rechaza datos inválidos.
         [DataTestMethod]
-        [DataRow("txtNombre", " ", "Crear cuenta", "Ingresá tu nombre.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 1)")]
-        [DataRow("txtApellido", " ", "Crear cuenta", "Ingresá tu apellido.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 2)")]
-        [DataRow("txtmail", " ", "Crear cuenta", "Ingresá tu correo electrónico.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 3)")]
+        [DataRow("txtNombre", " ", "Crear cuenta", "Escribí tu nombre.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 1)")]
+        [DataRow("txtApellido", " ", "Crear cuenta", "Escribí tu apellido.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 2)")]
+        [DataRow("txtmail", " ", "Crear cuenta", "Escribí tu correo electrónico.", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 3)")]
         [DataRow("TxtPassword", "abc", "Crear cuenta", "La contraseña debe tener al menos", DisplayName = "CP-15: Registro rechaza datos inválidos (variante 4)")]
         public void Registro_RechazaDatosInvalidosSinCrearUsuario(string campo, string valor, string titulo, string mensaje)
         {
@@ -243,7 +245,7 @@ namespace Pruebas
                 var cliente = Fake.Cliente(NivelFidelidad.Bronce);
                 Fake.ComoCliente(cliente);
                 var evento = Fake.EventoPublicado(1000m, 5);
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 using (var form = new Visual.Vendedor.frmEventosLocal { IDlocal = evento.IdLocal, IDUsuario = 1 })
                 {
                     Cargar(form);
@@ -259,7 +261,7 @@ namespace Pruebas
                 }
                 evento = Fake.EventoPublicado(1000m, 5);
                 Fake.CompraConfirmada(cliente, evento, 1, false);
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 using (var form = new Visual.Vendedor.frmEventosLocal { IDlocal = evento.IdLocal, IDUsuario = 1 })
                 {
                     Cargar(form);
@@ -425,8 +427,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-39 — RF-06, RN-15, H-02: cuenta regresiva visible y aviso rojo durante el último minuto.
+        // CP-39 — RF-06, H-02: cuenta regresiva visible y aviso rojo durante el último minuto.
         [TestMethod("CP-39: Temporizador de reserva normal y en el último minuto")]
         public void CP39_TemporizadorDeReservaALaVista()
         {
@@ -460,8 +461,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-40 — RF-04, RN-08, H-03: cupo restante por sector y edición exclusiva de Cantidad.
+        // CP-40 — RF-04, H-03: cupo restante por sector y edición exclusiva de Cantidad.
         [TestMethod("CP-40: Cupo restante por sector y única columna editable")]
         public void CP40_CupoRestantePorSector()
         {
@@ -486,8 +486,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-41 — RF-05, RN-28, H-04: cancelar la advertencia de compra sin seguro no reserva cupo.
+        // CP-41 — RF-05, H-04: cancelar la advertencia de compra sin seguro no reserva cupo.
         [TestMethod("CP-41: Confirmación al comprar sin seguro con No por defecto")]
         public void CP41_ConfirmacionAlComprarSinSeguro()
         {
@@ -516,8 +515,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-42 — RF-08, RN-19, RN-20, H-05: enlace visible y explicación con umbrales configurados.
+        // CP-42 — RF-08, H-05: enlace visible y explicación con umbrales configurados.
         [TestMethod("CP-42: Explicación de niveles con los umbrales vigentes")]
         public void CP42_ExplicacionDeLosNiveles()
         {
@@ -536,17 +534,12 @@ namespace Pruebas
                     Assert.AreEqual("¿Cómo funcionan los niveles?", enlace.Text);
                     MethodInfo manejador = form.GetType().GetMethod("lnkNiveles_LinkClicked", BindingFlags.Instance | BindingFlags.NonPublic);
                     Assert.IsNotNull(manejador);
-                    DialogosPrueba.Comprobar(() => manejador.Invoke(form, new object[] { enlace, null }),
-                        new DialogoEsperado
-                        {
-                            Titulo = "¿Cómo funcionan los niveles?",
-                            Texto = $"Plata: de {plata} a {oro - 1} compras"
-                        });
+                    manejador.Invoke(form, new object[] { enlace, null });
+                    Assert.IsTrue(Control<Label>(form, "avisoSistema").Text.Contains($"Plata: de {plata} a {oro - 1} compras"));
                 }
             });
         }
-
-        // CP-44 — RF-01, RN-05: el alta pública no permite elegir ni escribir un perfil privilegiado.
+        // CP-44 — RF-01, RN-05: el alta pública crea Cliente y no permite elegir un perfil privilegiado.
         [TestMethod("CP-44: Registro sin selector de perfil crea solo clientes")]
         public void CP44_AltaPublicaSinSelectorDePerfil()
         {
@@ -564,8 +557,9 @@ namespace Pruebas
                     Control<TextBox>(form, "TxtPassword").Text = "Cliente123";
                     Control<TextBox>(form, "TxtConfirmpassword").Text = "Cliente123";
 
-                    DialogosPrueba.Comprobar(() => Control<Button>(form, "btnregistrarse").PerformClick(),
-                        new DialogoEsperado { Titulo = "Crear cuenta", Texto = "Usuario creado" });
+                    Control<Button>(form, "btnregistrarse").PerformClick();
+                    Assert.IsNotNull(form.Controls.Find("verificacionCorreo", true).Single(), "El alta permite ingresar el código leído fuera de EventAura.");
+                    Assert.IsFalse(form.Controls.Find("bandejaCorreoSimulada", true).Any());
 
                     Usuario usuario = Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail);
                     Assert.IsNotNull(usuario);
@@ -574,7 +568,7 @@ namespace Pruebas
             });
         }
 
-        // CP-46 — RF-02: volver al inicio cierra la sesión de cliente o administrador y muestra el login.
+        // CP-46 — RF-02: volver al inicio cierra la sesión de cliente o administrador de plataforma.
         [DataTestMethod]
         [DataRow("cliente", DisplayName = "CP-46: Volver al inicio cierra sesión de cliente")]
         [DataRow("administrador", DisplayName = "CP-46: Volver al inicio cierra sesión de administrador")]
@@ -586,12 +580,16 @@ namespace Pruebas
                 GestorSesion.Instance.Iniciar(usuario);
                 using (Form menu = perfil == "cliente"
                     ? (Form)new Visual.frmMenuCliente { IDUsuario = usuario.Id, NombreUsuario = usuario.Nombre }
-                    : new Visual.frmMenuPropietario { IDUsuario = usuario.Id, NombreUsuario = usuario.Nombre })
+                    : new Visual.frmMenuAdministrador { IDUsuario = usuario.Id, NombreUsuario = usuario.Nombre })
                 {
                     Cargar(menu);
-                    MethodInfo volver = menu.GetType().GetMethod("lblvolver_Click", BindingFlags.Instance | BindingFlags.NonPublic);
-                    Assert.IsNotNull(volver);
-                    volver.Invoke(menu, new object[] { menu, EventArgs.Empty });
+                    if (perfil == "cliente")
+                    {
+                        MethodInfo volver = menu.GetType().GetMethod("lblvolver_Click", BindingFlags.Instance | BindingFlags.NonPublic);
+                        Assert.IsNotNull(volver);
+                        volver.Invoke(menu, new object[] { menu, EventArgs.Empty });
+                    }
+                    else Control<Button>(menu, "btnCerrarSesion").PerformClick();
 
                     Assert.IsFalse(GestorSesion.Instance.HaySesion);
                     Assert.IsTrue(Application.OpenForms.Cast<Form>().Any(f => f is Visual.frmInicio && f.Visible));
@@ -599,7 +597,7 @@ namespace Pruebas
             });
         }
 
-        // CP-47 — RNF-02: cerrar la última ventana visible termina solo un cierre solicitado por el usuario.
+        // CP-47 — RNF-02: mantener o cerrar la aplicacion segun sus ventanas visibles.
         [DataTestMethod]
         [DataRow(CloseReason.UserClosing, true, false, false, DisplayName = "CP-47: Otra ventana visible mantiene la aplicación")]
         [DataRow(CloseReason.UserClosing, false, false, true, DisplayName = "CP-47: Sin otras ventanas termina la aplicación")]
@@ -672,8 +670,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-50 — RF-05, RN-13, RN-28: Comprar y Seguro requieren entradas; quitarlas desactiva y destilda el seguro.
+        // CP-50 — RF-05: Comprar y Seguro requieren entradas; quitarlas desactiva y destilda el seguro.
         [TestMethod("CP-50: Comprar y Seguro se habilitan solo con entradas")]
         public void CP50_CompraYSeguroRequierenEntradas()
         {
@@ -706,11 +703,10 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-51 — RNF-02: mensajes seguros en castellano para errores de base, negocio y generales.
+        // CP-51 — RNF-02: presentar errores accionables sin filtrar detalles técnicos.
         [DataTestMethod]
         [DataRow("base de datos", DisplayName = "CP-51: Error de base de datos sin detalle técnico")]
-        [DataRow("negocio", DisplayName = "CP-51: Error real de negocio conserva su mensaje")]
+        [DataRow("negocio", DisplayName = "CP-51: Error de negocio con mensaje claro y sin ID interno")]
         [DataRow("general", DisplayName = "CP-51: Error inesperado sin detalle técnico")]
         public void CP51_MensajeDeErrorParaUsuario(string caso)
         {
@@ -725,10 +721,11 @@ namespace Pruebas
                 }
                 else if (caso == "negocio")
                 {
-                    Fake.ComoAdministrador();
-                    error = Assert.ThrowsException<InvalidOperationException>(() => GestorPaquetes.Instance.Nuevo(999999, 3));
-                    esperado = "No se encontró ningún evento con ese ID.";
-                    Assert.AreEqual(esperado, error.Message);
+                    var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                    Fake.ComoCliente(cliente);
+                    error = Assert.ThrowsException<InvalidOperationException>(() => GestorPaquetes.Instance.Nuevo(999999, cliente.Id));
+                    esperado = "Ese evento ya no está disponible. Actualizá la pantalla e intentá de nuevo.";
+                    StringAssert.Contains(error.Message, "ID");
                 }
                 else
                 {
@@ -739,6 +736,7 @@ namespace Pruebas
                 string mensaje = Visual.ManejadorErrores.MensajeParaUsuario(error);
                 Assert.AreEqual(esperado, mensaje);
                 Assert.IsFalse(mensaje.Contains("detalle técnico"));
+                Assert.IsFalse(mensaje.Contains("ID"), "No se muestran identificadores internos.");
             });
         }
 
@@ -746,8 +744,7 @@ namespace Pruebas
         {
             public ErrorDeBaseDeDatosDePrueba() : base("detalle técnico") { }
         }
-
-        // CP-52 — RF-06, RN-11: eliminar un evento durante el pago aborta con aviso y no registra un cobro.
+        // CP-52 — RF-06: eliminar un evento durante el pago aborta con aviso y no registra un cobro.
         [TestMethod("CP-52: Pago de evento eliminado vuelve al listado sin cobrar")]
         public void CP52_PagoDeEventoEliminado()
         {
@@ -760,7 +757,7 @@ namespace Pruebas
                 using (var pago = new Visual.frmPago { Compra = compra })
                 {
                     Cargar(pago);
-                    Fake.ComoAdministrador();
+                    Fake.ComoOrganizador();
                     GestorEventos.Instance.Eliminar(evento.Id);
                     Fake.ComoCliente(cliente);
                     DatosTarjeta tarjeta = Fake.Tarjeta();
@@ -769,8 +766,7 @@ namespace Pruebas
                     Control<TextBox>(pago, "txtVencimiento").Text = tarjeta.Vencimiento;
                     Control<TextBox>(pago, "txtCvv").Text = tarjeta.Cvv;
 
-                    DialogosPrueba.Comprobar(() => Control<Button>(pago, "btnPagar").PerformClick(),
-                        new DialogoEsperado { Titulo = "Pago no realizado", Texto = "ya no está pendiente" });
+                    DialogosPrueba.Comprobar(() => Control<Button>(pago, "btnPagar").PerformClick());
 
                     Assert.AreEqual(DialogResult.Abort, pago.DialogResult);
                     Assert.AreEqual(0, GestorCompras.Instance.PagosDe(compra).Count);

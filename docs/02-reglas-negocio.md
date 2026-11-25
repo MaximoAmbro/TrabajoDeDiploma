@@ -10,7 +10,20 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 | RN-02 | La contraseña tiene 8 caracteres como mínimo, con al menos una letra y un dígito. | E |
 | RN-03 | Toda cuenta nueva se crea con nivel Bronce y sin suscripción activa. | A |
 | RN-04 | Tras 5 intentos fallidos consecutivos la cuenta se bloquea por 15 minutos. | A |
-| RN-05 | Un usuario tiene un único perfil, Cliente o Administrador, excluyentes. | E |
+| RN-05 | Un usuario tiene un único perfil excluyente: Cliente, Organizador o Administrador de plataforma. El administrador de plataforma no es dueño de locales; el organizador administra solo los locales, eventos e ingresos de su cuenta. | E |
+
+## Seguridad de cuentas y autorización
+
+| ID | Regla | T |
+|---|---|---|
+| RN-40 | Para cambiar una contraseña se debe comprobar la contraseña actual. El rechazo no revela si el correo existe, si la contraseña es incorrecta o si la cuenta está bloqueada; los intentos y el bloqueo se aplican internamente. | A |
+| RN-41 | Las operaciones sobre datos privados de una cuenta solo pueden devolverlos o modificarlos para el usuario autenticado titular de esa cuenta. La sesión conserva una identidad verificada y no acepta como autorización un objeto de usuario alterado por quien llama. | A |
+| RN-42 | **DADA DE BAJA.** La autorización por perfil para gestión e ingreso fue reemplazada por RN-48; la autorización por pertenencia a los datos del Organizador, incluidos sectores, listas de espera e ingresos, está en RN-49. Los reportes se rigen por RN-34. El número no se reasigna. | — |
+| RN-43 | Una cuenta de Cliente debe verificar el correo antes de iniciar una compra. El código de verificación se envía al correo registrado; la entrega usa la bandeja simulada del sistema. | A |
+| RN-44 | Los códigos de verificación de correo, recuperación de contraseña y confirmación telefónica son de un solo uso, se almacenan protegidos, vencen según `CORREO_CODIGO_MIN` y admiten como máximo `CORREO_CODIGO_INTENTOS_MAX` intentos. La recuperación cambia la contraseña mediante las mismas validaciones y el mismo hash que el registro. | A |
+| RN-45 | Las operaciones de inicio de sesión, cambio de contraseña, compras, devoluciones, control de ingreso y gestión de eventos se registran en `Auditoria` con el usuario, la acción, la entidad afectada, la fecha y el resultado. Solo el Administrador de plataforma puede consultar esos registros, con filtros por período y acción. | A |
+| RN-46 | Una sesión sin actividad se cierra al cumplirse `SESION_INACTIVIDAD_MIN`. La aplicación avisa con `SESION_AVISO_SEG` segundos de anticipación; cualquier actividad reinicia el plazo. | A |
+| RN-47 | Una contraseña nueva debe cumplir la longitud y composición mínima de RN-02 y alcanzar el puntaje configurado en `PWD_FORTALEZA_MIN`, calculado por la variedad de minúsculas, mayúsculas, números y símbolos. | A |
 
 ## Eventos, sectores y disponibilidad
 
@@ -24,6 +37,16 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 | RN-11 | Un evento con entradas vendidas no se elimina: se suspende o se reprograma. | A |
 | RN-38 | La suma de las capacidades de los sectores de un evento no puede superar la capacidad del local donde se realiza. Se verifica al agregar o modificar un sector. | E |
 | RN-39 | **Preventa.** Mientras la fecha actual sea anterior a `Eventos.FinPreventa`, solo un cliente con suscripción activa puede iniciar una compra de ese evento. El evento igual se ve en el listado. `FinPreventa` en NULL significa que el evento no tiene preventa. Es el beneficio de preventa de RN-37. | A |
+
+## Solicitudes de Organizador y revisión del primer evento
+
+| ID | Regla | T |
+|---|---|---|
+| RN-50 | Solo una cuenta Cliente puede presentar una solicitud para ser Organizador y no puede mantener más de una solicitud pendiente. La solicitud pendiente no cambia el perfil ni concede permisos de Organizador. | A |
+| RN-51 | Antes de presentar la solicitud, el responsable debe ingresar un teléfono argentino válido y confirmarlo mediante un código de un solo uso enviado por el mecanismo de códigos del sistema. | A |
+| RN-52 | La solicitud valida el dígito verificador del CUIT y del CBU; también admite un alias bancario con el formato definido. La documentación debe ser una imagen PNG o JPEG válida, comprimida y de hasta 512 KB. La verificación externa de identidad es simulada y no sustituye la revisión del Administrador. | A |
+| RN-53 | Solo el Administrador de plataforma puede aprobar o rechazar solicitudes de Organizador. Ambas decisiones requieren un motivo de hasta 200 caracteres y registran la identidad del revisor y la fecha; aprobar cambia el perfil a Organizador y crea el local solicitado. | A |
+| RN-54 | La primera publicación de un Organizador se envía a revisión del Administrador y no aparece en el catálogo ni admite ventas mientras está en revisión. El Administrador puede aprobarla o rechazarla; para rechazar debe ingresar un motivo no vacío de hasta 500 caracteres. El rechazo devuelve el evento a Borrador y conserva el motivo para el Organizador. Si vuelve a publicarlo antes de que se haya aprobado un evento suyo, vuelve a revisión. Tras su primera aprobación, sus publicaciones siguientes son directas. | A |
 
 ## Compra y armado de paquetes
 
@@ -72,9 +95,11 @@ Tipo: **E** estructural (restricción de datos) · **D** derivación (cálculo) 
 
 | ID | Regla | T |
 |---|---|---|
-| RN-34 | Los reportes son accesibles únicamente al perfil Administrador. | A |
+| RN-34 | El administrador de plataforma accede a la administración global y a los reportes globales; los organizadores acceden a reportes limitados a eventos de sus propios locales. | A |
 | RN-35 | La lista de espera se ordena primero por los clientes que se inscribieron con suscripción activa y después por el resto; dentro de cada grupo, por orden de inscripción. La condición de suscriptor se **congela al inscribirse** (`ListaEspera.ConSuscripcion`): si después la suscripción vence o se cancela, el lugar no cambia. **Ventana de prioridad** (`1525202`): cuando un sector vuelve a tener una entrada (devolución, reserva vencida o pago rechazado) y el evento tiene algún inscripto con suscripción, durante `PRIORIDAD_ESPERA_MINUTOS` solo pueden comprar ese sector los inscriptos con suscripción; los demás reciben el rechazo RN-35. Sin inscriptos con suscripción no hay ventana. El instante sale de `Sectores.CupoLiberadoEl`. | E |
 | RN-36 | Un cliente se inscribe una sola vez en la lista de espera de un mismo evento. | E |
+| RN-48 | La gestión de locales, eventos y control de ingreso requiere perfil Organizador. | A |
+| RN-49 | Un Organizador solo puede consultar o modificar locales, eventos, sectores, ingresos y listas de espera pertenecientes a sus locales. | A |
 
 ---
 
@@ -105,6 +130,7 @@ No escribir estos valores en el código. Van en la tabla `Parametros`.
 | Clave | Regla | Valor inicial |
 |---|---|---|
 | `PWD_LONGITUD_MIN` | RN-02 | 8 |
+| `PWD_FORTALEZA_MIN` | RN-47 | 4 |
 | `LOGIN_INTENTOS_MAX` | RN-04 | 5 |
 | `LOGIN_BLOQUEO_MIN` | RN-04 | 15 |
 | `COMPRA_ENTRADAS_MAX` | RN-12 | 6 |
@@ -122,6 +148,10 @@ No escribir estos valores en el código. Van en la tabla `Parametros`.
 | `SUSCRIPCION_ANUAL_PRECIO` | RF-13 | 90000 (anexo A02: 4.590.000 ÷ 51) |
 | `SUSCRIPCION_SEGURO_DESCUENTO` | RN-37 | 1.000 (100 %: sin cargo) |
 | `PRIORIDAD_ESPERA_MINUTOS` | RN-35 | 15 (`BaseDatos/06-prioridad-temporal.sql`) |
+| `CORREO_CODIGO_MIN` | RN-44 | 10 |
+| `CORREO_CODIGO_INTENTOS_MAX` | RN-44 | 5 |
+| `SESION_INACTIVIDAD_MIN` | RN-46 | 15 |
+| `SESION_AVISO_SEG` | RN-46 | 60 |
 
 ## Conflictos resueltos
 

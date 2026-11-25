@@ -13,6 +13,82 @@ using static Pruebas.InterfazGrupoA;
 namespace Pruebas
 {
     [TestClass]
+    public class PruebasGrupoAPortadasEventos
+    {
+        // CP-177 — RF-19, RN-52: redimensionar y comprimir una imagen válida para su almacenamiento.
+        [TestMethod("CP-177: Codec reduce una imagen grande y conserva una portada decodificable")]
+        public void CP177_RedimensionaYComprime()
+        {
+            using (var original = new Bitmap(2400, 1600))
+            using (var grafico = Graphics.FromImage(original))
+            using (var entrada = new MemoryStream())
+            {
+                grafico.Clear(Color.MediumPurple);
+                original.Save(entrada, System.Drawing.Imaging.ImageFormat.Png);
+                entrada.Position = 0;
+                byte[] comprimida = Visual.ImagenEventoCodec.Preparar(entrada);
+                Assert.IsTrue(comprimida.Length <= Visual.ImagenEventoCodec.MaximoGuardadoBytes);
+                using (var flujo = new MemoryStream(comprimida))
+                using (var guardada = Image.FromStream(flujo))
+                {
+                    Assert.IsTrue(guardada.Width <= Visual.ImagenEventoCodec.AnchoMaximo);
+                    Assert.IsTrue(guardada.Height <= Visual.ImagenEventoCodec.AltoMaximo);
+                }
+            }
+        }
+
+        // CP-178 — RF-19, RN-52: rechazar contenido que no se puede decodificar como imagen.
+        [TestMethod("CP-178: Codec rechaza bytes que no son una imagen")]
+        public void CP178_RechazaArchivoFalso()
+        {
+            using (var entrada = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("esto no es una imagen")))
+            {
+                ArgumentException error = Assert.ThrowsException<ArgumentException>(() => Visual.ImagenEventoCodec.Preparar(entrada));
+                StringAssert.Contains(error.Message, "no contiene una imagen válida");
+            }
+        }
+
+        // CP-180 — RF-19, RN-52: rechazar archivos de imagen por encima del límite de carga.
+        [TestMethod("CP-180: Codec rechaza una imagen cuyo archivo supera 10 MB")]
+        public void CP180_RechazaArchivoDemasiadoGrande()
+        {
+            using (var entrada = new MemoryStream(new byte[Visual.ImagenEventoCodec.MaximoArchivoBytes + 1]))
+            {
+                ArgumentException error = Assert.ThrowsException<ArgumentException>(() => Visual.ImagenEventoCodec.Preparar(entrada));
+                StringAssert.Contains(error.Message, "supera el límite de 10 MB");
+            }
+        }
+
+        // CP-179 — RF-19, RN-49/RN-52: guardar la portada válida del evento y recuperarla desde la base.
+        [TestMethod("CP-179: Portada autorizada se guarda y se recupera desde la base")]
+        public void CP179_PersistenciaDePortada()
+        {
+            Fake.ComoOrganizador();
+            Evento evento = Fake.EventoBorradorSinSectores();
+            byte[] portada;
+            using (var imagen = new Bitmap(64, 40))
+            using (var flujo = new MemoryStream())
+            {
+                using (var grafico = Graphics.FromImage(imagen)) grafico.Clear(Color.Coral);
+                imagen.Save(flujo, System.Drawing.Imaging.ImageFormat.Png);
+                flujo.Position = 0;
+                portada = Visual.ImagenEventoCodec.Preparar(flujo);
+            }
+            GestorEventos.Instance.CambiarImagenPortada(evento.Id, portada);
+            Evento recargado = GestorEventos.Instance.ObtenerPorId(evento.Id);
+            CollectionAssert.AreEqual(portada, recargado.ImagenPortada);
+            using (var vista = new Visual.Componentes.PortadaEvento())
+            {
+                vista.Size = new Size(220, 120);
+                vista.Cargar(recargado.Nombre, recargado.Categoria, recargado.ImagenPortada);
+                Assert.IsTrue(vista.TieneImagen);
+                vista.Cargar(recargado.Nombre, recargado.Categoria, null);
+                Assert.IsFalse(vista.TieneImagen, "Sin imagen propia debe recuperar la portada generada.");
+            }
+        }
+    }
+
+    [TestClass]
     public class PruebasGrupoAReportesSemilla
     {
         // CP-86 — RF-11; PA-21, 9.15: los cinco reportes admiten la semilla sin datos de volumen.
@@ -209,7 +285,7 @@ namespace Pruebas
                         {
                             using (var archivo = new FileStream(ruta, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
                                 DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnExportar").PerformClick(),
-                                    new DialogoEsperado { Titulo = "Exportar", Texto = "No se pudo escribir el archivo." });
+                                    new DialogoEsperado { Texto = "Cerrá el archivo si está abierto" });
                             Assert.IsTrue(form.Visible); Assert.IsTrue(ControlDe<Button>(form, "btnExportar").Enabled);
                         }
                         else
@@ -287,8 +363,10 @@ namespace Pruebas
         }
         private static void Exportar(Form form, string ruta)
         {
-            DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnExportar").PerformClick(),
-                new DialogoEsperado { Titulo = "Exportar", Texto = ruta, Predeterminado = DialogResult.Yes, Respuesta = DialogResult.No });
+            ControlDe<Button>(form, "btnExportar").PerformClick();
+            Label aviso = ControlDe<Label>(form, "avisoSistema");
+            StringAssert.Contains(aviso.Text, "El reporte se guardó en tu carpeta de documentos.");
+            Assert.IsFalse(aviso.Text.Contains(ruta), "La interfaz no muestra rutas internas ni nombres de archivo.");
         }
     }
 }

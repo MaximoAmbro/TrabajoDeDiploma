@@ -1,0 +1,77 @@
+@startuml dominio-actualizado-3-organizacion
+!include _estilo.iuml
+skinparam nodesep 25
+skinparam ranksep 45
+hide empty members
+' Modelo de dominio actualizado, vista 3 de 3: solicitud para ser Organizador, registro de
+' auditoría y las enumeraciones del dominio (con los mismos valores que los CHECK de la base). Usuario, Cliente y Administrador están completos en la vista 1: acá solo su nombre.
+' Sin identificadores ni claves foráneas: las asociaciones los representan.
+
+class Usuario <<ver vista 1>>
+class Cliente <<ver vista 1>>
+class Administrador <<ver vista 1>>
+enum EstadoEvento {
+  Borrador
+  EnRevision
+  Publicado
+  Suspendido
+}
+enum NivelFidelidad {
+  Bronce
+  Plata
+  Oro
+}
+enum EstadoCompra {
+  Pendiente
+  Confirmada
+  Reembolsada
+  Vencida
+}
+enum EstadoEntrada {
+  Pendiente
+  Confirmada
+  Reembolsada
+  Vencida
+}
+enum EstadoPago {
+  Aprobado
+  Rechazado
+}
+enum EstadoSolicitud {
+  Pendiente
+  Aprobada
+  Rechazada
+}
+class "Solicitud de Organizador" as Solicitud {
+  responsable : string
+  cuit : string
+  telefono : string
+  nombreLocal : string
+  direccion : string
+  capacidad : int
+  documentacion : byte[]
+  cbuAlias : string
+  estado : EstadoSolicitud
+  motivoRevision : string
+  revisadaEl : DateTime?
+}
+class "Registro de auditoría" as Registro {
+  mailDelAutor : string
+  accion : string
+  entidad : string
+  fecha : DateTime
+  resultado : string
+}
+
+Usuario <|-- Cliente
+Usuario <|-- Administrador
+Cliente "1" -- "0..*$_" Solicitud : presenta
+Administrador "0..1" -- "0..*$_" Solicitud : revisa
+Usuario "0..1" -- "0..*$_" Registro : genera
+Solicitud -[hidden]down- EstadoEvento
+EstadoEvento -[hidden]right- EstadoSolicitud
+EstadoSolicitud -[hidden]right- NivelFidelidad
+EstadoEvento -[hidden]down- EstadoCompra
+EstadoCompra -[hidden]right- EstadoEntrada
+EstadoEntrada -[hidden]right- EstadoPago
+@enduml

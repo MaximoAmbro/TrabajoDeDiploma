@@ -33,9 +33,9 @@ namespace Negocio
             return new[] { "Paquete", "Composición", "Unid.", "Ingreso total", "Part." };
         }
 
-        public override DataTable Obtener(RepositorioReportes repo)
+        internal override DataTable Obtener(RepositorioReportes repo)
         {
-            DataTable crudo = repo.RankingPaquetes(InicioRango, FinRango, IdEvento);
+            DataTable crudo = repo.RankingPaquetes(InicioRango, FinRango, IdEvento, IdOrganizador);
             DataTable tabla = NuevaTabla(typeof(string), typeof(string), typeof(int), typeof(decimal), typeof(decimal));
             Formatear(tabla, 2, FormatoEntero);
             Formatear(tabla, 3, FormatoPesos);

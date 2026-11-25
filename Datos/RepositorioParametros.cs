@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class RepositorioParametros : RepositorioBase
+    internal sealed class RepositorioParametros : RepositorioBase
     {
         private static RepositorioParametros _instance;
 

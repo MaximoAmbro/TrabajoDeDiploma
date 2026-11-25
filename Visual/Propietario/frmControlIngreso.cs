@@ -7,6 +7,7 @@ namespace Visual
 {
     public partial class frmControlIngreso : FormularioEventAura
     {
+        private Componentes.EstadoVacio estadoSinEventos;
         public frmControlIngreso() { InitializeComponent(); }
 
         protected override void OnLoad(EventArgs e)
@@ -21,8 +22,19 @@ namespace Visual
                 btnRegistrar.Enabled = txtCodigo.Enabled;
                 lblResultado.Font = Tema.Titulo;
                 lblResultado.Text = txtCodigo.Enabled ? "Escaneá una entrada." : "No hay eventos con ingreso abierto en tus locales.";
+                if (!txtCodigo.Enabled)
+                {
+                    estadoSinEventos = new Componentes.EstadoVacio { Name = "estadoSinIngresoAbierto" };
+                    estadoSinEventos.AjustarA(new System.Drawing.Rectangle(24, 140, 672, 272));
+                    estadoSinEventos.Cargar("Todavía no hay eventos con el ingreso abierto en tus locales. Cuando empiece la ventana, vas a poder validar entradas acá.", "Volver al panel");
+                    estadoSinEventos.Accion += () => Close();
+                    Controls.Add(estadoSinEventos);
+                    estadoSinEventos.BringToFront();
+                    lblEvento.Visible = cmbEventos.Visible = lblCodigo.Visible = txtCodigo.Visible = btnRegistrar.Visible = lblResultado.Visible = lblContador.Visible = false;
+                }
                 ActualizarContador();
-                txtCodigo.Focus();
+                if (txtCodigo.Enabled) txtCodigo.Focus();
+                else btnVolver.Focus();
             }
             catch (ReglaNegocioException ex) { Avisos.Regla("Control de ingreso", ex); Close(); }
         }
@@ -36,7 +48,7 @@ namespace Visual
                 ResultadoIngreso resultado = GestorIngresos.Instance.Registrar(txtCodigo.Text, evento.Id);
                 lblResultado.Text = resultado.Mensaje;
                 lblResultado.ForeColor = resultado.Valido ? Tema.Exito : Tema.Error;
-                ActualizarContador();
+                if (resultado.Motivo != MotivoIngreso.NoAutorizado) ActualizarContador();
                 txtCodigo.Clear();
                 txtCodigo.Focus();
             }

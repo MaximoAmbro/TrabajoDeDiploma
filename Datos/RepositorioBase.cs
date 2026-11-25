@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 namespace Datos
 {
     // Base de todos los repositorios: apertura de conexión y helpers de comandos.
-    public abstract class RepositorioBase
+    internal abstract class RepositorioBase
     {
         // Códigos de SQL Server para violación de UNIQUE / PRIMARY KEY.
         private const int ErrorClaveUnica = 2627;
@@ -62,7 +62,7 @@ namespace Datos
 
     // Se lanza cuando la base rechaza un registro por una restricción de unicidad.
     // Negocio la traduce a la regla que corresponda (p. ej. RN-01).
-    public class RegistroDuplicadoException : Exception
+    internal class RegistroDuplicadoException : Exception
     {
         public RegistroDuplicadoException(string mensaje, Exception interna)
             : base(mensaje, interna) { }

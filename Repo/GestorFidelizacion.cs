@@ -24,6 +24,16 @@ namespace Negocio
 
         private GestorFidelizacion() { }
 
+        // Proyección opcional para la barra: una sesión cuyo usuario ya no existe
+        // no debe abrir un cuadro de excepción por intentar pintar su encabezado.
+        // No sirve para autorizar operaciones: esas conservan sus guardas existentes.
+        public Cliente ClienteActualParaEncabezado()
+        {
+            var sesion = GestorSesion.Instance.UsuarioActual;
+            return sesion == null || sesion.TipoUsuario != "Cliente" ? null :
+                RepositorioFidelizacion.Instance.ObtenerCliente(sesion.Id);
+        }
+
         public Cliente ObtenerCliente(int idUsuario)
         {
             GestorSesion.Instance.RequerirUsuario(idUsuario);

@@ -2,8 +2,9 @@
 !include _estilo.iuml
 skinparam nodesep 22
 skinparam ranksep 40
-' DER, vista 2 de 2: compra, pago, entradas, servicios contratados y seguro.
-' Fuente: BaseDatos/01-esquema.sql y 04-seguridad-ingreso.sql, más el CHECK de Entradas.Estado.
+' DER, vista 2 de 3: compra, pago, entradas, servicios contratados y seguro.
+' Fuente: BaseDatos/01-esquema.sql, 04-seguridad-ingreso.sql, 07-indice-unico-seguros.sql y
+' 10-restringir-cantidad-vendida.sql, más el CHECK de Entradas.Estado.
 ' Usuario, Eventos, Sectores y Servicios están completos en la vista 1: acá solo su clave.
 
 entity Usuario {
@@ -44,7 +45,7 @@ entity Entradas {
   ID_Compra : INT <<FK>>
   ID_Sector : INT <<FK>>
   * Precio : DECIMAL(12,2)
-  CantidadVendida : INT
+  * CantidadVendida : INT <<CK>>
   * FechaVenta : DATETIME
   * Estado : VARCHAR(12) <<CK>>
   CodigoQR : VARCHAR(64) <<UQ>>
@@ -71,7 +72,7 @@ entity CompraServicios {
 entity Seguros {
   * ID : INT <<PK>>
   --
-  * ID_Entrada : INT <<FK>>
+  * ID_Entrada : INT <<FK, UQ>>
   * Precio : DECIMAL(12,2)
   * VenceEl : DATETIME
 }
@@ -84,7 +85,7 @@ CompraServicios "0..*$_" }o-down-|| "1$_" Servicios
 Usuario "1$_" ||--o{ "0..*$_" Entradas
 Eventos "1$_" ||--o{ "0..*$_" Entradas
 Sectores "0..1$_" |o--o{ "0..*$_" Entradas
-Entradas "1$_" ||--o{ "0..*$_" Seguros
+Entradas "1$_" ||--o| "0..1$_" Seguros
 
 Pagos -[hidden]down- CompraServicios
 @enduml

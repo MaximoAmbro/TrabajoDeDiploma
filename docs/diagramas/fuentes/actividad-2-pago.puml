@@ -7,10 +7,10 @@ skinparam SwimlaneTitleFontSize 13
 skinparam ActivityBorderColor #333333
 skinparam ActivityBackgroundColor #F7F7F7
 skinparam ActivityDiamondBackgroundColor #F7F7F7
-' Diagrama de actividad del proceso de negocio, parte 2 de 3: pago y entrega de las entradas.
+' Diagrama de actividad del proceso de negocio, parte 3 de 4: pago y entrega de las entradas.
 ' Sin recomendaciones de eventos al final: RF-09 no está construido.
 
-|Administrador|
+|Organizador|
 |Cliente|
 (A)
 repeat

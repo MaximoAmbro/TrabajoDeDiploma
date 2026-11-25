@@ -27,19 +27,27 @@ namespace Negocio
         // Devuelve null si no existe.
         public Local PorId(int idLocal)
         {
-            return RepositorioLocales.Instance.ObtenerPorId(idLocal);
+            Local local = RepositorioLocales.Instance.ObtenerPorId(idLocal);
+            if (local == null) return null;
+            var sesion = GestorSesion.Instance.UsuarioActual;
+            if (sesion != null && sesion.TipoUsuario == "Organizador")
+                GestorSesion.Instance.RequerirOrganizadorDeLocal(local.IdPropietario);
+            else if ((sesion == null || sesion.TipoUsuario == "Cliente") &&
+                !RepositorioEventos.Instance.ObtenerPorLocal(idLocal).Exists(e => e.Estado == GestorEventos.EstadoPublicado))
+                return null;
+            return local;
         }
 
         public List<Local> PorPropietario(int idPropietario)
         {
-            GestorSesion.Instance.RequerirAdministrador();
-            return RepositorioLocales.Instance.ObtenerPorPropietario(idPropietario);
+            GestorSesion.Instance.RequerirOrganizadorDeLocal(idPropietario);
+            return RepositorioLocales.Instance.ObtenerPorPropietario(GestorSesion.Instance.UsuarioActual.Id);
         }
 
         // Devuelve el Id generado.
         public int Registrar(Local l)
         {
-            GestorSesion.Instance.RequerirAdministrador();
+            GestorSesion.Instance.RequerirOrganizador();
             if (l == null)
             {
                 throw new ArgumentNullException(nameof(l));
@@ -52,6 +60,8 @@ namespace Negocio
             {
                 throw new ArgumentException("La capacidad del local no puede ser negativa.");
             }
+
+            l.IdPropietario = GestorSesion.Instance.UsuarioActual.Id;
 
             l.Id = RepositorioLocales.Instance.Insertar(l);
             return l.Id;

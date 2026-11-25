@@ -94,6 +94,35 @@ rehicieron.
 | 15 | Patrón nombrado que no se ve en el diagrama | **Sí, con el Anexo 1 y el Anexo 2** | El Anexo 1 nombra Singleton, Repository, Strategy y la herencia de reportes, y las vistas 8a a 8c los muestran. Sin el Anexo 2, la p. 64 dice «del mismo modo que GestorClientes», que no es Singleton |
 | 16 | Figuras ilegibles al 100 % | **No se sabe** en los diagramas chicos y en las capturas viejas | Se ve al armar el PDF: hay que leer cada figura al 100 % |
 
+### Pasada final, sobre el documento con todo aplicado (`dba674c`)
+
+Pedida por JC después del cierre de Codex. Se corrió sobre la lista regenerada: script 07, las
+tres capturas del guion, U-09, M-22 y las cifras de 148 casos y 276 ejecuciones. La tabla de
+arriba queda como historia.
+
+| # | Error | Pasa | Qué se comprobó |
+|---|---|---|---|
+| 1 | FK duplicada con la línea | Sí | La vista 3 regenerada no agrega atributos: `Seguro` llega a la entrada por la línea |
+| 2 | Asociaciones sin multiplicidad | Sí | La relación cambiada lleva 0..1 y 1 |
+| 3 | Composición mal usada | Sí (no hay) | — |
+| 4 | Navegabilidad invertida | Sí | `Seguro → Entrada`, igual que antes |
+| 5 | 1:N dibujado como 1:1 sin UNIQUE | **Sí, ahora completo** | Entrada — Seguro es 0..1 y tiene `UX_Seguros_ID_Entrada` |
+| 6 | N:M sin tabla intermedia | Sí | — |
+| 7 | Herencia por conveniencia | Sí | — |
+| 8 | include/extend al revés o sin condición | **Sí** | Los diagramas chicos de CU-01 a CU-08 se quitan (D-7, 14/11). Queda solo el general, revisado |
+| 9 | Robustez con conexiones prohibidas | Sí | Sin cambios |
+| 10 | Secuencia que no coincide con el código | Sí | Las 17 operaciones existen en `dba674c`. El Anexo 2 está en la lista |
+| 11 | Clases de software en el dominio | Sí | — |
+| 12 | El sistema como actor | **Sí** | El diagrama chico de CU-06, con la pasarela como actor, se quita (D-7) |
+| 13 | Estados distintos | Sí | Sin cambios en las cuatro listas; los Anexos 1 y 2 están en la lista |
+| 14 | Objetivos que no son medibles | Sí | OE-3, OE-5 y OE-6 reescritos en la p. 11 y en la trazabilidad inversa de la p. 107 |
+| 15 | Patrón nombrado que no se ve | Sí | Sin cambios |
+| 16 | Figuras ilegibles al 100 % | **Sí** | Diagramas: 8,5 pt o más. Guion: 12,2 a 14,9 pt. Instructivo, decisión de JC sobre el recorte de Codex: **la figura 2 se recortó** y, a su tamaño real (10,7 cm), su letra menor queda en 9 pt; el resumen que sale del recorte ya está en la figura 3. **La figura 1 queda entera, a 7,2 pt, por decisión:** un recorte suficiente para mejorarla le quitaría los filtros, las columnas o el botón Comprar, que es lo que la figura tiene que mostrar |
+
+**Lo que esta pasada no pudo hacer:** releer el texto de las pp. 48 y 49 contra las capturas
+nuevas. El PDF no se puede abrir desde aquí sin instalar una herramienta. El texto de esas páginas
+se auditó el 13/11 (E-01 y E-02), y las capturas nuevas son de las mismas pantallas.
+
 ## 3. Los textos que faltaban
 
 **I-1 · pp. 10 y 11, Objetivos específicos 3, 5 y 6 · R** (errores 4 y 14). Reemplazar cada

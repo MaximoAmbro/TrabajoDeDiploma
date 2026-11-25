@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmRegistrarLocal
     {
@@ -44,16 +44,16 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(24, 144);
+            this.label5.Location = new System.Drawing.Point(24, 204);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(248, 20);
             this.label5.TabIndex = 49;
-            this.label5.Text = "Direccion";
+            this.label5.Text = "Dirección";
             // 
             // txtDireccion
             // 
             this.txtDireccion.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDireccion.Location = new System.Drawing.Point(24, 168);
+            this.txtDireccion.Location = new System.Drawing.Point(24, 228);
             this.txtDireccion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(248, 28);
@@ -62,7 +62,7 @@
             // btnregistrarse
             // 
             this.btnregistrarse.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnregistrarse.Location = new System.Drawing.Point(224, 296);
+            this.btnregistrarse.Location = new System.Drawing.Point(224, 356);
             this.btnregistrarse.Margin = new System.Windows.Forms.Padding(6, 2, 6, 2);
             this.btnregistrarse.Name = "btnregistrarse";
             this.btnregistrarse.Size = new System.Drawing.Size(168, 40);
@@ -74,7 +74,7 @@
             // 
             this.lblyatengocuen.AutoSize = false;
             this.lblyatengocuen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblyatengocuen.Location = new System.Drawing.Point(24, 296);
+            this.lblyatengocuen.Location = new System.Drawing.Point(24, 356);
             this.lblyatengocuen.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblyatengocuen.Name = "lblyatengocuen";
             this.lblyatengocuen.Size = new System.Drawing.Size(136, 40);
@@ -85,7 +85,7 @@
             // txtAltura
             // 
             this.txtAltura.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtAltura.Location = new System.Drawing.Point(288, 168);
+            this.txtAltura.Location = new System.Drawing.Point(288, 228);
             this.txtAltura.Margin = new System.Windows.Forms.Padding(6, 2, 6, 2);
             this.txtAltura.Name = "txtAltura";
             this.txtAltura.Size = new System.Drawing.Size(104, 28);
@@ -94,7 +94,7 @@
             // lblmail
             // 
             this.lblmail.AutoSize = true;
-            this.lblmail.Location = new System.Drawing.Point(288, 144);
+            this.lblmail.Location = new System.Drawing.Point(288, 204);
             this.lblmail.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblmail.Name = "lblmail";
             this.lblmail.Size = new System.Drawing.Size(104, 20);
@@ -104,7 +104,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(24, 80);
+            this.label6.Location = new System.Drawing.Point(24, 140);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(368, 20);
             this.label6.TabIndex = 43;
@@ -113,7 +113,7 @@
             // txtCapacidad
             // 
             this.txtCapacidad.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtCapacidad.Location = new System.Drawing.Point(24, 232);
+            this.txtCapacidad.Location = new System.Drawing.Point(24, 292);
             this.txtCapacidad.Margin = new System.Windows.Forms.Padding(6, 2, 6, 2);
             this.txtCapacidad.Name = "txtCapacidad";
             this.txtCapacidad.Size = new System.Drawing.Size(368, 28);
@@ -122,7 +122,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 208);
+            this.label3.Location = new System.Drawing.Point(24, 268);
             this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(368, 20);
@@ -132,7 +132,7 @@
             // txtNombre
             // 
             this.txtNombre.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtNombre.Location = new System.Drawing.Point(24, 104);
+            this.txtNombre.Location = new System.Drawing.Point(24, 164);
             this.txtNombre.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(368, 28);
@@ -141,7 +141,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(368, 32);
@@ -152,7 +152,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(416, 360);
+            this.ClientSize = new System.Drawing.Size(416, 420);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtDireccion);
             this.Controls.Add(this.btnregistrarse);
@@ -169,6 +169,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventAura · Registrar local";
             this.Load += new System.EventHandler(this.frmRegistrarLocal_Load);
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(416, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -187,5 +192,6 @@
         private Visual.Componentes.EtiquetaRotulo label3;
         private System.Windows.Forms.TextBox txtNombre;
         private Visual.Componentes.EtiquetaTitulo label1;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

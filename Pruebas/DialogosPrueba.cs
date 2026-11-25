@@ -93,8 +93,32 @@ namespace Pruebas
                 accion();
                 timer.Stop();
             }
-            Assert.AreEqual(0, pendientes.Count, "No aparecieron todos los diálogos esperados.");
+            while (pendientes.Count > 0)
+            {
+                DialogoEsperado esperado = pendientes.Dequeue();
+                Form visible = Application.OpenForms.Cast<Form>().LastOrDefault(f => f.Visible);
+                Control aviso = visible == null ? null : visible.Controls.Find("avisoSistema", true).FirstOrDefault();
+                if (aviso == null && visible != null)
+                    aviso = Descendientes(visible).FirstOrDefault(c => c.Name.StartsWith("errorInline_", StringComparison.Ordinal));
+                if (aviso == null) errores.Add("No apareció el aviso en pantalla esperado: " + esperado.Texto);
+                else
+                {
+                    esperado.TextoObservado = aviso.Text;
+                    esperado.TituloObservado = string.Empty;
+                    if (!aviso.Text.Contains(esperado.Texto)) errores.Add($"Aviso en pantalla: '{aviso.Text}', esperado '{esperado.Texto}'.");
+                }
+            }
+            Assert.AreEqual(0, pendientes.Count, "No aparecieron todos los diálogos o avisos esperados.");
             Assert.AreEqual(0, errores.Count, string.Join(Environment.NewLine, errores));
+        }
+
+        private static IEnumerable<Control> Descendientes(Control padre)
+        {
+            foreach (Control hijo in padre.Controls)
+            {
+                yield return hijo;
+                foreach (Control anidado in Descendientes(hijo)) yield return anidado;
+            }
         }
 
         private static string Clase(IntPtr ventana) { var texto = new StringBuilder(256); GetClassName(ventana, texto, texto.Capacity); return texto.ToString(); }

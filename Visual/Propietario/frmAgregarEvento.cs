@@ -15,6 +15,7 @@ namespace Visual.Propietario
 {
     public partial class frmAgregarEvento : FormularioEventAura
     {
+        private byte[] _imagenPortada;
         public int IDUsuario; public int IDlocal; public string NombreUsuario; public string NombreLocal;
         public frmAgregarEvento()
         {
@@ -22,20 +23,40 @@ namespace Visual.Propietario
             // Items y no DataSource: con DataSource, WinForms preselecciona el primer valor al
             // mostrarse y la categoría dejaría de ser una elección explícita.
             cmbCategoria.Items.AddRange(GestorEventos.Categorias.ToArray<object>());
+            txtNombre.TextChanged += (s, e) => portadaEvento.Cargar(string.IsNullOrWhiteSpace(txtNombre.Text) ? "Tu evento" : txtNombre.Text, CategoriaActual(), _imagenPortada);
+            cmbCategoria.SelectedIndexChanged += (s, e) => portadaEvento.Cargar(string.IsNullOrWhiteSpace(txtNombre.Text) ? "Tu evento" : txtNombre.Text, CategoriaActual(), _imagenPortada);
+            txtNombre.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtNombre);
+            cmbCategoria.SelectedIndexChanged += (s, e) => ValidacionCampo.Limpiar(cmbCategoria);
         }
 
-        // El evento se guarda en Borrador y se vuelve al listado. Se publica solo al agregarle,
-        // desde Administrar evento, su primer sector con capacidad mayor que cero.
+        private string CategoriaActual() => cmbCategoria.SelectedItem == null ? "Portada generada" : cmbCategoria.SelectedItem.ToString();
+
+        private void btnElegirPortada_Click(object sender, EventArgs e)
+        {
+            using (var selector = new OpenFileDialog { Title = "Elegí una portada", Filter = "Imágenes|*.png;*.jpg;*.jpeg;*.bmp;*.gif|Todos los archivos|*.*" })
+            {
+                if (selector.ShowDialog(this) != DialogResult.OK) return;
+                try
+                {
+                    using (var archivo = System.IO.File.OpenRead(selector.FileName)) _imagenPortada = ImagenEventoCodec.Preparar(archivo);
+                    portadaEvento.Cargar(string.IsNullOrWhiteSpace(txtNombre.Text) ? "Tu evento" : txtNombre.Text, CategoriaActual(), _imagenPortada);
+                }
+                catch (ArgumentException ex) { Avisos.Informativo(this, ex.Message); }
+            }
+        }
+
+        // El evento se guarda en Borrador y se vuelve al listado. Agregar sectores no lo publica:
+        // desde Administrar evento, el organizador elige Publicar cuando haya capacidad disponible.
         private void btnRegistrar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
-                MessageBox.Show("Ingresá el nombre del evento.", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtNombre, "Escribí el nombre del evento."); txtNombre.Focus();
                 return;
             }
             if (cmbCategoria.SelectedItem == null)
             {
-                MessageBox.Show("Seleccioná la categoría del evento.", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(cmbCategoria, "Seleccioná la categoría del evento."); cmbCategoria.Focus();
                 return;
             }
 
@@ -46,7 +67,8 @@ namespace Visual.Propietario
                 IdLocal = IDlocal,
                 Categoria = cmbCategoria.SelectedItem.ToString(),
                 // RN-39: destildado = sin preventa.
-                FinPreventa = dtpFinPreventa.Checked ? dtpFinPreventa.Value : (DateTime?)null
+                FinPreventa = dtpFinPreventa.Checked ? dtpFinPreventa.Value : (DateTime?)null,
+                ImagenPortada = _imagenPortada
             };
 
             try
@@ -55,11 +77,11 @@ namespace Visual.Propietario
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show(ex.Message, "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, ex.Message);
                 return;
             }
-            MessageBox.Show("Evento guardado como borrador. Para publicarlo, agregale un sector desde «Administrar Evento».", "Agregar evento", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            VolverAlListado();
+            var listado = VolverAlListado();
+            Avisos.Informativo(listado, "Evento guardado como borrador. Agregale un sector para publicarlo.");
         }
 
         private void lblVolver_Click(object sender, EventArgs e)
@@ -67,7 +89,7 @@ namespace Visual.Propietario
             VolverAlListado();
         }
 
-        private void VolverAlListado()
+        private frmEventosLocal VolverAlListado()
         {
             frmEventosLocal frm = new frmEventosLocal();
             frm.NombreUsuario = NombreUsuario;
@@ -75,6 +97,7 @@ namespace Visual.Propietario
             frm.IDUsuario = IDUsuario;
             frm.NombreLocal = NombreLocal;
             frm.Show(); this.Hide();
+            return frm;
         }
 
         // ------------------------------------- metodo -------------------------------------

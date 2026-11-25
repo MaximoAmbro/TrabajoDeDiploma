@@ -34,7 +34,7 @@ namespace Pruebas
             Fake.Limpiar();
         }
 
-        // CP-01 a CP-04 — RN-19 + RN-20: compras confirmadas en la ventana → nivel y descuento.
+        // CP-01 a CP-04 — RF-08, RN-19/RN-20: derivar nivel y descuento segun compras confirmadas.
         [DataTestMethod]
         [DataRow(2, NivelFidelidad.Bronce, "0.000", DisplayName = "CP-01: 2 compras → Bronce, 0 %")]
         [DataRow(3, NivelFidelidad.Plata, "0.050", DisplayName = "CP-02: 3 compras → Plata, 5 %")]
@@ -52,8 +52,8 @@ namespace Pruebas
                             GestorFidelizacion.Instance.PorcentajePara(nivel));
         }
 
-        // CP-05 — RN-21: Oro, entradas por $40.000 y un servicio de $30.000. El descuento es
         // $3.000 y el servicio no se descuenta.
+        // CP-05 — RF-05/RF-08, RN-21: aplicar el descuento solo a las entradas.
         [TestMethod]
         public void CP05_ElDescuentoNoAlcanzaALosServicios()
         {
@@ -73,7 +73,7 @@ namespace Pruebas
             Assert.AreEqual(r.SubtotalEntradas + r.Servicios + r.CargoServicio + r.Seguro, r.Total);
         }
 
-        // CP-06 — RN-19: 7 compras, una de hace 13 meses: queda fuera de la ventana → Plata.
+        // CP-06 — RF-08, RN-19: excluir compras fuera de la ventana movil de doce meses.
         [TestMethod]
         public void CP06_LaCompraDeHace13MesesQuedaFueraDeLaVentana()
         {
@@ -85,7 +85,7 @@ namespace Pruebas
             Assert.AreEqual(NivelFidelidad.Plata, GestorFidelizacion.Instance.DeterminarNivel(c.Id, DateTime.Now));
         }
 
-        // CP-07 — RN-16: cambia la tarifa con la compra ya iniciada; se factura el precio congelado.
+        // CP-07 — RF-06, RN-16: conservar la tarifa congelada al iniciar la compra.
         [TestMethod]
         public void CP07_SeFacturaElPrecioCongelado()
         {
@@ -109,8 +109,8 @@ namespace Pruebas
             Assert.AreEqual(60000m, GestorPaquetes.Instance.SubtotalEntradas(Fake.Paquete(e, 2, false)));
         }
 
-        // CP-08 — RN-22: con 6 compras hace la séptima. Se cobra al 5 % (Plata) y Oro rige desde
         // la octava. Recorre Iniciar y Confirmar enteros.
+        // CP-08 — RF-08, RN-22: aplicar el nuevo nivel a partir de la operacion siguiente.
         [TestMethod]
         public void CP08_LaSeptimaSeCobraAl5YOroRigeDesdeLaOctava()
         {
@@ -133,8 +133,8 @@ namespace Pruebas
             Assert.AreEqual(0.075m, octava.DescuentoAplicado);
         }
 
-        // CP-09 — RN-23 + RN-24: Oro con 7 compras devuelve una. El contador baja a 6; el nivel
         // persistido se mantiene hasta la reevaluación mensual.
+        // CP-09 — RF-08, RN-23/RN-24: recalcular compras reembolsadas sin bajar el nivel hasta su reevaluacion.
         [TestMethod]
         public void CP09_ReembolsoBajaElContadorPeroNoElNivel()
         {
@@ -157,7 +157,7 @@ namespace Pruebas
             Assert.AreEqual(NivelFidelidad.Plata, despues.Nivel, "En la reevaluación mensual pasa a Plata.");
         }
 
-        // CP-10 — RN-37: Oro con suscripción activa. 7,5 % y ni un punto más.
+        // CP-10 — RF-08/RF-13, RN-37: los beneficios de suscripcion no acumulan descuento porcentual.
         [TestMethod]
         public void CP10_LaSuscripcionNoSumaPorcentaje()
         {

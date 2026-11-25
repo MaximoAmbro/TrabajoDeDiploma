@@ -41,8 +41,9 @@ ejecuciones. Donde este archivo da un texto para el mismo lugar, **vale este**.
 ## 2. Reglas de negocio (páginas 25 a 27, 32, 33 y 55)
 
 **A-01 · p. 25 · R.** Dice: «los once requerimientos funcionales (RF-01 a RF-11)». Poner: «los
-trece requerimientos funcionales (RF-01 a RF-13)». *Razón:* el propio documento agrega RF-12 y
-RF-13 en la p. 23, y las reglas RN-06, RN-07 y RN-11 los citan como origen.
+veintidós requerimientos funcionales (RF-01 a RF-22)». *Razón:* el propio documento agrega RF-12
+y RF-13 en la p. 23, y la versión 2.6 agrega RF-14 a RF-22 (aprobados por JC el 19/11); las
+reglas citan esos requerimientos como origen.
 
 **A-02 · p. 26 · RN-11 · R.** Dice: «Un evento con entradas vendidas no puede eliminarse: sólo
 puede suspenderse o reprogramarse, conservando la trazabilidad de lo vendido.» Poner: «Un evento
@@ -133,8 +134,16 @@ documento.
 | Horas de ingreso antes del evento | RN-18 | 6 |
 | Horas de ingreso después del evento | RN-18 | 12 |
 | Minutos de prioridad de los suscriptores al liberarse un lugar | RN-35 | 15 |
+| Vigencia del código enviado por correo | RN-44 | 10 minutos |
+| Intentos para usar un código enviado por correo | RN-44 | 5 |
+| Minutos de inactividad antes de cerrar la sesión | RN-46 | 15 |
+| Segundos de aviso antes del cierre por inactividad | RN-46 | 60 |
+| Puntaje mínimo de fortaleza de la contraseña (de 0 a 5) | RN-47 | 4 |
 
-*Razón:* base. Son los valores de `BaseDatos/02-semilla.sql`.
+*Razón:* base. Son los valores de `BaseDatos/02-semilla.sql`. Los cinco últimos los agrega
+también `BaseDatos/08-seguridad-cuenta-auditoria.sql`. El puntaje de fortaleza suma un punto por
+cada condición que cumple la contraseña: largo mínimo, minúscula, mayúscula, dígito y símbolo
+(`GestorUsuarios.PuntajeFortaleza`).
 
 **A-11 · p. 33 · Conflictos · R** (solo si se aplica el ítem 6 de CORRECCIONES, RN-35). Dice:
 «tres pares de reglas». Poner: «cuatro pares de reglas». Y agregar la fila:
@@ -154,15 +163,18 @@ exportables.» Poner: «El sistema debe mostrar tablas con datos ficticios, expo
 *Razón:* `frmReportes` tiene grilla y «Exportar PDF», sin gráficos.
 
 **B-03 · p. 23 · RF-12 · R.** Dice: «Permitir al Administrador crear, modificar y desactivar
-eventos, definiendo sus sectores, capacidades y precios.» Poner: «Permitir al Administrador
-crear, suspender y eliminar eventos, agregar y quitar sus sectores con capacidad y precio, y
-fijar su período de preventa.» *Razón:* `GestorEventos` (completa T-7).
+eventos, definiendo sus sectores, capacidades y precios.» Poner: «Permitir al Organizador
+crear, publicar, suspender y eliminar eventos de sus locales, agregar y quitar sus sectores con
+capacidad y precio, y fijar su período de preventa.» *Razón:* `GestorEventos` (completa T-7);
+publicar es explícito desde la versión 2.6 (RF-21).
 
 **B-04 · p. 35 · R+N.** Dice: «Los once requerimientos funcionales y los cinco no funcionales».
-Poner: «Los trece requerimientos funcionales y los cinco no funcionales».
+Poner: «Los veintidós requerimientos funcionales y los cinco no funcionales».
 - Dice: «nueve de los once requerimientos funcionales quedaran en esa categoría, concentrando
   alrededor del 85 % del esfuerzo». Poner: «diez de los trece requerimientos funcionales
-  quedaran en esa categoría, concentrando alrededor del 80 % del esfuerzo estimado».
+  estimados quedaran en esa categoría, concentrando alrededor del 80 % del esfuerzo estimado».
+  Esa proporción es la de la estimación aprobada; los nueve requerimientos de la versión 2.6 se
+  midieron después (ver «Estimación de costos») y no la modifican.
 - *Cuenta:* 49 + 5 + 8 = 62 de 78 puntos, que da 79,5 %.
 
 **B-05 · p. 37 · W-06 · R.** En la columna Motivo, dice: «Requiere hardware específico. El código
@@ -213,13 +225,35 @@ EventAura» hasta «nivel alcanzado y beneficios vigentes.», **por:**
 > El nivel de fidelidad (Bronce, Plata u Oro) se determina por la cantidad de compras confirmadas
 > en los últimos doce meses, y fija el descuento sobre las entradas. La suscripción, mensual o
 > anual, no otorga descuento: bonifica el seguro, habilita la preventa y da prioridad en la lista
-> de espera. Si un evento está agotado, el cliente puede inscribirse en su lista de espera. El
-> Administrador registra locales, crea eventos con sus sectores y su preventa, consulta las
-> listas de espera, controla el ingreso y genera cinco reportes de gestión exportables a PDF.
+> de espera. Si un evento está agotado, el cliente puede inscribirse en su lista de espera.
+>
+> El sistema distingue tres perfiles. Un cliente puede solicitar ser Organizador con los datos
+> del responsable, del local y de su cuenta bancaria; la solicitud no le da permisos hasta que el
+> Administrador de la plataforma la aprueba. El Organizador registra sus locales y crea eventos,
+> que quedan en borrador hasta que los publica, con sus sectores y su preventa; el primer evento
+> de un Organizador nuevo pasa por la revisión del Administrador antes de llegar al catálogo.
+> También consulta las listas de espera de sus eventos, controla el ingreso y genera cinco
+> reportes de gestión exportables a PDF, limitados a sus propios eventos. El Administrador de la
+> plataforma no es dueño de locales: revisa las solicitudes y los primeros eventos, consulta los
+> mismos reportes sobre todos los eventos y el registro de auditoría, y da de alta a otros
+> administradores.
+>
+> Para registrarse, el visitante crea una cuenta de Cliente y confirma su correo con un código de
+> un solo uso; sin el correo verificado no puede comprar. Quien olvida su contraseña la
+> restablece con un código enviado al correo de su cuenta, y la respuesta al pedido es la misma
+> exista o no la cuenta. Los códigos vencen, admiten un número limitado de intentos y sirven una
+> sola vez; pedir uno nuevo anula el anterior. En esta versión el envío es simulado: cada mensaje
+> se escribe en un archivo de correo fuera de la aplicación, que la aplicación no puede abrir ni
+> leer.
+> La sesión se cierra sola después de un período sin actividad, y toda contraseña nueva debe
+> alcanzar una fortaleza mínima. El inicio de sesión, los cambios de contraseña, la emisión de
+> códigos y los restablecimientos, exitosos o rechazados, quedan en el registro de auditoría.
 
 *Razón:* código. Cada afirmación sale de un gestor: `GestorEventos.Buscar`, `GestorPaquetes`,
 `GestorFidelizacion.CalcularDescuento`, `GestorCompras.Iniciar`, `Confirmar` y `Reembolsar`,
-`GestorIngresos`, `GestorSuscripciones`, `GestorListaEspera` y `GestorReportes`.
+`GestorIngresos`, `GestorSuscripciones`, `GestorListaEspera` y `GestorReportes`; los dos
+párrafos de la versión 2.6, de `GestorSolicitudesOrganizador`, `GestorEventos.Publicar`,
+`AprobarPrimerEvento` y `RechazarPrimerEvento`, `GestorCodigosCorreo`, `ControlSesionInactiva` y `GestorAuditoria` (commit `5a4b645`).
 
 > Si se elige la opción (b) de D-6, la oración de la lista de espera agrega: «; el sistema no
 > envía avisos (W-03)».
@@ -234,17 +268,27 @@ administrador de eventos.», **por:**
 > ticketera local.
 >
 > **Inclusiones:**
-> - el registro de clientes y el inicio de sesión;
-> - el alta de locales y de eventos, con sus sectores, precios y período de preventa;
-> - la búsqueda de eventos y el armado de paquetes personalizados: entradas y servicios
->   complementarios (hospedaje, traslado, merchandising y experiencia VIP);
+> - el registro de clientes y el inicio de sesión, con tres perfiles: cliente, organizador y
+>   administrador de la plataforma;
+> - la verificación del correo de las cuentas nuevas, la recuperación de la contraseña con un
+>   código y el cierre de la sesión por inactividad;
+> - el registro de auditoría de las operaciones;
+> - la solicitud de un cliente para ser organizador, que la administración de la plataforma
+>   aprueba o rechaza;
+> - el alta de locales y de eventos por parte de cada organizador, con sus sectores, precios,
+>   período de preventa e imagen de portada, y su publicación, con la revisión del primer evento
+>   de cada organizador nuevo;
+> - la búsqueda de eventos y el armado de paquetes personalizados: entradas, elegidas en una
+>   tabla o en un mapa de los sectores, y servicios complementarios (hospedaje, traslado,
+>   merchandising y experiencia VIP);
 > - la compra con pago simulado y la emisión de una entrada por persona, con un código único;
 > - el control de ingreso al evento, que acepta cada entrada una sola vez;
 > - el programa de fidelización por niveles, con su descuento sobre las entradas;
 > - la suscripción mensual o anual, con sus beneficios;
 > - el seguro de entrada y la devolución de las entradas aseguradas;
 > - la lista de espera para los eventos agotados;
-> - cinco reportes de gestión para la administración.
+> - cinco reportes de gestión: cada organizador los consulta sobre sus eventos, y la
+>   administración de la plataforma, sobre todos.
 >
 > **Exclusiones** (quedan planteadas para iteraciones futuras):
 > - las recomendaciones personalizadas de eventos (RF-09);
@@ -899,7 +943,7 @@ el campo «Id y nombre». Los cinco casos nuevos están en el Anexo 3.
 
 **E-02 · p. 49 · R (T-6).**
 - **Dice:** «(por ejemplo, Cliente, Administrador de local, Conductor)».
-- **Poner:** «(Cliente o Administrador)».
+- **Poner:** «(Cliente, Organizador o Administrador)».
 
 **E-03 · p. 51, «Composición de un paquete» · R.** Tres filas:
 
@@ -917,28 +961,35 @@ completa por:
 
 | Control | Tipo | Contenido y comportamiento |
 |---|---|---|
+| indicadorPasos | Indicador | Los cuatro pasos de la compra («1 Elegí», «2 Armá», «3 Pagá» y «4 Listo»), con el paso 2 marcado. |
 | label1 | Etiqueta | Nombre del evento. Sólo lectura. |
 | lblNivel | Etiqueta | Nivel de fidelidad vigente y porcentaje de descuento, por ejemplo «Tu nivel: Plata · 5,0 % de descuento». |
 | lnkNiveles | Enlace | «¿Cómo funcionan los niveles?»: explica los umbrales vigentes (RN-19). |
+| mapaSectores | Mapa | Un bloque por sector, con su precio y su disponibilidad; un sector agotado no se puede elegir. Elegir un sector lleva a su fila de la grilla con una entrada. |
 | dgvSectores | Grilla | Una fila por sector, con su nombre, su precio y las entradas disponibles. El precio queda congelado al iniciar la compra (RN-16). En la columna «Cantidad (escribí aquí)» el cliente escribe cuántas entradas quiere. La suma no puede superar 6 (RN-12) ni el cupo del sector (RN-08). |
 | chkHospedaje / chkTraslado / chkMerch / chkVIP | Casilla | Servicios complementarios. Aparecen deshabilitados si el evento no los ofrece (RN-14). |
 | chkSeguro | Casilla | Seguro de entrada, con devolución hasta 48 h antes. Se habilita solo cuando hay al menos una entrada (RN-28). |
-| pnlResumen | Panel | Desglose del paquete. Se recalcula automáticamente ante cada cambio. |
+| pnlResumen / lblTotalDestacado | Panel y etiqueta | Desglose del paquete, con el total destacado al pie. Se recalcula automáticamente ante cada cambio. |
 | lblAgotado / btnListaEspera | Etiqueta y botón | Aparecen solo con el evento agotado, y ofrecen la inscripción en la lista de espera (RN-10). |
+| lnkPosicionEspera | Enlace | «Consultar mi posición»: aparece si el cliente ya está inscripto y le informa su posición en la lista (RN-35). |
 | btnComprar | Botón | Reserva el cupo y abre el pago. Deshabilitado mientras no haya al menos una entrada (RN-13). Sin seguro, pide confirmar que se continúa sin él. |
 | btnVolver | Botón | «Volver al listado». Si hay un paquete armado, pide confirmación antes de descartarlo; no reserva cupo. |
 
-**E-05 · p. 52, «Recorrido paso a paso», pasos 6 y 7 · R.**
+**E-05 · p. 52, «Recorrido paso a paso», pasos 2, 6 y 7 · R.**
 
 | Paso | Columna | Dice | Poner |
 |---|---|---|---|
+| 2 | Acción del cliente | «Selecciona un evento del listado.» | «Elige «Ver entradas» en la tarjeta de un evento.» |
+| 2 | Respuesta del sistema | «Abre la pantalla de armado y presenta los sectores con precio y disponibilidad.» | «Abre la ficha del evento, con su portada, sus datos y un mapa de los sectores con su precio y su disponibilidad. Con «Armar paquete», abre la pantalla de armado, con el sector que se haya elegido en el mapa.» |
 | 6 | Acción del cliente | «Revisa el resumen del paquete.» | «Revisa el resumen del paquete y presiona «Comprar».» |
 | 6 | Respuesta del sistema | «Muestra base de entradas, descuento por nivel, servicios sin descuento, cargo por servicio y total.» | «Muestra base de entradas, descuento por nivel, servicios sin descuento, cargo por servicio, seguro y total. Al confirmar, reserva el cupo por diez minutos y abre el pago.» |
 | 6 | Reglas | «RN-20, RN-21, RN-37» | «RN-15, RN-20, RN-21, RN-37» |
 | 7 | Respuesta del sistema | «Reserva el cupo por diez minutos, tokeniza los datos y envía la operación a la pasarela simulada.» | «Tokeniza los datos y envía la operación a la pasarela simulada, dentro del plazo de la reserva.» |
 
 *Razón:* código. `GestorCompras.Iniciar` reserva al presionar «Comprar»; la pantalla de pago
-llega después y muestra la cuenta regresiva.
+llega después y muestra la cuenta regresiva. El paso 2, desde el 17/11: la tarjeta abre
+`FichaEvento` (`frmEventosCliente.ElegirEvento`), y su botón «Armar paquete» abre el armado con
+el sector elegido (CP-160).
 
 **E-06 · p. 55, «Mensajes de validación» · R.**
 - **En la oración inicial, dice:** «Cada bloqueo se acompaña de un mensaje que indica la causa y
@@ -1008,14 +1059,15 @@ entrada.
 
 | Lugar | Dice | Poner |
 |---|---|---|
-| Descripción | «Permite al Administrador crear, modificar y desactivar eventos de la plataforma, controlando la información básica (nombre, fecha, ubicación, precio, cupos).» | «Permite al Administrador crear, suspender y eliminar eventos de sus locales, y administrar sus sectores (nombre, precio y capacidad) y su período de preventa.» |
-| Paso 1 | «El Administrador accede al módulo “Gestionar eventos”.» | «El Administrador ingresa a «Mis locales» y elige «Ver eventos» de un local.» |
-| Paso 3, viñeta 1 | «Crear un nuevo evento (título, fecha, ubicación, cupo, precios).» | «Crear un nuevo evento (nombre, fecha, categoría y preventa). Queda en borrador hasta tener un sector con capacidad.» |
+| Descripción | «Permite al Administrador crear, modificar y desactivar eventos de la plataforma, controlando la información básica (nombre, fecha, ubicación, precio, cupos).» | «Permite al Organizador crear, suspender y eliminar eventos de sus locales, y administrar sus sectores (nombre, precio y capacidad) y su período de preventa.» |
+| Paso 1 | «El Administrador accede al módulo “Gestionar eventos”.» | «El Organizador ingresa a «Mis locales» y elige «Ver eventos» de un local.» |
+| Paso 3, viñeta 1 | «Crear un nuevo evento (título, fecha, ubicación, cupo, precios).» | «Crear un nuevo evento (nombre, fecha, categoría, preventa y portada). Queda en borrador hasta que el Organizador lo publica (CU-17).» |
 | Paso 3, viñeta 2 | «Modificar datos de un evento existente.» | «Agregar o quitar sectores, con su precio y capacidad, y cambiar la preventa.» |
 | Paso 3, viñeta 3 | «Desactivar o eliminar un evento (si aún no tiene ventas asociadas, según regla).» | «Eliminar un evento sin ventas, o suspenderlo.» |
 | Paso 5 | «(alta, modificación o baja lógica)» | «(alta, cambio de sectores o de preventa, suspensión o eliminación)» |
 | FA2 | «ofrece marcarlo como “No disponible”.» | «ofrece suspenderlo.» |
-| Después de FA2, agregar | — | «FA3 – Sectores. Para agregar o quitar sectores del evento, el Administrador elige «Administrar evento» (CU-11, que extiende este caso de uso).» |
+| Después de FA2, agregar | — | «FA3 – Sectores. Para agregar o quitar sectores del evento, el Organizador elige «Administrar evento» (CU-11, que extiende este caso de uso).» |
+| Después de FA3, agregar | — | «FA4 – Evento rechazado. Si un Administrador rechazó el primer evento del Organizador (CU-19), el evento vuelve a borrador y «Eventos del local» muestra el motivo del rechazo. El Organizador lo corrige y lo vuelve a publicar (CU-17).» |
 | Postcondición 1 | «La tabla de Evento queda actualizada con las altas, modificaciones o bajas lógicas.» | «Los eventos y sus sectores quedan actualizados.» |
 | Postcondición 2 | «Solo se mostrarán a los Clientes los eventos que estén activos y con cupo.» | «Solo se muestran a los Clientes los eventos publicados con fecha futura; los agotados aparecen con la opción de lista de espera.» |
 
@@ -1023,7 +1075,7 @@ entrada.
 
 | Lugar | Dice | Poner |
 |---|---|---|
-| Paso 1 | «El Cliente ingresa a su perfil y selecciona “Ver historial de compras”.» | «El Cliente selecciona «Mis eventos» en su menú.» |
+| Paso 1 | «El Cliente ingresa a su perfil y selecciona “Ver historial de compras”.» | «El Cliente selecciona «Mis entradas» en su menú.» |
 | Paso 2 | «(evento, fecha, monto, estado)» | «(pedido, evento, fecha, estado, cantidad de entradas, total pagado y monto devuelto)» |
 | Paso 3 | «El Cliente selecciona una compra para ver el detalle del paquete (entradas, servicios adicionales, descuentos).» | «El Cliente selecciona una compra para ver sus entradas: sector, precio, estado, seguro y código. Si alguna tiene seguro, puede elegirla para devolverla.» |
 | FA1 | «“No se registran compras realizadas”» | ««Todavía no tenés compras.»» |
@@ -1071,8 +1123,8 @@ entrada.
 
 | Lugar | Dice | Poner |
 |---|---|---|
-| Paso 1 | «El Administrador ingresa a “Gestionar listas de espera”.» | «El Administrador elige «Listas de espera» en su menú.» |
-| Paso 5 | «El Administrador puede exportar o registrar esta información.» | «El Administrador puede elegir otro evento o volver al menú.» |
+| Paso 1 | «El Administrador ingresa a “Gestionar listas de espera”.» | «El Organizador elige «Listas de espera» en su menú.» |
+| Paso 5 | «El Administrador puede exportar o registrar esta información.» | «El Organizador puede elegir otro evento o volver al menú.» |
 | FA1 | «Si el Administrador selecciona un evento sin usuarios en lista, el sistema muestra el mensaje: “Este evento no tiene lista de espera asociada”.» | «Si ningún evento de sus locales está agotado ni tiene lista, el sistema muestra: «No hay eventos agotados ni listas de espera en tus locales.»» |
 | Debajo de las postcondiciones, agregar | — | «La inscripción en la lista la realiza el Cliente desde la compra (CU-01, FA3).» |
 
@@ -1081,11 +1133,11 @@ entrada.
 | Lugar | Dice | Poner |
 |---|---|---|
 | Descripción | «visualice reportes simulados con información agregada» | «visualice reportes con información agregada, calculados sobre los datos registrados (en esta práctica, un juego de datos ficticio),» |
-| Paso 1 | «El Administrador selecciona la opción “Ver reportes de ventas”.» | «El Administrador elige «Reportes» en su menú.» |
+| Paso 1 | «El Administrador selecciona la opción “Ver reportes de ventas”.» | «El Organizador elige «Reportes» en su menú; el Administrador, «Reportes globales».» |
 | Paso 2, agregar una viñeta | — | «Demanda insatisfecha (listas de espera).» |
 | Paso 4 | «El sistema genera el reporte con datos simulados y lo muestra en forma de tabla y/o gráficos.» | «El sistema genera el reporte y lo muestra en una tabla, con una lectura del resultado.» |
 | Paso 5 | «(rango de fechas, categoría de evento)» | «(rango de fechas y, según el reporte, categoría, evento o solo eventos agotados)» |
-| Paso 6 | «Opcionalmente, el Administrador puede exportar el reporte (por ejemplo, a PDF o imagen, aunque sea conceptual en esta práctica).» | «Opcionalmente, el Administrador exporta el reporte a PDF.» |
+| Paso 6 | «Opcionalmente, el Administrador puede exportar el reporte (por ejemplo, a PDF o imagen, aunque sea conceptual en esta práctica).» | «Opcionalmente, el usuario exporta el reporte a PDF.» |
 | FA1, punto 1 | «el sistema muestra un mensaje (“No se encontraron registros para el período seleccionado”).» | «el sistema lo informa en la lectura del reporte, por ejemplo: «No hay eventos en el período elegido.»» |
 | Debajo de FA1 | Un «2.» suelto, sin texto | Borrarlo |
 
@@ -1174,39 +1226,53 @@ Reemplaza las páginas 57 a 61 completas, desde el título «Implementación» h
 >
 > | Capa | Proyecto | Responsabilidad |
 > |---|---|---|
-> | Presentación | Visual (Windows Forms) | Veinte pantallas. No abre conexiones ni contiene SQL: solo invoca a la capa de negocio. |
+> | Presentación | Visual (Windows Forms) | Veinticinco pantallas. No abre conexiones ni contiene SQL: solo invoca a la capa de negocio. |
 > | Negocio | Repositorio (namespace Negocio) | Gestores que aplican las reglas de negocio. No referencia la interfaz: informa los rechazos con excepciones de dominio, que identifican la regla (RN-xx). |
 > | Datos | Datos | Repositorios: único lugar con conexiones y SQL, siempre con consultas parametrizadas. |
 > | Entidades | Entidades | Clases de dominio sin lógica, compartidas por las tres capas. |
 >
 > **Patrones de diseño aplicados.**
-> - **Singleton**, en veintiocho clases: doce gestores de negocio, trece repositorios, la
->   conexión, la pasarela simulada y el generador de códigos QR. Cada una expone una única
+> - **Singleton**, en treinta y cuatro clases: quince gestores de negocio, dieciséis
+>   repositorios, la conexión, la pasarela simulada y el generador de códigos QR. Cada una expone una única
 >   instancia (`Instance`) con constructor privado.
-> - **Repository:** las dieciséis tablas se acceden a través de trece repositorios, el único
+> - **Repository:** las veinte tablas se acceden a través de dieciséis repositorios, el único
 >   lugar con SQL; cada uno hereda de `RepositorioBase` la apertura de la conexión y la creación
 >   de comandos parametrizados.
 > - **Strategy**, en la exportación de reportes: el negocio conoce solo la interfaz
 >   `IExportador`, y la pantalla de reportes elige la implementación (`ExportadorPDF`, con iText).
+>   También en el envío de los códigos de verificación y de recuperación: el negocio conoce solo
+>   la interfaz `IEnviadorCodigos`, y la aplicación elige la implementación al iniciar. Por
+>   defecto usa `EnviadorSimulado`, que escribe cada mensaje en un archivo de correo fuera de la
+>   aplicación; la aplicación indica dónde está, pero no puede abrirlo ni leerlo. Si en la
+>   computadora están configuradas las cinco variables de entorno del servidor de correo
+>   (`EVENTAURA_SMTP_HOST`, `EVENTAURA_SMTP_PORT`, `EVENTAURA_SMTP_USER`, `EVENTAURA_SMTP_PASSWORD` y `EVENTAURA_SMTP_FROM`),
+>   usa `EnviadorSmtp`, que envía los códigos por correo real con conexión cifrada. Pasar de un
+>   modo al otro es una decisión de configuración: la capa de negocio no cambia.
 > - **Herencia en los reportes:** una clase abstracta `Reporte` con cinco especializaciones, una
 >   por reporte, creadas por `GestorReportes`.
 >
-> **Entidades y tablas.** El modelo persistido tiene dieciséis tablas:
-> - Usuario, con sus perfiles Cliente y Propietario (el Administrador);
+> **Entidades y tablas.** El modelo persistido tiene veinte tablas:
+> - Usuario, con sus tres perfiles: Cliente, Propietario (el Organizador, dueño de locales) y
+>   Administrador (de la plataforma);
 > - Locales, Eventos y Sectores;
 > - Compras, Entradas y Pagos;
 > - Servicios, ServiciosEvento y CompraServicios;
 > - Seguros, Suscripciones y ListaEspera;
-> - Parametros, que guarda los valores configurables de las reglas.
+> - Parametros, que guarda los valores configurables de las reglas;
+> - CodigosCorreo, con los códigos de verificación y de recuperación, guardados como hash;
+> - Auditoria, el registro de las operaciones;
+> - SolicitudesOrganizador, las solicitudes de un cliente para pasar a ser organizador.
 >
 > El paquete no se persiste como entidad propia: se arma en memoria y, al confirmarse, se
 > registra como una compra con sus entradas y sus servicios. Los diagramas de clases y el
 > diagrama entidad-relación de este documento muestran cada entidad con sus atributos y
 > relaciones.
 
-*Razón:* código. Las 4 capas son los proyectos de la solución. Los 12 gestores Singleton son los
-14 `Gestor*` menos `GestorClientes` y `GestorPropietario`. Hay 13 repositorios en `Datos/`. Las
-16 tablas salen de `BaseDatos/01-esquema.sql`.
+*Razón:* código. Las 4 capas son los proyectos de la solución. Los 15 gestores Singleton son los
+17 `Gestor*` menos `GestorClientes` y `GestorPropietario`, que están vacíos. Hay 16 repositorios en
+`Datos/`, sin contar `RepositorioBase`. Las 20 tablas salen de `BaseDatos/01-esquema.sql`
+(18/11). La tabla `Propietario` conserva su nombre: desde el script 11 es la de los
+organizadores.
 
 ## Anexo 2 — Textos para D-2
 
@@ -1332,7 +1398,7 @@ Y las líneas `if (n >= 7) …` y `if (n >= 3) …` **por:**
 - **Agregar** como primera línea del método, antes del comentario «// Base: solo entradas»:
 
 ```csharp
-    GestorSesion.Instance.RequerirUsuario(cliente.Id);   // RN-41: solo el titular o el Administrador
+    GestorSesion.Instance.RequerirUsuario(cliente.Id);   // RN-41: solo el titular de la cuenta
 ```
 
 - **Reemplazar** la línea del cargo **por:**
@@ -1395,10 +1461,10 @@ código, igual que CU-01 a CU-08.
 
 **Id y nombre:** CU-09 – Cambiar contraseña
 
-**Descripción:** Permite a un usuario registrado, Cliente o Administrador, reemplazar su
-contraseña. Para hacerlo debe conocer la contraseña actual.
+**Descripción:** Permite a un usuario registrado, Cliente, Organizador o Administrador,
+reemplazar su contraseña. Para hacerlo debe conocer la contraseña actual.
 
-**Actor:** Cliente o Administrador
+**Actor:** Cliente, Organizador o Administrador
 
 **Actores secundarios:** -
 
@@ -1450,35 +1516,35 @@ cuenta un intento fallido.
 
 **Id y nombre:** CU-10 – Registrar local
 
-**Descripción:** Permite al Administrador dar de alta un local donde se realizarán sus eventos,
+**Descripción:** Permite al Organizador dar de alta un local donde se realizarán sus eventos,
 con su capacidad máxima.
 
-**Actor:** Administrador
+**Actor:** Organizador
 
 **Actores secundarios:** -
 
 **Precondiciones:**
-- El Administrador inició sesión.
+- El Organizador inició sesión.
 
 **Flujo principal:**
-1. El Administrador elige «Registrar local» en su menú.
+1. El Organizador elige «Registrar local» en su menú.
 2. El sistema muestra los campos nombre, dirección, altura y capacidad.
-3. El Administrador completa los campos y presiona «Registrar local».
+3. El Organizador completa los campos y presiona «Registrar local».
 4. El sistema verifica que el local tenga nombre y que la capacidad sea un número entero no
    negativo. La dirección y la altura no se validan: se guardan juntas, como un único texto.
-5. El sistema registra el local a nombre del Administrador, informa «Local registrado
+5. El sistema registra el local a nombre del Organizador, informa «Local registrado
    correctamente» y vuelve al menú.
 
 **Flujo alternativo:**
 
 FA1 – Capacidad inválida. En el paso 4, si la capacidad no es un número entero, el sistema
 informa «La capacidad debe ser un número entero.»; si es negativa, «La capacidad del local no
-puede ser negativa.». El Administrador vuelve al paso 3.
+puede ser negativa.». El Organizador vuelve al paso 3.
 
 FA2 – Sin nombre. En el paso 4, si el nombre está vacío, el sistema informa «El local debe tener
-nombre.» y el Administrador vuelve al paso 3.
+nombre.» y el Organizador vuelve al paso 3.
 
-FA3 – Volver sin registrar. El Administrador puede elegir «Volver» en el paso 3; el sistema
+FA3 – Volver sin registrar. El Organizador puede elegir «Volver» en el paso 3; el sistema
 vuelve al menú sin registrar nada.
 
 **Postcondiciones:**
@@ -1491,33 +1557,33 @@ vuelve al menú sin registrar nada.
 
 **Id y nombre:** CU-11 – Gestionar sectores
 
-**Descripción:** Permite al Administrador agregar y quitar los sectores de un evento, cada uno
-con nombre, precio y capacidad. Extiende CU-02 cuando el Administrador agrega o quita un sector.
+**Descripción:** Permite al Organizador agregar y quitar los sectores de un evento, cada uno
+con nombre, precio y capacidad. Extiende CU-02 cuando el Organizador agrega o quita un sector.
 
-**Actor:** Administrador
+**Actor:** Organizador
 
 **Actores secundarios:** -
 
 **Precondiciones:**
-- El Administrador inició sesión.
+- El Organizador inició sesión.
 - Eligió un evento de uno de sus locales (CU-02).
 
 **Flujo principal:**
-1. En «Eventos del local», el Administrador elige un evento y presiona «Administrar Evento».
+1. En «Eventos del local», el Organizador elige un evento y presiona «Administrar Evento».
 2. El sistema muestra los sectores del evento, con su nombre, precio y capacidad, y la fecha de
    fin de la preventa.
-3. El Administrador presiona «Agregar sector».
+3. El Organizador presiona «Agregar sector».
 4. El sistema muestra los campos nombre, capacidad y precio.
-5. El Administrador los completa y presiona «Agregar sector».
+5. El Organizador los completa y presiona «Agregar sector».
 6. El sistema verifica los datos y que la suma de las capacidades de los sectores no supere la
    del local (RN-38).
 7. El sistema registra el sector, informa «Sector agregado correctamente.» y vacía los campos
-   para cargar otro. Si el evento estaba en borrador y el sector tiene capacidad, el evento queda
-   publicado (RN-06).
+   para cargar otro. Agregar un sector no publica el evento: un evento en borrador sigue en
+   borrador hasta que el Organizador lo publica (CU-17).
 
 **Flujo alternativo:**
 
-FA1 – Quitar un sector. En el paso 3, el Administrador elige un sector de la lista y presiona
+FA1 – Quitar un sector. En el paso 3, el Organizador elige un sector de la lista y presiona
 «Eliminar sector». El sistema lo elimina sin pedir confirmación y actualiza la lista. Si no
 eligió ninguno, informa «Por favor, seleccioná un sector para eliminar.».
 
@@ -1535,7 +1601,7 @@ sector (RN-38).
 FA5 – Datos inválidos. En el paso 6, el sistema informa «Por favor, completá todos los
 campos.», «La capacidad debe ser un número entero.», «El precio debe ser un número, por ejemplo
 12500.50.» o «La capacidad y el precio del sector no pueden ser negativos.», según el caso. El
-Administrador vuelve al paso 5.
+Organizador vuelve al paso 5.
 
 **Postcondiciones:**
 - Los sectores del evento quedan actualizados.
@@ -1548,26 +1614,26 @@ Administrador vuelve al paso 5.
 
 **Id y nombre:** CU-12 – Controlar ingreso
 
-**Descripción:** Permite al Administrador validar en la puerta las entradas de un evento de
+**Descripción:** Permite al Organizador validar en la puerta las entradas de un evento de
 sus locales, con el código QR del ticket leído por un lector USB o tipeado desde el PDF. Cada entrada
 ingresa una sola vez (RN-18).
 
-**Actor:** Administrador
+**Actor:** Organizador
 
 **Actores secundarios:** -
 
 **Precondiciones:**
-- El Administrador inició sesión.
+- El Organizador inició sesión.
 - Al menos un evento publicado de sus locales tiene el ingreso abierto: desde seis horas antes
   hasta doce horas después de su inicio.
 
 **Flujo principal:**
-1. El Administrador elige «Control de ingreso» en su menú.
-2. El sistema muestra los eventos publicados de los locales del Administrador que tienen el
+1. El Organizador elige «Control de ingreso» en su menú.
+2. El sistema muestra los eventos publicados de los locales del Organizador que tienen el
    ingreso abierto en ese momento, aunque hayan empezado el día anterior; el contador
    de ingresos registrados del evento elegido, y el mensaje «Escaneá una entrada.».
-3. El Administrador elige el evento.
-4. El Administrador lee el código del ticket con el lector, que lo confirma con Enter, o lo
+3. El Organizador elige el evento.
+4. El Organizador lee el código del ticket con el lector, que lo confirma con Enter, o lo
    tipea y presiona «Registrar ingreso».
 5. El sistema verifica que el código exista, que la entrada sea de ese evento, que esté
    confirmada y sin ingreso previo, y que la hora actual esté dentro del horario de ingreso:
@@ -1594,9 +1660,9 @@ FA3 – Lectura simultánea. Si dos puertas leen la misma entrada al mismo tiemp
 registra el ingreso. La otra muestra que la entrada ya ingresó o, si la entrada cambió por otro
 motivo, «La entrada cambió. Volvé a escanear.».
 
-FA4 – Evento de otro Administrador. Si el evento no es de uno de sus locales, el sistema no
+FA4 – Evento de otro Organizador. Si el evento no es de uno de sus locales, el sistema no
 registra ni cuenta ingresos e informa «Solo podés controlar el ingreso de eventos de tus
-locales.» (RN-42).
+locales.» (RN-49).
 
 **Postcondiciones:**
 - La entrada queda con su fecha de ingreso: no puede volver a ingresar ni devolverse (RN-29).
@@ -1668,6 +1734,332 @@ historial.
 
 ---
 
+**CU-14 – Verificar el correo**
+
+**Id y nombre:** CU-14 – Verificar el correo
+
+**Descripción:** Permite a quien se registra confirmar que el correo de su cuenta es suyo, con un
+código de un solo uso. Lo incluye CU-04 (Registrarse). Sin el correo verificado, el Cliente no
+puede iniciar una compra (RN-43).
+
+**Actor:** Visitante
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Visitante completó el registro (CU-04).
+
+**Flujo principal:**
+1. El sistema genera un código de un solo uso y lo envía al correo registrado (RN-44). Muestra
+   «Verificá tu correo» con el aviso «Si la cuenta existe, enviamos un código.» y dónde está el
+   archivo de correo simulado, que se abre fuera de la aplicación.
+2. El Visitante lee el código en su correo, lo escribe en «Código de verificación» y presiona
+   «Confirmar correo».
+3. El sistema verifica que el código corresponda a ese correo, que no haya vencido, que no se
+   haya usado y que no se haya superado el máximo de intentos (RN-44).
+4. El sistema marca el correo como verificado, informa «Correo verificado. Ya podés iniciar
+   sesión y comprar.» y ofrece «Volver al acceso».
+
+**Flujo alternativo:**
+
+FA1 – Código incorrecto, vencido o usado. En el paso 3, si el código no sirve, el sistema informa
+«El código no es válido o venció. Solicitá uno nuevo.» y cuenta el intento; superado el máximo
+(`CORREO_CODIGO_INTENTOS_MAX`), el código deja de servir. El Visitante vuelve al paso 2.
+
+FA2 – Código nuevo. Registrarse otra vez con el mismo correo envía un código nuevo y anula el
+anterior, sin cambiar la contraseña de la cuenta. La respuesta es la misma que la de un registro
+nuevo, para no revelar qué correos tienen cuenta.
+
+**Postcondiciones:**
+- La cuenta tiene el correo verificado y el Cliente puede comprar (RN-43).
+- El código quedó usado y no vuelve a servir (RN-44).
+- La emisión del código quedó en el registro de auditoría (RN-45).
+
+---
+
+**CU-15 – Recuperar contraseña**
+
+**Id y nombre:** CU-15 – Recuperar contraseña
+
+**Descripción:** Permite a quien olvidó su contraseña restablecerla con un código de un solo uso
+enviado al correo de su cuenta, sin conocer la contraseña actual.
+
+**Actor:** Usuario registrado (Cliente, Organizador o Administrador)
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Usuario no inició sesión.
+
+**Flujo principal:**
+1. En el acceso, el Usuario presiona «Recuperar contraseña».
+2. El Usuario escribe su correo y presiona «Enviar código».
+3. El sistema genera un código de un solo uso, lo envía al correo de la cuenta (RN-44) y muestra
+   «Si la cuenta existe, enviamos un código.», con la ubicación del archivo de correo simulado,
+   que se abre fuera de la aplicación.
+4. El Usuario lee el código en su correo, lo escribe en «Código de recuperación», escribe y
+   confirma la contraseña nueva, y presiona «Restablecer contraseña».
+5. El sistema valida la contraseña nueva con las mismas reglas que el registro (RN-02 y RN-47) y
+   verifica el código (RN-44).
+6. El sistema guarda la contraseña nueva con el mismo hash que el registro, marca el código como
+   usado, registra el restablecimiento en la auditoría (RN-45) e informa «La contraseña se
+   actualizó. Ya podés iniciar sesión.».
+
+**Flujo alternativo:**
+
+FA1 – Correo sin cuenta. En el paso 3, si no hay una cuenta con ese correo, el sistema responde
+igual y tarda lo mismo (al menos un segundo), para no revelar qué correos tienen cuenta. No se
+genera un código que sirva.
+
+FA2 – Código incorrecto, vencido o usado. En el paso 5, si el código no sirve, el sistema informa
+«El código no es válido o venció. Solicitá uno nuevo.», cuenta el intento y registra el rechazo en
+la auditoría. La contraseña no cambia.
+
+FA3 – Contraseña débil. En el paso 5, si la contraseña nueva no cumple RN-02 o no alcanza la
+fortaleza mínima (RN-47), el sistema lo indica en el campo y la contraseña no cambia.
+
+FA4 – Código nuevo. Si el Usuario pide otro código, el anterior deja de servir.
+
+**Postcondiciones:**
+- La cuenta tiene la contraseña nueva y el código quedó usado.
+- La emisión del código y el restablecimiento, exitoso o rechazado, quedan en el registro de
+  auditoría.
+
+---
+
+**CU-16 – Solicitar ser Organizador**
+
+**Id y nombre:** CU-16 – Solicitar ser Organizador
+
+**Descripción:** Permite a un Cliente pedir el perfil de Organizador, con los datos del
+responsable, del local que quiere registrar y de su cuenta bancaria. La solicitud no le da
+permisos hasta que un Administrador la aprueba (CU-18).
+
+**Actor:** Cliente
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Cliente inició sesión.
+- No tiene otra solicitud pendiente (RN-50).
+
+**Flujo principal:**
+1. El Cliente elige «Solicitar ser Organizador» en su menú.
+2. El sistema muestra los campos: responsable, CUIT, teléfono, nombre del local, dirección,
+   capacidad, CBU o alias, y la documentación del local.
+3. El Cliente escribe su teléfono y presiona «Enviar código». El sistema envía un código de un
+   solo uso a ese teléfono (en esta versión, al archivo de mensajes simulado, que se abre fuera de
+   la aplicación); el Cliente lo escribe y presiona «Confirmar teléfono» (RN-51).
+4. El Cliente completa los demás campos, adjunta la habilitación o constancia del local como
+   imagen y presiona «Enviar solicitud».
+5. El sistema valida el CUIT y el CBU con su dígito verificador, o el formato del alias, y la
+   imagen de la documentación (RN-52).
+6. El sistema registra la solicitud como pendiente e informa «Recibimos tu solicitud» con su
+   número.
+
+**Flujo alternativo:**
+
+FA1 – Datos inválidos. En el paso 5, si el CUIT, el CBU, el alias o la imagen no son válidos, el
+sistema indica el campo y el motivo, y el Cliente vuelve al paso 4.
+
+FA2 – Teléfono sin confirmar. Si el Cliente envía la solicitud sin haber confirmado el teléfono,
+el sistema la rechaza (RN-51).
+
+FA3 – Solicitud pendiente. Si el Cliente ya tiene una solicitud pendiente, el sistema no registra
+otra (RN-50).
+
+**Postcondiciones:**
+- Queda una solicitud pendiente a nombre del Cliente.
+- El perfil del Cliente no cambia hasta la revisión (RN-50).
+
+---
+
+**CU-17 – Publicar evento**
+
+**Id y nombre:** CU-17 – Publicar evento
+
+**Descripción:** Permite al Organizador poner a la venta un evento que está en borrador. El primer
+evento de un Organizador nuevo pasa a revisión de un Administrador (CU-19).
+
+**Actor:** Organizador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Organizador inició sesión.
+- El evento es de uno de sus locales y está en borrador (RN-49).
+
+**Flujo principal:**
+1. En «Eventos del local», el Organizador elige el evento y presiona «Administrar Evento».
+2. El Organizador presiona «Publicar».
+3. El sistema verifica que el evento tenga al menos un sector con capacidad mayor que cero (RN-06)
+   y que la suma de las capacidades no supere la del local (RN-38).
+4. Si el Organizador ya tuvo un evento aprobado, el sistema publica el evento e informa «El evento
+   ya está publicado y aparece en el catálogo.».
+
+**Flujo alternativo:**
+
+FA1 – Sin sectores con capacidad. En el paso 3, si ningún sector tiene capacidad, el sistema
+informa «No se puede publicar el evento: necesita al menos un sector con capacidad mayor que
+cero.» (RN-06) y el evento sigue en borrador.
+
+FA2 – Primer evento. En el paso 4, si el Organizador nunca tuvo un evento aprobado, el sistema deja
+el evento en revisión e informa «El primer evento se envió a revisión del Administrador.» (RN-54).
+Mientras está en revisión, el evento no aparece en el catálogo ni admite ventas.
+
+**Postcondiciones:**
+- El evento queda publicado o, si es el primero, en revisión.
+- Un evento publicado aparece en el catálogo de los Clientes.
+
+---
+
+**CU-18 – Revisar solicitudes de Organizador**
+
+**Id y nombre:** CU-18 – Revisar solicitudes de Organizador
+
+**Descripción:** Permite al Administrador de la plataforma aprobar o rechazar las solicitudes de
+los Clientes que quieren ser Organizadores (RN-53).
+
+**Actor:** Administrador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Administrador inició sesión.
+
+**Flujo principal:**
+1. El Administrador elige «Solicitudes de organizador» en su menú.
+2. El sistema muestra las solicitudes pendientes.
+3. El Administrador elige una; el sistema muestra el responsable, el CUIT, el teléfono, el local,
+   la cuenta bancaria y la documentación adjunta.
+4. El Administrador escribe un motivo y presiona «Aprobar y crear local».
+5. El sistema cambia el perfil de la cuenta a Organizador, crea el local solicitado a su nombre,
+   registra quién revisó y cuándo, e informa «Solicitud aprobada y local creado.».
+
+**Flujo alternativo:**
+
+FA1 – Rechazo. En el paso 4, el Administrador presiona «Rechazar». El sistema registra el
+rechazo con el motivo, el revisor y la fecha, e informa «Solicitud rechazada con el motivo
+registrado.». El perfil de la cuenta no cambia.
+
+FA2 – Sin motivo. Si el Administrador no escribe un motivo, el sistema informa «Escribí un motivo
+antes de aprobar o rechazar.» y no guarda la decisión (RN-53).
+
+FA3 – Sin pendientes. En el paso 2, si no hay solicitudes, el sistema informa «No hay solicitudes
+pendientes.».
+
+**Postcondiciones:**
+- La solicitud queda aprobada o rechazada, con su motivo, su revisor y su fecha.
+- Si se aprobó, la cuenta es Organizador y tiene el local.
+
+---
+
+**CU-19 – Revisar el primer evento de un Organizador**
+
+**Id y nombre:** CU-19 – Revisar el primer evento de un Organizador
+
+**Descripción:** Permite al Administrador de la plataforma aprobar o rechazar el primer evento que
+publica un Organizador nuevo (RN-54).
+
+**Actor:** Administrador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Administrador inició sesión.
+- Hay al menos un evento en revisión (CU-17, FA2).
+
+**Flujo principal:**
+1. El Administrador elige «Eventos en revisión» en su menú.
+2. El sistema muestra los eventos en revisión.
+3. El Administrador elige uno y presiona «Aprobar y publicar».
+4. El sistema publica el evento y registra que el Organizador ya tuvo un evento aprobado: sus
+   publicaciones siguientes son directas.
+
+**Flujo alternativo:**
+
+FA1 – Rechazo. En el paso 3, el Administrador escribe el motivo del rechazo y presiona «Rechazar y
+devolver». El sistema devuelve el evento a borrador y guarda el motivo, que el Organizador ve en
+«Eventos del local» (CU-02, FA4).
+
+FA2 – Sin motivo. Si el Administrador rechaza sin escribir un motivo, el sistema no lo acepta: el
+motivo es obligatorio, de hasta 500 caracteres (RN-54).
+
+FA3 – Sin pendientes. En el paso 2, si no hay eventos en revisión, el sistema informa «No hay
+eventos pendientes.».
+
+**Postcondiciones:**
+- El evento queda publicado, o en borrador con el motivo del rechazo.
+
+---
+
+**CU-20 – Consultar el registro de auditoría**
+
+**Id y nombre:** CU-20 – Consultar el registro de auditoría
+
+**Descripción:** Permite al Administrador de la plataforma consultar las operaciones registradas,
+con quién las hizo, cuándo y con qué resultado (RN-45).
+
+**Actor:** Administrador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Administrador inició sesión.
+
+**Flujo principal:**
+1. El Administrador elige «Registro de auditoría» en su menú.
+2. El sistema muestra los filtros: período (desde y hasta) y acción (por ejemplo, «Inicio de
+   sesión», «Compra confirmada» o «Gestión de eventos: publicar»).
+3. El Administrador elige los filtros.
+4. El sistema muestra los registros del período y la acción elegidos, con el usuario, la acción,
+   la entidad afectada, la fecha y el resultado.
+
+**Flujo alternativo:**
+
+FA1 – Sin registros. En el paso 4, si no hay registros, el sistema informa «No encontramos
+movimientos con estos filtros. Probá ampliar el período.».
+
+**Postcondiciones:**
+- El registro no se modifica: la consulta es de solo lectura.
+
+**Regla:** solo el Administrador de la plataforma consulta el registro (RN-45). Si otro perfil
+llega a la consulta, el sistema la rechaza con «Solo el Administrador puede consultar la auditoría.»
+
+---
+
+**CU-21 – Crear administrador**
+
+**Id y nombre:** CU-21 – Crear administrador
+
+**Descripción:** Permite al Administrador de la plataforma dar de alta a otro Administrador. Es la
+única forma de crear una cuenta con ese perfil: el registro público crea solo Clientes.
+
+**Actor:** Administrador
+
+**Actores secundarios:** -
+
+**Precondiciones:**
+- El Administrador inició sesión.
+
+**Flujo principal:**
+1. El Administrador elige «Crear administrador» en su menú.
+2. El sistema muestra los campos nombre, apellido, correo, contraseña y confirmación.
+3. El Administrador los completa y confirma.
+4. El sistema verifica que el correo no esté registrado (RN-01) y que la contraseña cumpla RN-02 y
+   la fortaleza mínima (RN-47).
+5. El sistema crea la cuenta con el perfil Administrador.
+
+**Flujo alternativo:**
+
+FA1 – Datos inválidos. En el paso 4, si el correo ya existe o la contraseña no cumple, el sistema
+lo informa y el Administrador vuelve al paso 3.
+
+**Postcondiciones:**
+- Existe una cuenta nueva con el perfil Administrador, sin locales.
+
+---
+
 **Lo que no se especifica y por qué.** El diagrama tiene también «Consultar mis locales»,
 «Buscar eventos», «Aplicar descuento por nivel», «Pagar la compra», «Contratar seguro»,
 «Inscribirse en lista de espera» y «Exportar reporte a PDF». Cada uno ya está como paso o como
@@ -1701,9 +2093,11 @@ número que tocar.
 > estudiantes. Todos los importes de esta sección resultan de multiplicar las horas por V: si V
 > cambia, basta con repetir esa multiplicación.
 >
-> Las horas son horas-persona de trabajo de ingeniería y surgen de la escala de esfuerzo (un punto
-> equivale a cuatro horas). Cubren el desarrollo que esa escala estima; no se agregan horas de
-> relevamiento ni de documentación, que el proyecto no estimó por separado.
+> Las horas son horas-persona de trabajo de ingeniería, a razón de cuatro horas por punto de la
+> escala de esfuerzo. Cubren el desarrollo; no se agregan horas de relevamiento ni de
+> documentación, que el proyecto no estimó por separado.
+>
+> **Estimación aprobada.** Es la que surge de la priorización, y se conserva sin cambios:
 >
 > | Fase | Requerimientos | Puntos | Horas | Costo (horas × V) |
 > |---|---|---|---|---|
@@ -1711,9 +2105,33 @@ número que tocar.
 > | Fase 6 — Desarrollo ampliado, 2ª iteración | RF-06, RF-08, RF-13 | 18 | 72 | $2.196.000 |
 > | Fase 7 — Generación de reportes | RF-11 | 8 | 32 | $976.000 |
 > | Fase 8 — Ajustes finales | RF-10 | 3 | 12 | $366.000 |
-> | **Alcance construido** | | **70** | **280** | **$8.540.000** |
+> | Construido de lo estimado | | 70 | 280 | $8.540.000 |
 > | RF-09, estimado y no construido (Won't have desde la versión 2.5) | RF-09 | 8 | 32 | $976.000 |
 > | **Estimación aprobada** | | **78** | **312** | **$9.516.000** |
+>
+> **Ampliación de la versión 2.6, medida.** Lo construido después de la estimación no se estimó:
+> se midió, contando las líneas de código y de pruebas que agregó cada parte, a razón de unas 250
+> líneas por punto, la misma relación que tienen los requerimientos estimados. Va en filas
+> separadas, para que lo estimado y lo medido no se mezclen:
+>
+> | Trabajo | Requerimientos | Puntos | Horas | Costo (horas × V) |
+> |---|---|---|---|---|
+> | Fase 9 — Ampliación de la versión 2.6 | RF-14 a RF-22 | 13 | 52 | $1.586.000 |
+> | Rediseño de la interfaz | RNF-02, RNF-03 | 8 | 32 | $976.000 |
+> | Revisión de pertenencia (fase 8a) | — | 1 | 4 | $122.000 |
+> | **Ampliación medida** | | **22** | **88** | **$2.684.000** |
+>
+> La fila de la revisión de pertenencia mide el volumen de código que agregó, como las demás. El
+> peso de esa revisión no está en sus líneas sino en lo que verificó: 24 métodos en cinco
+> familias, descriptos en «Metodología de verificación», junto con la prueba de mutación.
+>
+> **Total.**
+>
+> | Concepto | Puntos | Horas | Costo (horas × V) |
+> |---|---|---|---|
+> | **Alcance construido** (70 estimados y construidos más 22 medidos) | **92** | **368** | **$11.224.000** |
+> | RF-09, estimado y no construido | 8 | 32 | $976.000 |
+> | **Total con RF-09** | **100** | **400** | **$12.200.000** |
 >
 > **Otros costos.** No hay costo de licencias: las herramientas empleadas (Visual Studio, SQL
 > Server Express y PlantUML) se usan en versiones gratuitas o provistas por la universidad. Los
@@ -1721,21 +2139,27 @@ número que tocar.
 >
 > **Sensibilidad al valor hora.**
 >
-> | Escenario | Valor hora | Alcance construido (280 h) | Estimación aprobada (312 h) |
+> | Escenario | Valor hora | Alcance construido (368 h) | Total con RF-09 (400 h) |
 > |---|---|---|---|
-> | V − 25 % | $22.875 | $6.405.000 | $7.137.000 |
-> | Supuesto | $30.500 | $8.540.000 | $9.516.000 |
-> | V + 25 % | $38.125 | $10.675.000 | $11.895.000 |
+> | V − 25 % | $22.875 | $8.418.000 | $9.150.000 |
+> | Supuesto | $30.500 | $11.224.000 | $12.200.000 |
+> | V + 25 % | $38.125 | $14.030.000 | $15.250.000 |
 >
-> Una variación de ±25 % en el valor hora mueve el costo de la estimación aprobada entre
-> $7.137.000 y $11.895.000. Como el costo es proporcional al valor hora, el resultado no depende
-> de ningún otro supuesto.
+> Una variación de ±25 % en el valor hora mueve el costo del alcance construido entre $8.418.000
+> y $14.030.000. Como el costo es proporcional al valor hora, el resultado no depende de ningún
+> otro supuesto.
 
 **Cuentas verificadas:**
-- 41 + 18 + 8 + 3 = 70 puntos, y 70 + 8 = 78.
-- Horas: 164 + 72 + 32 + 12 = 280, y 280 + 32 = 312.
-- Importes: 5.002.000 + 2.196.000 + 976.000 + 366.000 = 8.540.000, y 8.540.000 + 976.000 =
-  9.516.000, igual a 312 × 30.500.
+- Estimación aprobada: 41 + 18 + 8 + 3 = 70 puntos, y 70 + 8 = 78; 164 + 72 + 32 + 12 = 280 h, y
+  280 + 32 = 312; 312 × 30.500 = 9.516.000.
+- Ampliación: RF-14 1, RF-15 2, RF-16 1, RF-17 1, RF-18 1, RF-19 1, RF-20 3, RF-21 2 y RF-22 1 =
+  13; 13 + 8 + 1 = 22 puntos; 22 × 4 = 88 h; 88 × 30.500 = 2.684.000 (1.586.000 + 976.000 +
+  122.000).
+- Total: 70 + 22 = 92 puntos, 368 h, 368 × 30.500 = 11.224.000; 92 + 8 = 100 puntos, 400 h,
+  400 × 30.500 = 12.200.000.
+- Sensibilidad: 368 × 22.875 = 8.418.000; 400 × 22.875 = 9.150.000; 368 × 38.125 = 14.030.000;
+  400 × 38.125 = 15.250.000.
+- Aprobado por JC el 19/11 (puntos, reparto y costo).
 
 **Para JC, antes de pegar:**
 - **V es un supuesto mío con fuente oficial, para que lo confirmes o lo cambies.** Leí la

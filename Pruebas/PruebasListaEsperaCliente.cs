@@ -55,7 +55,7 @@ namespace Pruebas {
      GestorCompras.Instance.Iniciar(Fake.Paquete(evento,1,false),GestorFidelizacion.Instance.ObtenerCliente(comprador.Id));
      Fake.ComoCliente(esperando);Assert.AreEqual(0,GestorListaEspera.Instance.AvisosAlIngresar(esperando.Id).Count);return;
     }
-    if(caso=="suspendido") {Fake.ComoAdministrador();GestorEventos.Instance.Suspender(evento.Id);Fake.ComoCliente(esperando);Assert.AreEqual(0,GestorListaEspera.Instance.AvisosAlIngresar(esperando.Id).Count);return;}
+    if(caso=="suspendido") {Fake.ComoOrganizador();GestorEventos.Instance.Suspender(evento.Id);Fake.ComoCliente(esperando);Assert.AreEqual(0,GestorListaEspera.Instance.AvisosAlIngresar(esperando.Id).Count);return;}
     Fake.ComoCliente(esperando);
     CollectionAssert.AreEqual(new[]{evento.Nombre},GestorListaEspera.Instance.AvisosAlIngresar(esperando.Id));
     // No se marca como leído ni se asigna cupo; el mismo estado produce el mismo aviso.

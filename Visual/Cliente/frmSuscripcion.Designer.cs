@@ -41,7 +41,7 @@ namespace Visual
             // label1
             //
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(392, 32);
@@ -50,7 +50,7 @@ namespace Visual
             //
             // lblEstado
             //
-            this.lblEstado.Location = new System.Drawing.Point(24, 72);
+            this.lblEstado.Location = new System.Drawing.Point(24, 132);
             this.lblEstado.Name = "lblEstado";
             this.lblEstado.Size = new System.Drawing.Size(392, 48);
             this.lblEstado.TabIndex = 31;
@@ -59,7 +59,7 @@ namespace Visual
             //
             // lblBeneficios
             //
-            this.lblBeneficios.Location = new System.Drawing.Point(24, 128);
+            this.lblBeneficios.Location = new System.Drawing.Point(24, 188);
             this.lblBeneficios.Name = "lblBeneficios";
             this.lblBeneficios.Size = new System.Drawing.Size(392, 104);
             this.lblBeneficios.TabIndex = 32;
@@ -68,7 +68,7 @@ namespace Visual
             // rdbMensual
             //
             this.rdbMensual.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.rdbMensual.Location = new System.Drawing.Point(24, 248);
+            this.rdbMensual.Location = new System.Drawing.Point(24, 308);
             this.rdbMensual.Name = "rdbMensual";
             this.rdbMensual.Size = new System.Drawing.Size(392, 24);
             this.rdbMensual.TabIndex = 0;
@@ -78,7 +78,7 @@ namespace Visual
             // rdbAnual
             //
             this.rdbAnual.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.rdbAnual.Location = new System.Drawing.Point(24, 280);
+            this.rdbAnual.Location = new System.Drawing.Point(24, 340);
             this.rdbAnual.Name = "rdbAnual";
             this.rdbAnual.Size = new System.Drawing.Size(392, 24);
             this.rdbAnual.TabIndex = 1;
@@ -87,7 +87,7 @@ namespace Visual
             // btnContratar
             //
             this.btnContratar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnContratar.Location = new System.Drawing.Point(232, 320);
+            this.btnContratar.Location = new System.Drawing.Point(232, 380);
             this.btnContratar.Margin = new System.Windows.Forms.Padding(2);
             this.btnContratar.Name = "btnContratar";
             this.btnContratar.Size = new System.Drawing.Size(184, 40);
@@ -98,7 +98,7 @@ namespace Visual
             // btnCancelar
             //
             this.btnCancelar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCancelar.Location = new System.Drawing.Point(24, 320);
+            this.btnCancelar.Location = new System.Drawing.Point(24, 380);
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(192, 40);
@@ -109,7 +109,7 @@ namespace Visual
             // btnVolver
             //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(24, 384);
+            this.btnVolver.Location = new System.Drawing.Point(24, 444);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(136, 40);
@@ -121,7 +121,7 @@ namespace Visual
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(440, 448);
+            this.ClientSize = new System.Drawing.Size(440, 508);
             this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnContratar);
@@ -136,6 +136,11 @@ namespace Visual
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventAura · Mi suscripción";
             this.Load += new System.EventHandler(this.frmSuscripcion_Load);
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(440, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -151,5 +156,6 @@ namespace Visual
         private Visual.Componentes.BotonPrimario btnContratar;
         private Visual.Componentes.BotonSecundario btnCancelar;
         private Visual.Componentes.BotonSecundario btnVolver;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

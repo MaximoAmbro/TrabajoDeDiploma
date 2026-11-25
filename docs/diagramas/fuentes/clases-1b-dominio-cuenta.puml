@@ -1,0 +1,48 @@
+@startuml clases-1b-dominio-cuenta
+!include _estilo.iuml
+skinparam nodesep 22
+skinparam ranksep 32
+hide empty members
+' Diagrama de clases, vista 1b de 8: entidades de la cuenta del usuario (proyecto Entidades):
+' suscripción, inscripción en la lista de espera y solicitud para ser Organizador.
+' Usuario y Evento están completos en la vista 1: acá solo su nombre.
+' Fuente: Entidade/*.cs. Las propiedades IdX que implementan una asociación no se repiten
+' como atributo: la asociación ya las representa (regla R1).
+
+class Usuario <<ver vista 1>>
+class Evento <<ver vista 1>>
+class Suscripcion {
+  + Id : int
+  + Plan : string
+  + FechaInicio : DateTime
+  + FechaFin : DateTime
+  + Precio : decimal
+  + Activa : bool
+}
+class ListaEspera {
+  + Id : int
+  + FechaAlta : DateTime
+  + ConSuscripcion : bool
+}
+class SolicitudOrganizador {
+  + Id : int
+  + Responsable : string
+  + Cuit : string
+  + Telefono : string
+  + NombreLocal : string
+  + Direccion : string
+  + Capacidad : int
+  + Documentacion : byte[]
+  + NombreArchivo : string
+  + CbuAlias : string
+  + Estado : string
+  + MotivoRevision : string
+  + RevisadaEl : DateTime?
+}
+
+Suscripcion "0..*" --> "1$_" Usuario : IdUsuario
+ListaEspera "0..*" --> "1$_" Evento : IdEvento
+ListaEspera "0..*" --> "1$_" Usuario : Usuario
+SolicitudOrganizador "0..*" -up-> "1$_" Usuario : UsuarioId
+SolicitudOrganizador "0..*" -up-> "0..1$_" Usuario : RevisadaPor
+@enduml

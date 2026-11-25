@@ -40,10 +40,10 @@ namespace Negocio
             return new[] { "Evento", "Estado", "En lista de espera", "Capacidad", "Demanda insat." };
         }
 
-        public override DataTable Obtener(RepositorioReportes repo)
+        internal override DataTable Obtener(RepositorioReportes repo)
         {
-            DataTable crudo = repo.DemandaInsatisfecha(InicioRango, FinRango, IdEvento, SoloAgotados);
-            ticketPromedio = repo.TicketPromedio(InicioRango, FinRango);
+            DataTable crudo = repo.DemandaInsatisfecha(InicioRango, FinRango, IdEvento, SoloAgotados, IdOrganizador);
+            ticketPromedio = repo.TicketPromedio(InicioRango, FinRango, IdOrganizador);
 
             DataTable tabla = NuevaTabla(typeof(string), typeof(string), typeof(int), typeof(int), typeof(decimal));
             Formatear(tabla, 2, FormatoEntero);

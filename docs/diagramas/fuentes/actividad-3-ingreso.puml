@@ -7,7 +7,7 @@ skinparam SwimlaneTitleFontSize 13
 skinparam ActivityBorderColor #333333
 skinparam ActivityBackgroundColor #F7F7F7
 skinparam ActivityDiamondBackgroundColor #F7F7F7
-' Diagrama de actividad del proceso de negocio, parte 3 de 3: después de la compra, la
+' Diagrama de actividad del proceso de negocio, parte 4 de 4: después de la compra, la
 ' devolución y el ingreso al evento. Un carril por actor; el sistema no es un carril.
 
 |Cliente|
@@ -20,7 +20,7 @@ else (no)
 endif
 :Presentar el QR
 en el ingreso;
-|Administrador|
+|Organizador|
 :Leer el código QR;
 if (¿Confirmada, del evento,
 en horario y sin

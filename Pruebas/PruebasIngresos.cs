@@ -15,29 +15,29 @@ namespace Pruebas
         private Evento evento;
         private Compra compra;
         private Entrada entrada;
+        private Cliente cliente;
 
         [TestInitialize]
         public void Preparar()
         {
             Fake.Limpiar();
-            Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
+            cliente = Fake.Cliente(NivelFidelidad.Bronce);
             evento = Fake.EventoPublicado(1000m, 5);
             compra = Fake.CompraConfirmada(cliente, evento, 1, true);
             entrada = GestorCompras.Instance.EntradasDe(compra).Single();
             Fake.CambiarFechaDeEvento(evento.Id, DateTime.Now.AddMinutes(10));
-            Fake.ComoAdministrador();
+            Fake.ComoOrganizador();
         }
 
         [TestCleanup]
         public void Terminar() { GestorSesion.Instance.Cerrar(); Fake.Limpiar(); }
-
-        // CP-99 — RF-07, RN-18: registro y persistencia sin alterar ventas.
+        // CP-99 — RF-07, RN-18/RN-48: registrar ingreso solo para Organizador autorizado; el Cliente se rechaza.
         [TestMethod("CP-99: Una entrada válida ingresa sin cambiar su estado de venta")]
         public void EntradaValida()
         {
             ResultadoIngreso resultado = GestorIngresos.Instance.Registrar(entrada.CodigoQR, evento.Id);
             Assert.IsTrue(resultado.Valido);
-            Entrada guardada = GestorCompras.Instance.EntradasDe(compra).Single();
+            Entrada guardada = RepositorioEntradas.Instance.ObtenerPorCompra(compra.Id).Single();
             Assert.IsTrue(guardada.FechaIngreso.HasValue);
             Assert.AreEqual(EstadoEntrada.Confirmada, guardada.Estado);
             Assert.AreEqual(1, GestorIngresos.Instance.Contar(evento.Id));
@@ -67,7 +67,12 @@ namespace Pruebas
             });
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
             Fake.ComoCliente(cliente);
-            Assert.ThrowsException<ReglaNegocioException>(() => GestorIngresos.Instance.Registrar(entrada.CodigoQR, evento.Id));
+            // M-22: el rechazo de Registrar ahora es un resultado con su regla, no una excepción.
+            ResultadoIngreso sinPermiso = GestorIngresos.Instance.Registrar(entrada.CodigoQR, evento.Id);
+            Assert.IsFalse(sinPermiso.Valido);
+            Assert.AreEqual(MotivoIngreso.NoAutorizado, sinPermiso.Motivo);
+            Assert.AreEqual("RN-48", sinPermiso.Regla);
+            Assert.AreEqual(guardada.FechaIngreso, RepositorioEntradas.Instance.PorCodigo(entrada.CodigoQR).FechaIngreso);
             GestorSesion.Instance.Cerrar();
             Assert.ThrowsException<ReglaNegocioException>(() => GestorIngresos.Instance.Contar(evento.Id));
         }
@@ -89,7 +94,9 @@ namespace Pruebas
         public void Reembolsada()
         {
             Fake.CambiarFechaDeEvento(evento.Id, DateTime.Now.AddDays(30));
+            Fake.ComoCliente(cliente);
             GestorCompras.Instance.Reembolsar(GestorCompras.Instance.EntradasDe(compra));
+            Fake.ComoOrganizador();
             Fake.CambiarFechaDeEvento(evento.Id, DateTime.Now.AddMinutes(10));
             Assert.AreEqual(MotivoIngreso.Reembolsado, GestorIngresos.Instance.Registrar(entrada.CodigoQR, evento.Id).Motivo);
             Assert.AreEqual(0, GestorIngresos.Instance.Contar(evento.Id));
@@ -132,7 +139,7 @@ namespace Pruebas
             {
                 var compraLote = Fake.CompraConfirmada(cliente, eventoLote, 1, false);
                 var ticket = GestorCompras.Instance.EntradasDe(compraLote).Single();
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 GestorIngresos.Instance.Contar(eventoLote.Id); // inicialización antes de soltar las puertas.
                 using (var inicio = new Barrier(puertas))
                 {

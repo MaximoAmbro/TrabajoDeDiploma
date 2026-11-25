@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class RepositorioLocales : RepositorioBase
+    internal sealed class RepositorioLocales : RepositorioBase
     {
         private static RepositorioLocales _instance;
 

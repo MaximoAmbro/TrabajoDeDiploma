@@ -27,10 +27,10 @@ namespace Negocio
             return new[] { "Beneficio", "Contrataciones", "Base de referencia", "Tasa", "Ingreso asociado" };
         }
 
-        public override DataTable Obtener(RepositorioReportes repo)
+        internal override DataTable Obtener(RepositorioReportes repo)
         {
             DataRow d = repo.AdopcionBeneficios(InicioRango, FinRango,
-                GestorSuscripciones.PlanMensual, GestorSuscripciones.PlanAnual).Rows[0];
+                GestorSuscripciones.PlanMensual, GestorSuscripciones.PlanAnual, IdOrganizador).Rows[0];
             decimal compras = Numero(d["Compras"]), usuarios = Numero(d["Usuarios"]);
             decimal seguros = Numero(d["ComprasConSeguro"]), mensuales = Numero(d["Mensuales"]), anuales = Numero(d["Anuales"]);
             string baseCompras = Entero(compras) + " compras";

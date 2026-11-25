@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Datos
 {
-    public sealed class RepositorioUsuarios : RepositorioBase
+    internal sealed class RepositorioUsuarios : RepositorioBase
     {
         private static RepositorioUsuarios _instance;
 
@@ -81,16 +81,17 @@ namespace Datos
             }
         }
 
-        // RN-05: inserta en Usuario y en Cliente o Propietario dentro de una misma transacción.
+        // RN-05: inserta en Usuario y en la tabla correspondiente al perfil dentro de una transacción.
         // Lanza RegistroDuplicadoException si el mail ya existe (UQ_Usuario_Mail, RN-01).
         public int Insertar(Usuario usuario, NivelFidelidad nivel)
         {
             const string insertarUsuario =
-                "INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel) " +
+                "INSERT INTO Usuario (Nombre, Apellido, Mail, Contraseña, TipoUsuario, Nivel, CorreoVerificado) " +
                 "OUTPUT INSERTED.ID " +
-                "VALUES (@Nombre, @Apellido, @Mail, @Contraseña, @TipoUsuario, @Nivel)";
+                "VALUES (@Nombre, @Apellido, @Mail, @Contraseña, @TipoUsuario, @Nivel, @CorreoVerificado)";
             const string insertarCliente = "INSERT INTO Cliente (ID) VALUES (@ID)";
-            const string insertarPropietario = "INSERT INTO Propietario (ID) VALUES (@ID)";
+            const string insertarOrganizador = "INSERT INTO Propietario (ID) VALUES (@ID)";
+            const string insertarAdministrador = "INSERT INTO Administrador (ID) VALUES (@ID)";
 
             using (SqlConnection conexion = AbrirConexion())
             using (SqlTransaction transaccion = conexion.BeginTransaction())
@@ -106,13 +107,14 @@ namespace Datos
                         AgregarParametro(comando, "@Contraseña", usuario.Contraseña);
                         AgregarParametro(comando, "@TipoUsuario", usuario.TipoUsuario);
                         AgregarParametro(comando, "@Nivel", nivel.ToString());
+                        AgregarParametro(comando, "@CorreoVerificado", usuario.TipoUsuario != "Cliente");
                         id = Convert.ToInt32(comando.ExecuteScalar());
                     }
 
-                    // Negocio ya validó que TipoUsuario sea Cliente o Propietario.
-                    string insertarPerfil = usuario.TipoUsuario == "Propietario"
-                        ? insertarPropietario
-                        : insertarCliente;
+                    // Negocio ya validó RN-05 antes de insertar.
+                    string insertarPerfil = usuario.TipoUsuario == "Organizador"
+                        ? insertarOrganizador
+                        : usuario.TipoUsuario == "Administrador" ? insertarAdministrador : insertarCliente;
                     using (SqlCommand comando = CrearComando(conexion, insertarPerfil, transaccion))
                     {
                         AgregarParametro(comando, "@ID", id);
@@ -136,6 +138,18 @@ namespace Datos
                     transaccion.Rollback();
                     throw;
                 }
+            }
+        }
+
+        public bool CorreoVerificado(int idUsuario)
+        {
+            const string consulta = "SELECT CorreoVerificado FROM dbo.Usuario WHERE ID=@ID";
+            using (SqlConnection conexion = AbrirConexion())
+            using (SqlCommand comando = CrearComando(conexion, consulta))
+            {
+                AgregarParametro(comando, "@ID", idUsuario);
+                object resultado = comando.ExecuteScalar();
+                return resultado != null && resultado != DBNull.Value && Convert.ToBoolean(resultado);
             }
         }
 

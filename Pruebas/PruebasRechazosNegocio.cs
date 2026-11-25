@@ -47,7 +47,7 @@ namespace Pruebas
         public void CP56_RechazaEliminarUltimoSectorPublicado()
         {
             Evento evento = Fake.EventoPublicado(1000m, 5);
-            Fake.ComoAdministrador();
+            Fake.ComoOrganizador();
             Sector unico = evento.Sectores.Single();
 
             ReglaNegocioException error = Assert.ThrowsException<ReglaNegocioException>(() =>
@@ -126,7 +126,7 @@ namespace Pruebas
         public void CP60_RechazaSectorQueSuperaCapacidadDelLocal()
         {
             Evento evento = Fake.EventoPublicado(1000m, 5);
-            Fake.ComoAdministrador();
+            Fake.ComoOrganizador();
             Sector original = evento.Sectores.Single();
             Local local = GestorLocales.Instance.PorId(evento.IdLocal);
             Sector excesivo = new Sector
@@ -146,7 +146,7 @@ namespace Pruebas
             Assert.AreEqual(0, excesivo.Id);
         }
 
-        // CP-61 — RF-05, RN-39: un cliente sin suscripción no puede comprar durante la preventa.
+        // CP-61 — RF-05/RF-13, RN-39: un cliente sin suscripción no puede comprar durante la preventa.
         [TestMethod("CP-61: Preventa rechaza al cliente sin suscripción activa")]
         public void CP61_RechazaPreventaSinSuscripcion()
         {
@@ -155,7 +155,7 @@ namespace Pruebas
             Evento evento = Fake.EventoPublicado(1000m, 5);
             Sector sector = evento.Sectores.Single();
             Assert.IsFalse(GestorSuscripciones.Instance.TieneActiva(cliente.Id));
-            Fake.ComoAdministrador();
+            Fake.ComoOrganizador();
             GestorEventos.Instance.CambiarPreventa(evento.Id, DateTime.Now.AddDays(1));
             Fake.ComoCliente(cliente);
             int disponibles = GestorPaquetes.Instance.DisponiblesDe(sector.Id);

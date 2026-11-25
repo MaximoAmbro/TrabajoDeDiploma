@@ -1,0 +1,44 @@
+@startuml clases-6b-auditoria
+!include _estilo.iuml
+hide empty members
+skinparam nodesep 12
+skinparam ranksep 70
+' Diagrama de clases, vista 6b: quién escribe la auditoría y de dónde sale el autor (RN-45).
+' Fuente: llamadas a GestorAuditoria.Instance.Registrar en Repo/*.cs (GestorUsuarios,
+' GestorCodigosCorreo, GestorCompras, GestorEventos y GestorIngresos) y Repo/GestorAuditoria.cs.
+' Registrar es internal desde la fase 8a (commit a48eb43); antes era público y recibía el autor.
+
+class GestorUsuarios
+class GestorCodigosCorreo
+class GestorCompras
+class GestorEventos
+class GestorIngresos
+class GestorAuditoria <<Singleton>> {
+  ~ Registrar(accion, entidad, …)
+  + Consultar(desde, hasta, accion)
+}
+class GestorSesion <<Singleton>> {
+  + UsuarioActual : SesionAutenticada
+  + RequerirAdministradorParaAuditoria()
+}
+
+GestorUsuarios ..> GestorAuditoria : Registrar
+GestorCodigosCorreo ..> GestorAuditoria : Registrar
+GestorCompras ..> GestorAuditoria : Registrar
+GestorEventos ..> GestorAuditoria : Registrar
+GestorIngresos ..> GestorAuditoria : Registrar
+GestorAuditoria ..> GestorSesion : UsuarioActual: autor\nAdministradorParaAuditoria:\nconsulta (RN-45)
+
+note right of GestorAuditoria
+  Registrar es interno (~):
+  ninguna pantalla lo llama
+  ni elige el autor: lo pone el
+  negocio desde la sesión o, en
+  la recuperación, que no tiene
+  sesión, desde la cuenta del
+  código.
+  Hasta la fase 8a era público
+  y recibía el autor como
+  argumento.
+end note
+@enduml

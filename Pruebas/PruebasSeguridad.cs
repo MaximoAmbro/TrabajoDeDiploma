@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Entidades;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -57,19 +57,18 @@ namespace Pruebas
             Assert.ThrowsException<ReglaNegocioException>(() => GestorSuscripciones.Instance.ActivaDe(propietario.Id));
             Assert.ThrowsException<ReglaNegocioException>(() => GestorFidelizacion.Instance.ObtenerCliente(propietario.Id));
         }
-
-        // CP-93 — RF-12, RN-34 generalizada: gestión reservada al administrador.
+        // CP-93 — RF-12, RN-48: la gestión de eventos requiere perfil Administrador de plataforma.
         [TestMethod("CP-93: Un cliente no elimina eventos")]
         public void EliminarEventoAjeno()
         {
             Evento evento = Fake.EventoPublicado(1000m, 5);
             Fake.ComoCliente(Fake.Cliente(NivelFidelidad.Bronce));
             var error = Assert.ThrowsException<ReglaNegocioException>(() => GestorEventos.Instance.Eliminar(evento.Id));
-            Assert.AreEqual("RN-34", error.Regla);
+            Assert.AreEqual("RN-48", error.Regla);
             Assert.IsNotNull(GestorEventos.Instance.ObtenerPorId(evento.Id));
         }
 
-        // CP-94 — RF-04/RF-12/RF-13, RN-41/42 propuestas: sin sesión se rechaza antes de escribir.
+        // CP-94 — RF-04/RF-12/RF-13, RN-41/RN-48: sin sesión se rechaza antes de escribir.
         [TestMethod("CP-94: Las operaciones protegidas rechazan la ausencia de sesión")]
         public void SinSesion()
         {
@@ -80,14 +79,15 @@ namespace Pruebas
             Compra compra = GestorCompras.Instance.Iniciar(paquete, cliente);
             GestorSesion.Instance.Cerrar();
             var operaciones = new[] {
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.Crear(new Evento()), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.Publicar(evento), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.Eliminar(evento.Id), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.Suspender(evento.Id), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarPreventa(evento.Id, null), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.AgregarSector(evento.Id, new Sector()), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorEventos.Instance.EliminarSector(evento.Sectores.Single().Id), "RN-34"),
-                Tuple.Create<Action,string>(() => GestorLocales.Instance.Registrar(new Local()), "RN-34"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Crear(new Evento()), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Publicar(evento), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Eliminar(evento.Id), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.Suspender(evento.Id), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarPreventa(evento.Id, null), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.CambiarImagenPortada(evento.Id, new byte[] { 1 }), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.AgregarSector(evento.Id, new Sector()), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorEventos.Instance.EliminarSector(evento.Sectores.Single().Id), "RN-48"),
+                Tuple.Create<Action,string>(() => GestorLocales.Instance.Registrar(new Local()), "RN-48"),
                 Tuple.Create<Action,string>(() => GestorListaEspera.Instance.Inscribir(evento.Id, cliente.Id), "RN-41"),
                 Tuple.Create<Action,string>(() => GestorCompras.Instance.Iniciar(paquete, cliente), "RN-41"),
                 Tuple.Create<Action,string>(() => GestorCompras.Instance.Confirmar(compra, Fake.Tarjeta()), "RN-41"),
@@ -109,14 +109,14 @@ namespace Pruebas
             Assert.IsNull(Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail));
             Fake.ComoAdministrador();
             GestorUsuarios.Instance.CrearAdministrador(mail, "ClaveSegura123", "Admin", "Prueba");
-            Assert.AreEqual("Propietario", Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail).TipoUsuario);
+            Assert.AreEqual("Administrador", Datos.RepositorioUsuarios.Instance.ObtenerPorMail(mail).TipoUsuario);
             Assert.IsNull(typeof(GestorUsuarios).GetMethod("Registrar"), "El registro genérico no debe ser público.");
             Fake.ComoCliente(cliente);
             Assert.AreEqual(EstadoCompra.Pendiente, GestorCompras.Instance.ObtenerPorId(compra.Id).Estado);
             Assert.IsNull(GestorSuscripciones.Instance.ActivaDe(cliente.Id));
         }
 
-        // CP-95 — RF-02, RN-04/40 propuesta: contraseña actual y contador de intentos.
+        // CP-95 — RF-02, RN-04/40: contraseña actual y contador de intentos.
         [TestMethod("CP-95: Cambiar contraseña rechaza la actual incorrecta y suma un intento")]
         public void ActualIncorrecta()
         {
@@ -140,7 +140,7 @@ namespace Pruebas
             Assert.IsNotNull(GestorUsuarios.Instance.Autenticar(cliente.Mail, "Cliente123"));
         }
 
-        // CP-97 — RF-02, RN-40 propuesta: respuesta uniforme y sin revelar la existencia del mail.
+        // CP-97 — RF-02, RN-40: respuesta uniforme y sin revelar la existencia del mail.
         [TestMethod("CP-97: Mail inexistente y contraseña actual incorrecta muestran lo mismo")]
         public void CambioNoEnumera()
         {
@@ -153,15 +153,15 @@ namespace Pruebas
             Assert.AreEqual(existente.Message, inexistente.Message);
         }
 
-        // CP-98 — RF-02, RN-40 propuesta: cambio real sin sustituir la sesión activa.
+        // CP-98 — RF-02, RN-40: cambio real sin sustituir la sesión activa.
         [TestMethod("CP-98: Cambiar contraseña invalida la anterior y conserva la sesión")]
         public void CambioCorrecto()
         {
             Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
-            Fake.ComoAdministrador();
-            int administrador = GestorSesion.Instance.UsuarioActual.Id;
+            Fake.ComoCliente(cliente);
+            int titular = GestorSesion.Instance.UsuarioActual.Id;
             GestorUsuarios.Instance.CambiarContrasena(cliente.Mail, "Cliente123", "NuevaClave123");
-            Assert.AreEqual(administrador, GestorSesion.Instance.UsuarioActual.Id);
+            Assert.AreEqual(titular, GestorSesion.Instance.UsuarioActual.Id);
             Assert.ThrowsException<ReglaNegocioException>(() => GestorUsuarios.Instance.Autenticar(cliente.Mail, "Cliente123"));
             Assert.IsNotNull(GestorUsuarios.Instance.Autenticar(cliente.Mail, "NuevaClave123"));
             EnStaSinCambiarDatos(() => {

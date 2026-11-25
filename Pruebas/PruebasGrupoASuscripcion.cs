@@ -107,7 +107,8 @@ namespace Pruebas
                     ContratarDesde(primera);
                     Suscripcion activa = GestorSuscripciones.Instance.ActivaDe(cliente.Id);
                     DialogosPrueba.Comprobar(() => ControlDe<Button>(segunda, "btnContratar").PerformClick(),
-                        ConfirmarContrato(), new DialogoEsperado { Titulo = "Suscripción", Texto = "vence el " + activa.FechaFin.ToString("dd/MM/yyyy") });
+                        ConfirmarContrato());
+                    Assert.IsTrue(AvisoDe(segunda).Contains("vence el " + activa.FechaFin.ToString("dd/MM/yyyy")));
                     Assert.AreEqual(1, Fake.ContarSuscripcionesVigentes(cliente.Id));
                     Assert.AreEqual(activa.Id, GestorSuscripciones.Instance.ActivaDe(cliente.Id).Id);
                 }
@@ -216,8 +217,15 @@ namespace Pruebas
 
         private static void ContratarDesde(Form form)
         {
-            DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnContratar").PerformClick(), ConfirmarContrato(),
-                new DialogoEsperado { Titulo = "Suscripción", Texto = "Suscripción Mensual contratada." });
+            DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnContratar").PerformClick(), ConfirmarContrato());
+            StringAssert.Contains(AvisoDe(form), "Suscripción Mensual contratada.");
+        }
+
+        private static string AvisoDe(Form form)
+        {
+            var aviso = form.Controls.Find("avisoSistema", true).SingleOrDefault();
+            Assert.IsNotNull(aviso, "El aviso debe quedar en la misma pantalla que originó la acción.");
+            return aviso.Text;
         }
 
         private static string Normalizar(string texto) => Regex.Replace(texto, @"\s+", " ").Trim();

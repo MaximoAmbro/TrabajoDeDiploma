@@ -16,8 +16,9 @@ namespace Pruebas {
   public static void Generar(string salida){
    Directory.CreateDirectory(salida);BaseDePrueba.Preparar(null);
    PruebasSeguridad.EnStaSinCambiarDatos(()=>{
-    GestorUsuarios.Instance.Autenticar("plata@eventaura.com","Cliente123");
-    var cliente=GestorFidelizacion.Instance.ObtenerCliente(3);var evento=RepositorioEventos.Instance.ObtenerPorId(1);
+    var usuario=GestorUsuarios.Instance.Autenticar("plata@eventaura.com","Cliente123");
+    if(usuario==null)throw new InvalidOperationException("No se pudo autenticar a Paula para la captura.");
+    var cliente=GestorFidelizacion.Instance.ObtenerCliente(usuario.Id);var evento=RepositorioEventos.Instance.ObtenerPorId(1);
     using(var listado=new Visual.frmEventosCliente{IDUsuario=cliente.Id,NombreUsuario=cliente.Nombre})
     using(var form=new Visual.FrmCompraCliente{IDUsuario=cliente.Id,IDEvento=evento.Id,NombreUsuario=cliente.Nombre}) {
      listado.Show();Application.DoEvents();var grilla=C<DataGridView>(listado,"dgveventos");
@@ -28,7 +29,7 @@ namespace Pruebas {
      sectores.CurrentCell=campo.Cells["Cantidad"];campo.Cells["Cantidad"].Value=2;
      if(sectores.EditingControl is TextBox)((TextBox)sectores.EditingControl).Text="2";sectores.EndEdit();
      C<CheckBox>(form,"chkHospedaje").Checked=true;Application.DoEvents();
-     var flags=BindingFlags.Instance|BindingFlags.NonPublic;var paquete=(Paquete)form.GetType().GetField("paquete",flags).GetValue(form);
+      var flagsFormulario=BindingFlags.Instance|BindingFlags.NonPublic;var paquete=(Paquete)form.GetType().GetField("paquete",flagsFormulario).GetValue(form);
      var resumen=GestorFidelizacion.Instance.CalcularDescuento(cliente,paquete);
      if(resumen.Total!=99625m||resumen.Porcentaje!=0.05m)throw new InvalidOperationException("El ejemplo del instructivo no coincide con $99.625 y Plata al 5 %.");
      Guardar(form,Path.Combine(salida,"figura2-armado-paquete.png"));
@@ -37,7 +38,14 @@ namespace Pruebas {
      panel.Height=panel.Controls.Cast<Control>().Max(x=>x.Bottom)+16;
      using(var b=new Bitmap(panel.Width,panel.Height)){panel.DrawToBitmap(b,new Rectangle(Point.Empty,panel.Size));b.Save(Path.Combine(salida,"figura3-resumen-descuento.png"));}
      panel.Size=original;panel.AutoScroll=true;
-     var compra=GestorCompras.Instance.Iniciar(paquete,cliente);if(!GestorCompras.Instance.Confirmar(compra,Fake.Tarjeta()))throw new InvalidOperationException("Rechazo inesperado de la pasarela simulada.");
+     var compra=GestorCompras.Instance.Iniciar(paquete,cliente);
+     using(var pago=new Visual.frmPago{Compra=compra}) {
+      pago.Show();Application.DoEvents();Guardar(pago,Path.Combine(salida,"anexo-pago.png"));
+      var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+      ((Timer)typeof(Visual.frmPago).GetField("tmrReserva",flags).GetValue(pago)).Stop();
+      typeof(Visual.frmPago).GetField("cerrada",flags).SetValue(pago,true);
+     }
+     if(!GestorCompras.Instance.Confirmar(compra,Fake.Tarjeta()))throw new InvalidOperationException("Rechazo inesperado de la pasarela simulada.");
      compra=GestorCompras.Instance.ObtenerPorId(compra.Id);
      var entradas=GestorCompras.Instance.EntradasDe(compra);var rutas=new List<string>();var pesos=CultureInfo.GetCultureInfo("es-AR");
      foreach(var entrada in entradas){var sector=RepositorioSectores.Instance.ObtenerPorId(entrada.IdSector.Value);string ruta=Path.Combine(salida,"Ticket_"+Visual.frmConfirmacion.NumeroPedido(compra)+"_"+entrada.Id+".pdf");

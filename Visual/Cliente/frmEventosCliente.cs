@@ -18,7 +18,14 @@ namespace Visual
         public frmEventosCliente()
         {
             InitializeComponent();
+            Tema.ComoFondo(tarjetas);
+            btnVista.Click += (s,e) => {
+                bool tabla=tarjetas.Visible;
+                tarjetas.Visible=!tabla;dgveventos.Visible=tabla;
+                btnVista.Text=tabla?"Ver tarjetas":"Ver como tabla";
+            };
         }
+        protected override void OnShown(EventArgs e){base.OnShown(e);Disposicion.AjustarAreaVisible(this);}
         private const string TodasLasCategorias = "Todas";
 
         private void frmEventosCliente_Load(object sender, EventArgs e)
@@ -66,17 +73,19 @@ namespace Visual
         private void CargarEventos(string texto, string categoria, DateTime? desde)
         {
             List<Evento> eventos = GestorEventos.Instance.Buscar(texto, categoria, desde);
+            foreach(Control anterior in tarjetas.Controls.Cast<Control>().ToArray()) anterior.Dispose();
+            tarjetas.Controls.Clear();
             if (eventos.Count == 0)
             {
-                DataTable vacia = new DataTable();
-                vacia.Columns.Add("Mensaje", typeof(string));
-                vacia.Rows.Add(texto == null && categoria == null && desde == null
-                    ? "No hay eventos disponibles por el momento."
-                    : "No hay eventos que coincidan con la búsqueda. Probá con otros filtros o «Limpiar».");
-                dgveventos.DataSource = vacia;
+                var estado=new Componentes.EstadoVacio { Name = "estadoSinResultados" };
+                estado.Cargar("No encontramos eventos para esa búsqueda. Probá con otro nombre o quitá los filtros.","Ver todos");
+                estado.Accion+=()=>btnLimpiar.PerformClick();tarjetas.Controls.Add(estado);
+                dgveventos.DataSource = null;
+                dgveventos.Visible = false;
                 return;
             }
 
+            dgveventos.Visible = true;
             var locales = new Dictionary<int, Local>();
             dgveventos.DataSource = eventos
                 .Select(ev =>
@@ -104,6 +113,31 @@ namespace Visual
             dgveventos.Columns["Nombre"].FillWeight = 160;
             dgveventos.Columns["Ubicacion"].FillWeight = 140;
             dgveventos.Columns["Complejo"].FillWeight = 140;
+            foreach(var ev in eventos) {
+                var tarjeta=new Componentes.TarjetaEvento();
+                tarjeta.Cargar(ev,locales[ev.IdLocal],GestorEventos.Instance.Sectores(ev.Id));
+                tarjeta.VerEntradas+=ElegirEvento;
+                tarjetas.Controls.Add(tarjeta);
+            }
+        }
+
+        private void ElegirEvento(Evento elegido)
+        {
+            var fila=dgveventos.Rows.Cast<DataGridViewRow>().Single(f=>Convert.ToInt32(f.Cells["ID"].Value)==elegido.Id);
+            dgveventos.CurrentCell=fila.Cells["Nombre"];
+            var ficha=new Componentes.FichaEvento {Name="fichaEvento",Dock=DockStyle.Fill};
+            ficha.Cargar(elegido);
+            tarjetas.Visible=false;dgveventos.Visible=false;pnlBusqueda.Visible=false;pnlAcciones.Visible=false;
+            pnlExplorar.Controls.Add(ficha);ficha.BringToFront();
+            ficha.Volver+=()=>{ficha.Dispose();pnlBusqueda.Visible=true;pnlAcciones.Visible=true;tarjetas.Visible=true;btnVista.Text="Ver como tabla";};
+            ficha.Comprar+=(ev,sector)=>AbrirCompra(ev.Id,sector);
+        }
+
+        private void AbrirCompra(int idEvento,int? sector=null)
+        {
+            var compra=new FrmCompraCliente {IDUsuario=IDUsuario,IDEvento=idEvento,NombreUsuario=NombreUsuario,SectorInicial=sector};
+            if (NavegacionCliente.Navegar(compra)) return;
+            compra.Show();Hide();
         }
 
         // Texto guía dentro del TextBox (EM_SETCUEBANNER): .NET Framework no tiene PlaceholderText.
@@ -120,22 +154,18 @@ namespace Visual
         {
             if (dgveventos.CurrentRow != null && dgveventos.Columns.Contains("ID"))
             {
-                FrmCompraCliente frm = new FrmCompraCliente();
-                frm.IDUsuario = IDUsuario;
-                frm.IDEvento = Convert.ToInt32(dgveventos.CurrentRow.Cells["ID"].Value);
-                frm.NombreUsuario = NombreUsuario;
-                frm.Show();
-                this.Hide();
+                AbrirCompra(Convert.ToInt32(dgveventos.CurrentRow.Cells["ID"].Value));
             }
             else
             {
-                MessageBox.Show("Tenés que seleccionar un evento para comprar", "Seleccionar evento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Avisos.Informativo(this, "Elegí un evento de la lista para ver sus entradas.");
             }
         }
 
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void btnVolver_Click(object sender, EventArgs e)
         {
+            if (NavegacionCliente.Inicio()) return;
             frmMenuCliente frm = new frmMenuCliente();
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;

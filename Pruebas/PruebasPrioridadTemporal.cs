@@ -8,15 +8,15 @@ namespace Pruebas {
  [TestClass] public class PruebasPrioridadTemporal {
   [TestInitialize] public void Preparar(){GestorSesion.Instance.Cerrar();Fake.Limpiar();}
   [TestCleanup] public void Limpiar(){GestorSesion.Instance.Cerrar();Fake.Limpiar();}
-  // CP-125 — RF-10, RN-35/37: prioridad real, persistencia y límites del privilegio.
-  [DataTestMethod]
+  // CP-125 — RF-10, RN-35: aplica la ventana de prioridad por sector y rechaza fuera del grupo prioritario.
+  [TestMethod("CP-125: Prioridad temporal por sector")]
   [DataRow("reembolso",false,false,DisplayName="CP-125: Reembolso rechaza no suscriptor dentro de la ventana")]
   [DataRow("reembolso",true,false,DisplayName="CP-125: Suscriptor inscripto compra dentro de la ventana")]
-  [DataRow("reembolso",false,true,DisplayName="CP-125: No suscriptor compra despu?s de la ventana")]
+  [DataRow("reembolso",false,true,DisplayName="CP-125: No suscriptor compra después de la ventana")]
   [DataRow("vencimiento",false,false,DisplayName="CP-125: Reserva vencida activa prioridad")]
   [DataRow("vencimiento",true,false,DisplayName="CP-125: Suscriptor compra el cupo de reserva vencida")]
   [DataRow("rechazo",false,false,DisplayName="CP-125: Pago rechazado activa prioridad")]
-  [DataRow("sin-inscripcion",true,false,DisplayName="CP-125: Suscriptor sin inscripci?n no usa prioridad")]
+  [DataRow("sin-inscripcion",true,false,DisplayName="CP-125: Suscriptor sin inscripción no usa prioridad")]
   [DataRow("reintento",false,false,DisplayName="CP-125: Reintento de pago no saltea prioridad")]
   public void CP125_Ventana(string liberacion,bool suscriptor,bool fuera) {
    var e=Fake.EventoPublicado(1000m,1);var vendedor=Fake.Cliente(NivelFidelidad.Bronce);

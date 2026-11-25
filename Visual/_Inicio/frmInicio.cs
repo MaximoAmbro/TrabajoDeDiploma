@@ -1,5 +1,6 @@
-﻿using Entidades;
+using Entidades;
 using Negocio;
+using Datos;
 using System;
 using System.Windows.Forms;
 
@@ -13,10 +14,18 @@ namespace Visual
             InitializeComponent();
             Tema.ComoEnlace(lblolividarcontra);
             Tema.ComoEnlace(lblcrearcuenta);
+            txtMailLogin.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtMailLogin);
+            txtContraseñaLogin.TextChanged += (s, e) => ValidacionCampo.Limpiar(txtContraseñaLogin);
         }
         
         private void frmInicio_Load(object sender, EventArgs e)
         {
+            var faltante = VerificadorEsquema.PrimerFaltante();
+            if (faltante != null)
+            {
+                MostrarEsquemaDesactualizado(faltante);
+                return;
+            }
             
             txtMailLogin.Text = "";
             txtContraseñaLogin.Text = "";
@@ -24,6 +33,23 @@ namespace Visual
             txtMailLogin.Select();   // no depende del orden de TabIndex
         }
 
+        private void MostrarEsquemaDesactualizado(RequisitoEsquemaFaltante faltante)
+        {
+            txtMailLogin.Visible = label5.Visible = txtContraseñaLogin.Visible = label3.Visible = false;
+            checkbxShowPass.Visible = lblolividarcontra.Visible = lblcrearcuenta.Visible = btninicio.Visible = false;
+            btninicio.Enabled = false;
+            var aviso = new Visual.Componentes.EtiquetaAyuda
+            {
+                Name = "avisoEsquemaDesactualizado",
+                Text = "Tu base de datos está desactualizada: falta " + faltante.Descripcion + ".\r\n\r\n" +
+                       "Corré BaseDatos/" + faltante.Script + " y volvé a abrir EventAura.",
+                Location = new System.Drawing.Point(24, 148),
+                Size = new System.Drawing.Size(352, 128),
+                AccessibleRole = System.Windows.Forms.AccessibleRole.Alert
+            };
+            Controls.Add(aviso);
+            aviso.BringToFront();
+        }
         private void checkbxShowPass_CheckedChanged(object sender, EventArgs e)
         {
             if (checkbxShowPass.Checked == true)
@@ -39,7 +65,7 @@ namespace Visual
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void lblolividarcontra_Click(object sender, EventArgs e)
         {
-            frmCambiarContraseña frm = new frmCambiarContraseña();
+            frmCambiarContraseña frm = new frmCambiarContraseña(true);
             frm.Show();
             this.Hide();
         } // Llama frmCambiarContraseña
@@ -53,18 +79,14 @@ namespace Visual
         {
             if (string.IsNullOrEmpty(txtMailLogin.Text))
             {
-                MessageBox.Show("Por favor, ingresá usuario",
-                              "Inicio de sesión",
-                              MessageBoxButtons.OK,
-                              MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtMailLogin, "Escribí tu correo electrónico para continuar.");
+                txtMailLogin.Focus();
                 return;
             }
             if (string.IsNullOrEmpty(txtContraseñaLogin.Text))
             {
-                MessageBox.Show("Por favor, ingresá contraseña",
-                              "Inicio de sesión",
-                              MessageBoxButtons.OK,
-                              MessageBoxIcon.Warning);
+                ValidacionCampo.Mostrar(txtContraseñaLogin, "Escribí tu contraseña para continuar.");
+                txtContraseñaLogin.Focus();
                 return;
             }
             else
@@ -93,17 +115,16 @@ namespace Visual
                 if (usuario.TipoUsuario == "Cliente")
                 {
                     var avisos = GestorListaEspera.Instance.AvisosAlIngresar(usuario.Id);
-                    if (avisos.Count > 0)
-                        MessageBox.Show("Hay entradas disponibles nuevamente en:\n" + string.Join("\n", avisos) +
-                            "\nPodés volver al listado para consultar y comprar. No es una reserva de lugar.",
-                            "Lista de espera", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     frmMenuCliente frm = new frmMenuCliente();
                     frm.IDUsuario = usuario.Id;
                     frm.NombreUsuario = usuario.Nombre;
                     frm.Show();
+                    if (avisos.Count > 0)
+                        Avisos.Informativo(frm, "Hay lugares disponibles en " + string.Join(", ", avisos) +
+                            ". Podés consultarlos en eventos; el aviso no reserva un lugar.");
                     this.Hide();
                 } // Se abre el menu de cliente
-                if (usuario.TipoUsuario == "Propietario")
+                if (usuario.TipoUsuario == "Organizador")
                 {
                     frmMenuPropietario frm = new frmMenuPropietario();
                     frm.IDUsuario = usuario.Id;
@@ -111,6 +132,14 @@ namespace Visual
                     frm.Show();
                     this.Hide();
                 } // Se abre el menu de vendedor
+                else if (usuario.TipoUsuario == "Administrador")
+                {
+                    frmMenuAdministrador frm = new frmMenuAdministrador();
+                    frm.IDUsuario = usuario.Id;
+                    frm.NombreUsuario = usuario.Nombre;
+                    frm.Show();
+                    this.Hide();
+                }
             }
             else
             {

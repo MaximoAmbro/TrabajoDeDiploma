@@ -4,16 +4,16 @@ Claude Code, 16/11/2026, a pedido de JC. Es texto para el documento entregable: 
 desde `docs/LISTA-PARA-MAXIMO.md`, entre el final de «Matriz de trazabilidad» (p. 109) y
 «Conclusiones» (p. 110).
 
-**Cifras definitivas** (17/11). Todas están medidas sobre el código congelado, `65225e7`. El código que se entregue puede ser posterior (Codex corrige M-22 y otras cuatro tareas): la cifra corresponde al commit medido y no se vuelve a medir (decisión de JC del 17/11).
+**Cifras definitivas.** La mutación se midió sobre el código congelado, `65225e7`. El código que se entrega es posterior, `967e038` (`967e038a79ce94ace3469f75843f01ec44310cfb`): después de la medición se corrigió M-22, se pasó a tres perfiles y se agregaron RF-14 a RF-22. La cifra de mutación corresponde al commit medido y no se vuelve a medir (decisión de JC del 17/11). La batería y la cobertura son las del código que se entrega.
 
 | Cifra en el texto | Valor | Fuente |
 |---|---|---|
-| Casos y ejecuciones | 145 casos, 271 ejecuciones, todas correctas | La corrió Codex y la repitió Claude Code en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-17nov/bateria.log`) |
-| Cobertura de reglas | 39 de 41 (95,1 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` |
+| Casos y ejecuciones | 205 casos (CP-01 a CP-206; CP-149 no se usó), 348 ejecuciones, todas correctas, sobre `967e038` | La corrió Codex el 19/11 y la repitió Claude Code el 20/11 en el árbol principal, por separado, con el mismo resultado (`TestResults/Claude-967e038/bateria.log`). Sobre `dba674c` eran 148 y 276; sobre `65225e7`, 145 y 271 |
+| Cobertura de reglas | 50 de 52 (96,2 %); sin caso RN-07 y RN-33 | `docs/04-casos-prueba.md` y los comentarios de las pruebas en `967e038` (`tools/Matriz/Extraer.py`): dan lo mismo |
 | Mutación, primera medición | 51 de 77 (66,2 %), sobre `fe04b1f` | `docs/INFORME-MUTACION-SEGURIDAD.md`, secciones 1 a 9 |
 | Mutación, medición final | **73 de 77 (94,8 %), sobre `65225e7`**; dos equivalentes descubiertas después, adentro (sin ellas, 97,3 %) | `docs/INFORME-MUTACION-SEGURIDAD.md`, sección 0 |
 
-El texto nombra el commit una sola vez, en el párrafo «Resultado».
+El texto nombra solo el commit medido, `65225e7`: en el párrafo «Resultado» y otra vez después del de las cuatro no detectadas, donde dice que después se reescribió la autorización (RN-34 pasó a RN-48) y que no se volvió a medir (JC, 18/11). No nombra la versión que se entrega, para que no quede vieja cuando cambie. **Cifras definitivas desde el 20/11**, con el código congelado en `967e038`.
 
 ---
 
@@ -35,9 +35,9 @@ corrida, con el mismo esquema y los mismos datos iniciales que se entregan, y nu
 desarrollo. Las pruebas de interfaz abren los formularios reales de la aplicación, los operan y
 leen lo que muestran.
 
-La batería tiene ciento cuarenta y cinco casos de prueba. Algunos se ejecutan varias veces con datos
-distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman doscientas
-setenta y una ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
+La batería tiene doscientos cinco casos de prueba. Algunos se ejecutan varias veces con datos
+distintos, por ejemplo una pantalla a dos escalas de visualización, y en total suman trescientas
+cuarenta y ocho ejecuciones, todas correctas en la última corrida. Como cada corrida recrea la
 base, los resultados no dependen de lo que haya quedado de una corrida anterior.
 
 **Cobertura de las reglas de negocio**
@@ -54,8 +54,8 @@ situación y no se contaron como cubiertas hasta que tuvieron un caso que verifi
 comportamiento: la de no renovación automática (RN-26) y la que impide agregar el seguro después
 de la compra (RN-28).
 
-Con ese criterio, treinta y nueve de las cuarenta y una reglas vigentes tienen caso automatizado,
-un 95,1 %. Las dos restantes no rechazan ninguna operación: RN-07 describe un cálculo y RN-33
+Con ese criterio, cincuenta de las cincuenta y dos reglas vigentes tienen caso automatizado,
+un 96,2 %. Las dos restantes no rechazan ninguna operación: RN-07 describe un cálculo y RN-33
 fija la moneda.
 
 **El límite de la cobertura**
@@ -101,7 +101,7 @@ y la batería volvió a dar el mismo resultado que antes de empezar.
 *Dos mediciones, sobre dos versiones del código.* La mutación se midió dos veces. La primera,
 sobre una versión intermedia, mostró qué defensas no tenían una prueba capaz de notar su falta.
 Con ese resultado se escribieron las pruebas que faltaban, y la segunda medición se hizo sobre el
-código congelado para la entrega. Las ochenta y tres mutaciones son las mismas en las dos. Entre una versión
+código congelado para medirla. Las ochenta y tres mutaciones son las mismas en las dos. Entre una versión
 y otra, el código cambió en algunos de los lugares que esas mutaciones tocan: setenta y nueve se
 aplicaron sin ningún cambio, y en cuatro se ajustó solo la forma de ubicar la línea por modificar,
 porque había pasado a otro método o aparecía dos veces. En las cuatro se rompe la misma defensa
@@ -150,21 +150,22 @@ restaurándola, con lo que debía volver a pasar.
 En la medición final quedaron cuatro mutaciones sin detectar. Dos son las equivalentes descubiertas
 después de ejecutar. La tercera quita la comparación de contraseñas en tiempo constante: una
 prueba funcional no puede observar cuánto tarda una comparación, y esa defensa se verificó leyendo
-el código. La cuarta quita el control de perfil al registrar el ingreso de una entrada: otra
-verificación rechaza igual al cliente que lo intenta, pero sin sesión la operación termina en un
-error no controlado, y ninguna prueba lo verifica. Es la única defensa que queda con una prueba
-por escribir.
+el código. La cuarta quita el control de perfil al registrar el ingreso de una entrada, y es un caso como el
+que se describió en «El límite de la cobertura». La prueba de ese registro aceptaba cualquier
+rechazo: sin el control, el sistema igual rechazaba al cliente, pero por otra regla, la que impide
+controlar el ingreso a eventos ajenos, y sin sesión la operación terminaba en un error no
+controlado. Con el control en su lugar el rechazo era el correcto, pero ninguna prueba lo exigía.
+Lo encontró la prueba de mutación, y se corrigió después de la medición: el rechazo pasó a ser un
+resultado que nombra su regla, y un caso nuevo lo exige, con un cliente y sin sesión, y falla si el
+control se quita. Es también el mejor argumento a favor del método: la mutación encontró un
+hueco que ninguna de las pruebas existentes advertía.
 
-**⏸ NO PEGAR TODAVÍA: depende de que Codex corrija M-22.** Cuando esté, las dos últimas oraciones del párrafo
-anterior («…pero sin sesión la operación termina en un error no controlado, y ninguna prueba lo
-verifica. Es la única defensa que queda con una prueba por escribir.») se reemplazan por:
-
-> …pero sin sesión la operación terminaba en un error no controlado, en lugar del rechazo que
-> establece la regla. Ninguna prueba lo veía: lo encontró la prueba de mutación, y se corrigió
-> después de la medición, junto con una prueba que lo verifica. Por eso la cifra de setenta y tres
-> de setenta y siete corresponde al commit medido, `65225e7`, y no a la versión final del código.
-> Es también el mejor argumento a favor del método: la mutación encontró un defecto real que
-> ninguna de las pruebas existentes advertía.
+La cifra de setenta y tres de setenta y siete se midió sobre esa versión, el commit `65225e7`, y
+no describe el código que se entrega. Después de la medición se reescribió la autorización: el
+sistema pasó de dos perfiles a tres, Cliente, Organizador y Administrador, y los controles de
+perfil cambiaron de regla. La mutación del control de perfil al registrar un ingreso, por ejemplo,
+se midió cuando ese control era RN-34; hoy es RN-48. La campaña no se volvió a ejecutar sobre el
+código nuevo, y por eso la cifra se informa con la versión en la que se midió.
 
 *Un caso que muestra para qué sirve.* El control de ingreso debe admitir una sola vez cada
 entrada aunque dos puertas la lean en el mismo instante (RN-18). La prueba original usaba dos
@@ -176,10 +177,80 @@ nueve rechazos exigidos en cada vuelta. La prueba reforzada detectó las tres mu
 concurrencia en todas las ejecuciones de control. El código de ingreso no se modificó: el sistema ya era correcto, y lo que faltaba era
 una prueba capaz de demostrarlo.
 
+*Lo que la revisión de coherencia no alcanzó.* Además de las pruebas, el documento se revisó con
+una matriz de diez comprobaciones de coherencia entre los diagramas, la base de datos y el código.
+Una de ellas compara los estados de la entrada en cuatro lugares: el diagrama de estados, la
+clase, la restricción de la base y el código. Las cuatro listas coincidían. Pero la comprobación
+compara listas de estados, no transiciones, y no puede ver de qué estado sale cada flecha. Así
+quedó sin detectar que el diagrama hacía salir la devolución de la entrada confirmada en general,
+lo que permitía devolver una entrada que ya se había usado para ingresar, cosa que el código
+rechaza. No lo encontró el instrumento: lo encontró una revisión externa, hecha por alguien
+distinto de quien había dibujado y verificado los diagramas, y se corrigió. Para que el
+instrumento lo detectara habría hecho falta una comprobación más: comparar cada transición del
+diagrama con la condición que la permite en el código, como se hizo con los métodos del diagrama
+de secuencia.
+
+La misma revisión encontró una segunda cosa que ningún instrumento había visto. Una pregunta
+sobre una columna del diagrama entidad-relación, la cantidad vendida de cada entrada, mostró que
+esa columna entra en el cálculo de los lugares disponibles y que la base la admitía vacía o con
+cualquier valor. Una entrada con la cantidad vacía o en cero no se descontaría de la capacidad del
+sector: sería una sobreventa. No ocurría en uso, porque el sistema siempre la escribe en uno, pero
+la base no lo garantizaba y ninguna prueba verificaba esa condición. Se restringió en la base, con
+su prueba.
+
+La matriz no mira transiciones; las pruebas no miraban esa condición. Las dos cosas aparecieron al
+revisar los diagramas desde afuera. Esa es la conclusión de método de este trabajo: cada
+instrumento de verificación cubre algo y deja algo afuera, saber qué deja afuera es parte del
+resultado, y una mirada externa encuentra lo que ningún instrumento propio estaba hecho para ver.
+
 *Qué queda fuera de la medición.* La mutación se aplicó a la capa de negocio, a la de datos y al
 esquema de la base, que es donde están las defensas; no a la interfaz gráfica, cuyos controles
 ocultos o deshabilitados no son una defensa. Tampoco cubre el acceso directo a la base de datos
 sin pasar por la aplicación, ni el tiempo de respuesta de la comparación de contraseñas, que una
 prueba funcional no puede observar y se verificó leyendo el código.
+
+**La revisión de pertenencia**
+
+Cuando el sistema pasó de dos perfiles a tres, se revisó una clase de defecto completa, en lugar
+de buscar fallas sueltas: el acceso a datos que pertenecen a otro dueño. Con dos perfiles, todos
+los dueños de locales compartían el perfil de administrador, y la pregunta era si una cuenta de
+ese perfil podía leer o modificar los locales, los eventos, las ventas o las listas de espera de
+otra cuenta con solo indicar un identificador ajeno. La revisión recorrió uno por uno todos los
+métodos públicos de la capa de negocio. Para cada uno comparó el código anterior al cambio con el
+posterior, y registró qué dato quedaba expuesto y qué prueba lo cierra.
+
+Se contó como fuga solo lo que estaba efectivamente abierto en el código anterior, no lo que se
+abriría si se quitara una verificación. Con ese criterio, veinticuatro métodos permitían leer u
+operar sobre datos de otro dueño. No son veinticuatro defectos independientes, sino cinco familias
+con una misma causa: el control comprobaba el perfil de quien llamaba, pero no a quién pertenecía
+el dato. Tres métodos eran de locales; trece, de eventos y sectores, entre ellos crear, publicar,
+suspender o eliminar el evento de otro dueño; dos, de servicios y disponibilidad; uno, de listas
+de espera, que exponía el nombre y el correo de los clientes inscriptos en eventos ajenos; y
+cinco, de los reportes y de la consulta de la auditoría, que entregaban las ventas y los importes
+de toda la plataforma. Todos se cerraron con dos reglas nuevas: la gestión requiere el perfil
+Organizador (RN-48), y un Organizador solo opera sobre los datos de sus propios locales (RN-49).
+
+Aparte de esas veinticuatro, la revisión encontró un defecto de otra naturaleza en el registro de
+auditoría. La operación que escribe un registro era pública y recibía como argumento quién era el
+autor, de modo que cualquier parte del sistema podía atribuirle una acción a otra persona. Un
+registro de auditoría que se puede falsificar no sirve como evidencia. Se cerró haciendo esa
+operación interna a la capa de negocio, que toma el autor de la sesión verificada y no de quien
+llama. Después se cerró también la capa de datos: sus repositorios dejaron de ser públicos, de
+modo que la interfaz no puede escribir un registro de auditoría por ningún camino, y un caso
+automático lo comprueba.
+
+Otros métodos se reforzaron sin que estuvieran abiertos, y no se cuentan entre las fugas. El
+control de ingreso, por ejemplo, ya comparaba el dueño del evento con la sesión antes del cambio.
+
+La prueba que cubre las lecturas verifica que un Organizador no recibe locales, eventos, sectores,
+servicios, disponibilidad, listas de espera ni cifras de reportes de otro. Para comprobar que
+sirve, se le quitó a propósito la verificación al código: la prueba falló, y volvió a pasar al
+restaurarla. Pero la revisión deja también una lista de lo que no está probado. No todas las
+escrituras tienen su caso negativo: faltan pruebas que intenten crear, publicar, suspender,
+eliminar o modificar el evento o el sector de otro dueño, registrar un local a nombre de otra
+cuenta, consultar los locales de otro Organizador, exportar un reporte ajeno, ejecutar los
+reportes distintos del primero y consultar la auditoría como Organizador. Las verificaciones están en el código; lo que
+falta es la prueba que demostraría que siguen ahí. Se informan como huecos abiertos, no como
+defensas probadas.
 
 <!-- fin del texto para el documento -->

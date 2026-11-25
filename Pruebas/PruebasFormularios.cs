@@ -30,7 +30,7 @@ namespace Pruebas
         private static readonly Regex Escala =
             new Regex(@"this\.AutoScaleDimensions\s*=\s*new\s+System\.Drawing\.SizeF\(\s*([\d.]+)F\s*,\s*([\d.]+)F\s*\)");
 
-        // CP-12 — RNF-03: altura de los formularios.
+        // CP-12 — RNF-03: mantener los formularios dentro del alto compatible con notebook.
         [TestMethod("CP-12: Altura de los formularios")]
         public void RNF03_NingunFormularioPasaDe790DeAlto()
         {
@@ -47,7 +47,21 @@ namespace Pruebas
                 string fuente;
                 if (!designers.TryGetValue(tipo.Name, out fuente))
                 {
-                    problemas.Add($"{tipo.Name}: no se encontró su .Designer.cs");
+                    // Las vistas creadas por codigo se validan por su tamano real.
+                    if (tipo.Name == "frmRevisarSolicitudesOrganizador") Fake.ComoAdministrador();
+                    else if (tipo.Name == "frmRevisarEventos") Fake.ComoAdministrador();
+                    else if (tipo.Name == "frmSolicitudOrganizador") Fake.ComoCliente(Fake.Cliente(Entidades.NivelFidelidad.Bronce));
+                    try
+                    {
+                        Form formulario;
+                        formulario = (Form)Activator.CreateInstance(tipo);
+                        using (formulario)
+                        {
+                            if (formulario.ClientSize.Height > AltoMaximo)
+                                problemas.Add($"{tipo.Name}: declara {formulario.ClientSize.Height} px de alto (maximo {AltoMaximo})");
+                        }
+                    }
+                    finally { Negocio.GestorSesion.Instance.Cerrar(); }
                     continue;
                 }
                 Match tamano = Tamano.Match(fuente);
@@ -77,12 +91,12 @@ namespace Pruebas
                 }
             }
 
-            // SEG-2 incorpora frmControlIngreso; conserva la verificación de todos los Designer.
-            Assert.AreEqual(20, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
+            // SEG-2 incorpora control de ingreso y la fase de seguridad incorpora auditoría.
+            // Las vistas de solicitudes y revisión del primer evento elevan el inventario a 25.
+            Assert.AreEqual(25, formularios.Count, "Formularios encontrados: " + string.Join(", ", formularios.Select(t => t.Name)));
             Assert.AreEqual(0, problemas.Count, string.Join(Environment.NewLine, problemas));
         }
-
-        // CP-53 — RNF-02: el punto de entrada instala el manejador antes del bucle de formularios.
+        // CP-53 — RNF-02: instalar el manejo global de errores antes de abrir formularios.
         [TestMethod("CP-53: Program instala el manejador global antes de ejecutar formularios")]
         public void CP53_ProgramInstalaManejadorGlobal()
         {
@@ -94,7 +108,7 @@ namespace Pruebas
             Assert.IsTrue(ejecucion > instalacion, "El manejador debe instalarse antes de Application.Run.");
         }
 
-        // CP-62 — RNF-02: contraste WCAG y familias tipográficas reales del tema.
+        // CP-62 — RNF-02: verificar tipografia y contraste del sistema visual.
         [TestMethod("CP-62: Contraste y fuentes del sistema de diseño")]
         public void CP62_ContrasteYFuentesDelTema()
         {
@@ -146,6 +160,7 @@ namespace Pruebas
         [DataRow("Propietario/frmEventosLocal", DisplayName = "CP-63: frmEventosLocal sin estilo propio")]
         [DataRow("Propietario/frmListasEspera", DisplayName = "CP-63: frmListasEspera sin estilo propio")]
         [DataRow("Propietario/frmMenuPropietario", DisplayName = "CP-63: frmMenuPropietario sin estilo propio")]
+        [DataRow("Propietario/frmMenuAdministrador", DisplayName = "CP-63: frmMenuAdministrador sin estilo serializado")]
         [DataRow("Propietario/frmMisLocales", DisplayName = "CP-63: frmMisLocales sin estilo propio")]
         [DataRow("Propietario/frmRegistrarLocal", DisplayName = "CP-63: frmRegistrarLocal sin estilo propio")]
         [DataRow("Propietario/frmReportes", DisplayName = "CP-63: frmReportes sin estilo propio")]
@@ -180,7 +195,7 @@ namespace Pruebas
             }
         }
 
-        // CP-64 — RNF-03: el proyecto usa el manifiesto de DPI, sin API manual en Program.
+        // CP-64 — RNF-03: declarar DPI de sistema para escalar de forma consistente.
         [TestMethod("CP-64: DPI de sistema declarado mediante el manifiesto")]
         public void CP64_DpiEnManifiesto()
         {
@@ -193,6 +208,49 @@ namespace Pruebas
             Assert.AreEqual("true", manifiesto.SelectSingleNode("//*[local-name()='dpiAware']")?.InnerText.Trim());
             Assert.AreEqual("system", manifiesto.SelectSingleNode("//*[local-name()='dpiAwareness']")?.InnerText.Trim());
             Assert.IsFalse(File.ReadAllText(Path.Combine(visual, "Program.cs")).Contains("SetProcessDPIAware"));
+        }
+
+        // CP-354 — RF-05, RNF-02: teclado, foco inicial y tamaño estable para ventanas sin diseño adaptable.
+        [TestMethod("CP-354: Enter, Esc, orden de tabulación, foco inicial y ventana no adaptable")]
+        public void CP354_TecladoYRedimensionamiento()
+        {
+            var formulariosProducto = typeof(Visual.FormularioEventAura).Assembly.GetTypes()
+                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Visual.FormularioEventAura))
+                .ToArray();
+            Assert.AreEqual(25, formulariosProducto.Length);
+            Assert.IsTrue(formulariosProducto.All(t => typeof(Visual.FormularioEventAura).IsAssignableFrom(t)),
+                "Todas las pantallas deben heredar la política común de teclado y redimensionamiento.");
+
+            InterfazGrupoA.EnSta(() =>
+            {
+                using (var formulario = new FormularioDePruebaTeclado())
+                {
+                    formulario.Show();
+                    Application.DoEvents();
+                    Assert.AreSame(formulario.Correo, formulario.ActiveControl, "El foco inicial debe ir al primer campo.");
+                    Assert.AreEqual(0, formulario.Correo.TabIndex);
+                    Assert.AreEqual(1, formulario.Clave.TabIndex);
+                    Assert.AreEqual(2, formulario.Confirmar.TabIndex);
+                    Assert.AreSame(formulario.Confirmar, formulario.AcceptButton, "Enter debe confirmar la acción principal.");
+                    Assert.AreSame(formulario.Volver, formulario.CancelButton, "Esc debe volver o cancelar.");
+                    Assert.AreEqual(FormBorderStyle.FixedSingle, formulario.FormBorderStyle, "Una ventana sin controles adaptables no debe ofrecer redimensionamiento roto.");
+                    Assert.IsFalse(formulario.MaximizeBox);
+                }
+            });
+        }
+
+        private sealed class FormularioDePruebaTeclado : Visual.FormularioEventAura
+        {
+            public readonly TextBox Correo = new TextBox { Name = "txtCorreo", Location = new Point(20, 20), Size = new Size(200, 28) };
+            public readonly TextBox Clave = new TextBox { Name = "txtClave", Location = new Point(20, 60), Size = new Size(200, 28) };
+            public readonly Button Confirmar = new Visual.Componentes.BotonPrimario { Name = "btnConfirmar", Text = "Confirmar", Location = new Point(20, 100), Size = new Size(140, 36) };
+            public readonly Button Volver = new Visual.Componentes.BotonSecundario { Name = "btnVolver", Text = "Volver", Location = new Point(170, 100), Size = new Size(120, 36) };
+
+            public FormularioDePruebaTeclado()
+            {
+                ClientSize = new Size(320, 160);
+                Controls.AddRange(new Control[] { Correo, Clave, Confirmar, Volver });
+            }
         }
 
         // Nombre de la clase → texto de su .Designer.cs.

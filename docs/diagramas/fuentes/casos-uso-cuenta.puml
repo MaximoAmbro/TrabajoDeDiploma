@@ -1,0 +1,34 @@
+@startuml casos-uso-cuenta
+!include _estilo.iuml
+left to right direction
+skinparam nodesep 14
+skinparam ranksep 30
+' Casos de uso de la cuenta, comunes a los tres perfiles (RN-05). Cliente, Organizador y
+' Administrador son especializaciones de «Usuario registrado»: heredan sus casos de uso.
+' Cada caso de uso corresponde a una pantalla real y a una operación de negocio (ver la tabla
+' de justificación en docs/PARA-MAXIMO-DIAGRAMAS.md, ficha 1).
+
+actor Visitante
+actor "Usuario\nregistrado" as Usuario
+actor Cliente
+actor Organizador
+actor Administrador
+
+Cliente -up-|> Usuario
+Organizador -up-|> Usuario
+Administrador -up-|> Usuario
+
+rectangle "EventAura" {
+  usecase "Registrarse" as Registrarse
+  usecase "Verificar\nel correo" as Verificar
+  usecase "Iniciar sesión" as Iniciar
+  usecase "Cambiar\ncontraseña" as Cambiar
+  usecase "Recuperar\ncontraseña" as Recuperar
+}
+
+Visitante --> Registrarse
+Registrarse ..> Verificar : <<include>>
+Usuario --> Iniciar
+Usuario --> Cambiar
+Usuario --> Recuperar
+@enduml

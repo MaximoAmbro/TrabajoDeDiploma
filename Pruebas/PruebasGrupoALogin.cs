@@ -15,7 +15,7 @@ namespace Pruebas
         // CP-66 — RF-02, RN-05; PA-01, filas 3.1/C.1: foco y navegación real del administrador.
         [DataTestMethod]
         [DataRow(false, DisplayName = "CP-66: Login inicia con foco en el correo")]
-        [DataRow(true, DisplayName = "CP-66: Administrador entra al menú de propietario")]
+        [DataRow(true, DisplayName = "CP-66: Administrador entra al menú de administración")]
         public void CP66_FocoYMenuDelAdministrador(bool iniciar)
         {
             EnSta(() =>
@@ -31,11 +31,11 @@ namespace Pruebas
                         mail.Text = anterior.Mail;
                         ControlDe<TextBox>(form, "txtContraseñaLogin").Text = "Admin1234";
                         DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btninicio").PerformClick());
-                        Visual.frmMenuPropietario menu = Application.OpenForms.OfType<Visual.frmMenuPropietario>().Single(f => f.Visible);
+                        Visual.frmMenuAdministrador menu = Application.OpenForms.OfType<Visual.frmMenuAdministrador>().Single(f => f.Visible);
                         Assert.AreEqual(anterior.Id, menu.IDUsuario);
                         Assert.IsFalse(form.Visible);
                         Assert.AreEqual(anterior.Id, GestorSesion.Instance.UsuarioActual.Id);
-                        Assert.AreEqual("Propietario", GestorSesion.Instance.UsuarioActual.TipoUsuario);
+                        Assert.AreEqual("Administrador", GestorSesion.Instance.UsuarioActual.TipoUsuario);
                     }
                     finally
                     {

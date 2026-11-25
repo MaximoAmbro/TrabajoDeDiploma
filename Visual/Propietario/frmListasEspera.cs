@@ -8,17 +8,22 @@ using Negocio;
 
 namespace Visual
 {
-    // RF-10 + CU-07: consulta de las listas de espera, solo lectura en esta versión. Se elige un
-    // evento agotado de los locales del administrador y se ve la lista en el orden de RN-35.
+    // RF-10 + CU-07: consulta de las listas de espera de los locales del Organizador, solo lectura.
+    // Se elige un evento agotado y se ve la lista en el orden de RN-35.
     public partial class frmListasEspera : FormularioEventAura
     {
         public int IDUsuario;
         public string NombreUsuario;
+        private Componentes.EstadoVacio estadoVacio;
 
 
         public frmListasEspera()
         {
             InitializeComponent();
+            estadoVacio = new Componentes.EstadoVacio { Name = "estadoListaVacia", Visible = false };
+            estadoVacio.AjustarA(dgvLista);
+            estadoVacio.Accion += () => btnVolver.PerformClick();
+            Controls.Add(estadoVacio);
         }
 
         // Lo que muestra el combo de eventos.
@@ -62,7 +67,7 @@ namespace Visual
             CargarEventos();
         }
 
-        // Eventos agotados de los locales del administrador (RN-10). También los que ya no están
+        // Eventos agotados de los locales del Organizador (RN-10). También los que ya no están
         // agotados pero conservan inscriptos, por ejemplo después de una devolución.
         private void CargarEventos()
         {
@@ -83,6 +88,9 @@ namespace Visual
             {
                 cmbEventos.Enabled = false;
                 lblCantidad.Text = "No hay eventos agotados ni listas de espera en tus locales.";
+                estadoVacio.Cargar("Cuando un evento se agote y haya personas anotadas, vas a encontrar el orden de espera acá.", "Volver al panel");
+                dgvLista.Visible = false;
+                estadoVacio.Visible = true;
                 return;
             }
             cmbEventos.SelectedIndex = 0;
@@ -113,6 +121,9 @@ namespace Visual
                     inscripcion.FechaAlta.ToString("dd/MM/yyyy HH:mm"));
             }
             dgvLista.ClearSelection();
+            dgvLista.Visible = lista.Count > 0;
+            estadoVacio.Cargar("Todavía nadie se anotó en la lista de este evento. Cuando alguien se sume, vas a ver su posición acá.", "Volver al panel");
+            estadoVacio.Visible = lista.Count == 0;
             int suscriptores = lista.Count(x => x.ConSuscripcion);
             lblCantidad.Text = lista.Count == 0
                 ? "Nadie se anotó todavía en la lista de este evento."

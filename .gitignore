@@ -31,3 +31,7 @@ EventAura-pruebas.zip
 
 # Evidencias locales de las corridas (incluyen códigos de tickets y rutas personales).
 TestResults/
+
+# Capturas intermedias locales de la pasada visual 2026-11-20.
+Pruebas/Capturas-UI-2026-11-20/
+Pruebas/Capturas-UI-Normalizada-2026-11-20/

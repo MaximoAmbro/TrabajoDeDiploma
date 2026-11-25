@@ -3,7 +3,10 @@
 skinparam nodesep 22
 skinparam ranksep 32
 hide empty members
-' Diagrama de clases, vista 1 de 6: entidades de cuentas y catálogo (proyecto Entidades).
+' Diagrama de clases, vista 1 de 8: entidades de cuentas y catálogo (proyecto Entidades).
+' Suscripción, lista de espera y solicitud de Organizador están en la vista 1b.
+' Propietario es la clase del Organizador (RN-05). El Administrador no tiene clase propia: es un
+' Usuario con TipoUsuario = "Administrador".
 ' Fuente: Entidade/*.cs. Las propiedades IdX que implementan una asociación no se repiten
 ' como atributo: la asociación ya las representa (regla R1). Ver la tabla de justificación.
 
@@ -22,7 +25,7 @@ class Cliente {
   + FechaUltimaEvaluacion : DateTime?
   + ComprasUltimos12Meses : int
 }
-class Propietario
+class Propietario <<Organizador>>
 class Local {
   + Id : int
   + Nombre : string
@@ -37,6 +40,8 @@ class Evento {
   + Categoria : string
   + Estado : string
   + FinPreventa : DateTime?
+  + ImagenPortada : byte[]
+  + MotivoRechazo : string
 }
 class Sector {
   + Id : int
@@ -53,19 +58,6 @@ class Servicio {
   + Activo : bool
 }
 class ServicioEvento
-class Suscripcion {
-  + Id : int
-  + Plan : string
-  + FechaInicio : DateTime
-  + FechaFin : DateTime
-  + Precio : decimal
-  + Activa : bool
-}
-class ListaEspera {
-  + Id : int
-  + FechaAlta : DateTime
-  + ConSuscripcion : bool
-}
 enum NivelFidelidad {
   Bronce
   Plata
@@ -80,7 +72,4 @@ Cliente "0..*" --> "$_ 0..*" Evento : entradasUsuario
 Evento "1" -- "0..*$_" Sector : Sectores / IdEvento
 ServicioEvento "0..*" --> "1$_" Evento : IdEvento
 ServicioEvento "0..*$_$_" --> "1$_" Servicio : IdServicio
-Suscripcion "0..*" --> "1$_" Usuario : IdUsuario
-ListaEspera "0..*" --> "1$_" Evento : IdEvento
-ListaEspera "0..*" --> "1$_" Usuario : Usuario
 @enduml

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Visual.Componentes;
 using System.Drawing;
@@ -33,6 +34,31 @@ namespace Visual
         public static readonly Color AdvertenciaFondo = Color.FromArgb(255, 244, 214);
 
         public static readonly Font Marca = new Font("Segoe UI Semibold", 26f);
+        public static readonly Font FirmaNormal = new Font("Segoe UI", 16f);
+        // 16/12/19 píxeles lógicos a 96 DPI, expresados en puntos para escalar con Windows.
+        public static readonly Font TituloTarjeta = new Font("Segoe UI Semibold",12f);
+        public static readonly Font DatoTarjeta = new Font("Segoe UI",9f);
+        public static readonly Font PrecioTarjeta = new Font("Segoe UI Semibold",14.25f);
+        public static readonly Color[] PaletaPortadas = { Primario,Color.FromArgb(67,64,135),Color.FromArgb(160,86,141),Color.FromArgb(72,117,145),Color.FromArgb(105,69,143),Color.FromArgb(83,132,126) };
+        public static readonly Color MarcaAguaPortada=Color.FromArgb(71,255,255,255);
+        public static Font FuenteInicialPortada(int alto){return new Font("Segoe UI",Math.Max(24,alto*0.75f),FontStyle.Bold,GraphicsUnit.Pixel);}
+        public static readonly Font FirmaFuerte = new Font("Segoe UI", 16f, FontStyle.Bold);
+        public static readonly Font IconosInterfaz = new Font(FamiliaIconos(), 24f);
+
+        public static void EstiloAviso(Control aviso, bool error)
+        {
+            aviso.BackColor = error ? ErrorFondo : ExitoFondo;
+            aviso.ForeColor = error ? Error : Texto;
+            aviso.Font = Cuerpo;
+        }
+
+        private static string FamiliaIconos()
+        {
+            using (var fuentes = new System.Drawing.Text.InstalledFontCollection())
+                foreach (var familia in fuentes.Families)
+                    if (familia.Name == "Segoe Fluent Icons") return familia.Name;
+            return "Segoe MDL2 Assets";
+        }
         public static readonly Font Titulo = new Font("Segoe UI Semibold", 18f);
         public static readonly Font Seccion = new Font("Segoe UI Semibold", 12f);
         public static readonly Font Cuerpo = new Font("Segoe UI", 10f);
@@ -50,9 +76,11 @@ namespace Visual
         }
 
         public const float DpiDiseno = 96f;
-        public const int AltoBoton = 32, AltoBotonPrimario = 36, AnchoMinimoBoton = 120;
-        public const int RellenoHorizontalBoton = 20, AltoFila = 32, AltoEncabezadoGrilla = 36;
-        public const int AltoEncabezadoVentana = 72, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
+        public const int AltoBoton = 32, AltoBotonPrimario = 36;
+        public const int AnchoBotonCompacto = 136, AnchoBotonNormal = 184, AnchoBotonAmplio = 240;
+        public const int MargenFormulario = 24, SeparacionControl = 8;
+        public const int RellenoHorizontalBoton = 20, RellenoIconoBoton = 46, AltoFila = 32, AltoEncabezadoGrilla = 36;
+        public const int AltoEncabezadoVentana = 72, AltoBarraSuperior = 60, AltoPie = 60, BordeNormal = 1, BordeFoco = 2;
 
         // Medidas del ticket en puntos PDF; no dependen de los DPI del monitor.
         public static class Ticket
@@ -112,6 +140,7 @@ namespace Visual
 
         private static readonly Dictionary<string, Font> fuentesNormalizadas = new Dictionary<string, Font>();
         private static readonly ConditionalWeakTable<Button, object> botonesPreparados = new ConditionalWeakTable<Button, object>();
+        private static readonly ConditionalWeakTable<Form, object> barrasAjustadas = new ConditionalWeakTable<Form, object>();
 
         private static Font NormalizarFuente(Font fuente)
         {
@@ -162,21 +191,119 @@ namespace Visual
 
         public static void Normalizar(Control raiz)
         {
+            if (raiz.Parent is FlowLayoutPanel || raiz.Parent is TableLayoutPanel)
+            {
+                int dpiContenedor = Math.Max(96, raiz.DeviceDpi);
+                int margen = MedidaDpi(SeparacionControl / 2, dpiContenedor);
+                raiz.Margin = new Padding(margen);
+            }
+            var formulario = raiz as FormularioEventAura;
+            if (formulario != null)
+            {
+                // La compra ya distribuye el margen de 24 px dentro de sus paneles desplazables.
+                if (!(formulario is FrmCompraCliente))
+                    formulario.Padding = new Padding(MedidaDpi(MargenFormulario, Math.Max(96, formulario.DeviceDpi)));
+                AjustarBarraSuperior(formulario);
+            }
             string familia = raiz.Font.Name;
             if (familia == "Nirmala UI" || familia == "MS Gothic" || familia == "Microsoft Sans Serif")
                 raiz.Font = NormalizarFuente(raiz.Font);
             if (raiz.ForeColor == TextoAnterior) raiz.ForeColor = TextoSecundario;
             if (raiz.ForeColor == TextoOscuroAnterior) raiz.ForeColor = Texto;
             var boton = raiz as Button;
-            if (boton != null && !(boton is Componentes.BotonPrimario) &&
-                !(boton is Componentes.BotonSecundario) && !(boton is Componentes.BotonPeligro))
+            if (boton != null)
             {
-                if (boton.BackColor == Primario) EstiloBoton(boton, true);
-                else if (boton.BackColor == BotonAnterior) EstiloBoton(boton, false);
+                RolBoton rol = boton is Componentes.BotonPrimario ? RolBoton.Primario :
+                    boton is Componentes.BotonPeligro ? RolBoton.Peligro : RolBoton.Secundario;
+                if (!(boton is BotonTematico))
+                    PrepararBoton(boton, rol);
+                boton.Font = Boton;
+                int dpi = Math.Max(96, boton.DeviceDpi);
+                bool tieneIcono = boton.Controls.OfType<Label>().Any(etiqueta =>
+                    etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase));
+                int rellenoIzquierdo = tieneIcono ? RellenoIconoBoton : RellenoHorizontalBoton;
+                boton.Padding = new Padding(MedidaDpi(rellenoIzquierdo, dpi), 0, MedidaDpi(RellenoHorizontalBoton, dpi), 0);
+                boton.Width = MedidaDpi(AnchoBotonSegunDiseno(boton), dpi);
+                boton.Height = MedidaDpi(rol == RolBoton.Primario ? AltoBotonPrimario : AltoBoton, dpi);
             }
             var grilla = raiz as DataGridView;
             if (grilla != null) EstiloGrilla(grilla);
             foreach (Control hijo in raiz.Controls) Normalizar(hijo);
+            NormalizarSeparacionBotones(raiz);
+        }
+
+        private static void NormalizarSeparacionBotones(Control contenedor)
+        {
+            int separacion = MedidaDpi(SeparacionControl, Math.Max(96, contenedor.DeviceDpi));
+            var botones = contenedor.Controls.Cast<Control>().OfType<Button>()
+                .Where(b => b.Bounds.Width > 0 && b.Bounds.Height > 0)
+                .OrderBy(b => b.Top).ThenBy(b => b.Left).ToArray();
+            for (int i = 0; i < botones.Length; i++)
+            {
+                var actual = botones[i];
+                for (int j = i + 1; j < botones.Length; j++)
+                {
+                    var siguiente = botones[j];
+                    int solape = Math.Min(actual.Bottom, siguiente.Bottom) - Math.Max(actual.Top, siguiente.Top);
+                    if (solape < Math.Min(actual.Height, siguiente.Height) / 2) continue;
+                    int anchoNecesario = actual.Width + siguiente.Width + separacion + contenedor.Padding.Horizontal;
+                    if (contenedor.ClientSize.Width > 0 && contenedor.ClientSize.Width < anchoNecesario) continue;
+                    if (siguiente.Left < actual.Right + separacion)
+                    {
+                        int margen = Math.Max(contenedor.Padding.Left, MedidaDpi(Espacio.XL, Math.Max(96, contenedor.DeviceDpi)));
+                        if (siguiente.Anchor.HasFlag(AnchorStyles.Right) && siguiente.Left - actual.Width - separacion >= margen)
+                            actual.Left = siguiente.Left - actual.Width - separacion;
+                        else if (siguiente.Left <= actual.Left && actual.Anchor.HasFlag(AnchorStyles.Left))
+                            siguiente.Left = actual.Right + separacion;
+                        else
+                            siguiente.Left = actual.Right + separacion;
+                    }
+                }
+            }
+        }
+
+        private static int MedidaDpi(int logico, int dpi)
+        {
+            return (int)Math.Round(logico * (dpi / DpiDiseno), MidpointRounding.AwayFromZero);
+        }
+
+        private static void AjustarBarraSuperior(Form formulario)
+        {
+            foreach (var barra in formulario.Controls.OfType<Componentes.BarraSuperior>())
+            {
+                if (barra.Dock == DockStyle.Top)
+                {
+                    barra.Dock = DockStyle.None;
+                    barra.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+                    barra.SetBounds(0, 0, formulario.ClientSize.Width, MedidaDpi(AltoBarraSuperior, Math.Max(96, formulario.DeviceDpi)));
+                    object marca;
+                    if (!barrasAjustadas.TryGetValue(formulario, out marca))
+                    {
+                        barrasAjustadas.Add(formulario, new object());
+                        formulario.SizeChanged += (s, e) =>
+                        {
+                            var actual = formulario.Controls.OfType<Componentes.BarraSuperior>().FirstOrDefault();
+                            if (actual != null) actual.SetBounds(0, 0, formulario.ClientSize.Width, MedidaDpi(AltoBarraSuperior, Math.Max(96, formulario.DeviceDpi)));
+                        };
+                    }
+                }
+            }
+        }
+
+        private static int AnchoBotonSegunDiseno(Button boton)
+        {
+            if (boton.FindForm() is frmInicio && boton.Name == "btninicio")
+                return Math.Max(AnchoBotonNormal, boton.Parent.ClientSize.Width - boton.Left - MargenFormulario);
+            if (boton.Name == "btnDevolver") return AnchoBotonAmplio;
+            if (boton.Name == "btnListaEspera")
+                return Math.Max(AnchoBotonAmplio, boton.Parent.ClientSize.Width - boton.Left * 2);
+            bool tieneIcono = boton.Controls.OfType<Label>().Any(etiqueta => etiqueta.Name.StartsWith("icono", StringComparison.OrdinalIgnoreCase));
+            int relleno = tieneIcono ? RellenoIconoBoton + RellenoHorizontalBoton : RellenoHorizontalBoton * 2;
+            int requerido = TextRenderer.MeasureText(boton.Text ?? string.Empty, Boton, Size.Empty,
+                TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width + relleno + BordeFoco * 2 + 8;
+            foreach (int ancho in new[] { AnchoBotonCompacto, AnchoBotonNormal, AnchoBotonAmplio })
+                if (ancho >= requerido) return ancho;
+            return AnchoBotonAmplio;
         }
 
         // Los componentes y los botones heredados comparten todos los estados de estilo.

@@ -16,6 +16,7 @@ namespace Visual
 
         private DateTime vence;
         private bool cerrada;   // pagada o vencida: ya no hay reserva que liberar al cerrar
+        private bool procesandoPago;
 
         public frmPago()
         {
@@ -47,9 +48,6 @@ namespace Visual
                 lblTemporizador.Text = "Reserva: 00:00";
                 GestorCompras.Instance.LiberarVencidas();
                 cerrada = true;
-                MessageBox.Show("Venció el plazo de la reserva y se liberaron las entradas. " +
-                                "Volvé a armar la compra desde el listado.",
-                                "Reserva vencida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.Abort;
                 return;
             }
@@ -59,6 +57,7 @@ namespace Visual
 
         private void btnPagar_Click(object sender, EventArgs e)
         {
+            if (procesandoPago || cerrada) return;
             // RN-30: el número completo vive solo en este objeto, en memoria, durante el cobro.
             var tarjeta = new DatosTarjeta
             {
@@ -69,31 +68,40 @@ namespace Visual
             };
 
             bool aprobado;
+            procesandoPago = true;
+            btnPagar.Enabled = false;
             try
             {
-                aprobado = GestorCompras.Instance.Confirmar(Compra, tarjeta);
+                using (Avisos.Esperar(this, btnPagar))
+                    aprobado = GestorCompras.Instance.Confirmar(Compra, tarjeta);
+                procesandoPago = false;
+                btnPagar.Enabled = true;
             }
             catch (ArgumentException ex)
             {
+                procesandoPago = false;
+                btnPagar.Enabled = true;
                 lblEstado.Text = ex.Message;
                 return;
             }
             catch (ReglaNegocioException ex)
             {
                 tmrReserva.Stop();
+                procesandoPago = false;
+                btnPagar.Enabled = true;
                 cerrada = ex.Regla == "RN-15";
                 Avisos.Regla("Pago", ex);
                 DialogResult = cerrada ? DialogResult.Abort : DialogResult.Cancel;
                 return;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 // La compra dejó de estar pendiente por fuera de esta pantalla (por ejemplo, el evento
                 // se eliminó mientras se pagaba). El cupo ya se liberó: se vuelve al listado.
                 tmrReserva.Stop();
+                procesandoPago = false;
+                btnPagar.Enabled = false;
                 cerrada = true;
-                MessageBox.Show(ex.Message + "\n\nVolvé a armar la compra desde el listado.",
-                    "Pago no realizado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.Abort;
                 return;
             }
@@ -121,13 +129,7 @@ namespace Visual
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            DialogResult respuesta = MessageBox.Show(
-                "Si cancelás el pago se liberan las entradas reservadas. ¿Querés cancelar?",
-                "Cancelar pago", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (respuesta == DialogResult.Yes)
-            {
-                DialogResult = DialogResult.Cancel;
-            }
+            DialogResult = DialogResult.Cancel;
         }
 
         // Cerrar sin pagar (Cancelar o la X) libera el cupo en el acto (RN-32).

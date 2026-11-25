@@ -5,7 +5,7 @@ skinparam ranksep 45
 hide empty members
 ' Diagrama de clases, vista 8a: patrones Singleton y Repository, con un caso real de cada uno.
 ' Fuente: Repo/GestorCompras.cs, Datos/RepositorioBase.cs, Datos/RepositorioCompras.cs,
-' Datos/Conexion.cs. La misma estructura de Singleton se repite en 28 clases (ver el texto).
+' Datos/Conexion.cs. La misma estructura de Singleton se repite en 34 clases (ver el texto).
 
 class GestorCompras <<Singleton>> {
   - {static} <U+005F>instance : GestorCompras

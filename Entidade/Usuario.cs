@@ -13,7 +13,7 @@ namespace Entidades
         public string Apellido { get; set; }
         public string Mail { get; set; }
         public string Contraseña { get; set; }
-        public string TipoUsuario { get; set; }       // Cliente|Propietario, RN-05
+        public string TipoUsuario { get; set; }       // Cliente|Organizador|Administrador, RN-05
         public int IntentosFallidos { get; set; }     // RN-04
         public DateTime? BloqueadoHasta { get; set; } // RN-04
     }

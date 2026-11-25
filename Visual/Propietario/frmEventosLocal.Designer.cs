@@ -1,4 +1,4 @@
-﻿namespace Visual.Vendedor
+namespace Visual.Vendedor
 {
     partial class frmEventosLocal
     {
@@ -41,7 +41,7 @@
             // btnEliminarEvento
             // 
             this.btnEliminarEvento.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEliminarEvento.Location = new System.Drawing.Point(168, 384);
+            this.btnEliminarEvento.Location = new System.Drawing.Point(168, 444);
             this.btnEliminarEvento.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnEliminarEvento.Name = "btnEliminarEvento";
             this.btnEliminarEvento.Size = new System.Drawing.Size(200, 40);
@@ -56,7 +56,7 @@
             this.dgvEventos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvEventos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvEventos.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.dgvEventos.Location = new System.Drawing.Point(24, 152);
+            this.dgvEventos.Location = new System.Drawing.Point(24, 212);
             this.dgvEventos.Margin = new System.Windows.Forms.Padding(2);
             this.dgvEventos.Name = "dgvEventos";
             this.dgvEventos.RowHeadersWidth = 51;
@@ -66,7 +66,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 24);
+            this.label2.Location = new System.Drawing.Point(24, 84);
             this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(792, 32);
@@ -76,7 +76,7 @@
             // btnVolver
             // 
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(24, 384);
+            this.btnVolver.Location = new System.Drawing.Point(24, 444);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(136, 40);
@@ -87,7 +87,7 @@
             // lblNombre
             // 
             this.lblNombre.AutoSize = false;
-            this.lblNombre.Location = new System.Drawing.Point(24, 64);
+            this.lblNombre.Location = new System.Drawing.Point(24, 124);
             this.lblNombre.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblNombre.Name = "lblNombre";
             this.lblNombre.Size = new System.Drawing.Size(792, 64);
@@ -97,7 +97,7 @@
             // btnAdministrarEvento
             // 
             this.btnAdministrarEvento.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAdministrarEvento.Location = new System.Drawing.Point(376, 384);
+            this.btnAdministrarEvento.Location = new System.Drawing.Point(376, 444);
             this.btnAdministrarEvento.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnAdministrarEvento.Name = "btnAdministrarEvento";
             this.btnAdministrarEvento.Size = new System.Drawing.Size(224, 40);
@@ -108,7 +108,7 @@
             // btnAgregarEvento
             // 
             this.btnAgregarEvento.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAgregarEvento.Location = new System.Drawing.Point(608, 384);
+            this.btnAgregarEvento.Location = new System.Drawing.Point(608, 444);
             this.btnAgregarEvento.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnAgregarEvento.Name = "btnAgregarEvento";
             this.btnAgregarEvento.Size = new System.Drawing.Size(208, 40);
@@ -120,7 +120,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(840, 448);
+            this.ClientSize = new System.Drawing.Size(840, 508);
             this.Controls.Add(this.btnAgregarEvento);
             this.Controls.Add(this.btnAdministrarEvento);
             this.Controls.Add(this.lblNombre);
@@ -134,6 +134,11 @@
             this.Text = "EventAura · Eventos del local";
             this.Load += new System.EventHandler(this.frmEventosLocal_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvEventos)).EndInit();
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(840, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,5 +153,6 @@
         private Visual.Componentes.EtiquetaTitulo lblNombre;
         private Visual.Componentes.BotonPrimario btnAdministrarEvento;
         private Visual.Componentes.BotonPrimario btnAgregarEvento;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

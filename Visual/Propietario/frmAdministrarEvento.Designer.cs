@@ -1,4 +1,4 @@
-﻿namespace Visual.Vendedor
+namespace Visual.Vendedor
 {
     partial class frmAdministrarEvento
     {
@@ -38,76 +38,78 @@
             this.lblPreventa = new Visual.Componentes.EtiquetaRotulo();
             this.dtpFinPreventa = new System.Windows.Forms.DateTimePicker();
             this.btnGuardarPreventa = new Visual.Componentes.BotonPrimario();
+            this.btnElegirPortada = new Visual.Componentes.BotonSecundario();
+            this.portadaEvento = new Visual.Componentes.PortadaEvento();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSectores)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // btnVolver
-            // 
+            //
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(24, 384);
+            this.btnVolver.Location = new System.Drawing.Point(24, 444);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(136, 40);
             this.btnVolver.TabIndex = 47;
             this.btnVolver.Text = "Volver";
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click1);
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(792, 32);
             this.label1.TabIndex = 38;
             this.label1.Text = "Administrar evento";
-            // 
+            //
             // lblEvento
-            // 
+            //
             this.lblEvento.AutoSize = false;
-            this.lblEvento.Location = new System.Drawing.Point(24, 64);
+            this.lblEvento.Location = new System.Drawing.Point(24, 124);
             this.lblEvento.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblEvento.Name = "lblEvento";
-            this.lblEvento.Size = new System.Drawing.Size(792, 24);
+            this.lblEvento.Size = new System.Drawing.Size(552, 24);
             this.lblEvento.TabIndex = 52;
             this.lblEvento.Text = "[Evento]";
-            // 
+            //
             // dgvSectores
-            // 
+            //
             this.dgvSectores.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvSectores.Location = new System.Drawing.Point(24, 216);
+            this.dgvSectores.Location = new System.Drawing.Point(24, 276);
             this.dgvSectores.Margin = new System.Windows.Forms.Padding(2);
             this.dgvSectores.Name = "dgvSectores";
             this.dgvSectores.RowHeadersWidth = 51;
             this.dgvSectores.Size = new System.Drawing.Size(792, 136);
             this.dgvSectores.TabIndex = 53;
-            // 
+            //
             // btnAgregarSector
-            // 
+            //
             this.btnAgregarSector.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAgregarSector.Location = new System.Drawing.Point(464, 384);
+            this.btnAgregarSector.Location = new System.Drawing.Point(464, 444);
             this.btnAgregarSector.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnAgregarSector.Name = "btnAgregarSector";
             this.btnAgregarSector.Size = new System.Drawing.Size(168, 40);
             this.btnAgregarSector.TabIndex = 54;
             this.btnAgregarSector.Text = "Agregar sector";
             this.btnAgregarSector.Click += new System.EventHandler(this.btnAgregarSector_Click);
-            // 
+            //
             // btnEliminarSector
-            // 
+            //
             this.btnEliminarSector.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEliminarSector.Location = new System.Drawing.Point(648, 384);
+            this.btnEliminarSector.Location = new System.Drawing.Point(648, 444);
             this.btnEliminarSector.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnEliminarSector.Name = "btnEliminarSector";
             this.btnEliminarSector.Size = new System.Drawing.Size(168, 40);
             this.btnEliminarSector.TabIndex = 55;
             this.btnEliminarSector.Text = "Eliminar sector";
             this.btnEliminarSector.Click += new System.EventHandler(this.btnEliminarSector_Click);
-            // 
+            //
             // label2
-            // 
+            //
             this.label2.AutoSize = false;
-            this.label2.Location = new System.Drawing.Point(24, 184);
+            this.label2.Location = new System.Drawing.Point(24, 244);
             this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(792, 24);
@@ -117,7 +119,7 @@
             // lblPreventa
             //
             this.lblPreventa.AutoSize = true;
-            this.lblPreventa.Location = new System.Drawing.Point(24, 112);
+            this.lblPreventa.Location = new System.Drawing.Point(24, 172);
             this.lblPreventa.Name = "lblPreventa";
             this.lblPreventa.Size = new System.Drawing.Size(352, 20);
             this.lblPreventa.TabIndex = 61;
@@ -129,7 +131,7 @@
             this.dtpFinPreventa.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpFinPreventa.CustomFormat = "dd/MM/yyyy HH:mm";
             this.dtpFinPreventa.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpFinPreventa.Location = new System.Drawing.Point(24, 136);
+            this.dtpFinPreventa.Location = new System.Drawing.Point(24, 196);
             this.dtpFinPreventa.Name = "dtpFinPreventa";
             this.dtpFinPreventa.ShowCheckBox = true;
             this.dtpFinPreventa.Size = new System.Drawing.Size(352, 28);
@@ -138,20 +140,41 @@
             // btnGuardarPreventa
             //
             this.btnGuardarPreventa.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnGuardarPreventa.Location = new System.Drawing.Point(400, 128);
+            this.btnGuardarPreventa.Location = new System.Drawing.Point(400, 188);
             this.btnGuardarPreventa.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.btnGuardarPreventa.Name = "btnGuardarPreventa";
             this.btnGuardarPreventa.Size = new System.Drawing.Size(208, 40);
             this.btnGuardarPreventa.TabIndex = 57;
             this.btnGuardarPreventa.Text = "Guardar preventa";
             this.btnGuardarPreventa.Click += new System.EventHandler(this.btnGuardarPreventa_Click);
-            // 
+            //
+            // portadaEvento
+            //
+            this.portadaEvento.Location = new System.Drawing.Point(628, 124);
+            this.portadaEvento.Name = "portadaEvento";
+            this.portadaEvento.Size = new System.Drawing.Size(188, 92);
+            this.portadaEvento.TabIndex = 62;
+            //
+            // btnElegirPortada
+            //
+            this.btnElegirPortada.Location = new System.Drawing.Point(628, 224);
+            this.btnElegirPortada.Name = "btnElegirPortada";
+            this.btnElegirPortada.Size = new System.Drawing.Size(188, 32);
+            this.btnElegirPortada.TabIndex = 63;
+            this.btnElegirPortada.Text = "Cambiar portada";
+            this.btnElegirPortada.Click += new System.EventHandler(this.btnElegirPortada_Click);
+            this.label2.Location = new System.Drawing.Point(24, 260);
+            this.dgvSectores.Location = new System.Drawing.Point(24, 292);
+            this.dgvSectores.Size = new System.Drawing.Size(792, 120);
+            //
             // frmModificarSectoresEventos
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(840, 448);
+            this.ClientSize = new System.Drawing.Size(840, 508);
             this.Controls.Add(this.btnGuardarPreventa);
+            this.Controls.Add(this.portadaEvento);
+            this.Controls.Add(this.btnElegirPortada);
             this.Controls.Add(this.dtpFinPreventa);
             this.Controls.Add(this.lblPreventa);
             this.Controls.Add(this.label2);
@@ -166,6 +189,11 @@
             this.Text = "EventAura · Administrar evento";
             this.Load += new System.EventHandler(this.frmAgregarEventoLocal_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSectores)).EndInit();
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(840, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -182,5 +210,8 @@
         private Visual.Componentes.EtiquetaRotulo lblPreventa;
         private System.Windows.Forms.DateTimePicker dtpFinPreventa;
         private Visual.Componentes.BotonPrimario btnGuardarPreventa;
+        private Visual.Componentes.BotonSecundario btnElegirPortada;
+        private Visual.Componentes.PortadaEvento portadaEvento;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

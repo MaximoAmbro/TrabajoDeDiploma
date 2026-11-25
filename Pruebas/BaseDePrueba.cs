@@ -29,10 +29,16 @@ namespace Pruebas
             new Regex(@"^[ \t]*GO[ \t]*\r?$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
         private static readonly Regex NombreValido = new Regex(@"^[A-Za-z0-9_]+$");
+        private static bool modoErroresConfigurado;
 
         [AssemblyInitialize]
         public static void Preparar(TestContext contexto)
         {
+            // También para los hilos STA creados por los casos: una excepción hace
+            // fallar el caso, nunca abre el diálogo modal del framework.
+            ConfigurarErroresDePrueba();
+            EnviadorSimulado.DirectorioBandeja = Path.Combine(RaizDelRepositorio(), "TestResults", "BandejaSimulada");
+            EnviadorSimulado.LimpiarBandeja();
             string cadena = CadenaDePrueba();
             string nombre = new SqlConnectionStringBuilder(cadena).InitialCatalog;
 
@@ -50,9 +56,26 @@ namespace Pruebas
             EjecutarScript(cadena, Path.Combine(carpeta, "01-esquema.sql"));
             EjecutarScript(cadena, Path.Combine(carpeta, "02-semilla.sql"));
             EjecutarScript(cadena, Path.Combine(carpeta, "06-prioridad-temporal.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "07-indice-unico-seguros.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "08-seguridad-cuenta-auditoria.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "09-imagenes-eventos.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "11-perfiles-administrador-organizador.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "12-solicitudes-organizador.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "13-revision-primer-evento.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "14-primer-evento-aprobado.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "15-motivo-rechazo-evento.sql"));
+            EjecutarScript(cadena, Path.Combine(carpeta, "16-fk-local-propietario.sql"));
 
             // GestorParametros cachea: que lea la tabla recién poblada.
             GestorParametros.Instance.Recargar();
+        }
+
+        public static void ConfigurarErroresDePrueba()
+        {
+            if (modoErroresConfigurado) return;
+            System.Windows.Forms.Application.SetUnhandledExceptionMode(
+                System.Windows.Forms.UnhandledExceptionMode.ThrowException, false);
+            modoErroresConfigurado = true;
         }
 
         [AssemblyCleanup]

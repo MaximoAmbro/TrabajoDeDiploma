@@ -34,6 +34,7 @@ namespace Visual
         public int IDUsuario;
         public int IDEvento;
         public string NombreUsuario;
+        public int? SectorInicial;
 
         // RF-05: lo que el cliente va armando. Vive en memoria hasta confirmar la compra.
         private Paquete paquete;
@@ -42,6 +43,8 @@ namespace Visual
         private Cliente cliente;   // RN-22: su nivel persistido es el que se aplica
         private Dictionary<int, Sector> sectores = new Dictionary<int, Sector>();
         private bool cargandoGrilla;
+        private bool compraEnCurso;
+        private bool compraFinalizada;
         private bool agotado;
         private Panel contenidoCompra;
         private Panel accionesCompra;
@@ -51,6 +54,7 @@ namespace Visual
         {
             InitializeComponent();
             ConfigurarAreaDeCompra();
+            mapaSectores.SectorElegido += ElegirSectorEnMapa;
         }
 
         // RNF-02/RNF-03: las acciones quedan visibles aun si el contenido necesita
@@ -77,7 +81,7 @@ namespace Visual
             pnlResumen.Paint += Disposicion.PintarTarjeta;
             label1.TextChanged += (sender, e) => AjustarEncabezado();
             label1.FontChanged += (sender, e) => AjustarEncabezado();
-            contenidoCompra.AutoScrollMargin = Size.Empty;
+            contenidoCompra.AutoScrollMargin = new Size(Tema.MargenFormulario, Tema.MargenFormulario);
             contenidoCompra.SizeChanged += (sender, e) => AjustarEncabezado();
             lblResumen.SizeChanged += (sender, e) => AjustarEncabezado();
             AjustarEncabezado();
@@ -119,6 +123,14 @@ namespace Visual
                 int columna = Math.Max(0, (ancho - margen) / 2);
                 pnlTarjetaEntradas.SetBounds(margen + desplazamiento.X, inicio, columna, pnlTarjetaEntradas.Height);
                 dgvSectores.Width = Math.Max(0, columna - relleno * 2);
+                mapaSectores.Width = dgvSectores.Width;
+                mapaSectores.Height = mapaSectores.AltoParaTodosLosSectores;
+                dgvSectores.Top = mapaSectores.Bottom + relleno;
+                lblAgotado.Top = dgvSectores.Top;
+                btnListaEspera.Top = lblAgotado.Bottom + separacion;
+                lnkPosicionEspera.Top = btnListaEspera.Bottom + separacion;
+                pnlTarjetaEntradas.Height = Math.Max(dgvSectores.Bottom,
+                    agotado ? lnkPosicionEspera.Bottom : 0) + relleno;
                 lblAgotado.Width = dgvSectores.Width;
                 btnListaEspera.Left = (columna - btnListaEspera.Width) / 2;
                 lnkPosicionEspera.Left = btnListaEspera.Left;
@@ -178,8 +190,7 @@ namespace Visual
             catch (ReglaNegocioException ex)
             {
                 accesoRechazado = true;
-                Avisos.Regla("No se puede armar el paquete", ex);
-                VolverAlListado();
+                VolverAlListado(ex.Message);
                 return;
             }
             evento = GestorEventos.Instance.ObtenerPorId(IDEvento);
@@ -196,6 +207,7 @@ namespace Visual
             lblResumen.UseMnemonic = false;   // «Meet & Greet»: el & no es tecla de acceso
             MostrarSiAgotado();
             ActualizarResumen();
+            if(SectorInicial.HasValue && sectores.ContainsKey(SectorInicial.Value)) ElegirSectorEnMapa(SectorInicial.Value);
         }
 
         // RN-10: con el evento agotado, en lugar de la grilla de sectores se ofrece la lista de espera.
@@ -218,7 +230,7 @@ namespace Visual
         private void ActualizarHabilitados()
         {
             bool hayEntradas = GestorPaquetes.Instance.CantidadEntradas(paquete) > 0;
-            btnComprar.Enabled = hayEntradas && !agotado;
+            btnComprar.Enabled = hayEntradas && !agotado && !compraEnCurso && !compraFinalizada;
             chkSeguro.Enabled = hayEntradas && !agotado;
             if (!chkSeguro.Enabled && chkSeguro.Checked)
             {
@@ -237,8 +249,8 @@ namespace Visual
         private void lnkPosicionEspera_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             int? posicion = GestorListaEspera.Instance.ConsultarPosicion(IDEvento, IDUsuario);
-            MessageBox.Show(posicion.HasValue ? "Tu posición actual en la lista es " + posicion.Value + "." :
-                "No estás en la lista de espera de este evento.", "Mi posición", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Avisos.Informativo(this, posicion.HasValue ? "Tu posición actual en la lista es " + posicion.Value + "." :
+                "No estás en la lista de espera de este evento.");
         }
 
         private void btnListaEspera_Click(object sender, EventArgs e)
@@ -262,13 +274,13 @@ namespace Visual
                 return;
             }
             MarcarInscripto(true);
-            MessageBox.Show("Te anotaste en la lista de espera de «" + evento.Nombre + "». " +
-                            "Podés consultar tu posición. Si vuelve a haber entradas, te lo mostramos al iniciar sesión.",
-                            "Lista de espera", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Avisos.Informativo(this, "Te anotaste en la lista de espera de «" + evento.Nombre + "». " +
+                            "Podés consultar tu posición. Si vuelve a haber entradas, te lo mostramos al iniciar sesión.");
         }
         // RF-06: reserva el cupo y pasa a la pantalla de pago.
         private void btnComprar_Click(object sender, EventArgs e)
         {
+            if (compraEnCurso || compraFinalizada) return;
             // H-04: el seguro solo se contrata durante la compra (RN-28).
             if (!paquete.ConSeguro && GestorPaquetes.Instance.CantidadEntradas(paquete) > 0)
             {
@@ -284,12 +296,17 @@ namespace Visual
             }
 
             Compra compra;
+            compraEnCurso = true;
+            btnComprar.Enabled = false;
             try
             {
-                compra = GestorCompras.Instance.Iniciar(paquete, cliente);
+                using (Avisos.Esperar(this, btnComprar))
+                    compra = GestorCompras.Instance.Iniciar(paquete, cliente);
             }
             catch (ReglaNegocioException ex)
             {
+                compraEnCurso = false;
+                ActualizarHabilitados();
                 Avisos.Regla("No se puede completar la compra", ex);
                 RecargarDisponibles();
                 return;
@@ -303,43 +320,38 @@ namespace Visual
 
             if (resultado == DialogResult.Abort)
             {
+                compraEnCurso = false;
+                ActualizarHabilitados();
                 // H-02: venció el plazo; el cupo ya se liberó.
-                VolverAlListado();
+                VolverAlListado("La reserva venció o cambió. Volvé a armar la compra desde eventos.");
                 return;
             }
             if (resultado != DialogResult.OK)
             {
+                compraEnCurso = false;
+                ActualizarHabilitados();
                 RecargarDisponibles();
+                if (resultado == DialogResult.Cancel)
+                    Avisos.Informativo(this, "Cancelaste el pago. La reserva se liberó; podés volver a intentarlo.");
                 return;
             }
 
             List<string> rutas = GenerarTicket(compra);
-            using (var confirmacion = new frmConfirmacion { Compra = compra, Rutas = rutas, Carpeta = CarpetaTickets() })
+            compraFinalizada = true;
+            var confirmacion = new frmConfirmacion { Compra = compra, Rutas = rutas, Carpeta = CarpetaTickets() };
+            if (NavegacionCliente.Activa)
+            {
+                NavegacionCliente.Navegar(confirmacion);
+                return;
+            }
+
+            using (confirmacion)
             {
                 confirmacion.ShowDialog(this);
             }
 
-            // RN-22: si la compra subió el nivel, rige desde esta operación siguiente.
-            cliente = GestorFidelizacion.Instance.ObtenerCliente(IDUsuario);
-            CargarNivel();
-            try
-            {
-                paquete = GestorPaquetes.Instance.Nuevo(IDEvento, IDUsuario);
-            }
-            catch (ReglaNegocioException ex)
-            {
-                Avisos.Regla("No se puede armar el paquete", ex);
-                VolverAlListado();
-                return;
-            }
-            CargarSectores();
-            foreach (CheckBox chk in ChecksDeServicio())
-            {
-                chk.Checked = false;
-            }
-            chkSeguro.Checked = false;
-            MostrarSiAgotado();
-            ActualizarResumen();
+            // U-09: el pedido ya terminó; vuelve al listado, sin un armado vacío.
+            VolverAlListado();
         }
 
         // --------------------------------------        FUNCIONES          --------------------------------------
@@ -354,6 +366,23 @@ namespace Visual
                     GestorPaquetes.Instance.DisponiblesDe(Convert.ToInt32(fila.Cells["IdSector"].Value));
             }
             cargandoGrilla = false;
+            ActualizarMapa();
+        }
+
+        private void ActualizarMapa()
+        {
+            mapaSectores.Cargar(sectores.Values, id =>
+                Convert.ToInt32(dgvSectores.Rows.Cast<DataGridViewRow>().Single(f =>
+                    Convert.ToInt32(f.Cells["IdSector"].Value) == id).Cells["Disponibles"].Value));
+        }
+
+        private void ElegirSectorEnMapa(int id)
+        {
+            var fila = dgvSectores.Rows.Cast<DataGridViewRow>().Single(f => Convert.ToInt32(f.Cells["IdSector"].Value) == id);
+            dgvSectores.CurrentCell = fila.Cells["Cantidad"];
+            if (Convert.ToInt32(fila.Cells["Cantidad"].Value) == 0) fila.Cells["Cantidad"].Value = 1;
+            contenidoCompra.ScrollControlIntoView(dgvSectores);
+            dgvSectores.Focus();
         }
 
         private void CargarNivel()
@@ -384,8 +413,7 @@ namespace Visual
             texto.AppendLine();
             texto.AppendLine("El nivel se reevalúa una vez por mes. Una compra cuenta para tu nivel " +
                              "a partir de la operación siguiente, no en la misma.");
-            MessageBox.Show(texto.ToString(), "¿Cómo funcionan los niveles?",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Avisos.Informativo(this, texto.ToString(), 15000);
         }
 
         // H-03: la grilla muestra el cupo restante de cada sector. Solo Cantidad es editable.
@@ -445,6 +473,7 @@ namespace Visual
             dgvSectores.CellValueChanged -= dgvSectores_CellValueChanged;
             dgvSectores.CellValueChanged += dgvSectores_CellValueChanged;
             cargandoGrilla = false;
+            ActualizarMapa();
         }
 
         // RN-08 y RN-12 los valida GestorPaquetes; si rechaza, la celda vuelve a lo que había.
@@ -462,10 +491,11 @@ namespace Visual
             string texto = Convert.ToString(fila.Cells["Cantidad"].Value);
             if (!int.TryParse(string.IsNullOrWhiteSpace(texto) ? "0" : texto.Trim(), out cantidad) || cantidad < 0)
             {
-                MessageBox.Show("La cantidad debe ser un número entero de 0 en adelante.", "Revisá los datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                fila.Cells["Cantidad"].ErrorText = "Usá un número entero desde cero.";
                 RestaurarCantidad(fila, anterior);
                 return;
             }
+            fila.Cells["Cantidad"].ErrorText = string.Empty;
             try
             {
                 GestorPaquetes.Instance.AgregarEntradas(paquete, idSector, cantidad);
@@ -478,7 +508,7 @@ namespace Visual
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show(ex.Message, "No se puede modificar la cantidad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, ex.Message);
                 RestaurarCantidad(fila, anterior);
                 return;
             }
@@ -780,12 +810,19 @@ namespace Visual
             base.OnFormClosing(e);
         }
 
-        private void VolverAlListado()
+        private void VolverAlListado(string aviso = null)
         {
             frmEventosCliente frm = new frmEventosCliente();
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;
+            if (NavegacionCliente.AbrirDesdeMenu(frm))
+            {
+                if (!string.IsNullOrWhiteSpace(aviso)) Avisos.Informativo(frm, aviso);
+                Hide();
+                return;
+            }
             frm.Show();
+            if (!string.IsNullOrWhiteSpace(aviso)) Avisos.Informativo(frm, aviso);
             this.Hide();
         }
 

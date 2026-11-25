@@ -23,7 +23,7 @@ namespace Pruebas
                 Evento evento = Fake.EventoPublicado(1000m, 5);
                 DateTime fin = DateTime.Today.AddDays(1).AddHours(20);
                 bool preventa = escenario != "sin-preventa";
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 if (preventa) GestorEventos.Instance.CambiarPreventa(evento.Id, fin);
                 foreach (bool suscripto in escenario == "sin-preventa" ? new[] { false, true } : new[] { escenario == "con-plan" })
                 {
@@ -38,7 +38,7 @@ namespace Pruebas
                         grilla.CurrentCell = fila.Cells["Nombre"];
                         bool rechazado = preventa && !suscripto;
                         DialogosPrueba.Comprobar(() => ControlDe<Button>(listado, "btnComprar").PerformClick(),
-                            rechazado ? new[] { new DialogoEsperado { Titulo = "No se puede armar el paquete",
+                            rechazado ? new[] { new DialogoEsperado {
                                 Texto = "hasta el " + fin.ToString("dd/MM/yyyy") + " a las 20:00" } } : new DialogoEsperado[0]);
                         if (rechazado)
                         {
@@ -59,8 +59,7 @@ namespace Pruebas
                 }
             });
         }
-
-        // CP-82 — RF-12, RN-06/RN-39; PA-17, C9.2/C9.3/C9.6/C9.7/C9.9: alta y edición de preventa.
+        // CP-82 — RF-12, RN-06/RN-39/RN-54: alta y edición de preventa, conservada al enviar a revisión.
         [DataTestMethod]
         [DataRow("alta", DisplayName = "CP-82: Alta guarda preventa y conserva la fecha al publicar")]
         [DataRow("posterior", DisplayName = "CP-82: Preventa posterior al evento se rechaza sin insertar")]
@@ -71,7 +70,7 @@ namespace Pruebas
         {
             EnSta(() =>
             {
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 Evento referencia = Fake.EventoBorradorSinSectores();
                 Local local = GestorLocales.Instance.PorId(referencia.IdLocal);
                 DateTime fin = DateTime.Today.AddDays(1).AddHours(20);
@@ -112,7 +111,12 @@ namespace Pruebas
                             new DialogoEsperado { Titulo = "Agregar sector", Texto = "Sector agregado correctamente." });
                     }
                     Evento publicado = GestorEventos.Instance.ObtenerPorId(creado.Id);
-                    Assert.AreEqual(GestorEventos.EstadoPublicado, publicado.Estado);
+                    Assert.AreEqual(GestorEventos.EstadoBorrador, publicado.Estado,
+                        "Agregar el sector deja el evento en borrador; la publicación es una acción explícita.");
+                    GestorEventos.Instance.Publicar(creado.Id);
+                    publicado = GestorEventos.Instance.ObtenerPorId(creado.Id);
+                    Assert.AreEqual(GestorEventos.EstadoEnRevision, publicado.Estado,
+                        "La primera publicación del organizador queda en revisión y conserva la preventa.");
                     Assert.AreEqual(fin, publicado.FinPreventa);
                     return;
                 }

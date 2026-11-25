@@ -16,12 +16,12 @@ namespace Pruebas
         // CP-83 — RF-10, RN-35; PA-18, 8.23/8.25: lista ordenada y propietario sin listas.
         [DataTestMethod]
         [DataRow(false, DisplayName = "CP-83: Lista agotada muestra columnas, prioridad y contadores")]
-        [DataRow(true, DisplayName = "CP-83: Propietario sin listas ve el combo deshabilitado")]
+        [DataRow(true, DisplayName = "CP-83: Organizador sin listas ve el combo deshabilitado")]
         public void CP83_ListasDeEspera(bool vacia)
         {
             EnSta(() =>
             {
-                Usuario propietario = vacia ? Fake.PropietarioSinLocales() : Fake.Administrador();
+                Usuario propietario = vacia ? Fake.PropietarioSinLocales() : Fake.Organizador();
                 Evento evento = null;
                 Cliente primero = null;
                 if (!vacia)
@@ -36,7 +36,7 @@ namespace Pruebas
                     Fake.ComoCliente(primero);
                     GestorListaEspera.Instance.Inscribir(evento.Id, primero.Id);
                 }
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador(propietario);
                 using (var form = new Visual.frmListasEspera { IDUsuario = propietario.Id })
                 {
                     Mostrar(form);
@@ -82,7 +82,7 @@ namespace Pruebas
                 GestorListaEspera.Instance.Inscribir(evento.Id, oro.Id);
                 GestorSuscripciones.Instance.Cancelar(oro.Id);
                 Assert.IsFalse(GestorSuscripciones.Instance.TieneActiva(oro.Id));
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 var lista = GestorListaEspera.Instance.DeEvento(evento.Id);
                 CollectionAssert.AreEqual(new[] { oro.Id, bronce.Id }, lista.Select(x => x.IdUsuario).ToArray());
                 Assert.IsTrue(lista[0].ConSuscripcion);
@@ -90,9 +90,9 @@ namespace Pruebas
             });
         }
 
-        // CP-85 — RF-11/RF-12, RNF-02/RNF-03; PA-20, 9.1/9.16/8.26: menús y separación de capas.
+        // CP-85 — RF-11/RF-12/RF-22, RNF-02/RNF-03; PA-20, 9.1/9.16/8.26: menús y separación de capas.
         [DataTestMethod]
-        [DataRow("propietario", DisplayName = "CP-85: Menú de propietario mantiene acciones visibles al 100 y 150 por ciento")]
+        [DataRow("propietario", DisplayName = "CP-85: Menú de Organizador mantiene acciones visibles al 100 y 150 por ciento")]
         [DataRow("cliente", DisplayName = "CP-85: El menú de cliente no ofrece reportes")]
         [DataRow("arquitectura", DisplayName = "CP-85: Visual no contiene conexiones ni comandos SQL")]
         public void CP85_MenusYCapas(string escenario)
@@ -121,9 +121,9 @@ namespace Pruebas
                     }
                     return;
                 }
-                Fake.ComoAdministrador();
+                Fake.ComoOrganizador();
                 foreach (float escala in new[] { 1f, 1.5f })
-                using (var menu = new Visual.frmMenuPropietario { IDUsuario = Fake.Administrador().Id })
+                using (var menu = new Visual.frmMenuPropietario { IDUsuario = Fake.Organizador().Id })
                 {
                     Mostrar(menu);
                     Control[] controles = menu.Controls.Cast<Control>().Prepend(menu).ToArray();
@@ -132,12 +132,12 @@ namespace Pruebas
                     for (int i = 0; i < controles.Length; i++) controles[i].Font = new Font(fuentes[i].FontFamily, fuentes[i].SizeInPoints * escala, fuentes[i].Style);
                     menu.Size = new Size(Math.Min(menu.Width, 1366), Math.Min(menu.Height, 728));
                     string[] nombres = { "btnRegistrarLocal", "btnMisLocales", "btnListasEspera", "btnReportes", "lblvolver" };
-                    string[] textos = { "Registrar local", "Mis locales", "Listas de espera", "Reportes", "Volver al inicio" };
+                    string[] textos = { "Registrar local", "Mis locales", "Listas de espera", "Reportes", "Cerrar sesión" };
                     for (int i = 0; i < nombres.Length; i++)
                     {
                         Control c = ControlDe<Control>(menu, nombres[i]);
                         Assert.AreEqual(textos[i], c.Text);
-                        Assert.IsTrue(c.Visible && menu.ClientRectangle.Contains(c.Bounds), nombres[i] + " fuera del menú a " + escala);
+                        Assert.IsTrue(c.Visible && menu.ClientRectangle.Contains(c.Bounds), nombres[i] + " fuera del menú a " + escala + ": " + c.Bounds + " dentro de " + menu.ClientRectangle);
                     }
                 }
             });

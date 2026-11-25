@@ -7,7 +7,7 @@ namespace Datos
 {
     // Una fila por entrada (CantidadVendida = 1): cada una lleva su propio QR (RN-18) y su propia
     // póliza de seguro. Nacen Pendiente al reservar y pasan a Confirmada al aprobarse el pago.
-    public sealed class RepositorioEntradas : RepositorioBase
+    internal sealed class RepositorioEntradas : RepositorioBase
     {
         private static RepositorioEntradas _instance;
 

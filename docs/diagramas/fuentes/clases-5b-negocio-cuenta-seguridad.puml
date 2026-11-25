@@ -1,0 +1,72 @@
+@startuml clases-5b-negocio-cuenta-seguridad
+!include _estilo.iuml
+skinparam nodesep 18
+skinparam ranksep 40
+hide empty members
+' Diagrama de clases, vista 5b de 9: capa de Negocio, gestores de la cuenta y la seguridad:
+' usuarios, sesión, códigos de un solo uso, auditoría y solicitudes de Organizador (proyecto
+' Repositorio, namespace Negocio). Fuente: Repo/*.cs. Operaciones públicas e internas con el
+' tipo de cada parámetro; «(…)» abrevia las listas de más de dos parámetros, que están completas
+' en la tabla de justificación. Las estáticas de validación (CuitValido, CbuValido, …) se omiten.
+
+class GestorUsuarios <<Singleton>> {
+  + Autenticar(string, string) : Usuario
+  + RegistrarCliente(…)
+  + CrearAdministrador(…)
+  + CambiarContrasena(…)
+  + ValidarContrasena(string)
+  + PuntajeFortaleza(string) : int
+  + ExigirCorreoVerificado(int)
+  + ExisteUsuarioDeSesion() : bool
+}
+class GestorSesion <<Singleton>> {
+  + UsuarioActual : SesionAutenticada
+  + HaySesion : bool
+  + IniciadaEl : DateTime?
+  + UltimaActividadEl : DateTime?
+  ~ Iniciar(Usuario)
+  + RequerirUsuario(int)
+  + RequerirOrganizador()
+  + RequerirOrganizadorDeLocal(int)
+  + RequerirAdministrador()
+  + RequerirAdministradorParaAuditoria()
+  + RegistrarActividad(DateTime?)
+  + DebeAvisarInactividad(DateTime) : bool
+  + DebeCerrarPorInactividad(DateTime) : bool
+  + Cerrar()
+}
+class SesionAutenticada {
+  + Id : int
+  + TipoUsuario : string
+  + Nombre : string
+  + Apellido : string
+  + Mail : string
+}
+class GestorCodigosCorreo <<Singleton>> {
+  + EnviarVerificacion(int, string)
+  + ConfirmarVerificacion(string, string)
+  + SolicitarRecuperacion(string)
+  + RecuperarContrasena(…)
+  + EnviarCodigoTelefono(int, string)
+  + ConfirmarCodigoTelefono(…)
+}
+class GestorAuditoria <<Singleton>> {
+  ~ Registrar(string, …)
+  + Consultar(…) : List<RegistroAuditoria>
+}
+class GestorSolicitudesOrganizador <<Singleton>> {
+  + EnviarCodigoTelefono(string)
+  + ConfirmarCodigoTelefono(string, string)
+  + Solicitar(SolicitudOrganizador) : int
+  + Obtener(int) : SolicitudOrganizador
+  + Pendientes() : List<SolicitudOrganizador>
+  + Aprobar(int, string)
+  + Rechazar(int, string)
+}
+
+GestorSesion "1" --> "0..1$_" SesionAutenticada : UsuarioActual
+GestorUsuarios -[hidden]right- GestorSesion
+GestorUsuarios -[hidden]down- GestorCodigosCorreo
+GestorCodigosCorreo -[hidden]down- GestorAuditoria
+SesionAutenticada -[hidden]down- GestorSolicitudesOrganizador
+@enduml

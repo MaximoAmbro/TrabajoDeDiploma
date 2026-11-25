@@ -14,7 +14,7 @@ namespace Datos
     //
     // RN-29: la devolución pasa entradas Confirmada a Reembolsada. TotalPagado no se toca: es lo
     // que el cliente pagó. Lo devuelto se acumula en MontoReembolsado.
-    public sealed class RepositorioCompras : RepositorioBase
+    internal sealed class RepositorioCompras : RepositorioBase
     {
         private static RepositorioCompras _instance;
 

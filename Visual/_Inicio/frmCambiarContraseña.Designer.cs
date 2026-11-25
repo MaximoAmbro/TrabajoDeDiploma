@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmCambiarContraseña
     {
@@ -40,14 +40,14 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txtActual = new System.Windows.Forms.TextBox();
             this.lblActual = new System.Windows.Forms.Label();
-            this.txtActual.Location = new System.Drawing.Point(24, 160);
+            this.txtActual.Location = new System.Drawing.Point(24, 220);
             this.txtActual.Size = new System.Drawing.Size(392, 28);
             this.txtActual.Name = "txtActual";
             this.txtActual.TabIndex = 1;
             this.lblActual.AutoSize = true;
             this.lblActual.Name = "lblActual";
             this.lblActual.Size = new System.Drawing.Size(392, 20);
-            this.lblActual.Location = new System.Drawing.Point(24, 136);
+            this.lblActual.Location = new System.Drawing.Point(24, 196);
             this.lblActual.Text = "Contraseña actual";
             this.Controls.Add(this.txtActual);
             this.Controls.Add(this.lblActual);
@@ -56,7 +56,7 @@
             // btnVolver
             // 
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(24, 384);
+            this.btnVolver.Location = new System.Drawing.Point(24, 484);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(136, 40);
@@ -68,7 +68,7 @@
             // 
             this.checkbxShowPass.AutoSize = true;
             this.checkbxShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkbxShowPass.Location = new System.Drawing.Point(24, 328);
+            this.checkbxShowPass.Location = new System.Drawing.Point(24, 432);
             this.checkbxShowPass.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.checkbxShowPass.Name = "checkbxShowPass";
             this.checkbxShowPass.Size = new System.Drawing.Size(260, 24);
@@ -79,7 +79,7 @@
             // TxtConfirmpassword
             // 
             this.TxtConfirmpassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TxtConfirmpassword.Location = new System.Drawing.Point(24, 288);
+            this.TxtConfirmpassword.Location = new System.Drawing.Point(24, 392);
             this.TxtConfirmpassword.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.TxtConfirmpassword.Multiline = true;
             this.TxtConfirmpassword.Name = "TxtConfirmpassword";
@@ -89,7 +89,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(24, 264);
+            this.label4.Location = new System.Drawing.Point(24, 368);
             this.label4.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(392, 20);
@@ -99,7 +99,7 @@
             // TxtPassword
             // 
             this.TxtPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TxtPassword.Location = new System.Drawing.Point(24, 224);
+            this.TxtPassword.Location = new System.Drawing.Point(24, 284);
             this.TxtPassword.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.TxtPassword.Multiline = true;
             this.TxtPassword.Name = "TxtPassword";
@@ -110,7 +110,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label3.Location = new System.Drawing.Point(24, 200);
+            this.label3.Location = new System.Drawing.Point(24, 260);
             this.label3.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(392, 20);
@@ -120,7 +120,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 24);
+            this.label1.Location = new System.Drawing.Point(24, 84);
             this.label1.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(392, 32);
@@ -130,7 +130,7 @@
             // btnconfirmar
             // 
             this.btnconfirmar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnconfirmar.Location = new System.Drawing.Point(232, 384);
+            this.btnconfirmar.Location = new System.Drawing.Point(232, 484);
             this.btnconfirmar.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.btnconfirmar.Name = "btnconfirmar";
             this.btnconfirmar.Size = new System.Drawing.Size(184, 40);
@@ -141,7 +141,7 @@
             // txtMail
             // 
             this.txtMail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtMail.Location = new System.Drawing.Point(24, 96);
+            this.txtMail.Location = new System.Drawing.Point(24, 156);
             this.txtMail.Margin = new System.Windows.Forms.Padding(8, 4, 8, 4);
             this.txtMail.Multiline = true;
             this.txtMail.Name = "txtMail";
@@ -151,7 +151,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(24, 72);
+            this.label5.Location = new System.Drawing.Point(24, 132);
             this.label5.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(392, 20);
@@ -164,7 +164,7 @@
             this.CancelButton = this.btnVolver;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(440, 448);
+            this.ClientSize = new System.Drawing.Size(440, 540);
             this.Controls.Add(this.txtMail);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.btnconfirmar);
@@ -182,6 +182,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventAura · Cambiar contraseña";
             this.Load += new System.EventHandler(this.frmCambiarContraseña_Load);
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(440, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -201,5 +206,6 @@
         private Visual.Componentes.BotonPrimario btnconfirmar;
         private System.Windows.Forms.TextBox txtMail;
         private System.Windows.Forms.Label label5;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

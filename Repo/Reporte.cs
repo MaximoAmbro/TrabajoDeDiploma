@@ -47,6 +47,9 @@ namespace Negocio
         // Quién lo pidió: lo completa GestorReportes con el usuario en sesión.
         public string Solicitante { get; internal set; }
 
+        // Se fija desde la sesión en GestorReportes.Ejecutar; nunca lo elige el formulario.
+        public int? IdOrganizador { get; internal set; }
+
         // Convención del anexo: EVAU_[código]_[AAAAMMDD-inicio]_[AAAAMMDD-fin], sin extensión
         // (la pone el exportador o quien elige el formato).
         public string NombreArchivo
@@ -55,7 +58,7 @@ namespace Negocio
         }
 
         public abstract string[] Encabezados();
-        public abstract DataTable Obtener(RepositorioReportes repo);
+        internal abstract DataTable Obtener(RepositorioReportes repo);
         public abstract string Lectura(DataTable datos);
 
         // Texto del bloque de filtros del PDF.

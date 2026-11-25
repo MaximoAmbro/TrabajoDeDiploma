@@ -1,4 +1,4 @@
-﻿namespace Visual
+namespace Visual
 {
     partial class frmMisLocales
     {
@@ -42,7 +42,7 @@
             this.dgvLocales.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvLocales.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLocales.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.dgvLocales.Location = new System.Drawing.Point(24, 88);
+            this.dgvLocales.Location = new System.Drawing.Point(24, 148);
             this.dgvLocales.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgvLocales.Name = "dgvLocales";
             this.dgvLocales.RowHeadersWidth = 51;
@@ -52,7 +52,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 24);
+            this.label2.Location = new System.Drawing.Point(24, 84);
             this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(792, 32);
@@ -62,7 +62,7 @@
             // btnVolver
             // 
             this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnVolver.Location = new System.Drawing.Point(24, 384);
+            this.btnVolver.Location = new System.Drawing.Point(24, 444);
             this.btnVolver.Margin = new System.Windows.Forms.Padding(2);
             this.btnVolver.Name = "btnVolver";
             this.btnVolver.Size = new System.Drawing.Size(144, 40);
@@ -73,7 +73,7 @@
             // btnEventosLocal
             // 
             this.btnEventosLocal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEventosLocal.Location = new System.Drawing.Point(624, 384);
+            this.btnEventosLocal.Location = new System.Drawing.Point(624, 444);
             this.btnEventosLocal.Margin = new System.Windows.Forms.Padding(6, 2, 6, 2);
             this.btnEventosLocal.Name = "btnEventosLocal";
             this.btnEventosLocal.Size = new System.Drawing.Size(192, 40);
@@ -85,7 +85,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(840, 448);
+            this.ClientSize = new System.Drawing.Size(840, 508);
             this.Controls.Add(this.btnEventosLocal);
             this.Controls.Add(this.dgvLocales);
             this.Controls.Add(this.label2);
@@ -96,6 +96,11 @@
             this.Text = "EventAura · Mis locales";
             this.Load += new System.EventHandler(this.frmMisLocales_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLocales)).EndInit();
+            this.barraSuperior = new Visual.Componentes.BarraSuperior();
+            this.barraSuperior.Name = "barraSuperior";
+            this.barraSuperior.Size = new System.Drawing.Size(840, 60);
+            this.barraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Controls.Add(this.barraSuperior);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -107,5 +112,6 @@
         private Visual.Componentes.EtiquetaTitulo label2;
         private Visual.Componentes.BotonSecundario btnVolver;
         private Visual.Componentes.BotonPrimario btnEventosLocal;
+        private Visual.Componentes.BarraSuperior barraSuperior;
     }
 }

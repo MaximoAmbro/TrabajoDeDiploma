@@ -16,9 +16,25 @@ namespace Visual.Vendedor
     {
         public int IDUsuario; public int IDlocal;
         public string NombreLocal { get; set; } public string NombreUsuario { get; set; }
+        private Componentes.EstadoVacio estadoSinEventos;
         public frmEventosLocal()
         {
             InitializeComponent();
+            AcceptButton = btnAgregarEvento;
+            dgvEventos.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter && AcceptButton is Button boton && boton.Enabled)
+                {
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                    boton.PerformClick();
+                }
+            };
+            estadoSinEventos = new Componentes.EstadoVacio { Name = "estadoSinEventos", Visible = false };
+            estadoSinEventos.AjustarA(dgvEventos);
+            estadoSinEventos.Cargar("Todavía no hay eventos en este local. Creá uno para empezar a ofrecer entradas.", "Agregar evento");
+            estadoSinEventos.Accion += () => btnAgregarEvento.PerformClick();
+            Controls.Add(estadoSinEventos);
         }
 
         private void frmEventosLocal_Load(object sender, EventArgs e)
@@ -31,7 +47,7 @@ namespace Visual.Vendedor
         {
             if (dgvEventos.CurrentRow == null)
             {
-                MessageBox.Show("Tenés que seleccionar un evento", "Eventos del local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, "Elegí un evento para administrarlo.");
                 return;
             }
 
@@ -49,7 +65,7 @@ namespace Visual.Vendedor
             }
             catch (ReglaNegocioException ex)
             {
-                DialogResult respuesta = MessageBox.Show(ex.Message + " (" + ex.Regla + ")\n\n¿Querés suspenderlo?",
+                DialogResult respuesta = MessageBox.Show(ex.Message + "\n\n¿Querés suspenderlo?",
                     "Suspender evento", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button2);
                 if (respuesta == DialogResult.Yes)
@@ -59,7 +75,7 @@ namespace Visual.Vendedor
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(ex.Message, "Eventos del local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, ex.Message);
             }
             CargaEventos();
         }
@@ -85,7 +101,7 @@ namespace Visual.Vendedor
         {
             if (dgvEventos.CurrentRow == null)
             {
-                MessageBox.Show("Tenés que seleccionar un evento", "Eventos del local", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Avisos.Informativo(this, "Elegí un evento para administrarlo.");
                 return;
             }
             frmAdministrarEvento frm = new frmAdministrarEvento();
@@ -105,10 +121,14 @@ namespace Visual.Vendedor
         public void CargaEventos()
         {
             lblNombre.Text = NombreLocal;
-            dgvEventos.DataSource = GestorEventos.Instance.PorLocal(IDlocal)
-                .Select(ev => new { ID = ev.Id, ev.Nombre, ev.Fecha, ev.Estado })
+            var eventos = GestorEventos.Instance.PorLocal(IDlocal);
+            dgvEventos.DataSource = eventos
+                .Select(ev => new { ID = ev.Id, ev.Nombre, ev.Fecha, ev.Estado, MotivoDelRechazo = ev.MotivoRechazo })
                 .ToList();
-            dgvEventos.Columns["ID"].Visible = false;
+            dgvEventos.Visible = eventos.Count > 0;
+            estadoSinEventos.Visible = eventos.Count == 0;
+            if (dgvEventos.Columns.Contains("ID")) dgvEventos.Columns["ID"].Visible = false;
+            if (dgvEventos.Columns.Contains("MotivoDelRechazo")) dgvEventos.Columns["MotivoDelRechazo"].HeaderText = "Motivo del rechazo";
         }
     }
 }

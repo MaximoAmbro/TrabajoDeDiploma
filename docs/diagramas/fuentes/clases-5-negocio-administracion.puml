@@ -3,17 +3,23 @@
 skinparam nodesep 18
 skinparam ranksep 40
 hide empty members
-' Diagrama de clases, vista 5 de 8: capa de Negocio, operaciones de los gestores de
-' administración y de la cuenta (proyecto Repositorio, namespace Negocio). Fuente: Repo/*.cs.
-' Las dependencias entre gestores están en la vista 6; el Singleton, en la 8.
+' Diagrama de clases, vista 5 de 9: capa de Negocio, operaciones de los gestores de
+' administración: eventos, locales, ingresos, reportes y parámetros (proyecto Repositorio,
+' namespace Negocio). Fuente: Repo/*.cs. Los gestores de la cuenta y la seguridad están en la
+' vista 5b; la verificación de identidad, en la 6; el Singleton, en la 8a.
 
 class GestorEventos <<Singleton>> {
   + Crear(Evento) : int
+  + Publicar(int)
   + Publicar(Evento) : int
+  + PendientesDeRevision() : List<Evento>
+  + AprobarPrimerEvento(int)
+  + RechazarPrimerEvento(int, string)
   + Eliminar(int)
   + Suspender(int)
   + EstaAgotado(int) : bool
   + CambiarPreventa(int, DateTime?)
+  + CambiarImagenPortada(int, byte[])
   + CapacidadTotal(int) : int
   + Vigentes() : List<Evento>
   + Buscar(string, string, DateTime?) : List<Evento>
@@ -33,13 +39,6 @@ class GestorIngresos <<Singleton>> {
   + Contar(int) : int
   + EventosConIngresoAbierto() : List<Evento>
 }
-class GestorUsuarios <<Singleton>> {
-  + Autenticar(string, string) : Usuario
-  + RegistrarCliente(string, string, string, string)
-  + CrearAdministrador(string, string, string, string)
-  + CambiarContrasena(string, string, string)
-  + ValidarContrasena(string)
-}
 class GestorReportes <<Singleton>> {
   + Crear(string, DateTime, DateTime) : Reporte
   + Ejecutar(Reporte) : DataTable
@@ -53,18 +52,9 @@ class GestorParametros <<Singleton>> {
   + ObtenerDecimal(string) : decimal
   + Recargar()
 }
-class GestorSesion <<Singleton>> {
-  + UsuarioActual : Usuario
-  + Iniciar(Usuario)
-  + RequerirAdministrador()
-  + RequerirUsuario(int)
-  + Cerrar()
-}
 
-GestorEventos -[hidden]down- GestorLocales
+GestorEventos -[hidden]right- GestorLocales
 GestorLocales -[hidden]down- GestorIngresos
-GestorUsuarios -[hidden]down- GestorReportes
+GestorIngresos -[hidden]down- GestorReportes
 GestorReportes -[hidden]down- GestorParametros
-GestorParametros -[hidden]down- GestorSesion
-GestorEventos -[hidden]right- GestorUsuarios
 @enduml

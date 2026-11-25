@@ -6,7 +6,7 @@ namespace Datos
 {
     // RF-08: datos del nivel de fidelidad (Usuario.Nivel, Usuario.FechaUltimaEvaluacion) y
     // conteo de compras de la ventana móvil sobre la tabla Compras.
-    public sealed class RepositorioFidelizacion : RepositorioBase
+    internal sealed class RepositorioFidelizacion : RepositorioBase
     {
         private static RepositorioFidelizacion _instance;
 
