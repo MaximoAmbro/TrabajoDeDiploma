@@ -76,16 +76,21 @@ namespace Visual
             string traza = Environment.StackTrace;
             string origen = traza.IndexOf("ControlSesionInactiva", StringComparison.OrdinalIgnoreCase) >= 0
                 ? "inactividad"
-                : traza.IndexOf("FormularioEventAura.OnFormClosed", StringComparison.OrdinalIgnoreCase) >= 0
-                    ? "última ventana / menú"
-                    : "orden interna de cierre";
+                : string.Equals(ultimoCloseReason, CloseReason.TaskManagerClosing.ToString(), StringComparison.OrdinalIgnoreCase)
+                    ? "orden externa"
+                    : Application.OpenForms.Count == 0 && !string.Equals(ultimaVentana, "(ninguna)", StringComparison.Ordinal)
+                        ? "última ventana / menú"
+                        : "orden interna de cierre";
             RegistrarOrigen(origen, "Application.ApplicationExit; última ventana=" + ultimaVentana +
                 "; CloseReason=" + ultimoCloseReason + Environment.NewLine + traza);
         }
 
         private static void RegistrarFinProceso()
         {
-            string origen = applicationExitRegistrado ? "fin de proceso posterior al cierre ordenado" : "fin externo o caída nativa (sin ApplicationExit)";
+            string origen = applicationExitRegistrado ? "fin de proceso posterior al cierre ordenado" :
+                string.Equals(ultimoCloseReason, CloseReason.TaskManagerClosing.ToString(), StringComparison.OrdinalIgnoreCase)
+                    ? "orden externa"
+                    : "fin sin ApplicationExit (orden externa o terminación nativa; ver Application Error 1000)";
             RegistrarOrigen(origen, "AppDomain.ProcessExit; última ventana=" + ultimaVentana +
                 "; CloseReason=" + ultimoCloseReason + "; ExitCode=" + Environment.ExitCode);
         }
