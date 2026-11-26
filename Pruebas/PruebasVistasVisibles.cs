@@ -20,6 +20,26 @@ namespace Pruebas
     [TestClass]
     public class PruebasVistasVisibles
     {
+        // CP-372 — RNF-02/RNF-03: WebView2 no debe mostrar el ojo nativo además del botón accesible de la vista.
+        [TestMethod("CP-372: El tema oculta el revelado nativo de Edge y reserva un ojo propio de 40 px")]
+        public void CP372_OjoNativoOculto()
+        {
+            string raiz = AppDomain.CurrentDomain.BaseDirectory;
+            while (raiz != null && !File.Exists(Path.Combine(raiz, "SistemaEntradas.sln")))
+                raiz = Directory.GetParent(raiz)?.FullName;
+            Assert.IsNotNull(raiz, "No se encontró la raíz del proyecto.");
+            string css = File.ReadAllText(Path.Combine(raiz, "Visual", "Web", "sistema.css"));
+            Assert.IsTrue(css.Contains("input::-ms-reveal") && css.Contains("input::-ms-clear") &&
+                System.Text.RegularExpressions.Regex.IsMatch(css,
+                    @"input::-ms-reveal\s*,\s*input::-ms-clear\s*\{[^}]*display\s*:\s*none\s*!important",
+                    System.Text.RegularExpressions.RegexOptions.Singleline),
+                "El ojo nativo de Edge/WebView2 debe ocultarse para evitar duplicados.");
+            Assert.IsTrue(System.Text.RegularExpressions.Regex.IsMatch(css,
+                @"\.ojo-contrasena\s*\{[^}]*width\s*:\s*40px[^}]*height\s*:\s*40px",
+                System.Text.RegularExpressions.RegexOptions.Singleline),
+                "El botón de ojo propio debe conservar un área de 40 × 40 px.");
+        }
+
         // CP-163 — RF-05, RNF-03: comprobar textos y color renderizado de las vistas compuestas.
         [DataTestMethod]
         [DataRow(typeof(TarjetaEvento),DisplayName="CP-163: Botones de tarjeta completos y primario renderizado")]
