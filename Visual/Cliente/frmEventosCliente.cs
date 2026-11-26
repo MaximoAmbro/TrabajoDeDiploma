@@ -174,6 +174,19 @@ namespace Visual
         private void CargarEventos(string texto, string categoria, DateTime? desde)
         {
             List<Evento> eventos = GestorEventos.Instance.Buscar(texto, categoria, desde);
+            var sectoresPorEvento = new Dictionary<int, Sector[]>();
+            eventos = eventos.Select((evento, indice) =>
+                {
+                    Sector[] sectores = GestorEventos.Instance.Sectores(evento.Id).ToArray();
+                    sectoresPorEvento[evento.Id] = sectores;
+                    bool agotado = sectores.Length == 0 || sectores.All(sector => GestorPaquetes.Instance.DisponiblesDe(sector.Id) <= 0);
+                    return new { Evento = evento, Indice = indice, Agotado = agotado };
+                })
+                .OrderBy(item => item.Agotado)
+                .ThenBy(item => item.Agotado ? DateTime.MaxValue : item.Evento.Fecha)
+                .ThenBy(item => item.Indice)
+                .Select(item => item.Evento)
+                .ToList();
             eventosMostrados = eventos;
             foreach(Control anterior in tarjetas.Controls.Cast<Control>().ToArray()) anterior.Dispose();
             tarjetas.Controls.Clear();
@@ -221,7 +234,7 @@ namespace Visual
             dgveventos.Columns["Complejo"].FillWeight = 140;
             foreach(var ev in eventos) {
                 var tarjeta=new Componentes.TarjetaEvento();
-                tarjeta.Cargar(ev,locales[ev.IdLocal],GestorEventos.Instance.Sectores(ev.Id));
+                tarjeta.Cargar(ev,locales[ev.IdLocal],sectoresPorEvento[ev.Id]);
                 tarjeta.VerEntradas+=ElegirEvento;
                 tarjetas.Controls.Add(tarjeta);
             }

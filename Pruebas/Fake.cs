@@ -211,6 +211,11 @@ namespace Pruebas
             return Releer(evento);
         }
 
+        public static void CambiarFechaEvento(int id, DateTime fecha)
+        {
+            Ejecutar("UPDATE Eventos SET Fecha = @Fecha WHERE ID = @ID", "@Fecha", fecha, "@ID", id);
+        }
+
         public static Evento EventoBorradorSinSectores()
         {
             Evento evento = EventoPublicado(1000m, 0);

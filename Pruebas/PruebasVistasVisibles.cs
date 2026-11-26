@@ -390,5 +390,36 @@ namespace Pruebas
                 }
             });
         }
+
+        // CP-366 — RF-18/RF-19: catálogo ordena primero los disponibles por fecha y conserva el grupo agotado al final.
+        [TestMethod("CP-366: Eventos agotados quedan al final y los disponibles siguen ordenados por fecha")]
+        public void CP366_CatalogoAgotadosAlFinal()
+        {
+            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
+                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
+            EnSta(() =>
+            {
+                Fake.Limpiar();
+                var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
+                var agotadoUno = Fake.EventoPublicado(1000m, 0);
+                var agotadoDos = Fake.EventoPublicado(1200m, 0);
+                var disponibleTarde = Fake.EventoPublicado(1500m, 10);
+                var disponibleTemprano = Fake.EventoPublicado(1300m, 10);
+                Fake.CambiarFechaEvento(agotadoUno.Id, DateTime.Today.AddDays(1).AddHours(20));
+                Fake.CambiarFechaEvento(agotadoDos.Id, DateTime.Today.AddDays(2).AddHours(20));
+                Fake.CambiarFechaEvento(disponibleTarde.Id, DateTime.Today.AddDays(5).AddHours(20));
+                Fake.CambiarFechaEvento(disponibleTemprano.Id, DateTime.Today.AddDays(3).AddHours(20));
+                using (var listado = new Visual.frmEventosCliente { IDUsuario = cliente.Id })
+                {
+                    Mostrar(listado);
+                    var panel = ControlDe<Visual.Web.PanelWeb>(listado, "catalogoWeb");
+                    EsperarVistaWeb(panel);
+                    string orden = EjecutarVistaWeb(panel, "[...document.querySelectorAll('#catalogo .evento')].map(c=>c.dataset.evento).join(',')");
+                    Assert.AreEqual(string.Join(",", new[] { disponibleTemprano.Id, disponibleTarde.Id, agotadoUno.Id, agotadoDos.Id }), orden,
+                        "Los eventos con cupo van por fecha; los agotados conservan el orden estable de su grupo al final.");
+                }
+            });
+        }
     }
 }
