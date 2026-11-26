@@ -49,9 +49,12 @@ namespace Visual
                 ColocarCampo(lblTitular, txtTitular);
                 lblTemporizador.Top = lblTitulo.Top;
                 indicadorPasos.Top = lblTitulo.Top - indicadorPasos.Height - Px(Tema.Espacio.XS);
+                txtNumero.Top = txtTitular.Bottom + Px(Tema.Espacio.L) + lblNumero.Height + Px(Tema.Espacio.XS);
                 ColocarCampo(lblNumero, txtNumero);
                 txtCvv.Left = txtVencimiento.Left + Px(Tema.AnchoCampo + Tema.Espacio.L);
                 ClientSize = new System.Drawing.Size(txtCvv.Left + Px(Tema.AnchoCampo + Tema.Espacio.XXL), ClientSize.Height);
+                txtVencimiento.Top = txtNumero.Bottom + Px(Tema.Espacio.L) + lblVencimiento.Height + Px(Tema.Espacio.XS);
+                txtCvv.Top = txtVencimiento.Top;
                 ColocarCampo(lblVencimiento, txtVencimiento);
                 ColocarCampo(lblCvv, txtCvv);
                 Disposicion.AlinearAccionesFormulario(this, txtTitular, btnPagar, btnCancelar);
