@@ -1,6 +1,6 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 219 casos: CP-01 a CP-211, CP-354 a CP-360 y CP-364 a CP-365. Suman **365 ejecuciones**. La última corrida completa, `TestResults/bateria-365-2026-11-26.md`, es anterior a la renumeración de CP-358 a CP-360; desde la renumeración CP-359 falla (T-31) y falta la corrida que lo confirme. El resultado anterior fue 360/360 sobre `2db272e` (`2db272ecf0f31898ee617e025ba763be1be7825e`). Antes: sobre `967e038`, 205 casos y 348 ejecuciones (corrida de Codex del 19/11 y de Claude Code del 20/11, `TestResults/Claude-967e038/bateria.log`); sobre `dba674c`, 148 casos y 276 ejecuciones; sobre el código congelado de la medición de mutación, `65225e7`, 145 casos y 271 ejecuciones.
+Proyecto `Pruebas/` con MSTest. Hay 219 casos: CP-01 a CP-211, CP-354 a CP-360 y CP-364 a CP-365. Suman **365 ejecuciones**. La última corrida completa pasó **365/365** sobre `7efc928430b308b16aa0bf37e022e8fa77126bea` el 26/11/2026. El resumen está en `TestResults/bateria-365-2026-11-26.md` y la salida completa en `TestResults/bateria-365-2026-11-26.log`. Antes: sobre `2db272e`, 360/360 antes de la renumeración de CP-358 a CP-360; sobre `967e038`, 205 casos y 348 ejecuciones (corrida de Codex del 19/11 y de Claude Code del 20/11, `TestResults/Claude-967e038/bateria.log`); sobre `dba674c`, 148 casos y 276 ejecuciones; sobre el código congelado de la medición de mutación, `65225e7`, 145 casos y 271 ejecuciones.
 CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-365 se
 agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-365» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
@@ -143,9 +143,8 @@ de RF-02 y RN-39 en la de RF-13: por eso CP-55 y CP-61 llevan dos requerimientos
 Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11; CP-146 a CP-148, en el cierre de Codex (`dba674c`); CP-150 a CP-206, el 19/11, sobre `c4ab61e`, junto con la corrección de las columnas RF y Reglas de CP-197 a CP-199, que había cambiado Codex en los comentarios; CP-207 a CP-211 y CP-354 a CP-357, el 24/11, sobre `2db272e`. CP-358 a CP-360 y CP-364 a CP-365 se añadieron el 26/11. Los números CP-149, CP-212 a CP-353 y CP-361 a CP-363 no se usaron: Codex saltó de CP-211 a CP-354 al numerar, y los números no se reasignan. Salen del comentario `// CP-xx — RF, RN` y del nombre
 visible de cada prueba en `Pruebas/`, leídos uno por uno. Para CP-62 a CP-357, la procedencia
 histórica de las ejecuciones sigue en `Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-12-T47-T48.md`;
-los cinco casos añadidos después pasaron en la corrida 365/365 de
-`TestResults/bateria-365-2026-11-26.md`, que es **anterior a la renumeración**. Con la renumeración,
-CP-359 falla (su filtro quedó con el nombre viejo, T-31): la cifra se confirma con la batería siguiente.
+los casos añadidos después pasaron en la corrida 365/365 de
+`TestResults/bateria-365-2026-11-26.md`, sobre el commit `7efc928430b308b16aa0bf37e022e8fa77126bea`.
 
 Valen las mismas condiciones que para CP-11 a CP-61:
 - integración contra `BddEventAura_Pruebas`;
