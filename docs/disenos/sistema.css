@@ -176,6 +176,12 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
 .rasgo strong { font: var(--n4); font-weight: 600; color: #fff; }
 .rasgo p { font: var(--n5); letter-spacing: var(--n5-ls); color: var(--lateral-texto); max-width: 40ch; }
 .panel-pie { font: var(--n5); letter-spacing: var(--n5-ls); color: var(--lateral-seccion); }
+/* Velo detrás de los textos en --lateral-seccion (PRINCIPIOS-DISENO.md §7 y §9): ese color da 4,51:1 solo
+   sobre --lateral-fondo liso, así que debajo de esas líneas el muro tiene que desaparecer del todo. El velo
+   es opaco en la caja del texto y 4 px más (el interletrado de la última letra se pasa de la caja), y después
+   se desvanece en 24 px; el resto del muro queda como está. */
+.panel .n6, .panel-pie { width: fit-content; background: var(--lateral-fondo);
+    box-shadow: 0 0 0 var(--e1) var(--lateral-fondo), 0 0 var(--e5) var(--e3) var(--lateral-fondo); }
 
 /* El muro de portadas (motivo): ver muro.js y PRINCIPIOS-DISENO.md §7 */
 /* Una sola columna de portadas más anchas que el panel (552 × 420): no hay borde vertical dentro del panel,

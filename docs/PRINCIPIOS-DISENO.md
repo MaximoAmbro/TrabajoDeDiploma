@@ -130,6 +130,10 @@ Ningún elemento lleva `margin` propio. Así no hay elementos corridos 2 px de s
     (`Visual/Web/armador-paquete.css`). El defecto era de la maqueta de referencia.
   - Verificado el 26/11/2026, con el paquete del guion: total y botón a la vista a 960 × 700 y a 860 × 640
     (solo el área web) y a 1280 × 720 y a 1366 × 768 (la maqueta completa).
+  - **Decisión de JC, 26/11/2026: esta retícula no se lleva a la aplicación.** La copia integrada de Codex
+    (alturas fijas, corte a 760 px) funciona y está verificada a cinco resoluciones; a días de la entrega no se
+    reemplaza algo que anda. La maqueta y la aplicación resuelven lo mismo de dos maneras distintas, y esta
+    diferencia es consciente.
 
 ## 5. Formas y controles
 
@@ -222,6 +226,18 @@ que están a la izquierda. Peor caso calculado (una inicial sobre la portada má
 
 Los dos siguen por encima de 7:1. El muro no se mueve.
 
+**Velo detrás de los textos en `--lateral-seccion` (26/11/2026).** El velo del 82 % no alcanza para ese color
+(ver §9). Los tres textos del panel en ese color llevan su propio velo: el sobrerrótulo N6 (`.panel .n6`) y
+el pie (`.panel-pie`), en `sistema.css`, y la lista de pasos del alta (`.pasos`, entera), en
+`alta-cuenta.css`. Es fondo `--lateral-fondo` opaco en la caja y 4 px más, con un difuminado de 24 px
+alrededor. Mide lo que mide el texto (`width: fit-content`), así que el resto del muro queda como estaba.
+- **Los pasos van en un solo bloque y no renglón por renglón:** con un velo por renglón quedaban placas de
+  distinto ancho, en escalera, y el hueco entre renglones dejaba algún píxel en 4,48:1.
+- **Por qué opaco y no «la opacidad mínima»:** `#8B839E` da 4,51:1 sobre `--lateral-fondo` liso. Cualquier
+  resto del muro debajo lo baja de 4,5, así que la opacidad mínima que cumple es la total.
+- **Cómo se ve:** una placa oscura y suave detrás de esas dos líneas. Se nota, pero no tiene borde.
+- **Si se cambia `--lateral-fondo` o `Tema.LateralSeccion`,** hay que volver a medir: el margen es de 0,01.
+
 ## 8. El momento de autor: el armador de paquete
 
 Es la única pantalla con un elemento grande y vivo: **el total, en N1, que se recalcula a la vista mientras se
@@ -239,13 +255,20 @@ lector de pantalla, cuando termina de contar, no en cada cuadro. Todo lo demás 
 
 - Contraste de texto de 4,5:1 como mínimo (los niveles N5 y N6 sobre `--superficie` y `--fondo` lo cumplen con
   `--texto-secundario`).
-- **Pendiente, encontrado el 26/11/2026:** `--lateral-seccion` (`#8B839E`, de `Tema.LateralSeccion`) da 4,51:1
-  sobre `--lateral-fondo` liso. Cumple, pero justo.
-  - **Sobre el muro no cumple:** en el peor caso (texto encima de una inicial) baja a 3,3:1 con el velo actual,
-    del 82 %, y a 3,7:1 con el anterior, del 88 %.
-  - **Dónde se usa en el panel:** en texto de 11 y 12 px, el N6 y el pie.
-  - **Por qué no se corrige ahora:** el color es de `Tema.cs`, también en Windows Forms. Sacar el muro también
-    lo resolvería. Decide JC.
+- **`--lateral-seccion` sobre el muro: resuelto en la maqueta el 26/11/2026.** `#8B839E` (de
+  `Tema.LateralSeccion`) da 4,51:1 sobre `--lateral-fondo` liso: cumple, pero justo.
+  - **Medido con Playwright, sin el velo propio** (píxeles reales detrás de cada letra, las cuatro pantallas de
+    entrada a 1366 × 768, 1280 × 720, 1100 × 681 y 1100 × 633): el N6 quedaba en 3,95 a 4,0:1 y el pie en
+    3,78 a 3,92:1. Los dos fallaban en todos los casos. El 3,3:1 que figuraba antes era un cálculo de peor
+    caso; la medición da algo mejor, pero tampoco cumple.
+  - **También fallaban los pasos pendientes del alta** («Tus datos», «Verificar el correo», «Listo» y sus
+    números): 3,75 a 4,16:1. Usan el mismo color y la medición del 26/11 los encontró después.
+  - **JC decidió (26/11):** probar un velo detrás de esos textos antes de sacar el muro; si no llegaba a
+    4,5:1, panel liso. Con el velo de §7, el peor píxel de los 14 textos en ese color, en las 16
+    combinaciones, da **4,51:1**. Queda.
+  - **Los íconos de los rasgos** usan el mismo color; como no son texto, les alcanza con 3:1. No se midieron
+    uno por uno: el fondo del panel donde están da alrededor de 4:1 para ese color (deducido de la medición
+    del N6).
 - Ningún estado se comunica solo con color: siempre va con texto o con un ícono.
 - Las validaciones y el total se anuncian con `aria-live="polite"`.
 - Todo se puede hacer con el teclado. Escape vuelve, como en el resto de la aplicación.
