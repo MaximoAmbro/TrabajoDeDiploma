@@ -35,3 +35,6 @@ TestResults/
 # Capturas intermedias locales de la pasada visual 2026-11-20.
 Pruebas/Capturas-UI-2026-11-20/
 Pruebas/Capturas-UI-Normalizada-2026-11-20/
+
+# Salidas del MCP de Playwright (capturas, registros de consola): son locales.
+.playwright-mcp/
