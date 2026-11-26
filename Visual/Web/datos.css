@@ -21,9 +21,18 @@ th { background: var(--fondo); color: var(--texto-secundario); font: var(--n5); 
 .numerica { text-align: right; }
 .total { font-weight: 600; }
 summary { cursor: pointer; padding-bottom: var(--e2); }
-.filas-barras { max-height: none; overflow: visible; }
-.filas-barras svg, .grafico svg { display: block; }
-.eje-barras { overflow: visible; }
+.grafico-barras { display: grid; gap: var(--e2); }
+.eje-barras, .fila-barra { display: grid; grid-template-columns: minmax(140px, 2fr) minmax(120px, 3fr) 48px;
+    gap: var(--e2); align-items: center; }
+.marcas-barras { grid-column: 2; display: flex; justify-content: space-between; padding-bottom: var(--e1);
+    border-bottom: 1px solid var(--borde); color: var(--texto-secundario); font: var(--n5); font-variant-numeric: tabular-nums; }
+.filas-barras { display: grid; gap: var(--e2); max-height: none; overflow: visible; }
+.etiqueta-barra { min-width: 0; color: var(--texto); font: var(--n5); line-height: 1.25; overflow-wrap: anywhere; }
+.pista-barra { display: block; height: 12px; overflow: hidden; border-left: 1px solid var(--borde-control); border-right: 1px solid var(--borde-control);
+    background-color: var(--fondo); background-image: linear-gradient(to right, var(--borde) 1px, transparent 1px); background-size: 25% 100%; }
+.barra-dato { display: block; width: var(--ancho-barra); height: 100%; background: var(--muestra); }
+.valor-barra { color: var(--texto-secundario); font: var(--n5); text-align: right; font-variant-numeric: tabular-nums; }
+.grafico svg { display: block; }
 .tabla-resultados { max-height: none; overflow: visible; }
 .tabla-resultados th { position: sticky; top: 0; }
 tbody tr:nth-child(even) { background: var(--fondo); }

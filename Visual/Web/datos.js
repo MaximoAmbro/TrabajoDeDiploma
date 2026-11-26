@@ -20,39 +20,32 @@ function baseGrafico(alto, titulo) {
     return figura("svg", { viewBox: "0 0 720 " + alto, role: "img", "aria-label": titulo });
 }
 function barras(serie) {
-    const bloque = nodo("div");
-    const filas = nodo("div", null, "filas-barras");
-    filas.tabIndex = 0;
-    filas.setAttribute("aria-label", "Desplazar barras de eventos");
-    const alto = 12;
-    const altoSvg = alto * serie.length;
-    const svg = baseGrafico(altoSvg, "Entradas vendidas por evento");
-    const eje = baseGrafico(22, "Escala en entradas");
-    const marcoEje = nodo("div", null, "eje-barras");
+    const bloque = nodo("div", null, "grafico-barras");
+    bloque.setAttribute("aria-label", "Entradas vendidas por evento");
     const mayor = Math.max(1, ...serie.map(p => p.valor));
     const orden = 10 ** Math.floor(Math.log10(mayor / 5));
     const paso = Math.max(1, [1, 2, 5, 10].find(multiplo => multiplo * orden >= mayor / 5) * orden);
     const max = Math.ceil(mayor / paso) * paso;
-    const x0 = 250;
-    const anchoEscala = 413;
-    for (let marca = 0; marca <= max; marca += paso) {
-        const x = x0 + marca * anchoEscala / max;
-        eje.append(figura("text", { x, y: 16, "text-anchor": "middle" }, entero.format(marca)));
-        svg.append(figura("line", { x1: x, x2: x, y1: 0, y2: altoSvg, stroke: "var(--borde)" }));
-    }
-    eje.append(figura("line", { x1: x0, x2: x0 + anchoEscala, y1: 21, y2: 21, stroke: "var(--borde)" }));
+    const eje = nodo("div", null, "eje-barras");
+    eje.append(nodo("span"));
+    const marcas = nodo("div", null, "marcas-barras");
+    for (let marca = 0; marca <= max; marca += paso)
+        marcas.append(nodo("span", entero.format(marca)));
+    eje.append(marcas, nodo("span"));
+    bloque.append(eje);
+    const filas = nodo("div", null, "filas-barras");
     serie.slice().sort((a, b) => b.valor - a.valor).forEach((p, i) => {
-        const y = 3 + alto * i;
-        const ancho = p.valor * anchoEscala / max;
-        const nombre = p.etiqueta.length > 32 ? p.etiqueta.slice(0, 31) + "…" : p.etiqueta;
-        const rotulo = figura("text", { x: 1, y: y + 10 }, nombre);
-        rotulo.prepend(figura("title", {}, p.etiqueta));
-        svg.append(rotulo, figura("rect", { x: x0, y: y + 2, width: ancho, height: 8, fill: "var(--primario)" }),
-            figura("text", { x: x0 + ancho + 9, y: y + 10 }, entero.format(p.valor)));
+        const fila = nodo("div", null, "fila-barra");
+        fila.append(nodo("span", p.etiqueta, "etiqueta-barra"));
+        const pista = nodo("span", null, "pista-barra");
+        pista.style.setProperty("--ancho-barra", (p.valor * 100 / max) + "%");
+        pista.style.setProperty("--muestra", "var(--primario)");
+        const barra = nodo("span", null, "barra-dato");
+        pista.append(barra);
+        fila.append(pista, nodo("span", entero.format(p.valor), "valor-barra"));
+        filas.append(fila);
     });
-    filas.append(svg);
-    marcoEje.append(eje);
-    bloque.append(marcoEje, filas);
+    bloque.append(filas);
     return bloque;
 }
 function categorias(serie) {
