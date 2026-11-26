@@ -224,6 +224,21 @@ namespace Pruebas
             return tarea.GetAwaiter().GetResult();
         }
 
+        // CP-369 - RF-06/RN-30: ayuda de pago y formato MM/AA presentados coinciden con lo que valida Negocio.
+        [TestMethod("CP-369: Pago explica los datos de prueba e inserta la barra del vencimiento")]
+        public void CP369_AyudaYFormatoDePago()
+        {
+            using (var pago = new Visual.frmPago())
+            {
+                var vencimiento = InterfazGrupoA.ControlDe<TextBox>(pago, "txtVencimiento");
+                vencimiento.Text = "1229";
+                Assert.AreEqual("12/29", vencimiento.Text);
+                StringAssert.Contains(InterfazGrupoA.ControlDe<Label>(pago, "ayudaDatosPruebaPago").Text, "13 a 19 dígitos");
+                StringAssert.Contains(InterfazGrupoA.ControlDe<Label>(pago, "ayudaDatosPruebaPago").Text, "0000 simula rechazo");
+                StringAssert.Contains(InterfazGrupoA.ControlDe<Label>(pago, "lblSeguro").Text, "Prototipo");
+            }
+        }
+
         private static void ComprobarOjos(Visual.Web.PanelWeb panel, int cantidad, string pantalla)
         {
             string script = "(()=>{const bs=[...document.querySelectorAll('.ojo-contrasena')];return bs.length===" + cantidad +

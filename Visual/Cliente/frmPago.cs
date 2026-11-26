@@ -17,29 +17,65 @@ namespace Visual
         private DateTime vence;
         private bool cerrada;   // pagada o vencida: ya no hay reserva que liberar al cerrar
         private bool procesandoPago;
+        private bool ajustandoVencimiento;
+        private readonly Label ayudaDatosPrueba = new Label
+        {
+            Name = "ayudaDatosPruebaPago",
+            AutoSize = false,
+            Text = "Acepta 13 a 19 dígitos; vencimiento MM/AA no vencido; código de 3 o 4 dígitos. Ejemplo: 4111 1111 1111 1111 · 12/29 · 123. Una tarjeta terminada en 0000 simula rechazo.",
+            ForeColor = Tema.TextoSecundario
+        };
 
         public frmPago()
         {
             InitializeComponent();
+            lblSeguro.Text = "Prototipo: usá estos datos de prueba";
+            Controls.Add(ayudaDatosPrueba);
+            txtVencimiento.TextChanged += txtVencimiento_TextChanged;
             Shown += (s, e) =>
             {
-                txtTitular.Left = txtNumero.Left = txtVencimiento.Left = Disposicion.Pixeles(this, Tema.Espacio.XXL);
-                ColocarCampo(lblTitular, txtTitular);
-                int espacio = Disposicion.Pixeles(this, Tema.Espacio.XS);
-                lblTotal.Top = lblTitular.Top - lblTotal.Height - espacio;
-                lblSeguro.Top = lblTotal.Top - lblSeguro.Height - espacio;
-                lblTitulo.Top = lblSeguro.Top - lblTitulo.Height - espacio;
-                lblTemporizador.Top = lblTitulo.Top;
-                indicadorPasos.Top = lblTitulo.Top - indicadorPasos.Height - espacio;
-                ColocarCampo(lblNumero, txtNumero);
                 int Px(int medida) => Disposicion.Pixeles(this, medida);
+                txtTitular.Left = txtNumero.Left = txtVencimiento.Left = Disposicion.Pixeles(this, Tema.Espacio.XXL);
+                lblTitulo.Top = Px(108);
+                lblTemporizador.Top = lblTitulo.Top;
+                lblSeguro.SetBounds(txtTitular.Left, lblTitulo.Bottom + Px(Tema.Espacio.S), txtTitular.Width, Px(Tema.Espacio.L));
+                lblSeguro.AutoSize = false;
+                lblSeguro.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+                ayudaDatosPrueba.Font = Tema.Ayuda;
+                ayudaDatosPrueba.SetBounds(txtTitular.Left, lblSeguro.Bottom + Px(Tema.Espacio.XS), txtTitular.Width, 0);
+                ayudaDatosPrueba.Height = ayudaDatosPrueba.GetPreferredSize(new System.Drawing.Size(ayudaDatosPrueba.Width, 0)).Height;
+                lblTotal.Top = ayudaDatosPrueba.Bottom + Px(Tema.Espacio.S);
+                txtTitular.Top = lblTotal.Bottom + Px(Tema.Espacio.L) + lblTitular.Height + Px(Tema.Espacio.XS);
+                ColocarCampo(lblTitular, txtTitular);
+                lblTemporizador.Top = lblTitulo.Top;
+                indicadorPasos.Top = lblTitulo.Top - indicadorPasos.Height - Px(Tema.Espacio.XS);
+                ColocarCampo(lblNumero, txtNumero);
                 txtCvv.Left = txtVencimiento.Left + Px(Tema.AnchoCampo + Tema.Espacio.L);
                 ClientSize = new System.Drawing.Size(txtCvv.Left + Px(Tema.AnchoCampo + Tema.Espacio.XXL), ClientSize.Height);
                 ColocarCampo(lblVencimiento, txtVencimiento);
                 ColocarCampo(lblCvv, txtCvv);
                 Disposicion.AlinearAccionesFormulario(this, txtTitular, btnPagar, btnCancelar);
+                lblEstado.Top = txtCvv.Bottom + Px(Tema.Espacio.S);
+                btnPagar.Top = btnCancelar.Top = lblEstado.Bottom + Px(Tema.Espacio.L);
+                ClientSize = new System.Drawing.Size(ClientSize.Width, Math.Max(ClientSize.Height, btnPagar.Bottom + Px(Tema.Espacio.XXL)));
                 Disposicion.LimitarAncho(lblEstado);
             };
+        }
+
+        private void txtVencimiento_TextChanged(object sender, EventArgs e)
+        {
+            if (ajustandoVencimiento) return;
+            string anterior = txtVencimiento.Text;
+            int posicion = txtVencimiento.SelectionStart;
+            int digitosAntes = anterior.Substring(0, Math.Min(posicion, anterior.Length)).Count(char.IsDigit);
+            string digitos = new string(anterior.Where(char.IsDigit).Take(4).ToArray());
+            string formateado = digitos.Length <= 2 ? digitos : digitos.Substring(0, 2) + "/" + digitos.Substring(2, Math.Min(2, digitos.Length - 2));
+            if (formateado == anterior) return;
+            ajustandoVencimiento = true;
+            txtVencimiento.Text = formateado;
+            int nuevoCursor = digitosAntes <= 2 ? digitosAntes : digitosAntes + 1;
+            txtVencimiento.SelectionStart = Math.Min(formateado.Length, nuevoCursor);
+            ajustandoVencimiento = false;
         }
 
         private void frmPago_Load(object sender, EventArgs e)
