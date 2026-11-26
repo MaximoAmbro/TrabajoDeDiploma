@@ -13,9 +13,9 @@ body { margin: 0; padding: var(--e3); background: var(--superficie); color: var(
 .secundario { color: var(--texto-secundario); font: var(--n5); letter-spacing: var(--n5-ls); }
 .dato { font-variant-numeric: tabular-nums; }
 .entradas { display: grid; gap: var(--e1); }
-.entrada { display: grid; grid-template-columns: var(--e4) minmax(var(--e8), 1fr) auto; gap: var(--e2); align-items: center;
+.entrada-ticket { display: grid; grid-template-columns: var(--e4) minmax(var(--e8), 1fr) auto; gap: var(--e2); align-items: center;
     padding: var(--e2); border-top: 1px solid var(--borde); }
-.entrada input { width: var(--e4); height: var(--e4); accent-color: var(--primario); }
+.entrada-ticket input { width: var(--e4); height: var(--e4); accent-color: var(--primario); }
 .codigo { font: var(--n5); color: var(--texto-secundario); overflow-wrap: anywhere; }
 .vacio { border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--superficie);
     padding: var(--e5); display: grid; gap: var(--e2); }

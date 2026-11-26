@@ -22,7 +22,7 @@ function dibujarHistorial(m) {
   compras.append(lista);
   const detalle = seccion(m.detalle || "Entradas"); const filas = nodo("div", "entradas");
   (m.entradas || []).forEach(e => {
-    const f = nodo("label", "entrada"); const check = document.createElement("input"); check.type = "checkbox"; check.checked = e.devolver; check.disabled = !e.puedeDevolver;
+    const f = nodo("label", "entrada-ticket"); const check = document.createElement("input"); check.type = "checkbox"; check.checked = e.devolver; check.disabled = !e.puedeDevolver;
     check.addEventListener("change", () => enviar({ tipo: "entrada", id: e.id, devolver: check.checked }));
     f.append(check, nodo("span", "", e.sector + " · " + e.precio + " · " + e.estado + " · seguro " + e.seguro), nodo("span", "codigo", e.codigo)); filas.append(f);
   });

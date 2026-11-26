@@ -189,10 +189,10 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
 /* Velo del 82 %: el peor caso (una inicial sobre la portada más clara) deja --lateral-texto en 7,4:1 y el
    blanco en 11,9:1. Ver PRINCIPIOS-DISENO.md §7. */
 .muro::after { content: ""; position: absolute; inset: 0; background: rgba(36, 29, 48, 0.82); }
-.portada { position: relative; overflow: hidden;
+.muro > .portada { position: relative; overflow: hidden;
     -webkit-mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent);
     mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent); }
-.portada .inicial { position: absolute; left: var(--e7); bottom: var(--e7); font: 700 252px/0.75 var(--familia); color: rgba(255, 255, 255, 0.28); }
+.muro > .portada .inicial { position: absolute; left: var(--e7); bottom: var(--e7); font: 700 252px/0.75 var(--familia); color: rgba(255, 255, 255, 0.28); }
 
 /* Centrado vertical seguro: si la columna no entra, se desplaza desde arriba en vez de recortarse.
    Es el único margin del sistema, y es de maquetación (auto), no una separación. */

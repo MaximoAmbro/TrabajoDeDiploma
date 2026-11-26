@@ -108,6 +108,32 @@ namespace Pruebas
             });
         }
 
+        [TestMethod("CP-365: El historial web muestra una compra y sus devoluciones dentro de la vista")]
+        public void CP365_HistorialConCompraCabeEnLaVistaWeb()
+        {
+            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
+                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
+            InterfazGrupoA.EnSta(() =>
+            {
+                Fake.Limpiar();
+                var cliente = Fake.Cliente(Entidades.NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
+                var evento = Fake.EventoPublicado(25000m, 100);
+                Fake.CompraConfirmada(cliente, evento, 2, true);
+                using (var historial = new Visual.frmHistorialCliente { IDUsuario = cliente.Id })
+                {
+                    historial.ClientSize = new Size(1100, 720);
+                    InterfazGrupoA.Mostrar(historial);
+                    var panel = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(historial, "historialWeb");
+                    Esperar(() => panel.Preparado && panel.Visible, "El historial debe abrir su vista web.");
+                    string cabe = Ejecutar(panel,
+                        "(()=>{const compra=document.querySelector('#app .grilla .tarjeta');const filas=[...document.querySelectorAll('.entrada-ticket')];const alto=document.documentElement.clientHeight;return !!compra&&filas.length===2&&compra.getBoundingClientRect().bottom<=alto&&filas.every(f=>f.getBoundingClientRect().top>=0&&f.getBoundingClientRect().bottom<=alto&&f.querySelector('input').getBoundingClientRect().height>0)})()");
+                    Assert.AreEqual("true", cabe,
+                        "La compra y las dos casillas Devolver deben entrar en la ventana, sin que cada renglón mida una pantalla.");
+                }
+            });
+        }
+
         private static void Esperar(Func<bool> condicion, string mensaje)
         {
             var reloj = Stopwatch.StartNew();
