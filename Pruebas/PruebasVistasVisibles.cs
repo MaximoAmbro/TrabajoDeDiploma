@@ -250,6 +250,7 @@ namespace Pruebas
                     Assert.IsTrue(compraMenu.ClientSize.Width <= hostCompra.ClientSize.Width && compraMenu.ClientSize.Height <= hostCompra.ClientSize.Height,
                         "El armador debe usar el tamaño disponible en el panel, no el mínimo de una ventana suelta.");
                     EsperarVistaWeb(webCompra);
+                    PruebasInteraccionPantallas.CapturarSiSeSolicito(menu, "ArmadorEnMiCuenta");
                     string paqueteCompleto = EjecutarVistaWeb(webCompra,
                         "(()=>{const a=document.querySelector('.area-web'),s=document.querySelector('[aria-labelledby=titulo-servicios]').getBoundingClientRect(),r=document.querySelector('.resumen').getBoundingClientRect(),t=document.querySelector('.total').getBoundingClientRect(),b=document.querySelector('#continuar').getBoundingClientRect(),d=document.querySelector('#desglose'),p=document.querySelector('.sector .precio');const apilado=r.top>=s.bottom-1,separado=apilado||r.left-s.right>=24;return a.scrollWidth<=a.clientWidth+1&&separado&&t.bottom<=b.top&&b.right<=r.right&&parseFloat(getComputedStyle(d).maxHeight)<=440&&getComputedStyle(p).whiteSpace==='nowrap'})()");
                     Assert.AreEqual("true", paqueteCompleto,
@@ -388,12 +389,18 @@ namespace Pruebas
                     Assert.AreEqual(menu, cambio.Retorno);
                     var host = ControlDe<HostFormularioCliente>(menu, "paginafrmCambiarContrase\u00f1a");
                     Assert.AreEqual(cambio, host.Pantalla, "El cambio debe quedar dentro del shell de Mi cuenta.");
-                    Assert.AreEqual("Cambiar contrase\u00f1a", ControlDe<Label>(menu, "label1").Text);
+                    Assert.AreEqual("Cambiar contrase\u00f1a", menu.Controls.OfType<Label>().Single(l => l.Name == "label1").Text);
                     var web = ControlDe<Visual.Web.PanelWeb>(cambio, "cambioContrasenaWeb");
                     EsperarVistaWeb(web);
                     Assert.AreEqual("true", EjecutarVistaWeb(web,
                         "(()=>document.querySelectorAll('.ojo-contrasena').length===3&&document.querySelector('#mail').readOnly&&document.querySelectorAll('h1').length===0)()"),
                         "El cambio web debe mostrar tres ojos, mail de solo lectura y el título del shell.");
+                    PruebasInteraccionPantallas.CapturarSiSeSolicito(menu, "CambiarContrasenaEnMiCuenta");
+                    ControlDe<Button>(menu, "btnSuscripcion").PerformClick();
+                    var hostSuscripcion = menu.Controls.Find("paginafrmSuscripcion", true).OfType<HostFormularioCliente>().First(h => h.Visible);
+                    var suscripcionWeb = ControlDe<Visual.Web.PanelWeb>(hostSuscripcion, "suscripcionWeb");
+                    EsperarVistaWeb(suscripcionWeb);
+                    PruebasInteraccionPantallas.CapturarSiSeSolicito(menu, "SuscripcionEnMiCuenta");
                     menu.Close();
                 }
             });

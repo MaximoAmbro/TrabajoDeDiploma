@@ -137,6 +137,7 @@ namespace Pruebas
                         Assert.IsTrue(Visual.NavegacionCliente.VerificarCorreo());
                         var panel = ControlDe<Visual.Web.PanelWeb>(menu, "altaCuentaWeb");
                         Esperar(() => panel.Preparado && panel.Visible, "La verificacion debe abrirse en Mi cuenta.");
+                        PruebasInteraccionPantallas.CapturarSiSeSolicito(menu, "VerificacionCorreo");
                         string ayuda = EjecutarScript(panel, "document.querySelector('#ayuda-correo-sesion').textContent");
                         StringAssert.Contains(ayuda, "BandejaSimulada");
                         string cooldown = EjecutarScript(panel, "document.querySelector('#reenviar-correo').disabled");

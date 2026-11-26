@@ -124,7 +124,6 @@ namespace Pruebas
                     Esperar(() => panelAlta.Preparado && panelAlta.Visible, "El alta debe mostrar la maqueta web y no el respaldo WinForms.");
                     Assert.IsFalse(alta.Controls.Find("checkbxShowPass", true).Single().Visible,
                         "El checkbox WinForms solo pertenece al respaldo y no debe aparecer encima del alta web.");
-                    ComprobarOjos(panelAlta, 2, "alta");
                     string opciones = Ejecutar(panelAlta, "document.querySelector('[data-vista=elegir]').innerText");
                     StringAssert.Contains(opciones, "Quiero comprar entradas");
                     StringAssert.Contains(opciones, "Quiero organizar eventos");
@@ -132,6 +131,7 @@ namespace Pruebas
                     Ejecutar(panelAlta, "document.getElementById('continuar').click()");
                     Esperar(() => Ejecutar(panelAlta, "!document.querySelector('[data-vista=datos]').classList.contains('oculto')") == "true",
                         "La elección debe avanzar al formulario de datos.");
+                    ComprobarOjos(panelAlta, 2, "alta");
                     Ejecutar(panelAlta,
                         "(()=>{const v=" + Newtonsoft.Json.JsonConvert.SerializeObject(correo) + ";" +
                         "for(const [id,valor] of Object.entries({nombre:'Prueba',apellido:'Recorrido',mail:v,contrasena:'Cliente123',confirmar:'Cliente123'})){"+
@@ -165,7 +165,11 @@ namespace Pruebas
                     var recuperacion = EsperarFormulario<Visual.frmCambiarContraseña>("El acceso debe abrir la recuperaciÃ³n web.");
                     var panelRecuperacion = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(recuperacion, "recuperacionWeb");
                     Esperar(() => panelRecuperacion.Preparado && panelRecuperacion.Visible, "La recuperaciÃ³n debe mostrar su maqueta web.");
-                    ComprobarOjos(panelRecuperacion, 2, "recuperaciÃ³n");
+                    Ejecutar(panelRecuperacion,
+                        "document.getElementById('mail').value=" + Newtonsoft.Json.JsonConvert.SerializeObject(correo) + ";document.getElementById('enviar').click()");
+                    Esperar(() => Ejecutar(panelRecuperacion, "!document.querySelector('[data-paso=codigo]').classList.contains('oculto')") == "true",
+                        "La recuperaci\u00f3n debe mostrar los campos de contrase\u00f1a en el paso de c\u00f3digo.");
+                    ComprobarOjos(panelRecuperacion, 2, "recuperaci\u00f3n");
                     Assert.IsTrue(recuperacion.ClientSize.Width >= 1100 && recuperacion.ClientSize.Height >= 720,
                         "La recuperaciÃ³n debe abrir al tamaño horizontal de su maqueta.");
                     Assert.IsFalse(alta.Visible, "El formulario de alta no debe reaparecer tras confirmar el correo.");
@@ -437,7 +441,7 @@ namespace Pruebas
                             PrepararSesion(tipo);
                             formulario = tipo == typeof(Visual.frmCambiarContraseña) &&
                                 !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI"))
-                                ? (Form)new Visual.frmCambiarContraseña(true)
+                                ? (Form)new Visual.frmCambiarContraseña(Environment.GetEnvironmentVariable("EVENTAURA_CP357_CAPTURAR_CAMBIO") != "1")
                                 : (Form)Activator.CreateInstance(tipo);
                             PrepararContextoSeleccionado(formulario);
                             formulario.Show();
@@ -608,6 +612,22 @@ namespace Pruebas
                     Assert.IsTrue(formulario.Controls.Find("txtMail", true).Any(c => c.Visible) &&
                         formulario.Controls.Find("btnconfirmar", true).Any(c => c.Visible),
                         "La recuperación WinForms debe quedar operativa cuando falla WebView2.");
+                    VerificarGeometria(formulario);
+                    continue;
+                }
+                if (formulario is Visual.frmCambiarContraseña)
+                {
+                    Assert.IsTrue(formulario.Controls.Find("txtMail", true).Any(c => c.Visible) &&
+                        formulario.Controls.Find("btnconfirmar", true).Any(c => c.Visible),
+                        "El cambio de contraseña WinForms debe quedar operativo cuando falla WebView2.");
+                    VerificarGeometria(formulario);
+                    continue;
+                }
+                if (formulario is Visual.frmSuscripcion)
+                {
+                    Assert.IsTrue(formulario.Controls.Find("rdbMensual", true).Any(c => c.Visible) &&
+                        formulario.Controls.Find("btnContratar", true).Any(c => c.Visible),
+                        "La suscripción WinForms debe conservar plan y contratación cuando falla WebView2.");
                     VerificarGeometria(formulario);
                     continue;
                 }
@@ -1023,7 +1043,7 @@ namespace Pruebas
             campo.Clear();
         }
 
-        private static void CapturarSiSeSolicito(Form formulario)
+        internal static void CapturarSiSeSolicito(Form formulario, string nombreArchivo = null)
         {
             string carpeta = Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI");
             if (string.IsNullOrWhiteSpace(carpeta)) return;
@@ -1053,6 +1073,15 @@ namespace Pruebas
             foreach (var vista in vistasWeb)
                 Console.WriteLine(formulario.GetType().Name + ": " + vista.Name + " preparado=" + vista.Preparado +
                     " inicializado=" + vista.InicializacionTerminada + " visible=" + vista.Visible + " bounds=" + vista.Bounds);
+            if (formulario is Visual.frmEventosCliente && Environment.GetEnvironmentVariable("EVENTAURA_CP357_CATALOGO_AGOTADOS") == "1")
+            {
+                var catalogo = vistasWeb.Single(v => v.Name == "catalogoWeb");
+                var desplazado = catalogo.EjecutarScriptAsync("(()=>{const e=[...document.querySelectorAll('#catalogo .evento')],a=e.findIndex(x=>x.querySelector('.estado').classList.contains('agotado'));window.scrollTo(0,document.documentElement.scrollHeight);return a>=0&&e.slice(a).every(x=>x.querySelector('.estado').classList.contains('agotado'))})()");
+                var esperaCatalogo = Stopwatch.StartNew();
+                while (!desplazado.IsCompleted && esperaCatalogo.ElapsedMilliseconds < 3000) { Application.DoEvents(); Thread.Sleep(10); }
+                Assert.IsTrue(desplazado.IsCompleted && desplazado.GetAwaiter().GetResult() == "true",
+                    "La captura del catálogo debe mostrar agotados agrupados al final.");
+            }
             if (formulario is Visual.FrmCompraCliente)
             {
                 var compraWeb = vistasWeb.Single();
@@ -1125,7 +1154,7 @@ namespace Pruebas
                     }
                     Console.WriteLine(formulario.GetType().Name + ": contenido WebView2 capturado.");
                 }
-                imagen.Save(Path.Combine(carpeta, formulario.GetType().Name + ".png"), System.Drawing.Imaging.ImageFormat.Png);
+                imagen.Save(Path.Combine(carpeta, (nombreArchivo ?? formulario.GetType().Name) + ".png"), System.Drawing.Imaging.ImageFormat.Png);
             }
         }
 
