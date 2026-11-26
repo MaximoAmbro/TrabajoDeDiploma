@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Negocio;
@@ -35,6 +36,98 @@ namespace Pruebas
                     StringAssert.Contains(confirmacion.AvisoTicket, "Documentos");
                 }
             }
+        }
+
+        [TestMethod("CP-364: El alta web completa correo y continúa al acceso sin volver a crear la cuenta")]
+        public void CP364_AltaWebCompletaElRecorridoHastaAcceso()
+        {
+            SeleccionEnviadorCodigos.Actual = new EnviadorSimulado();
+            InterfazGrupoA.EnSta(() =>
+            {
+                string correo = Fake.MailNuevo();
+                using (var bienvenida = new Visual.frmBienvenida())
+                {
+                    InterfazGrupoA.Mostrar(bienvenida);
+                    var panelBienvenida = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(bienvenida, "bienvenidaWeb");
+                    Esperar(() => panelBienvenida.Preparado && panelBienvenida.Visible, "La bienvenida debe abrir su vista web.");
+                    Ejecutar(panelBienvenida, "document.querySelector('[data-destino=alta]').click()" );
+
+                    var alta = EsperarFormulario<Visual.frmCrearUsuario>("El botón de alta de la bienvenida debe abrir Crear cuenta.");
+                    var panelAlta = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(alta, "altaCuentaWeb");
+                    Esperar(() => panelAlta.Preparado && panelAlta.Visible, "El alta debe mostrar la maqueta web y no el respaldo WinForms.");
+                    string opciones = Ejecutar(panelAlta, "document.querySelector('[data-vista=elegir]').innerText");
+                    StringAssert.Contains(opciones, "Quiero comprar entradas");
+                    StringAssert.Contains(opciones, "Quiero organizar eventos");
+
+                    Ejecutar(panelAlta, "document.getElementById('continuar').click()");
+                    Esperar(() => Ejecutar(panelAlta, "!document.querySelector('[data-vista=datos]').classList.contains('oculto')") == "true",
+                        "La elección debe avanzar al formulario de datos.");
+                    Ejecutar(panelAlta,
+                        "(()=>{const v=" + Newtonsoft.Json.JsonConvert.SerializeObject(correo) + ";" +
+                        "for(const [id,valor] of Object.entries({nombre:'Prueba',apellido:'Recorrido',mail:v,contrasena:'Cliente123',confirmar:'Cliente123'})){"+
+                        "const e=document.getElementById(id);e.value=valor;e.dispatchEvent(new Event('input',{bubbles:true}));}"+
+                        "document.getElementById('formulario').requestSubmit();return true;})()");
+                    Esperar(() => Ejecutar(panelAlta, "!document.querySelector('[data-vista=correo]').classList.contains('oculto')") == "true",
+                        "Crear cuenta debe avanzar a la verificación del correo.");
+
+                    Assert.IsTrue(panelAlta.Visible, "El alta no debe activar el respaldo WinForms al enviar sus datos.");
+                    Assert.IsFalse(alta.Controls.Find("txtmail", true).Single().Visible,
+                        "El formulario WinForms viejo debe seguir oculto mientras la maqueta web está activa.");
+                    var mensaje = EnviadorSimulado.Ultimo(correo, "Verificacion");
+                    Assert.IsNotNull(mensaje, "El recorrido real debe emitir el correo simulado de verificación.");
+                    Ejecutar(panelAlta, "document.getElementById('codigo-correo').value=" + Newtonsoft.Json.JsonConvert.SerializeObject(mensaje.Codigo) + ";"+
+                        "document.getElementById('confirmar-correo').click()");
+                    Esperar(() => Ejecutar(panelAlta, "!document.querySelector('[data-vista=listo]').classList.contains('oculto')") == "true",
+                        "Un correo confirmado debe avanzar a la pantalla final y no regresar al comienzo del alta.");
+                    Assert.IsTrue(panelAlta.Visible, "La verificación exitosa no debe caer al respaldo WinForms.");
+                    string final = Ejecutar(panelAlta, "document.querySelector('[data-vista=listo]').innerText");
+                    StringAssert.Contains(final, "Tu cuenta está lista");
+                    StringAssert.Contains(final, "Ir a iniciar sesión");
+
+                    Ejecutar(panelAlta, "document.querySelector('[data-vista=listo] [data-destino=acceso]').click()");
+                    var acceso = EsperarFormulario<Visual.frmInicio>("Después de completar el alta, la acción final debe abrir Acceso.");
+                    var panelAcceso = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(acceso, "accesoWeb");
+                    Esperar(() => panelAcceso.Preparado && panelAcceso.Visible, "El destino final del alta debe ser el acceso web.");
+                    Assert.IsFalse(alta.Visible, "El formulario de alta no debe reaparecer tras confirmar el correo.");
+                    StringAssert.Contains(Ejecutar(panelAcceso, "document.querySelector('h1').innerText"), "Iniciar sesión");
+                }
+            });
+        }
+
+        private static void Esperar(Func<bool> condicion, string mensaje)
+        {
+            var reloj = Stopwatch.StartNew();
+            while (reloj.Elapsed < TimeSpan.FromSeconds(20))
+            {
+                Application.DoEvents();
+                if (condicion()) return;
+                Thread.Sleep(15);
+            }
+            Assert.Fail(mensaje);
+        }
+
+        private static string Ejecutar(Visual.Web.PanelWeb panel, string script)
+        {
+            Task<string> tarea = panel.EjecutarScriptAsync(script);
+            var reloj = Stopwatch.StartNew();
+            while (!tarea.IsCompleted && reloj.Elapsed < TimeSpan.FromSeconds(10))
+            {
+                Application.DoEvents();
+                Thread.Sleep(10);
+            }
+            Assert.IsTrue(tarea.IsCompleted, "WebView2 debe responder al guion del recorrido.");
+            return tarea.GetAwaiter().GetResult();
+        }
+
+        private static T EsperarFormulario<T>(string mensaje) where T : Form
+        {
+            T resultado = null;
+            Esperar(() =>
+            {
+                resultado = Application.OpenForms.Cast<Form>().OfType<T>().FirstOrDefault(f => f.Visible);
+                return resultado != null;
+            }, mensaje);
+            return resultado;
         }
 
         // CP-199 — RF-03/RF-07/RF-11, RNF-02: sin DLL opcionales, la carga real termina en respaldo.

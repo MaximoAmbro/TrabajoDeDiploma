@@ -244,7 +244,7 @@
         if (datos.paso === "correo") {
             $("#contrasena").value = "";
             $("#confirmar").value = "";
-            fortaleza();
+            validadores.contrasena(false);
         }
         if (datos.paso === "telefono") {
             $("#telefono-normalizado").textContent = estado.telefono || "";
