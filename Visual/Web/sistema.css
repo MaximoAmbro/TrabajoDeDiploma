@@ -240,6 +240,11 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
     .panel-contenido { padding: var(--e6) var(--e7); gap: var(--e5); }
     .panel .pila-7 { gap: var(--e6); }
     .rasgos { gap: var(--e4); }
+    .recuperar-cuenta { gap: var(--e6); }
+    .recuperar-cuenta > .pila-5 { gap: var(--e4); }
+    #form-codigo { gap: var(--e5); }
+    #form-codigo > .pila-5 { gap: var(--e4); }
+    #form-codigo .pila-4 { gap: var(--e3); }
 }
 
 @media (prefers-reduced-motion: reduce) {

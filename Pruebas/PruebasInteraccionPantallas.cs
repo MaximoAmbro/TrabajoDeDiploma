@@ -241,6 +241,25 @@ namespace Pruebas
             }
         }
 
+        // CP-371 - RF-15/RNF-02: la acción de recuperación queda a la vista en el tamaño objetivo.
+        [TestMethod("CP-371: Restablecer contraseña entra sin scroll a 1100x720")]
+        public void CP371_RecuperacionSinDesplazamiento()
+        {
+            InterfazGrupoA.EnSta(() =>
+            {
+                using (var form = (Form)Activator.CreateInstance(typeof(Visual.frmInicio).Assembly.GetType("Visual.frmCambiarContrase\u00f1a"), new object[] { true }))
+                {
+                    form.ClientSize = new System.Drawing.Size(1100, 720);
+                    InterfazGrupoA.Mostrar(form);
+                    var panel = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(form, "recuperacionWeb");
+                    Esperar(() => panel.Preparado && panel.Visible, "La recuperación debe abrir la vista web.");
+                    string visible = Ejecutar(panel,
+                        "(()=>{const b=document.querySelector('#restablecer'),r=b.getBoundingClientRect();return r.bottom<=innerHeight&&r.top>=0&&document.documentElement.scrollHeight<=innerHeight})()");
+                    Assert.AreEqual("true", visible, "El botón Restablecer debe quedar entero dentro del alto visible, sin desplazamiento.");
+                }
+            });
+        }
+
         private static void ComprobarOjos(Visual.Web.PanelWeb panel, int cantidad, string pantalla)
         {
             string script = "(()=>{const bs=[...document.querySelectorAll('.ojo-contrasena')];return bs.length===" + cantidad +
