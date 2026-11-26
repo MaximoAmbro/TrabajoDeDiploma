@@ -39,7 +39,7 @@ function barras(serie) {
         fila.append(nodo("span", p.etiqueta, "etiqueta-barra"));
         const pista = nodo("span", null, "pista-barra");
         pista.style.setProperty("--ancho-barra", (p.valor * 100 / max) + "%");
-        pista.style.setProperty("--muestra", "var(--primario)");
+        pista.style.setProperty("--muestra", "var(--texto-secundario)");
         const barra = nodo("span", null, "barra-dato");
         pista.append(barra);
         fila.append(pista, nodo("span", entero.format(p.valor), "valor-barra"));
@@ -80,9 +80,9 @@ function temporal(serie) {
         p.y = 114 - p.valor / max * 94;
     });
     svg.append(figura("polyline", { points: puntos.map(p => p.x + "," + p.y).join(" "),
-        stroke: "var(--primario)", "stroke-width": 3, fill: "none" }));
+        stroke: "var(--texto-secundario)", "stroke-width": 3, fill: "none" }));
     puntos.forEach((p, i) => {
-        const punto = figura("circle", { cx: p.x, cy: p.y, r: 4, fill: "var(--primario)" });
+        const punto = figura("circle", { cx: p.x, cy: p.y, r: 4, fill: "var(--texto-secundario)" });
         punto.append(figura("title", {}, p.etiqueta + " · " + entero.format(p.valor)));
         svg.append(punto);
         if (i === 0 || i === puntos.length - 1)

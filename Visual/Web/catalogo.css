@@ -19,9 +19,9 @@
 .precio { margin-top: auto; padding-top: var(--e2); font: var(--n3); letter-spacing: var(--n3-ls); font-weight: 600;
     font-variant-numeric: tabular-nums; }
 .accion { align-self: flex-start; margin-top: var(--e1); height: var(--alto-control); padding: 0 var(--e5); border: 1px solid transparent;
-    border-radius: var(--radio-control); background: var(--primario); color: var(--superficie); font: var(--n4); font-weight: 600;
+    border-radius: var(--radio-control); background: var(--superficie); border-color: var(--borde-control); color: var(--texto); font: var(--n4); font-weight: 600;
     cursor: pointer; text-align: center; transition: background-color var(--transicion); }
-.accion:hover { background: var(--primario-encima); }
-.accion:active { background: var(--primario-presionado); }
+.accion:hover { background: var(--fondo); border-color: var(--texto-secundario); }
+.accion:active { background: var(--borde); }
 
 
