@@ -43,6 +43,33 @@ namespace Pruebas
             {
                 timer.Tick += (s, e) =>
                 {
+                    var propio = Application.OpenForms.Cast<Form>().OfType<Visual.DialogoEventAura>()
+                        .FirstOrDefault(f => f.Visible && !respondidos.Contains(f.Handle));
+                    if (propio != null)
+                    {
+                        respondidos.Add(propio.Handle);
+                        var esperadoPropio = pendientes.Count > 0 ? pendientes.Dequeue() : null;
+                        if (esperadoPropio == null) errores.Add("Diálogo EventAura inesperado: " + propio.TituloDialogo);
+                        else
+                        {
+                            esperadoPropio.TituloObservado = propio.TituloDialogo;
+                            esperadoPropio.TextoObservado = propio.MensajeDialogo;
+                            if (propio.TituloDialogo != esperadoPropio.Titulo)
+                                errores.Add($"Título: '{propio.TituloDialogo}', esperado '{esperadoPropio.Titulo}'.");
+                            if (!propio.MensajeDialogo.Contains(esperadoPropio.Texto))
+                                errores.Add($"Texto: '{propio.MensajeDialogo}', esperado '{esperadoPropio.Texto}'.");
+                            string predeterminado = (propio.AcceptButton as Control)?.Name ?? "";
+                            bool acepta = predeterminado == "dialogoConfirmar";
+                            if (esperadoPropio.Predeterminado != DialogResult.OK &&
+                                (esperadoPropio.Predeterminado == DialogResult.Yes) != acepta)
+                                errores.Add("El botón predeterminado del diálogo EventAura no coincide.");
+                            string boton = esperadoPropio.Respuesta == DialogResult.Yes ? "dialogoConfirmar" : "dialogoVolver";
+                            var control = propio.Controls.Find(boton, true).FirstOrDefault() as Button;
+                            if (control == null) errores.Add("No se encontró el botón de respuesta " + boton + ".");
+                            else control.PerformClick();
+                        }
+                        return;
+                    }
                     EnumThreadWindows(GetCurrentThreadId(), (ventana, parametro) =>
                     {
                         if (!IsWindowVisible(ventana) || Clase(ventana) != "#32770" || respondidos.Contains(ventana)) return true;

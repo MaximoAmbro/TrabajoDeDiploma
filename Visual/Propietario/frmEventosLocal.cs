@@ -85,9 +85,9 @@ namespace Visual.Vendedor
 
             int idEvento = Convert.ToInt32(dgvEventos.CurrentRow.Cells["ID"].Value);
             string nombre = Convert.ToString(dgvEventos.CurrentRow.Cells["Nombre"].Value);
-            if (MessageBox.Show($"¿Eliminar el evento «{nombre}»? Esta acción no se puede deshacer.",
-                "Eliminar evento", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            if (DialogoEventAura.Confirmar(this, "Eliminar evento",
+                $"¿Eliminar el evento «{nombre}»? Esta acción no se puede deshacer.",
+                "Eliminar evento", "Volver", true) != DialogResult.Yes)
             {
                 return;
             }
@@ -97,9 +97,8 @@ namespace Visual.Vendedor
             }
             catch (ReglaNegocioException ex)
             {
-                DialogResult respuesta = MessageBox.Show(ex.Message + "\n\n¿Querés suspenderlo?",
-                    "Suspender evento", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button2);
+                DialogResult respuesta = DialogoEventAura.Confirmar(this, "Suspender evento",
+                    ex.Message + "\n\n¿Querés suspenderlo?", "Suspender evento", "Volver", true);
                 if (respuesta == DialogResult.Yes)
                 {
                     GestorEventos.Instance.Suspender(idEvento);

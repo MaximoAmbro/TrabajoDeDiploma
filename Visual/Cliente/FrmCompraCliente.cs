@@ -397,11 +397,10 @@ namespace Visual
             // H-04: el seguro solo se contrata durante la compra (RN-28).
             if (!operacionWeb && !paquete.ConSeguro && GestorPaquetes.Instance.CantidadEntradas(paquete) > 0)
             {
-                DialogResult sinSeguro = MessageBox.Show(
-                    "No agregaste el seguro de entrada. Solo se puede contratar ahora: después de " +
-                    "pagar no se puede incorporar.\n\n¿Continuar sin seguro?",
-                    "Seguro de entrada", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button2);
+                DialogResult sinSeguro = DialogoEventAura.Confirmar(this,
+                    "Seguro de entrada", "No agregaste el seguro de entrada. Solo se puede contratar ahora: " +
+                    "después de pagar no se puede incorporar.\n\n¿Continuar sin seguro?",
+                    "Seguir sin seguro", "Agregar seguro");
                 if (sinSeguro != DialogResult.Yes)
                 {
                     return;
@@ -1045,10 +1044,9 @@ namespace Visual
         {
             if (!PaqueteVacio())
             {
-                DialogResult respuesta = MessageBox.Show(
-                    "Si volvés al listado se descarta el paquete que armaste. ¿Querés volver?",
-                    "Volver al listado", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button2);
+                DialogResult respuesta = DialogoEventAura.Confirmar(this,
+                    "Volver al listado", "Si volvés al listado se descarta el paquete que armaste. ¿Querés volver?",
+                    "Descartar paquete", "Seguir armando");
                 if (respuesta != DialogResult.Yes)
                 {
                     return;
@@ -1061,10 +1059,9 @@ namespace Visual
         {
             if (e.CloseReason == CloseReason.UserClosing && !PaqueteVacio())
             {
-                DialogResult respuesta = MessageBox.Show(
-                    "Si cerrás la ventana se descarta el paquete que armaste. ¿Querés cerrar?",
-                    "Cerrar la compra", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button2);
+                DialogResult respuesta = DialogoEventAura.Confirmar(this,
+                    "Cerrar la compra", "Si cerrás la ventana se descarta el paquete que armaste. ¿Querés cerrar?",
+                    "Descartar paquete", "Seguir armando");
                 if (respuesta != DialogResult.Yes)
                 {
                     e.Cancel = true;

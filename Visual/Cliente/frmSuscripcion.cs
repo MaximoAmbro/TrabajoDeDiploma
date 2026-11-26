@@ -123,18 +123,16 @@ namespace Visual
             catch { return; }
             string tipo = (string)mensaje["tipo"];
             if (tipo == "navegar") { btnVolver_Click(this, EventArgs.Empty); return; }
-            if (tipo == "contratar")
+            if (tipo == "contratarConfirmado")
             {
                 string plan = (string)mensaje["plan"];
                 rdbMensual.Checked = plan == GestorSuscripciones.PlanMensual;
                 rdbAnual.Checked = plan == GestorSuscripciones.PlanAnual;
-                btnContratar_Click(this, EventArgs.Empty);
-                MostrarEstado();
+                ProcesarContratacion(plan);
             }
-            else if (tipo == "cancelar")
+            else if (tipo == "cancelarConfirmado")
             {
-                btnCancelar_Click(this, EventArgs.Empty);
-                MostrarEstado();
+                ProcesarCancelacion();
             }
         }
 
@@ -142,11 +140,17 @@ namespace Visual
         {
             string plan = (string)(rdbAnual.Checked ? rdbAnual.Tag : rdbMensual.Tag);
             decimal precio = GestorSuscripciones.Instance.PrecioDe(plan);
-            DialogResult respuesta = MessageBox.Show(
-                $"¿Contratar el plan {plan} por {precio.ToString("C2", Pesos)}?\n\n" +
-                "La suscripción no se renueva automáticamente al vencer.",
-                "Contratar suscripción", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult respuesta = DialogoEventAura.Confirmar(this,
+                "Contratar suscripción",
+                $"Plan: {plan}\nPrecio: {precio.ToString("C2", Pesos)}\nVigencia: " +
+                (plan == GestorSuscripciones.PlanAnual ? "12 meses" : "1 mes") +
+                "\nNo se renueva automáticamente al vencer.", "Confirmar suscripción", "Volver");
             if (respuesta != DialogResult.Yes) return;
+            ProcesarContratacion(plan);
+        }
+
+        private void ProcesarContratacion(string plan)
+        {
             try
             {
                 Suscripcion nueva = GestorSuscripciones.Instance.Contratar(IDUsuario, plan);
@@ -161,14 +165,18 @@ namespace Visual
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            DialogResult respuesta = MessageBox.Show(
-                "¿Cancelar la suscripción? Los beneficios se pierden desde ahora.",
-                "Cancelar suscripción", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button2);
+            DialogResult respuesta = DialogoEventAura.Confirmar(this,
+                "Cancelar suscripción", "¿Cancelar la suscripción? Los beneficios se pierden desde ahora.",
+                "Cancelar suscripción", "Volver", true);
             if (respuesta != DialogResult.Yes)
             {
                 return;
             }
+            ProcesarCancelacion();
+        }
+
+        private void ProcesarCancelacion()
+        {
             try
             {
                 GestorSuscripciones.Instance.Cancelar(IDUsuario);

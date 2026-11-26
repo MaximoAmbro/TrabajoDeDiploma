@@ -16,4 +16,12 @@
 .lista-beneficios li { display: flex; align-items: center; gap: var(--e3); min-height: 48px; color: var(--texto); }
 .lista-beneficios svg { flex: none; width: 20px; height: 20px; fill: none; stroke: var(--texto-secundario); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .acciones-suscripcion { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--e3); }
+.dialogo-suscripcion { width: min(480px, calc(100vw - 32px)); padding: var(--e6); color: var(--texto); background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); }
+.dialogo-suscripcion::backdrop { background: rgb(31 31 36 / 48%); }
+.dialogo-suscripcion[open] { animation: modal-entrada 180ms ease-out both; }
+.dialogo-suscripcion form { display: grid; gap: var(--e5); }
+.detalle-confirmacion { padding: var(--e4); background: var(--fondo); }
+.acciones-confirmacion { display: flex; justify-content: flex-end; gap: var(--e3); }
+@keyframes modal-entrada { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .dialogo-suscripcion[open] { animation: none; } }
 @media (max-width: 620px) { .planes { grid-template-columns: 1fr; } .plan-contenido { min-height: 0; } .suscripcion-page { padding: var(--e4); } }

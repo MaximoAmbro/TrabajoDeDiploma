@@ -310,13 +310,11 @@ namespace Visual
             {
                 return;
             }
-            DialogResult respuesta = MessageBox.Show(
-                $"¿Devolver {elegidas.Count} entrada(s)?\n\n" +
+            DialogResult respuesta = DialogoEventAura.Confirmar(this,
+                "Devolver entradas", $"¿Devolver {elegidas.Count} entrada(s)?\n\n" +
                 "Se reintegra el precio de cada entrada con su descuento. Si devolvés todas las que " +
                 "quedan, también los servicios. El cargo por servicio y el seguro no se reintegran.\n\n" +
-                "La devolución no se puede deshacer.",
-                "Devolver entradas", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2);
+                "La devolución no se puede deshacer.", "Confirmar devolución", "Volver", true);
             if (respuesta != DialogResult.Yes)
             {
                 return;

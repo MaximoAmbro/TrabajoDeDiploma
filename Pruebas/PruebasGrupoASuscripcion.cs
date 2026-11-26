@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -76,9 +76,12 @@ namespace Pruebas
                     Mostrar(form);
                     if (cancelar)
                     {
-                        DialogosPrueba.Comprobar(() => EjecutarWeb(WebSuscripcion(form), "document.querySelector('#cancelar').click()"),
-                            new DialogoEsperado { Titulo = "Cancelar suscripción", Texto = "Los beneficios se pierden desde ahora.",
-                                Predeterminado = DialogResult.No, Respuesta = DialogResult.Yes });
+                        var web = WebSuscripcion(form);
+                        EjecutarWeb(web, "document.querySelector('#cancelar').click()");
+                        StringAssert.Contains(EjecutarWeb(web, "(()=>{const d=document.querySelector('#confirmacion');return d.open+'|'+document.querySelector('#confirmacion-titulo').textContent+'|'+document.querySelector('#confirmacion-detalle').textContent+'|'+document.querySelector('#aceptar-confirmacion').textContent+'|'+document.querySelector('#volver-confirmacion').textContent})()"),
+                            "true|Cancelar suscripción|¿Cancelar la suscripción? Los beneficios se pierden desde ahora.|Confirmar cancelación|Volver");
+                        EjecutarWeb(web, "document.querySelector('#aceptar-confirmacion').click()");
+                        EsperarEstadoSuscripcion(form, false);
                         Assert.AreEqual("No tenés una suscripción activa.", ControlDe<Label>(form, "lblEstado").Text);
                         Assert.IsNull(GestorSuscripciones.Instance.ActivaDe(cliente.Id));
                         Assert.IsTrue(ControlDe<Button>(form, "btnContratar").Enabled);
@@ -86,7 +89,7 @@ namespace Pruebas
                     }
                     else
                     {
-                        ContratarDesde(form);
+                        AbrirYConfirmarContrato(form, true);
                         Suscripcion activa = GestorSuscripciones.Instance.ActivaDe(cliente.Id);
                         Assert.AreEqual(DateTime.Today.AddMonths(1), activa.FechaFin.Date);
                         Assert.AreEqual("Plan Mensual activo\r\nVence el " + activa.FechaFin.ToString("dd/MM/yyyy") +
@@ -114,10 +117,9 @@ namespace Pruebas
                 {
                     Mostrar(primera);
                     Mostrar(segunda);
-                    ContratarDesde(primera);
+                    AbrirYConfirmarContrato(primera, true);
                     Suscripcion activa = GestorSuscripciones.Instance.ActivaDe(cliente.Id);
-                    DialogosPrueba.Comprobar(() => EjecutarWeb(WebSuscripcion(segunda), "document.querySelector('#contratar').click()"),
-                        ConfirmarContrato());
+                    AbrirYConfirmarContrato(segunda, false);
                         Assert.IsTrue(EjecutarWeb(WebSuscripcion(segunda), "document.querySelector('#estado').textContent")
                             .Contains("vence el " + activa.FechaFin.ToString("dd/MM/yyyy")));
                     Assert.AreEqual(1, Fake.ContarSuscripcionesVigentes(cliente.Id));
@@ -218,19 +220,33 @@ namespace Pruebas
             return new Visual.frmSuscripcion { IDUsuario = cliente.Id, NombreUsuario = cliente.Nombre };
         }
 
-        private static DialogoEsperado ConfirmarContrato()
+        private static void AbrirYConfirmarContrato(Form form, bool conEnter)
         {
-            return new DialogoEsperado { Titulo = "Contratar suscripción",
-                Texto = GestorSuscripciones.Instance.PrecioDe(GestorSuscripciones.PlanMensual).ToString("C2", Pesos) +
-                    "?\n\nLa suscripción no se renueva automáticamente al vencer.",
-                Predeterminado = DialogResult.Yes, Respuesta = DialogResult.Yes };
+            var web = WebSuscripcion(form);
+            string abrir = conEnter
+                ? "(()=>{const r=document.querySelector('input[name=plan][value=Mensual]');r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));r.focus();r.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));})()"
+                : "document.querySelector('#contratar').click()";
+            EjecutarWeb(web, abrir);
+            string precio = GestorSuscripciones.Instance.PrecioDe(GestorSuscripciones.PlanMensual).ToString("C0", Pesos);
+            string detalle = "Plan: Mensual · Precio: " + precio + " · Vigencia: 1 mes";
+            StringAssert.Contains(EjecutarWeb(web, "(()=>{const d=document.querySelector('#confirmacion');return d.open+'|'+document.querySelector('#confirmacion-titulo').textContent+'|'+document.querySelector('#confirmacion-detalle').textContent+'|'+document.querySelector('#aceptar-confirmacion').textContent+'|'+document.querySelector('#confirmacion').querySelector('p.secundario').textContent})()"),
+                "true|Confirmar suscripción|" + detalle + "|Confirmar suscripción|La suscripción no se renueva automáticamente al vencer.");
+            EjecutarWeb(web, "document.querySelector('#aceptar-confirmacion').click()");
+            EsperarEstadoSuscripcion(form, true);
         }
 
-        private static void ContratarDesde(Form form)
+        private static void EsperarEstadoSuscripcion(Form form, bool activa)
         {
-            DialogosPrueba.Comprobar(() => EjecutarWeb(WebSuscripcion(form),
-                "(()=>{const r=document.querySelector('input[name=plan][value=Mensual]');r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));r.focus();r.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));})()"), ConfirmarContrato());
-            StringAssert.Contains(EjecutarWeb(WebSuscripcion(form), "document.querySelector('#estado').textContent"), "Plan Mensual activo");
+            var pantalla = (Visual.frmSuscripcion)form;
+            var reloj = System.Diagnostics.Stopwatch.StartNew();
+            while (reloj.Elapsed < TimeSpan.FromSeconds(5))
+            {
+                Application.DoEvents();
+                bool actual = GestorSuscripciones.Instance.ActivaDe(pantalla.IDUsuario) != null;
+                if (actual == activa) return;
+                System.Threading.Thread.Sleep(10);
+            }
+            Assert.Fail("La suscripción no actualizó su estado después de confirmar el diálogo web.");
         }
 
         private static Visual.Web.PanelWeb WebSuscripcion(Form form)

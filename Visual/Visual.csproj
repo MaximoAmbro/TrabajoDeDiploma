@@ -312,6 +312,7 @@
     <Compile Include="FormularioEventAura.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="DialogoEventAura.cs" />
     <Compile Include="ManejadorErrores.cs" />
     <Compile Include="Tema.cs" />
     <Compile Include="Componentes\MapaSectores.cs">
