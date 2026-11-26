@@ -29,7 +29,7 @@
     /* Formas */
     --alto-control: 40px; --radio-control: 3px; --radio-tarjeta: 4px;
     --ancho-lateral: 240px; --alto-barra: 56px; --ancho-panel: 440px;
-    --ancho-columna: 480px; --ancho-columna-amplia: 608px; --ancho-resumen: 360px;
+    --ancho-columna: 480px; --ancho-columna-amplia: 608px; --ancho-resumen: 320px;
     /* Movimiento (PRINCIPIOS-DISENO.md §10): estados y hover con ease; lo que se mueve dentro de la
        pantalla con ease-in-out; lo que entra o sale con ease-out, y la salida un 20 % más rápida. */
     --transicion: 120ms ease;
