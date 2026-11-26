@@ -1,0 +1,19 @@
+.suscripcion-page { width: min(100%, 880px); padding: var(--e6); }
+.estado-suscripcion { padding: var(--e4); background: var(--fondo); border-left: 3px solid var(--borde-control); }
+.estado-suscripcion[data-activa="true"] { background: var(--superficie); border-left-color: var(--borde-control); }
+.planes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e4); }
+.plan { position: relative; min-width: 0; padding: var(--e5); border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--superficie); cursor: pointer; }
+.plan:hover { border-color: var(--texto-secundario); background: var(--fondo); }
+.plan:active { background: var(--borde); }
+.plan input { position: absolute; inset: var(--e4) auto auto var(--e4); width: 18px; height: 18px; accent-color: var(--texto); }
+.plan:has(input:checked) { border-color: var(--seleccion); box-shadow: inset 0 0 0 1px var(--seleccion); }
+.plan:has(input:focus-visible) { outline: 2px solid var(--primario); outline-offset: 2px; }
+.plan-contenido { min-height: 148px; align-items: flex-start; padding-top: var(--e4); }
+.precio { font: var(--n2); letter-spacing: var(--n2-ls); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ahorro { align-self: flex-start; padding: var(--e1) var(--e2); background: var(--fondo); color: var(--texto-secundario); font: var(--n5); }
+.beneficios h2 { color: var(--texto); }
+.lista-beneficios { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--e3); }
+.lista-beneficios li { display: flex; align-items: center; gap: var(--e3); min-height: 48px; color: var(--texto); }
+.lista-beneficios svg { flex: none; width: 20px; height: 20px; fill: none; stroke: var(--texto-secundario); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.acciones-suscripcion { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--e3); }
+@media (max-width: 620px) { .planes { grid-template-columns: 1fr; } .plan-contenido { min-height: 0; } .suscripcion-page { padding: var(--e4); } }

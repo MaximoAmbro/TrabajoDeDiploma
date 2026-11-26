@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Entidades;
 using Negocio;
+using Newtonsoft.Json.Linq;
 
 namespace Visual
 {
@@ -15,10 +16,19 @@ namespace Visual
 
         // RN-33: importes en pesos argentinos.
         private static readonly CultureInfo Pesos = new CultureInfo("es-AR");
+        private readonly Web.PanelWeb suscripcionWeb = new Web.PanelWeb { Name = "suscripcionWeb", Visible = false };
 
         public frmSuscripcion()
         {
             InitializeComponent();
+            Controls.Add(suscripcionWeb);
+            suscripcionWeb.Dock = DockStyle.Fill;
+            barraSuperior.BringToFront();
+            suscripcionWeb.VistaLista += MostrarSuscripcionWeb;
+            suscripcionWeb.VistaNoDisponible += MostrarRespaldoSuscripcion;
+            suscripcionWeb.Mensaje += ProcesarMensajeWeb;
+            suscripcionWeb.Escape += () => btnVolver_Click(this, EventArgs.Empty);
+            Shown += (s, e) => suscripcionWeb.Cargar("suscripcion.html");
             Shown += (s, e) =>
             {
                 ColocarTitulo(label1);
@@ -68,6 +78,64 @@ namespace Visual
             ClientSize = new System.Drawing.Size(Math.Max(ClientSize.Width, btnContratar.Right + margen), ClientSize.Height);
             btnContratar.Enabled = !tiene;
             btnCancelar.Enabled = tiene;
+            suscripcionWeb.Actualizar(DatosWeb());
+        }
+
+        private object DatosWeb()
+        {
+            Suscripcion activa = GestorSuscripciones.Instance.ActivaDe(IDUsuario);
+            decimal mensual = GestorSuscripciones.Instance.PrecioDe(GestorSuscripciones.PlanMensual);
+            decimal anual = GestorSuscripciones.Instance.PrecioDe(GestorSuscripciones.PlanAnual);
+            decimal ahorro = mensual * 12m - anual;
+            return new
+            {
+                activa = activa != null,
+                plan = activa?.Plan,
+                estado = activa == null ? "No tenés una suscripción activa." :
+                    $"Plan {activa.Plan} activo · Vence el {activa.FechaFin:dd/MM/yyyy} · No se renueva automáticamente",
+                mensual = mensual.ToString("C0", Pesos),
+                anual = anual.ToString("C0", Pesos),
+                ahorro = "Ahorrás " + ahorro.ToString("C0", Pesos) + " frente a 12 meses",
+                beneficios = new[] { "Seguro de entrada sin cargo", "Preventa exclusiva de eventos", "Prioridad en las listas de espera" }
+            };
+        }
+
+        private void MostrarSuscripcionWeb()
+        {
+            foreach (Control control in Controls)
+                if (control != barraSuperior && control != suscripcionWeb) control.Visible = false;
+            suscripcionWeb.Visible = true;
+            suscripcionWeb.BringToFront();
+            barraSuperior.BringToFront();
+        }
+
+        private void MostrarRespaldoSuscripcion()
+        {
+            foreach (Control control in Controls)
+                if (control != suscripcionWeb) control.Visible = true;
+            barraSuperior.BringToFront();
+        }
+
+        private void ProcesarMensajeWeb(string json)
+        {
+            JObject mensaje;
+            try { mensaje = JObject.Parse(json); }
+            catch { return; }
+            string tipo = (string)mensaje["tipo"];
+            if (tipo == "navegar") { btnVolver_Click(this, EventArgs.Empty); return; }
+            if (tipo == "contratar")
+            {
+                string plan = (string)mensaje["plan"];
+                rdbMensual.Checked = plan == GestorSuscripciones.PlanMensual;
+                rdbAnual.Checked = plan == GestorSuscripciones.PlanAnual;
+                btnContratar_Click(this, EventArgs.Empty);
+                MostrarEstado();
+            }
+            else if (tipo == "cancelar")
+            {
+                btnCancelar_Click(this, EventArgs.Empty);
+                MostrarEstado();
+            }
         }
 
         private void btnContratar_Click(object sender, EventArgs e)

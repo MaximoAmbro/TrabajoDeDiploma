@@ -19,6 +19,7 @@ namespace Pruebas
         [TestMethod("CP-76: Mi suscripción sin plan muestra precios, beneficios y controles completos")]
         public void CP76_SinPlan()
         {
+            ReiniciarEntornoWeb();
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
@@ -26,6 +27,13 @@ namespace Pruebas
                 using (var form = SuscripcionDe(cliente))
                 {
                     Mostrar(form);
+                    var web = WebSuscripcion(form);
+                    string mensual = GestorSuscripciones.Instance.PrecioDe(GestorSuscripciones.PlanMensual).ToString("C0", Pesos);
+                    string anual = GestorSuscripciones.Instance.PrecioDe(GestorSuscripciones.PlanAnual).ToString("C0", Pesos);
+                    string ahorro = (GestorSuscripciones.Instance.PrecioDe(GestorSuscripciones.PlanMensual) * 12m -
+                        GestorSuscripciones.Instance.PrecioDe(GestorSuscripciones.PlanAnual)).ToString("C0", Pesos);
+                    StringAssert.Contains(EjecutarWeb(web, "(()=>[document.querySelector('#estado').textContent,document.querySelector('#precio-mensual').textContent,document.querySelector('#precio-anual').textContent,document.querySelector('#ahorro').textContent,document.querySelector('#cancelar').classList.contains('oculto'),document.querySelectorAll('.plan').length,document.querySelectorAll('.lista-beneficios li').length].join('|'))()"),
+                        "No tenés una suscripción activa.|" + mensual + "|" + anual + "|Ahorrás " + ahorro + " frente a 12 meses|true|2|3");
                     Assert.AreEqual("No tenés una suscripción activa.", ControlDe<Label>(form, "lblEstado").Text);
                     Assert.AreEqual("Beneficios de la suscripción:\r\n  •  Seguro de entrada sin cargo\r\n" +
                         "  •  Preventa exclusiva de eventos\r\n  •  Prioridad en las listas de espera\r\n" +
@@ -57,6 +65,7 @@ namespace Pruebas
         [DataRow(true, DisplayName = "CP-77: Cancelar suscripción pide No por defecto y elimina beneficios")]
         public void CP77_ContratarYCancelar(bool cancelar)
         {
+            ReiniciarEntornoWeb();
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
@@ -67,7 +76,7 @@ namespace Pruebas
                     Mostrar(form);
                     if (cancelar)
                     {
-                        DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnCancelar").PerformClick(),
+                        DialogosPrueba.Comprobar(() => EjecutarWeb(WebSuscripcion(form), "document.querySelector('#cancelar').click()"),
                             new DialogoEsperado { Titulo = "Cancelar suscripción", Texto = "Los beneficios se pierden desde ahora.",
                                 Predeterminado = DialogResult.No, Respuesta = DialogResult.Yes });
                         Assert.AreEqual("No tenés una suscripción activa.", ControlDe<Label>(form, "lblEstado").Text);
@@ -95,6 +104,7 @@ namespace Pruebas
         [TestMethod("CP-78: Segunda ventana de suscripción rechaza duplicado con RN-25")]
         public void CP78_DosVentanas()
         {
+            ReiniciarEntornoWeb();
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
@@ -106,9 +116,10 @@ namespace Pruebas
                     Mostrar(segunda);
                     ContratarDesde(primera);
                     Suscripcion activa = GestorSuscripciones.Instance.ActivaDe(cliente.Id);
-                    DialogosPrueba.Comprobar(() => ControlDe<Button>(segunda, "btnContratar").PerformClick(),
+                    DialogosPrueba.Comprobar(() => EjecutarWeb(WebSuscripcion(segunda), "document.querySelector('#contratar').click()"),
                         ConfirmarContrato());
-                    Assert.IsTrue(AvisoDe(segunda).Contains("vence el " + activa.FechaFin.ToString("dd/MM/yyyy")));
+                        Assert.IsTrue(EjecutarWeb(WebSuscripcion(segunda), "document.querySelector('#estado').textContent")
+                            .Contains("vence el " + activa.FechaFin.ToString("dd/MM/yyyy")));
                     Assert.AreEqual(1, Fake.ContarSuscripcionesVigentes(cliente.Id));
                     Assert.AreEqual(activa.Id, GestorSuscripciones.Instance.ActivaDe(cliente.Id).Id);
                 }
@@ -217,8 +228,41 @@ namespace Pruebas
 
         private static void ContratarDesde(Form form)
         {
-            DialogosPrueba.Comprobar(() => ControlDe<Button>(form, "btnContratar").PerformClick(), ConfirmarContrato());
-            StringAssert.Contains(AvisoDe(form), "Suscripción Mensual contratada.");
+            DialogosPrueba.Comprobar(() => EjecutarWeb(WebSuscripcion(form),
+                "(()=>{const r=document.querySelector('input[name=plan][value=Mensual]');r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));r.focus();r.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));})()"), ConfirmarContrato());
+            StringAssert.Contains(EjecutarWeb(WebSuscripcion(form), "document.querySelector('#estado').textContent"), "Plan Mensual activo");
+        }
+
+        private static Visual.Web.PanelWeb WebSuscripcion(Form form)
+        {
+            var web = ControlDe<Visual.Web.PanelWeb>(form, "suscripcionWeb");
+            var reloj = System.Diagnostics.Stopwatch.StartNew();
+            while (!web.InicializacionTerminada && reloj.Elapsed < TimeSpan.FromSeconds(20))
+            {
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(10);
+            }
+            Assert.IsTrue(web.Preparado && web.Visible, "Mi suscripción debe cargar la vista web.");
+            return web;
+        }
+
+        private static void ReiniciarEntornoWeb()
+        {
+            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
+                .GetField("entorno", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
+        }
+
+        private static string EjecutarWeb(Visual.Web.PanelWeb web, string script)
+        {
+            var tarea = web.EjecutarScriptAsync(script);
+            var reloj = System.Diagnostics.Stopwatch.StartNew();
+            while (!tarea.IsCompleted && reloj.Elapsed < TimeSpan.FromSeconds(10))
+            {
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(10);
+            }
+            Assert.IsTrue(tarea.IsCompleted, "La vista de suscripción debe responder al guion de prueba.");
+            return (tarea.GetAwaiter().GetResult() ?? string.Empty).Trim('"');
         }
 
         private static string AvisoDe(Form form)
