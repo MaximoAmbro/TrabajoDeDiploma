@@ -37,6 +37,8 @@ namespace Negocio
             }
         }
 
+        public static string RutaBandejaActual { get { return Carpeta; } }
+
         public void Enviar(string correo, string proposito, string codigo, DateTime venceEl)
         {
             lock (Candado)

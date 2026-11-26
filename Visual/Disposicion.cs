@@ -109,6 +109,12 @@ namespace Visual
             titulo.TextAlign = ContentAlignment.MiddleLeft;
             titulo.SetBounds(izquierda, arriba + margen, ancho, Px(Tema.Espacio.XXL));
             int inicio = titulo.Bottom + Px(Tema.Espacio.XL);
+            Control aviso = ventana.Controls["avisoClienteEnLinea"];
+            if (aviso != null && aviso.Visible)
+            {
+                aviso.SetBounds(izquierda, inicio, ancho, aviso.Height);
+                inicio = aviso.Bottom + Px(Tema.Espacio.L);
+            }
             contenido.SetBounds(izquierda, inicio, ancho, Math.Max(1, ventana.ClientSize.Height - inicio - margen));
         }
 

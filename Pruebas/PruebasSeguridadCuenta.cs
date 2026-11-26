@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using Datos;
 using Entidades;
@@ -107,6 +108,89 @@ namespace Pruebas
                         .Any(r => r.UsuarioId == usuarioId && r.Resultado == "Correcto"));
                 }
             });
+        }
+
+        // CP-367 - RF-14, RN-43/RN-44: salir del alta sin verificar no bloquea la verificacion posterior.
+        [TestMethod("CP-367: Cuenta que sale del alta puede reenviar un codigo vencido sin cerrar sesion")]
+        public void CP367_VerificacionPosteriorAlAlta()
+        {
+            var emisorAnterior = SeleccionEnviadorCodigos.Actual;
+            SeleccionEnviadorCodigos.Actual = new EnviadorSimulado();
+            try
+            {
+                EnSta(() =>
+                {
+                    string correo = Fake.MailNuevo();
+                    GestorUsuarios.Instance.RegistrarCliente(correo, "Cliente123", "Cliente", "Sin verificar");
+                    var cliente = RepositorioFidelizacion.Instance.ObtenerCliente(RepositorioUsuarios.Instance.ObtenerPorMail(correo).Id);
+                    Assert.IsFalse(RepositorioUsuarios.Instance.CorreoVerificado(cliente.Id));
+
+                    // La cuenta abandona el paso de verificacion del alta y luego inicia sesion.
+                    GestorSesion.Instance.Cerrar();
+                    var autenticado = GestorUsuarios.Instance.Autenticar(correo, "Cliente123");
+                    GestorSesion.Instance.Iniciar(autenticado);
+                    using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id, NombreUsuario = "Cliente Sin verificar" })
+                    {
+                        Mostrar(menu);
+                        Assert.IsTrue(Visual.NavegacionCliente.VerificarCorreo());
+                        var panel = ControlDe<Visual.Web.PanelWeb>(menu, "altaCuentaWeb");
+                        Esperar(() => panel.Preparado && panel.Visible, "La verificacion debe abrirse en Mi cuenta.");
+                        string ayuda = EjecutarScript(panel, "document.querySelector('#ayuda-correo-sesion').textContent");
+                        StringAssert.Contains(ayuda, "BandejaSimulada");
+                        string cooldown = EjecutarScript(panel, "document.querySelector('#reenviar-correo').disabled");
+                        Assert.AreEqual("true", cooldown, "El reenvio debe respetar los 30 segundos iniciales.");
+
+                        EjecutarSql("UPDATE dbo.CodigosCorreo SET VenceEl=DATEADD(MINUTE,-1,SYSUTCDATETIME()) WHERE UsuarioID=@ID AND Proposito='Verificacion'", "@ID", cliente.Id);
+                        var vencido = EnviadorSimulado.Ultimo(correo, "Verificacion");
+                        EjecutarScript(panel, "(()=>{const i=document.querySelector('#codigo-correo');i.value='" + vencido.Codigo + "';document.querySelector('#confirmar-correo').click();return true})()");
+                        Esperar(() => EjecutarScript(panel, "document.querySelector('#estado-codigo-correo').textContent").Contains("no es válido o venció"),
+                            "El codigo vencido debe explicar que se puede pedir uno nuevo.");
+
+                        var pantalla = menu.Controls.Find("paginafrmCrearUsuario", true).OfType<Visual.Componentes.HostFormularioCliente>().Single().Pantalla;
+                        typeof(Visual.frmCrearUsuario).GetField("_proximoReenvioCorreo", BindingFlags.Instance | BindingFlags.NonPublic)
+                            .SetValue(pantalla, DateTime.UtcNow.AddSeconds(-1));
+                        EjecutarScript(panel, "document.querySelector('#reenviar-correo').disabled=false;document.querySelector('#reenviar-correo').click();true");
+                        Esperar(() => EnviadorSimulado.Ultimo(correo, "Verificacion")?.Codigo != vencido.Codigo,
+                            "Reenviar debe emitir un codigo nuevo.");
+                        var nuevo = EnviadorSimulado.Ultimo(correo, "Verificacion");
+                        EjecutarScript(panel, "(()=>{const i=document.querySelector('#codigo-correo');i.value='" + nuevo.Codigo + "';document.querySelector('#confirmar-correo').click();return true})()");
+                        Esperar(() => RepositorioUsuarios.Instance.CorreoVerificado(cliente.Id), "El codigo nuevo debe verificar la cuenta.");
+                        Assert.AreEqual(cliente.Id, GestorSesion.Instance.UsuarioActual.Id, "Verificar no debe cerrar la sesion activa.");
+                    }
+                });
+            }
+            finally { SeleccionEnviadorCodigos.Actual = emisorAnterior; }
+        }
+
+        private static string EjecutarScript(Visual.Web.PanelWeb panel, string script)
+        {
+            var tarea = panel.EjecutarScriptAsync(script);
+            var reloj = Stopwatch.StartNew();
+            while (!tarea.IsCompleted && reloj.Elapsed < TimeSpan.FromSeconds(15)) { Application.DoEvents(); System.Threading.Thread.Sleep(10); }
+            Assert.IsTrue(tarea.IsCompleted, "WebView2 debe completar el paso de verificacion.");
+            return tarea.GetAwaiter().GetResult();
+        }
+
+        private static void Esperar(Func<bool> condicion, string mensaje)
+        {
+            var reloj = Stopwatch.StartNew();
+            while (reloj.Elapsed < TimeSpan.FromSeconds(20))
+            {
+                Application.DoEvents();
+                if (condicion()) return;
+                System.Threading.Thread.Sleep(15);
+            }
+            Assert.Fail(mensaje);
+        }
+
+        private static void EjecutarSql(string sql, params object[] parametros)
+        {
+            using (var conexion = new SqlConnection(BaseDePrueba.CadenaDePrueba()))
+            using (var comando = new SqlCommand(sql, conexion))
+            {
+                for (int i = 0; i < parametros.Length; i += 2) comando.Parameters.AddWithValue(parametros[i].ToString(), parametros[i + 1]);
+                conexion.Open(); comando.ExecuteNonQuery();
+            }
         }
 
         // CP-169 — RF-15, RN-44: rechazar un código vencido sin alterar la contraseña almacenada.

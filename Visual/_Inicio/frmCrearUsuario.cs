@@ -23,6 +23,9 @@ namespace Visual
         private string _contrasenaPendiente;
         private string _perfilPendiente;
         private string _telefonoOrganizador;
+        private bool _verificacionSesion;
+        private DateTime _proximoReenvioCorreo;
+        private Action _alCompletarVerificacionSesion;
         public frmCrearUsuario() : this(false) { }
         public frmCrearUsuario(bool altaAdministrador)
         {
@@ -38,10 +41,14 @@ namespace Visual
                 _altaWeb.VistaLista += MostrarAltaWeb;
                 _altaWeb.VistaNoDisponible += () => { _altaWeb.Visible = false; MostrarRespaldoAlta(); };
                 _altaWeb.Mensaje += ProcesarMensajeAlta;
-                _altaWeb.Escape += VolverAlAcceso;
+                _altaWeb.Escape += () => { if (_verificacionSesion) VolverDeVerificacionSesion(); else VolverAlAcceso(); };
                 _altaWeb.VistaLista += () =>
                 {
-                    if (string.IsNullOrEmpty(_perfilPendiente))
+                    if (_verificacionSesion)
+                    {
+                        _altaWeb.Actualizar(EstadoPasoCorreo());
+                    }
+                    else if (string.IsNullOrEmpty(_perfilPendiente))
                     {
                         _perfilPendiente = "cliente";
                         _altaWeb.Actualizar(new { paso = "elegir", parametros = new { longitudMinima = GestorParametros.Instance.ObtenerEntero("PWD_LONGITUD_MIN"), fortalezaMinima = GestorParametros.Instance.ObtenerEntero("PWD_FORTALEZA_MIN") } });
@@ -90,6 +97,42 @@ namespace Visual
             }
             Tema.ComoEnlace(lblyatengocuen);
         }
+
+        public void ConfigurarVerificacionSesion(int idUsuario, string correo, Action alCompletar)
+        {
+            if (_altaAdministrador) throw new InvalidOperationException("La verificación de correo no está disponible en este formulario.");
+            _verificacionSesion = true;
+            _mailPendiente = (correo ?? string.Empty).Trim();
+            _perfilPendiente = "cliente";
+            _contrasenaPendiente = null;
+            _alCompletarVerificacionSesion = alCompletar;
+            GestorCodigosCorreo.Instance.EnviarVerificacion(idUsuario, _mailPendiente);
+            _proximoReenvioCorreo = DateTime.UtcNow.AddSeconds(30);
+        }
+
+        private object EstadoPasoCorreo(string error = null)
+        {
+            int restantes = Math.Max(0, (int)Math.Ceiling((_proximoReenvioCorreo - DateTime.UtcNow).TotalSeconds));
+            string ayuda = Negocio.SeleccionEnviadorCodigos.Actual is EnviadorSimulado
+                ? "Abrí la carpeta BandejaSimulada (" + EnviadorSimulado.RutaBandejaActual + ") y buscá el archivo más reciente."
+                : "Revisá tu correo para encontrar el código de verificación más reciente.";
+            return new
+            {
+                paso = "correo",
+                perfil = "cliente",
+                verificacionSesion = _verificacionSesion,
+                mail = _mailPendiente,
+                ayudaBandeja = _verificacionSesion ? ayuda : null,
+                reenviarRestante = _verificacionSesion || _proximoReenvioCorreo > DateTime.UtcNow ? (int?)restantes : null,
+                error = error == null ? null : new { mensaje = error }
+            };
+        }
+
+        private void VolverDeVerificacionSesion()
+        {
+            if (NavegacionCliente.Volver()) return;
+            Close();
+        }
         private void MostrarAltaWeb()
         {
             foreach (Control control in Controls)
@@ -101,6 +144,11 @@ namespace Visual
 
         private void MostrarRespaldoAlta()
         {
+            if (_verificacionSesion)
+            {
+                MostrarVerificacionCorreo(_mailPendiente, true);
+                return;
+            }
             foreach (Control control in Controls)
                 if (control != barraSuperior && control != _altaWeb) control.Visible = true;
             barraSuperior.BringToFront();
@@ -122,7 +170,27 @@ namespace Visual
             string tipo = (string)mensaje["tipo"];
             try
             {
-                if (tipo == "navegar") { VolverAlAcceso(); return; }
+                if (tipo == "navegar") { if (_verificacionSesion) VolverDeVerificacionSesion(); else VolverAlAcceso(); return; }
+                if (tipo == "cancelarVerificacion") { VolverDeVerificacionSesion(); return; }
+                if (tipo == "reenviarCorreo")
+                {
+                    int id = _verificacionSesion ? (GestorSesion.Instance.UsuarioActual?.Id ?? 0) : 0;
+                    if (_verificacionSesion && id <= 0) throw new InvalidOperationException("La sesión ya no está disponible. Volvé a iniciar sesión.");
+                    if (DateTime.UtcNow < _proximoReenvioCorreo)
+                    {
+                        _altaWeb.Actualizar(EstadoPasoCorreo("Esperá " + Math.Max(1, (int)Math.Ceiling((_proximoReenvioCorreo - DateTime.UtcNow).TotalSeconds)) + " segundos antes de pedir otro código."));
+                        return;
+                    }
+                    if (_verificacionSesion) GestorCodigosCorreo.Instance.EnviarVerificacion(id, _mailPendiente);
+                    else
+                    {
+                        var usuario = GestorUsuarios.Instance.Autenticar(_mailPendiente, _contrasenaPendiente ?? string.Empty);
+                        GestorCodigosCorreo.Instance.EnviarVerificacion(usuario.Id, _mailPendiente);
+                    }
+                    _proximoReenvioCorreo = DateTime.UtcNow.AddSeconds(30);
+                    _altaWeb.Actualizar(EstadoPasoCorreo());
+                    return;
+                }
                 if (tipo == "registrar")
                 {
                     var cuenta = mensaje["cuenta"];
@@ -131,12 +199,20 @@ namespace Visual
                     _perfilPendiente = (string)mensaje["perfil"] ?? "cliente";
                     GestorUsuarios.Instance.RegistrarCliente(_mailPendiente, _contrasenaPendiente,
                         (string)cuenta["nombre"], (string)cuenta["apellido"]);
-                    _altaWeb.Actualizar(new { paso = "correo", perfil = _perfilPendiente });
+                    _proximoReenvioCorreo = DateTime.UtcNow.AddSeconds(30);
+                    _altaWeb.Actualizar(EstadoPasoCorreo());
                     return;
                 }
                 if (tipo == "confirmarCorreo")
                 {
                     GestorCodigosCorreo.Instance.ConfirmarVerificacion(_mailPendiente, (string)mensaje["codigo"]);
+                    if (_verificacionSesion)
+                    {
+                        _altaWeb.Actualizar(new { paso = "listo", resultado = new { perfil = "cliente", verificacionSesion = true } });
+                        var completar = _alCompletarVerificacionSesion;
+                        if (completar != null && IsHandleCreated) BeginInvoke(completar);
+                        return;
+                    }
                     if (_perfilPendiente != "organizador")
                     {
                         _contrasenaPendiente = null;
@@ -190,12 +266,16 @@ namespace Visual
             }
             catch (ReglaNegocioException ex)
             {
-                _altaWeb.Actualizar(new { paso = tipo == "registrar" ? "datos" : tipo == "confirmarCorreo" ? "correo" : "telefono", perfil = _perfilPendiente ?? "cliente", error = new { mensaje = ex.Message } });
+                _altaWeb.Actualizar(tipo == "confirmarCorreo" || tipo == "reenviarCorreo"
+                    ? EstadoPasoCorreo(ex.Message)
+                    : (object)new { paso = tipo == "registrar" ? "datos" : "telefono", perfil = _perfilPendiente ?? "cliente", error = new { mensaje = ex.Message } });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.WriteLine(ex);
-                _altaWeb.Actualizar(new { paso = tipo == "registrar" ? "datos" : tipo == "confirmarCorreo" ? "correo" : "telefono", perfil = _perfilPendiente ?? "cliente", error = new { mensaje = ManejadorErrores.MensajeParaUsuario(ex) } });
+                _altaWeb.Actualizar(tipo == "confirmarCorreo" || tipo == "reenviarCorreo"
+                    ? EstadoPasoCorreo(ManejadorErrores.MensajeParaUsuario(ex))
+                    : (object)new { paso = tipo == "registrar" ? "datos" : "telefono", perfil = _perfilPendiente ?? "cliente", error = new { mensaje = ManejadorErrores.MensajeParaUsuario(ex) } });
             }
         }
         private void frmCrearUsuario_Load(object sender, EventArgs e)
@@ -237,6 +317,8 @@ namespace Visual
             {
                 try
                 {
+                    _mailPendiente = txtmail.Text.Trim();
+                    _contrasenaPendiente = TxtPassword.Text;
                     using (Avisos.Esperar(this, btnregistrarse))
                     {
                         if (_altaAdministrador) GestorUsuarios.Instance.CrearAdministrador(txtmail.Text, TxtPassword.Text, txtNombre.Text, txtApellido.Text);
@@ -261,6 +343,7 @@ namespace Visual
                     ValidacionCampo.Mostrar(txtmail, "No pudimos completar el alta o enviar el código. Revisá la conexión y volvé a intentarlo.");
                     return;
                 }
+                _proximoReenvioCorreo = DateTime.UtcNow.AddSeconds(30);
                 if (!_altaAdministrador)
                 {
                     MostrarVerificacionCorreo(txtmail.Text.Trim());
@@ -271,8 +354,9 @@ namespace Visual
             }
             else { return; }
         }
-        private void MostrarVerificacionCorreo(string correo)
+        private void MostrarVerificacionCorreo(string correo, bool desdeSesion = false)
         {
+            foreach (Control anterior in Controls.Find("verificacionCorreo", true)) anterior.Dispose();
             foreach (Control control in Controls.Cast<Control>().ToArray())
                 if (control.Name != "barraSuperior") control.Visible = false;
             Text = "EventAura · Verificar correo";
@@ -284,11 +368,30 @@ namespace Visual
             var contenido = new Componentes.EtiquetaAyuda { Name = "instruccionesVerificacion", Location = new Point(px(8), px(60)), Size = new Size(ancho - px(24), px(80)), Text = "Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección." };
             var etiqueta = new Componentes.EtiquetaRotulo { Text = "Código de verificación", Location = new Point(px(8), px(164)), Size = new Size(px(240), px(24)) };
             var codigo = new TextBox { Name = "txtCodigoCorreo", Location = new Point(px(8), px(192)), AutoSize = false, Size = new Size(px(Tema.AnchoCampo), px(Tema.AltoCampo)), MaxLength = 6 };
+            if (desdeSesion)
+                contenido.Text = Negocio.SeleccionEnviadorCodigos.Actual is EnviadorSimulado
+                    ? "Abrí la carpeta BandejaSimulada (" + EnviadorSimulado.RutaBandejaActual + ") y buscá el archivo más reciente."
+                    : "Revisá tu correo para encontrar el código de verificación más reciente.";
             ColocarRotulo(etiqueta, codigo);
             var estado = new Componentes.EtiquetaAyuda { Name = "estadoVerificacion", Location = new Point(px(8), px(232)), Size = new Size(ancho - px(24), px(54)) };
             codigo.TabIndex = 0;
             var confirmar = new Componentes.BotonPrimario { Name = "btnConfirmarCorreo", Text = "Confirmar correo", Location = new Point(px(8), px(292)), Size = new Size(px(200), px(40)), TabIndex = 1 };
-            var volver = new Componentes.BotonSecundario { Name = "btnVolverAcceso", Text = "Volver al acceso", Location = new Point(px(220), px(292)), Size = new Size(px(180), px(40)), Visible = true, TabIndex = 2 };
+            var volver = new Componentes.BotonSecundario { Name = "btnVolverAcceso", Text = desdeSesion ? "Volver a eventos" : "Volver al acceso", Location = new Point(px(220), px(292)), Size = new Size(px(180), px(40)), Visible = true, TabIndex = 2 };
+            var reenviar = new Componentes.BotonSecundario { Name = "btnReenviarCorreo", Text = "Reenviar código", Location = new Point(px(8), px(348)), Size = new Size(px(200), px(40)), TabIndex = 3 };
+            var espera = new Componentes.EtiquetaAyuda { Name = "esperaReenvioCorreo", Location = new Point(px(220), px(348)), Size = new Size(px(360), px(40)), TextAlign = ContentAlignment.MiddleLeft };
+            int segundos = Math.Max(0, (int)Math.Ceiling((_proximoReenvioCorreo - DateTime.UtcNow).TotalSeconds));
+            var reloj = new Timer { Interval = 1000 };
+            Action actualizarEspera = () =>
+            {
+                reenviar.Enabled = segundos <= 0;
+                espera.Text = segundos > 0 ? "Podés pedir otro código en " + segundos + " s." : "¿No llegó?";
+                if (segundos > 0) segundos--;
+                else reloj.Stop();
+            };
+            actualizarEspera();
+            if (segundos > 0) reloj.Start();
+            verificacion.Disposed += (s, e) => reloj.Dispose();
+            reloj.Tick += (s, e) => actualizarEspera();
             confirmar.Click += (s, e) =>
             {
                 try
@@ -298,12 +401,29 @@ namespace Visual
                     estado.Text = "Correo verificado. Ya podés iniciar sesión y comprar.";
                     confirmar.Enabled = false;
                     volver.Visible = true;
+                    reenviar.Enabled = false;
+                    _contrasenaPendiente = null;
+                    if (desdeSesion && _alCompletarVerificacionSesion != null && IsHandleCreated) BeginInvoke(_alCompletarVerificacionSesion);
                 }
                 catch (ReglaNegocioException ex) { estado.Text = ex.Message; }
             };
-            volver.Click += (s, e) => Cerrar();
+            reenviar.Click += (s, e) =>
+            {
+                if (DateTime.UtcNow < _proximoReenvioCorreo) { estado.Text = "Esperá antes de pedir otro código."; return; }
+                try
+                {
+                    int id = desdeSesion ? (GestorSesion.Instance.UsuarioActual?.Id ?? 0) : GestorUsuarios.Instance.Autenticar(correo, _contrasenaPendiente ?? string.Empty).Id;
+                    if (id <= 0) throw new InvalidOperationException("La sesión ya no está disponible. Volvé a iniciar sesión.");
+                    GestorCodigosCorreo.Instance.EnviarVerificacion(id, correo);
+                    _proximoReenvioCorreo = DateTime.UtcNow.AddSeconds(30);
+                    segundos = 30; reenviar.Enabled = false; actualizarEspera(); reloj.Start();
+                    estado.Text = "Enviamos un código nuevo.";
+                }
+                catch (Exception ex) { estado.Text = ManejadorErrores.MensajeParaUsuario(ex); }
+            };
+            volver.Click += (s, e) => { if (desdeSesion) VolverDeVerificacionSesion(); else Cerrar(); };
             Tema.Normalizar(verificacion);
-            verificacion.Controls.AddRange(new Control[] { titulo, contenido, etiqueta, codigo, estado, confirmar, volver });
+            verificacion.Controls.AddRange(new Control[] { titulo, contenido, etiqueta, codigo, estado, confirmar, volver, reenviar, espera });
             Controls.Add(verificacion);
             verificacion.BringToFront();
             AcceptButton = confirmar;

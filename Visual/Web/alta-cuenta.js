@@ -197,6 +197,36 @@
     }
 
     // ---------- Verificaciones ----------
+    let temporizadorReenvio = null;
+    const grupoIntroCorreo = document.querySelector('[data-vista="correo"] .pila-2');
+    const ayudaSesionCorreo = $("#ayuda-correo-sesion");
+    const ayudaCorreoOriginal = grupoIntroCorreo && grupoIntroCorreo.querySelector("p");
+    if (grupoIntroCorreo && ayudaSesionCorreo) grupoIntroCorreo.appendChild(ayudaSesionCorreo);
+    function iniciarEsperaReenvio(segundos) {
+        const fila = $("#reenviar-correo-fila"), boton = $("#reenviar-correo"), ayuda = $("#reenviar-correo-ayuda");
+        if (!fila || !boton) return;
+        fila.classList.remove("oculto");
+        if (temporizadorReenvio) clearInterval(temporizadorReenvio);
+        let restante = Math.max(0, Number(segundos) || 0);
+        const pintar = () => {
+            boton.disabled = restante > 0;
+            ayuda.textContent = restante > 0 ? "Podés pedir otro código en " + restante + " s." : "¿No llegó?";
+            restante--;
+            if (restante < 0 && temporizadorReenvio) { clearInterval(temporizadorReenvio); temporizadorReenvio = null; }
+        };
+        pintar();
+        if (restante >= 0) temporizadorReenvio = setInterval(pintar, 1000);
+    }
+    $("#reenviar-correo").addEventListener("click", () => {
+        ocupado($("#reenviar-correo"), true, "Enviando…");
+        puente.enviar({ tipo: "reenviarCorreo" });
+    });
+    $("#salir-verificacion").addEventListener("click", e => {
+        if (e.currentTarget.dataset.volverCuenta === "true") {
+            e.preventDefault();
+            puente.enviar({ tipo: "cancelarVerificacion" });
+        }
+    });
     $("#confirmar-correo").addEventListener("click", () => {
         if (vacio("codigo-correo")) { marcar("codigo-correo", "mal", "Escribí el código que recibiste."); return; }
         ocupado($("#confirmar-correo"), true, "Confirmando…");
@@ -230,7 +260,7 @@
     // { paso, perfil?, parametros?, error?: { campo, mensaje }, envioTelefono?: string,
     //   telefonoVerificado?: bool, resultado?: { perfil } }   (ver README.md)
     puente.alDibujar(datos => {
-        ["crear", "confirmar-correo", "enviar-codigo-telefono", "confirmar-telefono", "presentar"].forEach(id => ocupado(document.getElementById(id), false));
+        ["crear", "confirmar-correo", "reenviar-correo", "enviar-codigo-telefono", "confirmar-telefono", "presentar"].forEach(id => ocupado(document.getElementById(id), false));
         if (datos.parametros) {
             Object.assign(estado.parametros, datos.parametros);
             validadores.contrasena(false);
@@ -239,11 +269,30 @@
             elegirPerfil(datos.perfil);
             document.querySelector('input[name="perfil"][value="' + datos.perfil + '"]').checked = true;
         }
+        if (datos.mail) $("#mail").value = datos.mail;
         if (datos.paso && datos.paso !== estado.paso) mostrarPaso(datos.paso);
         if (datos.paso === "correo") {
             $("#contrasena").value = "";
             $("#confirmar").value = "";
             validadores.contrasena(false);
+            const ayudaNormal = ayudaCorreoOriginal;
+            const ayudaSesion = $("#ayuda-correo-sesion");
+            if (datos.verificacionSesion) {
+                ayudaSesion.textContent = datos.ayudaBandeja || "Revisá tu correo.";
+                ayudaSesion.classList.remove("oculto");
+                if (ayudaNormal) ayudaNormal.classList.add("oculto");
+                $("#salir-verificacion").textContent = "Volver a eventos";
+                $("#salir-verificacion").removeAttribute("data-destino");
+                $("#salir-verificacion").dataset.volverCuenta = "true";
+            } else {
+                ayudaSesion.classList.add("oculto");
+                if (ayudaNormal) ayudaNormal.classList.remove("oculto");
+                $("#salir-verificacion").textContent = "Volver al acceso";
+                $("#salir-verificacion").dataset.destino = "acceso";
+                delete $("#salir-verificacion").dataset.volverCuenta;
+            }
+            if (datos.reenviarRestante != null) iniciarEsperaReenvio(datos.reenviarRestante);
+            else $("#reenviar-correo-fila").classList.add("oculto");
         }
         if (datos.paso === "telefono") {
             $("#telefono-normalizado").textContent = estado.telefono || "";
@@ -261,6 +310,8 @@
             if (datos.error.campo && document.getElementById("estado-" + datos.error.campo)) {
                 marcar(datos.error.campo, "mal", datos.error.mensaje);
                 document.getElementById(datos.error.campo).focus();
+            } else if (datos.paso === "correo") {
+                marcar("codigo-correo", "mal", datos.error.mensaje);
             } else if (destino) {
                 $("#" + destino).textContent = datos.error.mensaje;
                 $("#" + destino).classList.remove("oculto");
@@ -274,7 +325,9 @@
         $("#bajada-listo").textContent = org
             ? "Ya podés iniciar sesión y comprar entradas. Para organizar eventos falta la revisión de tu solicitud."
             : "Ya podés iniciar sesión y comprar entradas.";
-        const filas = [["hecho", "Cuenta creada", "Perfil: Cliente."], ["hecho", "Correo verificado", texto("mail").trim()]];
+        const filas = resultado.verificacionSesion
+            ? [["hecho", "Correo verificado", texto("mail").trim()]]
+            : [["hecho", "Cuenta creada", "Perfil: Cliente."], ["hecho", "Correo verificado", texto("mail").trim()]];
         if (org) {
             filas.push(["hecho", "Teléfono verificado", estado.telefono || ""]);
             filas.push(["pendiente", "Solicitud para organizar eventos", "Local: " + texto("local").trim() + ". La revisa una persona administradora.", "Pendiente de revisión"]);

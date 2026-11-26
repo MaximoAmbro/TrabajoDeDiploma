@@ -49,5 +49,17 @@ namespace Visual
             contenedor.CerrarSesion();
             return true;
         }
+
+        public static bool MostrarAviso(string texto, bool error, int duracionMs)
+        {
+            return Activa && contenedor.MostrarAvisoEnLinea(texto, error, duracionMs);
+        }
+
+        public static bool VerificarCorreo()
+        {
+            if (!Activa) return false;
+            contenedor.IniciarVerificacionCorreo();
+            return true;
+        }
     }
 }

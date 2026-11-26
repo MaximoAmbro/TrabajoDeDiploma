@@ -11,6 +11,9 @@ namespace Visual
         {
             if (formulario == null || formulario.IsDisposed) return;
             if (formulario.InvokeRequired) { formulario.BeginInvoke((Action)(()=>Mostrar(formulario,texto,error))); return; }
+            bool avisoVerificacion = string.Equals(texto, "Verificá tu correo antes de iniciar una compra.", StringComparison.Ordinal);
+            int duracionShell = duracionMs > 0 ? duracionMs : avisoVerificacion ? 15000 : error ? 3000 : 6000;
+            if (NavegacionCliente.MostrarAviso(texto, error, duracionShell)) return;
             foreach(var anterior in formulario.Controls.Cast<Control>().Where(c=>c.Name=="avisoSistema").ToArray()) anterior.Dispose();
             var aviso = new Componentes.EtiquetaAyuda { Name="avisoSistema", Text=texto,
                 AutoSize=false, Padding=new Padding(16), AccessibleRole=AccessibleRole.Alert };

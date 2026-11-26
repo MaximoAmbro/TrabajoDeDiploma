@@ -151,6 +151,7 @@
 
       <!-- ================= Paso 3: correo ================= -->
       <section data-vista="correo" class="pila pila-7 oculto angosta">
+        <p class="n4 secundario medida oculto" id="ayuda-correo-sesion"></p>
         <div class="pila pila-2">
           <h1 class="n2" tabindex="-1">Verificá tu correo</h1>
           <p class="n4 secundario medida">Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.</p>
@@ -161,8 +162,12 @@
           <p class="estado" id="estado-codigo-correo" aria-live="polite"></p>
         </div>
         <div class="fila-extremos">
-          <button type="button" class="enlace n5" data-destino="acceso">Volver al acceso</button>
+          <button type="button" class="enlace n5" id="salir-verificacion" data-destino="acceso">Volver al acceso</button>
           <button type="button" class="boton boton-primario" id="confirmar-correo">Confirmar correo</button>
+        </div>
+        <div class="fila-extremos oculto" id="reenviar-correo-fila">
+          <span class="n5 secundario" id="reenviar-correo-ayuda" aria-live="polite"></span>
+          <button type="button" class="boton boton-secundario" id="reenviar-correo">Reenviar código</button>
         </div>
       </section>
 

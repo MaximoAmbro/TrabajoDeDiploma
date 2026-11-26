@@ -21,10 +21,21 @@ namespace Visual
         private Componentes.EtiquetaRotulo seccionExplorar;
         private Componentes.EtiquetaRotulo seccionCompras;
         private Componentes.EtiquetaRotulo seccionCuenta;
+        private Panel avisoEnLinea;
+        private Componentes.EtiquetaAyuda textoAvisoEnLinea;
+        private Componentes.BotonSecundario botonVerificarCorreo;
+        private Timer temporizadorAviso;
 
         public frmMenuCliente()
         {
             InitializeComponent();
+            avisoEnLinea = new Panel { Name = "avisoClienteEnLinea", Visible = false, Padding = new Padding(12) };
+            textoAvisoEnLinea = new Componentes.EtiquetaAyuda { Name = "textoAvisoCliente", Dock = DockStyle.Fill, AutoSize = false, TextAlign = ContentAlignment.MiddleLeft };
+            botonVerificarCorreo = new Componentes.BotonSecundario { Name = "btnVerificarCorreoSesion", Text = "Verificar correo", Dock = DockStyle.Right, Width = 176, Visible = false };
+            avisoEnLinea.Controls.Add(textoAvisoEnLinea);
+            avisoEnLinea.Controls.Add(botonVerificarCorreo);
+            Controls.Add(avisoEnLinea);
+            botonVerificarCorreo.Click += (s, e) => IniciarVerificacionCorreo();
             seccionExplorar = Seccion("seccionExplorar", "EXPLORAR", 164);
             seccionCompras = Seccion("seccionTusCompras", "TUS COMPRAS", 292);
             seccionCuenta = Seccion("seccionCuenta", "CUENTA", 484);
@@ -71,7 +82,7 @@ namespace Visual
                 seccionCompras, btnHistorial, btnSuscripcion, seccionCuenta,
                 btnSolicitudOrganizador, btnCambiarContrasena, lblvolver);
             SizeChanged += (s, e) => DistribuirContenido();
-            FormClosed += (s, e) => NavegacionCliente.Desregistrar(this);
+            FormClosed += (s, e) => { NavegacionCliente.Desregistrar(this); temporizadorAviso?.Dispose(); };
             NavegacionCliente.Registrar(this);
             MarcarActivo(btnInicio);
         }
@@ -103,6 +114,55 @@ namespace Visual
             if (lateral == null) return;
             Disposicion.DistribuirMenu(this, lateral, contenido, label1);
             MarcarEstadoAtras();
+        }
+
+        internal bool MostrarAvisoEnLinea(string texto, bool error, int duracionMs)
+        {
+            if (IsDisposed || !IsHandleCreated) return false;
+            textoAvisoEnLinea.Text = texto ?? string.Empty;
+            bool permitirVerificacion = string.Equals(texto, "Verificá tu correo antes de iniciar una compra.", StringComparison.Ordinal);
+            botonVerificarCorreo.Visible = permitirVerificacion;
+            Tema.EstiloAviso(textoAvisoEnLinea, error || permitirVerificacion);
+            avisoEnLinea.BackColor = textoAvisoEnLinea.BackColor;
+            int alto = Math.Max(64, textoAvisoEnLinea.GetPreferredSize(new Size(Math.Max(1, contenido.Width - 220), 0)).Height + avisoEnLinea.Padding.Vertical);
+            avisoEnLinea.Height = alto;
+            avisoEnLinea.Visible = true;
+            avisoEnLinea.BringToFront();
+            DistribuirContenido();
+            temporizadorAviso?.Stop();
+            temporizadorAviso?.Dispose();
+            if (duracionMs > 0)
+            {
+                temporizadorAviso = new Timer { Interval = duracionMs };
+                temporizadorAviso.Tick += (s, e) =>
+                {
+                    temporizadorAviso.Stop();
+                    avisoEnLinea.Visible = false;
+                    DistribuirContenido();
+                };
+                temporizadorAviso.Start();
+            }
+            return true;
+        }
+
+        internal void IniciarVerificacionCorreo()
+        {
+            try
+            {
+                var usuario = GestorSesion.Instance.UsuarioActual;
+                if (usuario == null) throw new InvalidOperationException("La sesión ya no está disponible. Volvé a iniciar sesión.");
+                var verificacion = new frmCrearUsuario();
+                verificacion.ConfigurarVerificacionSesion(usuario.Id, usuario.Mail, () =>
+                {
+                    if (IsHandleCreated && !IsDisposed) BeginInvoke((Action)(() =>
+                    {
+                        VolverPagina();
+                        MostrarAvisoEnLinea("Correo verificado. Ya podés iniciar la compra.", false, 7000);
+                    }));
+                });
+                NavegarDesdePantalla(verificacion);
+            }
+            catch (Exception ex) { Avisos.Error(this, ManejadorErrores.MensajeParaUsuario(ex)); }
         }
 
         private void Mostrar(Control pagina, bool guardarActual)
