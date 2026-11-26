@@ -1,11 +1,13 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Forms;
 using Entidades;
 using Datos;
@@ -177,7 +179,7 @@ namespace Pruebas
         public void CP160_Flujo()
         {
             EnSta(()=>{
-                var cliente=Fake.Cliente(NivelFidelidad.Bronce);var evento=Fake.EventoPublicado(1000m,5);Fake.ComoCliente(cliente);
+                var cliente=Fake.Cliente(NivelFidelidad.Bronce);var evento=Fake.EventoPublicado(1000m,5);Fake.EventoPublicado(1500m,5);Fake.ComoCliente(cliente);
                 using(var lista=new Visual.frmEventosCliente{IDUsuario=cliente.Id}) {
                     Mostrar(lista);var tarjeta=ControlDe<FlowLayoutPanel>(lista,"tarjetasEventos").Controls.OfType<TarjetaEvento>().Single(t=>t.AccessibleName==evento.Nombre);
                     ControlDe<Button>(tarjeta,"verEntradas").PerformClick();var ficha=ControlDe<FichaEvento>(lista,"fichaEvento");
@@ -206,16 +208,42 @@ namespace Pruebas
                     Assert.AreEqual("Eventos disponibles", menu.Controls.OfType<Label>().Single(c => c.Name == "label1").Text,
                         "El título del menú debe seguir la vista actual al navegar al catálogo.");
                     var listado = ControlDe<Visual.frmEventosCliente>(menu, "frmEventosCliente");
-                    var tarjetaCatalogo = ControlDe<FlowLayoutPanel>(listado, "tarjetasEventos").Controls
-                        .OfType<TarjetaEvento>().Single(t => t.AccessibleName == evento.Nombre);
-                    var botonEntradas = ControlDe<Button>(tarjetaCatalogo, "verEntradas");
-                    Assert.IsTrue(botonEntradas.Visible && botonEntradas.Bottom <= tarjetaCatalogo.ClientSize.Height,
-                        "La acción de la primera fila del catálogo debe entrar completa dentro de la tarjeta.");
-                    ControlDe<Button>(tarjetaCatalogo, "verEntradas").PerformClick();
+                    var hostCatalogo = ControlDe<HostFormularioCliente>(menu, "paginafrmEventosCliente");
+                    Assert.IsTrue(listado.ClientSize.Width <= hostCatalogo.ClientSize.Width && listado.ClientSize.Height <= hostCatalogo.ClientSize.Height,
+                        "El catálogo debe adaptarse al panel del menú y no conservar su tamaño mínimo de ventana suelta.");
+                    var webCatalogo = ControlDe<Visual.Web.PanelWeb>(listado, "catalogoWeb");
+                    EsperarVistaWeb(webCatalogo);
+                    string catalogoCompleto = EjecutarVistaWeb(webCatalogo,
+                        "(()=>{const cs=[...document.querySelectorAll('#catalogo .evento')];return cs.length>=2&&cs.every(c=>{const r=c.getBoundingClientRect(),b=c.querySelector('.accion').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&b.left>=0&&b.right<=innerWidth})&&document.scrollingElement.scrollWidth<=innerWidth})()");
+                    Assert.AreEqual("true", catalogoCompleto,
+                        "Las tarjetas y sus acciones deben entrar en el ancho del catálogo web dentro de Mi cuenta.");
+                    foreach (string nombreBoton in new[] { "btnVolver", "btnVista" })
+                    {
+                        var boton = ControlDe<Button>(listado, nombreBoton);
+                        var bounds = listado.RectangleToClient(boton.Parent.RectangleToScreen(boton.Bounds));
+                        Assert.IsTrue(listado.ClientRectangle.Contains(bounds), nombreBoton + " debe quedar dentro de la ventana Mi cuenta.");
+                    }
+                    EjecutarVistaWeb(webCatalogo,
+                        "[...document.querySelectorAll('#catalogo .evento')].find(c=>c.dataset.evento==" + evento.Id + ").querySelector('.accion').click()");
+                    Esperar(() => listado.Controls.Find("fichaEvento", true).Any(),
+                        "El clic web debe abrir la ficha dentro de la navegación del cliente.");
                     var fichaCliente = ControlDe<FichaEvento>(listado, "fichaEvento");
-                    ControlDe<Button>(fichaCliente, "comprarFicha").PerformClick();
+                    var accionFicha = ControlDe<Button>(fichaCliente, "comprarFicha");
+                    Assert.IsTrue(listado.ClientRectangle.Contains(listado.RectangleToClient(accionFicha.Parent.RectangleToScreen(accionFicha.Bounds))),
+                        "Armar paquete debe quedar dentro de la ventana Mi cuenta.");
+                    accionFicha.PerformClick();
                     Assert.AreEqual("Armar paquete", menu.Controls.OfType<Label>().Single(c => c.Name == "label1").Text,
                         "El título debe cambiar a la pantalla de compra.");
+                    var hostCompra = ControlDe<HostFormularioCliente>(menu, "paginaFrmCompraCliente");
+                    var compraMenu = (Visual.FrmCompraCliente)hostCompra.Pantalla;
+                    var webCompra = ControlDe<Visual.Web.PanelWeb>(compraMenu, "resumenCompraWeb");
+                    Assert.IsTrue(compraMenu.ClientSize.Width <= hostCompra.ClientSize.Width && compraMenu.ClientSize.Height <= hostCompra.ClientSize.Height,
+                        "El armador debe usar el tamaño disponible en el panel, no el mínimo de una ventana suelta.");
+                    EsperarVistaWeb(webCompra);
+                    string paqueteCompleto = EjecutarVistaWeb(webCompra,
+                        "(()=>{const a=document.querySelector('.area-web'),t=document.querySelector('.total').getBoundingClientRect(),b=document.querySelector('#continuar').getBoundingClientRect();return a.scrollWidth<=a.clientWidth+1&&t.right<=innerWidth&&b.right<=innerWidth&&b.bottom<=innerHeight})()");
+                    Assert.AreEqual("true", paqueteCompleto,
+                        "El total y Continuar al pago deben verse completos en el armador dentro de Mi cuenta.");
                 }
                 using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id })
                 {
@@ -228,6 +256,41 @@ namespace Pruebas
                 }
             });
         }
+        private static void EsperarVistaWeb(Visual.Web.PanelWeb panel)
+        {
+            var reloj = Stopwatch.StartNew();
+            while (!panel.Preparado && reloj.Elapsed < TimeSpan.FromSeconds(20))
+            {
+                Application.DoEvents();
+                Thread.Sleep(10);
+            }
+            Assert.IsTrue(panel.Preparado && panel.Visible, panel.Name + " debe cargar para comprobar su geometría.");
+        }
+
+        private static void Esperar(Func<bool> condicion, string mensaje)
+        {
+            var reloj = Stopwatch.StartNew();
+            while (!condicion() && reloj.Elapsed < TimeSpan.FromSeconds(10))
+            {
+                Application.DoEvents();
+                Thread.Sleep(10);
+            }
+            Assert.IsTrue(condicion(), mensaje);
+        }
+
+        private static string EjecutarVistaWeb(Visual.Web.PanelWeb panel, string script)
+        {
+            var tarea = panel.EjecutarScriptAsync(script);
+            var reloj = Stopwatch.StartNew();
+            while (!tarea.IsCompleted && reloj.Elapsed < TimeSpan.FromSeconds(10))
+            {
+                Application.DoEvents();
+                Thread.Sleep(10);
+            }
+            Assert.IsTrue(tarea.IsCompleted, panel.Name + " debe responder a la comprobación de geometría.");
+            return (tarea.GetAwaiter().GetResult() ?? "").Trim('"');
+        }
+
         // CP-161 — RF-07/RF-22, RN-41: el inicio no permite consultar el resumen de otro cliente.
         [TestMethod("CP-161: Inicio de cliente rechaza datos de otra cuenta")]
         public void CP161_InicioAjeno()

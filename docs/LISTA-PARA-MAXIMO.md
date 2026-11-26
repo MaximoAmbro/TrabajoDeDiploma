@@ -122,7 +122,8 @@
 > lugar.
 >
 > **Las cifras de la batería son otras:** eran 148 casos y 276 ejecuciones; el 20/11 pasaron a 205
-> y 348, y desde el 24/11 son 214 casos y 360 ejecuciones (ver el aviso del principio). La
+> y 348; desde el 24/11 eran 214 casos y 360 ejecuciones, y el 26/11 pasaron a 219 casos y 365
+> ejecuciones (ver el aviso del principio). La
 > cobertura de reglas pasa de 39 de 41 a 50 de 52.
 
 > ## ⏸ LO QUE TODAVÍA NO SE PEGA (20/11)
@@ -199,15 +200,15 @@ para ver la forma. El valor final lo completa Claude Code el día del cierre.
 | Marcador | Qué es | Provisorio (2db272e) | Final | Dónde aparece |
 |---|---|---|---|---|
 | `[[COMMIT-COMPLETO]]` | Commit del código que se entrega, los 40 caracteres | 2db272ecf0f31898ee617e025ba763be1be7825e | — | p. 1 |
-| `[[CASOS]]` | Cantidad de casos de prueba, en número | 214 | — | p. 106 |
-| `[[CASOS-LETRAS]]` | La misma cantidad, en letras | doscientos catorce | — | pp. 7, 106, 108, sección «Metodología» |
-| `[[CASOS-LETRAS-INICIAL]]` | En letras, con mayúscula inicial | Doscientos catorce | — | p. 7 |
-| `[[EJECUCIONES-LETRAS]]` | Cantidad de ejecuciones, en letras | trescientas sesenta | — | sección «Metodología» |
-| `[[ULTIMO-CASO]]` | Número del último caso | CP-357 | — | pp. 106, 108, 109 |
-| `[[CASOS-RANGO-2.6]]` | Casos que agrega la versión 2.6 | CP-62 a CP-211 y CP-354 a CP-357 | — | p. 6 |
-| `[[RANGO-CASOS-FINALES]]` | Casos del último ajuste del código | CP-207 a CP-211 y CP-354 a CP-357 | — | p. 108, «Origen de los casos» |
-| `[[NUMEROS-SIN-USO]]` | Números de caso que no se usaron, en minúscula | los números CP-149 y CP-212 a CP-353 no se usaron | — | p. 106 |
-| `[[NUMEROS-SIN-USO-ORACION]]` | Lo mismo, como oración | Los números CP-149 y CP-212 a CP-353 no se usaron. | — | p. 108, «Origen de los casos» |
+| `[[CASOS]]` | Cantidad de casos de prueba, en número | 219 | — | p. 106 |
+| `[[CASOS-LETRAS]]` | La misma cantidad, en letras | doscientos diecinueve | — | pp. 7, 106, 108, sección «Metodología» |
+| `[[CASOS-LETRAS-INICIAL]]` | En letras, con mayúscula inicial | Doscientos diecinueve | — | p. 7 |
+| `[[EJECUCIONES-LETRAS]]` | Cantidad de ejecuciones, en letras | trescientas sesenta y cinco | — | sección «Metodología» |
+| `[[ULTIMO-CASO]]` | Número del último caso | CP-365 | — | pp. 106, 108, 109 |
+| `[[CASOS-RANGO-2.6]]` | Casos que agrega la versión 2.6 | CP-62 a CP-211, CP-354 a CP-360 y CP-364 a CP-365 | — | p. 6 |
+| `[[RANGO-CASOS-FINALES]]` | Casos del último ajuste del código | CP-358 a CP-360 y CP-364 a CP-365 | — | p. 108, «Origen de los casos» |
+| `[[NUMEROS-SIN-USO]]` | Números de caso que no se usaron, en minúscula | los números CP-149, CP-212 a CP-353 y CP-361 a CP-363 no se usaron | — | p. 106 |
+| `[[NUMEROS-SIN-USO-ORACION]]` | Lo mismo, como oración | Los números CP-149, CP-212 a CP-353 y CP-361 a CP-363 no se usaron. | — | p. 108, «Origen de los casos» |
 | `[[CASOS-ESCALA]]` | Casos que verifican el tamaño de pantalla y la escala de Windows | CP-12, CP-25, CP-64, CP-69 y CP-85 | — | p. 37 |
 | `[[CASOS-RNF]]` | Casos de RNF-02, RNF-03 y RNF-04, en una oración | (ver p. 107) | — | p. 107 |
 | `[[BLOQUE-MATRIZ]]` | Renglón sobre la matriz principal: se rehace la tabla | — | — | p. 107 |
@@ -3795,7 +3796,12 @@ condición). Si ya pegaste esas filas, reemplazá solo esas cinco en las dos tab
 | CP-354 — Enter, Esc, orden de tabulación, foco inicial y tamaño de las ventanas (interfaz) | — (RNF-02) |
 | CP-355 — Solicitud para ser Organizador con SMTP configurado | RN-51 |
 | CP-356 — Envío de un código con un proveedor que falla | RN-43, RN-44 |
-| CP-357 — Teclado y geometría de las 25 ventanas reales (interfaz) | — (RNF-02, RNF-03) |
+| CP-357 — Teclado y geometría de las 26 ventanas reales (interfaz) | — (RNF-02, RNF-03) |
+| CP-358 — Sin conexión, inicio avisa y mantiene oculta la contraseña (interfaz) | — (RNF-02) |
+| CP-359 — Dependencias WebView2 ausentes físicamente y respaldo WinForms (interfaz) | — (RNF-02) |
+| CP-360 — Fallo de generación del ticket después del pago | — (RNF-02) |
+| CP-364 — Alta web, verificación de correo y navegación hasta Acceso (interfaz) | RN-43 |
+| CP-365 — Compra y opciones de devolución visibles en el historial (interfaz) | RN-29 |
 
 **El párrafo que sigue a la tabla. Reemplazar:**
 
@@ -4038,7 +4044,12 @@ lógica de descuento por nivel». La columna «Prueba automatizada» es el nombr
 | CP-354 | Las ventanas sin diseño adaptable (interfaz) | Enter, Esc, el orden de tabulación y el foco inicial responden como se espera, y la ventana no cambia de tamaño | RF-05, RNF-02 | — |
 | CP-355 | Solicitud para ser Organizador con SMTP configurado | El código del teléfono llega por el SMS simulado y la solicitud se completa | RF-20 | RN-51 |
 | CP-356 | El envío de un código con un proveedor que falla | No queda un código activo en la base | RF-14, RF-15 | RN-43, RN-44 |
-| CP-357 | Las 25 ventanas reales, abiertas y operadas (interfaz) | El foco, el teclado y la geometría responden en cada una | RNF-02, RNF-03 | — |
+| CP-357 | Las 26 ventanas reales, abiertas y operadas (interfaz) | El foco, el teclado y la geometría responden en cada una | RNF-02, RNF-03 | — |
+| CP-358 | Falla de conexión al iniciar (interfaz) | Avisa dentro de la ventana y mantiene oculta la contraseña | RF-02, RNF-02 | — |
+| CP-359 | Dependencias WebView2 y Newtonsoft ausentes físicamente (interfaz) | Activa el respaldo WinForms y muestra el aviso | RF-03, RF-07, RF-11, RNF-02 | — |
+| CP-360 | Falla al generar el ticket tras el pago confirmado | Conserva la compra y ofrece recuperar el ticket | RF-07, RNF-02 | — |
+| CP-364 | Alta web completa con verificación de correo (interfaz) | La acción final abre Acceso sin reiniciar el alta | RF-14 | RN-43 |
+| CP-365 | Compra con dos entradas en historial web (interfaz) | La compra y ambas opciones de devolución caben en la vista | RF-05 | RN-29 |
 
 **Después de las dos tablas, agregar:**
 

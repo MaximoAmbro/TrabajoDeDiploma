@@ -16,6 +16,10 @@ namespace Visual.Componentes
             Dock = DockStyle.Fill;
             pantalla.TopLevel = false;
             pantalla.FormBorderStyle = FormBorderStyle.None;
+            // Las dimensiones mínimas sirven como ventanas sueltas; dentro del menú
+            // el formulario debe adaptarse al área disponible del panel.
+            pantalla.MinimumSize = System.Drawing.Size.Empty;
+            pantalla.MaximumSize = System.Drawing.Size.Empty;
             pantalla.ShowInTaskbar = false;
             Control barra = pantalla.Controls.Find("barraSuperior", true).FirstOrDefault();
             if (barra != null) barra.Visible = false;

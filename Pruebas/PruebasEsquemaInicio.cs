@@ -11,9 +11,9 @@ namespace Pruebas
     [TestClass]
     public class PruebasEsquemaInicio
     {
-        // CP-198 — RF-02, RNF-02: fallo de conexión visible y máscara aplicada por el Designer.
-        [TestMethod("CP-198: Sin conexión, inicio avisa dentro de la ventana y mantiene oculta la contraseña")]
-        public void CP198_ErrorDeConexionNoExponeContrasenaNiDejaInicioMudo()
+        // CP-358 — RF-02, RNF-02: fallo de conexión visible y máscara aplicada por el Designer.
+        [TestMethod("CP-358: Sin conexión, inicio avisa dentro de la ventana y mantiene oculta la contraseña")]
+        public void CP358_ErrorDeConexionNoExponeContrasenaNiDejaInicioMudo()
         {
             using (var formulario = new Visual.frmInicio())
             {

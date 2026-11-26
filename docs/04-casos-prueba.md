@@ -1,8 +1,8 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 214 casos, de CP-01 a CP-211 y de CP-354 a CP-357 (los números CP-149 y CP-212 a CP-353 no se usaron), que suman **360 ejecuciones**, las 360 correctas sobre el código que se entrega, `2db272e` (`2db272ecf0f31898ee617e025ba763be1be7825e`). La corrió Codex el 24/11, fuera del sandbox, con `tools/Proyecto.ps1 -Accion Probar`; Claude Code cruzó el registro (`TestResults/post-reinicio.log`: 360 correctas) con el código, caso por caso: están los 214 y no sobra ninguno. Antes: sobre `967e038`, 205 casos y 348 ejecuciones (corrida de Codex del 19/11 y de Claude Code del 20/11, `TestResults/Claude-967e038/bateria.log`); sobre `dba674c`, 148 casos y 276 ejecuciones; sobre el código congelado de la medición de mutación, `65225e7`, 145 casos y 271 ejecuciones.
-CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-357 se
-agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-357» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
+Proyecto `Pruebas/` con MSTest. Hay 219 casos: CP-01 a CP-211, CP-354 a CP-360 y CP-364 a CP-365. Suman **365 ejecuciones**. La última corrida completa, `TestResults/bateria-365-2026-11-26.md`, es anterior a la renumeración de CP-358 a CP-360; desde la renumeración CP-359 falla (T-31) y falta la corrida que lo confirme. El resultado anterior fue 360/360 sobre `2db272e` (`2db272ecf0f31898ee617e025ba763be1be7825e`). Antes: sobre `967e038`, 205 casos y 348 ejecuciones (corrida de Codex del 19/11 y de Claude Code del 20/11, `TestResults/Claude-967e038/bateria.log`); sobre `dba674c`, 148 casos y 276 ejecuciones; sobre el código congelado de la medición de mutación, `65225e7`, 145 casos y 271 ejecuciones.
+CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-365 se
+agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-365» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
 en cada `DataRow`.
 
@@ -138,12 +138,14 @@ documentado, no todas sus variantes: CP-56 prueba eliminar el último sector, no
 sectores; CP-60 prueba agregar un sector, no modificarlo. En la matriz, RN-05 está en la fila
 de RF-02 y RN-39 en la de RF-13: por eso CP-55 y CP-61 llevan dos requerimientos.
 
-## Casos CP-62 a CP-357
+## Casos CP-62 a CP-365
 
-Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11; CP-146 a CP-148, en el cierre de Codex (`dba674c`); CP-150 a CP-206, el 19/11, sobre `c4ab61e`, junto con la corrección de las columnas RF y Reglas de CP-197 a CP-199, que había cambiado Codex en los comentarios; CP-207 a CP-211 y CP-354 a CP-357, el 24/11, sobre `2db272e`. Los números CP-149 y CP-212 a CP-353 no se usaron: Codex saltó de CP-211 a CP-354 al numerar, y los números no se reasignan. Salen del comentario `// CP-xx — RF, RN` y del nombre
-visible de cada prueba en `Pruebas/`, leídos uno por uno. **Ninguno se volvió a correr para
-este registro:** el resultado es el de la última batería de Codex
-(`Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-12-T47-T48.md`).
+Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11; CP-146 a CP-148, en el cierre de Codex (`dba674c`); CP-150 a CP-206, el 19/11, sobre `c4ab61e`, junto con la corrección de las columnas RF y Reglas de CP-197 a CP-199, que había cambiado Codex en los comentarios; CP-207 a CP-211 y CP-354 a CP-357, el 24/11, sobre `2db272e`. CP-358 a CP-360 y CP-364 a CP-365 se añadieron el 26/11. Los números CP-149, CP-212 a CP-353 y CP-361 a CP-363 no se usaron: Codex saltó de CP-211 a CP-354 al numerar, y los números no se reasignan. Salen del comentario `// CP-xx — RF, RN` y del nombre
+visible de cada prueba en `Pruebas/`, leídos uno por uno. Para CP-62 a CP-357, la procedencia
+histórica de las ejecuciones sigue en `Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-12-T47-T48.md`;
+los cinco casos añadidos después pasaron en la corrida 365/365 de
+`TestResults/bateria-365-2026-11-26.md`, que es **anterior a la renumeración**. Con la renumeración,
+CP-359 falla (su filtro quedó con el nombre viejo, T-31): la cifra se confirma con la batería siguiente.
 
 Valen las mismas condiciones que para CP-11 a CP-61:
 - integración contra `BddEventAura_Pruebas`;
@@ -168,9 +170,9 @@ escritorio abierta.
 | 2 | CP-66, CP-68, CP-69, CP-70, CP-71, CP-73, CP-74, CP-75, CP-77, CP-79, CP-80, CP-83, CP-89, CP-105, CP-111, CP-119, CP-120, CP-146 y CP-147 |
 | 1 | El resto |
 
-CP-62 a CP-148 suman **209 ejecuciones**; CP-150 a CP-206, **69**, y CP-207 a CP-211 y CP-354 a CP-357, **9**
-(una cada uno). Con las 73 de CP-01 a CP-61, la batería da **360** (corrida de Codex del 24/11 sobre
-`2db272e`). Sobre `967e038` eran 206 de CP-62 a CP-148: desde entonces CP-116 sumó tres pantallas
+CP-62 a CP-148 suman **209 ejecuciones**; CP-150 a CP-206, **69**, CP-207 a CP-211 y CP-354 a CP-357, **9**
+(una cada uno), y CP-358 a CP-360 y CP-364 a CP-365, **5** (una cada uno). Con las 73 de CP-01 a CP-61,
+la batería da **365**. Sobre `967e038` eran 206 de CP-62 a CP-148: desde entonces CP-116 sumó tres pantallas
 (de 22 a 25: `frmAuditoria`, `frmRevisarSolicitudesOrganizador` y `frmSolicitudOrganizador`). Sobre `dba674c` eran 203
 de CP-62 a CP-148: desde entonces CP-63 sumó una pantalla (de 20 a 21) y CP-116, dos (de 20 a 22).
 En el cierre de Codex (`dba674c`) se sumaron dos de CP-146, dos de CP-147 y una de CP-148 a las 271
@@ -353,7 +355,12 @@ sección 0).
 | CP-354 | PruebasFormularios | Las ventanas sin diseño adaptable (interfaz) | Enter, Esc, el orden de tabulación y el foco inicial responden como se espera, y la ventana no cambia de tamaño | RF-05, RNF-02 | — | Teclado |
 | CP-355 | PruebasSolicitudesOrganizador | Solicitud para ser Organizador con SMTP configurado | El código del teléfono llega por el SMS simulado y la solicitud se completa | RF-20 | RN-51 | Correo y SMS |
 | CP-356 | PruebasSolicitudesOrganizador | El envío de un código con un proveedor que falla | No queda un código activo en la base | RF-14, RF-15 | RN-43, RN-44 | Correo y SMS |
-| CP-357 | PruebasInteraccionPantallas | Las 25 ventanas reales, abiertas y operadas (interfaz) | El foco, el teclado y la geometría responden en cada una | RNF-02, RNF-03 | — | Teclado y escala |
+| CP-357 | PruebasInteraccionPantallas | Las 26 ventanas reales, abiertas y operadas (interfaz) | El foco, el teclado y la geometría responden en cada una | RNF-02, RNF-03 | — | Teclado y escala |
+| CP-358 | PruebasEsquemaInicio | Falla de conexión al iniciar (interfaz) | Avisa dentro de la ventana y mantiene oculta la contraseña | RF-02, RNF-02 | — | Arranque |
+| CP-359 | PruebasInteraccionPantallas | Quitar físicamente las dependencias WebView2 y Newtonsoft en una copia | Las vistas afectadas muestran su respaldo WinForms y un aviso | RF-03, RF-07, RF-11, RNF-02 | — | Respaldo web |
+| CP-360 | PruebasInteraccionPantallas | Sin iText, exportar un reporte; además, fallo al crear el ticket tras el pago | La exportación avisa que falta un archivo y la compra pagada conserva la opción de recuperar el ticket | RF-07, RNF-02 | — | PDF y compra |
+| CP-364 | PruebasInteraccionPantallas | Alta web completa con verificación de correo y navegación final (interfaz) | La cuenta queda creada y la acción final abre Acceso sin reiniciar el alta | RF-14 | RN-43 | Alta de cuenta |
+| CP-365 | PruebasInteraccionPantallas | Compra con dos entradas en el historial web (interfaz) | La compra y ambas opciones de devolución caben en la vista | RF-05 | RN-29 | Historial |
 
 **Notas de lectura:**
 - **CP-112 no verifica RNF-01** (revisado el 19/11). RNF-01 pide que el flujo de compra se
@@ -362,8 +369,8 @@ sección 0).
   comentario, y RF-05 se agregó como en el comentario. RNF-01 no tiene caso automático: lo verifica
   la medición del informe de usabilidad (`docs/usabilidad/INFORME-USABILIDAD.md`, «Tiempo del
   flujo completo»).
-- **CP-149 no existe**, ni CP-212 a CP-353. Los números se saltaron al numerar y no se reasignan, igual que RN-27.
-- **CP-207 a CP-211 y CP-354 a CP-357 (24/11, `2db272e`).** Requerimientos y reglas tomados de sus comentarios con
+- **CP-149 no existe**, ni CP-212 a CP-353 ni CP-361 a CP-363. Los números se saltaron al numerar y no se reasignan, igual que RN-27.
+- **CP-207 a CP-211 y CP-354 a CP-357 (24/11, `2db272e`); CP-358 a CP-360 y CP-364 a CP-365 (26/11).** Requerimientos y reglas tomados de sus comentarios con
   `tools/Matriz/Extraer.py`. No suman reglas nuevas: la cobertura sigue en 50 de 52.
 - **Requerimientos y reglas alineados con los comentarios (22/11).** Codex volvió a leer las
   pruebas y corrigió los comentarios en `42b255e` y `e3e000d`. Desde `e3e000d`, la columna RF del

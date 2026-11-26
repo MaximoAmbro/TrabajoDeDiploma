@@ -53,9 +53,6 @@ namespace Visual
             SizeChanged += (s, e) => ActualizarVistaWeb();
             Shown += (s, e) =>
             {
-                int altoExtra = Math.Max(0, Math.Min(Disposicion.Pixeles(this, 240),
-                    Screen.FromControl(this).WorkingArea.Height - Height));
-                ClientSize = new Size(ClientSize.Width, ClientSize.Height + altoExtra);
                 Disposicion.AjustarAreaVisible(this);
                 Disposicion.LimitarAncho(lblLectura);
                 int pie = Math.Min(btnExportar.Top, btnVolver.Top);
@@ -346,6 +343,12 @@ namespace Visual
                 return;
             }
             catch (FileNotFoundException)
+            {
+                Avisos.Informativo(this, "Falta un archivo necesario para generar el PDF. Repará la carpeta de EventAura y volvé a exportar.");
+                return;
+            }
+            catch (TypeInitializationException ex) when (ex.GetBaseException() is FileNotFoundException ||
+                ex.GetBaseException() is FileLoadException || ex.GetBaseException() is BadImageFormatException)
             {
                 Avisos.Informativo(this, "Falta un archivo necesario para generar el PDF. Repará la carpeta de EventAura y volvé a exportar.");
                 return;

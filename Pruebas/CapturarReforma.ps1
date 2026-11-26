@@ -2,15 +2,27 @@
     [Parameter(Mandatory = $true)]
     [ValidateSet(100, 150)]
     [int]$Escala,
-    [switch]$Demostracion
+    [switch]$Demostracion,
+    [switch]$Respaldo
 )
 
 $ErrorActionPreference = 'Stop'
 $raiz = Split-Path $PSScriptRoot -Parent
-$binarios = Join-Path $PSScriptRoot 'bin/Debug/net48'
-$hostCaptura = Join-Path $binarios 'CapturarReforma.exe'
+$binariosOriginales = Join-Path $PSScriptRoot 'bin/Debug/net48'
+$binarios = $binariosOriginales
+$binariosRespaldo = $null
 $temporales = Join-Path $raiz 'TestResults/CapturarReforma'
 [void][IO.Directory]::CreateDirectory($temporales)
+if ($Respaldo) {
+    $binariosRespaldo = Join-Path $env:TEMP ('EventAura-Capturas-Respaldo-' + [Guid]::NewGuid().ToString('N'))
+    [void][IO.Directory]::CreateDirectory($binariosRespaldo)
+    Get-ChildItem -LiteralPath $binariosOriginales | Copy-Item -Destination $binariosRespaldo -Recurse -Force
+    Get-ChildItem -LiteralPath $binariosRespaldo -Recurse -File |
+        Where-Object { $_.Name -match '^(Microsoft\.Web\.WebView2\.(Core|WinForms)|Newtonsoft\.Json|WebView2Loader)\.dll$' } |
+        Remove-Item -Force
+    $binarios = $binariosRespaldo
+}
+$hostCaptura = Join-Path $binarios 'CapturarReforma.exe'
 $codigo = Join-Path $temporales 'CapturarReforma.cs'
 $manifiesto = Join-Path $temporales 'CapturarReforma.manifest'
 
@@ -74,10 +86,13 @@ if ($Demostracion) {
 $escalaAnterior = $env:EVENTAURA_CAPTURAS_DPI
 $salidaAnterior = $env:EVENTAURA_CAPTURAS_UI
 $demoAnterior = $env:EVENTAURA_CAPTURAS_DEMO
+$respaldoAnterior = $env:EVENTAURA_CAPTURAS_RESPALDO
 Push-Location $binarios
 try {
     $env:EVENTAURA_CAPTURAS_DPI = (96 * $Escala / 100).ToString()
-    $env:EVENTAURA_CAPTURAS_UI = Join-Path $raiz "TestResults/Capturas-Reforma/$Escala"
+    $carpetaCapturas = if ($Respaldo) { "$Escala-Respaldo" } else { "$Escala" }
+    $env:EVENTAURA_CAPTURAS_UI = Join-Path $raiz "TestResults/Capturas-Reforma/$carpetaCapturas"
+    $env:EVENTAURA_CAPTURAS_RESPALDO = if ($Respaldo) { '1' } else { $null }
     if ($Demostracion) {
         $env:EVENTAURA_CAPTURAS_DEMO = '1'
         & $hostCaptura demo
@@ -91,5 +106,9 @@ try {
     $env:EVENTAURA_CAPTURAS_DPI = $escalaAnterior
     $env:EVENTAURA_CAPTURAS_UI = $salidaAnterior
     $env:EVENTAURA_CAPTURAS_DEMO = $demoAnterior
+    $env:EVENTAURA_CAPTURAS_RESPALDO = $respaldoAnterior
+    if ($binariosRespaldo -and (Test-Path -LiteralPath $binariosRespaldo)) {
+        Remove-Item -LiteralPath $binariosRespaldo -Recurse -Force
+    }
 }
 exit $resultado

@@ -19,10 +19,15 @@ namespace Pruebas
     {
         public TestContext TestContext { get; set; }
 
-        // CP-200 — RF-07, RNF-02: un fallo del PDF no revierte ni oculta el pago confirmado.
-        [TestMethod("CP-200: Fallo al generar el ticket conserva el pedido y muestra recuperación")]
-        public void CP200_FalloDeTicketDejaCompraRecuperable()
+        // CP-360 — RF-07, RNF-02: un fallo del PDF no revierte ni oculta el pago confirmado.
+        [TestMethod("CP-360: Fallo al generar el ticket conserva el pedido y muestra recuperación")]
+        public void CP360_FalloDeTicketDejaCompraRecuperable()
         {
+            if (Environment.GetEnvironmentVariable("EVENTAURA_CP360_HIJO") == "1")
+            {
+                ProbarExportacionSinIText();
+                return;
+            }
             using (var pantalla = new Visual.FrmCompraCliente())
             {
                 pantalla.CrearTickets = _ => { throw new IOException("Documentos no permite escritura"); };
@@ -36,8 +41,63 @@ namespace Pruebas
                     StringAssert.Contains(confirmacion.AvisoTicket, "Documentos");
                 }
             }
+
+            string raiz = Path.GetDirectoryName(typeof(PruebasInteraccionPantallas).Assembly.Location);
+            string temporal = Path.Combine(Path.GetTempPath(), "EventAura-CP360-" + Guid.NewGuid().ToString("N"));
+            CopiarCarpeta(raiz, temporal);
+            try
+            {
+                string[] itext = Directory.GetFiles(temporal, "itext*.dll", SearchOption.AllDirectories);
+                Assert.IsTrue(itext.Length > 0, "La copia debe contener las DLL de iText antes de simular la instalación incompleta.");
+                foreach (string archivo in itext) File.Delete(archivo);
+
+                string vstest = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "Microsoft Visual Studio", "2022", "BuildTools", "Common7", "IDE", "CommonExtensions", "Microsoft", "TestWindow", "vstest.console.exe");
+                Assert.IsTrue(File.Exists(vstest), "Se requiere vstest.console.exe para ejecutar la copia aislada sin iText.");
+                var inicio = new ProcessStartInfo(vstest,
+                    "\"" + Path.Combine(temporal, "Pruebas.dll") + "\" /TestCaseFilter:\"FullyQualifiedName~" + nameof(CP360_FalloDeTicketDejaCompraRecuperable) + "\" /Logger:console;verbosity=normal")
+                { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true };
+                inicio.EnvironmentVariables["EVENTAURA_CP360_HIJO"] = "1";
+                using (var proceso = Process.Start(inicio))
+                {
+                    string salida = proceso.StandardOutput.ReadToEnd();
+                    string error = proceso.StandardError.ReadToEnd();
+                    Assert.IsTrue(proceso.WaitForExit(120000), "La exportación sin iText debe terminar.");
+                    Assert.AreEqual(0, proceso.ExitCode, salida + Environment.NewLine + error);
+                    Assert.IsTrue(salida.Contains("CP-360"), salida);
+                }
+            }
+            finally { if (Directory.Exists(temporal)) Directory.Delete(temporal, true); }
         }
 
+        private static void ProbarExportacionSinIText()
+        {
+            InterfazGrupoA.EnSta(() =>
+            {
+                Fake.ComoAdministrador();
+                string carpeta = Path.Combine(Path.GetTempPath(), "EventAura-CP360-PDF-" + Guid.NewGuid().ToString("N"));
+                Directory.CreateDirectory(carpeta);
+                try
+                {
+                    using (var reportes = new Visual.frmReportes { CarpetaExportacion = carpeta })
+                    {
+                        InterfazGrupoA.Mostrar(reportes);
+                        var exportar = InterfazGrupoA.ControlDe<Button>(reportes, "btnExportar");
+                        Assert.IsTrue(exportar.Enabled, "El reporte inicial debe quedar listo para exportar.");
+                        exportar.PerformClick();
+                        var aviso = InterfazGrupoA.ControlDe<Label>(reportes, "avisoSistema");
+                        StringAssert.Contains(aviso.Text, "Falta un archivo necesario");
+                    }
+                }
+                finally
+                {
+                    foreach (string archivo in Directory.GetFiles(carpeta)) File.Delete(archivo);
+                    Directory.Delete(carpeta);
+                }
+            });
+        }
+
+        // CP-364 — RF-14, RN-43: el alta verificada avanza al acceso sin reiniciar el registro.
         [TestMethod("CP-364: El alta web completa correo y continúa al acceso sin volver a crear la cuenta")]
         public void CP364_AltaWebCompletaElRecorridoHastaAcceso()
         {
@@ -108,6 +168,7 @@ namespace Pruebas
             });
         }
 
+        // CP-365 — RF-05, RN-29: la compra y sus entradas para devolución caben en el historial.
         [TestMethod("CP-365: El historial web muestra una compra y sus devoluciones dentro de la vista")]
         public void CP365_HistorialConCompraCabeEnLaVistaWeb()
         {
@@ -170,18 +231,18 @@ namespace Pruebas
             return resultado;
         }
 
-        // CP-199 — RF-03/RF-07/RF-11, RNF-02: sin DLL opcionales, la carga real termina en respaldo.
-        [TestMethod("CP-199: Quitar las DLL de WebView2 y Newtonsoft activa el respaldo de las vistas")]
-        public void CP199_RespaldoConDependenciasAusentesEnCopia()
+        // CP-359 — RF-03/RF-07/RF-11, RNF-02: sin DLL opcionales, la carga real termina en respaldo.
+        [TestMethod("CP-359: Quitar las DLL de WebView2 y Newtonsoft activa el respaldo de las vistas")]
+        public void CP359_RespaldoConDependenciasAusentesEnCopia()
         {
-            if (Environment.GetEnvironmentVariable("EVENTAURA_CP199_HIJO") == "1")
+            if (Environment.GetEnvironmentVariable("EVENTAURA_CP359_HIJO") == "1")
             {
                 ProbarPanelSinDependencias();
                 return;
             }
 
             string raiz = Path.GetDirectoryName(typeof(PruebasInteraccionPantallas).Assembly.Location);
-            string temporal = Path.Combine(Path.GetTempPath(), "EventAura-CP199-" + Guid.NewGuid().ToString("N"));
+            string temporal = Path.Combine(Path.GetTempPath(), "EventAura-CP359-" + Guid.NewGuid().ToString("N"));
             CopiarCarpeta(raiz, temporal);
             try
             {
@@ -199,16 +260,16 @@ namespace Pruebas
                     "Microsoft Visual Studio", "2022", "BuildTools", "Common7", "IDE", "CommonExtensions", "Microsoft", "TestWindow", "vstest.console.exe");
                 Assert.IsTrue(File.Exists(vstest), "Se requiere vstest.console.exe para ejecutar la copia aislada.");
                 var inicio = new ProcessStartInfo(vstest,
-                    "\"" + Path.Combine(temporal, "Pruebas.dll") + "\" /TestCaseFilter:\"FullyQualifiedName~CP199_RespaldoConDependenciasAusentesEnCopia\" /Logger:console;verbosity=normal")
+                    "\"" + Path.Combine(temporal, "Pruebas.dll") + "\" /TestCaseFilter:\"FullyQualifiedName~" + nameof(CP359_RespaldoConDependenciasAusentesEnCopia) + "\" /Logger:console;verbosity=normal")
                 { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true };
-                inicio.EnvironmentVariables["EVENTAURA_CP199_HIJO"] = "1";
+                inicio.EnvironmentVariables["EVENTAURA_CP359_HIJO"] = "1";
                 using (var proceso = Process.Start(inicio))
                 {
                     string salida = proceso.StandardOutput.ReadToEnd();
                     string error = proceso.StandardError.ReadToEnd();
                     Assert.IsTrue(proceso.WaitForExit(120000), "El proceso aislado debe terminar.");
                     Assert.AreEqual(0, proceso.ExitCode, salida + Environment.NewLine + error);
-                    Assert.IsTrue(salida.Contains("CP-199"), salida);
+                    Assert.IsTrue(salida.Contains("CP-359"), salida);
                 }
             }
             finally
@@ -328,6 +389,21 @@ namespace Pruebas
                                 : (Form)Activator.CreateInstance(tipo);
                             PrepararContextoSeleccionado(formulario);
                             formulario.Show();
+                            if (tipo == typeof(Visual.frmReportes))
+                                Assert.IsTrue(formulario.ClientSize.Height <= 790,
+                                    "frmReportes debe respetar el máximo de 790 px de ClientSize fijado en CLAUDE.md.");
+                            if (Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_RESPALDO") == "1")
+                            {
+                                var panelesRespaldo = Descendientes(formulario).OfType<Visual.Web.PanelWeb>().ToArray();
+                                var esperaRespaldo = Stopwatch.StartNew();
+                                while (panelesRespaldo.Any(panel => !panel.InicializacionTerminada) && esperaRespaldo.ElapsedMilliseconds < 10000)
+                                {
+                                    Application.DoEvents();
+                                    Thread.Sleep(20);
+                                }
+                                Assert.IsTrue(panelesRespaldo.All(panel => panel.InicializacionTerminada && !panel.Preparado && !panel.Visible),
+                                    tipo.Name + " debe estar capturada con el respaldo WinForms, sin WebView2 activo.");
+                            }
                             if (formulario is Visual.FrmCompraCliente &&
                                 !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CP357_TAMANO")))
                             {
