@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+<title>Cambiar contraseña</title>
+<link rel="stylesheet" href="sistema.css">
+<script defer src="entrada-puente.js"></script>
+<script defer src="validaciones.js"></script>
+<script defer src="cambiar-clave.js"></script>
+</head>
+<body>
+<main class="pila pila-6 cambio-clave">
+  <p class="n4 secundario">Elegí una contraseña nueva para tu cuenta.</p>
+  <form id="formulario" class="pila pila-5" novalidate>
+    <div class="campo">
+      <label for="mail">Mail</label>
+      <input class="entrada-texto" id="mail" type="email" readonly aria-readonly="true">
+    </div>
+    <div class="campo">
+      <label for="actual">Contraseña actual</label>
+      <div class="entrada-con-ojo"><input class="entrada-texto" id="actual" type="password" autocomplete="current-password" aria-describedby="estado-actual"><button type="button" class="ojo-contrasena" aria-label="Mostrar contraseña" aria-pressed="false" aria-controls="actual" data-visible="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path data-apertura d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle data-apertura cx="12" cy="12" r="3"/><path data-cierre d="M3 3l18 18M10.6 5.2A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7c1.2 0 2.3-.2 3.3-.6"/><path data-cierre d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div>
+      <p class="estado" id="estado-actual" aria-live="polite"></p>
+    </div>
+    <div class="campo">
+      <label for="nueva">Contraseña nueva</label>
+      <div class="entrada-con-ojo"><input class="entrada-texto" id="nueva" type="password" autocomplete="new-password" aria-describedby="fortaleza-texto"><button type="button" class="ojo-contrasena" aria-label="Mostrar contraseña" aria-pressed="false" aria-controls="nueva" data-visible="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path data-apertura d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle data-apertura cx="12" cy="12" r="3"/><path data-cierre d="M3 3l18 18M10.6 5.2A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7c1.2 0 2.3-.2 3.3-.6"/><path data-cierre d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div>
+      <div class="fortaleza" id="fortaleza" data-nivel="bajo" aria-live="polite"><div class="barras" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><p id="fortaleza-texto">Fortaleza: Insuficiente (0/5; mínimo 4)</p></div>
+    </div>
+    <div class="campo">
+      <label for="confirmar">Confirmar contraseña nueva</label>
+      <div class="entrada-con-ojo"><input class="entrada-texto" id="confirmar" type="password" autocomplete="new-password" aria-describedby="estado-confirmar"><button type="button" class="ojo-contrasena" aria-label="Mostrar contraseña" aria-pressed="false" aria-controls="confirmar" data-visible="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path data-apertura d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle data-apertura cx="12" cy="12" r="3"/><path data-cierre d="M3 3l18 18M10.6 5.2A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.8M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7c1.2 0 2.3-.2 3.3-.6"/><path data-cierre d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div>
+      <p class="estado" id="estado-confirmar" aria-live="polite"></p>
+    </div>
+    <div class="aviso aviso-error oculto" id="error" role="alert"></div>
+    <div class="fila-extremos cambio-acciones">
+      <button type="button" class="boton boton-secundario" id="volver">Volver</button>
+      <button type="submit" class="boton boton-primario" id="confirmar-cambio">Confirmar</button>
+    </div>
+    <p class="aviso aviso-neutro oculto" id="exito" role="status"></p>
+  </form>
+</main>
+</body>
+</html>

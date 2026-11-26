@@ -364,6 +364,8 @@ namespace Pruebas
         [TestMethod("CP-211: El menú de Mi cuenta abre el cambio de contraseña con sesión")]
         public void CP211_AccesoCambiarContrasena()
         {
+            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
+                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Bronce);
@@ -376,7 +378,14 @@ namespace Pruebas
                     Assert.IsFalse(cambio.Controls.Find("btnEnviarCodigo", true).Any(), "El menú autenticado debe abrir modo cambio, no recuperación.");
                     Assert.AreEqual(cliente.Mail, cambio.CorreoInicial);
                     Assert.AreEqual(menu, cambio.Retorno);
-                    cambio.Close();
+                    var host = ControlDe<HostFormularioCliente>(menu, "paginafrmCambiarContrase\u00f1a");
+                    Assert.AreEqual(cambio, host.Pantalla, "El cambio debe quedar dentro del shell de Mi cuenta.");
+                    Assert.AreEqual("Cambiar contrase\u00f1a", ControlDe<Label>(menu, "label1").Text);
+                    var web = ControlDe<Visual.Web.PanelWeb>(cambio, "cambioContrasenaWeb");
+                    EsperarVistaWeb(web);
+                    Assert.AreEqual("true", EjecutarVistaWeb(web,
+                        "(()=>document.querySelectorAll('.ojo-contrasena').length===3&&document.querySelector('#mail').readOnly&&document.querySelectorAll('h1').length===0)()"),
+                        "El cambio web debe mostrar tres ojos, mail de solo lectura y el título del shell.");
                     menu.Close();
                 }
             });

@@ -164,11 +164,33 @@ namespace Pruebas
             Assert.AreEqual(titular, GestorSesion.Instance.UsuarioActual.Id);
             Assert.ThrowsException<ReglaNegocioException>(() => GestorUsuarios.Instance.Autenticar(cliente.Mail, "Cliente123"));
             Assert.IsNotNull(GestorUsuarios.Instance.Autenticar(cliente.Mail, "NuevaClave123"));
+            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
+                .GetField("entorno", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
             EnStaSinCambiarDatos(() => {
                 using (var form = new Visual.frmCambiarContraseña())
                 {
                     form.Show();
-                    System.Windows.Forms.Application.DoEvents();
+                    var web = form.Controls.Find("cambioContrasenaWeb", true).OfType<Visual.Web.PanelWeb>().Single();
+                    var espera = System.Diagnostics.Stopwatch.StartNew();
+                    while (!web.InicializacionTerminada && espera.Elapsed < TimeSpan.FromSeconds(15))
+                    {
+                        System.Windows.Forms.Application.DoEvents();
+                        System.Threading.Thread.Sleep(10);
+                    }
+                    Assert.IsTrue(web.InicializacionTerminada, "La vista de cambio o su respaldo deben inicializarse.");
+                    if (web.Preparado && web.Visible)
+                    {
+                        var tarea = web.EjecutarScriptAsync("(()=>document.querySelector('#mail').readOnly&&document.querySelectorAll('input[type=password]').length===3&&document.querySelectorAll('.ojo-contrasena').length===3)()");
+                        espera.Restart();
+                        while (!tarea.IsCompleted && espera.Elapsed < TimeSpan.FromSeconds(10))
+                        {
+                            System.Windows.Forms.Application.DoEvents();
+                            System.Threading.Thread.Sleep(10);
+                        }
+                        Assert.IsTrue(tarea.IsCompleted, "WebView2 debe responder sobre los campos secretos.");
+                        Assert.AreEqual("true", (tarea.GetAwaiter().GetResult() ?? "").Trim('\"'));
+                        return;
+                    }
                     var mostrar = form.Controls.Find("checkbxShowPass", true).Single();
                     Assert.IsTrue(mostrar.TabStop, "El checkbox de visibilidad sigue disponible por teclado en el respaldo WinForms.");
                     Assert.IsTrue(form.ClientRectangle.Contains(mostrar.Bounds), "Mostrar contraseñas debe quedar dentro de la pantalla.");

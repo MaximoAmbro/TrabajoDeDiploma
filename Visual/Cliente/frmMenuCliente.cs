@@ -47,8 +47,11 @@ namespace Visual
             btnCambiarContrasena.Click += (s, e) =>
             {
                 var cambio = new frmCambiarContraseña { CorreoInicial = GestorSesion.Instance.UsuarioActual?.Mail, Retorno = this };
-                cambio.Show();
-                Hide();
+                if (!NavegacionCliente.Navegar(cambio))
+                {
+                    cambio.Show();
+                    Hide();
+                }
             };
             Controls.Add(btnCambiarContrasena);
             btnCambiarContrasena.BringToFront();
@@ -195,6 +198,7 @@ namespace Visual
             if (tipo == "frmEventosCliente" || tipo == "FrmCompraCliente" || tipo == "frmPago" || tipo == "frmConfirmacion") boton = btnEventos;
             else if (tipo == "frmHistorialCliente") boton = btnHistorial;
             else if (tipo == "frmSuscripcion") boton = btnSuscripcion;
+            else if (tipo == "frmCambiarContraseña") boton = btnCambiarContrasena;
             MarcarActivo(boton);
         }
 
@@ -204,7 +208,8 @@ namespace Visual
                 new { Boton = (Button)btnInicio, Texto = "Inicio" },
                 new { Boton = (Button)btnEventos, Texto = "Eventos disponibles" },
                 new { Boton = (Button)btnHistorial, Texto = "Mis entradas" },
-                new { Boton = (Button)btnSuscripcion, Texto = "Mi suscripción" } })
+                new { Boton = (Button)btnSuscripcion, Texto = "Mi suscripción" },
+                new { Boton = (Button)btnCambiarContrasena, Texto = "Cambiar contraseña" } })
             {
                 par.Boton.Text = par.Texto;
                 ((Componentes.BotonTematico)par.Boton).MarcarOpcionActual(par.Boton == boton);

@@ -125,6 +125,8 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
 .marca-ver { display: inline-flex; align-items: center; gap: var(--e2); font: var(--n5); letter-spacing: var(--n5-ls);
     color: var(--texto-secundario); cursor: pointer; width: fit-content; }
 .marca-ver input { width: 16px; height: 16px; margin: 0; accent-color: var(--texto); }
+.cambio-clave { width: min(100%, var(--ancho-columna)); padding: var(--e6); }
+.cambio-acciones { justify-content: flex-end; }
 .rejilla-2 { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--e4); row-gap: var(--e5); }
 .rejilla-2 > .ancho { grid-column: 1 / -1; }
 

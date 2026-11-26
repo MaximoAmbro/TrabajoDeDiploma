@@ -296,7 +296,7 @@ namespace Pruebas
 
         private static void ProbarPanelSinDependencias()
         {
-            string[] paginas = { "catalogo.html", "compra.html", "armador-paquete.html", "datos.html", "datos.html", "gestion.html", "bienvenida.html", "acceso.html" };
+            string[] paginas = { "catalogo.html", "compra.html", "armador-paquete.html", "datos.html", "datos.html", "gestion.html", "bienvenida.html", "acceso.html", "cambiar-clave.html" };
             foreach (string pagina in paginas)
             {
                 using (var panel = new Visual.Web.PanelWeb())

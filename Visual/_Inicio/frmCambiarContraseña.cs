@@ -25,7 +25,9 @@ namespace Visual
         private Control _campoConAviso;
         private int _altoSinAviso;
         private readonly Web.PanelWeb _recuperacionWeb = new Web.PanelWeb { Name = "recuperacionWeb", Visible = false };
+        private readonly Web.PanelWeb _cambioWeb = new Web.PanelWeb { Name = "cambioContrasenaWeb", Visible = false };
         private bool _recuperacionInicializada;
+        private bool _cambioInicializado;
         public frmCambiarContraseña() : this(false) { }
         public frmCambiarContraseña(bool recuperacion)
         {
@@ -45,6 +47,70 @@ namespace Visual
                 _recuperacionWeb.Mensaje += ProcesarMensajeRecuperacion;
                 _recuperacionWeb.Escape += () => btnVolver_Click(this, EventArgs.Empty);
                 Shown += (s, e) => _recuperacionWeb.Cargar("recuperar-clave.html");
+            }
+            else
+            {
+                Controls.Add(_cambioWeb);
+                _cambioWeb.Dock = DockStyle.Fill;
+                barraSuperior.BringToFront();
+                _cambioWeb.VistaLista += MostrarCambioWeb;
+                _cambioWeb.VistaNoDisponible += () => { _cambioWeb.Visible = false; MostrarRespaldoCambioWeb(); };
+                _cambioWeb.Mensaje += ProcesarMensajeCambio;
+                _cambioWeb.Escape += () => { if (!NavegacionCliente.Volver()) btnVolver_Click(this, EventArgs.Empty); };
+                Shown += (s, e) => _cambioWeb.Cargar("cambiar-clave.html");
+            }
+        }
+
+        private void MostrarCambioWeb()
+        {
+            foreach (Control control in Controls)
+                if (control != barraSuperior && control != _cambioWeb) control.Visible = false;
+            _cambioWeb.Visible = true;
+            _cambioWeb.BringToFront();
+            barraSuperior.BringToFront();
+            if (_cambioInicializado) return;
+            _cambioInicializado = true;
+            _cambioWeb.Actualizar(new
+            {
+                mail = CorreoInicial ?? GestorSesion.Instance.UsuarioActual?.Mail,
+                parametros = new
+                {
+                    longitudMinima = GestorParametros.Instance.ObtenerEntero("PWD_LONGITUD_MIN"),
+                    fortalezaMinima = GestorParametros.Instance.ObtenerEntero("PWD_FORTALEZA_MIN")
+                }
+            });
+        }
+
+        private void MostrarRespaldoCambioWeb()
+        {
+            foreach (Control control in Controls)
+                if (control != _cambioWeb) control.Visible = true;
+            barraSuperior.BringToFront();
+        }
+
+        private void ProcesarMensajeCambio(string json)
+        {
+            JObject mensaje;
+            try { mensaje = JObject.Parse(json); }
+            catch { return; }
+            string tipo = (string)mensaje["tipo"];
+            if (tipo == "navegar") { btnVolver_Click(this, EventArgs.Empty); return; }
+            if (tipo != "cambiarContrasena") return;
+            string mail = CorreoInicial ?? GestorSesion.Instance.UsuarioActual?.Mail;
+            try
+            {
+                GestorUsuarios.Instance.CambiarContrasena(mail, (string)mensaje["actual"], (string)mensaje["nueva"]);
+                _cambioWeb.Actualizar(new { estado = "ok", mensaje = "La contraseña se cambió correctamente." });
+            }
+            catch (ReglaNegocioException ex)
+            {
+                string campo = ex.Regla == "RN-02" || ex.Regla == "RN-47" ? "nueva" : "actual";
+                _cambioWeb.Actualizar(new { error = new { campo, mensaje = ex.Message } });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine(ex);
+                _cambioWeb.Actualizar(new { error = new { mensaje = ManejadorErrores.MensajeParaUsuario(ex) } });
             }
         }
 
@@ -263,6 +329,7 @@ namespace Visual
         // --------------------------------------LLAMADO A OTROS FORMULARIOS--------------------------------------
         private void btnVolver_Click(object sender, EventArgs e)
         {
+            if (NavegacionCliente.Volver()) return;
             if (Retorno != null && !Retorno.IsDisposed)
             {
                 Retorno.Show();
