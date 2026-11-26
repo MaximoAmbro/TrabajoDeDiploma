@@ -79,13 +79,14 @@ solo cuando el ticket es una prueba manual, un dato o el Word, que no puede hace
 | T-35 | Claude Code | Poner `docs/disenos/` al día con lo que Codex integró | abierto, baja prioridad |
 | T-36 | Codex | `frmReportes` mide 960 px de alto, por encima del techo de 790 | abierto (26/11) |
 | T-37 | JC | ¿El alta y la recuperación avisan «Vista web no disponible» como las demás? | abierto (26/11) |
-| T-38 | Codex, después JC | **P0, sin reproducir:** la aplicación se cerró sola en el pago, dos veces, sin dejar rastro | abierto: sin commit al 26/11 17:20 |
-| T-39 | Codex | **P0:** una cuenta que sale del alta sin verificar no puede verificar después ni comprar | abierto: sin commit; JC decidió dónde se muestra la ruta de la bandeja |
-| T-40 | Codex | El aviso verde del catálogo tapa los filtros de categoría y fecha | abierto: sin commit |
-| T-41 | Codex | Pago: texto de ayuda con la tarjeta de prueba y barra automática en el vencimiento | abierto: sin commit |
+| T-38 | Codex, después JC | **P0, sin reproducir:** la aplicación se cerró sola en el pago, dos veces, sin dejar rastro | en revisión: registro de cierres en `52cba8e` y `9963ef6`; 10 vueltas el 26/11 sin cierre; falta el reintento de JC |
+| T-39 | Codex | **P0:** una cuenta que sale del alta sin verificar no puede verificar después ni comprar | cerrado: `06a9451`, verificado en ejecución el 26/11 (detalles de título y desplazamiento en T-45) |
+| T-40 | Codex | El aviso verde del catálogo tapa los filtros de categoría y fecha | cerrado: `bb93fd4`, verificado en ejecución el 26/11 |
+| T-41 | Codex | Pago: texto de ayuda con la tarjeta de prueba y barra automática en el vencimiento | cerrado: `6bd5777` y `5d2c7de`, verificado en ejecución el 26/11 |
 | T-42 | Claude Code | Semilla de demostración: 25 eventos futuros, 7 organizadores, un solo agotado | en revisión: hecha y probada el 26/11, sin commitear |
-| T-43 | Codex | Quitar el checkbox «Mostrar contraseña(s)» de las vistas web y dejar solo el ojo | pendiente de verificación en ejecución: `3100733` |
-| T-44 | Codex | Pedidos directos de JC del 26/11 a la tarde: cambio de contraseña dentro de Mi cuenta, suscripción web, armador y agotados al final | pendiente de verificación en ejecución: `47ae5a3`, `a9f9c1b`, `7f76e63`, `e98a958` |
+| T-43 | Codex | Quitar el checkbox «Mostrar contraseña(s)» de las vistas web y dejar solo el ojo | cerrado: `3100733` y `29ccb85`, verificado en ejecución el 26/11 en las cuatro pantallas |
+| T-44 | Codex | Pedidos directos de JC del 26/11 a la tarde: cambio de contraseña dentro de Mi cuenta, suscripción web, armador y agotados al final | verificado en ejecución el 26/11: pasan el cambio de contraseña, la suscripción, el mapa y el catálogo; **el total del armador no se ve** (T-45) |
+| T-45 | Codex | Armador: el total y «Continuar al pago» quedan 300 a 600 px debajo del borde; detalles de la verificación del 26/11 | abierto (26/11) |
 
 ---
 
@@ -840,10 +841,15 @@ tocó y la hora. Si se cierra, `errores.log` y el Visor de eventos dicen por qu�
 **Listo cuando:** o hay una causa con archivo y línea y está corregida, o JC repitió el recorrido dos veces
 con el registro de cierre y no se cerró.
 
-**Commits:** ninguno al 26/11 a las 17:20. Cuando exista, Claude Code repite el recorrido de JC diez veces con
+**Commits:** `52cba8e` y `9963ef6` (registro del origen de cada cierre en `errores.log`, y `SetErrorMode` sin
+`SEM_NOGPFAULTERRORBOX`). Antes, al 26/11 a las 17:20, no había ninguno. Cuando exista, Claude Code repite el recorrido de JC diez veces con
 el registro de cierre (encargo de JC del 26/11).
 
-**Estado:** abierto.
+**Ejecutado el 26/11 a las 18:31, con el registro nuevo** (`docs/VERIFICACION-EJECUCION-2026-11-26-TARDE.md`):
+10 vueltas con el pago abierto 45 s, en `BddEventAura`, con `bronce@` (la contraseña de `test0001` es de JC). No se
+cerró; no hubo evento 1000 ni 1026. `errores.log` registró cada cierre del pago con su `CloseReason`.
+
+**Estado:** en revisión: falta que JC lo repita sin Visual Studio, con su cuenta.
 
 ### T-39 · Codex · P0: una cuenta sin verificar queda trabada
 
@@ -880,7 +886,7 @@ el registro de cierre (encargo de JC del 26/11).
 **Listo cuando,** con una cuenta que salió del alta sin verificar, se puede pedir el código desde el aviso,
 verificar y comprar sin cerrar sesión; y hay una prueba que lo recorre.
 
-**Estado:** abierto.
+**Estado:** cerrado: `06a9451`, verificado en ejecución el 26/11 (`docs/VERIFICACION-EJECUCION-2026-11-26-TARDE.md`). Detalles en T-45.
 
 ### T-40 · Codex · El aviso del catálogo tapa los filtros
 
@@ -892,7 +898,7 @@ cuenta», encima del selector de categoría y del de fecha del catálogo
 **Listo cuando** el aviso no tapa ningún control del catálogo (por ejemplo, debajo de los filtros o en la
 franja del título), con una prueba de geometría como las de CP-357.
 
-**Estado:** abierto.
+**Estado:** cerrado: `bb93fd4`, verificado en ejecución el 26/11.
 
 ### T-41 · Codex · Pago: ayuda con la tarjeta de prueba
 
@@ -908,7 +914,7 @@ escribir `1228` en el vencimiento, el pago responde «El vencimiento debe tener 
 
 **Listo cuando** la línea se ve en «Pago seguro» sin recortes a 96 DPI y `1228` queda como `12/28`.
 
-**Estado:** abierto.
+**Estado:** cerrado: `6bd5777` y `5d2c7de`, verificado en ejecución el 26/11.
 
 ### T-42 · Claude Code · Semilla de demostración con 25 eventos
 
@@ -965,7 +971,11 @@ CP-211 y CP-364 contra el código el 26/11 y corrigió sus filas.
 **Falta:** verificar en ejecución que el ojo está siempre visible, funciona y es un solo control en las cuatro
 pantallas, y que en el alta ya no se ve `checkbxShowPass` encima de la vista web.
 
-**Estado:** pendiente de verificación en ejecución.
+**Verificado en ejecución el 26/11** (`docs/VERIFICACION-EJECUCION-2026-11-26-TARDE.md`): en el acceso, el alta, la recuperación y el
+cambio de contraseña hay 1, 2, 2 y 3 ojos, ninguna casilla visible, y cada ojo deja ver y vuelve a ocultar su campo.
+En el alta ya no aparece `checkbxShowPass`. `29ccb85` («ocultar checkbox sobre la vista web») completó el arreglo.
+
+**Estado:** cerrado.
 
 ### T-44 · Codex · Pedidos directos de JC del 26/11 a la tarde
 
@@ -984,7 +994,36 @@ tarjetas y Enter; el cambio de contraseña sin ventana aparte; el armador en cin
 sectores distintos, con el total a la vista y el mapa orientativo dibujado; el catálogo con 25 eventos y el
 agotado al final. **CP-366 no está en ninguna corrida completa todavía.**
 
-**Estado:** pendiente de verificación en ejecución.
+**Verificado en ejecución el 26/11** (`docs/VERIFICACION-EJECUCION-2026-11-26-TARDE.md`):
+- **pasan:** el cambio de contraseña dentro de «Mi cuenta», sin ventana aparte; «Mi suscripción» con un solo
+  título, dos tarjetas, y Enter que abre la confirmación; el mapa del armador con 1, 2, 3 y 4 sectores, en orden
+  de precio; el catálogo con 25 eventos y el agotado último;
+- **no pasa:** el total del armador a la vista. Va como T-45.
+
+**Estado:** cerrado salvo el armador, que sigue en T-45.
+
+### T-45 · Codex · El total del armador no se ve, y detalles del 26/11
+
+**Qué (ejecutado el 26/11, a 96 DPI, en «Mi cuenta» de 1216 × 799):** desde `7f76e63` («separar servicios y resumen
+del armador»), «Tu paquete» quedó en una sola columna, debajo de Entradas y de Servicios. La vista web va de Y 175
+a 759 de la ventana. En Duki, «Comedia musical en la avenida» y «Festival del río», TOTAL queda en Y 1225 y
+«Continuar al pago» en Y 1326 a 1367; en «Taller de fotografía urbana», en 1059 y 1160. Se ve recién desplazando
+entre 300 y 600 px. La compra se completa, pero quien arma el paquete no ve cuánto suma.
+
+**Qué hacer:** que el total y «Continuar al pago» estén a la vista sin desplazar mientras se eligen las entradas:
+el resumen a la derecha, como antes de `7f76e63`, o una franja fija abajo con el total y el botón.
+
+**Listo cuando,** dentro de «Mi cuenta» a 96 DPI, el total y «Continuar al pago» quedan dentro de la vista en los cinco
+eventos de la tabla del informe, con una prueba de geometría.
+
+**Detalles de la misma verificación, menores:**
+- **Mi suscripción:** **Contratar** queda en Y 712 a 753 con la vista terminando en 727. Se ven 15 de 41 px.
+- **Verificar correo con sesión:** el título de «Mi cuenta» dice «Crear cuenta», el menú marca «Inicio», y la parte
+  visible es el panel lateral; el código queda en Y 930, fuera de la vista.
+- **Después del aviso de RN-43,** el catálogo que queda es el respaldo WinForms, con el título «Armar paquete».
+- **Lista de espera:** después de anotarse, las tarjetas web siguen diciendo «Anotarme en la lista de espera».
+
+**Estado:** abierto.
 
 ---
 

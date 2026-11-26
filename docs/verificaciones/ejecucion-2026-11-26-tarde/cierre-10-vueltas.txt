@@ -1,0 +1,25 @@
+﻿18:30:45 Visual.exe pid 20400
+18:32:16 vuelta 1: pago abierto 45 s sin cierre; cancelado
+18:33:27 vuelta 2: pago abierto 45 s sin cierre; cancelado
+18:34:38 vuelta 3: pago abierto 45 s sin cierre; cancelado
+18:35:49 vuelta 4: pago abierto 45 s sin cierre; cancelado
+18:37:00 vuelta 5: pago abierto 45 s sin cierre; cancelado
+18:38:10 vuelta 6: pago abierto 45 s sin cierre; cancelado
+18:39:21 vuelta 7: pago abierto 45 s sin cierre; cancelado
+18:40:32 vuelta 8: pago abierto 45 s sin cierre; cancelado
+18:41:43 vuelta 9: pago abierto 45 s sin cierre; cancelado
+18:42:54 vuelta 10: pago abierto 45 s sin cierre; cancelado
+proceso vivo al final: True
+--- errores.log nuevo:
+2026-11-26T18:32:13.1784021-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T18:33:24.1424616-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T18:34:35.0694921-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T18:35:46.0378686-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T18:36:57.0025940-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T18:38:07.9670029-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T18:39:18.9230032-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T18:40:29.9043190-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T18:41:40.8396416-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T18:42:51.7992363-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+
+--- eventos 1000/1026 desde el inicio:
