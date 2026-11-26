@@ -42,7 +42,7 @@
     transition: border-color var(--transicion), box-shadow var(--transicion); }
 .sector::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--color-sector); }
 .sector:hover { border-color: var(--texto-secundario); }
-.sector.elegido { border-color: var(--primario); box-shadow: inset 0 0 0 1px var(--primario); }
+.sector.elegido { border-color: var(--seleccion); box-shadow: inset 0 0 0 1px var(--seleccion); }
 .sector.agotado { background: var(--fondo); }
 .sector.agotado::before { background: var(--borde); }
 .sector .precio { font: var(--n3); letter-spacing: var(--n3-ls); font-variant-numeric: tabular-nums; }
@@ -71,7 +71,7 @@
 .interruptor:active { background: var(--fondo); }
 .interruptor input { position: absolute; opacity: 0; pointer-events: none; }
 .interruptor:has(input:focus-visible) { outline: 2px solid var(--primario); outline-offset: 2px; }
-.interruptor:has(input:checked) { border-color: var(--primario); box-shadow: inset 0 0 0 1px var(--primario); }
+.interruptor:has(input:checked) { border-color: var(--seleccion); box-shadow: inset 0 0 0 1px var(--seleccion); }
 .interruptor .fuerte { font-weight: 600; }
 .interruptor .precio { font-variant-numeric: tabular-nums; color: var(--texto-secundario); }
 .interruptor:has(input:checked) .precio { color: var(--texto); font-weight: 600; }
