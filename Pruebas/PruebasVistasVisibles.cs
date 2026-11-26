@@ -421,5 +421,49 @@ namespace Pruebas
                 }
             });
         }
+
+        // CP-368 - RNF-03: la regla RN-43 debe reservar una fila y mantener libres categoría y fecha.
+        [TestMethod("CP-368: Aviso de correo no verificado desplaza el catálogo sin cubrir filtros")]
+        public void CP368_AvisoNoCubreFiltrosCatalogo()
+        {
+            EnSta(() =>
+            {
+                var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
+                EjecutarSqlAviso("UPDATE dbo.Usuario SET CorreoVerificado=0 WHERE ID=@ID", "@ID", cliente.Id);
+                var evento = Fake.EventoPublicado(1000m, 2);
+                using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id, NombreUsuario = "Cliente" })
+                using (var catalogo = new Visual.frmEventosCliente { IDUsuario = cliente.Id, NombreUsuario = "Cliente" })
+                {
+                    Mostrar(menu);
+                    Assert.IsTrue(Visual.NavegacionCliente.AbrirDesdeMenu(catalogo));
+                    try { GestorPaquetes.Instance.Nuevo(evento.Id, cliente.Id); Assert.Fail("RN-43 debe impedir armar un paquete."); }
+                    catch (ReglaNegocioException ex) { Visual.Avisos.Regla(catalogo, "Compra", ex); }
+
+                    var aviso = ControlDe<Panel>(menu, "avisoClienteEnLinea");
+                    var filtros = ControlDe<Panel>(menu, "pnlBusqueda");
+                    var categoria = ControlDe<ComboBox>(menu, "cmbCategoria");
+                    var fecha = ControlDe<DateTimePicker>(menu, "dtpDesde");
+                    Rectangle rectAviso = aviso.RectangleToScreen(aviso.ClientRectangle);
+                    Assert.IsTrue(aviso.Visible, "El aviso RN-43 debe permanecer visible para conducir a la verificación.");
+                    Assert.IsFalse(rectAviso.IntersectsWith(filtros.RectangleToScreen(filtros.ClientRectangle)), "El aviso debe empujar el catálogo debajo del título.");
+                    Assert.IsFalse(rectAviso.IntersectsWith(categoria.RectangleToScreen(categoria.ClientRectangle)), "El aviso no debe tapar categoría.");
+                    Assert.IsFalse(rectAviso.IntersectsWith(fecha.RectangleToScreen(fecha.ClientRectangle)), "El aviso no debe tapar fecha.");
+                    Assert.IsTrue(filtros.RectangleToScreen(filtros.ClientRectangle).Top >= rectAviso.Bottom,
+                        "Los filtros deben comenzar debajo de la fila reservada al aviso.");
+                    Assert.IsTrue(ControlDe<Button>(menu, "btnVerificarCorreoSesion").Visible, "RN-43 debe ofrecer la acción Verificar correo.");
+                }
+            });
+        }
+
+        private static void EjecutarSqlAviso(string sql, params object[] parametros)
+        {
+            using (var conexion = new Microsoft.Data.SqlClient.SqlConnection(BaseDePrueba.CadenaDePrueba()))
+            using (var comando = new Microsoft.Data.SqlClient.SqlCommand(sql, conexion))
+            {
+                for (int i = 0; i < parametros.Length; i += 2) comando.Parameters.AddWithValue(parametros[i].ToString(), parametros[i + 1]);
+                conexion.Open(); comando.ExecuteNonQuery();
+            }
+        }
     }
 }
