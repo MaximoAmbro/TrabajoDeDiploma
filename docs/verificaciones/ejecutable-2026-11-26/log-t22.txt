@@ -1,0 +1,43 @@
+Modo t22 · 26/11/2026 13:24:32 · carpeta C:\Users\JUANCR~1\AppData\Local\Temp\claude\9c849513f9e06241\56debd5b-5ae8-4bde-8bf9-4341c8042ddd\scratchpad\verif\sinitext\
+DLL presentes: Microsoft.Web.WebView2.Core.dll=sí, Microsoft.Web.WebView2.WinForms.dll=sí, Newtonsoft.Json.dll=sí, runtimes\win-x64\native\WebView2Loader.dll=sí, itext.kernel.dll=NO
+
+-- sesión: admin@eventaura.com
+
+== t22-1-generar
+  avisoSistema=«(ninguno)» · estadoEnvioTelefono=«»
+  captura: 01-t22-1-generar.png (1102×992)
+  errores.log: sin entradas nuevas
+  botones: Volver · Exportar PDF · Generar
+
+== t22-2-exportar
+  avisoSistema=«(ninguno)» · estadoEnvioTelefono=«»
+  captura: 02-t22-2-exportar.png (1102×992)
+  errores.log: ENTRADAS NUEVAS:
+2026-11-26T13:24:41.1049034-03:00 System.IO.FileNotFoundException
+   en Visual.ExportadorPDF..cctor()
+
+
+== t22-3-compra
+
+-- sesión: plata@eventaura.com
+  armador web visible: True
+  sumar Campo: 3
+  continuar: "deshabilitado antes=false"
+  seguir sin seguro: (sin respuesta)
+  captura: 03-t22-3a-pago.png (722×547)
+  confirmación: Base entradas            $ 25.000,00 Desc. Plata 5,0 %        -$ 1.250,00 Subtotal entradas        $ 23.750,00 Servicios                     $ 0,00 Cargo por servicio        $ 3.562,50 Seguro                        $ 0,00  TOTAL PAGADO             $ 27.312,50  Tarjeta •••• 1111  | TOTAL $ 27.312,50 | Recuperación: Mis entradas · Pedido EA-005846 | El pago quedó confirmado como pedido EA-005846, pero no pudimos crear el PDF. Tus entradas y sus códigos se conservan en Mis entradas; podés consultar allí los códigos QR y recuperar el ticket. Revisá el acceso a Documentos y las dependencias del programa. | Pedido EA-005846 | ¡Compra confirmada!
+  captura: 04-t22-3b-confirmacion.png (762×575)
+  compras de Paula: 4 → 5 · última: 5846 Confirmada
+  archivos en «A1.Tickets EVENTAURA»: 12 → 12
+  errores.log: sin entradas nuevas
+  captura: 05-cuadro.png (382×147)
+  captura: 06-cuadro.png (382×147)
+  captura: 07-cuadro.png (382×147)
+  captura: 08-cuadro.png (382×147)
+  captura: 09-cuadro.png (382×147)
+  captura: 10-cuadro.png (382×147)
+  captura: 11-cuadro.png (382×147)
+  captura: 12-cuadro.png (382×147)
+  captura: 13-cuadro.png (382×147)
+  captura: 14-cuadro.png (382×147)
+Fin.

@@ -1,0 +1,156 @@
+Modo pantallas · 26/11/2026 13:17:17 · carpeta C:\Users\JUANCR~1\AppData\Local\Temp\claude\9c849513f9e06241\56debd5b-5ae8-4bde-8bf9-4341c8042ddd\scratchpad\verif\completa\
+DLL presentes: Microsoft.Web.WebView2.Core.dll=sí, Microsoft.Web.WebView2.WinForms.dll=sí, Newtonsoft.Json.dll=sí, runtimes\win-x64\native\WebView2Loader.dll=sí, itext.kernel.dll=sí
+
+== 01-bienvenida
+  ventana: frmBienvenida «Bienvenida» cliente 1100×720 en {X=402,Y=136,Width=1116,Height=759}
+    vista web bienvenidaWeb: VISIBLE, preparada=True, terminada=True, 1100×720
+    botones visibles (0): 
+  captura: 01-01-bienvenida-frmBienvenida.png (1102×752)
+  errores.log: sin entradas nuevas
+
+== 02-acceso
+  ventana: frmInicio «Iniciar sesión» cliente 1100×720 en {X=407,Y=141,Width=1106,Height=749}
+    vista web accesoWeb: VISIBLE, preparada=True, terminada=True, 1100×720
+    botones visibles (0): 
+  captura: 02-02-acceso-frmInicio.png (1102×747)
+  errores.log: sin entradas nuevas
+
+== 03-alta
+  ventana: frmCrearUsuario «Crear cuenta» cliente 1100×720 en {X=407,Y=141,Width=1106,Height=749}
+    vista web altaCuentaWeb: VISIBLE, preparada=True, terminada=True, 1036×596
+    botones visibles (0): 
+  captura: 03-03-alta-frmCrearUsuario.png (1102×747)
+  errores.log: sin entradas nuevas
+
+== 04-recuperacion
+  ventana: frmCambiarContraseña «Recuperar contraseña» cliente 1100×720 en {X=407,Y=141,Width=1106,Height=749}
+    vista web recuperacionWeb: VISIBLE, preparada=True, terminada=True, 1036×596
+    botones visibles (0): 
+  captura: 04-04-recuperacion-frmCambiarContraseña.png (1102×747)
+  errores.log: sin entradas nuevas
+
+-- sesión: plata@eventaura.com
+
+== 05-catalogo
+  ventana: frmMenuCliente «Mi cuenta» cliente 1200×760 en {X=357,Y=121,Width=1206,Height=789}
+    vista web catalogoWeb: VISIBLE, preparada=True, terminada=True, 936×384
+    botones visibles (12): Ver entradas · Volver · Ver como tabla · Buscar · Limpiar · Inicio · Eventos disponibles · Mis entradas · Mi suscripción · Solicitar ser Organizador · Cambiar contraseña · Cerrar sesión
+    fuera del área cliente (2): BotonSecundario «Volver» {X=328,Y=742,Width=160,Height=36} | BotonSecundario «Ver como tabla» {X=496,Y=742,Width=160,Height=36}
+  captura: 05-05-catalogo-frmMenuCliente.png (1202×787)
+  ventana: frmEventosCliente «Eventos disponibles» cliente 1000×680 en {X=0,Y=0,Width=1000,Height=680}
+    vista web catalogoWeb: VISIBLE, preparada=True, terminada=True, 936×384
+    botones visibles (5): Ver entradas · Volver · Ver como tabla · Buscar · Limpiar
+  captura: 06-05-catalogo-frmEventosCliente.png (1000×680)
+  errores.log: sin entradas nuevas
+
+== 06a-ficha-del-evento
+  (abierta con el último «Ver entradas» del catálogo)
+  ventana: frmMenuCliente «Mi cuenta» cliente 1200×760 en {X=357,Y=121,Width=1206,Height=789}
+    vista web catalogoWeb: oculta, preparada=True, terminada=True, 936×384
+    botones visibles (9): Volver a eventos · Armar paquete · Inicio · Eventos disponibles · Mis entradas · Mi suscripción · Solicitar ser Organizador · Cambiar contraseña · Cerrar sesión
+    fuera del área cliente (2): BotonSecundario «Volver a eventos» {X=320,Y=744,Width=200,Height=36} | BotonPrimario «Armar paquete» {X=1024,Y=744,Width=200,Height=36}
+  captura: 07-06a-ficha-del-evento-frmMenuCliente.png (1202×787)
+  ventana: frmEventosCliente «Eventos disponibles» cliente 1000×680 en {X=0,Y=0,Width=1000,Height=680}
+    vista web catalogoWeb: oculta, preparada=True, terminada=True, 936×384
+    botones visibles (2): Volver a eventos · Armar paquete
+  captura: 08-06a-ficha-del-evento-frmEventosCliente.png (1000×680)
+  errores.log: sin entradas nuevas
+
+== 06-armador
+  (abierta con «Armar paquete» de la ficha)
+  ventana: frmMenuCliente «Mi cuenta» cliente 1200×760 en {X=357,Y=121,Width=1206,Height=789}
+    vista web resumenCompraWeb: VISIBLE, preparada=True, terminada=True, 1280×720
+    grilla visible dgvSectores: 3 filas, 572×144
+    botones visibles (8): Ver servicios · Inicio · Eventos disponibles · Mis entradas · Mi suscripción · Solicitar ser Organizador · Cambiar contraseña · Cerrar sesión
+    fuera del área cliente (2): IndicadorPasos «» {X=296,Y=144,Width=1232,Height=36} | EtiquetaTitulo «Duki en Rosario» {X=296,Y=188,Width=1232,Height=38}
+  captura: 09-06-armador-frmMenuCliente.png (1202×787)
+  ventana: FrmCompraCliente «Armar paquete» cliente 1280×720 en {X=0,Y=0,Width=1280,Height=720}
+    vista web resumenCompraWeb: VISIBLE, preparada=True, terminada=True, 1280×720
+    grilla visible dgvSectores: 3 filas, 572×144
+    botones visibles (1): Ver servicios
+  captura: 10-06-armador-FrmCompraCliente.png (1280×720)
+  errores.log: sin entradas nuevas
+
+== 07-historial
+  ventana: frmMenuCliente «Mi cuenta» cliente 1200×760 en {X=357,Y=121,Width=1206,Height=789}
+    vista web historialWeb: VISIBLE, preparada=True, terminada=True, 936×312
+    botones visibles (9): Devolver · Volver · Inicio · Eventos disponibles · Mis entradas · Mi suscripción · Solicitar ser Organizador · Cambiar contraseña · Cerrar sesión
+    fuera del área cliente (1): BotonPrimario «Devolver» {X=1000,Y=652,Width=240,Height=36}
+  captura: 11-07-historial-frmMenuCliente.png (1202×787)
+  ventana: frmHistorialCliente «Mis eventos» cliente 1000×680 en {X=0,Y=0,Width=1000,Height=680}
+    vista web historialWeb: VISIBLE, preparada=True, terminada=True, 936×312
+    botones visibles (2): Devolver · Volver
+  captura: 12-07-historial-frmHistorialCliente.png (1000×680)
+  errores.log: sin entradas nuevas
+
+-- sesión: organizador@eventaura.com
+
+== 08-mis-locales
+  ventana: frmMisLocales «Mis locales» cliente 1100×720 en {X=402,Y=136,Width=1116,Height=759}
+    vista web localesWeb: VISIBLE, preparada=True, terminada=True, 1036×280
+    grilla visible dgvLocales: 1 filas, 1036×280
+    botones visibles (2): Ver eventos · Volver
+  captura: 13-08-mis-locales-frmMisLocales.png (1102×752)
+  errores.log: sin entradas nuevas
+
+== 09-eventos-del-local
+  ventana: frmMenuPropietario «Organizador» cliente 1000×720 en {X=457,Y=141,Width=1006,Height=749}
+    botones visibles (8): Inicio · Mis locales · Registrar local · Control de ingreso · Listas de espera · Reportes · Cambiar contraseña · Cerrar sesión
+  captura: 14-09-eventos-del-local-frmMenuPropietario.png (1002×747)
+  ventana: frmEventosLocal «Eventos del local» cliente 1100×720 en {X=402,Y=136,Width=1116,Height=759}
+    vista web eventosLocalWeb: VISIBLE, preparada=True, terminada=True, 1036×268
+    grilla visible dgvEventos: 3 filas, 1036×268
+    botones visibles (4): Agregar Evento · Administrar Evento · Eliminar evento · Volver
+  captura: 15-09-eventos-del-local-frmEventosLocal.png (1102×752)
+  errores.log: sin entradas nuevas
+
+== 10-control-ingreso
+  ventana: frmMenuPropietario «Organizador» cliente 1000×720 en {X=457,Y=141,Width=1006,Height=749}
+    botones visibles (8): Inicio · Mis locales · Registrar local · Control de ingreso · Listas de espera · Reportes · Cambiar contraseña · Cerrar sesión
+  captura: 16-10-control-ingreso-frmMenuPropietario.png (1002×747)
+  ventana: frmControlIngreso «Control de ingreso» cliente 1100×720 en {X=402,Y=136,Width=1116,Height=759}
+    vista web controlIngresoWeb: VISIBLE, preparada=True, terminada=True, 1052×304
+    botones visibles (1): Volver
+  captura: 17-10-control-ingreso-frmControlIngreso.png (1102×752)
+  errores.log: sin entradas nuevas
+
+== 11-reportes
+  ventana: frmReportes «Reportes» cliente 1100×960 en {X=402,Y=16,Width=1116,Height=999}
+    vista web reporteWeb: VISIBLE, preparada=True, terminada=True, 788×384
+    botones visibles (3): Volver · Exportar PDF · Generar
+  captura: 18-11-reportes-frmReportes.png (1102×992)
+  errores.log: sin entradas nuevas
+
+-- sesión: admin@eventaura.com
+
+== 12-panel-administrador
+  ventana: frmMenuAdministrador «Administración de plataforma» cliente 1100×720 en {X=402,Y=136,Width=1116,Height=759}
+    vista web panelAdministradorWeb: VISIBLE, preparada=True, terminada=True, 796×544
+    botones visibles (8): Inicio · Reportes globales · Crear administrador · Registro de auditoría · Solicitudes de organizador · Eventos en revisión · Cambiar contraseña · Cerrar sesión
+  captura: 19-12-panel-administrador-frmMenuAdministrador.png (1102×752)
+  errores.log: sin entradas nuevas
+
+== 13-auditoria
+  ventana: frmMenuAdministrador «Administración de plataforma» cliente 1100×720 en {X=402,Y=136,Width=1116,Height=759}
+    vista web panelAdministradorWeb: VISIBLE, preparada=True, terminada=True, 796×544
+    botones visibles (8): Inicio · Reportes globales · Crear administrador · Registro de auditoría · Solicitudes de organizador · Eventos en revisión · Cambiar contraseña · Cerrar sesión
+  captura: 20-13-auditoria-frmMenuAdministrador.png (1102×752)
+  ventana: frmAuditoria «Registro de auditoría» cliente 1100×784 en {X=52,Y=52,Width=1116,Height=823}
+    vista web auditoriaWeb: VISIBLE, preparada=True, terminada=True, 1036×521
+    botones visibles (1): Buscar
+  captura: 21-13-auditoria-frmAuditoria.png (1102×816)
+  errores.log: sin entradas nuevas
+
+== 14-revision-eventos
+  ventana: frmMenuAdministrador «Administración de plataforma» cliente 1100×720 en {X=402,Y=136,Width=1116,Height=759}
+    vista web panelAdministradorWeb: VISIBLE, preparada=True, terminada=True, 796×544
+    botones visibles (8): Inicio · Reportes globales · Crear administrador · Registro de auditoría · Solicitudes de organizador · Eventos en revisión · Cambiar contraseña · Cerrar sesión
+  captura: 22-14-revision-eventos-frmMenuAdministrador.png (1102×752)
+  ventana: frmRevisarEventos «Eventos en revisión» cliente 1100×784 en {X=402,Y=104,Width=1116,Height=823}
+    vista web revisionEventosWeb: VISIBLE, preparada=True, terminada=True, 1052×214
+    botones visibles (3): Aprobar y publicar · Rechazar y devolver · Cerrar
+  captura: 23-14-revision-eventos-frmRevisarEventos.png (1102×816)
+  errores.log: sin entradas nuevas
+  EXCEPCIÓN AL ABRIR: ObjectDisposedException: No se puede obtener acceso al objeto desechado.
+Nombre del objeto: 'DatoPanel'.
+Fin.

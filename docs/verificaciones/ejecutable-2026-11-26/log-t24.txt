@@ -1,0 +1,17 @@
+Modo t24 · 26/11/2026 13:26:28 · carpeta C:\Users\JUANCR~1\AppData\Local\Temp\claude\9c849513f9e06241\56debd5b-5ae8-4bde-8bf9-4341c8042ddd\scratchpad\verif\completa\
+DLL presentes: Microsoft.Web.WebView2.Core.dll=sí, Microsoft.Web.WebView2.WinForms.dll=sí, Newtonsoft.Json.dll=sí, runtimes\win-x64\native\WebView2Loader.dll=sí, itext.kernel.dll=sí
+
+-- sesión: organizador@eventaura.com
+  selector: Custom «dd/MM/yyyy HH:mm» valor inicial 26/11/2026 14:00:00 (ahora 13:26:32)
+  captura: 01-t24-1-agregar-evento.png (722×519)
+  controles: TextBox:txtNombre | DateTimePicker:dtEvento | ComboBox:cmbCategoria | DateTimePicker:dtpFinPreventa
+  elegido en pantalla: 29/11/2026 21:00
+  captura: 02-t24-2-con-hora.png (722×519)
+  guardado en la base: 160 · Verificacion T24 132632 · 2026-11-29 21:00:00 · Borrador
+  ventana: frmEventosLocal «Eventos del local» cliente 1100×720 en {X=402,Y=136,Width=1116,Height=759}
+    vista web eventosLocalWeb: VISIBLE, preparada=True, terminada=True, 1036×268
+    texto «avisoSistema»: Evento guardado como borrador. Agregale un sector para publicarlo.
+    grilla visible dgvEventos: 4 filas, 1036×268
+    botones visibles (4): Agregar Evento · Administrar Evento · Eliminar evento · Volver
+  captura: 03-t24-3-despues.png (1102×752)
+  errores.log: sin entradas nuevas

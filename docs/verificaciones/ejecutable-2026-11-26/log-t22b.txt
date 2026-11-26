@@ -1,0 +1,18 @@
+Modo t22 · 26/11/2026 13:25:48 · carpeta C:\Users\JUANCR~1\AppData\Local\Temp\claude\9c849513f9e06241\56debd5b-5ae8-4bde-8bf9-4341c8042ddd\scratchpad\verif\sinitext\
+DLL presentes: Microsoft.Web.WebView2.Core.dll=sí, Microsoft.Web.WebView2.WinForms.dll=sí, Newtonsoft.Json.dll=sí, runtimes\win-x64\native\WebView2Loader.dll=sí, itext.kernel.dll=NO
+
+-- sesión: admin@eventaura.com
+
+== t22-1-generar
+  avisoSistema=«(ninguno)» · estadoEnvioTelefono=«»
+  captura: 01-t22-1-generar.png (1102×992)
+  errores.log: sin entradas nuevas
+  botones: Volver · Exportar PDF · Generar
+
+== t22-2-exportar
+  avisoSistema=«Ocurrió un error inesperado y la operación no se completó. Si se repite, avisá al administrador.» · estadoEnvioTelefono=«»
+  captura: 02-t22-2-exportar.png (1102×992)
+  errores.log: ENTRADAS NUEVAS:
+2026-11-26T13:25:56.9051348-03:00 System.IO.FileNotFoundException
+   en Visual.ExportadorPDF..cctor()
+

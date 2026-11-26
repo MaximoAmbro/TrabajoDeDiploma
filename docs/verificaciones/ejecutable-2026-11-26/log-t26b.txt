@@ -1,0 +1,10 @@
+Modo t26b · 26/11/2026 13:28:33 · carpeta C:\Users\JUANCR~1\AppData\Local\Temp\claude\9c849513f9e06241\56debd5b-5ae8-4bde-8bf9-4341c8042ddd\scratchpad\verif\completa\
+DLL presentes: Microsoft.Web.WebView2.Core.dll=sí, Microsoft.Web.WebView2.WinForms.dll=sí, Newtonsoft.Json.dll=sí, runtimes\win-x64\native\WebView2Loader.dll=sí, itext.kernel.dll=sí
+
+-- sesión: plata@eventaura.com
+  menú: borde FixedSingle, maximizar=False, mínimo {Width=1206, Height=789}, máximo {Width=0, Height=0}, cliente {Width=1200, Height=760}
+  ficha: «Armar paquete» en {X=1024,Y=744,Width=200,Height=36} · área cliente {Width=1200, Height=760} · contenedores con AutoScroll: ninguno
+  captura: 01-t26b-1-ficha.png (1202×787)
+  armador web en {X=272,Y=144,Width=1280,Height=720} · área cliente {Width=1200, Height=760}
+  dentro del armador: "{\"vista\":\"1280x720\",\"continuar\":\"930,602 286x40\",\"total\":\"930,510 286x46\",\"scrollAncho\":1280,\"scrollAlto\":720}"
+  captura: 02-t26b-2-armador.png (1202×787)

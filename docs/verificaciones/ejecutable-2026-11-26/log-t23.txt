@@ -1,0 +1,38 @@
+Modo t23 · 26/11/2026 13:22:18 · carpeta C:\Users\JUANCR~1\AppData\Local\Temp\claude\9c849513f9e06241\56debd5b-5ae8-4bde-8bf9-4341c8042ddd\scratchpad\verif\completa\
+DLL presentes: Microsoft.Web.WebView2.Core.dll=sí, Microsoft.Web.WebView2.WinForms.dll=sí, Newtonsoft.Json.dll=sí, runtimes\win-x64\native\WebView2Loader.dll=sí, itext.kernel.dll=sí
+
+-- sesión: plata@eventaura.com
+
+== t23-1-cuit-invalido
+  avisoSistema=«El CUIT no es válido. Revisá sus 11 dígitos y el dígito verificador.» · estadoEnvioTelefono=«»
+  captura: 01-t23-1-cuit-invalido.png (902×655)
+  errores.log: sin entradas nuevas
+
+== t23-extra-cbu-invalido
+  avisoSistema=«Ingresá un CBU válido de 22 dígitos o un alias bancario de 6 a 20 caracteres.» · estadoEnvioTelefono=«»
+  captura: 02-t23-extra-cbu-invalido.png (902×655)
+  errores.log: sin entradas nuevas
+
+== t23-2-telefono-sin-confirmar
+  avisoSistema=«Verificá este teléfono con el código enviado antes de presentar la solicitud.» · estadoEnvioTelefono=«»
+  captura: 03-t23-2-telefono-sin-confirmar.png (902×655)
+  errores.log: sin entradas nuevas
+
+== t23-3a-enviar-codigo
+  avisoSistema=«(ninguno)» · estadoEnvioTelefono=«Si el teléfono es válido, guardamos un SMS simulado fuera de EventAura. Abrí el archivo del mensaje para continuar.»
+  captura: 04-t23-3a-enviar-codigo.png (902×655)
+  errores.log: sin entradas nuevas
+
+== t23-3-codigo-incorrecto
+  avisoSistema=«El código no es válido o venció. Solicitá uno nuevo.» · estadoEnvioTelefono=«Si el teléfono es válido, guardamos un SMS simulado fuera de EventAura. Abrí el archivo del mensaje para continuar.»
+  captura: 05-t23-3-codigo-incorrecto.png (902×655)
+  errores.log: sin entradas nuevas
+
+-- sesión: admin@eventaura.com
+  solicitudes pendientes en la lista: lista 1, elegida 0
+
+== t23-4-rechazo-sin-motivo
+  avisoSistema=«Escribí el motivo del rechazo.» · estadoEnvioTelefono=«»
+  captura: 06-t23-4-rechazo-sin-motivo.png (1182×693)
+  errores.log: sin entradas nuevas
+Fin.

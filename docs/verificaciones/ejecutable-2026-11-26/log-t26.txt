@@ -1,0 +1,48 @@
+Modo t26 · 26/11/2026 13:19:10 · carpeta C:\Users\JUANCR~1\AppData\Local\Temp\claude\9c849513f9e06241\56debd5b-5ae8-4bde-8bf9-4341c8042ddd\scratchpad\verif\completa\
+DLL presentes: Microsoft.Web.WebView2.Core.dll=sí, Microsoft.Web.WebView2.WinForms.dll=sí, Newtonsoft.Json.dll=sí, runtimes\win-x64\native\WebView2Loader.dll=sí, itext.kernel.dll=sí
+
+-- sesión: plata@eventaura.com
+
+== t26-1-inicio
+  ventana: frmMenuCliente «Mi cuenta» cliente 1200×760 en {X=357,Y=121,Width=1206,Height=789}
+    botones visibles (10): Ver eventos · Explorar eventos · Ver entradas · Inicio · Eventos disponibles · Mis entradas · Mi suscripción · Solicitar ser Organizador · Cambiar contraseña · Cerrar sesión
+  captura: 01-t26-1-inicio-frmMenuCliente.png (1202×787)
+  errores.log: sin entradas nuevas
+
+== t26-2-catalogo
+  ventana: frmMenuCliente «Mi cuenta» cliente 1200×760 en {X=357,Y=121,Width=1206,Height=789}
+    vista web catalogoWeb: VISIBLE, preparada=True, terminada=True, 936×384
+    botones visibles (12): Ver entradas · Volver · Ver como tabla · Buscar · Limpiar · Inicio · Eventos disponibles · Mis entradas · Mi suscripción · Solicitar ser Organizador · Cambiar contraseña · Cerrar sesión
+    fuera del área cliente (2): BotonSecundario «Volver» {X=328,Y=742,Width=160,Height=36} | BotonSecundario «Ver como tabla» {X=496,Y=742,Width=160,Height=36}
+  captura: 02-t26-2-catalogo-frmMenuCliente.png (1202×787)
+  ventana: frmEventosCliente «Eventos disponibles» cliente 1000×680 en {X=0,Y=0,Width=1000,Height=680}
+    vista web catalogoWeb: VISIBLE, preparada=True, terminada=True, 936×384
+    botones visibles (5): Ver entradas · Volver · Ver como tabla · Buscar · Limpiar
+  captura: 03-t26-2-catalogo-frmEventosCliente.png (1000×680)
+  errores.log: sin entradas nuevas
+  título del menú: «Eventos disponibles»
+  vista: catalogoWeb en {X=304,Y=348,Width=936,Height=384} de {Width=1200, Height=760}
+  medición dentro de la página: "{\"vista\":\"936x384\",\"botones\":2,\"alturas\":[\"244-284\",\"244-284\"],\"primeraFilaCompleta\":true,\"scrollAlto\":384}"
+
+== t26-3-compra
+  ventana: frmMenuCliente «Mi cuenta» cliente 1200×760 en {X=357,Y=121,Width=1206,Height=789}
+    vista web catalogoWeb: VISIBLE, preparada=True, terminada=True, 936×384
+    botones visibles (12): Ver entradas · Volver · Ver como tabla · Buscar · Limpiar · Inicio · Eventos disponibles · Mis entradas · Mi suscripción · Solicitar ser Organizador · Cambiar contraseña · Cerrar sesión
+    fuera del área cliente (2): BotonSecundario «Volver» {X=328,Y=742,Width=160,Height=36} | BotonSecundario «Ver como tabla» {X=496,Y=742,Width=160,Height=36}
+  captura: 04-t26-3-compra-frmMenuCliente.png (1202×787)
+  ventana: frmEventosCliente «Eventos disponibles» cliente 1000×680 en {X=0,Y=0,Width=1000,Height=680}
+    vista web catalogoWeb: VISIBLE, preparada=True, terminada=True, 936×384
+    botones visibles (5): Ver entradas · Volver · Ver como tabla · Buscar · Limpiar
+  captura: 05-t26-3-compra-frmEventosCliente.png (1000×680)
+  errores.log: sin entradas nuevas
+  título del menú después de «Ver entradas»: «Eventos disponibles»
+  ventana: frmMenuCliente «Mi cuenta» cliente 1200×760 en {X=357,Y=121,Width=1206,Height=789}
+    vista web catalogoWeb: oculta, preparada=True, terminada=True, 936×384
+    botones visibles (9): Volver a eventos · Armar paquete · Inicio · Eventos disponibles · Mis entradas · Mi suscripción · Solicitar ser Organizador · Cambiar contraseña · Cerrar sesión
+    fuera del área cliente (2): BotonSecundario «Volver a eventos» {X=320,Y=744,Width=200,Height=36} | BotonPrimario «Armar paquete» {X=1024,Y=744,Width=200,Height=36}
+  captura: 06-t26-3-compra-frmMenuCliente.png (1202×787)
+  ventana: frmEventosCliente «Eventos disponibles» cliente 1000×680 en {X=0,Y=0,Width=1000,Height=680}
+    vista web catalogoWeb: oculta, preparada=True, terminada=True, 936×384
+    botones visibles (2): Volver a eventos · Armar paquete
+  captura: 07-t26-3-compra-frmEventosCliente.png (1000×680)
+Fin.

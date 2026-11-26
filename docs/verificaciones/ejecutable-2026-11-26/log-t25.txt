@@ -1,0 +1,11 @@
+Modo t25 · 26/11/2026 13:26:39 · carpeta C:\Users\JUANCR~1\AppData\Local\Temp\claude\9c849513f9e06241\56debd5b-5ae8-4bde-8bf9-4341c8042ddd\scratchpad\verif\completa\
+DLL presentes: Microsoft.Web.WebView2.Core.dll=sí, Microsoft.Web.WebView2.WinForms.dll=sí, Newtonsoft.Json.dll=sí, runtimes\win-x64\native\WebView2Loader.dll=sí, itext.kernel.dll=sí
+
+-- sesión: admin@eventaura.com
+  hora local del inicio de sesión: 13:26:41 · UTC 16:26:41
+  ventana: frmAuditoria «Registro de auditoría» cliente 1100×784 en {X=402,Y=136,Width=1116,Height=823}
+    vista web auditoriaWeb: VISIBLE, preparada=True, terminada=True, 1036×521
+    botones visibles (1): Buscar
+  captura: 01-t25-auditoria.png (1102×816)
+  primeras filas en la página: "[\"Fecha y hora Correo Acción Qué se modificó Resultado\",\"26/11/2026 13:26 admin@eventaura.com Inicio de sesión Usuario Correcto\",\"26/11/2026 13:26 organizador@eventaura.com Gestión de eventos: crear Evento Correcto\",\"26/11/2026 13:26 organizador@eventaura.com Inicio de sesión Usuario Correcto\",\"26/11/2026 13:25 admin@eventaura.com Inicio de sesión Usuario Correcto\",\"26/11/2026 13:24 plata@eventaura.com Compra confirmada Compra Correcto\"]"
+  primeras filas de la grilla: 633 | 1 | admin@eventaura.com | Inicio de sesión | Usuario | 1 | 26/11/2026 13:26 | Correcto || 632 | 2 | organizador@eventaura.com | Gestión de eventos: crear | Evento | 160 | 26/11/2026 13:26 | Correcto || 631 | 2 | organizador@eventaura.com | Inicio de sesión | Usuario | 2 | 26/11/2026 13:26 | Correcto || 630 | 1 | admin@eventaura.com | Inicio de sesión | Usuario | 1 | 26/11/2026 13:25 | Correcto
