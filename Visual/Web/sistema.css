@@ -30,7 +30,7 @@
     --alto-control: 40px; --radio-control: 3px; --radio-tarjeta: 4px;
     --ancho-lateral: 240px; --alto-barra: 56px; --ancho-panel: 440px;
     --ancho-columna: 480px; --ancho-columna-amplia: 608px; --ancho-resumen: 320px;
-    /* Selecci�n: lo elegido se marca en neutro; el violeta queda para la acci�n. */
+    /* Selección (PRINCIPIOS-DISENO.md §2): lo elegido se marca en neutro; el violeta queda para la acción. */
     --seleccion: var(--texto);
     /* Movimiento (PRINCIPIOS-DISENO.md §10): estados y hover con ease; lo que se mueve dentro de la
        pantalla con ease-in-out; lo que entra o sale con ease-out, y la salida un 20 % más rápida. */
@@ -176,17 +176,23 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
 .rasgo strong { font: var(--n4); font-weight: 600; color: #fff; }
 .rasgo p { font: var(--n5); letter-spacing: var(--n5-ls); color: var(--lateral-texto); max-width: 40ch; }
 .panel-pie { font: var(--n5); letter-spacing: var(--n5-ls); color: var(--lateral-seccion); }
+/* Velo detrás de los textos en --lateral-seccion: el muro desaparece debajo de esas líneas y se desvanece alrededor. */
+.panel .n6, .panel-pie { width: fit-content; background: var(--lateral-fondo);
+    box-shadow: 0 0 0 var(--e1) var(--lateral-fondo), 0 0 var(--e5) var(--e3) var(--lateral-fondo); }
 
 /* El muro de portadas (motivo): ver muro.js y PRINCIPIOS-DISENO.md §7 */
-/* Portadas grandes (528 × 336): por el panel asoman dos o tres, como un muro, y no una fila de iniciales. */
-.muro { position: absolute; inset: -120px -360px -120px -200px; z-index: 0; display: grid;
-    grid-template-columns: repeat(3, 528px); grid-auto-rows: 336px; gap: var(--e5); align-content: start; }
-.muro::after { content: ""; position: absolute; inset: 0; background: rgba(36, 29, 48, 0.88); }
-/* Más cerrado donde está el texto (izquierda), más abierto hacia el borde. */
-.muro::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(36, 29, 48, 0.5), rgba(36, 29, 48, 0) 70%); }
-.portada { position: relative; overflow: hidden; border-radius: var(--radio-tarjeta); }
-.portada:nth-child(3n+2) { transform: translateY(168px); }
-.portada .inicial { position: absolute; left: var(--e6); bottom: -40px; font: 700 252px/1 var(--familia); color: rgba(255, 255, 255, 0.28); }
+/* Una sola columna de portadas más anchas que el panel (552 × 420): no hay borde vertical dentro del panel,
+   y la inicial de cada portada queda adentro. Entre una portada y la siguiente no hay corte: cada una se
+   desvanece arriba y abajo sobre --lateral-fondo. En 720 a 900 px de alto se ven dos o tres iniciales. */
+.muro { position: absolute; inset: -48px -88px auto -24px; z-index: 0; display: grid;
+    grid-template-columns: 552px; grid-auto-rows: 420px; }
+/* Velo del 82 %: el peor caso (una inicial sobre la portada más clara) deja --lateral-texto en 7,4:1 y el
+   blanco en 11,9:1. Ver PRINCIPIOS-DISENO.md §7. */
+.muro::after { content: ""; position: absolute; inset: 0; background: rgba(36, 29, 48, 0.82); }
+.portada { position: relative; overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent); }
+.portada .inicial { position: absolute; left: var(--e7); bottom: var(--e7); font: 700 252px/0.75 var(--familia); color: rgba(255, 255, 255, 0.28); }
 
 /* Centrado vertical seguro: si la columna no entra, se desplaza desde arriba en vez de recortarse.
    Es el único margin del sistema, y es de maquetación (auto), no una separación. */

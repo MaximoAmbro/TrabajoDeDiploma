@@ -332,10 +332,23 @@ namespace Pruebas
                                 !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
                             {
                                 var sectores = Descendientes(formulario).OfType<DataGridView>().Single(g => g.Name == "dgvSectores");
-                                var filaDisponible = sectores.Rows.Cast<DataGridViewRow>().First(f => Convert.ToInt32(f.Cells["Disponibles"].Value) >= 2);
+                                bool demostracion = Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_DEMO") == "1";
+                                var filaDisponible = sectores.Rows.Cast<DataGridViewRow>().First(f =>
+                                    Convert.ToInt32(f.Cells["Disponibles"].Value) >= 2 &&
+                                    (!demostracion || Convert.ToString(f.Cells["Sector"].Value) == "Campo"));
                                 sectores.EndEdit();
                                 cantidadCapturada = filaDisponible.Cells["Cantidad"];
                                 cantidadCapturada.Value = 2;
+                                if (demostracion)
+                                {
+                                    foreach (string nombre in new[] { "chkHospedaje", "chkTraslado", "chkSeguro" })
+                                    {
+                                        var casilla = Descendientes(formulario).OfType<CheckBox>().Single(c => c.Name == nombre);
+                                        Assert.IsTrue(casilla.Enabled, "El paquete de demostración requiere " + nombre + ".");
+                                        casilla.Checked = true;
+                                    }
+                                    Application.DoEvents();
+                                }
                                 Descendientes(formulario).OfType<Button>().Single(b => b.Name == "btnComprar").Focus();
                                 var contenido = Descendientes(formulario).OfType<Panel>().Single(p => p.Name == "pnlContenidoCompra");
                                 contenido.AutoScrollPosition = Point.Empty;
@@ -468,6 +481,11 @@ namespace Pruebas
             else if (tipo.Namespace == "Visual.Vendedor" || nombre == "frmControlIngreso" || nombre == "frmMenuPropietario" || nombre == "frmMisLocales" ||
                 nombre == "frmListasEspera" || nombre == "frmRegistrarLocal" || nombre == "frmReportes")
                 Fake.ComoOrganizador();
+            else if (nombre == "FrmCompraCliente" && Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_DEMO") == "1")
+            {
+                var cuenta = Datos.RepositorioUsuarios.Instance.ObtenerPorMail("plata@eventaura.com");
+                Fake.ComoCliente(Datos.RepositorioFidelizacion.Instance.ObtenerCliente(cuenta.Id));
+            }
             else if ((nombre == "frmMenuCliente" || nombre == "frmHistorialCliente") && !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
             {
                 var cuenta = Datos.RepositorioUsuarios.Instance.ObtenerPorMail("oro@eventaura.com");
@@ -659,11 +677,19 @@ namespace Pruebas
             {
                 var candidatos = eventos.Select(evento => new { Evento = evento, Sectores = GestorEventos.Instance.Sectores(evento.Id) });
                 if (Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_DEMO") == "1")
+                {
+                    var eventoGuion = eventos.FirstOrDefault(evento => evento.Nombre == "Duki en Rosario");
+                    Assert.IsNotNull(eventoGuion, "La base de demostración debe contener Duki en Rosario para la captura del paquete.");
+                    idEvento = eventoGuion.Id;
                     candidatos = candidatos.OrderByDescending(candidato => candidato.Sectores.Count)
                         .ThenBy(candidato => candidato.Evento.Fecha);
-                var demostracion = candidatos.FirstOrDefault(candidato => candidato.Sectores.Count > 0 &&
-                    candidato.Sectores.All(sector => GestorPaquetes.Instance.DisponiblesDe(sector.Id) >= 2))?.Evento;
-                idEvento = (demostracion ?? Fake.EventoPublicado(20000m, 100)).Id;
+                }
+                else
+                {
+                    var demostracion = candidatos.FirstOrDefault(candidato => candidato.Sectores.Count > 0 &&
+                        candidato.Sectores.All(sector => GestorPaquetes.Instance.DisponiblesDe(sector.Id) >= 2))?.Evento;
+                    idEvento = (demostracion ?? Fake.EventoPublicado(20000m, 100)).Id;
+                }
             }
             foreach (var campo in formulario.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
             {
@@ -892,6 +918,19 @@ namespace Pruebas
                         "El TOTAL del armador debe quedar visible en la ventana capturada.");
                     Assert.AreEqual("true", totalAnclado.GetAwaiter().GetResult(),
                         "El resumen debe conservar el panel fijo y el TOTAL anclado al pie.");
+                    if (Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_DEMO") == "1")
+                    {
+                        var paqueteGuion = compraWeb.EjecutarScriptAsync(
+                            "(function(){var t=document.querySelector('#total').textContent;var n=document.querySelector('#nivel-chip').textContent;var d=document.querySelector('#desglose').innerText;return t.includes('121.625')&&n.includes('Plata')&&d.includes('Campo')&&d.includes('Hotel Ríos')&&d.includes('Traslado')&&d.includes('Seguro')})()");
+                        var esperaPaquete = Stopwatch.StartNew();
+                        while (!paqueteGuion.IsCompleted && esperaPaquete.ElapsedMilliseconds < 3000)
+                        {
+                            Application.DoEvents();
+                            Thread.Sleep(10);
+                        }
+                        Assert.AreEqual("true", paqueteGuion.GetAwaiter().GetResult(),
+                            "La captura de demostración debe mostrar el paquete Plata de $ 121.625,00 del guion.");
+                    }
                 }
             }
             Application.DoEvents();
