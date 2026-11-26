@@ -122,6 +122,8 @@ namespace Pruebas
                         "El alta debe abrir al tamaño horizontal de su maqueta.");
                     var panelAlta = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(alta, "altaCuentaWeb");
                     Esperar(() => panelAlta.Preparado && panelAlta.Visible, "El alta debe mostrar la maqueta web y no el respaldo WinForms.");
+                    Assert.IsFalse(alta.Controls.Find("checkbxShowPass", true).Single().Visible,
+                        "El checkbox WinForms solo pertenece al respaldo y no debe aparecer encima del alta web.");
                     ComprobarOjos(panelAlta, 2, "alta");
                     string opciones = Ejecutar(panelAlta, "document.querySelector('[data-vista=elegir]').innerText");
                     StringAssert.Contains(opciones, "Quiero comprar entradas");

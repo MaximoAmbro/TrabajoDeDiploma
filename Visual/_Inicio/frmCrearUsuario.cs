@@ -135,6 +135,7 @@ namespace Visual
         }
         private void MostrarAltaWeb()
         {
+            checkbxShowPass.Visible = false;
             foreach (Control control in Controls)
                 if (control != barraSuperior && control != _altaWeb) control.Visible = false;
             _altaWeb.Visible = true;
@@ -151,6 +152,7 @@ namespace Visual
             }
             foreach (Control control in Controls)
                 if (control != barraSuperior && control != _altaWeb) control.Visible = true;
+            checkbxShowPass.Visible = true;
             barraSuperior.BringToFront();
         }
 

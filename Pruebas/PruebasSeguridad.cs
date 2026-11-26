@@ -180,6 +180,8 @@ namespace Pruebas
                     Assert.IsTrue(web.InicializacionTerminada, "La vista de cambio o su respaldo deben inicializarse.");
                     if (web.Preparado && web.Visible)
                     {
+                        Assert.IsFalse(form.Controls.Find("checkbxShowPass", true).Single().Visible,
+                            "El checkbox de respaldo no debe aparecer encima de la vista web de cambio.");
                         var tarea = web.EjecutarScriptAsync("(()=>document.querySelector('#mail').readOnly&&document.querySelectorAll('input[type=password]').length===3&&document.querySelectorAll('.ojo-contrasena').length===3)()");
                         espera.Restart();
                         while (!tarea.IsCompleted && espera.Elapsed < TimeSpan.FromSeconds(10))

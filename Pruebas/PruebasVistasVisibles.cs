@@ -161,10 +161,18 @@ namespace Pruebas
                 using (var form = new Visual.frmCambiarContraseña(true))
                 {
                     Mostrar(form);
+                    var vistaWeb = ControlDe<Visual.Web.PanelWeb>(form, "recuperacionWeb");
+                    EsperarVistaWeb(vistaWeb);
+                    var check = ControlDe<CheckBox>(form, "checkbxShowPass");
+                    if (vistaWeb.Preparado && vistaWeb.Visible)
+                    {
+                        Assert.IsFalse(check.Visible, "El checkbox WinForms no debe aparecer sobre la recuperación web.");
+                        Assert.AreEqual("true", EjecutarVistaWeb(vistaWeb, "document.querySelectorAll('.ojo-contrasena').length===2"));
+                        return;
+                    }
                     var medidor = ControlDe<IndicadorFortaleza>(form, "fortalezaContrasena");
                     var nueva = ControlDe<TextBox>(form, "TxtPassword");
                     var confirmacion = ControlDe<TextBox>(form, "TxtConfirmpassword");
-                    var check = ControlDe<CheckBox>(form, "checkbxShowPass");
                     var confirmar = ControlDe<Button>(form, "btnconfirmar");
                     Assert.IsFalse(medidor.Bounds.IntersectsWith(nueva.Bounds), "El medidor se superpone con la contraseña nueva: " + medidor.Bounds + " / " + nueva.Bounds);
                     Assert.IsFalse(medidor.Bounds.IntersectsWith(confirmacion.Bounds), "El medidor se superpone con la confirmación: " + medidor.Bounds + " / " + confirmacion.Bounds);
