@@ -22,7 +22,7 @@
     // ---------- El único movimiento del proyecto (PRINCIPIOS-DISENO.md §8) ----------
     // El total cuenta hasta el valor nuevo en 200 ms, con desaceleración. Con prefers-reduced-motion, salta.
     const sinMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let totalMostrado = 0, cuadro = 0;
+    let totalMostrado = 0, cuadro = 0, pedidoTotal = 0;
     function escribirTotal(valor) {
         const [entero, decimales] = plata(valor).split(",");
         const total = $("#total");
@@ -44,6 +44,12 @@
             if (t < 1) cuadro = requestAnimationFrame(paso);
         };
         cuadro = requestAnimationFrame(paso);
+        // Respaldo: si no hay cuadros (vista oculta, sin pintura), a los 260 ms queda el valor exacto.
+        const pedido = ++pedidoTotal;
+        setTimeout(() => {
+            if (pedido !== pedidoTotal || totalMostrado === destino) return;
+            cancelAnimationFrame(cuadro); totalMostrado = destino; escribirTotal(destino);
+        }, 260);
     }
 
     // ---------- Dibujo del evento y de las opciones (una vez por carga de datos) ----------
@@ -190,7 +196,7 @@
 
     function dibujarResumen(r) {
         const lista = $("#desglose");
-        const existentes = new Map([...lista.children].map(li => [li.dataset.clave, li]));
+        const existentes = new Map([...lista.children].filter(li => !li.classList.contains("saliendo")).map(li => [li.dataset.clave, li]));
         const nuevas = lineas(r).map(f => {
             let li = existentes.get(f.clave);
             const recien = !li;
@@ -205,14 +211,34 @@
                 li.querySelector(".texto").textContent = f.texto;
                 li.querySelector(".importe").textContent = f.importe;
             }
-            if (recien) li.addEventListener("animationend", () => li.classList.remove("nueva"), { once: true });
+            if (recien) {
+                // Respaldo: si la animación no corre (vista oculta, movimiento reducido), igual se limpia.
+                const listo = () => li.classList.remove("nueva");
+                li.addEventListener("animationend", listo, { once: true });
+                setTimeout(listo, 260);
+            }
             return li;
         });
         // Reconciliación en el lugar: las líneas que ya estaban no se sacan ni se reinsertan (reinsertarlas
         // reiniciaría su animación). Solo entra lo nuevo y sale lo que ya no corresponde.
         const deseadas = new Set(nuevas);
-        [...lista.children].forEach(li => { if (!deseadas.has(li)) li.remove(); });
-        nuevas.forEach((li, i) => { if (lista.children[i] !== li) lista.insertBefore(li, lista.children[i] || null); });
+        // Lo que sale se desvanece en 160 ms (un 20 % menos que la entrada) y recién después se quita.
+        [...lista.children].forEach(li => {
+            if (deseadas.has(li) || li.classList.contains("saliendo")) return;
+            if (sinMovimiento.matches) { li.remove(); return; }
+            li.classList.remove("nueva");
+            li.classList.add("saliendo");
+            // Se quita al terminar de desvanecerse, o a los 220 ms si la animación no llega a correr.
+            li.addEventListener("animationend", () => li.remove(), { once: true });
+            setTimeout(() => li.remove(), 220);
+        });
+        // Ordena lo deseado sin tocar lo que ya está en su lugar; los renglones que salen se saltean.
+        let referencia = lista.firstChild;
+        nuevas.forEach(li => {
+            while (referencia && referencia.classList && referencia.classList.contains("saliendo")) referencia = referencia.nextSibling;
+            if (referencia === li) referencia = referencia.nextSibling;
+            else lista.insertBefore(li, referencia);
+        });
         $("#vacio").classList.toggle("oculto", nuevas.length > 0);
 
         animarTotal(r.total);

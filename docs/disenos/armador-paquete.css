@@ -18,7 +18,8 @@
 
 /* ---------- Área web ---------- */
 .area-web { padding: var(--e6); background: var(--fondo); min-width: 0; }
-.encabezado { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--e6);
+/* El evento arriba y los pasos debajo: la columna de elecciones no alcanza para los dos en una fila. */
+.encabezado { display: flex; flex-direction: column; align-items: flex-start; gap: var(--e4);
     padding-bottom: var(--e5); border-bottom: 1px solid var(--borde); }
 .evento { display: flex; align-items: center; gap: var(--e4); min-width: 0; }
 .portada-chica { position: relative; flex: none; width: 96px; height: 64px; overflow: hidden; border-radius: var(--radio-tarjeta); }
@@ -32,7 +33,14 @@
 .pasos-compra li.actual { color: var(--texto); font-weight: 600; }
 .pasos-compra li.actual::before { border-color: var(--primario); background: var(--primario); color: #fff; }
 
-.armado { display: grid; grid-template-columns: minmax(0, 1fr) var(--ancho-resumen); gap: var(--e6); align-items: start; }
+/* El resumen va a la par del encabezado y nunca es más alto que la vista: el total y «Continuar al pago»
+   se ven sin desplazar. El corte a una columna mide el área web (consulta de contenedor), no la ventana:
+   dentro de la aplicación WebView2 aloja solo <main class="area-web">, sin el lateral de la maqueta. */
+.area-web { container-type: inline-size; }
+.area-web > .pila-7 { display: grid; grid-template-columns: minmax(0, 1fr) var(--ancho-resumen);
+    column-gap: var(--e6); row-gap: var(--e7); align-items: start; }
+.armado { display: contents; }
+.encabezado, .armado > .pila-8 { grid-column: 1; }
 
 /* ---------- Sectores ---------- */
 .escenario { text-align: center; padding: var(--e2); background: var(--borde); color: var(--texto-secundario); border-radius: var(--radio-control); }
@@ -42,7 +50,7 @@
     transition: border-color var(--transicion), box-shadow var(--transicion); }
 .sector::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--color-sector); }
 .sector:hover { border-color: var(--texto-secundario); }
-.sector.elegido { border-color: var(--primario); box-shadow: inset 0 0 0 1px var(--primario); }
+.sector.elegido { border-color: var(--seleccion); box-shadow: inset 0 0 0 1px var(--seleccion); }
 .sector.agotado { background: var(--fondo); }
 .sector.agotado::before { background: var(--borde); }
 .sector .precio { font: var(--n3); letter-spacing: var(--n3-ls); font-variant-numeric: tabular-nums; }
@@ -53,9 +61,9 @@
 .cantidad { display: grid; grid-template-columns: var(--alto-control) 1fr var(--alto-control); height: var(--alto-control);
     border: 1px solid var(--borde-control); border-radius: var(--radio-control); overflow: hidden; }
 .cantidad button { border: 0; background: var(--superficie); cursor: pointer; display: grid; place-items: center;
-    transition: background-color var(--transicion), color var(--transicion); }
+    transition: background-color var(--transicion), color var(--transicion), transform var(--transicion); }
 .cantidad button:hover { background: var(--fondo); }
-.cantidad button:active { background: var(--borde); }
+.cantidad button:active:not(:disabled) { background: var(--borde); transform: scale(0.97); }
 .cantidad button:disabled { color: var(--borde-control); background: var(--superficie); cursor: not-allowed; }
 .cantidad button svg { width: 12px; height: 12px; }
 .cantidad output { display: grid; place-items: center; font: var(--n3); font-variant-numeric: tabular-nums;
@@ -71,22 +79,26 @@
 .interruptor:active { background: var(--fondo); }
 .interruptor input { position: absolute; opacity: 0; pointer-events: none; }
 .interruptor:has(input:focus-visible) { outline: 2px solid var(--primario); outline-offset: 2px; }
-.interruptor:has(input:checked) { border-color: var(--primario); box-shadow: inset 0 0 0 1px var(--primario); }
+.interruptor:has(input:checked) { border-color: var(--seleccion); box-shadow: inset 0 0 0 1px var(--seleccion); }
 .interruptor .fuerte { font-weight: 600; }
 .interruptor .precio { font-variant-numeric: tabular-nums; color: var(--texto-secundario); }
 .interruptor:has(input:checked) .precio { color: var(--texto); font-weight: 600; }
 .llave { position: relative; width: 32px; height: 18px; border-radius: 9px; background: var(--borde-control);
     transition: background-color var(--transicion); }
 .llave::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff;
-    transition: transform var(--transicion); }
+    transition: transform var(--desplazamiento); }
 .interruptor:has(input:checked) .llave { background: var(--texto); }
 .interruptor:has(input:checked) .llave::after { transform: translateX(14px); }
 
 /* ---------- El resumen ---------- */
-.resumen { position: sticky; top: var(--e6); padding: var(--e5); background: var(--superficie);
-    border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); }
+.resumen { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: var(--e6);
+    max-height: calc(100vh - 2 * var(--e6)); display: flex; flex-direction: column;
+    padding: var(--e5); background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); }
+/* Si el desglose no entra, se desplaza adentro; el encabezado, el total y el botón quedan fijos. */
+.resumen > .pila { min-height: 0; }
+.resumen .pila-3 > .fila-extremos { flex-direction: column; align-items: flex-start; gap: var(--e2); }
 .nivel { padding: var(--e1) var(--e2); border-radius: var(--radio-control); background: var(--fondo); color: var(--texto-secundario); }
-.desglose { display: flex; flex-direction: column; }
+.desglose { display: flex; flex-direction: column; min-height: 0; overflow: auto; }
 .desglose .grupo { font: var(--n6); letter-spacing: var(--n6-ls); text-transform: uppercase; color: var(--texto-secundario);
     padding: var(--e4) 0 var(--e2); }
 .desglose .grupo:first-child { padding-top: 0; }
@@ -98,21 +110,25 @@
 .desglose .linea.secundaria { color: var(--texto-secundario); font: var(--n5); }
 /* El renglón nuevo entra deslizándose desde arriba, 8 px en 200 ms. Es el único desplazamiento del
    proyecto (PRINCIPIOS-DISENO.md §8). Con prefers-reduced-motion, sistema.css lo anula. */
-.desglose .nueva { animation: entrar 200ms ease-out both; }
+.desglose .nueva { animation: entrar var(--entrada) both; }
+.desglose .saliendo { animation: salir var(--salida) both; pointer-events: none; }
 @keyframes entrar { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+/* La salida no se desplaza: solo se desvanece. Ya no es lo que se mira. */
+@keyframes salir { from { opacity: 1; } to { opacity: 0; } }
 .vacio { padding: var(--e4) 0; }
 .total { display: flex; flex-direction: column; gap: var(--e1); padding-top: var(--e5); border-top: 1px solid var(--texto); }
 .total .n1 { font-variant-numeric: tabular-nums; }
 .total .decimales { font: var(--n3); letter-spacing: 0; color: var(--texto-secundario); }
 #ahorro { color: var(--exito-texto); min-height: 18px; }
 
-@media (max-width: 1080px) {
-    .armado { grid-template-columns: 1fr; }
-    .resumen { position: static; }
+/* Área web angosta: una columna, y el resumen al final, sin alto máximo. */
+@container (max-width: 760px) {
+    .area-web > .pila-7 { grid-template-columns: 1fr; }
+    .resumen { grid-column: 1; grid-row: auto; position: static; max-height: none; }
+    .servicios { grid-template-columns: 1fr; }
 }
+/* Solo la maqueta: el lateral de contexto se oculta en una ventana angosta. */
 @media (max-width: 880px) {
     .aplicacion { grid-template-columns: 1fr; }
     .lateral { display: none; }
-    .servicios { grid-template-columns: 1fr; }
-    .encabezado { flex-direction: column; align-items: flex-start; }
 }

@@ -54,6 +54,22 @@ Anclas para revisar un estado sin hacer clics (solo en la maqueta):
 
 **No probado todavía:** dentro de WebView2 y a 144 DPI. Eso lo hace Codex al integrarlas.
 
+**Corregido y verificado con Playwright el 26/11/2026** (detalle en `PRINCIPIOS-DISENO.md`, §2, §4 y §7):
+- **Armador:**
+  - el resumen va a la par del encabezado, mide como máximo el alto de la vista y su desglose se desplaza
+    adentro;
+  - el corte a una columna es una consulta de contenedor sobre el área web (760 px), no `@media` sobre la
+    ventana;
+  - con el paquete del guion, el total y «Continuar al pago» se ven sin desplazar a 960 × 700 y a 860 × 640
+    (solo el área web, como en WebView2), y a 1280 × 720 y a 1366 × 768 (la maqueta completa).
+- **Selección neutra (`--seleccion`):** en el armador con el guion quedan tres trazos violeta: el botón, el paso
+  actual y la franja del sector VIP.
+- **Muro:** una columna de portadas de 552 × 420, iniciales dentro del panel y sin cortes duros.
+
+Para revisar estas pantallas con Playwright: el MCP bloquea `file:`, así que hay que servir la carpeta con
+`py -3 -m http.server 8765 --bind 127.0.0.1` y abrir `http://127.0.0.1:8765/`. Para ver el armador como lo
+ve WebView2, hay que ocultar `.barra` y `.lateral` y llevar la ventana al tamaño del área web.
+
 ---
 
 ## Integración

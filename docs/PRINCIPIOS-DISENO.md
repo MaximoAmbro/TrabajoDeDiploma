@@ -38,6 +38,16 @@ Familias:
 
 - **Cifras:** todo importe y toda cantidad usan `font-variant-numeric: tabular-nums`, alineados a la
   derecha.
+
+**Desvío consciente: el sobrerrótulo N6 sigue en mayúsculas espaciadas.** Las dos referencias estudiadas el
+26/11/2026 (linear.app y ui.shadcn.com) rotulan los grupos en minúscula, a 12 px y en un gris apagado. Con
+mayúsculas, una pantalla densa acumula rótulos que gritan: el armador muestra unos doce a la vez. Aun así,
+**no se cambia**:
+- el +0,10 em sale de `Tema.InterletradoSeccion`, el mismo de los encabezados de sección de Windows Forms;
+- cambiar solo la web rompe la coherencia entre las dos mitades de la aplicación;
+- cambiar los dos lados obliga a rehacer las capturas, y el rédito no lo justifica a días de la entrega.
+
+Decisión de JC, 26/11/2026. Si se retoma después de la entrega, se cambian los dos lados a la vez.
 - **Ancho de línea:** el texto corrido no pasa de 60 caracteres (`max-width: 60ch`), dentro del tope de 65ch de §10.4.
 
 ## 2. Color: casi todo neutro, el acento cuenta
@@ -65,6 +75,11 @@ ve en reposo:
 - lo seleccionado;
 - un enlace.
 
+**Lo elegido no usa el acento.** Una tarjeta de sector con entradas, un servicio encendido o la opción elegida
+del alta se marcan con `--seleccion` (`--texto`): borde de 1 px más un trazo interior de 1 px. Así coincide con
+el interruptor encendido, que ya era `--texto`. Con el violeta en cada selección, el armador con el paquete
+del guion llegaba a siete trazos violeta a la vista, aunque la regla «contaba» uno (26/11/2026).
+
 El anillo de foco no cuenta, porque solo aparece al usar el teclado. Los colores de estado (éxito, error,
 advertencia) solo aparecen cuando hay un estado que comunicar. Los colores de portada son **datos** (identifican
 un evento o un sector), nunca adorno.
@@ -76,8 +91,8 @@ Cuenta por pantalla:
 | Bienvenida | Botón «Iniciar sesión» · punto del logo |
 | Acceso | Botón «Iniciar sesión» · punto del logo · enlace «Crear cuenta» |
 | Recuperar contraseña | Botón del paso · punto del logo |
-| Alta de cuenta | Botón del paso · opción elegida · paso actual · punto del logo |
-| Armador de paquete | Botón «Continuar al pago» · paso actual · selección (las tarjetas con entradas, los servicios y el seguro encendidos comparten el mismo trazo). El ítem activo del lateral usa `--lateral-encima`, no el acento |
+| Alta de cuenta | Botón del paso · paso actual · punto del logo |
+| Armador de paquete | Botón «Continuar al pago» · paso actual. **Medido con Playwright el 26/11/2026**, con el paquete del guion, recorriendo cada elemento y sus `::before`/`::after`: tres trazos violeta en el área web. El tercero es la franja del sector VIP (`--portada-4`, `#69458F`): es un dato, pero se ve violeta y se cuenta. El ítem activo del lateral usa `--lateral-encima`, no el acento |
 
 ## 3. Espacio: ritmo, no uniformidad
 
@@ -103,7 +118,18 @@ Ningún elemento lleva `margin` propio. Así no hay elementos corridos 2 px de s
 - **Equilibrio vertical:** en las pantallas de entrada, el contenido se centra en vertical en el espacio
   disponible. Si no entra, se desplaza desde arriba, con 64 px de margen.
 - **Retícula del armador:** el lateral mide 240 px y la barra superior 56 px. El contenido tiene márgenes de
-  32 px, las elecciones van en una columna flexible y el resumen en una columna fija de 360 px, separadas por 32.
+  32 px, las elecciones van en una columna flexible y el resumen en una columna fija de 320 px, separadas por 32.
+  - **El resumen empieza arriba**, a la par del encabezado, y nunca es más alto que la vista (`100vh − 64`). Si
+    el desglose no entra, se desplaza dentro de la tarjeta: el total y «Continuar al pago» se ven siempre sin
+    desplazar la página. Es lo mismo que hace `FrmCompraCliente` en Windows Forms.
+  - **El corte a una columna mide el área web, no la ventana** (consulta de contenedor, 760 px). Dentro de la
+    aplicación, WebView2 aloja solo `<main class="area-web">`, sin el lateral de la maqueta. Con el
+    `@media (max-width: 1080px)` de la maqueta, un área de unos 960 px pasaba a una columna y el total quedaba
+    dos pantallas más abajo. Lo encontró la medición con Playwright el 26/11/2026. **La copia integrada no
+    tenía el problema:** Codex lo había compensado en `c2f80ca` con un bloque propio para WebView2
+    (`Visual/Web/armador-paquete.css`). El defecto era de la maqueta de referencia.
+  - Verificado el 26/11/2026, con el paquete del guion: total y botón a la vista a 960 × 700 y a 860 × 640
+    (solo el área web) y a 1280 × 720 y a 1366 × 768 (la maqueta completa).
 
 ## 5. Formas y controles
 
@@ -131,7 +157,7 @@ separar cosas.
 | Interruptor | 32 × 18 px, botón de 14 px |
 | Barras (fortaleza, ocupación) | 4 px de alto |
 | Número de paso | Círculo de 24 px en el panel, de 20 px en el encabezado del armador |
-| Portadas | 528 × 336 px en el muro (inicial de 252 px, separación de 24); 96 × 64 px en el armador (inicial de 48 px) |
+| Portadas | 552 × 420 px en el muro (una columna, inicial de 252 px, sin separación); 96 × 64 px en el armador (inicial de 48 px) |
 | Tarjeta de sector | Mínimo de 176 px de ancho; franja de color de 4 px |
 | Línea de estado | Alto reservado de 18 px; signo de 12 px |
 | Panel oscuro | 440 px de ancho |
@@ -167,13 +193,34 @@ más claro de cada portada y compite con el texto del panel.
 
 Los nombres son los de la semilla de demostración, con sus índices calculados de antemano en `muro.js`.
 
-**Las portadas del muro son grandes** (528 × 336 px, tres veces las del catálogo): por el panel asoman dos o
-tres, cortadas por el borde. Con portadas chicas el muro se leía como una fila de iniciales sueltas. Se probó
-también bajar la opacidad al 6 %, y las letras seguían leyéndose (24/11/2026).
+**Una sola columna de portadas más anchas que el panel** (552 × 420 px, desde x = −24): no hay ningún borde
+vertical dentro del panel, y la inicial de cada portada queda adentro, a 24 px del borde. Entre una portada
+y la siguiente no hay corte: cada una se desvanece arriba y abajo (máscara del 20 %) sobre `--lateral-fondo`.
 
-El muro queda **atenuado al 12 %** bajo una capa de `--lateral-fondo` al 88 %, con un refuerzo del 50 % hacia
-la izquierda, donde está el texto. Así el texto en blanco y en `--lateral-texto` mantiene un contraste mayor
-que 7:1. El muro no se mueve.
+**Por qué se rehízo (26/11/2026).** La versión anterior (tres columnas de 528 × 336, desde x = −200) se midió
+con Playwright:
+- la inicial de la primera columna quedaba siempre en x ≈ −168, fuera del panel;
+- de la segunda columna solo asomaban 88 px;
+- lo visible eran rectángulos de borde duro, con una franja vertical de 24 px detrás del texto y cortes
+  horizontales que cruzaban el lema.
+
+No se veía ninguna inicial y parecía un error de dibujo. JC autorizó **un solo intento** de corrección; si no
+quedaba bien, el panel pasaba a ser liso.
+
+**Resultado del intento:**
+- no hay cortes duros;
+- a 1366 × 768 quedan dos iniciales enteras dentro del panel;
+- a 1280 × 720, una entera y la segunda asoma 165 de sus 189 px.
+
+**Si se decide sacarlo:** se borra el bloque del muro de `sistema.css`, `muro.js` y el `<div class="muro">`
+de las cuatro páginas de entrada. El panel queda liso en `--lateral-fondo`.
+
+**El velo es del 82 %** de `--lateral-fondo`, sin refuerzo lateral, porque el refuerzo tapaba las iniciales,
+que están a la izquierda. Peor caso calculado (una inicial sobre la portada más clara):
+- el blanco queda en 11,9:1;
+- `--lateral-texto` queda en 7,4:1.
+
+Los dos siguen por encima de 7:1. El muro no se mueve.
 
 ## 8. El momento de autor: el armador de paquete
 
@@ -192,6 +239,13 @@ lector de pantalla, cuando termina de contar, no en cada cuadro. Todo lo demás 
 
 - Contraste de texto de 4,5:1 como mínimo (los niveles N5 y N6 sobre `--superficie` y `--fondo` lo cumplen con
   `--texto-secundario`).
+- **Pendiente, encontrado el 26/11/2026:** `--lateral-seccion` (`#8B839E`, de `Tema.LateralSeccion`) da 4,51:1
+  sobre `--lateral-fondo` liso. Cumple, pero justo.
+  - **Sobre el muro no cumple:** en el peor caso (texto encima de una inicial) baja a 3,3:1 con el velo actual,
+    del 82 %, y a 3,7:1 con el anterior, del 88 %.
+  - **Dónde se usa en el panel:** en texto de 11 y 12 px, el N6 y el pie.
+  - **Por qué no se corrige ahora:** el color es de `Tema.cs`, también en Windows Forms. Sacar el muro también
+    lo resolvería. Decide JC.
 - Ningún estado se comunica solo con color: siempre va con texto o con un ícono.
 - Las validaciones y el total se anuncian con `aria-live="polite"`.
 - Todo se puede hacer con el teclado. Escape vuelve, como en el resto de la aplicación.
