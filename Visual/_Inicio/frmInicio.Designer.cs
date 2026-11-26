@@ -136,7 +136,7 @@ namespace Visual
             this.AcceptButton = this.btninicio;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(480, 484);
+            this.ClientSize = new System.Drawing.Size(1100, 720);
 
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label5);

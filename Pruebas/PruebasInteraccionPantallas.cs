@@ -42,17 +42,23 @@ namespace Pruebas
         public void CP364_AltaWebCompletaElRecorridoHastaAcceso()
         {
             SeleccionEnviadorCodigos.Actual = new EnviadorSimulado();
+            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
+                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
             InterfazGrupoA.EnSta(() =>
             {
                 string correo = Fake.MailNuevo();
                 using (var bienvenida = new Visual.frmBienvenida())
                 {
                     InterfazGrupoA.Mostrar(bienvenida);
+                    Assert.IsTrue(bienvenida.ClientSize.Width >= 1100 && bienvenida.ClientSize.Height >= 720,
+                        "La bienvenida debe abrir al tamaño horizontal de su maqueta.");
                     var panelBienvenida = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(bienvenida, "bienvenidaWeb");
                     Esperar(() => panelBienvenida.Preparado && panelBienvenida.Visible, "La bienvenida debe abrir su vista web.");
                     Ejecutar(panelBienvenida, "document.querySelector('[data-destino=alta]').click()" );
 
                     var alta = EsperarFormulario<Visual.frmCrearUsuario>("El botón de alta de la bienvenida debe abrir Crear cuenta.");
+                    Assert.IsTrue(alta.ClientSize.Width >= 1100 && alta.ClientSize.Height >= 720,
+                        "El alta debe abrir al tamaño horizontal de su maqueta.");
                     var panelAlta = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(alta, "altaCuentaWeb");
                     Esperar(() => panelAlta.Preparado && panelAlta.Visible, "El alta debe mostrar la maqueta web y no el respaldo WinForms.");
                     string opciones = Ejecutar(panelAlta, "document.querySelector('[data-vista=elegir]').innerText");
@@ -88,6 +94,14 @@ namespace Pruebas
                     var acceso = EsperarFormulario<Visual.frmInicio>("Después de completar el alta, la acción final debe abrir Acceso.");
                     var panelAcceso = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(acceso, "accesoWeb");
                     Esperar(() => panelAcceso.Preparado && panelAcceso.Visible, "El destino final del alta debe ser el acceso web.");
+                    Assert.IsTrue(acceso.ClientSize.Width >= 1100 && acceso.ClientSize.Height >= 720,
+                        "El acceso debe abrir al tamaño horizontal de su maqueta.");
+                    Ejecutar(panelAcceso, "document.querySelector('[data-destino=recuperar]').click()");
+                    var recuperacion = EsperarFormulario<Visual.frmCambiarContraseña>("El acceso debe abrir la recuperaciÃ³n web.");
+                    var panelRecuperacion = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(recuperacion, "recuperacionWeb");
+                    Esperar(() => panelRecuperacion.Preparado && panelRecuperacion.Visible, "La recuperaciÃ³n debe mostrar su maqueta web.");
+                    Assert.IsTrue(recuperacion.ClientSize.Width >= 1100 && recuperacion.ClientSize.Height >= 720,
+                        "La recuperaciÃ³n debe abrir al tamaño horizontal de su maqueta.");
                     Assert.IsFalse(alta.Visible, "El formulario de alta no debe reaparecer tras confirmar el correo.");
                     StringAssert.Contains(Ejecutar(panelAcceso, "document.querySelector('h1').innerText"), "Iniciar sesión");
                 }
@@ -207,7 +221,8 @@ namespace Pruebas
         private static void VerificarMigracionWeb(Form formulario)
         {
             string nombre = formulario.GetType().Name;
-            if (!new[] { "frmHistorialCliente", "frmMisLocales", "frmEventosLocal", "frmControlIngreso", "frmAuditoria", "frmRevisarEventos", "frmInicio", "frmBienvenida" }.Contains(nombre)) return;
+            bool recuperacionWeb = formulario is Visual.frmCambiarContraseña && formulario.Controls.Find("recuperacionWeb", true).Length > 0;
+            if (!recuperacionWeb && !new[] { "frmHistorialCliente", "frmMisLocales", "frmEventosLocal", "frmControlIngreso", "frmAuditoria", "frmRevisarEventos", "frmInicio", "frmBienvenida" }.Contains(nombre)) return;
             var panel = Descendientes(formulario).OfType<Visual.Web.PanelWeb>().Single();
             var reloj = System.Diagnostics.Stopwatch.StartNew();
             while (!panel.InicializacionTerminada && reloj.ElapsedMilliseconds < 5000)
@@ -281,7 +296,10 @@ namespace Pruebas
                                 GestorUsuarios.Instance.Autenticar("admin@eventaura.com", "Admin1234");
                             }
                             PrepararSesion(tipo);
-                            formulario = (Form)Activator.CreateInstance(tipo);
+                            formulario = tipo == typeof(Visual.frmCambiarContraseña) &&
+                                !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI"))
+                                ? (Form)new Visual.frmCambiarContraseña(true)
+                                : (Form)Activator.CreateInstance(tipo);
                             PrepararContextoSeleccionado(formulario);
                             formulario.Show();
                             if (formulario is Visual.FrmCompraCliente &&
@@ -298,6 +316,7 @@ namespace Pruebas
                             Thread.Sleep(30);
                             Application.DoEvents();
                             VerificarMigracionWeb(formulario);
+                            VerificarTamanoVentanaWeb(formulario);
 
                             if (formulario is Visual.frmReportes &&
                                 !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("EVENTAURA_CAPTURAS_UI")))
@@ -339,7 +358,9 @@ namespace Pruebas
                                 cantidadCapturada.DataGridView.Focus();
                             }
                             VerificarMedidas(formulario);
-                            if (formulario is Visual.frmCambiarContraseña cambio) VerificarFilaAviso(cambio);
+                            if (formulario is Visual.frmCambiarContraseña cambio &&
+                                formulario.Controls.Find("recuperacionWeb", true).Length == 0)
+                                VerificarFilaAviso(cambio);
                             string foco = VerificarFoco(formulario);
                             string geometria = VerificarGeometria(formulario);
                             VerificarRespaldoPosteriorALaCarga(formulario);
@@ -373,6 +394,28 @@ namespace Pruebas
             Assert.AreEqual(0, defectos.Length, "Interacción real defectuosa: " + string.Join("; ", defectos));
         }
 
+        private static void VerificarTamanoVentanaWeb(Form formulario)
+        {
+            string nombre = formulario.GetType().Name;
+            bool esCompra = nombre == "FrmCompraCliente";
+            bool esRecuperacion = formulario is Visual.frmCambiarContraseña && formulario.Controls.Find("recuperacionWeb", true).Length > 0;
+            bool migrada = esCompra || new[] { "frmBienvenida", "frmInicio", "frmCrearUsuario", "frmEventosCliente",
+                "frmHistorialCliente", "frmMisLocales", "frmEventosLocal", "frmControlIngreso", "frmAuditoria",
+                "frmRevisarEventos", "frmReportes", "frmMenuAdministrador" }.Contains(nombre) || esRecuperacion;
+            if (!migrada) return;
+            int ancho = esCompra ? 1366 : 1100;
+            int alto = esCompra ? 768 : 720;
+            if (Visual.Disposicion.Dpi(formulario) >= 120)
+            {
+                ancho = 1000;
+                alto = 600;
+            }
+            Assert.IsTrue(formulario.ClientSize.Width >= ancho && formulario.ClientSize.Height >= alto,
+                nombre + " abre por debajo del tamaño de su maqueta: " + formulario.ClientSize + ".");
+            Assert.IsTrue(formulario.MinimumSize.Width >= (esCompra ? 1280 : 1000) && formulario.MinimumSize.Height >= 680,
+                nombre + " no limita el tamaño mínimo para proteger la composición: " + formulario.MinimumSize + ".");
+        }
+
         private static void VerificarRespaldoPosteriorALaCarga(Form formulario)
         {
             foreach (var panel in Descendientes(formulario).OfType<Visual.Web.PanelWeb>().Where(p => p.Preparado).ToArray())
@@ -391,6 +434,14 @@ namespace Pruebas
                     Assert.IsTrue(formulario.Controls.Find("txtmail", true).Any(c => c.Visible) &&
                         formulario.Controls.Find("btnregistrarse", true).Any(c => c.Visible),
                         "El alta WinForms debe recuperar sus campos y acción al fallar WebView2.");
+                    continue;
+                }
+                if (formulario is Visual.frmCambiarContraseña && formulario.Controls.Find("recuperacionWeb", true).Length > 0)
+                {
+                    Assert.IsTrue(formulario.Controls.Find("txtMail", true).Any(c => c.Visible) &&
+                        formulario.Controls.Find("btnconfirmar", true).Any(c => c.Visible),
+                        "La recuperación WinForms debe quedar operativa cuando falla WebView2.");
+                    VerificarGeometria(formulario);
                     continue;
                 }
                 var aviso = Descendientes(formulario).OfType<Control>()

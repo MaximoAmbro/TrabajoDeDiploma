@@ -68,6 +68,7 @@ namespace Visual
         public FrmCompraCliente()
         {
             InitializeComponent();
+            MinimumSize = new Size(1280, 720);
             AplicarEscalaVisualSistema();
             ConfigurarAreaDeCompra();
             mapaSectores.SectorElegido += ElegirSectorEnMapa;

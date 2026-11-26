@@ -63,7 +63,8 @@ namespace Visual
             this.AcceptButton = this.btnRegistrar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(720, 508);
+            this.ClientSize = new System.Drawing.Size(1100, 720);
+            this.MinimumSize = new System.Drawing.Size(1000, 680);
             this.Controls.Add(this.lblEvento);
             this.Controls.Add(this.cmbEventos);
             this.Controls.Add(this.lblCodigo);

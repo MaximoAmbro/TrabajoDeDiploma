@@ -208,7 +208,8 @@ namespace Visual
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(900, 572);
+            this.ClientSize = new System.Drawing.Size(1100, 720);
+            this.MinimumSize = new System.Drawing.Size(1000, 680);
             this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.lblLectura);
             this.Controls.Add(this.dgvReporte);

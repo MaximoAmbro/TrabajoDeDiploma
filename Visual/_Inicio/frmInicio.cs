@@ -34,6 +34,7 @@ namespace Visual
         public frmInicio()
         {
             InitializeComponent();
+            MinimumSize = new Size(1000, 680);
             Controls.Add(avisoAccesoWeb);
             Controls.Add(_accesoWeb);
             _accesoWeb.Dock = DockStyle.Fill;
@@ -79,6 +80,11 @@ namespace Visual
             lblcrearcuenta.Left = txtMailLogin.Left;
             lblcrearcuenta.Width = lblolividarcontra.Width = anchoEnlace;
             lblolividarcontra.Left = lblcrearcuenta.Right + espacio;
+            int izquierdaRespaldo = Math.Max(Disposicion.Pixeles(this, Tema.Espacio.XXL), (ClientSize.Width - Disposicion.Pixeles(this, 392)) / 2);
+            txtMailLogin.Left = txtContraseñaLogin.Left = checkbxShowPass.Left = izquierdaRespaldo;
+            label5.Left = label3.Left = btninicio.Left = lblcrearcuenta.Left = izquierdaRespaldo;
+            lblolividarcontra.Left = izquierdaRespaldo + anchoEnlace + espacio;
+            label2.Left = (ClientSize.Width - label2.Width) / 2;
             try
             {
                 var faltante = VerificarEsquema();
@@ -120,6 +126,7 @@ namespace Visual
                 };
                 Controls.Add(_avisoBaseControl);
             }
+            _avisoBaseControl.Left = (ClientSize.Width - _avisoBaseControl.Width) / 2;
             _avisoBaseControl.Text = mensaje ?? MensajeBaseNoDisponible();
             _avisoBaseControl.Visible = true;
             _avisoBaseControl.BringToFront();
@@ -161,6 +168,7 @@ namespace Visual
         {
             _accesoWeb.Visible = false;
             Padding = _paddingRespaldo;
+            avisoAccesoWeb.Left = (ClientSize.Width - avisoAccesoWeb.Width) / 2;
             var barra = Controls.OfType<Componentes.BarraSuperior>().FirstOrDefault();
             if (barra != null) barra.Visible = true;
             if (_avisoBase != null)

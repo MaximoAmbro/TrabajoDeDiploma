@@ -21,8 +21,8 @@ namespace Visual
             Controls.AddRange(new Control[] { desde, hasta, accion, buscar, tabla });
             Text = "Registro de auditoría";
             StartPosition = FormStartPosition.CenterParent;
-            MinimumSize = new Size(900, 560);
-            this.ClientSize = new System.Drawing.Size(900, 520);
+            MinimumSize = new Size(1000, 680);
+            this.ClientSize = new System.Drawing.Size(1100, 720);
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = AutoScaleMode.Dpi;
         }

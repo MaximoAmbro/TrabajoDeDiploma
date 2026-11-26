@@ -62,7 +62,11 @@ namespace Visual
                 if (TopLevel)
                 {
                     var area = Screen.FromControl(this).WorkingArea;
-                    MinimumSize = new System.Drawing.Size(Math.Min(area.Width, Width), Math.Min(area.Height, Height));
+                    int minimoAncho = MinimumSize.Width > 0 ? MinimumSize.Width : Width;
+                    int minimoAlto = MinimumSize.Height > 0 ? MinimumSize.Height : Height;
+                    MinimumSize = new System.Drawing.Size(Math.Min(area.Width, minimoAncho), Math.Min(area.Height, minimoAlto));
+                    if (Width > area.Width || Height > area.Height)
+                        Size = new System.Drawing.Size(Math.Min(Width, area.Width), Math.Min(Height, area.Height));
                 }
                 Control primerCampo = DescendientesEnOrden(this)
                     .FirstOrDefault(c => EsCampoInicial(c) && c.Visible && c.Enabled && c.CanFocus);

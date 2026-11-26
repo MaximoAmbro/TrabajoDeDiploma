@@ -22,7 +22,7 @@ namespace Visual
             Text = "EventAura · Bienvenida";
             StartPosition = FormStartPosition.CenterScreen;
             ClientSize = new Size(1100, 720);
-            MinimumSize = new Size(600, 520);
+            MinimumSize = new Size(1000, 680);
             Controls.Add(vista);
             vista.VistaNoDisponible += AbrirAcceso;
             vista.Mensaje += ProcesarMensaje;

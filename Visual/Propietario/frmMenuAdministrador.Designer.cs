@@ -12,7 +12,8 @@ namespace Visual
             StartPosition = FormStartPosition.CenterScreen;
             AutoScaleMode = AutoScaleMode.Dpi;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.ClientSize = new System.Drawing.Size(1000, 720);
+            this.ClientSize = new System.Drawing.Size(1100, 720);
+            this.MinimumSize = new System.Drawing.Size(1000, 680);
             barra = new Componentes.BarraSuperior { Name = "barraSuperior", Dock = DockStyle.Top, Height = 60 };
             titulo = new Componentes.EtiquetaTitulo { Name = "tituloAdministrador", Text = "Panel de plataforma", Location = new Point(24, 84), Size = new Size(370, 40) };
             this.btnReportesGlobales = new Componentes.BotonPrimario();

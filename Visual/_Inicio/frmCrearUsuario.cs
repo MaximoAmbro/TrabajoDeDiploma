@@ -30,6 +30,7 @@ namespace Visual
             InitializeComponent();
             if (!_altaAdministrador)
             {
+                MinimumSize = new Size(1000, 680);
                 Controls.Add(_altaWeb);
                 _altaWeb.SetBounds(0, barraSuperior.Bottom, ClientSize.Width, ClientSize.Height - barraSuperior.Bottom);
                 _altaWeb.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -60,12 +61,13 @@ namespace Visual
             Shown += (s, e) =>
             {
                 ColocarTitulo(label1);
+                label1.Left = (ClientSize.Width - label1.Width) / 2;
                 int Px(int medida) => Disposicion.Pixeles(this, medida);
-                const int izquierda = Tema.Espacio.XXL;
-                const int derecha = izquierda + Tema.AnchoCampo + Tema.Espacio.L;
-                ClientSize = new Size(Px(derecha + Tema.AnchoCampo + Tema.Espacio.XXL), ClientSize.Height);
-                txtNombre.Left = txtmail.Left = TxtPassword.Left = Px(izquierda);
-                txtApellido.Left = TxtConfirmpassword.Left = Px(derecha);
+                ClientSize = new Size(Math.Max(1100, ClientSize.Width), Math.Max(720, ClientSize.Height));
+                int izquierda = Math.Max(Px(Tema.Espacio.XXL), (ClientSize.Width - Px(2 * Tema.AnchoCampo + Tema.Espacio.L)) / 2);
+                int derecha = izquierda + Px(Tema.AnchoCampo + Tema.Espacio.L);
+                txtNombre.Left = txtmail.Left = TxtPassword.Left = izquierda;
+                txtApellido.Left = TxtConfirmpassword.Left = derecha;
                 ColocarCampo(label6, txtNombre);
                 ColocarCampo(label5, txtApellido);
                 ColocarCampo(lblmail, txtmail);
@@ -77,7 +79,7 @@ namespace Visual
                 btnregistrarse.SetBounds(TxtPassword.Left, checkbxShowPass.Bottom + Px(Tema.Espacio.XL),
                     TxtPassword.Width, Px(Tema.AltoBoton));
                 lblyatengocuen.Location = new Point(TxtConfirmpassword.Left, btnregistrarse.Top);
-                ClientSize = new Size(ClientSize.Width, btnregistrarse.Bottom + Px(Tema.Espacio.XXL));
+                ClientSize = new Size(ClientSize.Width, Math.Max(720, btnregistrarse.Bottom + Px(Tema.Espacio.XXL)));
             };
             if (_altaAdministrador)
             {

@@ -42,7 +42,7 @@
             this.pnlAcciones.Name="pnlAcciones";this.pnlAcciones.Dock=System.Windows.Forms.DockStyle.Bottom;this.pnlAcciones.Size=new System.Drawing.Size(840,60);this.pnlAcciones.Controls.Add(this.btnVolver);this.pnlAcciones.Controls.Add(this.btnVista);this.pnlAcciones.Controls.Add(this.btnComprar);
             this.barraSuperior.Name="barraSuperior";this.barraSuperior.Size=new System.Drawing.Size(840,60);this.barraSuperior.Dock=System.Windows.Forms.DockStyle.Top;
             this.AutoScaleDimensions=new System.Drawing.SizeF(96F,96F);this.AutoScaleMode=System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize=new System.Drawing.Size(840,664);this.Name="frmEventosCliente";this.Text="EventAura · Eventos disponibles";this.StartPosition=System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.ClientSize=new System.Drawing.Size(1100,720);this.MinimumSize=new System.Drawing.Size(1000,680);this.Name="frmEventosCliente";this.Text="EventAura · Eventos disponibles";this.StartPosition=System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Controls.Add(this.pnlExplorar);this.Controls.Add(this.pnlAcciones);this.Controls.Add(this.pnlBusqueda);this.Controls.Add(this.barraSuperior);
             this.Load+=new System.EventHandler(this.frmEventosCliente_Load);this.ResumeLayout(false);
         }

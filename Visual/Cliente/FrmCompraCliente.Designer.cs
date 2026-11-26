@@ -287,7 +287,7 @@ namespace Visual
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(880, 604);
+            this.ClientSize = new System.Drawing.Size(1366, 768);
             this.CancelButton = this.btnVolver;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FrmCompraCliente";

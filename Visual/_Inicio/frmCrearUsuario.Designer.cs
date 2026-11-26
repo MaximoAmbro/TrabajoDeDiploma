@@ -187,7 +187,7 @@ namespace Visual
             this.AcceptButton = this.btnregistrarse;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(440, 508);
+            this.ClientSize = new System.Drawing.Size(1100, 720);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtApellido);
             this.Controls.Add(this.btnregistrarse);

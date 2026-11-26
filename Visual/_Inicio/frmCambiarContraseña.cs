@@ -34,6 +34,8 @@ namespace Visual
             ConfigurarVista();
             if (_recuperacion)
             {
+                ClientSize = new Size(1100, 720);
+                MinimumSize = new Size(1000, 680);
                 Controls.Add(_recuperacionWeb);
                 _recuperacionWeb.SetBounds(0, barraSuperior.Bottom, ClientSize.Width, ClientSize.Height - barraSuperior.Bottom);
                 _recuperacionWeb.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -178,20 +180,25 @@ namespace Visual
             _fortaleza.SetBounds(margen, px(_recuperacion ? 388 : 332), Math.Max(1, ClientSize.Width - 2 * margen), px(24));
             if (_recuperacion)
             {
-                ClientSize = new Size(px(568), px(580));
-                txtActual.SetBounds(px(24), px(220), px(184), px(28));
-                label3.Location = new Point(px(24), px(328));
-                TxtPassword.Location = new Point(px(24), px(352));
-                label4.Location = new Point(px(24), px(420));
-                TxtConfirmpassword.Location = new Point(px(24), px(444));
-                checkbxShowPass.Location = new Point(px(24), px(484));
-                btnVolver.Location = new Point(px(24), px(524));
-                btnconfirmar.Location = new Point(px(232), px(524));
-                _enviarCodigo.SetBounds(px(368), px(216), px(184), px(36));
-                _estadoCorreo.SetBounds(px(24), px(260), px(392), px(54));
+                ClientSize = new Size(1100, 720);
+                int izquierda = (ClientSize.Width - px(568)) / 2;
+                _fortaleza.Left = izquierda + margen;
+                _fortaleza.Width = px(320);
+                txtActual.SetBounds(izquierda + px(24), px(220), px(184), px(28));
+                label3.Location = new Point(izquierda + px(24), px(328));
+                TxtPassword.Location = new Point(izquierda + px(24), px(352));
+                label4.Location = new Point(izquierda + px(24), px(420));
+                TxtConfirmpassword.Location = new Point(izquierda + px(24), px(444));
+                checkbxShowPass.Location = new Point(izquierda + px(24), px(484));
+                btnVolver.Location = new Point(izquierda + px(24), px(524));
+                btnconfirmar.Location = new Point(izquierda + px(232), px(524));
+                _enviarCodigo.SetBounds(izquierda + px(368), px(216), px(184), px(36));
+                _estadoCorreo.SetBounds(izquierda + px(24), px(260), px(392), px(54));
             }
             label1.Top = px(Tema.AltoBarraSuperior + Tema.Espacio.L);
-            txtMail.Left = txtActual.Left = TxtPassword.Left = TxtConfirmpassword.Left = margen;
+            if (_recuperacion) label1.Left = (ClientSize.Width - label1.Width) / 2;
+            int izquierdaCampos = _recuperacion ? (ClientSize.Width - px(568)) / 2 + margen : margen;
+            txtMail.Left = txtActual.Left = TxtPassword.Left = TxtConfirmpassword.Left = izquierdaCampos;
             ColocarCampo(label5, txtMail);
             ColocarCampo(lblActual, txtActual);
             ColocarCampo(label3, TxtPassword);
