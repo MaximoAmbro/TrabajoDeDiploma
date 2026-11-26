@@ -109,7 +109,7 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
 .entrada-texto { height: var(--alto-control); width: 100%; padding: 0 var(--e3); background: var(--superficie);
     border: 1px solid var(--borde-control); border-radius: var(--radio-control);
     transition: border-color var(--transicion), background-color var(--transicion); }
-.entrada-texto::placeholder { color: var(--borde-control); }
+.entrada-texto::placeholder { color: var(--texto-secundario); }
 .entrada-texto:hover { border-color: var(--texto-secundario); }
 .entrada-texto:focus { outline: 2px solid var(--primario); outline-offset: 0; border-color: var(--primario); }
 .entrada-texto[aria-invalid="true"] { border-color: var(--error-texto); }
@@ -155,7 +155,7 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
 .eleccion .flecha { width: 20px; height: 20px; color: var(--texto-secundario); transition: color var(--transicion); }
 .eleccion:hover .flecha { color: var(--texto); }
 .eleccion-destacada { background: var(--primario); border-color: var(--primario); color: #fff; }
-.eleccion-destacada .secundario, .eleccion-destacada .flecha { color: #E4DCF3; }
+.eleccion-destacada .secundario, .eleccion-destacada .flecha { color: #fff; }
 .eleccion-destacada:hover { background: var(--primario-encima); border-color: var(--primario-encima); }
 .eleccion-destacada:hover .flecha { color: #fff; }
 .eleccion-destacada:active { background: var(--primario-presionado); }

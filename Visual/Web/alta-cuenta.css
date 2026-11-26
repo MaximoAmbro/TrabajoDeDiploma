@@ -14,6 +14,9 @@ body:not(.organizador) .solo-organizador { display: none !important; }
 .pasos li.hecho .numero::after { content: "✓"; position: absolute; inset: 0; display: grid; place-items: center; color: #fff; }
 .pasos li.actual { color: #fff; font-weight: 600; }
 .pasos li.actual .numero { border-color: var(--primario); background: var(--primario); color: #fff; }
+/* Los pasos pendientes llevan el mismo velo que el N6 y el pie del panel; sin él no alcanzan 4,5:1. */
+.pasos { width: fit-content; background: var(--lateral-fondo);
+    box-shadow: 0 0 0 var(--e1) var(--lateral-fondo), 0 0 var(--e5) var(--e3) var(--lateral-fondo); }
 
 /* Las dos opciones: la elegida es otro uso del acento (un solo trazo, sin fondo de color) */
 .opciones { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e4); }
