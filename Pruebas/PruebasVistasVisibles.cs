@@ -181,7 +181,7 @@ namespace Pruebas
             EnSta(()=>{
                 var cliente=Fake.Cliente(NivelFidelidad.Bronce);var evento=Fake.EventoPublicado(1000m,5);Fake.EventoPublicado(1500m,5);Fake.ComoCliente(cliente);
                 using(var lista=new Visual.frmEventosCliente{IDUsuario=cliente.Id}) {
-                    Mostrar(lista);var tarjeta=ControlDe<FlowLayoutPanel>(lista,"tarjetasEventos").Controls.OfType<TarjetaEvento>().Single(t=>t.AccessibleName==evento.Nombre);
+                    Mostrar(lista);EsperarVistaWeb(ControlDe<Visual.Web.PanelWeb>(lista,"catalogoWeb"));var tarjeta=ControlDe<FlowLayoutPanel>(lista,"tarjetasEventos").Controls.OfType<TarjetaEvento>().Single(t=>t.AccessibleName==evento.Nombre);
                     ControlDe<Button>(tarjeta,"verEntradas").PerformClick();var ficha=ControlDe<FichaEvento>(lista,"fichaEvento");
                     Assert.AreEqual(evento.Nombre,ControlDe<Label>(ficha,"tituloFicha").Text);
                     var mapa=ControlDe<MapaSectores>(ficha,"mapaFicha");var zona=mapa.Zona(0);

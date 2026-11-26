@@ -126,6 +126,10 @@ namespace Pruebas
         // de la configuración ni del framework con que se compiló.
         public static string RaizDelRepositorio()
         {
+            string raizConfigurada = Environment.GetEnvironmentVariable("EVENTAURA_TEST_ROOT");
+            if (!string.IsNullOrWhiteSpace(raizConfigurada) &&
+                File.Exists(Path.Combine(raizConfigurada, "SistemaEntradas.sln")))
+                return raizConfigurada;
             var carpeta = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             while (carpeta != null && !File.Exists(Path.Combine(carpeta.FullName, "SistemaEntradas.sln")))
             {

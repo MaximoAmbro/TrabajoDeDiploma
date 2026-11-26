@@ -58,6 +58,7 @@ namespace Pruebas
                     "\"" + Path.Combine(temporal, "Pruebas.dll") + "\" /TestCaseFilter:\"FullyQualifiedName~" + nameof(CP360_FalloDeTicketDejaCompraRecuperable) + "\" /Logger:console;verbosity=normal")
                 { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true };
                 inicio.EnvironmentVariables["EVENTAURA_CP360_HIJO"] = "1";
+                inicio.EnvironmentVariables["EVENTAURA_TEST_ROOT"] = BaseDePrueba.RaizDelRepositorio();
                 using (var proceso = Process.Start(inicio))
                 {
                     string salida = proceso.StandardOutput.ReadToEnd();
@@ -263,6 +264,7 @@ namespace Pruebas
                     "\"" + Path.Combine(temporal, "Pruebas.dll") + "\" /TestCaseFilter:\"FullyQualifiedName~" + nameof(CP359_RespaldoConDependenciasAusentesEnCopia) + "\" /Logger:console;verbosity=normal")
                 { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true };
                 inicio.EnvironmentVariables["EVENTAURA_CP359_HIJO"] = "1";
+                inicio.EnvironmentVariables["EVENTAURA_TEST_ROOT"] = BaseDePrueba.RaizDelRepositorio();
                 using (var proceso = Process.Start(inicio))
                 {
                     string salida = proceso.StandardOutput.ReadToEnd();
