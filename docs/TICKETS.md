@@ -4,7 +4,17 @@
 final, JC se lo pasa a Claude Code y Claude Code actualiza el estado acá. JC puede corregir
 cualquier ticket cuando quiera.
 
-Última actualización: **24/11/2026**, por Claude Code.
+Última actualización: **26/11/2026, a la noche**, por Claude Code.
+- Estados puestos al día con los commits `4c200ef` a `0a2d786`.
+- Agregados T-27 a T-35: el encargo de las vistas web del 26/11 y la auditoría visual.
+- **Verificación sobre el ejecutable del 26/11** (`docs/VERIFICACION-EJECUTABLE-2026-11-26.md`): cierran
+  T-03, T-21, T-23, T-24 y T-25; se reabren T-22, T-26 y T-31; T-02 sigue abierto. Nuevos: T-36 y T-37.
+
+**Fechas:** congelamiento del código el **01/12**; entrega el **10/12**. El alcance del documento no
+se achica. Lo que tiene que estar cerrado para congelar está en `docs/CONGELAMIENTO-2026-12-01.md`.
+
+**«Verificado»** quiere decir ejecutado por Claude Code sobre la aplicación compilada; no leído en el
+código ni informado por Codex.
 
 **Dueño:** quien hace el trabajo. Casi todos son de Codex o de Claude Code. Figuran JC o Máximo
 solo cuando el ticket es una prueba manual, un dato o el Word, que no puede hacer un agente.
@@ -19,8 +29,12 @@ solo cuando el ticket es una prueba manual, un dato o el Word, que no puede hace
 | **en revisión** | Hecho; falta que JC lo revise o autorice el commit |
 | **cerrado** | Cumple el criterio de «Listo cuando» |
 
-**Orden:** T-03 y T-20 primero (urgentes); T-01 a T-05 antes de congelar el código; T-06 congela; de T-08 en adelante, con el
-código congelado.
+**Orden:**
+1. Antes de congelar el código, las fallas: T-26 (la compra desde el menú), T-31 (CP-359), T-28 (el
+   historial), T-22 (la exportación) y T-36 (el alto de Reportes). Después, T-27, T-29, T-02, T-05 y
+   T-37. T-32 solo si todo eso cierra antes del 29/11.
+2. T-06 congela el código.
+3. De T-08 en adelante, con el código congelado.
 
 ---
 
@@ -28,12 +42,12 @@ código congelado.
 
 | ID | Dueño | Qué | Estado |
 |---|---|---|---|
-| T-01 | Codex | Terminar y commitear la tanda visual en curso (gráficos y disponibilidad) | en curso |
-| T-02 | Codex | Prueba automática del respaldo de WebView2 | abierto |
-| T-03 | Codex | **URGENTE, confirmado:** sin las DLL de WebView2 o sin `Newtonsoft.Json.dll`, error en lugar del respaldo | en revisión: Codex lo informa hecho en `5b6fd5a` (CP-199); falta verificarlo sobre el ejecutable |
-| T-04 | Codex | Carpeta de la aplicación para la defensa, completa y comprobada | abierto |
-| T-05 | Codex | Lo que la reforma visual dejó declarado como fuera de conformidad | abierto (a decidir por JC) |
-| T-06 | Codex | Congelar el código | bloqueado por T-01 a T-05 |
+| T-01 | Codex | Terminar y commitear la tanda visual en curso (gráficos y disponibilidad) | cerrado: `ff79658` (24/11) |
+| T-02 | Codex | Prueba automática del respaldo de WebView2 | abierto: ejecutado el 26/11, CP-359 falla (ver T-31); falta el parámetro de capturas de `CapturarReforma.ps1`; 144 DPI sin probar |
+| T-03 | Codex | **URGENTE, confirmado:** sin las DLL de WebView2 o sin `Newtonsoft.Json.dll`, error en lugar del respaldo | cerrado: verificado sobre el ejecutable el 26/11, las 14 pantallas caen al respaldo |
+| T-04 | Codex | Carpeta de la aplicación para la defensa, completa y comprobada | abierto; ahora `Web\` tiene 27 archivos, no 11 |
+| T-05 | Codex | Lo que la reforma visual dejó declarado como fuera de conformidad | abierto: Codex lista los puntos primero y JC decide (26/11) |
+| T-06 | Codex | Congelar el código | bloqueado por T-02, T-05, T-22, T-26 a T-29, T-31, T-36 y la decisión de T-37 |
 | T-07 | Claude Code | Las dos filas del catálogo con reglas distintas de su prueba | cerrado (24/11) |
 | T-08 | Codex y Claude Code | Batería final, dos corridas | bloqueado por T-06 |
 | T-09 | Claude Code | Valores de los marcadores `[[...]]` y las tres tablas | bloqueado por T-08 |
@@ -43,17 +57,28 @@ código congelado.
 | T-13 | Claude Code | WebView2 en la arquitectura (p. 57) y la bibliografía (p. 112) | bloqueado por T-06 |
 | T-14 | JC | Los datos que faltan para el Word | abierto |
 | T-15 | Claude Code, después JC | JC-R10: escanear dos tickets con el celular | abierto |
-| T-16 | JC | JC-R12: las cuatro pantallas sin WebView2 | bloqueado por T-03 |
+| T-16 | JC | JC-R12: las cuatro pantallas sin WebView2 | abierto: T-03 cerrado el 26/11 |
 | T-17 | Máximo | La tarde en Word: marcadores, pausas e índice | bloqueado por T-09, T-11 a T-14 |
 | T-18 | Claude Code | Commitear los documentos y herramientas del 24/11 | cerrado (`0ddc0c4`) |
 | T-19 | Claude Code | `tools/VerificarReglasAgentes.ps1` no corre | abierto |
 | T-20 | Codex | **URGENTE:** sin base, la pantalla de inicio muestra la contraseña y no avisa nada | cerrado: verificado el 24/11 sobre el ejecutable (sin config y con la instancia inexistente) |
-| T-21 | Codex | El cartel de esquema sin `02-semilla.sql` pide correr `04` | en revisión: Codex lo informa hecho en `5b6fd5a` |
-| T-22 | Codex | El ticket se genera sin `try` después del pago confirmado; mensajes de PDF que no corresponden | en revisión: Codex lo informa hecho en `5b6fd5a` (CP-200) |
-| T-23 | Codex | **Para la defensa:** los rechazos de la solicitud de Organizador dicen «error inesperado» | abierto |
-| T-24 | Codex | «Agregar evento» no deja elegir la hora | abierto |
-| T-25 | Codex | El registro de auditoría muestra la hora UTC | abierto |
-| T-26 | Codex | El catálogo y la compra quedan corridos dentro de «Mi cuenta» | abierto |
+| T-21 | Codex | El cartel de esquema sin `02-semilla.sql` pide correr `04` | cerrado: verificado sobre el `Visual.exe` real el 26/11 |
+| T-22 | Codex | El ticket se genera sin `try` después del pago confirmado; mensajes de PDF que no corresponden | abierto: el ticket pasa; **la exportación sin iText sigue mostrando «error inesperado»** (26/11) |
+| T-23 | Codex | **Para la defensa:** los rechazos de la solicitud de Organizador dicen «error inesperado» | cerrado: verificado el 26/11, los cinco casos muestran el mensaje de la regla |
+| T-24 | Codex | «Agregar evento» no deja elegir la hora | cerrado: verificado el 26/11 (evento a las 21:00) |
+| T-25 | Codex | El registro de auditoría muestra la hora UTC | cerrado: verificado el 26/11 (13:26 local) |
+| T-26 | Codex | **Para la defensa:** el catálogo y la compra quedan cortados dentro de «Mi cuenta» | abierto, reabierto el 26/11: **la compra desde el menú no se puede terminar** («Continuar al pago» fuera de la ventana) |
+| T-27 | Codex | Vistas web: copiar el encargo de diseño del 26/11 (resumen, selección neutra, muro y velo) | en revisión, salvo el velo de los pasos del alta, que falta |
+| T-28 | Codex | **Falla:** en el historial, cada compra ocupa una pantalla entera (A-1) | en curso (JC se lo pasó a Codex el 26/11) |
+| T-29 | Codex | Cuatro hallazgos de una línea de la auditoría visual (M-4, M-5, B-2 y B-3) | a confirmar: JC pasó la auditoría a Codex; no está dicho si incluye estos |
+| T-30 | JC | Decidir M-1 (gráfico de barras), M-3 (más de cuatro trazos violeta) y B-5 (`compra.*` sin uso) | cerrado: `4ee3003` |
+| T-31 | Codex | Corregir identificadores duplicados de pruebas y completar comentarios y matriz | abierto, reabierto el 26/11: la renumeración rompe CP-359 (filtro con el nombre viejo); cierra cuando CP-359 pasa |
+| T-32 | JC | P4, una sola tabla: ¿antes del congelamiento o después de la entrega? | decidido (26/11): entra solo si todo lo demás que bloquea T-06 cierra antes del 29/11 |
+| T-33 | Claude Code | Volver a medir A-1 y A-2 y anotar las pruebas manuales de las vistas web | bloqueado por T-27 y T-28 |
+| T-34 | Claude Code | Revisar la transcripción de los casos nuevos desde el 24/11 | hecho en parte el 26/11 (filas de Codex revisadas y corregidas); cierra con T-31 |
+| T-35 | Claude Code | Poner `docs/disenos/` al día con lo que Codex integró | abierto, baja prioridad |
+| T-36 | Codex | `frmReportes` mide 960 px de alto, por encima del techo de 790 | abierto (26/11) |
+| T-37 | JC | ¿El alta y la recuperación avisan «Vista web no disponible» como las demás? | abierto (26/11) |
 
 ---
 
@@ -79,7 +104,7 @@ commitearon el 24/11 porque estabas trabajando.
   que nunca se publican);
 - tu reporte dice el commit y la cantidad de ejecuciones.
 
-**Estado:** en curso.
+**Estado:** cerrado. Se commiteó como `ff79658` el 24/11 a las 15:49, con el mensaje que pidió JC.
 
 ### T-02 · Codex · Prueba automática del respaldo de WebView2
 
@@ -99,7 +124,23 @@ Opcional, si sale con el mismo mecanismo: la falla después de que la web ya se 
 - tiene su fila en `docs/04-casos-prueba.md` (Claude Code la transcribe desde tu reporte);
 - `CapturarReforma.ps1` puede generar las capturas del respaldo con un parámetro.
 
-**Estado:** abierto.
+**Estado:** en revisión. Según el reporte del 24/11, en `5b6fd5a`:
+- H-3: el aviso «Cargando vista…»;
+- H-4: el aviso de Reportes, debajo de «Generar»;
+- H-5: CP-357 revisa la geometría y que los indicadores vuelvan a verse;
+- H-6: la falla forzada después de preparar WebView2.
+
+`b34b022` amplió la verificación a las seis migraciones del 24/11 a la tarde.
+
+**Ejecutado el 26/11 (Claude Code), no pasa del todo:**
+- con `vstest.console` sobre el árbol de trabajo, CP-357, CP-358 y CP-360 pasan y **CP-359 falla**:
+  «Ninguna prueba coincide con el filtro… `FullyQualifiedName~CP199_RespaldoConDependenciasAusentesEnCopia`»
+  (`TestResults/claude-verif-t02.trx`). Se arregla en T-31;
+- `Pruebas/CapturarReforma.ps1` no tiene parámetro para capturar el respaldo; sí tiene uno de escala;
+- 144 DPI, sin probar.
+
+**Estado:** abierto. Falta: CP-359 pasando (T-31), el parámetro de capturas y una corrida a 144 DPI, o
+que JC acepte declarar 144 DPI como no probado.
 
 ### T-03 · Codex · Que la falta de las DLL caiga al respaldo, no a un error
 
@@ -130,7 +171,18 @@ Administrador muestra el aviso rojo de error. Mismo arreglo: los tipos de Newton
 que tiene el `try`. **Listo cuando** también sin `Newtonsoft.Json.dll` las cuatro pantallas caen al
 respaldo con su aviso.
 
-**Estado:** abierto, **urgente**.
+**Estado:** en revisión. Según el reporte del 24/11, en `5b6fd5a`:
+- `PanelWeb` carga `PanelWebMotor` por reflexión dentro de un `try`;
+- la prueba borra las DLL de una copia y verifica `PanelWeb` aislado, **no las pantallas**.
+
+Esa prueba quedó numerada CP-359.
+
+**Cerrado el 26/11, verificado sobre el ejecutable** (Claude Code). En una copia de `bin\Debug` sin
+`Microsoft.Web.WebView2.*`, los tres `WebView2Loader.dll` ni `Newtonsoft.Json.dll`, las **14** pantallas con
+vista web abren su versión de Windows Forms con datos, sin aviso de error y sin entradas en `errores.log`.
+El panel del Administrador muestra los 8 indicadores. Once muestran «Vista web no disponible»; el alta y la
+recuperación no muestran aviso (decide JC en T-37). Evidencia: `docs/verificaciones/ejecutable-2026-11-26/`,
+capturas `t03-*` y `log-sindll.txt`.
 
 ### T-04 · Codex · Carpeta de la aplicación para la defensa
 
@@ -138,13 +190,15 @@ respaldo con su aviso.
 carpeta del programa que se usa en la defensa:
 - `Visual.exe` y su `.config`, y las DLL del proyecto;
 - `Microsoft.Web.WebView2.Core.dll`, `Microsoft.Web.WebView2.WinForms.dll` y `Newtonsoft.Json.dll`;
-- las carpetas `runtimes\` (con `WebView2Loader.dll`) y `Web\` (once archivos).
+- las carpetas `runtimes\` (con `WebView2Loader.dll`) y `Web\`. Al 26/11 son 27 archivos, sin
+  contar los tres `.cs`; el 24/11 eran 11.
 
-Comprobar que una copia de esa carpeta, en otra ubicación, abre las cuatro vistas web.
+Comprobar que una copia de esa carpeta, en otra ubicación, abre las vistas web. Al 26/11 son 14
+pantallas que cargan 8 páginas.
 
 **Listo cuando** la lista está escrita y la comprobación figura en el reporte.
 
-**Estado:** abierto.
+**Estado:** abierto. Se hace con el código congelado: cada pantalla migrada cambia la lista.
 
 ### T-05 · Codex · Lo que la reforma declaró fuera de conformidad
 
@@ -161,7 +215,8 @@ Enter en Suscripción sigue como verificación manual porque abre un modal.
 **Listo cuando** JC decidió. Si decide hacerlo, cuando la batería pasa y las capturas a 96 y
 144 DPI no muestran regresiones.
 
-**Estado:** abierto, a decidir por JC.
+**Estado:** abierto. **Decisión de JC (26/11):** Codex lista primero los puntos concretos de cada uno de
+los tres; con esa lista, JC decide cuáles se hacen antes del 01/12.
 
 ### T-06 · Codex · Congelar el código
 
@@ -171,7 +226,7 @@ correcciones de fallas, y cada una se anota acá como ticket nuevo.
 
 **Listo cuando** JC confirma el congelamiento y el hash queda anotado en `docs/ESTADO-AGENTES.md`.
 
-**Estado:** bloqueado por T-01 a T-05.
+**Estado:** bloqueado. Lo que tiene que estar cerrado está en `docs/CONGELAMIENTO-2026-12-01.md`.
 
 ### T-07 · Claude Code · Las dos filas del catálogo con reglas distintas de su prueba
 
@@ -238,6 +293,18 @@ está (decisión de JC del 24/11).
 Se hacen sobre el código congelado. Las rehace Codex, o Claude Code con
 `tools/CapturasInstructivo/` si Codex no está trabajando.
 
+**Más grande desde el 24/11:** la bienvenida, el acceso, el alta, la recuperación, el armador y seis
+pantallas de gestión son ahora vistas web. Casi todas las figuras del instructivo y del guion muestran
+alguna.
+
+**Además, las herramientas de capturas probablemente ya no sirven.** Esto lo leí en el código; no lo
+ejecuté. `tools/CapturasInstructivo/Captura.cs` y `tools/Usabilidad/Medicion.cs` arman la compra
+escribiendo en controles de Windows Forms: `dgvSectores`, `chkHospedaje`, `lblResumen`, `pnlResumen` y
+`btnComprar`. Desde `c2f80ca`, la compra es el armador web, y esos controles quedaron como adaptadores
+ocultos (lo dice una prueba de `4b8d2d5`). Lo más probable es que las figuras salgan con la pantalla
+vieja, o vacías, porque una captura de Windows Forms no dibuja el contenido de WebView2. Hay que probarlo
+antes de contar con ellas.
+
 **Listo cuando** las 60 se rehicieron sobre el hash de T-06 y JC las aprobó.
 
 **Estado:** bloqueado por T-06.
@@ -251,7 +318,9 @@ Se hacen sobre el código congelado. Las rehace Codex, o Claude Code con
 - el anexo «Pantallas del sistema».
 
 En cada una hay que revisar los nombres de botones y menús, los controles y los mensajes. En las
-cuatro vistas web, las tablas de controles se redactan de nuevo.
+vistas web, las tablas de controles se redactan de nuevo. Eran 4 el 24/11 a la mañana; al 26/11 son
+14 pantallas. Incluyen el inicio de sesión, el alta y el armador, que son el corazón del instructivo
+(pp. 51 a 55).
 
 **Listo cuando:**
 - ninguna página de la lista sigue con ⏸;
@@ -319,7 +388,8 @@ Lo que ve el usuario:
 **Listo cuando,** con `Data Source=.\NOEXISTE`, la contraseña sale oculta, el aviso fijo está visible
 desde que se abre la ventana y hay una prueba automática que lo comprueba.
 
-**Estado:** abierto, **urgente**.
+**Estado:** cerrado. Se verificó el 24/11 sobre el ejecutable, sin configuración y con la instancia
+inexistente. La prueba quedó numerada CP-358.
 
 ### T-21 · Codex · El cartel de esquema sin `02` pide la migración equivocada
 
@@ -331,7 +401,9 @@ Administrador, y pedir `02-semilla.sql`.
 **Listo cuando,** sobre una base con solo `01`, el cartel pide `02-semilla.sql`, y hay una prueba en
 `PruebasEsquemaInicio`.
 
-**Estado:** abierto.
+**Estado:** cerrado el 26/11, verificado. Sobre una base nueva con solo `01-esquema.sql`, el `Visual.exe`
+real dice «…falta la semilla inicial con los parámetros y la cuenta Administrador. Corré
+BaseDatos/02-semilla.sql y volvé a abrir EventAura.» Leído con UI Automation; no quedó captura.
 
 ### T-22 · Codex · El ticket después del pago y los mensajes del PDF
 
@@ -352,7 +424,33 @@ Administrador, y pedir `02-semilla.sql`.
 **Listo cuando** hay una prueba para cada caso (carpeta sin permiso de escritura) y el mensaje
 corresponde a la causa.
 
-**Estado:** abierto.
+**Estado:** en revisión. Codex lo informa hecho en `5b6fd5a`:
+- el ticket conserva el pedido y remite a «Mis entradas»;
+- la exportación distingue tres casos: sin permiso, dependencia ausente y archivo bloqueado.
+
+La prueba del ticket quedó numerada CP-360. Según el reporte de Codex,
+**no se simularon por separado** iText, QRCoder y los permisos de Documentos; los tres pasan por el
+mismo `catch`.
+
+**Ejecutado el 26/11 en una copia sin las DLL de iText (Claude Code):**
+- **El ticket pasa.** La compra EA-005846 queda Confirmada; la pantalla dice que no se pudo crear el PDF y
+  que las entradas están en «Mis entradas»; no se crea ningún archivo (`t22-2-confirmacion-sin-pdf.png`).
+- **La exportación del reporte no pasa.** Muestra «Ocurrió un error inesperado y la operación no se
+  completó…» (`t22-1-exportar-sin-itext.png`), y `errores.log` registra
+  `System.IO.FileNotFoundException en Visual.ExportadorPDF..cctor()`.
+  - **Causa:** `ExportadorPDF` tiene campos `static readonly` de tipos de iText (`DeviceRgb`, líneas 29 a
+    33). Sin la DLL falla el constructor estático y .NET lo envuelve en una `TypeInitializationException`,
+    que el `catch (FileNotFoundException)` de `frmReportes.btnExportar_Click` no atrapa.
+  - La prueba de Codex pasa porque inyecta una `FileNotFoundException` directa.
+
+**Qué hacer ahora:** atrapar también `TypeInitializationException` en la exportación, o sacar los
+`static readonly` de iText de `ExportadorPDF`. La prueba tiene que quitar la DLL de verdad, como CP-359,
+no inyectar la excepción.
+
+**Listo cuando,** sin `itext*.dll`, «Exportar PDF» muestra el mensaje de dependencia ausente y no el de
+error inesperado, y la prueba lo comprueba quitando la DLL.
+
+**Estado:** abierto, reabierto el 26/11 por la exportación.
 
 ### T-23 · Codex · Los rechazos de la solicitud de Organizador muestran «error inesperado»
 
@@ -375,8 +473,12 @@ demás pantallas.
 **Listo cuando** los cuatro casos muestran el mensaje de la regla (los textos están en la sección 8 del
 guion) y hay una prueba que lo comprueba.
 
-**Estado:** abierto. Importa para la defensa: si el jurado pide un CUIT inválido, hoy el sistema dice
-«error inesperado».
+En `4b8d2d5`, `ManejadorErrores.MensajeParaUsuario` devuelve el mensaje de la `ReglaNegocioException`, y
+`PruebasSolicitudesOrganizador` afirma el texto de la regla en `avisoSistema`.
+
+**Estado:** cerrado el 26/11, verificado. CUIT inválido, CBU inválido, teléfono sin confirmar, código
+incorrecto y rechazo sin motivo muestran el mensaje de la regla, sin entradas en `errores.log` (capturas
+`t23-*`). Detalle menor, no bloquea: el aviso rojo tapa el campo CUIT durante 3 segundos.
 
 ### T-24 · Codex · «Agregar evento» no deja elegir la hora
 
@@ -393,7 +495,13 @@ larga y sin hora. El evento queda con la hora en que se abrió el formulario. Co
 **Listo cuando** el Organizador puede elegir día y hora, y hay una prueba que registra un evento a una hora
 elegida.
 
-**Estado:** abierto.
+**Estado:** en revisión, según el código. En `4b8d2d5`:
+- el selector usa `dd/MM/yyyy HH:mm` y propone la próxima hora en punto;
+- `PruebasGrupoAPropietario` afirma que la hora elegida se guarda.
+
+**Estado:** cerrado el 26/11, verificado. Abierto a las 13:26, el selector propone 14:00; un evento cargado
+para el 29/11/2026 a las 21:00 queda guardado a las 21:00:00 (evento 160 de `BddEventAura_Pruebas`,
+`t24-1-hora-elegida.png`).
 
 ### T-25 · Codex · El registro de auditoría muestra la hora UTC
 
@@ -405,7 +513,15 @@ con el reloj de Windows.
 
 **Listo cuando** una acción hecha a las HH:mm locales figura a las HH:mm, y hay una prueba que lo comprueba.
 
-**Estado:** abierto.
+**Estado:** en revisión, según el código. En `4b8d2d5`:
+- `frmAuditoria` convierte de UTC a la hora local;
+- una prueba registra un movimiento y afirma que se ve con menos de un minuto de diferencia con
+  `DateTime.Now`.
+
+`b34b022` volvió a tocar `frmAuditoria`, que desde el 24/11 es vista web.
+
+**Estado:** cerrado el 26/11, verificado. Un inicio de sesión a las 13:26 locales (16:26 UTC) figura
+a las 13:26, en la página web y en la grilla de respaldo (`t25-1-auditoria-hora-local.png`).
 
 ### T-26 · Codex · El catálogo y la compra quedan corridos dentro de «Mi cuenta»
 
@@ -423,6 +539,246 @@ guion, sección 3).
 
 **Listo cuando,** dentro de la navegación, el título corresponde a la pantalla abierta y la primera fila
 de tarjetas se ve completa, a 96 y a 144 DPI.
+
+**Estado:** en revisión, según el código. En `4b8d2d5`:
+- `frmMenuCliente` pone en el título el nombre de la pantalla abierta;
+- una prueba afirma «Eventos disponibles».
+
+**Ejecutado el 26/11 (Claude Code), a 96 DPI: no pasa, y está peor que el 24/11.** El título sí cambia.
+Pero la ventana «Mi cuenta» es fija (`FixedSingle`, sin maximizar, 1200 × 760) y las pantallas que aloja
+quedan más grandes que ella:
+- **catálogo:** la vista web va de X 304 a 1240 en un área de 1200; la segunda tarjeta queda cortada 40 px
+  y «Volver» y «Ver como tabla» quedan debajo del borde (`t26-1-catalogo-en-mi-cuenta.png`);
+- **ficha:** de «Armar paquete» se ven 16 px (Y 744 a 780 en 760), sin barra de desplazamiento
+  (`t26-2-ficha-sin-armar-paquete.png`);
+- **armador:** la vista mide 1280 de ancho y arranca en X 272; el total y «Continuar al pago» (x 930 de la
+  página) quedan enteros fuera de la ventana, y la página no se desplaza
+  (`t26-3-armador-sin-total-ni-continuar.png`);
+- sin las DLL pasa lo mismo: «Comprar» queda en Y 814 y X 1368.
+
+**El recorrido de compra de la sección 3 del guion no se puede completar desde el menú.**
+
+**Causa:** `0160b55` («ampliar ventanas de pantallas migradas») puso `MinimumSize` de 1280 × 720 en
+`FrmCompraCliente` y de 1000 × 680 en `frmEventosCliente` y `frmHistorialCliente`. Dentro de «Mi cuenta»,
+`HostFormularioCliente` les da unos 960 de ancho y el mínimo le gana. Sueltas se ven bien: por eso CP-357,
+que las abre como ventanas, pasa.
+
+**Qué hacer ahora:** que `HostFormularioCliente` anule el `MinimumSize` de la pantalla que aloja, o que esas
+tres lo pongan solo cuando son ventanas sueltas. Después, que el armador reparta su ancho en unos 960 px.
+
+**Listo cuando,** en la ventana de 1200 × 760, se ven completos: las tarjetas del catálogo con «Volver» y
+«Ver como tabla»; «Armar paquete» en la ficha; el total y «Continuar al pago» en el armador. Y hay una
+prueba que lo afirma **abriendo las pantallas desde el menú**, no sueltas. 144 DPI va en la verificación
+manual de T-33.
+
+**Estado:** abierto, reabierto el 26/11. **Es el más importante para la defensa.**
+
+---
+
+## Vistas web del 25 y 26/11 y auditoría visual
+
+Origen:
+- el encargo de diseño del 26/11, `docs/BORRADOR-ENCARGO-CODEX-2026-11-26.md`. **No se borra hasta que
+  Codex confirme que terminó:** lo está usando de referencia;
+- la auditoría visual, `docs/AUDITORIA-VISUAL-2026-11-26.md`. Sus IDs (A-1, M-3…) son de ese
+  informe.
+
+### T-27 · Codex · Copiar el encargo de diseño del 26/11 a `Visual/Web/`
+
+**Qué:** las secciones 1, 2 y 2 bis del borrador. Decisiones de JC del 26/11:
+
+| Propuesta | Decisión |
+|---|---|
+| P1: resumen del armador por contenedor | **No va a la aplicación.** El bloque WebView2 de Codex queda como está (PRINCIPIOS-DISENO.md §4) |
+| P2: selección neutra (`--seleccion`) | Va |
+| P3: rótulos N6 en minúscula | Afuera |
+| P4: una sola tabla | Ver T-32 |
+| P5: muro rehecho, con el velo detrás de los textos en `--lateral-seccion` | Va |
+
+**No se copian encima** `armador-paquete.css`, `armador-paquete.js`, `armador-paquete.html` ni
+`alta-cuenta.js`: las copias de Codex tienen trabajo de integración que la maqueta no tiene (borrador,
+«Antes de empezar»).
+
+**Estado:** en revisión, salvo una línea.
+- Ya están: `b4ae003` (resumen de 320 px), `756d106` (selección neutra) y `b3a0d1b` (muro y velo del N6
+  y el pie). Claude Code midió el velo de `b3a0d1b` y cumple.
+- **Falta** el bloque `.pasos` en `Visual/Web/alta-cuenta.css`, en el borrador, sección 2 bis. Sin él,
+  los pasos pendientes del alta quedan entre 3,75 y 4,44:1 (A-2).
+
+**Listo cuando:**
+- se cumple «Cómo se da por hecho» del borrador: la batería pasa y hay capturas de las cuatro pantallas
+  de entrada y del armador a 96 y a 144 DPI;
+- la nueva medición de T-33 da 4,5:1 o más en los pasos.
+
+### T-28 · Codex · El historial: cada compra ocupa una pantalla entera
+
+**Qué:** A-1 de la auditoría, **ejecutado**.
+- `sistema.css:166` define `.entrada { min-height: 100vh }` para la estructura de las pantallas de
+  entrada.
+- `gestion.js:25` usa la misma clase para cada renglón del historial, y `gestion.css` no pisa el alto.
+- Al elegir un pedido, el usuario ve un hueco en blanco y la casilla «Devolver» queda abajo o fuera de
+  la vista.
+- Está en lo commiteado desde `b6d05bf`.
+
+**Qué hacer:** renombrar la clase del historial (por ejemplo, `entrada-ticket`) o fijar `min-height: 0`
+en `gestion.css`. Lo primero evita que vuelva a pasar.
+
+**Listo cuando:**
+- con una compra de dos entradas, los dos renglones y «Devolver» se ven juntos sin desplazar;
+- hay una prueba que afirma el alto del renglón.
+
+**Estado:** en curso: JC se lo pasó a Codex el 26/11.
+
+### T-29 · Codex · Cuatro hallazgos de una línea
+
+**Qué:** de la auditoría, todos ejecutados:
+- **M-4:** «Ya tengo una cuenta.» de la bienvenida da 4,3:1 (`sistema.css:158`). Con `#fff` da 5,7.
+- **M-5:** los marcadores de los campos del alta dan 3,35:1 (`sistema.css:112`). Con
+  `--texto-secundario` dan 6,4.
+- **B-2:** las etiquetas de estado de «Eventos del local» se estiran. Se arregla con
+  `align-content: start` en `.tarjeta` (`gestion.css:7`).
+- **B-3:** el detalle de la revisión de eventos pierde los saltos de línea. Se arregla con
+  `white-space: pre-line`.
+
+**Listo cuando** T-33 los vuelve a medir y dan bien.
+
+**Estado:** a confirmar. JC le pasó la auditoría a Codex el 26/11; no está dicho si estos cuatro
+entran.
+
+### T-30 · JC · Tres decisiones de la auditoría
+
+- **M-1, el gráfico de barras** de los reportes y del panel del Administrador:
+  - corta el último renglón;
+  - los rótulos se ven a 17-18 px, fuera de la escala;
+  - el interlineado es 1,0.
+
+  Arreglarlo es rehacer la escala del SVG en `datos.js` (22-55). **Es lo que más se ve en la defensa**
+  de los tres.
+- **M-3, más de cuatro trazos violeta**: los 8 botones del catálogo, las 9 barras de los reportes y lo
+  elegido en gestión (en violeta suave; la regla dice neutro).
+- **B-5:** `compra.html`, `compra.css` y `compra.js` no los carga ninguna pantalla desde `c2f80ca`. Solo
+  los nombra una prueba (`PruebasInteraccionPantallas.cs:196`). Hay que decidir si se borran.
+
+Quedan como están, salvo que JC diga otra cosa:
+- **M-2:** el desglose del armador no entra entero a 1280 × 720. El total y el botón sí; JC decidió no
+  tocar ese diseño.
+- B-1, B-4 y B-6.
+
+**Estado:** cerrado: resuelto en `4ee3003` («reservar el acento para acciones»).
+
+### T-31 · Codex · Números de caso repetidos
+
+**Qué:** encontrado por Claude Code el 26/11, leyendo el código.
+
+| Número | Caso existente (se conserva) | Caso agregado el 24/11, ya renumerado |
+|---|---|---|
+| CP-198 | `PruebasPublicacionEventos`: el Organizador no rechaza eventos y el Administrador debe justificar | — |
+| CP-199 | `PruebasPublicacionEventos`: el rechazo devuelve a borrador | — |
+| CP-200 | `PruebasSeguridadCuenta`: la recuperación no enumera correos | — |
+| CP-358 | — | `PruebasEsquemaInicio`: sin conexión, el inicio avisa y oculta la contraseña (T-20) |
+| CP-359 | — | `PruebasInteraccionPantallas`: sin las DLL, respaldo (T-03) |
+| CP-360 | — | `PruebasInteraccionPantallas`: falla del ticket después del pago (T-22) |
+
+CP-364 y CP-365 ya tienen comentario `// CP-xx — RF-yy, RN-zz: …` y fila en `docs/04-casos-prueba.md`.
+
+**Por qué importa:**
+- la matriz y las tablas de la p. 108 salen de esos comentarios (`tools/Matriz/Extraer.py`): con
+  números repetidos, el documento cuenta mal los casos;
+- el jurado puede buscar un CP y encontrar dos.
+
+**Resolución (26/11):** se conservaron CP-198 a CP-200 para sus pruebas originales y las tres pruebas
+nuevas pasaron a CP-358, CP-359 y CP-360. CP-364 y CP-365 tienen comentarios y filas con RF, RN y
+resultado esperado en `docs/04-casos-prueba.md`; la matriz de `docs/LISTA-PARA-MAXIMO.md` también se
+actualizó. El rango CP-361 a CP-363 sigue libre.
+
+**Listo:** cada `CP-xx` aparece en un solo `[TestMethod]`; se comprobó sin ejecutar la aplicación.
+`Extraer.py` no detecta duplicados, así que el barrido de nombres se hizo por separado.
+
+**Reabierto el 26/11 (verificación de Claude Code; JC lo deja abierto hasta que CP-359 pase).** La
+renumeración está bien en los números y en `docs/`, pero rompe CP-359. La prueba se copia a una carpeta
+temporal y se vuelve a lanzar a sí misma filtrando por el nombre del método, y el filtro quedó con el nombre
+viejo: `Pruebas/PruebasInteraccionPantallas.cs:204`,
+`FullyQualifiedName~CP199_RespaldoConDependenciasAusentesEnCopia`; el método ahora es `CP359_…`.
+Resultado: «Ninguna prueba coincide con el filtro» (`TestResults/claude-verif-t02.trx`).
+
+El registro `TestResults/bateria-365-2026-11-26.md` es de antes de renumerar y dice que los cambios
+posteriores «solo modifican identificadores y comentarios». No es así: con la renumeración, la batería da
+364 de 365.
+
+**Qué hacer ahora:** el filtro con `nameof(CP359_RespaldoConDependenciasAusentesEnCopia)`. Mejor renombrar
+también `EVENTAURA_CP199_HIJO` y la carpeta `EventAura-CP199-`. Volver a correr la batería completa
+**después** de renumerar, y que el registro diga sobre qué commit se corrió.
+
+**Listo cuando** CP-359 pasa y hay un registro de batería completa, posterior a la renumeración, con 365 de
+365.
+
+**Estado:** abierto.
+
+### T-32 · JC · P4, una sola tabla
+
+**Qué:** `docs/disenos/PROPUESTA-TABLA.md`. Toca `sistema.css`, `datos.css`, `datos.js` y `gestion.css`,
+es decir, las vistas de reportes, del panel del Administrador y las seis de gestión.
+
+**Recomendación de Claude Code: después de la entrega.** No arregla ninguna falla. Cambia la mitad de
+las vistas web, así que obliga a rehacer sus capturas (T-10) y sus páginas (T-11). Si JC la quiere,
+tiene que entrar antes de T-06.
+
+**Estado:** decidido por JC el 26/11: entra solo si todo lo demás que bloquea T-06 cierra antes del
+29/11. Si no, queda para después de la entrega.
+
+### T-33 · Claude Code · Volver a medir A-1 y A-2, y anotar las pruebas manuales
+
+**Qué:**
+- cuando Codex termine T-27 y T-28, medir de nuevo en `Visual/Web/` con Playwright sin ventana: el alto
+  de los renglones del historial y el contraste de los pasos del alta;
+- pasar a `docs/PRUEBAS-PENDIENTES.md` las pruebas manuales del borrador:
+  - el armador dentro de la aplicación, a 100 % y a 150 %;
+  - las cuatro pantallas de entrada, a 100 % y a 150 %;
+  - el historial con una compra de dos entradas.
+
+**No se usa Playwright mientras Codex trabaja con ventanas.**
+
+**Estado:** bloqueado por T-27 y T-28.
+
+### T-34 · Claude Code · Los casos nuevos en el catálogo
+
+**Qué:** transcribir a `docs/04-casos-prueba.md` los cuatro casos de T-31, ya renumerados, y cualquier
+otro que Codex haya agregado desde el 24/11 (los de `b34b022` y `9b36ac6` se revisan en el código).
+
+**26/11:** Claude Code revisó lo que Codex escribió en `docs/04-casos-prueba.md` y
+`docs/LISTA-PARA-MAXIMO.md` para CP-358 a CP-360, CP-364 y CP-365. Números, textos y RF están bien. Se
+corrigieron dos cosas: RNF-02 estaba en la columna de reglas de CP-358 a CP-360 (va con los RF, como en
+CP-354), y un párrafo decía que los cinco casos pasaron en la corrida de 365, cuando CP-359 falla desde la
+renumeración.
+
+**Estado:** cierra con T-31, cuando haya una batería posterior a la renumeración para citar.
+
+### T-35 · Claude Code · `docs/disenos/` al día
+
+**Qué:** traer a la maqueta lo que Codex integró en `armador-paquete.js` y `alta-cuenta.js`. Así la
+referencia no vuelve a quedar vieja (borrador, «Para Claude Code, después»).
+
+**Estado:** abierto, baja prioridad. No es para la entrega.
+
+### T-36 · Codex · `frmReportes` supera el alto máximo
+
+**Qué:** encontrado en la verificación del 26/11. `frmReportes` mide **1100 × 960** de área cliente, con o
+sin vista web (`t03-11-reportes-sin-dll.png`). `CLAUDE.md` («Alto máximo de un formulario») pone el techo en
+790. Lo cambió `0160b55`. En la pantalla de desarrollo (1032 px útiles) entra; en una de 768, o a 125 %,
+los controles de abajo quedan fuera.
+
+**Qué hacer:** bajar el `ClientSize` a 790 de alto como máximo, compactando, sin agrandar nada.
+
+**Listo cuando** `ClientSize.Height` ≤ 790 y CP-357 lo afirma para `frmReportes`.
+
+**Estado:** abierto.
+
+### T-37 · JC · El aviso del respaldo en el alta y la recuperación
+
+**Qué:** sin las DLL de WebView2, once pantallas muestran «Vista web no disponible» y dos no: el alta de
+cuenta y la recuperación de contraseña. Las dos funcionan en su versión de Windows Forms.
+
+**Decide JC** si avisan igual que las demás (sería un ticket de Codex) o si quedan así, declarado.
 
 **Estado:** abierto.
 
@@ -466,7 +822,7 @@ Hay que abrir las cuatro pantallas con la vista web forzada a fallar, al 100 % y
 **Listo cuando** las cuatro muestran su versión de Windows Forms completa, con el aviso y sin
 error, a las dos escalas.
 
-**Estado:** bloqueado por T-03. Si se hace antes, el caso de las DLL no queda cubierto.
+**Estado:** abierto. T-03 se cerró el 26/11 sobre el ejecutable; esta es la prueba manual de JC.
 
 ### T-17 · Máximo · La tarde en Word
 
