@@ -36,13 +36,16 @@ Hace falta SQL Server 2017 o posterior. Todo esto se verificó el 24/11/2026 sob
 
 **Lo que deja la base:**
 - la semilla base: 5 cuentas, el local «Sala Demostrativa EventAura» y los eventos Duki en Rosario, Clásico Rosarino (agotado) y Noche de Teatro Independiente (pasado);
-- la demostración: 4 locales de Rosario, 20 eventos más, 337 entradas vendidas, 14 clientes `@demo.eventaura.example`, 3 personas en lista de espera y solicitudes de Organizador en varios estados.
+- la demostración (rehecha el 26/11): 6 organizadores más, 8 sedes más en Rosario, Santa Fe, Paraná, Córdoba y Buenos Aires, 34 eventos más (11 pasados y 23 futuros), 964 entradas vendidas en total (308 compras), 58 clientes `@demo.eventaura.example` (unos 20 por nivel; los Oro, con 9 a 11 compras en el año), 3 personas en la lista de espera de Clásico Rosarino y solicitudes de Organizador en varios estados;
+- en el catálogo, **25 eventos futuros** de 7 organizadores. **Un solo evento agotado:** Clásico Rosarino. Con pocas entradas: «Muestra de cine rosarino» (Preferencial, 2 libres), «Taller de fotografía urbana» (3 libres) y «Hamlet en la costanera» (Platea baja, 4 libres). En cada evento, el precio de los sectores baja a medida que se alejan del escenario.
 
-**Las fechas son relativas al día en que se corre cada semilla.** Duki queda 60 días adelante, Clásico Rosarino 30, y los eventos de la demostración entre seis meses atrás y cuatro adelante. Corré las semillas en la semana de la presentación, no un mes antes.
+**Las fechas son relativas al día en que se corre cada semilla.** Duki queda 60 días adelante, Clásico Rosarino 30, y los eventos de la demostración entre seis meses atrás y cuatro adelante. El más próximo, «Muestra de cine rosarino», queda 3 días adelante. Corré las semillas en la semana de la presentación, no un mes antes.
 
-**Verificado el 24/11/2026:**
+**Verificado el 26/11/2026 (semilla nueva):** sobre una base nueva, `semilla-demostracion.sql` corrida dos veces deja lo mismo que una sola: 37 eventos, 25 de ellos futuros y publicados, 964 entradas, 7 organizadores y 3 personas en lista de espera. La semilla misma comprueba al final los 25 eventos futuros, los 6 a 8 organizadores, el único agotado, el orden de precios de los sectores y que ningún cliente pase de 12 compras en el año, y se detiene con un error si algo no da. **No se volvió a recorrer el guion con la semilla nueva.**
+
+**Verificado el 24/11/2026, con la semilla anterior:**
 - con `01` y `02`, el inicio no muestra el aviso de base desactualizada, y entran Ana y Paula;
-- `semilla-demostracion.sql` corrida dos veces deja lo mismo que una sola: 23 eventos y 343 entradas;
+- `semilla-demostracion.sql` corrida dos veces dejaba lo mismo que una sola: 23 eventos y 343 entradas;
 - sobre una base con `03` también carga;
 - sobre una base que no termina en `_Demostracion` se detiene con el error 51000 sin modificar nada.
 
@@ -60,6 +63,8 @@ La cadena de conexión está en `Visual.exe.config`, junto al ejecutable. En la 
 
 No edites `Visual/App.config` ni `Pruebas/App.config` del repositorio: guardan la configuración de cada máquina y no se publican.
 
+**Ir a la base de demostración y volver, en una línea:** en el `Visual.exe.config` de la copia, cambiá `Initial Catalog=BddEventAura;` por `Initial Catalog=BddEventAura_Demostracion;`, guardá y abrí `Visual.exe`; para volver, poné de nuevo `BddEventAura`, guardá y volvé a abrir. La aplicación lee la cadena solo al arrancar, así que el cambio vale desde la próxima vez que la abrís.
+
 ### Abrir
 
 Abrí `Visual.exe`. Hay tres resultados posibles:
@@ -76,7 +81,8 @@ Abrí `Visual.exe`. Hay tres resultados posibles:
 | Cliente Plata | `plata@eventaura.com` | `Cliente123` | Compra y suscripción. |
 | Cliente Oro | `oro@eventaura.com` | `Cliente123` | Segunda cuenta para privacidad entre clientes. |
 | Cliente Bronce | `bronce@eventaura.com` | `Cliente123` | Cuenta con una solicitud de Organizador ficticia pendiente ya sembrada. |
-| Clientes de la demostración | `…@demo.eventaura.example` | `Cliente123` | Catorce clientes con historial de compras en los tres niveles. |
+| Clientes de la demostración | `…@demo.eventaura.example` | `Cliente123` | 58 clientes con historial de compras: 21 Bronce, 20 Plata y 20 Oro. |
+| Organizadores de la demostración | `laura.mendez@`, `diego.sosa@`, `carla.peralta@`, `ramiro.quiroga@`, `ines.correa@` y `gabriel.ortiz@demo.eventaura.example` | `Cliente123` | Uno por productora, con sus sedes y eventos. Ya tienen el primer evento aprobado. |
 
 Ingresos verificados el 24/11/2026: Ana y Paula. El resto de las contraseñas sale de las semillas: los clientes de la demostración copian la de `bronce@`.
 
@@ -98,7 +104,11 @@ Los códigos de verificación y de recuperación se escriben en archivos de corr
 
 Abrí esa carpeta en el Explorador de archivos (pegá la ruta en la barra de direcciones) **antes** de empezar esta sección.
 
-**La pantalla no muestra la ruta, a propósito.** El código prueba que quien lo usa tiene acceso al correo de la cuenta. Si EventAura mostrara dónde leerlo, cualquiera frente a la aplicación podría pedir la recuperación de una cuenta ajena e ir a buscar el código: es el agujero de recuperación que se cerró. La ruta es información del operador y por eso va en este guion, no en la interfaz.
+**Dónde muestra la ruta la pantalla (decidido por JC el 26/11).** El código prueba que quien lo usa tiene acceso al correo de la cuenta. Si EventAura mostrara dónde leerlo en la **recuperación**, cualquiera frente a la aplicación podría pedir la recuperación de una cuenta ajena e ir a buscar el código: es el agujero que se cerró. Por eso:
+- **en la recuperación, la ruta no se muestra nunca;**
+- **en la verificación del correo con la sesión iniciada, sí se muestra, y solo si el envío es simulado.** Ahí la cuenta es de quien está usando la aplicación. Con SMTP configurado, el código llega a un correo real y la ruta no aparece.
+
+El cambio lo hace Codex en T-39. Hasta entonces, la ruta es información del operador y está solo en este guion.
 
 **Qué archivo abrir.** Cada archivo `.eml` tiene por nombre un código largo (un hash) y no la dirección de correo, para que la carpeta no muestre las cuentas. **Tomá el archivo más reciente:** ordená por «Fecha de modificación». Al abrirlo con el Bloc de notas, verificá que la línea `To:` sea la dirección que estás usando. Copiá el número de la línea `Código:`. La línea `Vence:` dice hasta cuándo sirve: 10 minutos.
 
@@ -126,7 +136,7 @@ Esos tres casos los cubren las pruebas automáticas de la batería.
 
 ## 3. Comprar de punta a punta
 
-1. **Abrir Duki.** Iniciá sesión como Paula (`plata@eventaura.com` / `Cliente123`) y, en el menú lateral, pulsá **Eventos disponibles**. Con la semilla de demostración hay más de veinte eventos: escribí `Duki` en el buscador y pulsá **Buscar**. En la tarjeta **Duki en Rosario**, pulsá **Ver entradas**. **Vas a ver** la ficha con la portada generada, «sábado 23 de enero · 21:00», el local («Galpón 17 · Estévez Boero 600, Rosario») y el mapa con el escenario sobre las zonas de los sectores.
+1. **Abrir Duki.** Iniciá sesión como Paula (`plata@eventaura.com` / `Cliente123`) y, en el menú lateral, pulsá **Eventos disponibles**. Con la semilla de demostración hay 25 eventos futuros: escribí `Duki` en el buscador y pulsá **Buscar**. En la tarjeta **Duki en Rosario**, pulsá **Ver entradas**. **Vas a ver** la ficha con la portada generada, «sábado 23 de enero · 21:00», el local («Galpón 17 · Estévez Boero 600, Rosario») y el mapa con el escenario sobre las zonas de los sectores.
 2. **Armar el paquete.** Pulsá la zona **Campo** y después **Armar paquete**. **Vas a ver** el indicador `2 Armá`, «Tu nivel: Plata · 5,0 % de descuento» y la grilla con VIP, Platea y Campo. En la columna **Cantidad (escribí aquí)** de la fila **Campo** escribí `2` y pulsá Enter. Elegir la zona en el mapa no carga la cantidad: hay que escribirla. Pulsá **Ver servicios** y marcá **Hospedaje · $ 45.000**, **Traslado · $ 12.000** y **Seguro de entrada (devolución hasta 48 h antes)**. Dejá **Merchandising** y **VIP** sin marcar.
 3. **Comprobar el resumen.** Con la base de la sección 1, el desglose es:
 
@@ -142,7 +152,18 @@ Esos tres casos los cubren las pruebas automáticas de la batería.
    | **TOTAL** | **$ 121.625,00** |
 
    El cargo por servicio es el 15 % de las entradas con descuento: los servicios no lo generan. Pulsá **Comprar**.
-4. **Pagar.** Se abre **Pago seguro** con «Total a pagar: $ 121.625,00» y la cuenta regresiva de la reserva (10 minutos). Completá titular `Paula Plata`, número `4111111111111111`, vencimiento `12/28` y código `123`, y pulsá **Pagar**. **Vas a ver** `4 Listo`, «¡Compra confirmada!», «Pedido EA-…», el comprobante con «TOTAL PAGADO $ 121.625,00» y «Tarjeta •••• 1111», y «2 entradas en PDF con QR: Guardadas en Documentos.». La tarjeta es de prueba: no se procesa ningún cargo.
+4. **Pagar.** Se abre **Pago seguro** con «Total a pagar: $ 121.625,00» y la cuenta regresiva de la reserva (10 minutos). Completá titular `Paula Plata`, número `4111 1111 1111 1111`, vencimiento `12/29` y código `123`, y pulsá **Pagar**. **Vas a ver** `4 Listo`, «¡Compra confirmada!», «Pedido EA-…», el comprobante con «TOTAL PAGADO $ 121.625,00» y «Tarjeta •••• 1111», y «2 entradas en PDF con QR: Guardadas en Documentos.». La tarjeta es de prueba: no se procesa ningún cargo.
+   **La tarjeta de prueba.** El pago es simulado (`Repo/PasarelaSimulada.cs` y `GestorCompras.ValidarTarjeta`):
+
+   | Campo | Qué acepta | Si no |
+   |---|---|---|
+   | Titular | Cualquier texto que no esté vacío | «Ingresá el nombre del titular de la tarjeta.» |
+   | Número | De 13 a 19 dígitos; se ignoran espacios y guiones. **No se valida Luhn:** cualquier número de ese largo pasa | «El número de tarjeta debe tener entre 13 y 19 dígitos.» |
+   | Vencimiento | Exactamente `MM/AA`, **con la barra**: `1228` no sirve. Vale hasta el último día de ese mes | «El vencimiento debe tener el formato MM/AA.» o «La tarjeta está vencida.» |
+   | Código | 3 o 4 dígitos | «El código de seguridad debe tener 3 o 4 dígitos.» |
+
+   Con esos datos bien, **cualquier número se aprueba salvo los terminados en `0000`**, que se rechazan con «Rechazada por el emisor (simulación: tarjeta terminada en 0000).» y liberan el cupo (RN-32). **Para la demostración: `4111 1111 1111 1111` · `12/29` · `123` se aprueba; la misma terminada en `0000` (`4111 1111 1111 0000`) se rechaza.** Un error de formato no gasta un intento de pago. La pantalla de pago no dice nada de esto: está propuesto como ticket (T-41).
+
 5. **Los PDF.** Pulsá **Abrir carpeta**: los tickets están en `Documentos\A1.Tickets EVENTAURA`, uno por entrada (`Ticket_EA-…_Campo_1.PDF`, `…_2.PDF`), cada uno con un QR distinto. Pulsá **Aceptar**: la aplicación vuelve a **Eventos disponibles**.
 
 **Verificado el 24/11/2026:**
@@ -154,6 +175,8 @@ Esos tres casos los cubren las pruebas automáticas de la batería.
 - la ficha al pasar el puntero por una zona.
 
 **Atención en pantalla:** dentro de la navegación del cliente, el catálogo y la compra quedan debajo del título «Mi cuenta», corridos hacia abajo. En el catálogo, los botones **Ver entradas** de la primera fila quedan cortados por el borde inferior. Por eso conviene usar el buscador. Está anotado para Codex.
+
+**Pago, Suscripción y Cambiar contraseña (26/11).** **Pago seguro** y **Mi suscripción** siguen en Windows Forms: no tienen vista web. **Cambiar contraseña** sí es vista web (`cambiar-clave.html`), igual que la recuperación (`recuperar-clave.html`).
 
 ## 4. Seguro y devolución
 
@@ -222,7 +245,7 @@ El Administrador de plataforma no tiene locales y no hace el control de ingreso.
    1. **Vas a ver** «Entradas agotadas. Anotate en la lista de espera. Los avisos de disponibilidad se muestran al iniciar sesión.».
    2. Pulsá **Anotarme en la lista de espera**. **Vas a ver** «Te anotaste en la lista de espera de «Clásico Rosarino». Podés consultar tu posición. Si vuelve a haber entradas, te lo mostramos al iniciar sesión.», y el botón pasa a **Ya estás en la lista de espera**.
    3. Pulsá el enlace **Consultar mi posición**, sobre el texto subrayado. **Vas a ver** «Tu posición actual en la lista es {N}.».
-   4. En **Inicio**, la tarjeta **Lista de espera** muestra los eventos y la cantidad de inscripciones. Con la semilla de demostración, Paula ya estaba en la de Guitarras del litoral.
+   4. En **Inicio**, la tarjeta **Lista de espera** muestra los eventos y la cantidad de inscripciones. Con la semilla de demostración, la lista de Clásico Rosarino ya tiene tres clientes anotados; Paula no está en ninguna hasta este paso.
 5. **Prioridad temporal.** Cuando se devuelve una entrada de un sector agotado, durante 15 minutos el cupo liberado se reserva para los suscriptores anotados en la lista de ese evento. No hay forma de adelantar el reloj: para mostrarlo en vivo hay que esperar 15 minutos. Si no, explicá la regla y mostrá el caso de la batería. No digas que la posición garantiza ser el único comprador, ni que se manda un correo externo.
 
 **Verificado el 24/11/2026:**
