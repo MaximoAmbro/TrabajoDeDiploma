@@ -178,6 +178,8 @@ namespace Pruebas
         [TestMethod("CP-160: Tarjeta abre ficha y el sector elegido llega al paquete")]
         public void CP160_Flujo()
         {
+            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
+                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
             EnSta(()=>{
                 var cliente=Fake.Cliente(NivelFidelidad.Bronce);var evento=Fake.EventoPublicado(1000m,5);Fake.EventoPublicado(1500m,5);Fake.ComoCliente(cliente);
                 using(var lista=new Visual.frmEventosCliente{IDUsuario=cliente.Id}) {
