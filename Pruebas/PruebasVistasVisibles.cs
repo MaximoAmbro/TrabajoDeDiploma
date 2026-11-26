@@ -243,7 +243,7 @@ namespace Pruebas
                         "El armador debe usar el tamaño disponible en el panel, no el mínimo de una ventana suelta.");
                     EsperarVistaWeb(webCompra);
                     string paqueteCompleto = EjecutarVistaWeb(webCompra,
-                        "(()=>{const a=document.querySelector('.area-web'),t=document.querySelector('.total').getBoundingClientRect(),b=document.querySelector('#continuar').getBoundingClientRect();return a.scrollWidth<=a.clientWidth+1&&t.right<=innerWidth&&b.right<=innerWidth&&b.bottom<=innerHeight})()");
+                        "(()=>{const a=document.querySelector('.area-web'),s=document.querySelector('[aria-labelledby=titulo-servicios]').getBoundingClientRect(),r=document.querySelector('.resumen').getBoundingClientRect(),t=document.querySelector('.total').getBoundingClientRect(),b=document.querySelector('#continuar').getBoundingClientRect(),d=document.querySelector('#desglose'),p=document.querySelector('.sector .precio');const apilado=r.top>=s.bottom-1,separado=apilado||r.left-s.right>=24;return a.scrollWidth<=a.clientWidth+1&&separado&&t.bottom<=b.top&&b.right<=r.right&&parseFloat(getComputedStyle(d).maxHeight)<=440&&getComputedStyle(p).whiteSpace==='nowrap'})()");
                     Assert.AreEqual("true", paqueteCompleto,
                         "El total y Continuar al pago deben verse completos en el armador dentro de Mi cuenta.");
                 }
