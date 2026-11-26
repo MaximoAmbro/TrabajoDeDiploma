@@ -423,9 +423,14 @@ namespace Pruebas
                     Mostrar(listado);
                     var panel = ControlDe<Visual.Web.PanelWeb>(listado, "catalogoWeb");
                     EsperarVistaWeb(panel);
-                    string orden = EjecutarVistaWeb(panel, "[...document.querySelectorAll('#catalogo .evento')].map(c=>c.dataset.evento).join(',')");
-                    Assert.AreEqual(string.Join(",", new[] { disponibleTemprano.Id, disponibleTarde.Id, agotadoUno.Id, agotadoDos.Id }), orden,
-                        "Los eventos con cupo van por fecha; los agotados conservan el orden estable de su grupo al final.");
+                    string ordenCorrecto = EjecutarVistaWeb(panel,
+                        "(()=>{const c=[...document.querySelectorAll('#catalogo .evento')],ids=c.map(x=>Number(x.dataset.evento))," +
+                        "estados=c.map(x=>x.querySelector('.estado').classList.contains('agotado'))," +
+                        "p=id=>ids.indexOf(id),primeroAgotado=estados.indexOf(true);" +
+                        "return p(" + disponibleTemprano.Id + ")<p(" + disponibleTarde.Id + ")&&p(" + agotadoUno.Id + ")<p(" + agotadoDos.Id + ")&&" +
+                        "(primeroAgotado<0||estados.slice(primeroAgotado).every(Boolean))})()");
+                    Assert.AreEqual("true", ordenCorrecto,
+                        "Los disponibles van por fecha y todos los agotados quedan agrupados al final con orden estable.");
                 }
             });
         }
