@@ -8,6 +8,7 @@
         "@playwright/mcp@0.0.85",
         "--browser",
         "msedge",
+        "--headless",
         "--isolated"
       ],
       "env": {}
