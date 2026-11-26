@@ -114,6 +114,14 @@ button, input, select { font: inherit; color: inherit; letter-spacing: inherit; 
 .entrada-texto:focus { outline: 2px solid var(--primario); outline-offset: 0; border-color: var(--primario); }
 .entrada-texto[aria-invalid="true"] { border-color: var(--error-texto); }
 .entrada-texto:disabled { background: var(--fondo); color: var(--texto-secundario); cursor: not-allowed; }
+.entrada-con-ojo { display: grid; grid-template-columns: minmax(0, 1fr) 40px; gap: var(--e2); align-items: center; min-width: 0; }
+.ojo-contrasena { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; color: var(--texto-secundario); background: var(--superficie); border: 1px solid var(--borde-control); border-radius: var(--radio-control); cursor: pointer; }
+.ojo-contrasena:hover { color: var(--texto); background: var(--fondo); }
+.ojo-contrasena:active { background: var(--borde); }
+.ojo-contrasena svg { width: 20px; height: 20px; }
+.ojo-contrasena [data-cierre] { display: none; }
+.ojo-contrasena[aria-pressed="true"] [data-cierre] { display: block; }
+.ojo-contrasena[aria-pressed="true"] [data-apertura] { display: none; }
 .marca-ver { display: inline-flex; align-items: center; gap: var(--e2); font: var(--n5); letter-spacing: var(--n5-ls);
     color: var(--texto-secundario); cursor: pointer; width: fit-content; }
 .marca-ver input { width: 16px; height: 16px; margin: 0; accent-color: var(--texto); }

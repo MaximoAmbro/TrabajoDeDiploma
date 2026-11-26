@@ -8,7 +8,6 @@
     const formulario = $("#formulario"), mail = $("#mail"), contrasena = $("#contrasena");
     const error = $("#error"), sinBase = $("#sin-base"), entrar = $("#entrar");
 
-    $("#mostrar").addEventListener("change", e => { contrasena.type = e.target.checked ? "text" : "password"; });
 
     function marcar(campo, texto) {
         const estado = $("#estado-" + campo.id);

@@ -170,6 +170,7 @@ namespace Pruebas
                     form.Show();
                     System.Windows.Forms.Application.DoEvents();
                     var mostrar = form.Controls.Find("checkbxShowPass", true).Single();
+                    Assert.IsTrue(mostrar.TabStop, "El checkbox de visibilidad sigue disponible por teclado en el respaldo WinForms.");
                     Assert.IsTrue(form.ClientRectangle.Contains(mostrar.Bounds), "Mostrar contraseñas debe quedar dentro de la pantalla.");
                     foreach (string nombre in new[] { "txtMail", "txtActual", "TxtPassword", "TxtConfirmpassword" })
                     {

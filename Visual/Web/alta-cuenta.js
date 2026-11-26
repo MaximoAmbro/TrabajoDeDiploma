@@ -133,7 +133,6 @@
         campo.addEventListener("input", () => { validadores[id](false); if (id === "contrasena" && !vacio("confirmar")) validadores.confirmar(false); });
         campo.addEventListener("blur", () => { if (!vacio(id)) validadores[id](false); });
     });
-    $("#mostrar").addEventListener("change", e => ["contrasena", "confirmar"].forEach(id => { document.getElementById(id).type = e.target.checked ? "text" : "password"; }));
 
     // ---------- Documentación ----------
     const zona = $("#zona-documento"), entrada = $("#documento"), vista = $("#vista-documento");

@@ -43,7 +43,6 @@
         marcar("confirmar", "ok", "Coinciden."); return true;
     }
     $("#confirmar").addEventListener("input", coinciden);
-    $("#mostrar").addEventListener("change", e => ["contrasena", "confirmar"].forEach(id => { document.getElementById(id).type = e.target.checked ? "text" : "password"; }));
     $("#mail").addEventListener("input", () => marcar("mail", "", ""));
     $("#codigo").addEventListener("input", () => marcar("codigo", "", ""));
 

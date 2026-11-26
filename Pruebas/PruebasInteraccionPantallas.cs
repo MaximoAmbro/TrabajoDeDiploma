@@ -122,6 +122,7 @@ namespace Pruebas
                         "El alta debe abrir al tamaño horizontal de su maqueta.");
                     var panelAlta = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(alta, "altaCuentaWeb");
                     Esperar(() => panelAlta.Preparado && panelAlta.Visible, "El alta debe mostrar la maqueta web y no el respaldo WinForms.");
+                    ComprobarOjos(panelAlta, 2, "alta");
                     string opciones = Ejecutar(panelAlta, "document.querySelector('[data-vista=elegir]').innerText");
                     StringAssert.Contains(opciones, "Quiero comprar entradas");
                     StringAssert.Contains(opciones, "Quiero organizar eventos");
@@ -155,12 +156,14 @@ namespace Pruebas
                     var acceso = EsperarFormulario<Visual.frmInicio>("Después de completar el alta, la acción final debe abrir Acceso.");
                     var panelAcceso = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(acceso, "accesoWeb");
                     Esperar(() => panelAcceso.Preparado && panelAcceso.Visible, "El destino final del alta debe ser el acceso web.");
+                    ComprobarOjos(panelAcceso, 1, "acceso");
                     Assert.IsTrue(acceso.ClientSize.Width >= 1100 && acceso.ClientSize.Height >= 720,
                         "El acceso debe abrir al tamaño horizontal de su maqueta.");
                     Ejecutar(panelAcceso, "document.querySelector('[data-destino=recuperar]').click()");
                     var recuperacion = EsperarFormulario<Visual.frmCambiarContraseña>("El acceso debe abrir la recuperaciÃ³n web.");
                     var panelRecuperacion = InterfazGrupoA.ControlDe<Visual.Web.PanelWeb>(recuperacion, "recuperacionWeb");
                     Esperar(() => panelRecuperacion.Preparado && panelRecuperacion.Visible, "La recuperaciÃ³n debe mostrar su maqueta web.");
+                    ComprobarOjos(panelRecuperacion, 2, "recuperaciÃ³n");
                     Assert.IsTrue(recuperacion.ClientSize.Width >= 1100 && recuperacion.ClientSize.Height >= 720,
                         "La recuperaciÃ³n debe abrir al tamaño horizontal de su maqueta.");
                     Assert.IsFalse(alta.Visible, "El formulario de alta no debe reaparecer tras confirmar el correo.");
@@ -219,6 +222,17 @@ namespace Pruebas
             }
             Assert.IsTrue(tarea.IsCompleted, "WebView2 debe responder al guion del recorrido.");
             return tarea.GetAwaiter().GetResult();
+        }
+
+        private static void ComprobarOjos(Visual.Web.PanelWeb panel, int cantidad, string pantalla)
+        {
+            string script = "(()=>{const bs=[...document.querySelectorAll('.ojo-contrasena')];return bs.length===" + cantidad +
+                "&&bs.every(b=>{const i=document.getElementById(b.getAttribute('aria-controls')),r=b.getBoundingClientRect();" +
+                "if(!i||r.width!==40||r.height!==40||b.tabIndex<0||getComputedStyle(b).display==='none')return false;" +
+                "b.focus();if(document.activeElement!==b)return false;b.click();" +
+                "if(i.type!=='text'||b.getAttribute('aria-pressed')!=='true'||b.getAttribute('aria-label')!=='Ocultar contrase\u00f1a'||getComputedStyle(b).display==='none')return false;" +
+                "b.click();return i.type==='password'&&b.getAttribute('aria-pressed')==='false'&&b.getAttribute('aria-label')==='Mostrar contrase\u00f1a'&&getComputedStyle(b).display!=='none';})})()";
+            Assert.AreEqual("true", Ejecutar(panel, script), "Los ojos de " + pantalla + " deben ser botones de 40 px accesibles y siempre visibles.");
         }
 
         private static T EsperarFormulario<T>(string mensaje) where T : Form

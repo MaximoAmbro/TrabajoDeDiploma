@@ -11,6 +11,17 @@
     const enAplicacion = !!webview;
     let simulador = null;          // lo define cada página: (mensaje) => void
     let dibujar = () => {};
+    document.querySelectorAll(".ojo-contrasena").forEach(boton => {
+        const campo = document.getElementById(boton.getAttribute("aria-controls"));
+        if (!campo) return;
+        boton.addEventListener("click", () => {
+            const visible = campo.type === "password";
+            campo.type = visible ? "text" : "password";
+            boton.setAttribute("aria-pressed", String(visible));
+            boton.setAttribute("aria-label", visible ? "Ocultar contraseña" : "Mostrar contraseña");
+            boton.dataset.visible = String(visible);
+        });
+    });
 
     function aplicarTema(tema) {
         Object.entries(tema || {}).forEach(([nombre, valor]) =>
