@@ -79,6 +79,13 @@ solo cuando el ticket es una prueba manual, un dato o el Word, que no puede hace
 | T-35 | Claude Code | Poner `docs/disenos/` al día con lo que Codex integró | abierto, baja prioridad |
 | T-36 | Codex | `frmReportes` mide 960 px de alto, por encima del techo de 790 | abierto (26/11) |
 | T-37 | JC | ¿El alta y la recuperación avisan «Vista web no disponible» como las demás? | abierto (26/11) |
+| T-38 | Codex, después JC | **P0, sin reproducir:** la aplicación se cerró sola en el pago, dos veces, sin dejar rastro | abierto: sin commit al 26/11 17:20 |
+| T-39 | Codex | **P0:** una cuenta que sale del alta sin verificar no puede verificar después ni comprar | abierto: sin commit; JC decidió dónde se muestra la ruta de la bandeja |
+| T-40 | Codex | El aviso verde del catálogo tapa los filtros de categoría y fecha | abierto: sin commit |
+| T-41 | Codex | Pago: texto de ayuda con la tarjeta de prueba y barra automática en el vencimiento | abierto: sin commit |
+| T-42 | Claude Code | Semilla de demostración: 25 eventos futuros, 7 organizadores, un solo agotado | en revisión: hecha y probada el 26/11, sin commitear |
+| T-43 | Codex | Quitar el checkbox «Mostrar contraseña(s)» de las vistas web y dejar solo el ojo | pendiente de verificación en ejecución: `3100733` |
+| T-44 | Codex | Pedidos directos de JC del 26/11 a la tarde: cambio de contraseña dentro de Mi cuenta, suscripción web, armador y agotados al final | pendiente de verificación en ejecución: `47ae5a3`, `a9f9c1b`, `7f76e63`, `e98a958` |
 
 ---
 
@@ -781,6 +788,203 @@ cuenta y la recuperación de contraseña. Las dos funcionan en su versión de Wi
 **Decide JC** si avisan igual que las demás (sería un ticket de Codex) o si quedan así, declarado.
 
 **Estado:** abierto.
+
+### T-38 · Codex, después JC · P0: cierre inesperado en el pago, sin reproducir
+
+**Qué contó JC (26/11):** con la aplicación abierta en el método de pago, se cerró sola a los ~20 s, y
+después volvió a cerrarse. Por la base, fue en `BddEventAura` (no en una `_Demostracion`): la cuenta
+`test0001@pruebas.eventaura.com` inició la compra 12 a las 16:44:56, que quedó Pendiente. El build de las
+16:28 lo hizo Visual Studio, y a las 16:30:38 hay un aviso de .NET (1022) típico de un proceso lanzado con
+el depurador.
+
+**Qué hizo Claude Code el 26/11, sobre el `Visual.exe` real** (copia de `bin\Debug` del build de las
+16:28, contra `BddEventAura_Pruebas`, manejada con UI Automation; capturas 1, 2, 3 y 7 en
+`docs/verificaciones/pago-y-verificacion-2026-11-26/`):
+- Paula: catálogo → Duki → Armar paquete → una Platea → Continuar al pago → Seguir sin seguro → **Pago
+  seguro** abierto **3 minutos sin tocar**, después con los cuatro campos cargados un minuto más, y hasta
+  que **venció la reserva** (10 min). La aplicación no se cerró: al vencer volvió al catálogo con «La
+  reserva venció o cambió…». `errores.log` no creció.
+- Con una cuenta nueva verificada, la compra completa hasta «Pedido EA-000072». Tampoco se cerró.
+- **Con el depurador de Visual Studio no se probó:** un agente no puede manejar el depurador.
+
+**Qué se descartó, con evidencia:**
+- **Una excepción .NET no controlada:** no hay evento 1026 de .NET Runtime ni entrada en `errores.log`
+  después de las 15:44. `ManejadorErrores` registra antes de mostrar.
+- **La batería de Codex:** `Pruebas/EjecutarBateriaSegura.ps1` mata todo `Visual.exe` del repositorio y
+  CP-209 mata el de `bin\Debug`, pero no hubo ninguna corrida ni archivo nuevo entre las 16:20 y las 16:52.
+- **El vencimiento de la reserva (`frmPago.tmrReserva`):** al vencer, el pago se cierra con `Abort` y la
+  compra vuelve al catálogo; la aplicación sigue abierta. Además, a los 20 s faltan 9:40.
+- **El cierre por inactividad (`ControlSesionInactiva`):** son 15 min (JC llevaba 4 desde el inicio de
+  sesión) y no termina el proceso: muestra el acceso.
+- **`FormularioEventAura.OnFormClosed` → `Application.Exit()`:** solo con `UserClosing` y ninguna otra
+  ventana visible; con el pago abierto, «Mi cuenta» sigue visible.
+- **La caída del proceso de WebView2 (`PanelWebMotor.cs:67`, `ProcessFailed` → `Desactivar`):** pasa al
+  respaldo, no cierra la aplicación.
+
+**Lo que no se puede descartar, y por qué no hay rastro:** `ManejadorErrores.Instalar` llama a
+`SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX)` (`Visual/ManejadorErrores.cs:28`). Con
+`SEM_NOGPFAULTERRORBOX`, una caída **nativa** (un desbordamiento de pila, un acceso inválido en el
+cargador de WebView2) no pasa por el Informe de errores de Windows y **no deja ni el evento 1000**. Tampoco
+queda registro de un cierre ordenado: nada anota quién llamó a `Application.Exit`.
+
+**Qué hacer (Codex, cambio mínimo, solo diagnóstico):**
+1. En `ManejadorErrores.Instalar`, registrar en `errores.log` cada cierre: `Application.ApplicationExit`
+   y `AppDomain.CurrentDomain.ProcessExit` con la hora, la última ventana que se cerró y su
+   `CloseReason`, y `Environment.StackTrace` cuando el cierre viene de `Application.Exit`.
+2. Quitar `SEM_NOGPFAULTERRORBOX` (dejar `SEM_FAILCRITICALERRORS`), para que una caída nativa deje el
+   evento 1000 en el Visor de eventos.
+
+**Qué hace JC después:** repetir con el ejecutable, sin Visual Studio, y anotar la cuenta, el evento, qué
+tocó y la hora. Si se cierra, `errores.log` y el Visor de eventos dicen por qué.
+
+**Listo cuando:** o hay una causa con archivo y línea y está corregida, o JC repitió el recorrido dos veces
+con el registro de cierre y no se cerró.
+
+**Commits:** ninguno al 26/11 a las 17:20. Cuando exista, Claude Code repite el recorrido de JC diez veces con
+el registro de cierre (encargo de JC del 26/11).
+
+**Estado:** abierto.
+
+### T-39 · Codex · P0: una cuenta sin verificar queda trabada
+
+**Qué (ejecutado el 26/11 sobre el `Visual.exe` real):**
+- **RN-43** exige el correo verificado para comprar. Lo aplican `GestorPaquetes.Nuevo` (`Repo/GestorPaquetes.cs:43`)
+  y `GestorCompras.Iniciar` (`Repo/GestorCompras.cs:40`) con el mensaje «Verificá tu correo antes de
+  iniciar una compra.» (`Repo/GestorUsuarios.cs:49`).
+- **El único lugar donde se verifica es el paso 3 del alta.** `EnviarVerificacion` solo se llama al crear
+  la cuenta, y en la interfaz `ConfirmarVerificacion` solo está en `frmCrearUsuario`.
+- **Camino completo, sin salir del alta: funciona.** Alta → código en la bandeja → «Correo verificado» →
+  inicio de sesión → Duki → pago → «Pedido EA-000072».
+- **Camino roto:** crear la cuenta, pulsar **Volver al acceso** en «Verificá tu correo», e iniciar sesión.
+  La cuenta entra; al pulsar **Armar paquete** aparece el aviso «Verificá tu correo antes de iniciar una
+  compra.» y **no hay ningún botón ni pantalla para verificar ni para pedir otro código**. Lo mismo si el
+  código venció (10 min): el alta dice «Solicitá uno nuevo», pero no hay botón para pedirlo. Captura:
+  `docs/verificaciones/pago-y-verificacion-2026-11-26/8-sin-verificar-trabada.png`.
+- **La semilla deja verificadas a las cuentas de la demostración:** `CorreoVerificado` tiene `DEFAULT (1)`
+  (`01-esquema.sql:96`); solo las altas nuevas de Cliente entran en 0 (`RepositorioUsuarios.cs:110`).
+
+**Qué hacer, mínimo:**
+1. En el aviso de RN-43, un botón **Verificar mi correo** que llame a
+   `GestorCodigosCorreo.EnviarVerificacion` con la cuenta de la sesión y abra el paso de código (el mismo
+   del alta).
+2. En el paso de código, un botón **Enviar otro código**.
+3. **El texto de la bandeja, con cuidado.** El guion (sección 2) dice que la pantalla no muestra la ruta
+   **a propósito**, porque la recuperación de una cuenta ajena podría leer el código. Por eso, la ruta
+   `%LOCALAPPDATA%\EventAura\BandejaSimulada` se puede mostrar **solo en la verificación con sesión
+   iniciada**, donde la cuenta es de quien la usa, y nunca en la recuperación.
+
+   **Decidido por JC el 26/11:** la ruta se muestra **solo** en la verificación con sesión iniciada **y solo si
+   el envío es simulado** (`EnviadorSimulado`; con SMTP configurado, no). En la recuperación no se muestra
+   nunca. El guion (sección 2) lo dice igual.
+
+**Listo cuando,** con una cuenta que salió del alta sin verificar, se puede pedir el código desde el aviso,
+verificar y comprar sin cerrar sesión; y hay una prueba que lo recorre.
+
+**Estado:** abierto.
+
+### T-40 · Codex · El aviso del catálogo tapa los filtros
+
+**Qué:** visto el 26/11 dos veces, con «Verificá tu correo antes de iniciar una compra.» y con «La reserva
+venció o cambió…». El aviso verde de `AvisosEnPantalla` aparece en X 680 a 1160 e Y 247 a 330 de «Mi
+cuenta», encima del selector de categoría y del de fecha del catálogo
+(`docs/verificaciones/pago-y-verificacion-2026-11-26/`, capturas 3 y 8).
+
+**Listo cuando** el aviso no tapa ningún control del catálogo (por ejemplo, debajo de los filtros o en la
+franja del título), con una prueba de geometría como las de CP-357.
+
+**Estado:** abierto.
+
+### T-41 · Codex · Pago: ayuda con la tarjeta de prueba
+
+**Qué:** `frmPago` no dice qué datos acepta. Las reglas están en `GestorCompras.ValidarTarjeta` y
+`PasarelaSimulada.Cobrar`, y en el guion (sección 3, paso 4): 13 a 19 dígitos, sin Luhn; vencimiento
+`MM/AA` **con barra** y no vencido; código de 3 o 4 dígitos; aprobada salvo terminación `0000`. Al
+escribir `1228` en el vencimiento, el pago responde «El vencimiento debe tener el formato MM/AA.».
+
+**Qué hacer:**
+- una línea fija bajo el título: «Tarjeta de prueba: cualquier número de 13 a 19 dígitos, por ejemplo
+  4111 1111 1111 1111. Las terminadas en 0000 se rechazan. Vencimiento MM/AA futuro y código de 3 dígitos.»;
+- en el vencimiento, insertar la barra al escribir el tercer dígito.
+
+**Listo cuando** la línea se ve en «Pago seguro» sin recortes a 96 DPI y `1228` queda como `12/28`.
+
+**Estado:** abierto.
+
+### T-42 · Claude Code · Semilla de demostración con 25 eventos
+
+**Qué pidió JC (26/11):** 25 eventos futuros de distintas categorías y ciudades, de 6 a 8 organizadores,
+con locales variados; exactamente un evento agotado; los demás con cupos distintos, alguno con pocas
+entradas; sectores con precios que bajen al alejarse del escenario.
+
+**Hecho** en `BaseDatos/semilla-demostracion.sql`, con autorización de JC para tocar `BaseDatos/` en esta
+sesión:
+- 6 organizadores nuevos, 8 sedes nuevas en Rosario, Santa Fe, Paraná, Córdoba y Buenos Aires;
+- 23 eventos futuros nuevos: con Duki y el Clásico, **25** de **7** organizadores y 4 categorías;
+- **un solo agotado:** Clásico Rosarino; tres con pocas entradas; dos sin ventas;
+- la semilla comprueba al final los 25, los 6 a 8 organizadores, el único agotado y el orden de precios,
+  y se detiene si algo no da;
+- Paula ya no queda anotada en la lista de espera, para que el paso 6.4 del guion funcione.
+
+**Probado el 26/11:** sobre una base nueva, con los scripts en el orden de la batería, corrida dos veces:
+37 eventos, 964 entradas, 7 organizadores, 3 en lista de espera. **La batería no la usa:** corre sobre
+`BddEventAura_Pruebas` y solo `Pruebas/CapturarReforma.ps1` carga esta semilla, en
+`BddEventAura_Capturas_Demostracion`.
+
+**Corregido el 26/11 a la tarde (pedido de JC):** los 6 clientes Oro absorbían las ventas que sobraban y
+quedaban con 45 a 47 compras en 12 meses. **RN-19 no lo exige:** Oro empieza en 7 compras
+(`FIDELIDAD_UMBRAL_ORO`). La semilla ahora suma 44 clientes generados y reparte: 21 Bronce (1 o 2
+compras), 20 Plata (3 a 6) y 20 Oro (9 a 11). Comprueba que nadie pase de 12 (error 51013). Corrida dos
+veces sobre una base nueva: pasan todos sus chequeos.
+
+**Falta:** recorrer el guion con la semilla nueva (lo hace Claude Code con el escritorio libre).
+
+**Estado:** en revisión.
+
+### T-43 · Codex · Solo el ojo para ver la contraseña
+
+**Qué:** JC decidió el 26/11 quitar el checkbox «Mostrar contraseña(s)» y dejar solo el ojo. El checkbox es
+`checkbxShowPass` de Windows Forms, en `frmInicio`, `frmCrearUsuario` y `frmCambiarContraseña`. El 26/11 se
+lo vio **encima de la vista web del alta**, debajo de «Confirmar contraseña».
+
+**Casos que hay que reescribir:**
+- **CP-98** (`PruebasSeguridad.cs:194`): afirma que `checkbxShowPass` está en el respaldo WinForms, con
+  `TabStop` y dentro de la pantalla;
+- **CP-176** (`PruebasVistasVisibles.cs:167`): usa `checkbxShowPass` en la recuperación;
+- los ojos de las vistas web ya los prueba `ComprobarOjos` (`PruebasInteraccionPantallas.cs:227`) y no
+  cambian.
+
+El respaldo WinForms necesita su propio ojo; si no, en el respaldo no se puede ver la contraseña.
+
+**Alcance decidido por JC el 26/11:** el checkbox desaparece **de las vistas web**; queda solo el ojo. El
+respaldo WinForms conserva su casilla, y por eso CP-98 y CP-176 la siguen afirmando ahí.
+
+**Hecho por Codex en `3100733`** («reemplazar checks de contraseña por ojos accesibles»): acceso, alta,
+recuperación y cambio sin la casilla web; los ojos los prueba `ComprobarOjos`. Claude Code revisó CP-98, CP-176,
+CP-211 y CP-364 contra el código el 26/11 y corrigió sus filas.
+
+**Falta:** verificar en ejecución que el ojo está siempre visible, funciona y es un solo control en las cuatro
+pantallas, y que en el alta ya no se ve `checkbxShowPass` encima de la vista web.
+
+**Estado:** pendiente de verificación en ejecución.
+
+### T-44 · Codex · Pedidos directos de JC del 26/11 a la tarde
+
+Sin ticket previo; JC se los pidió a Codex directamente. Claude Code revisó las pruebas el 26/11 y actualizó
+sus filas en `docs/04-casos-prueba.md`.
+
+| Commit | Qué | Pruebas |
+|---|---|---|
+| `47ae5a3` | Cambiar contraseña se abre dentro de «Mi cuenta», sin ventana aparte | CP-211 |
+| `a9f9c1b` | «Mi suscripción» pasa a vista web con tarjetas de plan | CP-76, CP-77, CP-78 |
+| `7f76e63` | El armador separa servicios y resumen del panel | — (CSS) |
+| `e98a958` | El catálogo pone los agotados al final | CP-366, nueva |
+
+**Falta:** verificar en ejecución, con la semilla de demostración: un solo título en «Mi suscripción», las
+tarjetas y Enter; el cambio de contraseña sin ventana aparte; el armador en cinco eventos con juegos de
+sectores distintos, con el total a la vista y el mapa orientativo dibujado; el catálogo con 25 eventos y el
+agotado al final. **CP-366 no está en ninguna corrida completa todavía.**
+
+**Estado:** pendiente de verificación en ejecución.
 
 ---
 

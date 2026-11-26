@@ -38,3 +38,6 @@ Pruebas/Capturas-UI-Normalizada-2026-11-20/
 
 # Salidas del MCP de Playwright (capturas, registros de consola): son locales.
 .playwright-mcp/
+
+# Turno del escritorio compartido entre agentes (no se publica)
+.escritorio.lock

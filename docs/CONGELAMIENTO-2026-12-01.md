@@ -1,11 +1,11 @@
 # Congelamiento del código: 01/12/2026
 
 Lista para mirar el **30/11**. Cada renglón se contesta con **sí** o **no**, sin interpretar. Se congela
-el 01/12 solo si los doce dicen sí. Con un solo no, no se congela, y JC decide qué hacer.
+el 01/12 solo si los quince dicen sí. Con un solo no, no se congela, y JC decide qué hacer.
 
 Escrita por Claude Code el 26/11 a pedido de JC. Los tickets están en `docs/TICKETS.md`.
 
-## Las doce condiciones
+## Las quince condiciones
 
 **A. Fallas que hoy están abiertas.** Las comprueba Claude Code **ejecutando la aplicación**, no
 leyendo el código ni el reporte de Codex. Se usa el método de `docs/VERIFICACION-EJECUTABLE-2026-11-26.md`.
@@ -18,6 +18,9 @@ leyendo el código ni el reporte de Codex. Se usa el método de `docs/VERIFICACI
 | 4 | T-36 | `frmReportes`, abierto, tiene `ClientSize.Height` de **790 o menos**. | |
 | 5 | T-28 | En el historial web, con una compra de dos entradas, los dos renglones y «Devolver» se ven **juntos, sin desplazar**. | |
 | 6 | T-27 | En los pasos del alta, el texto sobre la foto tiene contraste de **4,5:1 o más**, medido con Playwright sin ventana. | |
+| 6a | T-39 | Con una cuenta que salió del alta sin verificar: desde el aviso de RN-43 se pide el código, se verifica y se compra **sin cerrar sesión**. | |
+| 6b | T-38 | O el cierre inesperado tiene causa con archivo y línea y está corregido, o JC repitió dos veces el recorrido del pago con el registro de cierre de T-38 y la aplicación no se cerró. | |
+| 6c | T-43 y T-44 | Verificados ejecutando la aplicación: el ojo en las cuatro pantallas de contraseña (sin la casilla web), el cambio de contraseña dentro de «Mi cuenta», «Mi suscripción» web, el armador y el catálogo con los agotados al final. | |
 
 **B. Pruebas automáticas.**
 
@@ -41,7 +44,7 @@ recién cuando está hecho y comprobado como en A.
 
 ## Lo que no hace falta para congelar
 
-- **T-32 (P4, una sola tabla).** Entra solo si los doce renglones están en sí antes del 29/11. Si entra,
+- **T-32 (P4, una sola tabla).** Entra solo si los quince renglones están en sí antes del 29/11. Si entra,
   los renglones 8 y 9 se vuelven a mirar después.
 - **Se hacen con el código ya congelado:** T-04 (la carpeta de la defensa) y T-08 a T-13 (batería final,
   marcadores, capturas, páginas, diagramas y arquitectura).
@@ -49,7 +52,7 @@ recién cuando está hecho y comprobado como en A.
 
 ## Cuidado con los tiempos
 
-- **Los renglones 1 a 6 necesitan el escritorio.** Claude Code no puede ejecutarlos mientras Codex trabaja
+- **Los renglones 1 a 6c necesitan el escritorio.** Claude Code no puede ejecutarlos mientras Codex trabaja
   con ventanas, así que el 30/11 tiene que haber un rato en que Codex esté parado. Lo mismo vale para la
   batería del renglón 8, que abre formularios reales.
 - **Si el congelamiento se corre, el tiempo sale del documento.** La entrega del 10/12 no se mueve, así que

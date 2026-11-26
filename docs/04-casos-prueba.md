@@ -1,6 +1,6 @@
 # Casos de prueba
 
-Proyecto `Pruebas/` con MSTest. Hay 219 casos: CP-01 a CP-211, CP-354 a CP-360 y CP-364 a CP-365. Suman **365 ejecuciones**. La última corrida completa pasó **365/365** sobre `7efc928430b308b16aa0bf37e022e8fa77126bea` el 26/11/2026. El resumen está en `TestResults/bateria-365-2026-11-26.md` y la salida completa en `TestResults/bateria-365-2026-11-26.log`. Antes: sobre `2db272e`, 360/360 antes de la renumeración de CP-358 a CP-360; sobre `967e038`, 205 casos y 348 ejecuciones (corrida de Codex del 19/11 y de Claude Code del 20/11, `TestResults/Claude-967e038/bateria.log`); sobre `dba674c`, 148 casos y 276 ejecuciones; sobre el código congelado de la medición de mutación, `65225e7`, 145 casos y 271 ejecuciones.
+Proyecto `Pruebas/` con MSTest. Hay 220 casos: CP-01 a CP-211, CP-354 a CP-360 y CP-364 a CP-366. Suman **366 ejecuciones**. **CP-366 se agregó en `e98a958`, después de la última corrida completa:** la cifra de 366 sale del código, no de una corrida. La última corrida completa pasó **365/365** sobre `7efc928430b308b16aa0bf37e022e8fa77126bea` el 26/11/2026. El resumen está en `TestResults/bateria-365-2026-11-26.md` y la salida completa en `TestResults/bateria-365-2026-11-26.log`. Antes: sobre `2db272e`, 360/360 antes de la renumeración de CP-358 a CP-360; sobre `967e038`, 205 casos y 348 ejecuciones (corrida de Codex del 19/11 y de Claude Code del 20/11, `TestResults/Claude-967e038/bateria.log`); sobre `dba674c`, 148 casos y 276 ejecuciones; sobre el código congelado de la medición de mutación, `65225e7`, 145 casos y 271 ejecuciones.
 CP-01 a CP-10 son los de la lógica de fidelización, que define el documento. CP-11 a CP-365 se
 agregaron en noviembre de 2026: ver «Casos CP-11 a CP-61» y «Casos CP-62 a CP-365» más abajo. CP-01 a CP-04 se resuelven con `[DataTestMethod]`.
 Cada método muestra su ID en el nombre visible: `[TestMethod("CP-xx: …")]`, o `DisplayName`
@@ -138,9 +138,9 @@ documentado, no todas sus variantes: CP-56 prueba eliminar el último sector, no
 sectores; CP-60 prueba agregar un sector, no modificarlo. En la matriz, RN-05 está en la fila
 de RF-02 y RN-39 en la de RF-13: por eso CP-55 y CP-61 llevan dos requerimientos.
 
-## Casos CP-62 a CP-365
+## Casos CP-62 a CP-366
 
-Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11; CP-146 a CP-148, en el cierre de Codex (`dba674c`); CP-150 a CP-206, el 19/11, sobre `c4ab61e`, junto con la corrección de las columnas RF y Reglas de CP-197 a CP-199, que había cambiado Codex en los comentarios; CP-207 a CP-211 y CP-354 a CP-357, el 24/11, sobre `2db272e`. CP-358 a CP-360 y CP-364 a CP-365 se añadieron el 26/11. Los números CP-149, CP-212 a CP-353 y CP-361 a CP-363 no se usaron: Codex saltó de CP-211 a CP-354 al numerar, y los números no se reasignan. Salen del comentario `// CP-xx — RF, RN` y del nombre
+Registrados por Claude Code el 13/11/2026; CP-116 a CP-145, el 16/11; CP-146 a CP-148, en el cierre de Codex (`dba674c`); CP-150 a CP-206, el 19/11, sobre `c4ab61e`, junto con la corrección de las columnas RF y Reglas de CP-197 a CP-199, que había cambiado Codex en los comentarios; CP-207 a CP-211 y CP-354 a CP-357, el 24/11, sobre `2db272e`. CP-358 a CP-360 y CP-364 a CP-366 se añadieron el 26/11. Los números CP-149, CP-212 a CP-353 y CP-361 a CP-363 no se usaron: Codex saltó de CP-211 a CP-354 al numerar, y los números no se reasignan. Salen del comentario `// CP-xx — RF, RN` y del nombre
 visible de cada prueba en `Pruebas/`, leídos uno por uno. Para CP-62 a CP-357, la procedencia
 histórica de las ejecuciones sigue en `Pruebas/RESULTADOS-TAREAS-CODEX-2026-11-12-T47-T48.md`;
 los casos añadidos después pasaron en la corrida 365/365 de
@@ -170,8 +170,8 @@ escritorio abierta.
 | 1 | El resto |
 
 CP-62 a CP-148 suman **209 ejecuciones**; CP-150 a CP-206, **69**, CP-207 a CP-211 y CP-354 a CP-357, **9**
-(una cada uno), y CP-358 a CP-360 y CP-364 a CP-365, **5** (una cada uno). Con las 73 de CP-01 a CP-61,
-la batería da **365**. Sobre `967e038` eran 206 de CP-62 a CP-148: desde entonces CP-116 sumó tres pantallas
+(una cada uno), y CP-358 a CP-360 y CP-364 a CP-366, **6** (una cada uno). Con las 73 de CP-01 a CP-61,
+la batería da **366**. Sobre `967e038` eran 206 de CP-62 a CP-148: desde entonces CP-116 sumó tres pantallas
 (de 22 a 25: `frmAuditoria`, `frmRevisarSolicitudesOrganizador` y `frmSolicitudOrganizador`). Sobre `dba674c` eran 203
 de CP-62 a CP-148: desde entonces CP-63 sumó una pantalla (de 20 a 21) y CP-116, dos (de 20 a 22).
 En el cierre de Codex (`dba674c`) se sumaron dos de CP-146, dos de CP-147 y una de CP-148 a las 271
@@ -215,9 +215,9 @@ sección 0).
 | CP-73 | PruebasGrupoAPropietario | Alta de un evento con categoría y sin categoría (2 variantes) | Con categoría, se guarda y se lista como borrador; sin categoría, no se inserta | RF-12 | RN-06 | PA-08 (C.6, C.7) |
 | CP-74 | PruebasGrupoAPropietario | Agregar a un borrador un sector de capacidad 0 y uno de capacidad 10 (2 variantes), luego publicar explícitamente | Agregar el sector nunca publica: el borrador sigue en Borrador. Al publicar el primer evento del Organizador queda EnRevision | RF-12 | RN-06, RN-54 | PA-09 (C.8, C.9) |
 | CP-75 | PruebasGrupoAPropietario | Desde la pantalla, un sector que supera la capacidad del local; eliminar el último sector (2 variantes) | RN-38 informa la capacidad disponible y no inserta; RN-06 informa el código y conserva el sector | RF-12 | RN-06, RN-38 | PA-10 (C.10, C.11) |
-| CP-76 | PruebasGrupoASuscripcion | «Mi suscripción» sin plan | Muestra precios, beneficios y controles completos, sin recortes | RF-13, RNF-02 | — | PA-11 (8.3) |
-| CP-77 | PruebasGrupoASuscripcion | Contratar el plan mensual; cancelarlo (2 variantes) | Al contratar, muestra precio y vencimiento y habilita los beneficios. Al cancelar, pide confirmación con No por defecto y quita los beneficios | RF-13 | RN-25 | PA-12 (8.4, 8.6) |
-| CP-78 | PruebasGrupoASuscripcion | Dos ventanas de suscripción abiertas; contratar en las dos | La segunda se rechaza con RN-25: no se crean dos planes | RF-13 | RN-25 | PA-13 (8.5) |
+| CP-76 | PruebasGrupoASuscripcion | «Mi suscripción» sin plan (interfaz; vista web desde `a9f9c1b`) | La vista web muestra «No tenés una suscripción activa.», el precio mensual, el anual y «Ahorrás … frente a 12 meses», dos tarjetas de plan, tres beneficios y **Cancelar** oculto. El respaldo WinForms muestra los mismos textos, sin recortes ni superposiciones | RF-13, RNF-02 | — | PA-11 (8.3) |
+| CP-77 | PruebasGrupoASuscripcion | Contratar el plan mensual con Enter sobre la tarjeta; cancelarlo (2 variantes, vista web) | Al contratar, la suscripción vence en un mes, el estado dice «Plan Mensual activo / Vence el …» y quedan deshabilitados los planes y **Contratar**. Al cancelar, pide confirmación con No por defecto, no queda plan activo y vuelve **Contratar** | RF-13 | RN-25 | PA-12 (8.4, 8.6) |
+| CP-78 | PruebasGrupoASuscripcion | Dos pantallas de suscripción abiertas; contratar en las dos (vista web) | La segunda se rechaza con RN-25: queda una sola suscripción vigente, la primera | RF-13 | RN-25 | PA-13 (8.5) |
 | CP-79 | PruebasGrupoASuscripcion | Resumen de compra de 2 entradas con suscripción y sin ella (2 variantes) | El suscriptor tiene el seguro sin cargo y no recibe la pregunta del seguro; sin suscripción, el seguro de 2 entradas cuesta $10.000 | RF-05 | RN-37 | PA-14 (8.7, 8.9) |
 | CP-80 | PruebasGrupoASuscripcion | Pagar con seguro siendo suscriptor; pagar sin seguro (2 variantes) | Con seguro, una póliza gratuita por entrada; sin seguro, ninguna póliza | RF-06, RF-07 | RN-37 | PA-15 (8.8, C9.10, C9.11) |
 | CP-81 | PruebasGrupoAPreventa | Evento en preventa: cliente sin plan, suscriptor; evento sin preventa (3 variantes) | El evento se lista; al cliente sin plan se le rechaza con la fecha y hora en que termina la preventa; el suscriptor abre la compra; sin preventa compran todos. **Falla:** la preventa rechazada deja visible la compra | RF-03, RF-05 | RN-39 | PA-16 (8.21, 8.22, C9.4, C9.5, C9.8) |
@@ -237,7 +237,7 @@ sección 0).
 | CP-95 | PruebasSeguridad | Cambiar la contraseña con la actual incorrecta | Rechazado; el contador de intentos sube a 1 y la contraseña anterior sigue sirviendo | RF-02 | RN-04, RN-40 | SEG-1 |
 | CP-96 | PruebasSeguridad | Cambiar la contraseña de una cuenta bloqueada, con la actual correcta | Rechazado con el mensaje genérico «Mail o contraseña actual incorrectos.», sin decir que está bloqueada; al vencer el bloqueo, la anterior sigue sirviendo | RF-02 | RN-04 | SEG-1, K-8 |
 | CP-97 | PruebasSeguridad | Cambiar la contraseña con un correo inexistente y con la actual incorrecta | Las dos respuestas son iguales: misma regla y mismo mensaje | RF-02 | RN-40 | SEG-1 |
-| CP-98 | PruebasSeguridad | Con la sesión del Administrador, cambiar la contraseña de un cliente; abrir la pantalla | La anterior deja de servir y la nueva sirve; la sesión sigue siendo del Administrador. Pantalla: tres campos enmascarados y vacíos, todo dentro de la ventana | RF-02 | RN-40 | SEG-1 |
+| CP-98 | PruebasSeguridad | Un cliente, con su propia sesión, cambia su contraseña; abrir la pantalla de cambio | La anterior deja de servir y la nueva sirve; la sesión sigue siendo la del cliente. Vista web: mail de solo lectura, tres campos secretos y tres ojos. Respaldo WinForms: tres campos vacíos y enmascarados, y la casilla de visibilidad dentro de la ventana | RF-02 | RN-40 | SEG-1 |
 | CP-99 | PruebasIngresos | Entrada confirmada, del evento elegido y dentro del horario; después, un cliente que intenta registrarla y una consulta del contador sin sesión | Ingresa: `FechaIngreso` queda registrada, el estado de venta no cambia y el contador da 1. En la pantalla, el segundo escaneo dice «ya ingresó». Al cliente se le rechaza el registro por RN-48, sin alterar el ingreso; sin sesión, el contador se rechaza | RF-07 | RN-18, RN-48 | SEG-2 |
 | CP-100 | PruebasIngresos | El mismo código escaneado dos veces | El segundo se rechaza como ya usado, con la fecha y hora del primero | RF-07 | RN-18 | SEG-2 |
 | CP-101 | PruebasIngresos | Entrada reembolsada | Se rechaza como reembolsada; el contador queda en 0 | RF-07 | RN-18, RN-29 | SEG-2 |
@@ -299,7 +299,7 @@ sección 0).
 | CP-157 | PruebasEjecucionSinDialogos | Error inesperado con un detalle interno, mostrado por `ManejadorErrores` (interfaz) | Aviso dentro de la ventana con el mensaje general y sin el detalle interno; la ventana sigue habilitada | RF-02, RNF-02 | — | Errores |
 | CP-158 | PruebasVistasVisibles | Dos portadas generadas con el mismo nombre y la misma categoría, sin imagen | Las dos se dibujan idénticas, píxel a píxel, con el fondo en degradé | RF-19 | — | Portadas |
 | CP-159 | PruebasVistasVisibles | Ocho vistas compuestas en un host de diseño real (8 variantes) | Ninguna guarda tipografía ni colores en el Designer, y ninguna fija un tamaño mínimo | RF-05, RNF-02 | — | Vistas |
-| CP-160 | PruebasVistasVisibles | Cliente en el listado: abre la ficha de un evento desde su tarjeta, elige un sector en el mapa y pulsa comprar (interfaz) | La ficha muestra el evento; se abre la compra de ese evento y de ese cliente, con 1 entrada del sector elegido | RF-03, RF-18, RF-19 | — | Vistas |
+| CP-160 | PruebasVistasVisibles | Cliente en el listado: abre la ficha desde la tarjeta, elige un sector en el mapa, suma una entrada en la tarjeta del sector; después, el catálogo dentro de «Mi cuenta» (interfaz) | La ficha muestra el evento; la compra es de ese evento y ese cliente, con 1 entrada y después 2, sin que la grilla de compatibilidad reciba foco. En «Mi cuenta», el título dice «Eventos disponibles», el catálogo cabe en el área de contenido y sus botones quedan dentro de la ventana | RF-03, RF-18, RF-19 | — | Vistas |
 | CP-161 | PruebasVistasVisibles | Sesión de un cliente que carga el inicio de otro cliente | Rechazo RN-41 | RF-07, RF-22 | RN-41 | Vistas |
 | CP-162 | PruebasVistasVisibles | Panel del administrador cargado como Administrador y después como cliente | Como Administrador muestra cinco indicadores; como cliente, rechazo RN-34 | RF-11, RF-22 | RN-34 | Vistas |
 | CP-163 | PruebasVistasVisibles | Botones de tres vistas, del estado vacío y de las pantallas de auditoría y de revisión de eventos (6 variantes) | Ningún botón corta su texto; los primarios se dibujan con el color primario en más del 60 % de su superficie | RF-05, RNF-03 | — | Vistas |
@@ -315,7 +315,7 @@ sección 0).
 | CP-173 | PruebasSeguridadCuenta | Recuperación desde la pantalla: pedir el código, leerlo del archivo y restablecer (interfaz) | La pantalla muestra solo el aviso de la bandeja; ningún control muestra el código y no existe una pantalla de bandeja. La contraseña nueva sirve y la anterior no | RF-15 | RN-44 | Seguridad de cuenta |
 | CP-174 | PruebasSeguridadCuenta | Inactividad configurada en 2 min, con aviso a 30 s; un cliente registra una acción y consulta la auditoría | Avisa a los 90 s y cierra a los 120 s, no antes. El cliente no puede consultar (RN-45); el Administrador ve la acción y el inicio de sesión del cliente | RF-16, RF-17 | RN-45, RN-46 | Auditoría |
 | CP-175 | PruebasSeguridadCuenta | Administrador abre la pantalla de auditoría (interfaz) | La pantalla se muestra con la tabla cargada | RF-16 | RN-45 | Auditoría |
-| CP-176 | PruebasVistasVisibles | Pantalla de recuperación de contraseña (interfaz) | El medidor, los dos campos, la casilla y el botón no se superponen, y el botón entra en la ventana | RF-15 | RN-44 | Seguridad de cuenta |
+| CP-176 | PruebasVistasVisibles | Recuperación de contraseña en su respaldo WinForms (interfaz) | El medidor, los dos campos, la casilla de visibilidad y el botón no se superponen, y el botón entra en la ventana | RF-15 | RN-44 | Seguridad de cuenta |
 | CP-177 | PruebasGrupoAReportes | Imagen PNG de 2400 × 1600 px | Se guarda comprimida, dentro del tamaño y de las medidas máximas, y se puede volver a abrir | RF-19 | RN-52 | Portadas |
 | CP-178 | PruebasGrupoAReportes | Bytes de texto presentados como imagen | Rechazo «no contiene una imagen válida» | RF-19 | RN-52 | Portadas |
 | CP-179 | PruebasGrupoAReportes | Organizador guarda la portada de su evento | La base devuelve la misma imagen y la vista la muestra; sin imagen propia, vuelve a la portada generada | RF-19 | RN-49, RN-52 | Portadas |
@@ -350,18 +350,20 @@ sección 0).
 | CP-208 | PruebasSeguridadCuenta | Las cinco variables de entorno de SMTP, completas o con alguna faltante | El emisor SMTP se elige solo cuando están las cinco | RF-14, RF-15 | RN-43, RN-44 | Correo y SMS |
 | CP-209 | PruebasArranqueYAlcance | El ejecutable real, `Visual.exe` | Completa el arranque y la ventana permanece abierta | RF-01, RNF-03 | — | Arranque y navegación |
 | CP-210 | PruebasArranqueYAlcance | Las referencias de navegación entre los formularios | Cada pantalla tiene una ruta de entrada y una salida visible | RF-01, RF-22, RNF-03 | — | Arranque y navegación |
-| CP-211 | PruebasVistasVisibles | Usuario con sesión iniciada, menú «Mi cuenta» (interfaz) | Abre el cambio de contraseña, que pide la contraseña actual | RF-17, RF-22 | RN-02 | Cambio de contraseña |
+| CP-211 | PruebasVistasVisibles | Usuario con sesión iniciada, menú «Mi cuenta» → **Cambiar contraseña** (interfaz) | Abre el modo cambio, no la recuperación, con el correo de la sesión, **dentro** de «Mi cuenta» (sin ventana aparte) y con el título «Cambiar contraseña». La vista web tiene tres ojos, el mail de solo lectura y ningún título propio | RF-17, RF-22 | RN-02 | Cambio de contraseña |
 | CP-354 | PruebasFormularios | Las ventanas sin diseño adaptable (interfaz) | Enter, Esc, el orden de tabulación y el foco inicial responden como se espera, y la ventana no cambia de tamaño | RF-05, RNF-02 | — | Teclado |
 | CP-355 | PruebasSolicitudesOrganizador | Solicitud para ser Organizador con SMTP configurado | El código del teléfono llega por el SMS simulado y la solicitud se completa | RF-20 | RN-51 | Correo y SMS |
 | CP-356 | PruebasSolicitudesOrganizador | El envío de un código con un proveedor que falla | No queda un código activo en la base | RF-14, RF-15 | RN-43, RN-44 | Correo y SMS |
 | CP-357 | PruebasInteraccionPantallas | Las 26 ventanas reales, abiertas y operadas (interfaz) | El foco, el teclado y la geometría responden en cada una | RNF-02, RNF-03 | — | Teclado y escala |
 | CP-358 | PruebasEsquemaInicio | Falla de conexión al iniciar (interfaz) | Avisa dentro de la ventana y mantiene oculta la contraseña | RF-02, RNF-02 | — | Arranque |
-| CP-359 | PruebasInteraccionPantallas | Quitar físicamente las dependencias WebView2 y Newtonsoft en una copia | Las vistas afectadas muestran su respaldo WinForms y un aviso | RF-03, RF-07, RF-11, RNF-02 | — | Respaldo web |
+| CP-359 | PruebasInteraccionPantallas | Quitar físicamente WebView2, sus cargadores y Newtonsoft de una copia y correr ahí la prueba (interfaz) | En la copia, cada vista termina en su respaldo: dispara el evento de respaldo, el panel web queda sin preparar y oculto. La prueba aislada termina con código 0 | RF-03, RF-07, RF-11, RNF-02 | — | Respaldo web |
 | CP-360 | PruebasInteraccionPantallas | Sin iText, exportar un reporte; además, fallo al crear el ticket tras el pago | La exportación avisa que falta un archivo y la compra pagada conserva la opción de recuperar el ticket | RF-07, RNF-02 | — | PDF y compra |
-| CP-364 | PruebasInteraccionPantallas | Alta web completa con verificación de correo y navegación final (interfaz) | La cuenta queda creada y la acción final abre Acceso sin reiniciar el alta | RF-14 | RN-43 | Alta de cuenta |
+| CP-364 | PruebasInteraccionPantallas | Alta web completa con verificación de correo y navegación final (interfaz) | La bienvenida y el alta miden al menos 1100 × 720; el alta tiene los dos ojos accesibles y las dos opciones de cuenta; no cae al respaldo WinForms; la bandeja simulada recibe el código; termina en «Tu cuenta está lista» y la acción final abre Acceso sin reiniciar el alta | RF-14 | RN-43 | Alta de cuenta |
 | CP-365 | PruebasInteraccionPantallas | Compra con dos entradas en el historial web (interfaz) | La compra y ambas opciones de devolución caben en la vista | RF-05 | RN-29 | Historial |
+| CP-366 | PruebasVistasVisibles | Catálogo con dos eventos agotados y dos disponibles, en fechas mezcladas (interfaz) | Primero los disponibles por fecha y al final los agotados, también por fecha | RF-18, RF-19 | — | Catálogo |
 
 **Notas de lectura:**
+- **Filas revisadas contra el código el 26/11 (T-43 y las vistas web de `3100733` a `e98a958`):** CP-76, CP-77, CP-78, CP-98, CP-160, CP-176, CP-211, CP-359, CP-364 y la nueva CP-366. La casilla «Mostrar contraseña» desapareció de las vistas web (quedan los ojos); sigue en el respaldo WinForms, y por eso CP-98 y CP-176 la siguen afirmando ahí. La fila anterior de CP-98 decía «con la sesión del Administrador»: la prueba usa la sesión del propio cliente.
 - **CP-112 no verifica RNF-01** (revisado el 19/11). RNF-01 pide que el flujo de compra se
   resuelva en menos de cinco minutos; CP-112 comprueba que siete componentes no guarden su estilo
   en el Designer, que es RNF-02. Se quitó RNF-01 del catálogo, como ya lo había quitado Codex del
@@ -369,7 +371,7 @@ sección 0).
   la medición del informe de usabilidad (`docs/usabilidad/INFORME-USABILIDAD.md`, «Tiempo del
   flujo completo»).
 - **CP-149 no existe**, ni CP-212 a CP-353 ni CP-361 a CP-363. Los números se saltaron al numerar y no se reasignan, igual que RN-27.
-- **CP-207 a CP-211 y CP-354 a CP-357 (24/11, `2db272e`); CP-358 a CP-360 y CP-364 a CP-365 (26/11).** Requerimientos y reglas tomados de sus comentarios con
+- **CP-207 a CP-211 y CP-354 a CP-357 (24/11, `2db272e`); CP-358 a CP-360 y CP-364 a CP-366 (26/11).** Requerimientos y reglas tomados de sus comentarios con
   `tools/Matriz/Extraer.py`. No suman reglas nuevas: la cobertura sigue en 50 de 52.
 - **Requerimientos y reglas alineados con los comentarios (22/11).** Codex volvió a leer las
   pruebas y corrigió los comentarios en `42b255e` y `e3e000d`. Desde `e3e000d`, la columna RF del
