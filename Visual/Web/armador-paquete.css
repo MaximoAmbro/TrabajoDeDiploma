@@ -135,13 +135,14 @@ body { padding: 0; }
 .resumen #confirmar-seguro, .resumen #error { grid-row: 5; }
 .resumen .pila-3 { grid-row: 6; }
 @media (max-height: 760px) and (min-width: 761px) {
-    .resumen { height: min(600px, calc(100vh - 96px)); min-height: 380px; padding: var(--e4); }
-    .resumen > .pila { gap: var(--e3); }
+    .resumen { height: min(600px, calc(100vh - 184px)); min-height: 0; padding: var(--e4); }
+    .resumen > .pila { gap: var(--e2); grid-template-rows: auto minmax(96px, 1fr) auto auto auto auto; }
+    .desglose { min-height: 96px; }
     .desglose .grupo { padding-top: var(--e2); }
     .desglose .linea { padding: 2px 0; }
     .total { padding-top: var(--e3); }
 }
-@container armador (max-width: 920px) {
+@container armador (max-width: 700px) {
     .armado { grid-template-columns: minmax(0, 1fr); min-height: 0; }
     .resumen { position: static; height: auto; min-height: 0; max-height: none; }
     .resumen > .pila { height: auto; min-height: 0; display: flex; }
