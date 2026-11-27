@@ -6,11 +6,111 @@ Plataforma de venta de entradas para espectáculos de Rosario, con armado person
 paquetes (entrada + hospedaje + traslado + merchandising + experiencia VIP).
 Trabajo de Campo I — Universidad Abierta Interamericana.
 
+## Abrir la aplicación desde cero
+
+Comprobado el 27/11/2026 sobre un clon limpio de la rama `JC` (`ed23ac0`), en Windows 11 con
+Visual Studio 2022 Community y SQL Server 2022 Express. Detalle de la comprobación:
+`docs/VERIFICACION-MUESTRA-1-2026-11-27.md`, sección 7.
+
+### Requisitos
+
+- **Windows 10 u 11.**
+- **Visual Studio 2022** con la carga de trabajo «Desarrollo de escritorio de .NET».
+- **SQL Server 2017 o posterior** (Express alcanza), con autenticación de Windows y permiso para
+  crear bases. Para ejecutar los scripts sirve SQL Server Management Studio o `sqlcmd`.
+- **Runtime de WebView2.** Viene con Windows 11 y con Edge en Windows 10. Si falta, la aplicación
+  abre igual y usa sus pantallas en Windows Forms (ver «Sin WebView2» abajo).
+
+### 1. Clonar en una ruta corta
+
+Cloná en una carpeta de ruta corta, por ejemplo `C:\EventAura`. **Con una ruta larga la
+compilación falla:** los paquetes NuGet tienen archivos de nombre largo y Windows no admite rutas
+de más de 260 caracteres. Pasó en la comprobación, con el clon dentro de la carpeta temporal del
+usuario.
+
+### 2. Crear la base y cargar la semilla
+
+1. Creá una base vacía llamada `BddEventAura`.
+2. **Con esa base seleccionada** (no `master`: `01-esquema.sql` no elige base), ejecutá en orden:
+   1. `BaseDatos/01-esquema.sql`
+   2. `BaseDatos/02-semilla.sql`
+
+   Con `sqlcmd`, desde la raíz del repositorio (cambiá `.\SQLEXPRESS` por tu instancia):
+   ```powershell
+   sqlcmd -S .\SQLEXPRESS -E -b -Q "CREATE DATABASE BddEventAura"
+   sqlcmd -S .\SQLEXPRESS -E -b -d BddEventAura -i BaseDatos\01-esquema.sql
+   sqlcmd -S .\SQLEXPRESS -E -b -d BddEventAura -i BaseDatos\02-semilla.sql
+   ```
+   Si `sqlcmd` responde «Timed out waiting for pipe '\\.\pipe\SQLLocal\SQLEXPRESS'», es el
+   `sqlcmd` nuevo (el de `C:\Program Files\SqlCmd`), que no se conecta por memoria compartida.
+   Pasó en la comprobación. Usá la canalización con nombre en lugar de `.\SQLEXPRESS`:
+   `-S 'np:\\.\pipe\MSSQL$SQLEXPRESS\sql\query'` (entre comillas simples en PowerShell), o
+   ejecutá los scripts desde SQL Server Management Studio.
+3. **No hace falta ningún script del 03 al 16.** `01-esquema.sql` ya trae el esquema completo; los
+   del 04 al 16 son para actualizar una base vieja, y el 03 es una carga grande para medir
+   reportes.
+
+**Para la demostración** hay una base aparte con más datos (25 eventos futuros, 58 clientes, 964
+entradas vendidas): su nombre tiene que terminar en `_Demostracion`, y después de `01` y `02` se
+corre `BaseDatos/semilla-demostracion.sql`. El paso a paso y cómo apuntar la aplicación a ella y
+volver está en `Pruebas/GUION-DEMOSTRACION.md`, «Armar la base de demostración».
+
+### 3. Compilar
+
+Abrí `SistemaEntradas.sln` en Visual Studio y elegí **Compilar → Compilar solución**: Visual
+Studio restaura solo los paquetes NuGet. Desde una terminal PowerShell, en la raíz:
+
+```powershell
+& 'C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe' SistemaEntradas.sln -restore -p:RestorePackagesConfig=true -p:Configuration=Debug -v:minimal -nologo
+```
+
+**`-p:RestorePackagesConfig=true` es necesario.** El proyecto `Visual` declara sus paquetes en
+`packages.config`, y `-restore` solo no los descarga: en un clon limpio la compilación falla con
+«Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo»
+(`Microsoft.Data.SqlClient.SNI.targets`). Con otra edición de Visual Studio, cambiá `Community` en
+la ruta.
+
+### 4. Apuntar la aplicación a tu servidor
+
+La cadena de conexión del repositorio apunta a la instancia de Máximo
+(`DESKTOP-5QSNMRE\AMBROMSSQLSERVER`). **Si tu instancia es otra**, después de compilar abrí
+`Visual\bin\Debug\Visual.exe.config` con el Bloc de notas y, en `connectionString`, cambiá
+`Data Source=` por tu instancia (por ejemplo `.\SQLEXPRESS`). No edites `Visual/App.config`:
+guarda la configuración de cada máquina y no se publica (ver `CLAUDE.md`).
+
+### 5. Abrir
+
+Abrí **`Visual\bin\Debug\Visual.exe`** con doble clic. Aparece «Bienvenido a EventAura» y, desde
+ahí, el acceso. Cuentas de la semilla:
+
+| Perfil | Mail | Contraseña |
+|---|---|---|
+| Administrador | `admin@eventaura.com` | `Admin1234` |
+| Organizador | `organizador@eventaura.com` | `Cliente123` |
+| Clientes | `plata@`, `oro@` y `bronce@eventaura.com` | `Cliente123` |
+
+**La demostración se corre desde el ejecutable compilado, nunca desde Visual Studio** (ni con F5 ni
+con «Iniciar sin depurar»). Una vez, en medio de una prueba, la aplicación lanzada desde Visual
+Studio se cerró sin dejar ningún registro, y fuera del depurador no se pudo reproducir (ticket
+T-38, `docs/TICKETS.md`). La aplicación igual registra cada cierre en
+`%LOCALAPPDATA%\EventAura\errores.log`.
+
+Si al abrir dice que la base está desactualizada, el aviso nombra el script que falta: ejecutalo en
+esa base y volvé a abrir.
+
+### Sin WebView2
+
+Si el equipo no tiene el runtime de WebView2, la aplicación abre igual. Va directo al acceso en
+Windows Forms, que avisa «La vista web no está disponible. Podés iniciar sesión con este
+formulario.», y cada pantalla web usa su versión de respaldo. El catálogo, por ejemplo, muestra
+tarjetas y una tabla. Comprobado el 27/11 haciendo que la aplicación no encuentre el runtime
+(`docs/VERIFICACION-MUESTRA-1-2026-11-27.md`). El runtime se instala gratis desde Microsoft: buscá
+«WebView2 Runtime Evergreen».
+
 ## Cómo correr las pruebas
 
-El proyecto `Pruebas/` (MSTest, .NET Framework 4.8) verifica los casos CP-01 a CP-10, el
-cálculo de referencia de $99.625 y el alto máximo de los formularios (RNF-03). El detalle de
-cada caso está en [docs/04-casos-prueba.md](docs/04-casos-prueba.md).
+El proyecto `Pruebas/` (MSTest, .NET Framework 4.8) tiene 234 casos y 379 ejecuciones. El
+detalle de cada caso está en [docs/04-casos-prueba.md](docs/04-casos-prueba.md).
 
 Son **pruebas de integración contra SQL Server**, no unitarias: usan los mismos gestores y la
 misma base que la aplicación. Por eso necesitan un servidor disponible.
@@ -46,7 +146,7 @@ solución con el MSBuild de Visual Studio y después corre las pruebas.
 **Desde una terminal PowerShell**, en la raíz del repositorio:
 
 ```powershell
-& 'C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe' SistemaEntradas.sln -restore -p:Configuration=Debug -v:minimal -nologo
+& 'C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe' SistemaEntradas.sln -restore -p:RestorePackagesConfig=true -p:Configuration=Debug -v:minimal -nologo
 
 $vstest = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products '*' -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -find '**\TestPlatform\vstest.console.exe' | Select-Object -First 1
 & $vstest .\Pruebas\bin\Debug\net48\Pruebas.dll /Logger:"console;verbosity=normal"
@@ -66,19 +166,9 @@ Para correr una sola prueba, agregá un filtro al final del comando de `vstest`:
 
 ### 3. Qué esperar
 
-Una corrida correcta informa **12 pruebas superadas**:
-
-| Prueba | Qué verifica |
-|---|---|
-| CP-01 a CP-04 (4 resultados) | Nivel y descuento según la cantidad de compras: Bronce 0 %, Plata 5 %, Oro 7,5 % |
-| CP-05 | El descuento se aplica a las entradas y no al hospedaje |
-| CP-06 | Una compra de hace 13 meses queda fuera de la ventana de 12 |
-| CP-07 | Se factura el precio congelado aunque cambie la tarifa |
-| CP-08 | La séptima compra se cobra al 5 %; el nivel Oro rige desde la octava |
-| CP-09 | Un reembolso baja el contador pero no el nivel |
-| CP-10 | La suscripción no suma porcentaje de descuento |
-| Referencia | El cálculo de ejemplo da exactamente $99.625 |
-| RNF-03 | Ningún formulario pasa de 790 px de alto |
+Una corrida completa informa **379 pruebas superadas** y tarda unos 4 minutos. Muchas abren las
+pantallas reales: **no uses el teclado ni el mouse mientras corren**, y dejá la sesión de
+Windows abierta y sin bloquear. Las capturas que guardan van a `TestResults/`.
 
 ### Qué hace cada corrida con la base
 
@@ -104,6 +194,6 @@ vuelve a borrar.
 
 ### Pruebas manuales
 
-Las pruebas de interfaz no están automatizadas. Las que faltan correr están en
+Las pruebas manuales que faltan correr están en
 [docs/PRUEBAS-PENDIENTES.md](docs/PRUEBAS-PENDIENTES.md), con qué probar y qué resultado
 esperar.
