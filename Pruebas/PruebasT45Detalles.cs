@@ -31,8 +31,7 @@ namespace Pruebas
                         Mostrar(acceso);
                         var web = ControlDe<Visual.Web.PanelWeb>(acceso, "accesoWeb");
                         EsperarVistaWeb(web);
-                        Assert.AreEqual("1", EjecutarVistaWeb(web,
-                            "document.querySelectorAll('input[type=password] + .ojo-contrasena').length.toString()"));
+                        Assert.AreEqual("1|true", EstadoOjos(web), "El ojo de acceso debe tener tamaño, ARIA y foco por Tab.");
                         PruebasInteraccionPantallas.CapturarSiSeSolicito(acceso, "Ojo-Acceso");
                     }
 
@@ -45,8 +44,7 @@ namespace Pruebas
                         Esperar(() => EjecutarVistaWeb(web,
                             "!document.querySelector('[data-vista=datos]').classList.contains('oculto')") == "true",
                             "El alta debe mostrar su paso de datos para capturar ambos campos.");
-                        Assert.AreEqual("2", EjecutarVistaWeb(web,
-                            "document.querySelectorAll('input[type=password] + .ojo-contrasena').length.toString()"));
+                        Assert.AreEqual("2|true", EstadoOjos(web), "Los ojos del alta deben tener tamaño, ARIA y foco por Tab.");
                         PruebasInteraccionPantallas.CapturarSiSeSolicito(alta, "Ojo-Alta");
                     }
 
@@ -62,8 +60,7 @@ namespace Pruebas
                         Esperar(() => EjecutarVistaWeb(web,
                             "!document.querySelector('#form-codigo').classList.contains('oculto')") == "true",
                             "Recuperación debe mostrar los campos de contraseña para capturarlos.");
-                        Assert.AreEqual("2", EjecutarVistaWeb(web,
-                            "document.querySelectorAll('input[type=password] + .ojo-contrasena').length.toString()"));
+                        Assert.AreEqual("2|true", EstadoOjos(web), "Los ojos de recuperación deben tener tamaño, ARIA y foco por Tab.");
                         PruebasInteraccionPantallas.CapturarSiSeSolicito(recuperar, "Ojo-Recuperar");
                     }
                 });
@@ -173,6 +170,12 @@ namespace Pruebas
                 Thread.Sleep(10);
             }
             Assert.IsTrue(panel.Preparado && panel.Visible, "WebView2 debe estar disponible para verificar T-45.");
+        }
+
+        private static string EstadoOjos(Visual.Web.PanelWeb panel)
+        {
+            return EjecutarVistaWeb(panel,
+                "(()=>{const b=[...document.querySelectorAll('input[type=password] + .ojo-contrasena')];return b.length+'|'+b.every(x=>{const r=x.getBoundingClientRect();return r.width===40&&r.height===40&&x.getAttribute('aria-label')==='Mostrar contraseña'&&x.getAttribute('aria-pressed')==='false'&&x.tabIndex>=0})})()");
         }
 
         private static string EjecutarVistaWeb(Visual.Web.PanelWeb panel, string script)
