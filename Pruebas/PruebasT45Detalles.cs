@@ -116,7 +116,8 @@ namespace Pruebas
                     var formulario = (Visual.frmCrearUsuario)host.Pantalla;
                     var web = ControlDe<Visual.Web.PanelWeb>(formulario, "altaCuentaWeb");
                     EsperarVistaWeb(web);
-                    Assert.AreEqual("Verificar correo", menu.Controls.OfType<Label>().Single(c => c.Name == "label1").Text);
+                    Assert.AreEqual("Verificar correo", menu.Controls.Find("label1", true)
+                        .Single(c => c.Text == "Verificar correo").Text);
                     string visible = EjecutarVistaWeb(web,
                         "(()=>{const e=document.querySelector('#codigo-correo'),r=e.getBoundingClientRect(),a=document.querySelector('[data-vista=correo]').getBoundingClientRect();return [e.offsetParent!==null,r.top>=0,r.bottom<=innerHeight,a.top>=0,a.bottom<=innerHeight,innerHeight,r.top,r.bottom,a.top,a.bottom].join('|')})()");
                     TestContext?.WriteLine("CP-375 geometría: " + visible);

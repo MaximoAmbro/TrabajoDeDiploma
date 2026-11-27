@@ -36,7 +36,8 @@ namespace Pruebas
         {
             List<Type> formularios = typeof(Visual.frmInicio).Assembly.GetTypes()
                 // La base común no es una pantalla y no tiene Designer.
-                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Visual.FormularioEventAura))
+                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract &&
+                    t != typeof(Visual.FormularioEventAura) && t != typeof(Visual.DialogoEventAura))
                 .OrderBy(t => t.Name)
                 .ToList();
             Dictionary<string, string> designers = LeerDesigners();
@@ -235,7 +236,8 @@ namespace Pruebas
         public void CP354_TecladoYRedimensionamiento()
         {
             var formulariosProducto = typeof(Visual.FormularioEventAura).Assembly.GetTypes()
-                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Visual.FormularioEventAura))
+                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract &&
+                    t != typeof(Visual.FormularioEventAura) && t != typeof(Visual.DialogoEventAura))
                 .ToArray();
             Assert.AreEqual(26, formulariosProducto.Length);
             Assert.IsTrue(formulariosProducto.All(t => typeof(Visual.FormularioEventAura).IsAssignableFrom(t)),

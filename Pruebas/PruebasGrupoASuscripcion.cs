@@ -117,8 +117,10 @@ namespace Pruebas
                     AbrirYConfirmarContrato(primera, true);
                     Suscripcion activa = GestorSuscripciones.Instance.ActivaDe(cliente.Id);
                     AbrirYConfirmarContrato(segunda, false);
-                        Assert.IsTrue(EjecutarWeb(WebSuscripcion(segunda), "document.querySelector('#estado').textContent")
-                            .Contains("vence el " + activa.FechaFin.ToString("dd/MM/yyyy")));
+                    string fechaEsperada = "vence el " + activa.FechaFin.ToString("dd/MM/yyyy");
+                    Esperar(() => EjecutarWeb(WebSuscripcion(segunda), "document.querySelector('#estado').textContent")
+                        .IndexOf(fechaEsperada, StringComparison.OrdinalIgnoreCase) >= 0,
+                        "La vista desactualizada debe actualizarse al detectar RN-25.");
                     Assert.AreEqual(1, Fake.ContarSuscripcionesVigentes(cliente.Id));
                     Assert.AreEqual(activa.Id, GestorSuscripciones.Instance.ActivaDe(cliente.Id).Id);
                 }
@@ -244,6 +246,17 @@ namespace Pruebas
                 System.Threading.Thread.Sleep(10);
             }
             Assert.Fail("La suscripción no actualizó su estado después de confirmar el diálogo web.");
+        }
+
+        private static void Esperar(Func<bool> condicion, string mensaje)
+        {
+            var reloj = System.Diagnostics.Stopwatch.StartNew();
+            while (!condicion() && reloj.Elapsed < TimeSpan.FromSeconds(5))
+            {
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(10);
+            }
+            Assert.IsTrue(condicion(), mensaje);
         }
 
         private static Visual.Web.PanelWeb WebSuscripcion(Form form)

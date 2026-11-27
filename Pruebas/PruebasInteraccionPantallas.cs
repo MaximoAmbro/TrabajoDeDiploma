@@ -408,7 +408,8 @@ namespace Pruebas
         public void CP357_InteraccionRealDeLasPantallas()
         {
             var todosLosTipos = typeof(Visual.FormularioEventAura).Assembly.GetTypes()
-                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Visual.FormularioEventAura))
+                .Where(t => typeof(Form).IsAssignableFrom(t) && !t.IsAbstract &&
+                    t != typeof(Visual.FormularioEventAura) && t != typeof(Visual.DialogoEventAura))
                 .OrderBy(t => t.Name).ToArray();
             Assert.AreEqual(26, todosLosTipos.Length);
             string filtro = Environment.GetEnvironmentVariable("EVENTAURA_CP357_FILTRO");

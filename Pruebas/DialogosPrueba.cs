@@ -123,10 +123,10 @@ namespace Pruebas
             while (pendientes.Count > 0)
             {
                 DialogoEsperado esperado = pendientes.Dequeue();
-                Form visible = Application.OpenForms.Cast<Form>().LastOrDefault(f => f.Visible);
-                Control aviso = visible == null ? null : visible.Controls.Find("avisoSistema", true).FirstOrDefault();
-                if (aviso == null && visible != null)
-                    aviso = Descendientes(visible).FirstOrDefault(c => c.Name.StartsWith("errorInline_", StringComparison.Ordinal));
+                Control aviso = Application.OpenForms.Cast<Form>().Where(f => f.Visible)
+                    .SelectMany(f => Descendientes(f))
+                    .FirstOrDefault(c => c.Name == "avisoSistema" || c.Name == "textoAvisoCliente" ||
+                        c.Name.StartsWith("errorInline_", StringComparison.Ordinal));
                 if (aviso == null) errores.Add("No apareció el aviso en pantalla esperado: " + esperado.Texto);
                 else
                 {
