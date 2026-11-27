@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Data.SqlClient;
@@ -34,6 +35,10 @@ namespace Pruebas
         [AssemblyInitialize]
         public static void Preparar(TestContext contexto)
         {
+            // La batería tiene un perfil de navegador exclusivo del testhost. Un WebView2 manual
+            // de Visual.exe nunca comparte el directorio de datos con las pruebas.
+            string perfilWeb = Path.Combine(Path.GetTempPath(), "EventAura", "WebView2-Pruebas-" + Process.GetCurrentProcess().Id);
+            Environment.SetEnvironmentVariable("EVENTAURA_WEBVIEW2_USER_DATA", perfilWeb);
             // También para los hilos STA creados por los casos: una excepción hace
             // fallar el caso, nunca abre el diálogo modal del framework.
             ConfigurarErroresDePrueba();

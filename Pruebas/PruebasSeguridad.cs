@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Entidades;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -164,8 +164,6 @@ namespace Pruebas
             Assert.AreEqual(titular, GestorSesion.Instance.UsuarioActual.Id);
             Assert.ThrowsException<ReglaNegocioException>(() => GestorUsuarios.Instance.Autenticar(cliente.Mail, "Cliente123"));
             Assert.IsNotNull(GestorUsuarios.Instance.Autenticar(cliente.Mail, "NuevaClave123"));
-            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
-                .GetField("entorno", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
             EnStaSinCambiarDatos(() => {
                 using (var form = new Visual.frmCambiarContraseña())
                 {

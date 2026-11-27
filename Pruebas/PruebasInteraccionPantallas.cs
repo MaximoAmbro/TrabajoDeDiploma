@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Diagnostics;
@@ -103,8 +103,6 @@ namespace Pruebas
         public void CP364_AltaWebCompletaElRecorridoHastaAcceso()
         {
             SeleccionEnviadorCodigos.Actual = new EnviadorSimulado();
-            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
-                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
             InterfazGrupoA.EnSta(() =>
             {
                 string correo = Fake.MailNuevo();
@@ -182,8 +180,6 @@ namespace Pruebas
         [TestMethod("CP-365: El historial web muestra una compra y sus devoluciones dentro de la vista")]
         public void CP365_HistorialConCompraCabeEnLaVistaWeb()
         {
-            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
-                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
             InterfazGrupoA.EnSta(() =>
             {
                 Fake.Limpiar();

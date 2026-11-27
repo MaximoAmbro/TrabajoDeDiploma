@@ -118,8 +118,6 @@ namespace Pruebas
             SeleccionEnviadorCodigos.Actual = new EnviadorSimulado();
             try
             {
-                typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
-                    .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
                 EnSta(() =>
                 {
                     string correo = Fake.MailNuevo();

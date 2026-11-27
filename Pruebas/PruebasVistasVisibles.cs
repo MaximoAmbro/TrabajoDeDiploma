@@ -206,8 +206,6 @@ namespace Pruebas
         [TestMethod("CP-160: Tarjeta abre ficha y el sector elegido llega al paquete")]
         public void CP160_Flujo()
         {
-            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
-                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
             EnSta(()=>{
                 var cliente=Fake.Cliente(NivelFidelidad.Bronce);var evento=Fake.EventoPublicado(1000m,5);Fake.EventoPublicado(1500m,5);Fake.ComoCliente(cliente);
                 using(var lista=new Visual.frmEventosCliente{IDUsuario=cliente.Id}) {
@@ -393,8 +391,6 @@ namespace Pruebas
         [TestMethod("CP-211: El menú de Mi cuenta abre el cambio de contraseña con sesión")]
         public void CP211_AccesoCambiarContrasena()
         {
-            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
-                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
             EnSta(() =>
             {
                 var cliente = Fake.Cliente(NivelFidelidad.Bronce);
@@ -430,8 +426,6 @@ namespace Pruebas
         [TestMethod("CP-366: Eventos agotados quedan al final y los disponibles siguen ordenados por fecha")]
         public void CP366_CatalogoAgotadosAlFinal()
         {
-            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
-                .GetField("entorno", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, null);
             EnSta(() =>
             {
                 Fake.Limpiar();
@@ -458,6 +452,7 @@ namespace Pruebas
                         "(primeroAgotado<0||estados.slice(primeroAgotado).every(Boolean))})()");
                     Assert.AreEqual("true", ordenCorrecto,
                         "Los disponibles van por fecha y todos los agotados quedan agrupados al final con orden estable.");
+                    PruebasInteraccionPantallas.CapturarSiSeSolicito(listado, "CatalogoT45-AgotadosAlFinal");
                 }
             });
         }

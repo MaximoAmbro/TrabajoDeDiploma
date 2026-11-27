@@ -19,7 +19,6 @@ namespace Pruebas
         [TestMethod("CP-76: Mi suscripción sin plan muestra precios, beneficios y controles completos")]
         public void CP76_SinPlan()
         {
-            ReiniciarEntornoWeb();
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
@@ -65,7 +64,6 @@ namespace Pruebas
         [DataRow(true, DisplayName = "CP-77: Cancelar suscripción pide No por defecto y elimina beneficios")]
         public void CP77_ContratarYCancelar(bool cancelar)
         {
-            ReiniciarEntornoWeb();
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
@@ -107,7 +105,6 @@ namespace Pruebas
         [TestMethod("CP-78: Segunda ventana de suscripción rechaza duplicado con RN-25")]
         public void CP78_DosVentanas()
         {
-            ReiniciarEntornoWeb();
             EnSta(() =>
             {
                 Cliente cliente = Fake.Cliente(NivelFidelidad.Bronce);
@@ -261,13 +258,6 @@ namespace Pruebas
             Assert.IsTrue(web.Preparado && web.Visible, "Mi suscripción debe cargar la vista web.");
             return web;
         }
-
-        private static void ReiniciarEntornoWeb()
-        {
-            typeof(Visual.Web.PanelWeb).Assembly.GetType("Visual.Web.PanelWebMotor")
-                .GetField("entorno", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
-        }
-
         private static string EjecutarWeb(Visual.Web.PanelWeb web, string script)
         {
             var tarea = web.EjecutarScriptAsync(script);

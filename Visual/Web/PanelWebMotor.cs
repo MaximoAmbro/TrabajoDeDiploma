@@ -15,7 +15,10 @@ namespace Visual.Web
     public sealed class PanelWebMotor : UserControl
     {
         private const string Origen = "https://eventaura.local/";
+        [ThreadStatic]
         private static Task<CoreWebView2Environment> entorno;
+        [ThreadStatic]
+        private static string perfilWebPrueba;
         private WebView2 navegador;
         private Uri pagina;
         private object datos;
@@ -48,9 +51,20 @@ namespace Visual.Web
                 navegador = new WebView2 { Dock = DockStyle.Fill };
                 Controls.Add(navegador);
                 if (entorno == null || entorno.IsFaulted)
-                    entorno = CoreWebView2Environment.CreateAsync(null,
-                        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "EventAura", "WebView2"),
+                {
+                    string perfilPruebas = Environment.GetEnvironmentVariable("EVENTAURA_WEBVIEW2_USER_DATA");
+                    string carpetaDatos;
+                    if (string.IsNullOrWhiteSpace(perfilPruebas))
+                        carpetaDatos = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "EventAura", "WebView2");
+                    else
+                    {
+                        if (perfilWebPrueba == null)
+                            perfilWebPrueba = Path.Combine(perfilPruebas, Guid.NewGuid().ToString("N"));
+                        carpetaDatos = perfilWebPrueba;
+                    }
+                    entorno = CoreWebView2Environment.CreateAsync(null, carpetaDatos,
                         new CoreWebView2EnvironmentOptions("--disable-background-networking --disable-component-update --disable-sync --no-pings"));
+                }
                 await navegador.EnsureCoreWebView2Async(await entorno);
                 if (IsDisposed || fallida) return;
                 var core = navegador.CoreWebView2;
@@ -64,7 +78,8 @@ namespace Visual.Web
                 core.NewWindowRequested += (s, e) => e.Handled = true;
                 core.PermissionRequested += (s, e) => e.State = CoreWebView2PermissionState.Deny;
                 core.DownloadStarting += (s, e) => e.Cancel = true;
-                core.ProcessFailed += (s, e) => Desactivar();
+                core.ProcessFailed += (s, e) => Desactivar(
+                    new InvalidOperationException("WebView2 process failed: " + e.ProcessFailedKind));
                 core.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
                 core.WebResourceRequested += (s, e) =>
                 {
@@ -77,8 +92,8 @@ namespace Visual.Web
                     if (IsDisposed || fallida) return;
                     if (!e.IsSuccess)
                     {
-                        System.Diagnostics.Trace.WriteLine("WebView2 navigation failed: " + e.WebErrorStatus);
-                        Desactivar(); return;
+                        Desactivar(new InvalidOperationException("WebView2 navigation failed: " + e.WebErrorStatus));
+                        return;
                     }
                     cargada = true;
                     await Renderizar();
@@ -87,8 +102,7 @@ namespace Visual.Web
             }
             catch (Exception error)
             {
-                System.Diagnostics.Trace.WriteLine(error);
-                Desactivar();
+                Desactivar(error);
             }
         }
 
@@ -110,15 +124,14 @@ namespace Visual.Web
                 if (IsDisposed || fallida || actual != version) return;
                 if (respuesta != "true")
                 {
-                    System.Diagnostics.Trace.WriteLine("WebView2 did not render data: " + (respuesta ?? "<null>"));
-                    Desactivar(); return;
+                    Desactivar(new InvalidOperationException("WebView2 did not render data: " + (respuesta ?? "<null>")));
+                    return;
                 }
                 VistaLista?.Invoke(null);
             }
             catch (Exception error)
             {
-                System.Diagnostics.Trace.WriteLine(error);
-                Desactivar();
+                Desactivar(error);
             }
         }
 
@@ -132,9 +145,10 @@ namespace Visual.Web
             else Mensaje?.Invoke(mensaje.ToString(Formatting.None));
         }
 
-        private void Desactivar()
+        private void Desactivar(Exception motivo = null)
         {
             if (IsDisposed || fallida) return;
+            if (motivo != null) ManejadorErrores.Registrar(motivo);
             fallida = true;
             Hide();
             VistaNoDisponible?.Invoke(null);
