@@ -300,10 +300,15 @@ namespace Pruebas
         public void CP356_EnvioFallidoNoPersisteCodigo()
         {
             var destinatario = Fake.Cliente(NivelFidelidad.Bronce);
+            var enviadorAnterior = SeleccionEnviadorCodigos.Actual;
             SeleccionEnviadorCodigos.Actual = new EnviadorQueFalla();
-            Assert.ThrowsException<IOException>(() => GestorCodigosCorreo.Instance.SolicitarRecuperacion(destinatario.Mail));
-            Assert.IsNull(Datos.RepositorioCodigosCorreo.Instance.Ultimo(destinatario.Id, "Recuperacion"),
-                "La emisión debe ocurrir después de que el proveedor confirme la entrega.");
+            try
+            {
+                Assert.ThrowsException<IOException>(() => GestorCodigosCorreo.Instance.SolicitarRecuperacion(destinatario.Mail));
+                Assert.IsNull(Datos.RepositorioCodigosCorreo.Instance.Ultimo(destinatario.Id, "Recuperacion"),
+                    "La emisión debe ocurrir después de que el proveedor confirme la entrega.");
+            }
+            finally { SeleccionEnviadorCodigos.Actual = enviadorAnterior; }
         }
 
         private sealed class EnviadorQueFalla : IEnviadorCodigos
