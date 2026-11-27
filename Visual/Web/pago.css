@@ -1,0 +1,21 @@
+html, body { min-height: 100%; height: 100%; }
+body { overflow: auto; }
+body.en-shell #titulo-pago { display: none; }
+.pagina-pago { width: min(100%, 760px); min-height: 100%; margin: 0 auto; padding: var(--e5) var(--e6); display: flex; flex-direction: column; gap: var(--e5); }
+.encabezado { min-height: 40px; align-items: center; padding-left: var(--e5); }
+.temporizador { color: var(--texto-secundario); }
+.tarjeta { padding: var(--e5); background: var(--superficie); border: 1px solid var(--borde); }
+.formulario-pago { display: flex; flex-direction: column; gap: var(--e4); }
+.total { padding: var(--e3) 0; border-block: 1px solid var(--borde); font-variant-numeric: tabular-nums; }
+#form-pago { display: flex; flex-direction: column; gap: var(--e4); }
+.campo { display: flex; flex-direction: column; gap: var(--e2); min-width: 0; }
+.entrada-texto { width: 100%; min-height: 40px; }
+.campos-cortos { align-items: flex-start; gap: var(--e5); }
+.campos-cortos .campo { flex: 1; }
+.estado { min-height: 0; color: var(--error-texto); white-space: pre-line; }
+.estado:empty { display: none; }
+.acciones { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e4); }
+@media (max-width: 620px) {
+  .pagina-pago { padding: var(--e4); }
+  .campos-cortos, .acciones { display: flex; flex-direction: column; align-items: stretch; }
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+  <title>Pago</title>
+  <link rel="stylesheet" href="sistema.css">
+  <link rel="stylesheet" href="pago.css">
+  <script defer src="tema.js"></script>
+  <script defer src="pago.js"></script>
+</head>
+<body>
+  <main class="pagina-pago" aria-labelledby="titulo-pago">
+    <div class="encabezado fila-extremos">
+      <h1 class="n2" id="titulo-pago" tabindex="-1">Pago</h1>
+      <p class="temporizador n5 cifra" id="temporizador" aria-live="polite">Reserva: 10:00</p>
+    </div>
+    <section class="formulario-pago tarjeta">
+      <p class="rotulo" id="prototipo">Prototipo: usá estos datos de prueba</p>
+      <p class="secundario n5" id="ayuda-tarjeta"></p>
+      <p class="total n3" id="total">Total a pagar</p>
+      <form id="form-pago" autocomplete="off">
+        <label class="campo" for="titular"><span class="rotulo">Titular (como figura en la tarjeta)</span>
+          <input class="entrada-texto" id="titular" name="titular" type="text" maxlength="60" autocomplete="cc-name" aria-label="Titular (como figura en la tarjeta)" aria-describedby="ayuda-tarjeta" required>
+        </label>
+        <label class="campo" for="numero"><span class="rotulo">Número de tarjeta</span>
+          <input class="entrada-texto cifra" id="numero" name="numero" type="text" inputmode="numeric" maxlength="23" autocomplete="cc-number" aria-label="Número de tarjeta" aria-describedby="ayuda-tarjeta" required>
+        </label>
+        <div class="fila campos-cortos">
+          <label class="campo" for="vencimiento"><span class="rotulo">Vencimiento (MM/AA)</span>
+            <input class="entrada-texto cifra" id="vencimiento" name="vencimiento" type="text" inputmode="numeric" maxlength="5" autocomplete="cc-exp" aria-label="Vencimiento (MM/AA)" aria-describedby="ayuda-tarjeta" required>
+          </label>
+          <label class="campo" for="cvv"><span class="rotulo">Código de seguridad</span>
+            <input class="entrada-texto cifra" id="cvv" name="cvv" type="password" inputmode="numeric" maxlength="4" autocomplete="cc-csc" aria-label="Código de seguridad" aria-describedby="ayuda-tarjeta" required>
+          </label>
+        </div>
+        <p class="estado n5" id="estado" role="status" aria-live="polite"></p>
+        <div class="acciones">
+          <button class="boton boton-secundario boton-ancho" id="cancelar" type="button">Cancelar pago</button>
+          <button class="boton boton-primario boton-ancho" id="pagar" type="submit">Pagar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

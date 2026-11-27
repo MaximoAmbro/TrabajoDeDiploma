@@ -429,27 +429,42 @@ namespace Visual
                 return;
             }
 
-            DialogResult resultado;
-            using (var pago = new frmPago { Compra = compra })
+            if (NavegacionCliente.Activa)
             {
-                resultado = pago.ShowDialog(this);
+                var pagoEnShell = new frmPago { Compra = compra };
+                pagoEnShell.Terminado += resultadoPago => ResolverResultadoPago(compra, resultadoPago, true);
+                if (NavegacionCliente.Navegar(pagoEnShell)) return;
+                pagoEnShell.Dispose();
             }
 
+            DialogResult resultado;
+            using (var pago = new frmPago { Compra = compra }) resultado = pago.ShowDialog(this);
+            ResolverResultadoPago(compra, resultado, false);
+        }
+
+        private void ResolverResultadoPago(Compra compra, DialogResult resultado, bool desdeShell)
+        {
             if (resultado == DialogResult.Abort)
             {
                 compraEnCurso = false;
                 ActualizarHabilitados();
                 // H-02: venció el plazo; el cupo ya se liberó.
+                if (desdeShell) NavegacionCliente.Volver();
                 VolverAlListado("La reserva venció o cambió. Volvé a armar la compra desde eventos.");
                 return;
             }
             if (resultado != DialogResult.OK)
             {
+                if (desdeShell) NavegacionCliente.Volver();
                 compraEnCurso = false;
                 ActualizarHabilitados();
                 RecargarDisponibles();
                 if (resultado == DialogResult.Cancel)
-                    Avisos.Informativo(this, "Cancelaste el pago. La reserva se liberó; podés volver a intentarlo.");
+                {
+                    const string aviso = "Cancelaste el pago. La reserva se liberó; podés volver a intentarlo.";
+                    if (desdeShell) NavegacionCliente.MostrarAviso(aviso, false, 7000);
+                    else Avisos.Informativo(this, aviso);
+                }
                 return;
             }
 

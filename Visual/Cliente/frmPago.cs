@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Entidades;
 using Negocio;
+using Newtonsoft.Json.Linq;
 
 namespace Visual
 {
@@ -18,6 +19,8 @@ namespace Visual
         private bool cerrada;   // pagada o vencida: ya no hay reserva que liberar al cerrar
         private bool procesandoPago;
         private bool ajustandoVencimiento;
+        private readonly Web.PanelWeb pagoWeb = new Web.PanelWeb { Name = "pagoWeb", Dock = DockStyle.None, Visible = false };
+        public event Action<DialogResult> Terminado;
         private readonly Label ayudaDatosPrueba = new Label
         {
             Name = "ayudaDatosPruebaPago",
@@ -31,11 +34,26 @@ namespace Visual
             InitializeComponent();
             lblSeguro.Text = "Prototipo: usá estos datos de prueba";
             Controls.Add(ayudaDatosPrueba);
+            Controls.Add(pagoWeb);
+            pagoWeb.VistaLista += ActualizarVistaPago;
+            pagoWeb.VistaNoDisponible += ActualizarVistaPago;
+            pagoWeb.Mensaje += RecibirMensajePago;
+            pagoWeb.Escape += () => btnCancelar.PerformClick();
             txtVencimiento.TextChanged += txtVencimiento_TextChanged;
+            txtTitular.AccessibleName = lblTitular.Text;
+            txtNumero.AccessibleName = lblNumero.Text;
+            txtVencimiento.AccessibleName = lblVencimiento.Text;
+            txtCvv.AccessibleName = lblCvv.Text;
+            txtTitular.AccessibleDescription = txtNumero.AccessibleDescription =
+                txtVencimiento.AccessibleDescription = txtCvv.AccessibleDescription = "El lector de pantalla anuncia el nombre del campo enfocado.";
+            SizeChanged += (s, e) => AjustarPagoWeb();
+            Shown += (s, e) => { AjustarPagoWeb(); pagoWeb.Cargar("pago.html"); };
             Shown += (s, e) =>
             {
                 int Px(int medida) => Disposicion.Pixeles(this, medida);
                 txtTitular.Left = txtNumero.Left = txtVencimiento.Left = Disposicion.Pixeles(this, Tema.Espacio.XXL);
+                lblTitulo.Left = lblTotal.Left = txtTitular.Left;
+                lblTotal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
                 lblTitulo.Top = Px(108);
                 lblTemporizador.Top = lblTitulo.Top;
                 lblSeguro.SetBounds(txtTitular.Left, lblTitulo.Bottom + Px(Tema.Espacio.S), txtTitular.Width, Px(Tema.Espacio.L));
@@ -62,6 +80,7 @@ namespace Visual
                 btnPagar.Top = btnCancelar.Top = lblEstado.Bottom + Px(Tema.Espacio.L);
                 ClientSize = new System.Drawing.Size(ClientSize.Width, Math.Max(ClientSize.Height, btnPagar.Bottom + Px(Tema.Espacio.XXL)));
                 Disposicion.LimitarAncho(lblEstado);
+                AjustarPagoWeb();
             };
         }
 
@@ -89,6 +108,7 @@ namespace Visual
             ActualizarTemporizador();
             tmrReserva.Start();
             ActiveControl = txtTitular;
+            ActualizarModeloPago();
         }
 
         // H-02: cuenta regresiva de la reserva, siempre a la vista en el encabezado.
@@ -106,11 +126,12 @@ namespace Visual
                 lblTemporizador.Text = "Reserva: 00:00";
                 GestorCompras.Instance.LiberarVencidas();
                 cerrada = true;
-                DialogResult = DialogResult.Abort;
+                Terminar(DialogResult.Abort);
                 return;
             }
             lblTemporizador.Text = $"Reserva: {(int)restante.TotalMinutes:00}:{restante.Seconds:00}";
             lblTemporizador.ForeColor = Tema.ColorTemporizador(restante);
+            ActualizarModeloPago();
         }
 
         private void btnPagar_Click(object sender, EventArgs e)
@@ -140,6 +161,7 @@ namespace Visual
                 procesandoPago = false;
                 btnPagar.Enabled = true;
                 lblEstado.Text = ex.Message;
+                ActualizarModeloPago();
                 return;
             }
             catch (ReglaNegocioException ex)
@@ -149,7 +171,8 @@ namespace Visual
                 btnPagar.Enabled = true;
                 cerrada = ex.Regla == "RN-15";
                 Avisos.Regla("Pago", ex);
-                DialogResult = cerrada ? DialogResult.Abort : DialogResult.Cancel;
+                if (cerrada) Terminar(DialogResult.Abort);
+                else ActualizarModeloPago();
                 return;
             }
             catch (InvalidOperationException)
@@ -160,7 +183,7 @@ namespace Visual
                 procesandoPago = false;
                 btnPagar.Enabled = false;
                 cerrada = true;
-                DialogResult = DialogResult.Abort;
+                Terminar(DialogResult.Abort);
                 return;
             }
             finally
@@ -173,7 +196,7 @@ namespace Visual
                 tmrReserva.Stop();
                 cerrada = true;
                 txtNumero.Clear();
-                DialogResult = DialogResult.OK;
+                Terminar(DialogResult.OK);
                 return;
             }
 
@@ -183,11 +206,62 @@ namespace Visual
                              "Se liberaron las entradas. Podés reintentar antes de que venza la reserva.";
             txtNumero.Clear();
             txtNumero.Focus();
+            ActualizarModeloPago();
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
+            Terminar(DialogResult.Cancel);
+        }
+
+        private void AjustarPagoWeb()
+        {
+            if (pagoWeb == null || IsDisposed) return;
+            int top = NavegacionCliente.Activa ? 0 : barraSuperior.Bottom;
+            pagoWeb.SetBounds(0, top, ClientSize.Width, Math.Max(1, ClientSize.Height - top));
+        }
+
+        private void ActualizarVistaPago()
+        {
+            bool usarWeb = pagoWeb.Preparado;
+            pagoWeb.Visible = usarWeb;
+            foreach (Control control in Controls)
+            {
+                if (ReferenceEquals(control, barraSuperior) || ReferenceEquals(control, pagoWeb)) continue;
+                control.Visible = !usarWeb;
+            }
+            if (usarWeb) { pagoWeb.BringToFront(); if (!NavegacionCliente.Activa) barraSuperior.BringToFront(); }
+            ActualizarModeloPago();
+        }
+
+        private void ActualizarModeloPago()
+        {
+            if (pagoWeb == null || !pagoWeb.Preparado) return;
+            pagoWeb.Actualizar(new { total = lblTotal.Text, temporizador = lblTemporizador.Text,
+                estado = lblEstado.Text, ayuda = ayudaDatosPrueba.Text, prototipo = lblSeguro.Text,
+                colorTemporizador = System.Drawing.ColorTranslator.ToHtml(lblTemporizador.ForeColor), pagarHabilitado = btnPagar.Enabled,
+                enShell = NavegacionCliente.Activa });
+        }
+
+        private void RecibirMensajePago(string json)
+        {
+            JObject mensaje;
+            try { mensaje = JObject.Parse(json); } catch { return; }
+            string tipo = (string)mensaje["tipo"];
+            if (tipo == "cancelar") { btnCancelar_Click(btnCancelar, EventArgs.Empty); return; }
+            if (tipo != "pagar") return;
+            txtTitular.Text = (string)mensaje["titular"] ?? "";
+            txtNumero.Text = (string)mensaje["numero"] ?? "";
+            txtVencimiento.Text = (string)mensaje["vencimiento"] ?? "";
+            txtCvv.Text = (string)mensaje["cvv"] ?? "";
+            btnPagar_Click(btnPagar, EventArgs.Empty);
+            ActualizarModeloPago();
+        }
+
+        private void Terminar(DialogResult resultado)
+        {
+            if (NavegacionCliente.Activa && Terminado != null) Terminado(resultado);
+            else DialogResult = resultado;
         }
 
         // Cerrar sin pagar (Cancelar o la X) libera el cupo en el acto (RN-32).

@@ -196,7 +196,9 @@ namespace Visual
 
         private static string TituloDeNavegacion(Form pantalla)
         {
-            if (pantalla is frmEventosCliente || pantalla is FrmCompraCliente || pantalla is frmPago || pantalla is frmConfirmacion)
+            if (pantalla is frmPago) return "Pago";
+            if (pantalla is frmConfirmacion) return "Compra confirmada";
+            if (pantalla is frmEventosCliente || pantalla is FrmCompraCliente)
                 return "Eventos disponibles";
             if (pantalla is frmHistorialCliente) return "Mis entradas";
             if (pantalla is frmSuscripcion) return "Mi suscripción";

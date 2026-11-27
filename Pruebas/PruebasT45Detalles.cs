@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -15,6 +16,72 @@ namespace Pruebas
     public class PruebasT45Detalles
     {
         public TestContext TestContext { get; set; }
+
+        // CP-380 — RF-06/RF-07/RNF-02: el pago alojado conserva la reserva y termina una compra con su PDF real.
+        [TestMethod("CP-380: El pago WebView2 en Mi cuenta completa la compra y genera el ticket")]
+        public void CP380_PagoWebEnShellCompletaCompraConTicket()
+        {
+            EnSta(() =>
+            {
+                Fake.Limpiar();
+                var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
+                var evento = Fake.EventoPublicado(25000m, 20);
+                string[] rutasTicket = Array.Empty<string>();
+                try
+                {
+                    using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id, NombreUsuario = "Cliente" })
+                    using (var paquete = new Visual.FrmCompraCliente { IDUsuario = cliente.Id, IDEvento = evento.Id, NombreUsuario = "Cliente" })
+                    {
+                    Mostrar(menu);
+                    Assert.IsTrue(Visual.NavegacionCliente.AbrirDesdeMenu(paquete));
+                    var sectores = ControlDe<DataGridView>(paquete, "dgvSectores");
+                    var fila = sectores.Rows.Cast<DataGridViewRow>().First(r => Convert.ToInt32(r.Cells["Disponibles"].Value) > 0);
+                    fila.Cells["Cantidad"].Value = 1;
+                    sectores.EndEdit();
+                    ControlDe<CheckBox>(paquete, "chkSeguro").Checked = true;
+                    ControlDe<Button>(paquete, "btnComprar").PerformClick();
+                    var pagoHost = EsperarValor(() => menu.Controls.Find("paginaprmPago", true).OfType<HostFormularioCliente>().FirstOrDefault()
+                        ?? menu.Controls.Find("paginafrmPago", true).OfType<HostFormularioCliente>().FirstOrDefault(),
+                        "El pago debe abrirse como una página del shell.");
+                    var pago = (Visual.frmPago)pagoHost.Pantalla;
+                    var web = ControlDe<Visual.Web.PanelWeb>(pago, "pagoWeb");
+                    EsperarVistaWeb(web);
+                    Assert.IsTrue(pago.Controls.Find("pagoWeb", true).Single().Visible);
+                    StringAssert.Contains(EjecutarVistaWeb(web,
+                        "(()=>{const f=document.querySelector('#form-pago');const i=document.querySelector('#numero');return ["+
+                        "document.body.classList.contains('en-shell'),f.querySelector('label[for=numero]')!==null,"+
+                        "i.getAttribute('aria-label'),i.getAttribute('aria-describedby'),document.querySelector('#titulo-pago').hidden||getComputedStyle(document.querySelector('#titulo-pago')).display==='none'].join('|')})()"),
+                        "true|true|Número de tarjeta|ayuda-tarjeta|true");
+                    string alineacion = EjecutarVistaWeb(web,
+                        "(()=>{const x=document.querySelector('#total').getBoundingClientRect().left;return [x,...[...document.querySelectorAll('.campo > .rotulo')].filter(e=>e.parentElement.htmlFor!=='cvv').map(e=>e.getBoundingClientRect().left)].join('|')})()");
+                    Assert.IsTrue(alineacion.Split('|').Select(x => double.Parse(x, System.Globalization.CultureInfo.InvariantCulture))
+                        .All(x => Math.Abs(x - double.Parse(alineacion.Split('|')[0], System.Globalization.CultureInfo.InvariantCulture)) < 1),
+                        "Pago, total y rótulos deben respetar un mismo eje izquierdo: " + alineacion);
+                    StringAssert.Contains(EjecutarVistaWeb(web, "document.querySelector('#ayuda-tarjeta').textContent"), "4111 1111 1111 1111");
+                    string idCompra = pago.Compra.Id.ToString();
+                    TestContext?.WriteLine("CP-380 reserva activa al mostrar Pago: " + GestorCompras.Instance.VencimientoDe(pago.Compra).ToString("O"));
+                    var tarjeta = Fake.Tarjeta();
+                    EjecutarVistaWeb(web,
+                        "(()=>{for(const [id,value] of Object.entries({titular:" + Newtonsoft.Json.JsonConvert.SerializeObject(tarjeta.Titular) + ","+
+                        "numero:" + Newtonsoft.Json.JsonConvert.SerializeObject(tarjeta.Numero) + ",vencimiento:" + Newtonsoft.Json.JsonConvert.SerializeObject(tarjeta.Vencimiento) + ","+
+                        "cvv:" + Newtonsoft.Json.JsonConvert.SerializeObject(tarjeta.Cvv) + "})){document.getElementById(id).value=value;}"+
+                        "document.querySelector('#form-pago').requestSubmit();return 'enviado'})()");
+                    var confirmacionHost = EsperarValor(() => menu.Controls.Find("paginafrmConfirmacion", true).OfType<HostFormularioCliente>().FirstOrDefault(),
+                        "El pago aprobado debe navegar a la confirmación dentro del shell.");
+                    var confirmacion = (Visual.frmConfirmacion)confirmacionHost.Pantalla;
+                    rutasTicket = confirmacion.Rutas.ToArray();
+                    Assert.IsTrue(rutasTicket.Length > 0, "La compra debe emitir al menos un PDF de ticket.");
+                    Assert.IsTrue(rutasTicket.All(File.Exists), "Los archivos de ticket deben existir en disco después del pago.");
+                    Assert.IsTrue(GestorCompras.Instance.PagosDe(pago.Compra).Any(p => p.Estado == EstadoPago.Aprobado),
+                        "La compra debe quedar confirmada por la lógica original del negocio.");
+                    Assert.AreEqual("1", confirmacion.Controls.Find("lstArchivos", true).OfType<ListBox>().Single().Items.Count.ToString());
+                    TestContext?.WriteLine("CP-380 compra=" + idCompra + " tickets=" + string.Join(";", rutasTicket));
+                    }
+                }
+                finally { foreach (string ruta in rutasTicket) if (File.Exists(ruta)) File.Delete(ruta); }
+            });
+        }
 
         // CP-379 — RNF-02: cada estado web expone un único título de pantalla y, en Mi cuenta, lo aporta el shell.
         [TestMethod("CP-379: Las vistas web no duplican el título de pantalla")]
@@ -266,6 +333,20 @@ namespace Pruebas
                 Thread.Sleep(10);
             }
             Assert.IsTrue(condicion(), mensaje);
+        }
+
+        private static T EsperarValor<T>(Func<T> obtener, string mensaje) where T : class
+        {
+            var reloj = Stopwatch.StartNew();
+            T valor = obtener();
+            while (valor == null && reloj.Elapsed < TimeSpan.FromSeconds(20))
+            {
+                Application.DoEvents();
+                Thread.Sleep(15);
+                valor = obtener();
+            }
+            Assert.IsNotNull(valor, mensaje);
+            return valor;
         }
 
         private static void EjecutarSqlAviso(string sql, params object[] parametros)
