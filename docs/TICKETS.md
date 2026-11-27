@@ -79,15 +79,26 @@ solo cuando el ticket es una prueba manual, un dato o el Word, que no puede hace
 | T-35 | Claude Code | Poner `docs/disenos/` al día con lo que Codex integró | abierto, baja prioridad |
 | T-36 | Codex | `frmReportes` mide 960 px de alto, por encima del techo de 790 | abierto (26/11) |
 | T-37 | JC | ¿El alta y la recuperación avisan «Vista web no disponible» como las demás? | abierto (26/11) |
-| T-38 | Codex, después JC | **P0, sin reproducir:** la aplicación se cerró sola en el pago, dos veces, sin dejar rastro | en revisión: registro de cierres en `52cba8e` y `9963ef6`. El 26/11, 10 vueltas y otras 5 cambiando de ventana, todas sin depurador y sin cierre. El tercer cierre de JC no dejó ningún rastro, que es lo que deja el depurador al terminar el proceso. Falta que JC lo repita con el depurador |
+| T-38 | Codex, después JC | Cierre inesperado en el pago | **cerrado el 27/11 como «no reproducible fuera del depurador»** (decisión de JC). La demo se corre desde el ejecutable, nunca desde Visual Studio (guion y README). Se mantiene el registro de cierres |
 | T-39 | Codex | **P0:** una cuenta que sale del alta sin verificar no puede verificar después ni comprar | cerrado: `06a9451`, verificado en ejecución el 26/11 (detalles de título y desplazamiento en T-45) |
 | T-40 | Codex | El aviso verde del catálogo tapa los filtros de categoría y fecha | cerrado: `bb93fd4`, verificado en ejecución el 26/11 |
 | T-41 | Codex | Pago: texto de ayuda con la tarjeta de prueba y barra automática en el vencimiento | cerrado: `6bd5777` y `5d2c7de`, verificado en ejecución el 26/11 |
 | T-42 | Claude Code | Semilla de demostración: 25 eventos futuros, 7 organizadores, un solo agotado | en revisión: hecha y probada el 26/11, sin commitear |
 | T-43 | Codex | Quitar el checkbox «Mostrar contraseña(s)» de las vistas web y dejar solo el ojo | cerrado: `3100733` y `29ccb85`, verificado en ejecución el 26/11 en las cuatro pantallas |
 | T-44 | Codex | Pedidos directos de JC del 26/11 a la tarde: cambio de contraseña dentro de Mi cuenta, suscripción web, armador y agotados al final | verificado en ejecución el 26/11: pasan el cambio de contraseña, la suscripción, el mapa y el catálogo; **el total del armador no se ve** (T-45) |
-| T-45 | Codex | Armador: el total y «Continuar al pago» quedan 300 a 600 px debajo del borde; detalles de la verificación del 26/11 | abierto (26/11) |
-| T-46 | Codex | «Mis entradas» con el título «Mis eventos» repetido; los campos de Pago no son `Edit` para UI Automation; alineación del pago | abierto (26/11, noche) |
+| T-45 | Codex | Armador: el total y «Continuar al pago» quedaban debajo del borde | **cerrado:** `b20c358` y `5717cf3`. Verificado en ejecución el 27/11 en 5 eventos de 1, 2, 3, 4 y 4 sectores, en 1200 × 760 de área cliente: siempre visibles. 1100 × 720 no se alcanza en esta pantalla (el mínimo de «Mi cuenta» es 1200 × 760); lo cubre CP-373. Queda T-53 |
+| T-46 | Codex | «Mis entradas» con el título repetido; campos de Pago sin `Edit`; alineación del pago | **en revisión:** el Pago pasó a web (`9977314`) y sus campos ahora son `Edit` con nombre (verificado el 27/11). Los títulos se unificaron en `3be9960` (CP-379), sin mirar «Mis entradas» en pantalla |
+| T-47 | Codex | **P1.** «Mi suscripción»: Esc en el modal lo cierra y además saca de la pantalla a «Inicio» | abierto (27/11) |
+| T-48 | Codex | **P1.** Se puede crear y **publicar** un evento con fecha pasada; el aviso dice «aparece en el catálogo» | abierto (27/11) |
+| T-49 | Codex | **P1.** «Auditoría» y «Revisión de eventos» miden 823 px de alto: pasan el techo de 790 (RNF-03) | abierto (27/11) |
+| T-50 | Codex | **P2.** «Mi suscripción»: el círculo de cada opción tapa el nombre del plan («M●nsual») | abierto (27/11) |
+| T-51 | Codex | **P2.** «Cancelar suscripción»: Enter confirma la cancelación; PA-12 pedía «No» por defecto | abierto (27/11) |
+| T-52 | Codex, decide JC | **P2.** La X de una ventana secundaria del Administrador o del Organizador cierra toda la aplicación, sin preguntar | abierto (27/11) |
+| T-53 | Codex | **P2.** Armador: el aviso del seguro empuja «Continuar al pago» debajo del borde | abierto (27/11) |
+| T-54 | Codex | **P2.** Alta de cuenta a 1100 × 720: «Volver» y «Crear cuenta» quedan cortados | abierto (27/11) |
+| T-55 | Codex | **P3.** Detalles del Administrador y del Organizador (motivo que queda escrito, avisos que tapan, sector sin aviso, Enter en verificar correo) | abierto (27/11) |
+| T-56 | Claude Code | **P2.** Semilla de demostración: ningún evento en revisión ni con ingreso abierto hoy; no se pueden mostrar esas dos pantallas | abierto (27/11) |
+| T-57 a T-64 | Codex | Las 8 brechas más grandes de la auditoría de pulido (`docs/AUDITORIA-PULIDO-2026-11-27.md`) | abierto (27/11) |
 
 ---
 
@@ -791,7 +802,14 @@ cuenta y la recuperación de contraseña. Las dos funcionan en su versión de Wi
 
 **Estado:** abierto.
 
-### T-38 · Codex, después JC · P0: cierre inesperado en el pago, sin reproducir
+### T-38 · Codex, después JC · Cierre inesperado en el pago · **cerrado el 27/11**
+
+> **Cerrado como «no reproducible fuera del depurador»** (decisión de JC del 27/11). La demostración se
+> corre desde `Visual\bin\Debug\Visual.exe`, nunca desde Visual Studio: está escrito en el guion y en
+> el README. El registro de cierres (`52cba8e`, `9963ef6`) se mantiene. El 27/11 ese registro anotó con su
+> origen todos los cierres de la verificación, incluido el de la X de T-52.
+
+**Antes:** P0, sin reproducir.
 
 **Qué contó JC (26/11):** con la aplicación abierta en el método de pago, se cerró sola a los ~20 s, y
 después volvió a cerrarse. Por la base, fue en `BddEventAura` (no en una `_Demostracion`): la cuenta
@@ -1086,6 +1104,85 @@ eventos de la tabla del informe, con una prueba de geometría.
 **Estado:** abierto.
 
 ---
+
+### T-47 a T-64 · 27/11 · Verificación de `muestra-1` y auditoría de pulido
+
+Evidencia: `docs/VERIFICACION-MUESTRA-1-2026-11-27.md`, `docs/AUDITORIA-PULIDO-2026-11-27.md`.
+Capturas en `docs/verificaciones/muestra-1-2026-11-27/`. Ejecutable de `9977314`, el mismo de
+`ed23ac0`. Ninguno es P0: no impiden comprar, suscribirse ni administrar.
+
+**T-47 · P1 · Esc en el modal de la suscripción.** En «Mi suscripción», **Contratar** abre el modal.
+Esc lo cierra, pero el shell también lo atiende y vuelve a «Inicio». Repetido dos veces:
+`sus-5-modal-otra-vez.png` → `sus-6-esc-otra-vez.png`.
+- **Esperado:** Esc cierra solo el modal y deja la suscripción.
+- **Enter:** confirma bien (`sus-7-enter.png`).
+
+**T-48 · P1 · Publicar un evento pasado.** En «Agregar evento», la fecha 07/11/2026, ya pasada, se
+guarda como borrador. Con un sector, **Publicar** lo deja Publicado y avisa «El evento ya está
+publicado y aparece en el catálogo» (`org-publicar.png`).
+- **Medida en la base:** `Estado=Publicado`, `Fecha=2026-11-07 17:00`.
+- **Regla:** ninguna lo prohíbe; RN-09 solo impide venderlo. Hay que validar la fecha al publicar
+  (y avisar al crear). Si hace falta una regla nueva, la decide JC.
+
+**T-49 · P1 · Ventanas más altas que 790.** «Auditoría» y «Revisión de eventos» abren como
+ventanas de 1116 × 823 (medido con UI Automation). El borde de abajo queda fuera del área útil de
+760, y el techo de `CLAUDE.md` es 790.
+
+**T-50 · P2 · Opciones de la suscripción.** El círculo de cada opción se dibuja encima de la
+segunda letra del plan (`sus-1-inicio.png`).
+
+**T-51 · P2 · Cancelar con Enter.** El modal «Cancelar suscripción» confirma con Enter.
+- **Medido:** se canceló (`sus-9-cancelar-enter.png`). Después no aparece ningún aviso de éxito.
+- **Antes:** PA-12 y la versión anterior de CP-77 pedían «No» por defecto en una acción
+  destructiva.
+
+**T-52 · P2 · La X cierra todo.** Del Administrador o del Organizador, «Mis locales», «Crear
+administrador», «Reportes» y las demás abren como ventanas aparte. Su X llama a
+`Application.Exit`: registrado en `errores.log` a las 16:49:12, con `CloseReason=ApplicationExitCall`
+en las cuatro ventanas. **Decide JC:** que la X vuelva al panel, o que pregunte.
+
+**T-53 · P2 · El aviso del seguro y el total.** En el armador, al pulsar **Continuar al pago** sin
+seguro aparece el aviso. El botón baja hasta la y 750 de una vista que termina en 759 y queda
+cortado (`compra-1-tras-continuar.png`). T-45 sigue cerrado: sin el aviso, todo se ve.
+
+**T-54 · P2 · Alta a 1100 × 720.** En el paso «Tus datos», **Volver** y **Crear cuenta** quedan
+cortados por el borde de abajo y hay que desplazar (`ojo-alta-ventana.png`). CP-364 mide la
+ventana, no el botón.
+
+**T-55 · P3 · Detalles:**
+- **Solicitudes:**
+  - sin motivo, **Aprobar** no muestra nada;
+  - el aviso tapa la vista previa;
+  - el motivo queda escrito para la solicitud siguiente.
+- **Agregar sector:** al guardar no hay aviso y el formulario queda abierto.
+- **Verificar correo:**
+  - Enter no confirma;
+  - una vez, el primer clic en **Verificar correo** no abrió nada (`verif-3-verificar.png`);
+    el segundo sí.
+- **Títulos:** «Agregar Evento» y «Administrar Evento» van con mayúscula. La ventana «Registrar
+  evento» lleva el encabezado «Agregar eventos».
+
+**T-56 · P2 · Claude Code · La semilla no permite mostrar dos pantallas.** En
+`BddEventAura_Demostracion`:
+- no hay eventos «En revisión»;
+- tampoco hay ningún evento de hoy, así que control de ingreso dice «No hay eventos con ingreso
+  abierto».
+
+Para la demo hacen falta un organizador nuevo con su primer evento pendiente y un evento con
+ingreso abierto. Se hace en `BaseDatos/semilla-demostracion.sql`.
+
+**T-57 a T-64 · Pulido.** Las 8 brechas más grandes de la auditoría:
+- **T-57 (P1):** compra confirmada;
+- **T-58:** revisión de eventos;
+- **T-59 (P1):** reportes;
+- **T-60:** auditoría;
+- **T-61:** mis locales;
+- **T-62:** eventos del local;
+- **T-63:** solicitudes;
+- **T-64:** verificar correo.
+
+Qué baja cada una está en la sección 2 de la auditoría. Las animaciones aprobadas por JC van en
+T-57 (éxito) y en el modal de la suscripción.
 
 ## Personas
 
