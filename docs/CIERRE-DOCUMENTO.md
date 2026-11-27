@@ -184,6 +184,8 @@ entonces:
 | Vista 7, datos (`clases-7-datos.puml`) | `RepositorioEntradas.EntradasVendidas(int)`, `RepositorioListaEspera.EventosEnEspera(int)` |
 | Vista 8d, Strategy de la cuenta (`clases-8d-patron-strategy-cuenta.puml`) | `SeleccionEnviadorCodigos.Para(proposito)`; `GestorCodigosCorreo` ya no usa solo `Actual` |
 
+**Hecho el 27/11 contra `9295e3c`:** vista 4 suma `GestorListaEspera.EventosEnEspera(int)` y `GeneradorQR.Imagen(string)`; vista 5, `GestorEventos.EntradasVendidas(int)` (el nombre real; arriba decía `VendidasDeEvento`); vista 8d, `SeleccionEnviadorCodigos.Para(string)`, la dependencia rotulada «Para(propósito)» y la nota de `EnviadorSmtp` (Program la elige si están las variables de SMTP). **La vista 7 no cambia:** muestra solo los métodos que aparecen en las secuencias, y los dos de la tabla no aparecen. 8d pasa de 13,9 a 13,7 cm. Si Codex cambia `Repo/` antes de la entrega, se repite con `tools/Diagramas/Renderizar.py`.
+
 Se regeneran con el código final (fuentes en `docs/diagramas/fuentes/`, render con
 `py -3 tools/Diagramas/Renderizar.py`). En ese momento también se revisan la vista 6 (llamadas de
 autorización de los métodos nuevos) y las tres secuencias de la compra, porque `FrmCompraCliente`
@@ -221,6 +223,27 @@ La regla «Visual nunca abre una conexión ni escribe SQL» se mantiene. Las cua
 dependencias y los patrones descriptos no cambian.
 
 ### Qué hay que agregar al documento, y dónde
+
+**Borrador adelantado el 27/11, contra `9295e3c` (reemplaza a los textos 1 y 2 de abajo cuando se
+congele el código; verificado en `Visual/Web/PanelWebMotor.cs`, líneas 71 a 87):** hoy no son
+cuatro sino **15 pantallas** con vista web, servidas por 11 páginas de `Visual/Web/`: bienvenida,
+acceso, alta de cuenta, recuperación y cambio de contraseña, catálogo, armador del paquete, mis
+entradas, suscripción, reportes, panel del Administrador, auditoría, revisión de eventos, mis locales,
+eventos del local y control de ingreso. **El Pago pasa a web (encargo de Codex):** serían 16.
+
+1. Fila Presentación, columna Responsabilidad:
+   > Veinticinco pantallas. [[VISTAS_WEB]] de ellas muestran su contenido como una página web local
+   > dentro de un control WebView2. No abre conexiones ni contiene SQL: solo invoca a la capa de
+   > negocio.
+2. Párrafo después de la tabla:
+   > **Vistas web locales.** Las vistas web son páginas HTML, CSS y JavaScript que se instalan con la
+   > aplicación y se cargan desde la carpeta del programa, con la dirección local `eventaura.local`.
+   > La pantalla obtiene los datos de la capa de negocio y se los pasa a la página ya calculados; la
+   > página solo los dibuja y le avisa a la pantalla lo que elige el usuario. El control no navega
+   > fuera de esas páginas: cualquier otra dirección recibe un rechazo. Tampoco abre ventanas nuevas,
+   > descarga archivos, concede permisos ni expone objetos de la aplicación al código de la página.
+   > Si el equipo no tiene el componente WebView2, cada pantalla usa su versión en Windows Forms.
+
 
 Se aplica en el cierre, porque Codex todavía puede migrar más vistas: la cantidad («cuatro») es
 del código final.

@@ -2530,8 +2530,8 @@ desde el 19/11 a la tarde muestran la verificación propia de la consulta de la 
 | 1b. Dominio: suscripción, lista de espera y solicitud de Organizador | `clases-1b-dominio-cuenta.png` | **11,4 cm** |
 | 2. Dominio: compra y pago | `clases-2-dominio-compra.png` | **16,0 cm** |
 | 3. Dominio: entrada y seguro | `clases-3-dominio-entrada.png` | **16,0 cm** |
-| 4. Negocio: gestores de la compra | `clases-4-negocio-compra.png` | **16,0 cm** |
-| 5. Negocio: administración | `clases-5-negocio-administracion.png` | **16,0 cm** |
+| 4. Negocio: gestores de la compra | `clases-4-negocio-compra.png` | **16,0 cm** (**reemplazala**: se regeneró el 27/11) |
+| 5. Negocio: administración | `clases-5-negocio-administracion.png` | **16,0 cm** (**reemplazala**: se regeneró el 27/11) |
 | 5b. Negocio: cuenta y seguridad | `clases-5b-negocio-cuenta-seguridad.png` | **16,0 cm** |
 | 6. Negocio: verificación de identidad, perfil y pertenencia | `clases-6-autorizacion.png` | **16,0 cm** |
 | 6b. Negocio: escritura de la auditoría | `clases-6b-auditoria.png` | **16,0 cm** |
@@ -2583,7 +2583,7 @@ Texto, debajo del título «Diagrama de clases»:
 | Singleton y Repository | `clases-8a-patron-singleton-repository.png` | **16,0 cm** |
 | Strategy: formato de los reportes | `clases-8b-patron-strategy.png` | **15,5 cm** |
 | Jerarquía de Reporte | `clases-8c-jerarquia-reportes.png` | **16,0 cm** (es baja: puede compartir página con el texto) |
-| Strategy: envío de códigos y verificación de identidad | `clases-8d-patron-strategy-cuenta.png` | **13,9 cm** (página entera) |
+| Strategy: envío de códigos y verificación de identidad | `clases-8d-patron-strategy-cuenta.png` | **13,7 cm** (página entera; **reemplazala**: se regeneró el 27/11) |
 
 **Si ya pegaste la figura de Strategy de códigos del 18/11, reemplazala** (19/11): cambió un signo de visibilidad. En el texto de abajo cambió una oración del segundo párrafo de Strategy («…que escribe el mensaje en un archivo de correo fuera de la aplicación…»). **Cambio del 22/11:** ese segundo párrafo cambió otra vez, en sus primeras cinco oraciones (el correo real). Si ya lo pegaste, reemplazalo entero.
 

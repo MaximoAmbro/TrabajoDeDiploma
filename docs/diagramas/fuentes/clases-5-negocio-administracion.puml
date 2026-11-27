@@ -21,6 +21,7 @@ class GestorEventos <<Singleton>> {
   + CambiarPreventa(int, DateTime?)
   + CambiarImagenPortada(int, byte[])
   + CapacidadTotal(int) : int
+  + EntradasVendidas(int) : int
   + Vigentes() : List<Evento>
   + Buscar(string, string, DateTime?) : List<Evento>
   + ObtenerPorId(int) : Evento

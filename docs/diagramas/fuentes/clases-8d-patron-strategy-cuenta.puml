@@ -6,7 +6,8 @@ hide empty members
 ' Diagrama de clases, vista 8d: patrón Strategy en el envío de códigos de un solo uso y en la
 ' verificación de identidad de un Organizador. Fuente: Repo/IEnviadorCodigos.cs,
 ' Repo/GestorCodigosCorreo.cs, Repo/GestorSolicitudesOrganizador.cs, Visual/EnviadorSmtp.cs y
-' Visual/Program.cs (fija la estrategia: new EnviadorSimulado()).
+' Visual/Program.cs (elige la estrategia: EnviadorSmtp.Seleccionar() devuelve SMTP si están las
+' cinco variables de entorno y, si no, el simulado). Revisado contra 9295e3c el 27/11/2026.
 
 class GestorCodigosCorreo <<Singleton, Context>>
 interface IEnviadorCodigos <<Strategy>> {
@@ -21,6 +22,7 @@ class EnviadorSmtp <<ConcreteStrategy>> {
 }
 class SeleccionEnviadorCodigos {
   + {static} Actual : IEnviadorCodigos
+  + {static} Para(string) : IEnviadorCodigos
 }
 
 class GestorSolicitudesOrganizador <<Singleton, Context>>
@@ -37,7 +39,7 @@ class SeleccionVerificadorIdentidad {
   + {static} Actual : IVerificadorIdentidad
 }
 
-GestorCodigosCorreo ..> SeleccionEnviadorCodigos : Actual
+GestorCodigosCorreo ..> SeleccionEnviadorCodigos : Para(propósito)
 SeleccionEnviadorCodigos --> "1$_" IEnviadorCodigos
 IEnviadorCodigos <|.. EnviadorSimulado
 IEnviadorCodigos <|.. EnviadorSmtp
@@ -50,8 +52,8 @@ IVerificadorIdentidad <|.. VerificadorIdentidadSimulado
 IVerificadorIdentidad <|.. VerificadorIdentidadExterno
 
 note bottom of EnviadorSmtp
-  Capa Visual. Existe y compila;
-  la versión entregada no la elige.
+  Capa Visual. Se elige si están las
+  variables de SMTP; el teléfono, nunca.
 end note
 note bottom of VerificadorIdentidadExterno
   Existe y compila; la versión

@@ -1,4 +1,63 @@
-# Plan del documento entregable
+# Plan del documento: qué se puede escribir ya y qué espera las capturas
+
+Claude Code, 27/11/2026, para el fin de semana de JC. Es un checklist corto. El detalle de cada
+página está en `docs/LISTA-PARA-MAXIMO.md` y el de cada cifra en `docs/CIERRE-DOCUMENTO.md`.
+
+**Regla para decidir:** si el texto describe una regla, un dato o una prueba, se escribe ya. Si
+describe lo que se ve en una pantalla (un botón, un título, una captura), espera la interfaz final.
+Codex todavía pasa el Pago a vista web y aplica la auditoría de pulido.
+
+## 1. Ya, sin esperar la interfaz
+
+- [ ] **Reglas de negocio** (pp. 25 a 27, 32, 33): 52 vigentes, RN-01 a RN-54, sin RN-27 ni RN-42.
+- [ ] **Requerimientos** (pp. 23, 24, 35 a 38): 22, RF-01 a RF-22, con RF-09 como Won't have. La
+  oración de WebView2 de las pp. 18 y 24 ya está en la lista: es la opción (a), del 24/11.
+- [ ] **DER** (p. 89): `er-1` a `er-4`. El esquema no cambia con la interfaz.
+- [ ] **Diagramas de casos de uso, dominio, estados, actividad y robustez** (pp. 71, 86 a 88).
+- [ ] **Diagramas de clases 4, 5, 7 y 8d.** 4, 5 y 8d regenerados con el código de `9295e3c`; la 7 no cambia. Ver la
+  sección 3.
+- [ ] **Arquitectura, p. 57: el párrafo de WebView2** (sección 4).
+- [ ] **Casos de prueba y batería** (pp. 68 a 70, 107 a 111): 232 casos y 377 ejecuciones,
+  377/377 sobre `9295e3c`. **La cifra final se congela con el commit de la entrega.** Si Codex
+  suma casos, cambia; los lugares están marcados `[[...]]` en la lista.
+- [ ] **Matriz y cobertura** (pp. 106 a 111): 50 de 52 reglas con caso; RN-07 y RN-33 sin caso.
+- [ ] **Mutación** (p. 7): 73 de 77 sobre `65225e7`. No se vuelve a medir (decisión de JC).
+- [ ] **A02, reportes** (pp. 98 a 105): no depende de la interfaz; solo la captura del PDF.
+- [ ] **Datos de JC** (pp. 6, 15 a 17): fechas del historial y del cronograma.
+- [ ] **Bloques de código** (pp. 63 a 67, 102 a 105): pegarlos sin comillas tipográficas
+  (aviso al principio de la lista).
+
+## 2. Espera las capturas finales
+
+Se hace después de que Codex termine el Pago web y el pulido, sobre el commit congelado.
+
+- [ ] **Prototipos y guion de interfaz** (pp. 45, 47 a 49): tres capturas.
+- [ ] **Instructivo** (pp. 51 a 55): controles, recorrido, las figuras 1 a 4 y los mensajes. Los
+  nombres de los botones y los textos de los diálogos cambiaron con los diálogos EventAura
+  (`689a0c8`).
+- [ ] **Especificaciones CU-01 a CU-21** (pp. 72 a 85 y las nuevas): solo los nombres de botones
+  y menús. El flujo y las reglas no cambian.
+- [ ] **Usabilidad** (pp. 90 a 97): el párrafo sobre el rediseño.
+- [ ] **Anexo «Pantallas del sistema»** (después de la p. 105): unas 52 capturas.
+- [ ] **Secuencias de la compra**: revisarlas cuando el Pago sea web, porque cambia quién llama.
+
+## 3. Diagramas de clases adelantados
+
+Fuentes en `docs/diagramas/fuentes/`, imágenes en `docs/diagramas/`. Ver la nota del final de
+`docs/CIERRE-DOCUMENTO.md`, sección 3.3, con lo que se agregó a cada vista.
+
+## 4. El párrafo de WebView2
+
+Borrador adelantado en `docs/CIERRE-DOCUMENTO.md`, sección 4, contra `9295e3c`: **15 pantallas**
+con vista web (11 páginas HTML), 16 cuando el Pago sea web. La cantidad queda como marcador
+`[[VISTAS_WEB]]` y se completa al congelar el código. Las afirmaciones de seguridad del párrafo se
+comprobaron en `Visual/Web/PanelWebMotor.cs`.
+
+---
+
+> **Lo que sigue es el plan anterior, del 11/11** (fuentes, prueba de conversión con Word y pdf2docx). Se conserva porque lo citan `docs/DOCUMENTO-ENTREGABLE.md` y los reportes de esa fecha. Para el fin de semana vale el checklist de arriba.
+
+## Antecedente: el plan de conversión del 11/11
 
 Claude Code, a pedido de JC. La prioridad vuelve a ser el documento: el docente pide la
 documentación de requerimientos presentable para la próxima reunión, y es lo que más pesa en

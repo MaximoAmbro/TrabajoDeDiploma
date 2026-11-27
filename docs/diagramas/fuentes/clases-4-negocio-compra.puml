@@ -26,6 +26,7 @@ class PasarelaSimulada <<Singleton>> {
 }
 class GeneradorQR <<Singleton>> {
   + NuevoCodigo() : string
+  + Imagen(string) : byte[]
 }
 class GestorPaquetes <<Singleton>> {
   + ServiciosDe(int) : List<Servicio>
@@ -63,6 +64,7 @@ class GestorListaEspera <<Singleton>> {
   + ConsultarPosicion(int, int) : int?
   + AvisosAlIngresar(int) : List<string>
   + DeEvento(int) : List<ListaEspera>
+  + EventosEnEspera(int) : List<string>
 }
 
 GestorCompras -[hidden]down- PasarelaSimulada
