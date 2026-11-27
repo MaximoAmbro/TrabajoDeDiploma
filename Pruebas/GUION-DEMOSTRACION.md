@@ -8,6 +8,22 @@ Guion para recorrer el sistema sin ayuda. Es el documento del operador: dice qu�
   - recorridos otra vez: la recuperación con el código (sección 2), la compra sin seguro y con seguro y la
     devolución (sección 4), y la contratación con Enter (sección 6.1);
   - **sin recorrer en esta pasada:** las secciones 5, 7 y 8, la preventa y 144 DPI.
+- **27/11, sobre el ejecutable de `9977314` (el mismo de `ed23ac0`, tag `muestra-1`):**
+  - recorrida la sección 7, Administrador y Organizador, con fallas P1 a P3 (T-47 a T-56). El detalle
+    está en `docs/VERIFICACION-MUESTRA-1-2026-11-27.md`;
+  - recorridos otra vez la compra con el Pago web nuevo, la lista de espera, la verificación del
+    correo con sesión y la suscripción;
+  - **sin recorrer:** las secciones 5 y 8 y la preventa (sección 6.2/6.3), por tiempo;
+  - **144 DPI: pendiente, con JC presente.** No se cambia la escala de Windows sin JC.
+
+> **La base de la demo, en una línea:** está armada y lista desde el 27/11 como
+> `BddEventAura_Demostracion`, en `.\SQLEXPRESS`. Para usarla, en el `Visual.exe.config` de la copia
+> cambiá `Initial Catalog=BddEventAura;` por `Initial Catalog=BddEventAura_Demostracion;`. Para volver,
+> hacé el cambio inverso. Detalle abajo, en «Apuntar la aplicación a la base».
+>
+> **La demo se corre desde el ejecutable compilado (`Visual\bin\Debug\Visual.exe`), nunca desde Visual
+> Studio**, ni con F5 ni con «Iniciar sin depurar». T-38 se cerró como «no reproducible fuera del
+> depurador»: una vez, la aplicación lanzada desde Visual Studio se cerró sola sin dejar rastro.
 - **Secciones 3 a 8:** reescritas y recorridas el 24/11/2026 sobre el ejecutable compilado a las 16:29 (`942b451`), contra la misma base. Cada sección termina con lo verificado y lo que quedó sin verificar. La tabla de la sección 8 dice, fila por fila, qué rechazos se vieron en pantalla.
 - Durante el recorrido (sección 2 a las 16:00; secciones 3 a 8 entre las 16:33 y las 16:59) no se bloqueó ninguna cuenta, no se cerró ninguna sesión por inactividad y `errores.log` no registró ningún error.
 
@@ -71,7 +87,7 @@ No edites `Visual/App.config` ni `Pruebas/App.config` del repositorio: guardan l
 
 ### Abrir
 
-Abrí `Visual.exe`. Hay tres resultados posibles:
+Abrí `Visual.exe` con doble clic, **no desde Visual Studio** (T-38). Hay tres resultados posibles:
 - **Aparece el acceso con «Mail» y «Contraseña»:** la base está bien.
 - **Aparece «EventAura no pudo comprobar la base de datos.»,** con la instancia y la base que intentó y sin los campos de acceso: SQL Server no está en marcha, la cadena apunta a algo que no existe o falta `Visual.exe.config`. Corregilo y volvé a abrir. Verificado el 24/11/2026 con la instancia inexistente (el aviso aparece en unos 3 s) y sin `Visual.exe.config`.
 - **Aparece que la base está desactualizada:** ver «Una base que ya existe».
