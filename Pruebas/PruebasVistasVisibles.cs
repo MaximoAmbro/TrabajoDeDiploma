@@ -260,8 +260,8 @@ namespace Pruebas
                     Assert.IsTrue(listado.ClientRectangle.Contains(listado.RectangleToClient(accionFicha.Parent.RectangleToScreen(accionFicha.Bounds))),
                         "Armar paquete debe quedar dentro de la ventana Mi cuenta.");
                     accionFicha.PerformClick();
-                    Assert.AreEqual("Armar paquete", menu.Controls.OfType<Label>().Single(c => c.Name == "label1").Text,
-                        "El título debe cambiar a la pantalla de compra.");
+                    Assert.AreEqual("Eventos disponibles", menu.Controls.OfType<Label>().Single(c => c.Name == "label1").Text,
+                        "El shell conserva un único título correspondiente al ítem activo del menú durante el armado.");
                     var hostCompra = ControlDe<HostFormularioCliente>(menu, "paginaFrmCompraCliente");
                     var compraMenu = (Visual.FrmCompraCliente)hostCompra.Pantalla;
                     var webCompra = ControlDe<Visual.Web.PanelWeb>(compraMenu, "resumenCompraWeb");
