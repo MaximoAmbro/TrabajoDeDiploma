@@ -9,6 +9,7 @@ namespace Visual
 {
     public sealed class frmRevisarEventos : FormularioEventAura
     {
+        private readonly Componentes.EtiquetaTitulo tituloRevision = new Componentes.EtiquetaTitulo { Name = "tituloRevisionEventos", Text = "Revisión de eventos", Location = new Point(24, 12), Size = new Size(700, 44) };
         private readonly ListBox pendientes = new ListBox { Name = "lstEventosEnRevision", Location = new Point(24, 88), Size = new Size(620, 400), DisplayMember = "Nombre" };
         private readonly Label detalle = new Componentes.EtiquetaAyuda { Name = "lblDetalleEventoRevision", Location = new Point(670, 88), Size = new Size(360, 120) };
         private readonly Label etiquetaMotivo = new Componentes.EtiquetaAyuda { Name = "lblMotivoRechazoEvento", Text = "Motivo del rechazo (obligatorio)", Location = new Point(670, 210), Size = new Size(350, 20) };
@@ -23,11 +24,11 @@ namespace Visual
         public frmRevisarEventos()
         {
             GestorSesion.Instance.RequerirAdministrador();
-            Text = "Eventos en revisión";
+            Text = "Revisión de eventos";
             StartPosition = FormStartPosition.CenterParent;
             ClientSize = new Size(1100, 720);
             MinimumSize = new Size(1000, 680);
-            Controls.Add(new Componentes.EtiquetaTitulo { Text = "Primer evento de cada organizador", Location = new Point(24, 12), Size = new Size(700, 44) });
+            Controls.Add(tituloRevision);
             Controls.AddRange(new Control[] { pendientes, detalle, etiquetaMotivo, motivo, aprobar, rechazar, cerrar });
             CancelButton = cerrar;
             Controls.Add(revisionWeb);
@@ -93,6 +94,7 @@ namespace Visual
         private void ActualizarVistaRevision()
         {
             bool web = revisionWeb.Preparado;
+            tituloRevision.Visible = !web;
             revisionWeb.Visible = web;
             avisoWeb.Visible = revisionWeb.InicializacionTerminada && !web;
             pendientes.Visible = !web && pendientes.Items.Count > 0;

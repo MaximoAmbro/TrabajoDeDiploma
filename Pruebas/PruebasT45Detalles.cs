@@ -16,6 +16,72 @@ namespace Pruebas
     {
         public TestContext TestContext { get; set; }
 
+        // CP-379 — RNF-02: cada estado web expone un único título de pantalla y, en Mi cuenta, lo aporta el shell.
+        [TestMethod("CP-379: Las vistas web no duplican el título de pantalla")]
+        public void CP379_TitulosDeLasVistasNoSeDuplican()
+        {
+            EnSta(() =>
+            {
+                using (var formulario = new Form())
+                using (var web = new Visual.Web.PanelWeb { Bounds = new System.Drawing.Rectangle(0, 0, 1100, 640) })
+                {
+                    formulario.Controls.Add(web);
+                    Mostrar(formulario);
+                    web.Cargar("gestion.html");
+                    EsperarVistaWeb(web);
+                    var vistas = new[]
+                    {
+                        new { Id = "historial", Titulo = "Compras recientes" },
+                        new { Id = "locales", Titulo = "Mis locales" },
+                        new { Id = "eventosLocal", Titulo = "Eventos del local" },
+                        new { Id = "controlIngreso", Titulo = "Control de ingreso" },
+                        new { Id = "auditoria", Titulo = "Auditoría" },
+                        new { Id = "revisionEventos", Titulo = "Revisión de eventos" }
+                    };
+                    foreach (var vista in vistas)
+                    {
+                        EjecutarVistaWeb(web, "window.eventAuraDibujar({vista:'" + vista.Id + "'});'rendered'");
+                        string estado = EjecutarVistaWeb(web,
+                            "(()=>{const t=[...document.querySelectorAll('#app h1,#app h2')].map(x=>x.textContent.trim());" +
+                            "return [(t.length?t[0]:''),(t.length?t.filter(x=>x===t[0]).length:0),document.querySelectorAll('#app h1').length].join('|')})()");
+                        Assert.AreEqual(vista.Titulo + "|1|0", estado,
+                            "La vista " + vista.Id + " no debe repetir el primer encabezado ni agregar un título de página dentro del contenido: " + estado);
+                    }
+                }
+
+                var cliente = Fake.Cliente(NivelFidelidad.Bronce);
+                Fake.ComoCliente(cliente);
+                using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id, NombreUsuario = "Cliente" })
+                {
+                    Mostrar(menu);
+                    ControlDe<Button>(menu, "btnEventos").PerformClick();
+                    var catalogo = ControlDe<HostFormularioCliente>(menu, "paginafrmEventosCliente");
+                    var catalogoWeb = ControlDe<Visual.Web.PanelWeb>(catalogo.Pantalla, "catalogoWeb");
+                    EsperarVistaWeb(catalogoWeb);
+                    Assert.AreEqual("Eventos disponibles", menu.Controls.Find("label1", false).OfType<Label>().Single().Text);
+                    Assert.IsFalse(ControlDe<Label>(catalogo.Pantalla, "label2").Visible,
+                        "El catálogo alojado debe dejar el único título al shell.");
+                    Assert.AreEqual("0", EjecutarVistaWeb(catalogoWeb, "document.querySelectorAll('h1').length.toString()"));
+
+                    ControlDe<Button>(menu, "btnHistorial").PerformClick();
+                    var historial = ControlDe<HostFormularioCliente>(menu, "paginafrmHistorialCliente");
+                    var historialWeb = ControlDe<Visual.Web.PanelWeb>(historial.Pantalla, "historialWeb");
+                    EsperarVistaWeb(historialWeb);
+                    Assert.AreEqual("Mis entradas", menu.Controls.Find("label1", false).OfType<Label>().Single().Text);
+                    Assert.IsFalse(ControlDe<Label>(historial.Pantalla, "label1").Visible,
+                        "El historial alojado debe dejar el único título al shell.");
+                    Assert.AreEqual("0", EjecutarVistaWeb(historialWeb, "document.querySelectorAll('h1').length.toString()"));
+
+                    ControlDe<Button>(menu, "btnSuscripcion").PerformClick();
+                    var suscripcion = ControlDe<HostFormularioCliente>(menu, "paginafrmSuscripcion");
+                    var suscripcionWeb = ControlDe<Visual.Web.PanelWeb>(suscripcion.Pantalla, "suscripcionWeb");
+                    EsperarVistaWeb(suscripcionWeb);
+                    Assert.AreEqual("Mi suscripción", menu.Controls.Find("label1", false).OfType<Label>().Single().Text);
+                    Assert.AreEqual("0", EjecutarVistaWeb(suscripcionWeb, "document.querySelectorAll('h1').length.toString()"));
+                }
+            });
+        }
+
         // CP-378 — RNF-02/RNF-03: capturas de ejecución para revisar visualmente cada ojo propio.
         [TestMethod("CP-378: Las vistas de acceso, alta y recuperación muestran ojos accesibles")]
         public void CP378_CapturarOjosAccesoAltaYRecuperacion()

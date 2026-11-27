@@ -217,6 +217,8 @@ namespace Visual
         private void ActualizarVistaHistorial()
         {
             bool web = historialWeb.Preparado;
+            label1.Text = "Mis entradas";
+            label1.Visible = !NavegacionCliente.Activa;
             historialWeb.Visible = web;
             avisoWeb.Visible = historialWeb.InicializacionTerminada && !web;
             dgvCompras.Visible = !web && dgvCompras.Rows.Count > 0;

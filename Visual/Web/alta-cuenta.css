@@ -67,6 +67,7 @@ body:not(.organizador) .solo-organizador { display: none !important; }
 body.verificacion-sesion .entrada { display: block; height: 100%; min-height: 0; }
 body.verificacion-sesion .panel { display: none; }
 body.verificacion-sesion .contenido { height: 100%; min-height: 0; padding: var(--e4); justify-content: flex-start; overflow-y: auto; }
+body.verificacion-sesion h1 { display: none; }
 body.verificacion-sesion .columna { margin: 0 auto; }
 body.verificacion-sesion [data-vista="correo"] { gap: var(--e4); }
 body.verificacion-sesion [data-vista="correo"] .pila-2 { gap: var(--e2); }

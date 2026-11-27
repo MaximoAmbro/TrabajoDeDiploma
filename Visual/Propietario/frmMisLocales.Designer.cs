@@ -57,7 +57,7 @@ namespace Visual
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(792, 32);
             this.label2.TabIndex = 38;
-            this.label2.Text = "Locales";
+            this.label2.Text = "Mis locales";
             // 
             // btnVolver
             // 

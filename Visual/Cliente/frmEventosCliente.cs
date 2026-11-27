@@ -133,6 +133,8 @@ namespace Visual
 
         private void ActualizarVistaWeb()
         {
+            label2.Text = "Eventos disponibles";
+            label2.Visible = !NavegacionCliente.Activa;
             bool mostrarTarjetas = !vistaTabla && !fichaAbierta;
             catalogoWeb.Visible = mostrarTarjetas && catalogoWeb.Preparado && eventosMostrados.Count > 0;
             avisoWeb.Visible = mostrarTarjetas && avisoWeb.Tag != null;

@@ -175,6 +175,9 @@ namespace Visual.Vendedor
         private void ActualizarVistaEventos()
         {
             bool web = eventosWeb.Preparado;
+            label2.Text = "Eventos del local";
+            label2.Visible = !web;
+            lblNombre.Visible = !web;
             eventosWeb.Visible = web;
             avisoWeb.Visible = eventosWeb.InicializacionTerminada && !web;
             // La grilla conserva su ruta de teclado y queda cubierta por el panel web.

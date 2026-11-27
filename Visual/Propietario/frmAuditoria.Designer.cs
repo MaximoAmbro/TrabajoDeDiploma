@@ -19,7 +19,7 @@ namespace Visual
             buscar = new Componentes.BotonPrimario { Name = "buscarAuditoria", Text = "Buscar", Location = new Point(710, 8), Size = new Size(120, 32), Anchor = AnchorStyles.Top | AnchorStyles.Right };
             tabla = new DataGridView { Name = "tablaAuditoria", ReadOnly = true, AllowUserToAddRows = false, AutoGenerateColumns = true, Location = new Point(12, 52), Size = new Size(876, 456), Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill };
             Controls.AddRange(new Control[] { desde, hasta, accion, buscar, tabla });
-            Text = "Registro de auditoría";
+            Text = "Auditoría";
             StartPosition = FormStartPosition.CenterParent;
             MinimumSize = new Size(1000, 680);
             this.ClientSize = new System.Drawing.Size(1100, 720);

@@ -91,6 +91,7 @@ namespace Visual
         private void ActualizarVistaIngreso()
         {
             bool web = ingresoWeb.Preparado;
+            lblTituloIngreso.Visible = !web;
             ingresoWeb.Visible = web;
             avisoWeb.Visible = ingresoWeb.InicializacionTerminada && !web;
             bool vacio = cmbEventos.Items.Count == 0;

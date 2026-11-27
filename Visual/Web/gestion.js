@@ -10,7 +10,7 @@ function estadoVacio(mensaje, accion, tipo) {
 }
 function dibujarHistorial(m) {
   app.replaceChildren();
-  const compras = seccion("Compras"); const lista = nodo("div", "grilla");
+  const compras = seccion("Compras recientes"); const lista = nodo("div", "grilla");
   (m.compras || []).forEach(c => {
     const t = nodo("article", "tarjeta" + (c.id === m.seleccionada ? " activa" : ""));
     const b = nodo("button", "principal", c.evento || "Evento"); b.type = "button";
@@ -40,7 +40,9 @@ function dibujarLocales(m) {
   s.append(grilla); app.append(s);
 }
 function dibujarEventosLocal(m) {
-  app.replaceChildren(); const s = seccion(m.local || "Eventos del local"); const grilla = nodo("div", "grilla");
+  app.replaceChildren(); const s = seccion("Eventos del local");
+  if (m.local) s.append(nodo("p", "secundario", m.local));
+  const grilla = nodo("div", "grilla");
   (m.eventos || []).forEach(e => {
     const t = nodo("button", "tarjeta seleccionable" + (e.id === m.seleccionado ? " activa" : "")); t.type = "button";
     t.addEventListener("click", () => enviar({ tipo: "eventoLocal", id: e.id }));
@@ -51,7 +53,7 @@ function dibujarEventosLocal(m) {
   s.append(grilla); app.append(s);
 }
 function dibujarControlIngreso(m) {
-  app.replaceChildren(); const s = seccion("Registrar ingreso");
+  app.replaceChildren(); const s = seccion("Control de ingreso");
   if (!m.eventos || !m.eventos.length) s.append(estadoVacio("No hay eventos con ingreso abierto en tus locales.", "Volver al panel", "volver"));
   else {
     const form = nodo("form", "formulario"); const labelEvento = nodo("label", "campo"); labelEvento.append(nodo("span", "encabezado", "Evento"));
@@ -67,7 +69,7 @@ function dibujarControlIngreso(m) {
   app.append(s);
 }
 function dibujarAuditoria(m) {
-  app.replaceChildren(); const s = seccion("Movimientos registrados");
+  app.replaceChildren(); const s = seccion("Auditoría");
   const tabla = nodo("table", "tabla"); const head = document.createElement("thead"); const hr = document.createElement("tr");
   ["Fecha y hora", "Correo", "Acción", "Qué se modificó", "Resultado"].forEach(x => hr.append(nodo("th", "", x))); head.append(hr); tabla.append(head);
   const body = document.createElement("tbody"); (m.filas || []).forEach(f => { const tr = document.createElement("tr");
@@ -76,7 +78,7 @@ function dibujarAuditoria(m) {
   app.append(s);
 }
 function dibujarRevision(m) {
-  app.replaceChildren(); const s = seccion("Eventos pendientes de revisión"); const layout = nodo("div", "revision"); const lista = nodo("div", "grilla");
+  app.replaceChildren(); const s = seccion("Revisión de eventos"); const layout = nodo("div", "revision"); const lista = nodo("div", "grilla");
   (m.eventos || []).forEach(e => { const b = nodo("button", "tarjeta seleccionable" + (e.id === m.seleccionado ? " activa" : "")); b.type = "button";
     b.addEventListener("click", () => enviar({ tipo: "revision", id: e.id })); b.append(nodo("strong", "dato", e.nombre), nodo("span", "secundario", e.fecha)); lista.append(b); });
   if (!m.eventos || !m.eventos.length) lista.append(estadoVacio("No hay eventos pendientes de revisión.", "Actualizar", "actualizar"));

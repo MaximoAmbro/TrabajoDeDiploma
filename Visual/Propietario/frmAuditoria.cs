@@ -9,7 +9,7 @@ namespace Visual
     public sealed partial class frmAuditoria : FormularioEventAura
     {
         private Componentes.EstadoVacio estadoVacio;
-        private readonly Componentes.EtiquetaTitulo titulo = new Componentes.EtiquetaTitulo { Text = "Registro de auditoría", AutoSize = true };
+        private readonly Componentes.EtiquetaTitulo titulo = new Componentes.EtiquetaTitulo { Text = "Auditoría", AutoSize = true };
         private readonly Componentes.EtiquetaRotulo etiquetaDesde = new Componentes.EtiquetaRotulo { Text = "Desde", AutoSize = true };
         private readonly Componentes.EtiquetaRotulo etiquetaHasta = new Componentes.EtiquetaRotulo { Text = "Hasta", AutoSize = true };
         private readonly Componentes.EtiquetaRotulo etiquetaAccion = new Componentes.EtiquetaRotulo { Text = "Acción", AutoSize = true };
@@ -148,6 +148,7 @@ namespace Visual
         private void ActualizarVistaAuditoria()
         {
             bool web = auditoriaWeb.Preparado;
+            titulo.Visible = !web;
             auditoriaWeb.Visible = web;
             avisoWeb.Visible = auditoriaWeb.InicializacionTerminada && !web;
             tabla.Visible = !web && tabla.Rows.Count > 0;

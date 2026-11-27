@@ -187,11 +187,21 @@ namespace Visual
             if (pagina is Componentes.HostFormularioCliente host)
             {
                 host.Activar();
-                label1.Text = host.Pantalla.Text.Replace("EventAura · ", "");
+                label1.Text = TituloDeNavegacion(host.Pantalla);
             }
             else label1.Text = "Mi cuenta";
             ActualizarActivo(pagina);
             MarcarEstadoAtras();
+        }
+
+        private static string TituloDeNavegacion(Form pantalla)
+        {
+            if (pantalla is frmEventosCliente || pantalla is FrmCompraCliente || pantalla is frmPago || pantalla is frmConfirmacion)
+                return "Eventos disponibles";
+            if (pantalla is frmHistorialCliente) return "Mis entradas";
+            if (pantalla is frmSuscripcion) return "Mi suscripción";
+            if (pantalla is frmCambiarContraseña) return "Cambiar contraseña";
+            return pantalla.Text.Replace("EventAura · ", "");
         }
 
         private Componentes.HostFormularioCliente Envolver(Form pantalla)

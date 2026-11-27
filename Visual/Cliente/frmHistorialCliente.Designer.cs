@@ -69,7 +69,7 @@ namespace Visual
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(852, 32);
             this.label1.TabIndex = 28;
-            this.label1.Text = "Historial Compras";
+            this.label1.Text = "Mis entradas";
             //
             // lblDetalle
             //
@@ -126,7 +126,7 @@ namespace Visual
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmHistorialCliente";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "EventAura · Mis eventos";
+            this.Text = "EventAura · Mis entradas";
             this.Load += new System.EventHandler(this.frmHistorialCliente_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvCompras)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEntradas)).EndInit();

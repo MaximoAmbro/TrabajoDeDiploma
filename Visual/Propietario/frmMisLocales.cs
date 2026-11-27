@@ -78,6 +78,8 @@ namespace Visual
         private void ActualizarVistaLocales()
         {
             bool web = localesWeb.Preparado;
+            label2.Text = "Mis locales";
+            label2.Visible = !web;
             localesWeb.Visible = web;
             avisoWeb.Visible = localesWeb.InicializacionTerminada && !web;
             // La grilla queda debajo del panel web para conservar el acceso por teclado y el respaldo.
