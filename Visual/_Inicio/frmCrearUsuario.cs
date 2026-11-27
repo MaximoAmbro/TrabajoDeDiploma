@@ -67,6 +67,7 @@ namespace Visual
             TxtConfirmpassword.TextChanged += (s, e) => ValidacionCampo.Limpiar(TxtConfirmpassword);
             Shown += (s, e) =>
             {
+                if (_verificacionSesion) return; // El host de Mi cuenta entrega el tamaño; no forzar la ventana de alta suelta.
                 ColocarTitulo(label1);
                 label1.Left = (ClientSize.Width - label1.Width) / 2;
                 int Px(int medida) => Disposicion.Pixeles(this, medida);
@@ -102,6 +103,8 @@ namespace Visual
         {
             if (_altaAdministrador) throw new InvalidOperationException("La verificación de correo no está disponible en este formulario.");
             _verificacionSesion = true;
+            Text = "EventAura · Verificar correo";
+            _altaWeb.SetBounds(0, 0, ClientSize.Width, ClientSize.Height);
             _mailPendiente = (correo ?? string.Empty).Trim();
             _perfilPendiente = "cliente";
             _contrasenaPendiente = null;

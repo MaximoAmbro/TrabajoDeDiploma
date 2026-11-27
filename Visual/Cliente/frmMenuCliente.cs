@@ -258,6 +258,7 @@ namespace Visual
             if (tipo == "frmEventosCliente" || tipo == "FrmCompraCliente" || tipo == "frmPago" || tipo == "frmConfirmacion") boton = btnEventos;
             else if (tipo == "frmHistorialCliente") boton = btnHistorial;
             else if (tipo == "frmSuscripcion") boton = btnSuscripcion;
+            else if (tipo == "frmCrearUsuario") boton = null;
             else if (tipo == "frmCambiarContraseña") boton = btnCambiarContrasena;
             MarcarActivo(boton);
         }

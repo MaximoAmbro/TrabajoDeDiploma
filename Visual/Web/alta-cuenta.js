@@ -260,6 +260,7 @@
     // { paso, perfil?, parametros?, error?: { campo, mensaje }, envioTelefono?: string,
     //   telefonoVerificado?: bool, resultado?: { perfil } }   (ver README.md)
     puente.alDibujar(datos => {
+        document.body.classList.toggle("verificacion-sesion", !!datos.verificacionSesion);
         ["crear", "confirmar-correo", "reenviar-correo", "enviar-codigo-telefono", "confirmar-telefono", "presentar"].forEach(id => ocupado(document.getElementById(id), false));
         if (datos.parametros) {
             Object.assign(estado.parametros, datos.parametros);

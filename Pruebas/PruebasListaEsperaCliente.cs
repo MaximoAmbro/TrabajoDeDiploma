@@ -36,7 +36,33 @@ namespace Pruebas {
     }
    });
   }
-  // CP-118 — RF-10/RN-41: aviso de disponibilidad con datos existentes, sin subsistema nuevo.
+  // CP-374 — RF-10/RN-35: el estado de la lista de espera se refleja en el armador WebView2.
+  [TestMethod("CP-374: El armador confirma la inscripción en lista de espera")]
+  public void CP374_ArmadorActualizaListaEspera() {
+   EnSta(()=> {
+    var cliente=Fake.Cliente(NivelFidelidad.Bronce);Fake.ComoCliente(cliente);
+    var evento=Fake.EventoPublicado(1000m,0);
+    using(var form=new Visual.FrmCompraCliente{IDUsuario=cliente.Id,IDEvento=evento.Id}) {
+     Mostrar(form);var web=ControlDe<Visual.Web.PanelWeb>(form,"resumenCompraWeb");
+     var reloj=System.Diagnostics.Stopwatch.StartNew();
+     while(!web.Preparado&&reloj.Elapsed<TimeSpan.FromSeconds(20)){Application.DoEvents();System.Threading.Thread.Sleep(10);}
+     Assert.IsTrue(web.Preparado&&web.Visible,"El armador debe cargar para probar la lista de espera.");
+     var click=web.EjecutarScriptAsync("document.querySelector('.agotado .al-inicio').click()");
+     reloj.Restart();while(!click.IsCompleted&&reloj.Elapsed<TimeSpan.FromSeconds(10)){Application.DoEvents();System.Threading.Thread.Sleep(10);}
+     Assert.IsTrue(click.IsCompleted,"El botón web debe enviar la inscripción.");
+     reloj.Restart();string texto="";
+     while(reloj.Elapsed<TimeSpan.FromSeconds(10)){
+      Application.DoEvents();var consulta=web.EjecutarScriptAsync("document.querySelector('.agotado .al-inicio').textContent");
+      while(!consulta.IsCompleted&&reloj.Elapsed<TimeSpan.FromSeconds(10)){Application.DoEvents();System.Threading.Thread.Sleep(10);}
+      texto=consulta.GetAwaiter().GetResult()??"";
+      if(texto.Contains("Ya estás en la lista"))break;
+      System.Threading.Thread.Sleep(10);
+     }
+     StringAssert.Contains(texto,"Ya estás en la lista de espera");
+     Assert.IsTrue(ControlDe<Button>(form,"btnListaEspera").Text.StartsWith("Ya estás"));
+    }
+   });
+  }  // CP-118 — RF-10/RN-41: aviso de disponibilidad con datos existentes, sin subsistema nuevo.
   [DataTestMethod]
   [DataRow("agotado",DisplayName="CP-118: No se avisa mientras el evento siga agotado")]
   [DataRow("liberado",DisplayName="CP-118: Liberar una entrada genera aviso al iniciar sesión")]

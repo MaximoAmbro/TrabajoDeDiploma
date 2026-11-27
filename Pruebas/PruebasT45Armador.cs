@@ -51,6 +51,8 @@ namespace Pruebas
                             TestContext?.WriteLine("CP-373 geometría " + tamano + " / " + evento.Sectores.Count + " sectores: " + resultado);
                             if (!resultado.StartsWith("true|true|" + evento.Sectores.Count + "|", StringComparison.Ordinal))
                                 fallas.Add(tamano + " / " + evento.Sectores.Count + " sectores: " + resultado);
+                            PruebasInteraccionPantallas.CapturarSiSeSolicito(menu,
+                                "ArmadorT45-" + tamano.Width + "x" + tamano.Height + "-" + evento.Sectores.Count + "-sectores");
                         }
                     }
                 }

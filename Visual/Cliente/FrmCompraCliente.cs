@@ -49,6 +49,7 @@ namespace Visual
         internal Func<Compra, List<string>> CrearTickets = null;
         internal bool CompraFinalizada => compraFinalizada;
         private bool agotado;
+        private bool inscriptoListaEspera;
         private Panel contenidoCompra;
         private Panel accionesCompra;
         private Panel documentoResumen;
@@ -353,6 +354,7 @@ namespace Visual
         // RF-10: después de anotarse el botón queda deshabilitado, diciendo que ya está en la lista.
         private void MarcarInscripto(bool inscripto)
         {
+            inscriptoListaEspera = inscripto;
             lnkPosicionEspera.Visible = inscripto;
             btnListaEspera.Enabled = !inscripto;
             btnListaEspera.Text = inscripto ? "Ya estás en la lista de espera" : "Anotarme en la lista de espera";
@@ -378,6 +380,7 @@ namespace Visual
                 if (ex.Regla == "RN-36")
                 {
                     MarcarInscripto(true);
+                    if (operacionWeb) EnviarDatosArmador(null);
                 }
                 else if (ex.Regla == "RN-10")
                 {
@@ -387,6 +390,7 @@ namespace Visual
                 return;
             }
             MarcarInscripto(true);
+            if (operacionWeb) EnviarDatosArmador(null);
             Avisos.Informativo(this, "Te anotaste en la lista de espera de «" + evento.Nombre + "». " +
                             "Podés consultar tu posición. Si vuelve a haber entradas, te lo mostramos al iniciar sesión.");
         }
@@ -827,6 +831,7 @@ namespace Visual
                     servicios = paquete.Servicios.Select(s => s.Id).ToArray(),
                     seguro = paquete.ConSeguro
                 },
+                listaEsperaInscripto = inscriptoListaEspera,
                 resumen = resumenWebModelo,
                 error = string.IsNullOrWhiteSpace(error) ? null : new { mensaje = error }
             };
@@ -1072,6 +1077,14 @@ namespace Visual
 
         private void VolverAlListado(string aviso = null)
         {
+            // Si el flujo vino desde un catálogo dentro del shell, volver por su pila conserva
+            // esa página y la navegación que inició la compra.
+            if (NavegacionCliente.Volver())
+            {
+                if (!string.IsNullOrWhiteSpace(aviso))
+                    NavegacionCliente.MostrarAviso(aviso, true, 7000);
+                return;
+            }
             frmEventosCliente frm = new frmEventosCliente();
             frm.IDUsuario = IDUsuario;
             frm.NombreUsuario = NombreUsuario;

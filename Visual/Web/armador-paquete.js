@@ -88,8 +88,12 @@
             tarjeta.querySelector(".mas").addEventListener("click", () => cambiarCantidad(s, +1));
             if (s.disponibles <= 0) {
                 const espera = document.createElement("button");
-                espera.type = "button"; espera.className = "enlace n5 al-inicio"; espera.textContent = "Anotarme en la lista de espera";
-                espera.addEventListener("click", () => puente.enviar({ tipo: "listaEspera", sectorId: s.id }));
+                espera.type = "button"; espera.className = "enlace n5 al-inicio";
+                espera.textContent = datos.listaEsperaInscripto ? "Ya estás en la lista de espera" : "Anotarme en la lista de espera";
+                espera.disabled = !!datos.listaEsperaInscripto;
+                espera.setAttribute("aria-live", "polite");
+                if (!datos.listaEsperaInscripto)
+                    espera.addEventListener("click", () => puente.enviar({ tipo: "listaEspera", sectorId: s.id }));
                 tarjeta.append(espera);
             }
             return tarjeta;

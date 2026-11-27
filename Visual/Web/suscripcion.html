@@ -39,11 +39,11 @@
   </div>
   <p class="aviso aviso-error oculto" id="error" role="alert"></p>
 </main>
-<dialog class="dialogo-suscripcion" id="confirmacion" aria-labelledby="confirmacion-titulo" aria-describedby="confirmacion-detalle">
+<dialog class="dialogo-suscripcion" id="confirmacion" aria-labelledby="confirmacion-titulo" aria-describedby="confirmacion-detalle confirmacion-renovacion">
   <form method="dialog" id="form-confirmacion">
     <h2 class="n3" id="confirmacion-titulo">Confirmar suscripción</h2>
     <div class="detalle-confirmacion pila pila-3" id="confirmacion-detalle"></div>
-    <p class="secundario n5">La suscripción no se renueva automáticamente al vencer.</p>
+    <p class="secundario n5" id="confirmacion-renovacion">La suscripción no se renueva automáticamente al vencer.</p>
     <div class="acciones-confirmacion">
       <button type="button" class="boton boton-secundario" id="volver-confirmacion">Volver</button>
       <button type="submit" class="boton boton-primario" id="aceptar-confirmacion">Confirmar suscripción</button>

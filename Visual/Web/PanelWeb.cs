@@ -119,7 +119,7 @@ namespace Visual.Web
         private void Desactivar(Exception error)
         {
             if (IsDisposed || fallida) return;
-            if (error != null) System.Diagnostics.Trace.WriteLine(error);
+            if (error != null) ManejadorErrores.Registrar(error);
             fallida = true;
             Preparado = false;
             Hide();
