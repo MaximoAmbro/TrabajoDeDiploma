@@ -79,7 +79,7 @@ solo cuando el ticket es una prueba manual, un dato o el Word, que no puede hace
 | T-35 | Claude Code | Poner `docs/disenos/` al día con lo que Codex integró | abierto, baja prioridad |
 | T-36 | Codex | `frmReportes` mide 960 px de alto, por encima del techo de 790 | abierto (26/11) |
 | T-37 | JC | ¿El alta y la recuperación avisan «Vista web no disponible» como las demás? | abierto (26/11) |
-| T-38 | Codex, después JC | **P0, sin reproducir:** la aplicación se cerró sola en el pago, dos veces, sin dejar rastro | en revisión: registro de cierres en `52cba8e` y `9963ef6`; 10 vueltas el 26/11 sin cierre; falta el reintento de JC |
+| T-38 | Codex, después JC | **P0, sin reproducir:** la aplicación se cerró sola en el pago, dos veces, sin dejar rastro | en revisión: registro de cierres en `52cba8e` y `9963ef6`. El 26/11, 10 vueltas y otras 5 cambiando de ventana, todas sin depurador y sin cierre. El tercer cierre de JC no dejó ningún rastro, que es lo que deja el depurador al terminar el proceso. Falta que JC lo repita con el depurador |
 | T-39 | Codex | **P0:** una cuenta que sale del alta sin verificar no puede verificar después ni comprar | cerrado: `06a9451`, verificado en ejecución el 26/11 (detalles de título y desplazamiento en T-45) |
 | T-40 | Codex | El aviso verde del catálogo tapa los filtros de categoría y fecha | cerrado: `bb93fd4`, verificado en ejecución el 26/11 |
 | T-41 | Codex | Pago: texto de ayuda con la tarjeta de prueba y barra automática en el vencimiento | cerrado: `6bd5777` y `5d2c7de`, verificado en ejecución el 26/11 |
@@ -87,6 +87,7 @@ solo cuando el ticket es una prueba manual, un dato o el Word, que no puede hace
 | T-43 | Codex | Quitar el checkbox «Mostrar contraseña(s)» de las vistas web y dejar solo el ojo | cerrado: `3100733` y `29ccb85`, verificado en ejecución el 26/11 en las cuatro pantallas |
 | T-44 | Codex | Pedidos directos de JC del 26/11 a la tarde: cambio de contraseña dentro de Mi cuenta, suscripción web, armador y agotados al final | verificado en ejecución el 26/11: pasan el cambio de contraseña, la suscripción, el mapa y el catálogo; **el total del armador no se ve** (T-45) |
 | T-45 | Codex | Armador: el total y «Continuar al pago» quedan 300 a 600 px debajo del borde; detalles de la verificación del 26/11 | abierto (26/11) |
+| T-46 | Codex | «Mis entradas» con el título «Mis eventos» repetido; los campos de Pago no son `Edit` para UI Automation; alineación del pago | abierto (26/11, noche) |
 
 ---
 
@@ -849,7 +850,47 @@ el registro de cierre (encargo de JC del 26/11).
 10 vueltas con el pago abierto 45 s, en `BddEventAura`, con `bronce@` (la contraseña de `test0001` es de JC). No se
 cerró; no hubo evento 1000 ni 1026. `errores.log` registró cada cierre del pago con su `CloseReason`.
 
-**Estado:** en revisión: falta que JC lo repita sin Visual Studio, con su cuenta.
+**Tercer cierre, contado por JC (26/11, entre las 20:30 y las 20:45).** Las dos veces fue al cambiar de ventana: al
+pasar de Visual Studio a la ventana de Claude, y al tomar una captura con Win+Shift+S.
+
+**Qué hay en los registros (leído a las 20:46):**
+- **`errores.log` no tiene ninguna línea después de las 18:43:11,** que es mi cierre de la tarde. El ejecutable
+  de `bin\Debug` es de las 18:15:59 y ya trae el registro de `52cba8e` y `9963ef6`; Visual Studio no lo
+  recompiló.
+- **El Visor de eventos no tiene ningún 1000, 1001 ni 1026** entre las 20:20 y las 20:50. Sí hay un
+  «Starting up database 'BddEventAura'» a las 20:38:42: es la primera conexión después de que la base se cerró
+  sola, y concuerda con que la aplicación arrancó a esa hora.
+- **Qué significa:** con el registro nuevo, cualquier cierre que pase por .NET deja una línea:
+  - el cierre de una ventana, `Application.ApplicationExit` o `AppDomain.ProcessExit`;
+  - una excepción no controlada.
+
+  Una caída nativa deja el evento 1000. **Que no haya nada** es lo que pasa cuando otro proceso termina la
+  aplicación con `TerminateProcess`: no corre ningún código administrado. Con la aplicación lanzada desde Visual
+  Studio, eso es lo que hace el **depurador al terminar la sesión** (Detener depuración, o el depurador que se
+  cae). **Es una deducción, no una prueba:** no hay un registro de Visual Studio que lo confirme.
+
+**Reproducción sin depurador, 26/11 de 20:48 a 20:57** (`docs/verificaciones/cierre-al-cambiar-de-ventana-2026-11-26/`):
+- el `Visual.exe` de `bin\Debug` lanzado directo, contra `BddEventAura`, con `bronce@`;
+- en cada vuelta:
+  1. con **Pago seguro** abierto, pasar al **Bloc de notas** y quedarse 40 s;
+  2. **Win+Shift+S**, recortar un rectángulo con el mouse;
+  3. volver con **Alt+Tab**;
+  4. **Cancelar pago**;
+- se comprobó en cada vuelta qué proceso tenía la ventana activa: el Bloc de notas al salir y Visual al volver;
+- **5 vueltas, ningún cierre.** `errores.log` anotó solo los cinco cierres del pago (`CloseReason=None`). Ningún
+  evento 1000 ni 1026.
+- **No reproduce sin depurador.** Con el depurador de Visual Studio no lo probé: Visual Studio no estaba abierto y
+  un agente no puede manejarlo.
+
+**Qué hace JC:**
+1. Repetir con el depurador. Antes, en Visual Studio, abrir **Depurar → Ventanas → Configuración de
+   excepciones** y marcar **Common Language Runtime Exceptions**. Si el depurador se detiene en una excepción,
+   esa es la causa y la ventana **Salida** la nombra.
+2. Si el cierre se repite con el depurador y no sin él, **no es un error de EventAura:** se documenta y se cierra
+   T-38.
+3. Si se cierra sin el depurador, mirar `errores.log`: el registro nuevo dice el origen.
+
+**Estado:** en revisión. No reproduce sin depurador; con el depurador, a cargo de JC.
 
 ### T-39 · Codex · P0: una cuenta sin verificar queda trabada
 
@@ -1022,6 +1063,25 @@ eventos de la tabla del informe, con una prueba de geometría.
   visible es el panel lateral; el código queda en Y 930, fuera de la vista.
 - **Después del aviso de RN-43,** el catálogo que queda es el respaldo WinForms, con el título «Armar paquete».
 - **Lista de espera:** después de anotarse, las tarjetas web siguen diciendo «Anotarme en la lista de espera».
+
+**Estado:** abierto.
+
+### T-46 · Codex · Detalles del recorrido del guion del 26/11 a la noche
+
+**Qué (ejecutado el 26/11 sobre el ejecutable de `5890e70`, a 96 DPI; capturas en
+`docs/verificaciones/guion-2026-11-26-noche/`):**
+1. **«Mis entradas» se titula «Mis eventos»** y, debajo, repite un segundo título, «Historial Compras». Entre el
+   aviso y las tarjetas quedan unos 100 px vacíos (`4-devolver-hecha.png`). Tendría que haber un solo título, igual
+   al del menú.
+2. **Los cuatro campos de Pago seguro no son campos para UI Automation.** Se exponen como cuatro `Pane` sin nombre,
+   no como `Edit`. Las etiquetas («Titular…», «Número de tarjeta»…) son `Text` sueltos.
+   - **Consecuencia:** un lector de pantalla no anuncia qué campo tiene el foco. Va contra la regla «Todo se puede
+     hacer con el teclado» y la sección de accesibilidad de `PRINCIPIOS-DISENO.md` §9.
+   - **Probable origen:** `5d2c7de` («separar campos»), que envolvió cada `TextBox` en un panel. **A confirmar
+     leyendo el código.**
+   - **Listo cuando:** UI Automation encuentra cuatro `Edit` con el nombre de su etiqueta.
+3. **Pago seguro, alineación** (`4-sin-seguro-pago.png`): «Pago» y «Total a pagar» empiezan unos 28 px más a la
+   derecha que las etiquetas de los campos. Es un detalle de acabado, no de función.
 
 **Estado:** abierto.
 

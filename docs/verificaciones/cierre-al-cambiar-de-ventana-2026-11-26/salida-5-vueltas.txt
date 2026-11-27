@@ -1,0 +1,15 @@
+﻿20:48:19 Visual.exe pid 38548 (D:\proyectos\TrabajoDeDiploma\Visual\bin\Debug\Visual.exe)
+20:50:09 vuelta 1: adelante en la otra app pid 38116 (cambió); tras Alt+Tab pid 38548 (Visual=True); sin cierre; pago cancelado
+20:51:39 vuelta 2: adelante en la otra app pid 38116 (cambió); tras Alt+Tab pid 38548 (Visual=True); sin cierre; pago cancelado
+20:53:09 vuelta 3: adelante en la otra app pid 38116 (cambió); tras Alt+Tab pid 38548 (Visual=True); sin cierre; pago cancelado
+20:54:39 vuelta 4: adelante en la otra app pid 38116 (cambió); tras Alt+Tab pid 38548 (Visual=True); sin cierre; pago cancelado
+20:56:09 vuelta 5: adelante en la otra app pid 38116 (cambió); tras Alt+Tab pid 38548 (Visual=True); sin cierre; pago cancelado
+proceso vivo al final: True
+--- errores.log nuevo:
+2026-11-26T20:50:06.3971231-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T20:51:36.5426413-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T20:53:06.7294403-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T20:54:36.8129465-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+2026-11-26T20:56:06.9616862-03:00 [origen: cierre de ventana] ventana=frmPago (Pago seguro); CloseReason=None
+
+--- eventos 1000/1026 desde el inicio:
