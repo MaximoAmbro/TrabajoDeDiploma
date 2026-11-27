@@ -8,7 +8,7 @@ try {
     $instalacion = & $vswhere -latest -products '*' -requires Microsoft.Component.MSBuild -property installationPath
     if (-not $instalacion) { throw 'No se encuentra una instalación de MSBuild.' }
     $msbuild = Join-Path $instalacion 'MSBuild\Current\Bin\MSBuild.exe'
-    & $msbuild SistemaEntradas.sln -restore -p:Configuration=Debug -v:minimal -nologo
+    & $msbuild SistemaEntradas.sln -restore -p:RestorePackagesConfig=true -p:Configuration=Debug -v:minimal -nologo
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     if ($Accion -eq 'Probar') {
         $vstest = Join-Path $instalacion 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe'
