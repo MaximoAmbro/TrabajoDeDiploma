@@ -22,7 +22,11 @@ namespace Visual
             ShowInTaskbar = false;
             MinimizeBox = false;
             MaximizeBox = false;
-            ClientSize = new Size(480, 230);
+            Size medidaMensaje = TextRenderer.MeasureText(MensajeDialogo, Tema.Cuerpo,
+                new Size(424, 480), TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl);
+            int altoMensaje = Math.Max(56, medidaMensaje.Height + 4);
+            int arribaAcciones = 76 + altoMensaje + 24;
+            ClientSize = new Size(480, arribaAcciones + 54);
             BackColor = Tema.Superficie;
             ForeColor = Tema.Texto;
             Font = Tema.Cuerpo;
@@ -33,9 +37,9 @@ namespace Visual
                 Location = new Point(28, 24), Size = new Size(424, 42) };
             var mensajeLabel = new Label { Name = "dialogoMensaje", Text = MensajeDialogo,
                 Font = Tema.Cuerpo, ForeColor = Tema.Texto, AutoSize = false,
-                Location = new Point(28, 76), Size = new Size(424, 82) };
+                Location = new Point(28, 76), Size = new Size(424, altoMensaje) };
             var acciones = new FlowLayoutPanel { Name = "dialogoAcciones", FlowDirection = FlowDirection.RightToLeft,
-                WrapContents = false, Location = new Point(28, 176), Size = new Size(424, 40), BackColor = Tema.Superficie };
+                WrapContents = false, Location = new Point(28, arribaAcciones), Size = new Size(424, 40), BackColor = Tema.Superficie };
             var aceptar = new Button { Name = "dialogoConfirmar", Text = confirmar ?? "Confirmar", Size = new Size(190, 40),
                 DialogResult = DialogResult.Yes, Font = Tema.Boton, BackColor = peligro ? Tema.Error : Tema.Primario,
                 ForeColor = Color.White, FlatStyle = FlatStyle.Flat, UseVisualStyleBackColor = false };
