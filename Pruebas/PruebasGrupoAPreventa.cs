@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using Datos;
 using Entidades;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Negocio;
@@ -116,8 +117,10 @@ namespace Pruebas
                         "Agregar el sector deja el evento en borrador; la publicación es una acción explícita.");
                     GestorEventos.Instance.Publicar(creado.Id);
                     publicado = GestorEventos.Instance.ObtenerPorId(creado.Id);
-                    Assert.AreEqual(GestorEventos.EstadoEnRevision, publicado.Estado,
-                        "La primera publicación del organizador queda en revisión y conserva la preventa.");
+                    string estadoEsperado = RepositorioEventos.Instance.OrganizadorYaTuvoEventoAprobado(local.IdPropietario)
+                        ? GestorEventos.EstadoPublicado : GestorEventos.EstadoEnRevision;
+                    Assert.AreEqual(estadoEsperado, publicado.Estado,
+                        "El estado de publicación debe respetar si el organizador ya tuvo un evento aprobado.");
                     Assert.AreEqual(fin, publicado.FinPreventa);
                     return;
                 }

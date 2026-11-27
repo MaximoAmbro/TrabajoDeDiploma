@@ -162,7 +162,11 @@ namespace Visual
                 });
                 NavegarDesdePantalla(verificacion);
             }
-            catch (Exception ex) { Avisos.Error(this, ManejadorErrores.MensajeParaUsuario(ex)); }
+            catch (Exception ex)
+            {
+                ManejadorErrores.Registrar(ex);
+                Avisos.Error(this, ManejadorErrores.MensajeParaUsuario(ex));
+            }
         }
 
         private void Mostrar(Control pagina, bool guardarActual)

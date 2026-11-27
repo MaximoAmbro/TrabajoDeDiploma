@@ -111,8 +111,11 @@ namespace Pruebas
                 using (var menu = new Visual.frmMenuCliente { IDUsuario = cliente.Id, NombreUsuario = "Cliente" })
                 {
                     Mostrar(menu);
+                    Assert.IsNotNull(GestorSesion.Instance.UsuarioActual, "La sesión de cliente debe seguir activa.");
                     menu.IniciarVerificacionCorreo();
-                    var host = ControlDe<HostFormularioCliente>(menu, "paginafrmCrearUsuario");
+                    var host = menu.Controls.Find("paginafrmCrearUsuario", true).OfType<HostFormularioCliente>().SingleOrDefault();
+                    Assert.IsNotNull(host, "Debe abrirse la vista de verificación dentro de Mi cuenta. Aviso: " +
+                        menu.Controls.Find("avisoSistema", true).FirstOrDefault()?.Text);
                     var formulario = (Visual.frmCrearUsuario)host.Pantalla;
                     var web = ControlDe<Visual.Web.PanelWeb>(formulario, "altaCuentaWeb");
                     EsperarVistaWeb(web);
