@@ -4,6 +4,10 @@ Guion para recorrer el sistema sin ayuda. Es el documento del operador: dice qu�
 
 **Estado de la verificación.** Desde el 24/11/2026 lo mantiene Claude Code; Codex ya no lo modifica.
 - **Secciones 1 y 2:** reescritas y recorridas el 24/11/2026 sobre el ejecutable compilado con `5b6fd5a`, contra una base nueva armada con este procedimiento.
+- **26/11 a la noche, con la semilla nueva:**
+  - recorridos otra vez: la recuperación con el código (sección 2), la compra sin seguro y con seguro y la
+    devolución (sección 4), y la contratación con Enter (sección 6.1);
+  - **sin recorrer en esta pasada:** las secciones 5, 7 y 8, la preventa y 144 DPI.
 - **Secciones 3 a 8:** reescritas y recorridas el 24/11/2026 sobre el ejecutable compilado a las 16:29 (`942b451`), contra la misma base. Cada sección termina con lo verificado y lo que quedó sin verificar. La tabla de la sección 8 dice, fila por fila, qué rechazos se vieron en pantalla.
 - Durante el recorrido (sección 2 a las 16:00; secciones 3 a 8 entre las 16:33 y las 16:59) no se bloqueó ninguna cuenta, no se cerró ninguna sesión por inactividad y `errores.log` no registró ningún error.
 
@@ -108,7 +112,7 @@ Abrí esa carpeta en el Explorador de archivos (pegá la ruta en la barra de dir
 - **en la recuperación, la ruta no se muestra nunca;**
 - **en la verificación del correo con la sesión iniciada, sí se muestra, y solo si el envío es simulado.** Ahí la cuenta es de quien está usando la aplicación. Con SMTP configurado, el código llega a un correo real y la ruta no aparece.
 
-El cambio lo hace Codex en T-39. Hasta entonces, la ruta es información del operador y está solo en este guion.
+Está hecho desde `06a9451` (T-39) y se verificó en ejecución el 26/11. Con la sesión iniciada, **Verificar correo** dice «Abrí la carpeta BandejaSimulada (C:\Users\…\AppData\Local\EventAura\BandejaSimulada) y buscá el archivo más reciente». La recuperación no muestra la ruta.
 
 **Qué archivo abrir.** Cada archivo `.eml` tiene por nombre un código largo (un hash) y no la dirección de correo, para que la carpeta no muestre las cuentas. **Tomá el archivo más reciente:** ordená por «Fecha de modificación». Al abrirlo con el Bloc de notas, verificá que la línea `To:` sea la dirección que estás usando. Copiá el número de la línea `Código:`. La línea `Vence:` dice hasta cuándo sirve: 10 minutos.
 
@@ -118,7 +122,7 @@ El cambio lo hace Codex en T-39. Hasta entonces, la ruta es información del ope
 2. **Verificar el correo.** Abrí el `.eml` más reciente de la bandeja y copiá el código en **Código de verificación**. Pulsá **Confirmar correo**. **Vas a ver** «Correo verificado. Ya podés iniciar sesión y comprar.» y el botón **Volver al acceso**. Si el código está vacío o es incorrecto, aparece «El código no es válido o venció. Solicitá uno nuevo.».
 3. **Entrar.** Pulsá **Volver al acceso** e iniciá sesión con la cuenta nueva. La contraseña se ve con asteriscos. **Vas a ver** «Mi cuenta» con el nivel Bronce («Bronce · 0,0 % de descuento», «3 compras para Plata»), «Sin entradas próximas», «Sin inscripciones» y, debajo, «Eventos disponibles».
 4. **Pedir la recuperación.** Cerrá sesión y, en el acceso, pulsá **Recuperar contraseña**. Escribí el correo de la cuenta y pulsá **Enviar código**. **Vas a ver** el mismo texto que en el alta: «Si la cuenta existe, enviamos un código. Para continuar, abrí fuera de EventAura el correo simulado de esa dirección.». Con un correo inexistente la respuesta es idéntica y tarda lo mismo, así que la pantalla no revela qué cuentas existen.
-5. **Restablecer la contraseña.** Abrí el `.eml` más reciente: su asunto es «Recuperacion de contrasena». Copiá el código en **Código de recuperación**, escribí y confirmá la contraseña nueva y pulsá **Restablecer contraseña**. **Vas a ver** «La contraseña se actualizó. Ya podés iniciar sesión.». Pulsá **Volver** e iniciá sesión con la contraseña nueva. Cada código vence, se consume una sola vez y pedir otro invalida el anterior.
+5. **Restablecer la contraseña.** Abrí el `.eml` más reciente: su asunto es «Recuperacion de contrasena». Copiá el código en **Código de recuperación**, escribí y confirmá la contraseña nueva y pulsá **Restablecer contraseña**. **Vas a ver** «Listo.», «La contraseña se actualizó.» y «Ya podés iniciar sesión con la contraseña nueva.». Pulsá **Iniciar sesión** y entrá con la contraseña nueva. Cada código vence, se consume una sola vez y pedir otro invalida el anterior.
 
 **Verificado el 24/11/2026:**
 - los cinco pasos, con la cuenta `lucia.guion@demo.eventaura.example`, sobre una base armada con la sección 1. Los mensajes son exactamente los que figuran arriba;
@@ -126,6 +130,12 @@ El cambio lo hace Codex en T-39. Hasta entonces, la ruta es información del ope
 - el código vacío dio el mensaje de código no válido;
 - después de restablecer, la cuenta entró con la contraseña nueva;
 - `errores.log` no registró ningún error durante el recorrido.
+
+**Verificado otra vez el 26/11 a la noche,** sobre el ejecutable de `5890e70` y una base `_Demostracion` nueva con la semilla rehecha (`docs/verificaciones/guion-2026-11-26-noche/`):
+- los pasos 4 y 5 con `malena.rios@demo.eventaura.example`: el `.eml` más reciente tenía `To:` igual a la cuenta y el asunto «Recuperacion de contrasena - EventAura»;
+- el restablecimiento, con los textos del paso 5;
+- el ingreso a «Mi cuenta» con la contraseña nueva;
+- la pantalla de recuperación no muestra la ruta de la bandeja.
 
 **Sin verificar en esta pasada:**
 - la respuesta con un correo inexistente;
@@ -162,7 +172,7 @@ Esos tres casos los cubren las pruebas automáticas de la batería.
    | Vencimiento | Exactamente `MM/AA`, **con la barra**: `1228` no sirve. Vale hasta el último día de ese mes | «El vencimiento debe tener el formato MM/AA.» o «La tarjeta está vencida.» |
    | Código | 3 o 4 dígitos | «El código de seguridad debe tener 3 o 4 dígitos.» |
 
-   Con esos datos bien, **cualquier número se aprueba salvo los terminados en `0000`**, que se rechazan con «Rechazada por el emisor (simulación: tarjeta terminada en 0000).» y liberan el cupo (RN-32). **Para la demostración: `4111 1111 1111 1111` · `12/29` · `123` se aprueba; la misma terminada en `0000` (`4111 1111 1111 0000`) se rechaza.** Un error de formato no gasta un intento de pago. La pantalla de pago no dice nada de esto: está propuesto como ticket (T-41).
+   Con esos datos bien, **cualquier número se aprueba salvo los terminados en `0000`**, que se rechazan con «Rechazada por el emisor (simulación: tarjeta terminada en 0000).» y liberan el cupo (RN-32). **Para la demostración: `4111 1111 1111 1111` · `12/29` · `123` se aprueba; la misma terminada en `0000` (`4111 1111 1111 0000`) se rechaza.** Un error de formato no gasta un intento de pago. Desde `6bd5777` (T-41), **Pago seguro** muestra estos datos de prueba y pone sola la barra del vencimiento: al escribir `1229` queda `12/29`. Verificado en ejecución el 26/11.
 
 5. **Los PDF.** Pulsá **Abrir carpeta**: los tickets están en `Documentos\A1.Tickets EVENTAURA`, uno por entrada (`Ticket_EA-…_Campo_1.PDF`, `…_2.PDF`), cada uno con un QR distinto. Pulsá **Aceptar**: la aplicación vuelve a **Eventos disponibles**.
 
@@ -176,7 +186,7 @@ Esos tres casos los cubren las pruebas automáticas de la batería.
 
 **Atención en pantalla:** dentro de la navegación del cliente, el catálogo y la compra quedan debajo del título «Mi cuenta», corridos hacia abajo. En el catálogo, los botones **Ver entradas** de la primera fila quedan cortados por el borde inferior. Por eso conviene usar el buscador. Está anotado para Codex.
 
-**Pago, Suscripción y Cambiar contraseña (26/11).** **Pago seguro** y **Mi suscripción** siguen en Windows Forms: no tienen vista web. **Cambiar contraseña** sí es vista web (`cambiar-clave.html`), igual que la recuperación (`recuperar-clave.html`).
+**Pago, Suscripción y Cambiar contraseña (26/11).** **Pago seguro** sigue en Windows Forms. **Mi suscripción** es vista web desde `a9f9c1b`: muestra dos tarjetas de plan, y Enter sobre el plan elegido abre la confirmación. **Cambiar contraseña** sí es vista web (`cambiar-clave.html`), igual que la recuperación (`recuperar-clave.html`).
 
 ## 4. Seguro y devolución
 
@@ -200,6 +210,13 @@ En un pedido sin seguro, la interfaz no deja devolver: aunque marques la casilla
 - el aviso del seguro y la compra sin seguro (pedido EA-000122, $ 27.312,50);
 - la devolución de una entrada del pedido EA-000121, con el reintegro de $ 23.750,00 y el estado Reembolsada;
 - el botón deshabilitado en el pedido sin seguro.
+
+**Verificado otra vez el 26/11 a la noche,** con Malena, que es Bronce, sobre el armador web:
+- **compra sin seguro:** **Continuar al pago** muestra dentro del armador el aviso «No agregaste el seguro de entrada. Solo se puede contratar ahora: después de pagar no se puede incorporar.», con **Agregar seguro** y **Seguir sin seguro**. Ya no es un cuadro aparte. Con **Seguir sin seguro**, 1 Campo se pagó en EA-000320: $ 25.000 más $ 3.750 de cargo, **$ 28.750,00**. Para Paula, que es Plata, sigue valiendo el importe de arriba;
+- **compra con seguro:** EA-000321, 1 Campo, **$ 33.750,00** con «Seguro $ 5.000,00», sin el aviso;
+- **devolución:** en **Mis entradas** se elige la tarjeta del pedido y debajo aparece «Entradas del pedido EA-…», con una casilla por entrada. Al marcarla aparece **Devolver 1 entrada(s)**; abre el cuadro **Devolver entradas**, y con **Sí**: «Devolución registrada. Se reintegran $ 25.000,00.» La entrada pasa a **Reembolsada** y la tarjeta dice «devuelto $ 25.000,00».
+
+**Atención en pantalla:** la sección del menú se llama **Mis entradas**, pero el título dice «Mis eventos» y debajo repite «Historial Compras». Está anotado como T-46.
 
 ## 5. QR de ingreso y privacidad entre clientes
 
@@ -253,6 +270,15 @@ El Administrador de plataforma no tiene locales y no hace el control de ingreso.
 - «Seguro sin cargo» en el resumen;
 - el cuadro de «Volver al listado»;
 - anotarse en Clásico Rosarino, la posición 1 y la tarjeta del inicio con «2 inscripciones».
+
+**Verificado otra vez el 26/11 a la noche (paso 1, vista web de `a9f9c1b`):**
+- con el foco en **Mensual**, **Enter** abre el cuadro **Contratar suscripción**;
+- con **Sí**, la pantalla pasa a «Plan Mensual activo · Vence el 26/12/2026 · No se renueva automáticamente»;
+- **Contratar** desaparece y queda **Cancelar suscripción**: ya no es un botón deshabilitado;
+- no apareció un segundo cuadro de éxito: la confirmación es ese texto en la pantalla.
+
+**Codex está reemplazando estos cuadros del sistema por diálogos propios.** Cuando lo entregue, este paso hay que
+volver a recorrerlo.
 
 **No verificado:**
 - la preventa (paso 3);
